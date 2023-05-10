@@ -8,14 +8,13 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { ApplicationSubmissionReviewDto } from '../../portal/application-submission-review/application-submission-review.dto';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../decision/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeetingDto } from '../decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
@@ -136,6 +135,94 @@ export class SubmittedApplicationDto {
   subdIsHomeSiteSeverance?: boolean | null;
 
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  @AutoMap(() => Boolean)
+  soilIsNOIFollowUp: boolean | null;
+
+  @AutoMap(() => String)
+  soilNOIIDs: string | null;
+
+  @AutoMap(() => Boolean)
+  soilHasPreviousALCAuthorization: boolean | null;
+
+  @AutoMap(() => String)
+  soilApplicationIDs: string | null;
+
+  @AutoMap(() => String)
+  soilPurpose: string | null;
+
+  @AutoMap(() => String)
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => String)
+  soilReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToRemoveAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyRemovedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedVolume: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedArea: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilAlreadyPlacedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  soilProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  soilProjectDurationUnit?: string | null;
+
+  @AutoMap(() => String)
+  soilFillTypeToPlace?: string;
+
+  @AutoMap(() => String)
+  soilAlternativeMeasures?: string;
+
+  @AutoMap(() => Boolean)
+  soilIsExtractionOrMining?: boolean;
+
+  @AutoMap(() => Boolean)
+  soilHasSubmittedNotice?: boolean;
 }
 
 export class CreateApplicationDto {

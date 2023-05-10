@@ -1,9 +1,9 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../application-code.dto';
-import { ApplicationDecisionDto } from '../application-decision/application-decision.dto';
 import { ApplicationLocalGovernmentDto } from '../application-local-government/application-local-government.dto';
 import { ApplicationDecisionMeetingDto } from '../application.dto';
+import { ApplicationDecisionDto } from '../decision/application-decision-v1/application-decision.dto';
 
 export const enum RECONSIDERATION_TYPE {
   T_33 = '33',
@@ -15,6 +15,8 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
 }
 
 export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
+
+export interface ApplicationStatusTypeDto extends BaseCodeDto {}
 
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;

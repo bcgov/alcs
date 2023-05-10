@@ -9,10 +9,10 @@ import {
   ManyToOne,
   OneToOne,
 } from 'typeorm';
+import { Base } from '../../../common/entities/base.entity';
 import { Application } from '../../application/application.entity';
 import { Card } from '../../card/card.entity';
-import { Base } from '../../../common/entities/base.entity';
-import { ApplicationDecision } from '../application-decision/application-decision.entity';
+import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationModificationOutcomeType } from './modification-outcome-type/application-modification-outcome-type.entity';
 
 @Entity()

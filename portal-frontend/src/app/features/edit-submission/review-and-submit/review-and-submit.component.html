@@ -8,7 +8,7 @@
   ></app-application-details>
   <div class="button-container">
     <button
-      *ngIf="applicationSubmission?.fileNumber"
+      *ngIf="applicationSubmission?.fileNumber && !draftMode"
       mat-flat-button
       color="primary"
       (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
@@ -26,7 +26,7 @@
         Previous<span class="mobile-hidden"> Step</span>
       </button>
       <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">
-        {{ draftMode ? 'Publish updated version' : 'Submit' }}
+        {{ draftMode ? 'Update Submission' : 'Submit' }}
       </button>
     </div>
   </div>

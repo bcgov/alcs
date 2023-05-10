@@ -20,10 +20,15 @@ import { ApplicationOwnerDialogComponent } from './parcel-details/application-ow
 import { ApplicationOwnersDialogComponent } from './parcel-details/application-owners-dialog/application-owners-dialog.component';
 import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
+import { ParcelEntryConfirmationDialogComponent } from './parcel-details/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
+import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
+import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.component';
+import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
+import { SoilTableComponent } from './proposal/soil-table/soil-table.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
@@ -33,6 +38,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
   declarations: [
     ParcelDetailsComponent,
     ParcelEntryComponent,
+    ParcelEntryConfirmationDialogComponent,
     ChangeApplicationTypeDialogComponent,
     EditSubmissionComponent,
     DeleteParcelDialogComponent,
@@ -50,6 +56,10 @@ import { SelectGovernmentComponent } from './select-government/select-government
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,
+    RosoProposalComponent,
+    PofoProposalComponent,
+    PfrsProposalComponent,
+    SoilTableComponent,
   ],
   imports: [
     CommonModule,
@@ -67,6 +77,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
   exports: [
     ParcelDetailsComponent,
     ParcelEntryComponent,
+    ParcelEntryConfirmationDialogComponent,
     ChangeApplicationTypeDialogComponent,
     EditSubmissionComponent,
     DeleteParcelDialogComponent,
@@ -84,6 +95,10 @@ import { SelectGovernmentComponent } from './select-government/select-government
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,
+    RosoProposalComponent,
+    PofoProposalComponent,
+    PfrsProposalComponent,
+    SoilTableComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

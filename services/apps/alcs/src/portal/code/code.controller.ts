@@ -29,7 +29,7 @@ export class CodeController {
 
   @Get()
   async loadCodes() {
-    const localGovernments = await this.localGovernmentService.list();
+    const localGovernments = await this.localGovernmentService.listActive();
     const applicationTypes =
       await this.applicationService.fetchApplicationTypes();
     const applicationDocumentTypes =

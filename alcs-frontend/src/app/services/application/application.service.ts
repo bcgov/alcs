@@ -9,6 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
+import { ApplicationStatusTypeDto } from './application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
@@ -20,11 +21,13 @@ export class ApplicationService {
   public $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
+  public $applicationStatuses = new BehaviorSubject<ApplicationStatusTypeDto[]>([]);
 
   private baseUrl = `${environment.apiUrl}/application`;
   private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
+  private applicationStatuses: ApplicationStatusTypeDto[] = [];
   private isInitialized = false;
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
@@ -91,5 +94,8 @@ export class ApplicationService {
 
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
+
+    this.applicationStatuses = codes.applicationStatusType;
+    this.$applicationStatuses.next(this.applicationStatuses);
   }
 }

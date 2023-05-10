@@ -8,6 +8,7 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
 import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
@@ -54,6 +55,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   reviewAppFngSteps = ReviewApplicationFngSteps;
   doNotSaveAppReview = false;
   showValidationErrors = false;
+  showDownloadPdf = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -69,7 +71,8 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialog: MatDialog,
     private toastService: ToastService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +95,12 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
             if (stepInd) {
               // setTimeout is required for stepper to be initialized
               setTimeout(() => {
-                this.customStepper.navigateToStep(parseInt(stepInd), true);
+                const stepInt = parseInt(stepInd);
+                this.customStepper.navigateToStep(stepInt, true);
+
+                this.showDownloadPdf = this.isFirstNationGovernment
+                  ? stepInt === ReviewApplicationFngSteps.ReviewAndSubmitFng
+                  : stepInt === ReviewApplicationSteps.ReviewAndSubmit;
               });
             }
           });
@@ -204,6 +212,12 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     const documents = await this.applicationDocumentService.getByFileId(fileId);
     if (documents) {
       this.$applicationDocuments.next(documents);
+    }
+  }
+
+  async onDownloadPdf() {
+    if (this.fileId) {
+      await this.pdfGenerationService.generateReview(this.fileId);
     }
   }
 }

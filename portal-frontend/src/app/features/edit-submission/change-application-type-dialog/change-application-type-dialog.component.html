@@ -16,7 +16,7 @@
 <div mat-dialog-title>
   <h4>Change Application Type</h4>
 </div>
-<div mat-dialog-content class='change-app-type-modal'>
+<div mat-dialog-content class="change-app-type-modal">
   <div *ngIf="stepIdx === warningStep">
     <div class="step-body">
       <app-warning-banner>
@@ -31,19 +31,17 @@
   </div>
 
   <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
-    <div>
-      <mat-radio-group
-        class="app-type-radio-group"
-        aria-labelledby="radio-label"
-        (change)="onAppTypeSelected($event)"
-        color="primary"
-        required
-      >
-        <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
-          {{ appType.portalLabel }}
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
+    <mat-radio-group
+      class="app-type-radio-group"
+      aria-labelledby="radio-label"
+      (change)="onAppTypeSelected($event)"
+      color="primary"
+      required
+    >
+      <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
+        {{ appType.portalLabel }}
+      </mat-radio-button>
+    </mat-radio-group>
   </div>
 
   <div class="app-type-step-extension" *ngIf="stepIdx === applicationTypeStep">

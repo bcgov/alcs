@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {
-  APPLICATION_STATUS,
   ApplicationSubmissionDto,
+  APPLICATION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
@@ -33,6 +33,8 @@ export class ApplicationListComponent implements OnInit {
     [APPLICATION_STATUS.INCOMPLETE, 'incomplete'],
     [APPLICATION_STATUS.WRONG_GOV, 'wrong-government'],
     [APPLICATION_STATUS.CANCELLED, 'cancelled'],
+    [APPLICATION_STATUS.ALC_DECISION, 'alc-decision'],
+    [APPLICATION_STATUS.CEO_DECISION, 'ceo-decision'],
   ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

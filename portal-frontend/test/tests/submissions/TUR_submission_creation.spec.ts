@@ -16,7 +16,7 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByText('Transportation, Utility, or Recreational Trail Uses within the ALR').click();
   await page.getByRole('button', { name: 'create' }).click();
-  await page.locator('.btns-wrapper > button:nth-child(1)').click();
+  // await page.locator('.btns-wrapper > button:nth-child(1)').click();
 
   await page.getByRole('button', { name: 'Fee Simple' }).click();
   await page.getByPlaceholder('Enter legal description').click();

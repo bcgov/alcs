@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CeoCriterionDto } from '../../../../services/application/application-decision/application-decision.dto';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CeoCriterionDto } from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { CeoCriterionService } from '../../../../services/ceo-criterion/ceo-criterion.service';
 
 @Component({
@@ -12,7 +12,7 @@ export class CeoCriterionDialogComponent {
   description = '';
   label = '';
   code = '';
-  number: number | null = null;
+  number: string | null = null;
 
   isLoading = false;
   isEdit = false;
@@ -26,7 +26,7 @@ export class CeoCriterionDialogComponent {
       this.description = data.description;
       this.label = data.label;
       this.code = data.code;
-      this.number = data.number;
+      this.number = data.number.toString();
     }
     this.isEdit = !!data;
   }
@@ -39,7 +39,7 @@ export class CeoCriterionDialogComponent {
     }
 
     const dto = {
-      number: this.number,
+      number: parseInt(this.number, 10),
       code: this.code,
       label: this.label,
       description: this.description,

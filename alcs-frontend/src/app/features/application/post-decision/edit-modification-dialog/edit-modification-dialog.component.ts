@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
 import {
   ApplicationModificationDto,
   ApplicationModificationUpdateDto,
 } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
+import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 

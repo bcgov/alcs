@@ -5,6 +5,7 @@ import { CanDeactivateGuard } from '../../shared/guard/can-deactivate.guard';
 import { SharedModule } from '../../shared/shared.module';
 import { EditSubmissionBaseModule } from '../edit-submission/edit-submission-base.module';
 import { AlcsEditSubmissionComponent } from './alcs-edit-submission.component';
+import { ConfirmPublishDialogComponent } from './confirm-publish-dialog/confirm-publish-dialog.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AlcsEditSubmissionComponent],
+  declarations: [AlcsEditSubmissionComponent, ConfirmPublishDialogComponent],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), EditSubmissionBaseModule],
 })
 export class AlcsEditSubmissionModule {}

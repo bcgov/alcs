@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CeoCriterionCode } from '../../decision/application-decision/ceo-criterion/ceo-criterion.entity';
+import { CeoCriterionCode } from '../../decision/ceo-criterion/ceo-criterion.entity';
 import { CeoCriterionService } from './ceo-criterion.service';
 
 describe('CeoCriterionService', () => {
@@ -64,20 +64,6 @@ describe('CeoCriterionService', () => {
     });
 
     expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toBeCalledWith({
-      where: { uuid: ceoCriterionCode.code },
-    });
-    expect(result).toBeDefined();
-  });
-
-  it('should successfully delete holiday entry if it exists', async () => {
-    mockRepository.remove.mockResolvedValue(ceoCriterionCode);
-    mockRepository.findOneOrFail.mockResolvedValue(ceoCriterionCode);
-
-    const result = await service.delete(ceoCriterionCode.code);
-
-    expect(mockRepository.remove).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: ceoCriterionCode.code },

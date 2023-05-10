@@ -15,6 +15,9 @@ import { ApplicationListComponent } from './features/home/application-list/appli
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
+import { AlcReviewComponent } from './features/view-submission/alc-review/alc-review.component';
+import { SubmissionDocumentsComponent } from './features/view-submission/alc-review/submission-documents/submission-documents.component';
+import { LfngReviewComponent } from './features/view-submission/lfng-review/lfng-review.component';
 import { ViewSubmissionComponent } from './features/view-submission/view-submission.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
@@ -37,6 +40,9 @@ import { SharedModule } from './shared/shared.module';
     LandingPageComponent,
     ConfirmationDialogComponent,
     ViewSubmissionComponent,
+    LfngReviewComponent,
+    AlcReviewComponent,
+    SubmissionDocumentsComponent,
   ],
   imports: [
     BrowserModule,

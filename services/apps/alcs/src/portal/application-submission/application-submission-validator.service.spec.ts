@@ -492,96 +492,440 @@ describe('ApplicationSubmissionValidatorService', () => {
     ).toBe(true);
   });
 
-  it('should report no NFU errors when all information is present and there is fill', async () => {
-    const application = new ApplicationSubmission({
-      owners: [],
-      nfuHectares: 1.5125,
-      nfuPurpose: 'VALID',
-      nfuOutsideLands: 'VALID',
-      nfuAgricultureSupport: 'VALID',
-      nfuWillImportFill: true,
-      nfuFillTypeDescription: 'VALID',
-      nfuFillOriginDescription: 'VALID',
-      nfuTotalFillPlacement: 0.0,
-      nfuMaxFillDepth: 1.5125,
-      nfuFillVolume: 742.1,
-      nfuProjectDurationAmount: 12,
-      nfuProjectDurationUnit: 'VALID',
+  describe('NFU Applications', () => {
+    it('should report no errors when all information is present and there is fill', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        nfuHectares: 1.5125,
+        nfuPurpose: 'VALID',
+        nfuOutsideLands: 'VALID',
+        nfuAgricultureSupport: 'VALID',
+        nfuWillImportFill: true,
+        nfuFillTypeDescription: 'VALID',
+        nfuFillOriginDescription: 'VALID',
+        nfuTotalFillPlacement: 0.0,
+        nfuMaxFillDepth: 1.5125,
+        nfuFillVolume: 742.1,
+        nfuProjectDurationAmount: 12,
+        nfuProjectDurationUnit: 'VALID',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`NFU Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
+      ).toBe(false);
     });
 
-    const res = await service.validateSubmission(application);
+    it('should not report errors when there is no fill', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        nfuHectares: 1.5125,
+        nfuPurpose: 'VALID',
+        nfuOutsideLands: 'VALID',
+        nfuAgricultureSupport: 'VALID',
+        nfuWillImportFill: false,
+      });
 
-    expect(
-      includesError(res.errors, new Error(`NFU Proposal incomplete`)),
-    ).toBe(false);
+      const res = await service.validateSubmission(application);
 
-    expect(
-      includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
-    ).toBe(false);
+      expect(
+        includesError(res.errors, new Error(`NFU Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        nfuHectares: null,
+        nfuPurpose: 'VALID',
+        nfuOutsideLands: 'VALID',
+        nfuAgricultureSupport: 'VALID',
+        nfuWillImportFill: true,
+        nfuFillTypeDescription: 'VALID',
+        nfuFillOriginDescription: null,
+        nfuTotalFillPlacement: 0.0,
+        nfuMaxFillDepth: 1.5125,
+        nfuFillVolume: 742.1,
+        nfuProjectDurationAmount: 12,
+        nfuProjectDurationUnit: 'VALID',
+        typeCode: 'NFUP',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`NFU Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
+      ).toBe(true);
+    });
   });
 
-  it('should not report NFU errors when there is no fill', async () => {
-    const application = new ApplicationSubmission({
-      owners: [],
-      nfuHectares: 1.5125,
-      nfuPurpose: 'VALID',
-      nfuOutsideLands: 'VALID',
-      nfuAgricultureSupport: 'VALID',
-      nfuWillImportFill: false,
+  describe('TUR Applications', () => {
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        turAgriculturalActivities: 'turAgriculturalActivities',
+        turReduceNegativeImpacts: 'turReduceNegativeImpacts',
+        typeCode: 'TURP',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`TUR Proposal incomplete`)),
+      ).toBe(true);
     });
-
-    const res = await service.validateSubmission(application);
-
-    expect(
-      includesError(res.errors, new Error(`NFU Proposal incomplete`)),
-    ).toBe(false);
-
-    expect(
-      includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
-    ).toBe(false);
   });
 
-  it('should report NFU errors when information is missing', async () => {
-    const application = new ApplicationSubmission({
-      owners: [],
-      nfuHectares: null,
-      nfuPurpose: 'VALID',
-      nfuOutsideLands: 'VALID',
-      nfuAgricultureSupport: 'VALID',
-      nfuWillImportFill: true,
-      nfuFillTypeDescription: 'VALID',
-      nfuFillOriginDescription: null,
-      nfuTotalFillPlacement: 0.0,
-      nfuMaxFillDepth: 1.5125,
-      nfuFillVolume: 742.1,
-      nfuProjectDurationAmount: 12,
-      nfuProjectDurationUnit: 'VALID',
-      typeCode: 'NFUP',
+  describe('ROSO Applications', () => {
+    it('should not have an error when base information is filled correctly', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilHasPreviousALCAuthorization: false,
+        soilIsNOIFollowUp: false,
+        soilAlreadyRemovedVolume: 5,
+        soilAlreadyRemovedMaximumDepth: 5,
+        soilToRemoveMaximumDepth: 5,
+        soilAlreadyRemovedAverageDepth: 5,
+        soilAlreadyRemovedArea: 5,
+        soilToRemoveAverageDepth: 5,
+        soilToRemoveVolume: 5,
+        soilToRemoveArea: 5,
+        soilTypeRemoved: 'soilTypeRemoved',
+        typeCode: 'ROSO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`ROSO Proposal incomplete`)),
+      ).toBe(false);
     });
 
-    const res = await service.validateSubmission(application);
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: null,
+        soilToRemoveVolume: null,
+        typeCode: 'ROSO',
+      });
 
-    expect(
-      includesError(res.errors, new Error(`NFU Proposal incomplete`)),
-    ).toBe(true);
+      const res = await service.validateSubmission(application);
 
-    expect(
-      includesError(res.errors, new Error(`NFU Fill Section incomplete`)),
-    ).toBe(true);
+      expect(
+        includesError(res.errors, new Error(`ROSO Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`ROSO Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOIDs and ApplicationIDs', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'ROSO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`ROSO Proposal missing NOI IDs`)),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`ROSO Proposal missing Application IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'ROSO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`ROSO proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`ROSO proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`ROSO proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
   });
 
-  it('should report TUR errors when information is missing', async () => {
-    const application = new ApplicationSubmission({
-      owners: [],
-      turAgriculturalActivities: 'turAgriculturalActivities',
-      turReduceNegativeImpacts: 'turReduceNegativeImpacts',
-      typeCode: 'TURP',
+  describe('POFO Applications', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilHasPreviousALCAuthorization: false,
+        soilIsNOIFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilAlternativeMeasures: 'soilAlternativeMeasures',
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(false);
     });
 
-    const res = await service.validateSubmission(application);
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilFillTypeToPlace: null,
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilToPlaceArea: null,
+        typeCode: 'POFO',
+      });
 
-    expect(
-      includesError(res.errors, new Error(`TUR Proposal incomplete`)),
-    ).toBe(true);
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOIDs and ApplicationIDs', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal missing NOI IDs`)),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO Proposal missing Application IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+  });
+
+  describe('PFRS Applications', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilHasPreviousALCAuthorization: false,
+        soilIsNOIFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilAlternativeMeasures: 'soilAlternativeMeasures',
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilPurpose: 'soilPurpose',
+        soilFillTypeToPlace: null,
+        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
+        soilToPlaceArea: null,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOIDs and ApplicationIDs', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Proposal missing NOI IDs`)),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS Proposal missing Application IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should require a notice of work for both mining and notice true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        soilHasPreviousALCAuthorization: true,
+        soilIsNOIFollowUp: true,
+        soilIsExtractionOrMining: true,
+        soilHasSubmittedNotice: true,
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `PFRS proposal has yes to notice of work but is not attached`,
+          ),
+        ),
+      ).toBe(true);
+    });
   });
 });

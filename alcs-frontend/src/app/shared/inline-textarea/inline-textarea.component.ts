@@ -29,7 +29,7 @@ export class InlineTextareaComponent implements AfterContentChecked {
   }
 
   confirmEdit() {
-    if (this.pendingValue !== this.value && this.pendingValue) {
+    if (this.pendingValue !== this.value && this.pendingValue !== undefined) {
       this.save.emit(this.pendingValue);
       this.value = this.pendingValue;
     }

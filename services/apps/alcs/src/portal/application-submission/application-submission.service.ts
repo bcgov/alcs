@@ -2,6 +2,7 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
+import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
@@ -14,7 +15,6 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
-import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -35,6 +35,9 @@ const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.REFUSED_TO_FORWARD,
   APPLICATION_STATUS.SUBMITTED_TO_ALC,
 ];
+
+const filterUndefined = (val: any, fallback: any) =>
+  val !== undefined ? val : fallback;
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -135,6 +138,7 @@ export class ApplicationSubmissionService {
     this.setNFUFields(applicationSubmission, updateDto);
     this.setTURFields(applicationSubmission, updateDto);
     await this.setSUBDFields(applicationSubmission, updateDto);
+    this.setSoilFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -626,21 +630,33 @@ export class ApplicationSubmissionService {
         ? updateDto.nfuWillImportFill
         : application.nfuWillImportFill;
     application.nfuTotalFillPlacement =
-      updateDto.nfuTotalFillPlacement || application.nfuTotalFillPlacement;
+      updateDto.nfuTotalFillPlacement !== undefined
+        ? updateDto.nfuTotalFillPlacement
+        : application.nfuTotalFillPlacement;
     application.nfuMaxFillDepth =
-      updateDto.nfuMaxFillDepth || application.nfuMaxFillDepth;
+      updateDto.nfuMaxFillDepth !== undefined
+        ? updateDto.nfuMaxFillDepth
+        : application.nfuMaxFillDepth;
     application.nfuFillVolume =
-      updateDto.nfuFillVolume || application.nfuFillVolume;
+      updateDto.nfuFillVolume !== undefined
+        ? updateDto.nfuFillVolume
+        : application.nfuFillVolume;
     application.nfuProjectDurationUnit =
-      updateDto.nfuProjectDurationUnit || application.nfuProjectDurationUnit;
+      updateDto.nfuProjectDurationUnit !== undefined
+        ? updateDto.nfuProjectDurationUnit
+        : application.nfuProjectDurationUnit;
     application.nfuProjectDurationAmount =
-      updateDto.nfuProjectDurationAmount ||
-      application.nfuProjectDurationAmount;
+      updateDto.nfuProjectDurationAmount !== undefined
+        ? updateDto.nfuProjectDurationAmount
+        : application.nfuProjectDurationAmount;
     application.nfuFillTypeDescription =
-      updateDto.nfuFillTypeDescription || application.nfuFillTypeDescription;
+      updateDto.nfuFillTypeDescription !== undefined
+        ? updateDto.nfuFillTypeDescription
+        : application.nfuFillTypeDescription;
     application.nfuFillOriginDescription =
-      updateDto.nfuFillOriginDescription ||
-      application.nfuFillOriginDescription;
+      updateDto.nfuFillOriginDescription !== undefined
+        ? updateDto.nfuFillOriginDescription
+        : application.nfuFillOriginDescription;
 
     return application;
   }
@@ -691,6 +707,143 @@ export class ApplicationSubmissionService {
       );
       await this.applicationDocumentService.deleteByType(
         DOCUMENT_TYPE.HOMESITE_SEVERANCE,
+        applicationUuid,
+      );
+    }
+  }
+
+  private async setSoilFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.soilIsNOIFollowUp = filterUndefined(
+      updateDto.soilIsNOIFollowUp,
+      applicationSubmission.soilIsNOIFollowUp,
+    );
+    applicationSubmission.soilNOIIDs = filterUndefined(
+      updateDto.soilNOIIDs,
+      applicationSubmission.soilNOIIDs,
+    );
+    applicationSubmission.soilHasPreviousALCAuthorization = filterUndefined(
+      updateDto.soilHasPreviousALCAuthorization,
+      applicationSubmission.soilHasPreviousALCAuthorization,
+    );
+    applicationSubmission.soilApplicationIDs = filterUndefined(
+      updateDto.soilApplicationIDs,
+      applicationSubmission.soilApplicationIDs,
+    );
+    applicationSubmission.soilPurpose = filterUndefined(
+      updateDto.soilPurpose,
+      applicationSubmission.soilPurpose,
+    );
+    applicationSubmission.soilTypeRemoved = filterUndefined(
+      updateDto.soilTypeRemoved,
+      applicationSubmission.soilTypeRemoved,
+    );
+    applicationSubmission.soilReduceNegativeImpacts = filterUndefined(
+      updateDto.soilReduceNegativeImpacts,
+      applicationSubmission.soilReduceNegativeImpacts,
+    );
+    applicationSubmission.soilToRemoveVolume = filterUndefined(
+      updateDto.soilToRemoveVolume,
+      applicationSubmission.soilToRemoveVolume,
+    );
+    applicationSubmission.soilToRemoveArea = filterUndefined(
+      updateDto.soilToRemoveArea,
+      applicationSubmission.soilToRemoveArea,
+    );
+    applicationSubmission.soilToRemoveMaximumDepth = filterUndefined(
+      updateDto.soilToRemoveMaximumDepth,
+      applicationSubmission.soilToRemoveMaximumDepth,
+    );
+    applicationSubmission.soilToRemoveAverageDepth = filterUndefined(
+      updateDto.soilToRemoveAverageDepth,
+      applicationSubmission.soilToRemoveAverageDepth,
+    );
+    applicationSubmission.soilAlreadyRemovedVolume = filterUndefined(
+      updateDto.soilAlreadyRemovedVolume,
+      applicationSubmission.soilAlreadyRemovedVolume,
+    );
+    applicationSubmission.soilAlreadyRemovedArea = filterUndefined(
+      updateDto.soilAlreadyRemovedArea,
+      applicationSubmission.soilAlreadyRemovedArea,
+    );
+    applicationSubmission.soilAlreadyRemovedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedMaximumDepth,
+      applicationSubmission.soilAlreadyRemovedMaximumDepth,
+    );
+    applicationSubmission.soilAlreadyRemovedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedAverageDepth,
+      applicationSubmission.soilAlreadyRemovedAverageDepth,
+    );
+    applicationSubmission.soilToPlaceVolume = filterUndefined(
+      updateDto.soilToPlaceVolume,
+      applicationSubmission.soilToPlaceVolume,
+    );
+    applicationSubmission.soilToPlaceArea = filterUndefined(
+      updateDto.soilToPlaceArea,
+      applicationSubmission.soilToPlaceArea,
+    );
+    applicationSubmission.soilToPlaceMaximumDepth = filterUndefined(
+      updateDto.soilToPlaceMaximumDepth,
+      applicationSubmission.soilToPlaceMaximumDepth,
+    );
+    applicationSubmission.soilToPlaceAverageDepth = filterUndefined(
+      updateDto.soilToPlaceAverageDepth,
+      applicationSubmission.soilToPlaceAverageDepth,
+    );
+    applicationSubmission.soilAlreadyPlacedVolume = filterUndefined(
+      updateDto.soilAlreadyPlacedVolume,
+      applicationSubmission.soilAlreadyPlacedVolume,
+    );
+    applicationSubmission.soilAlreadyPlacedArea = filterUndefined(
+      updateDto.soilAlreadyPlacedArea,
+      applicationSubmission.soilAlreadyPlacedArea,
+    );
+    applicationSubmission.soilAlreadyPlacedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedMaximumDepth,
+      applicationSubmission.soilAlreadyPlacedMaximumDepth,
+    );
+    applicationSubmission.soilAlreadyPlacedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedAverageDepth,
+      applicationSubmission.soilAlreadyPlacedAverageDepth,
+    );
+    applicationSubmission.soilProjectDurationAmount = filterUndefined(
+      updateDto.soilProjectDurationAmount,
+      applicationSubmission.soilProjectDurationAmount,
+    );
+    applicationSubmission.soilProjectDurationUnit = filterUndefined(
+      updateDto.soilProjectDurationUnit,
+      applicationSubmission.soilProjectDurationUnit,
+    );
+    applicationSubmission.soilFillTypeToPlace = filterUndefined(
+      updateDto.soilFillTypeToPlace,
+      applicationSubmission.soilFillTypeToPlace,
+    );
+    applicationSubmission.soilAlternativeMeasures = filterUndefined(
+      updateDto.soilAlternativeMeasures,
+      applicationSubmission.soilAlternativeMeasures,
+    );
+
+    applicationSubmission.soilIsExtractionOrMining = filterUndefined(
+      updateDto.soilIsExtractionOrMining,
+      applicationSubmission.soilIsExtractionOrMining,
+    );
+
+    applicationSubmission.soilHasSubmittedNotice = filterUndefined(
+      updateDto.soilHasSubmittedNotice,
+      applicationSubmission.soilHasSubmittedNotice,
+    );
+
+    if (
+      updateDto.soilHasSubmittedNotice === false ||
+      updateDto.soilIsExtractionOrMining === false
+    ) {
+      const applicationUuid = await this.applicationService.getUuid(
+        applicationSubmission.fileNumber,
+      );
+      await this.applicationDocumentService.deleteByType(
+        DOCUMENT_TYPE.NOTICE_OF_WORK,
         applicationUuid,
       );
     }

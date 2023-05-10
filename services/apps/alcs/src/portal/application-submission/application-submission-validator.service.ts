@@ -54,19 +54,19 @@ export class ApplicationSubmissionValidatorService {
       errors,
     );
 
-    const applicationDocuments =
+    const applicantDocuments =
       await this.appDocumentService.getApplicantDocuments(
         applicationSubmission.fileNumber,
       );
 
     const validatedPrimaryContact = await this.validatePrimaryContact(
       applicationSubmission,
-      applicationDocuments,
+      applicantDocuments,
       errors,
     );
     await this.validateLocalGovernment(applicationSubmission, errors);
     await this.validateLandUse(applicationSubmission, errors);
-    await this.validateOptionalDocuments(applicationDocuments, errors);
+    await this.validateOptionalDocuments(applicantDocuments, errors);
 
     if (applicationSubmission.typeCode === 'NFUP') {
       await this.validateNfuProposal(applicationSubmission, errors);
@@ -77,7 +77,38 @@ export class ApplicationSubmissionValidatorService {
     if (applicationSubmission.typeCode === 'SUBD') {
       await this.validateSubdProposal(
         applicationSubmission,
-        applicationDocuments,
+        applicantDocuments,
+        errors,
+      );
+    }
+    if (applicationSubmission.typeCode === 'ROSO') {
+      await this.validateRosoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+    if (applicationSubmission.typeCode === 'POFO') {
+      await this.validatePofoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+    if (applicationSubmission.typeCode === 'PFRS') {
+      await this.validatePofoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+      await this.validateRosoProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+      await this.validatePfrsProposal(
+        applicationSubmission,
+        applicantDocuments,
         errors,
       );
     }
@@ -103,18 +134,18 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateParcels(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
   ) {
     const parcels = await this.appParcelService.fetchByApplicationFileId(
-      application.fileNumber,
+      applicationSubmission.fileNumber,
     );
 
     if (parcels.length === 0) {
       errors.push(new ServiceValidationException(`Application has no parcels`));
     }
 
-    if (application.hasOtherParcelsInCommunity === null) {
+    if (applicationSubmission.hasOtherParcelsInCommunity === null) {
       errors.push(
         new ServiceValidationException(`Not answered has Other Parcels`),
       );
@@ -248,14 +279,14 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateLocalGovernment(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
   ) {
     const localGovernments = await this.localGovernmentService.list();
     const matchingLg = localGovernments.find(
-      (lg) => lg.uuid === application.localGovernmentUuid,
+      (lg) => lg.uuid === applicationSubmission.localGovernmentUuid,
     );
-    if (!application.localGovernmentUuid) {
+    if (!applicationSubmission.localGovernmentUuid) {
       errors.push(
         new ServiceValidationException('Application has no local government'),
       );
@@ -280,26 +311,26 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateLandUse(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
   ) {
     if (
-      !application.parcelsAgricultureDescription ||
-      !application.parcelsAgricultureImprovementDescription ||
-      !application.parcelsNonAgricultureUseDescription
+      !applicationSubmission.parcelsAgricultureDescription ||
+      !applicationSubmission.parcelsAgricultureImprovementDescription ||
+      !applicationSubmission.parcelsNonAgricultureUseDescription
     ) {
       errors.push(new ServiceValidationException(`Invalid Parcel Description`));
     }
 
     if (
-      !application.northLandUseType ||
-      !application.northLandUseTypeDescription ||
-      !application.eastLandUseType ||
-      !application.eastLandUseTypeDescription ||
-      !application.southLandUseType ||
-      !application.southLandUseTypeDescription ||
-      !application.westLandUseType ||
-      !application.westLandUseTypeDescription
+      !applicationSubmission.northLandUseType ||
+      !applicationSubmission.northLandUseTypeDescription ||
+      !applicationSubmission.eastLandUseType ||
+      !applicationSubmission.eastLandUseTypeDescription ||
+      !applicationSubmission.southLandUseType ||
+      !applicationSubmission.southLandUseTypeDescription ||
+      !applicationSubmission.westLandUseType ||
+      !applicationSubmission.westLandUseTypeDescription
     ) {
       errors.push(new ServiceValidationException(`Invalid Adjacent Parcels`));
     }
@@ -339,28 +370,28 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateNfuProposal(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
   ) {
     if (
-      !application.nfuHectares ||
-      !application.nfuPurpose ||
-      !application.nfuOutsideLands ||
-      !application.nfuAgricultureSupport ||
-      application.nfuWillImportFill === null
+      !applicationSubmission.nfuHectares ||
+      !applicationSubmission.nfuPurpose ||
+      !applicationSubmission.nfuOutsideLands ||
+      !applicationSubmission.nfuAgricultureSupport ||
+      applicationSubmission.nfuWillImportFill === null
     ) {
       errors.push(new ServiceValidationException(`NFU Proposal incomplete`));
     }
 
-    if (application.nfuWillImportFill) {
+    if (applicationSubmission.nfuWillImportFill) {
       if (
-        !application.nfuFillTypeDescription ||
-        !application.nfuFillOriginDescription ||
-        application.nfuTotalFillPlacement === null ||
-        application.nfuMaxFillDepth === null ||
-        application.nfuFillVolume === null ||
-        application.nfuProjectDurationAmount === null ||
-        !application.nfuProjectDurationUnit
+        !applicationSubmission.nfuFillTypeDescription ||
+        !applicationSubmission.nfuFillOriginDescription ||
+        applicationSubmission.nfuTotalFillPlacement === null ||
+        applicationSubmission.nfuMaxFillDepth === null ||
+        applicationSubmission.nfuFillVolume === null ||
+        applicationSubmission.nfuProjectDurationAmount === null ||
+        !applicationSubmission.nfuProjectDurationUnit
       ) {
         errors.push(
           new ServiceValidationException(`NFU Fill Section incomplete`),
@@ -370,16 +401,16 @@ export class ApplicationSubmissionValidatorService {
   }
 
   private async validateTurProposal(
-    application: ApplicationSubmission,
+    applicationSubmission: ApplicationSubmission,
     errors: Error[],
   ) {
     if (
-      !application.turPurpose ||
-      !application.turOutsideLands ||
-      !application.turAgriculturalActivities ||
-      !application.turReduceNegativeImpacts ||
-      application.turTotalCorridorArea === null ||
-      !application.turAllOwnersNotified
+      !applicationSubmission.turPurpose ||
+      !applicationSubmission.turOutsideLands ||
+      !applicationSubmission.turAgriculturalActivities ||
+      !applicationSubmission.turReduceNegativeImpacts ||
+      applicationSubmission.turTotalCorridorArea === null ||
+      !applicationSubmission.turAllOwnersNotified
     ) {
       errors.push(new ServiceValidationException(`TUR Proposal incomplete`));
     }
@@ -424,6 +455,203 @@ export class ApplicationSubmissionValidatorService {
           ),
         );
       }
+    }
+  }
+
+  private async validateRosoProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.soilPurpose === null ||
+      applicationSubmission.soilTypeRemoved === null ||
+      applicationSubmission.soilReduceNegativeImpacts === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal incomplete`,
+        ),
+      );
+    }
+
+    if (
+      applicationSubmission.soilTypeRemoved === null ||
+      applicationSubmission.soilToRemoveVolume === null ||
+      applicationSubmission.soilToRemoveArea === null ||
+      applicationSubmission.soilToRemoveMaximumDepth === null ||
+      applicationSubmission.soilToRemoveAverageDepth === null ||
+      applicationSubmission.soilAlreadyRemovedVolume === null ||
+      applicationSubmission.soilAlreadyRemovedArea === null ||
+      applicationSubmission.soilAlreadyRemovedMaximumDepth === null ||
+      applicationSubmission.soilAlreadyRemovedAverageDepth === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Soil Table Incomplete`,
+        ),
+      );
+    }
+    this.runSharedSoilValidation(
+      applicationSubmission,
+      errors,
+      applicantDocuments,
+    );
+  }
+
+  private async validatePofoProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.soilPurpose === null ||
+      applicationSubmission.soilFillTypeToPlace === null ||
+      applicationSubmission.soilAlternativeMeasures === null ||
+      applicationSubmission.soilReduceNegativeImpacts === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal incomplete`,
+        ),
+      );
+    }
+
+    this.runSharedSoilValidation(
+      applicationSubmission,
+      errors,
+      applicantDocuments,
+    );
+
+    if (
+      applicationSubmission.soilToPlaceVolume === null ||
+      applicationSubmission.soilToPlaceArea === null ||
+      applicationSubmission.soilToPlaceMaximumDepth === null ||
+      applicationSubmission.soilToPlaceAverageDepth === null ||
+      applicationSubmission.soilAlreadyPlacedVolume === null ||
+      applicationSubmission.soilAlreadyPlacedArea === null ||
+      applicationSubmission.soilAlreadyPlacedMaximumDepth === null ||
+      applicationSubmission.soilAlreadyPlacedAverageDepth === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Soil Table Incomplete`,
+        ),
+      );
+    }
+    this.runSharedSoilValidation(
+      applicationSubmission,
+      errors,
+      applicantDocuments,
+    );
+  }
+
+  private runSharedSoilValidation(
+    applicationSubmission: ApplicationSubmission,
+    errors: Error[],
+    applicantDocuments: ApplicationDocument[],
+  ) {
+    if (
+      applicationSubmission.soilIsNOIFollowUp === null ||
+      applicationSubmission.soilHasPreviousALCAuthorization === null ||
+      !applicationSubmission.soilPurpose ||
+      applicationSubmission.soilReduceNegativeImpacts === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal incomplete`,
+        ),
+      );
+    }
+
+    if (
+      applicationSubmission.soilIsNOIFollowUp &&
+      !applicationSubmission.soilNOIIDs
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal missing NOI IDs`,
+        ),
+      );
+    }
+
+    if (
+      applicationSubmission.soilHasPreviousALCAuthorization &&
+      !applicationSubmission.soilApplicationIDs
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} Proposal missing Application IDs`,
+        ),
+      );
+    }
+
+    const proposalMaps = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMaps.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing Proposal Map / Site Plan`,
+        ),
+      );
+    }
+
+    const crossSections = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.CROSS_SECTIONS,
+    );
+    if (crossSections.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing Cross Section Diagrams`,
+        ),
+      );
+    }
+
+    const reclamationPlans = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.RECLAMATION_PLAN,
+    );
+    if (reclamationPlans.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing Reclamation Plans`,
+        ),
+      );
+    }
+  }
+
+  private async validatePfrsProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicationDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (applicationSubmission.soilIsExtractionOrMining === null) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing extraction/mining answer`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.soilIsExtractionOrMining) {
+      if (applicationSubmission.soilHasSubmittedNotice === null) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal missing notice submitted answer`,
+          ),
+        );
+      }
+    }
+
+    const noticeOfWork = applicationDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
+    );
+    if (noticeOfWork.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,
+        ),
+      );
     }
   }
 }

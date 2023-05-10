@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FileSizePipe implements PipeTransform {
   transform(size: number, extension: string = 'MB') {
-    return (size / (1024 * 1024)).toFixed(2) + extension;
+    const fileSize = Math.round((size / (1024 * 1024)) * 100) / 100;
+    return Math.max(fileSize, 0.01) + extension;
   }
 }

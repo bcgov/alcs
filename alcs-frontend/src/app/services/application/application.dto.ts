@@ -4,6 +4,16 @@ import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
+export enum APPLICATION_SYSTEM_SOURCE_TYPES {
+  APPLICANT = 'APPLICANT',
+  ALCS = 'ALCS',
+}
+
+export enum PARCEL_OWNERSHIP_TYPE {
+  FEE_SIMPLE = 'SMPL',
+  CROWN = 'CRWN',
+}
+
 export interface StatusHistory {
   type: 'status_change';
   label: string;
@@ -130,6 +140,37 @@ export interface ApplicationSubmissionDto {
   subdAgricultureSupport?: string;
   subdIsHomeSiteSeverance?: boolean;
   subdProposedLots: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp?: boolean | null;
+  soilNOIIDs?: string | null;
+  soilHasPreviousALCAuthorization?: boolean | null;
+  soilApplicationIDs?: string | null;
+  soilPurpose?: string | null;
+  soilTypeRemoved?: string | null;
+  soilReduceNegativeImpacts?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+  soilAlreadyRemovedVolume?: number | null;
+  soilAlreadyRemovedArea?: number | null;
+  soilAlreadyRemovedMaximumDepth?: number | null;
+  soilAlreadyRemovedAverageDepth?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+  soilAlreadyPlacedVolume?: number | null;
+  soilAlreadyPlacedArea?: number | null;
+  soilAlreadyPlacedMaximumDepth?: number | null;
+  soilAlreadyPlacedAverageDepth?: number | null;
+  soilProjectDurationAmount?: number | null;
+  soilProjectDurationUnit?: string;
+  soilFillTypeToPlace?: string;
+  soilAlternativeMeasures?: string;
+  soilIsExtractionOrMining?: boolean;
+  soilHasSubmittedNotice?: boolean;
 }
 
 export interface ApplicationDto {

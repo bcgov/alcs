@@ -3,16 +3,6 @@
     <h6 *ngIf="applicationSubmission">
       Application ID: {{ applicationSubmission.fileNumber }} | {{ applicationSubmission.type }}
     </h6>
-    <div class="header-btn-wrapper">
-      <button
-        *ngIf="applicationSubmission?.fileNumber && cdkStepper.selectedIndex === editAppSteps.ReviewAndSubmit"
-        mat-flat-button
-        color="primary"
-        (click)="onDownloadPdf(applicationSubmission?.fileNumber)"
-      >
-        Download PDF
-      </button>
-    </div>
   </div>
 </ng-template>
 
@@ -112,6 +102,30 @@
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-subd-proposal>
+      <app-roso-proposal
+        *ngIf="applicationSubmission.typeCode === 'ROSO'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-roso-proposal>
+      <app-pofo-proposal
+        *ngIf="applicationSubmission.typeCode === 'POFO'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-pofo-proposal>
+      <app-pfrs-proposal
+        *ngIf="applicationSubmission.typeCode === 'PFRS'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-pfrs-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
@@ -134,10 +148,10 @@
         [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [updatedFields]="updatedFields"
-        [originalSubmissionUuid]='originalSubmissionUuid'
+        [originalSubmissionUuid]="originalSubmissionUuid"
         [draftMode]="true"
         (exit)="onExit()"
-        (submit)='onSubmit()'
+        (submit)="onSubmit()"
       ></app-review-and-submit>
     </div>
   </cdk-step>

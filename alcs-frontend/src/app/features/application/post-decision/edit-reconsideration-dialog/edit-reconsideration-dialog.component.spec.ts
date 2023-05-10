@@ -1,8 +1,8 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDecisionService } from '../../../../services/application/application-decision/application-decision.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
+import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialog.component';

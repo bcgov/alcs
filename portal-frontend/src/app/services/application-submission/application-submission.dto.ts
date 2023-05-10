@@ -10,6 +10,8 @@ export enum APPLICATION_STATUS {
   INCOMPLETE = 'INCM',
   WRONG_GOV = 'WRNG',
   CANCELLED = 'CANC',
+  ALC_DECISION = 'ALCD',
+  CEO_DECISION = 'CEOD',
 }
 
 export interface ApplicationStatusDto extends BaseCodeDto {
@@ -83,6 +85,37 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
   subdProposedLots: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp: boolean | null;
+  soilNOIIDs: string | null;
+  soilHasPreviousALCAuthorization: boolean | null;
+  soilApplicationIDs: string | null;
+  soilPurpose: string | null;
+  soilTypeRemoved: string | null;
+  soilReduceNegativeImpacts: string | null;
+  soilToRemoveVolume: number | null;
+  soilToRemoveArea: number | null;
+  soilToRemoveMaximumDepth: number | null;
+  soilToRemoveAverageDepth: number | null;
+  soilAlreadyRemovedVolume: number | null;
+  soilAlreadyRemovedArea: number | null;
+  soilAlreadyRemovedMaximumDepth: number | null;
+  soilAlreadyRemovedAverageDepth: number | null;
+  soilToPlaceVolume: number | null;
+  soilToPlaceArea: number | null;
+  soilToPlaceMaximumDepth: number | null;
+  soilToPlaceAverageDepth: number | null;
+  soilAlreadyPlacedVolume: number | null;
+  soilAlreadyPlacedArea: number | null;
+  soilAlreadyPlacedMaximumDepth: number | null;
+  soilAlreadyPlacedAverageDepth: number | null;
+  soilProjectDurationAmount: number | null;
+  soilProjectDurationUnit: string | null;
+  soilFillTypeToPlace: string | null;
+  soilAlternativeMeasures: string | null;
+  soilIsExtractionOrMining: boolean;
+  soilHasSubmittedNotice: boolean;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -133,4 +166,35 @@ export interface ApplicationSubmissionUpdateDto {
   subdAgricultureSupport?: string | null;
   subdIsHomeSiteSeverance?: boolean | null;
   subdProposedLots?: ProposedLot[];
+
+  //Soil Fields
+  soilIsNOIFollowUp?: boolean | null;
+  soilNOIIDs?: string | null;
+  soilHasPreviousALCAuthorization?: boolean | null;
+  soilApplicationIDs?: string | null;
+  soilPurpose?: string | null;
+  soilTypeRemoved?: string | null;
+  soilReduceNegativeImpacts?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+  soilAlreadyRemovedVolume?: number | null;
+  soilAlreadyRemovedArea?: number | null;
+  soilAlreadyRemovedMaximumDepth?: number | null;
+  soilAlreadyRemovedAverageDepth?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+  soilAlreadyPlacedVolume?: number | null;
+  soilAlreadyPlacedArea?: number | null;
+  soilAlreadyPlacedMaximumDepth?: number | null;
+  soilAlreadyPlacedAverageDepth?: number | null;
+  soilProjectDurationAmount?: number | null;
+  soilProjectDurationUnit?: string | null;
+  soilFillTypeToPlace?: string | null;
+  soilAlternativeMeasures?: string | null;
+  soilIsExtractionOrMining?: boolean | null;
+  soilHasSubmittedNotice?: boolean | null;
 }

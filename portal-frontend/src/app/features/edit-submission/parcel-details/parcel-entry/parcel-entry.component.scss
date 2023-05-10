@@ -84,3 +84,13 @@
     margin-left: rem(16);
   }
 }
+
+mat-button-toggle-group#isFarm {
+  height: rem(55);
+
+  .mat-button-toggle {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}

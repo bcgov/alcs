@@ -7,6 +7,7 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
+import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
@@ -43,7 +44,8 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -213,5 +215,11 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
 
   onNavigateToStep(step: number) {
     this.router.navigateByUrl(`application/${this.fileId}/review/${step}?errors=t`);
+  }
+
+  async onDownloadPdf() {
+    if (this.fileId) {
+      await this.pdfGenerationService.generateReview(this.fileId);
+    }
   }
 }

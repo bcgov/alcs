@@ -8,6 +8,7 @@ import { ApplicationSubtaskProfile } from '../../common/automapper/application-s
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
+import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
@@ -52,6 +53,7 @@ import { ApplicationService } from './application.service';
       ApplicationSubmission,
       ApplicationSubmissionReview,
       ApplicationStaffJournal,
+      ApplicationStatus,
     ]),
     NotificationModule,
     DocumentModule,

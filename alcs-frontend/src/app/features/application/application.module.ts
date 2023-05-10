@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MtxNativeDatetimeModule, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
-import { InlineDatepickerComponent } from '../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../shared/shared.module';
 import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { DATE_FORMATS } from '../../shared/utils/date-format';
@@ -14,9 +13,8 @@ import { ApplicationDetailsModule } from './applicant-info/application-details/a
 import { ApplicationMeetingDialogComponent } from './application-meeting/application-meeting-dialog/application-meeting-dialog.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { CreateApplicationMeetingDialogComponent } from './application-meeting/create-application-meeting-dialog/create-application-meeting-dialog.component';
-import { ApplicationComponent, childRoutes } from './application.component';
-import { DecisionDialogComponent } from './decision/decision-dialog/decision-dialog.component';
-import { DecisionComponent } from './decision/decision.component';
+import { appChildRoutes, ApplicationComponent } from './application.component';
+import { DecisionModule } from './decision/decision.module';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { DocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -34,15 +32,15 @@ import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
-import { StaffJournalComponent } from './staff-journal/staff-journal.component';
-import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
 import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
 
 const routes: Routes = [
   {
     path: ':fileNumber',
     component: ApplicationComponent,
-    children: childRoutes,
+    children: appChildRoutes,
   },
 ];
 
@@ -61,15 +59,12 @@ const routes: Routes = [
     DecisionMeetingDialogComponent,
     DecisionMeetingComponent,
     IntakeComponent,
-    InlineDatepickerComponent,
     ApplicationMeetingComponent,
     ApplicationMeetingDialogComponent,
     CreateApplicationMeetingDialogComponent,
-    DecisionComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
     TimelineComponent,
-    DecisionDialogComponent,
     PostDecisionComponent,
     InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
@@ -93,6 +88,7 @@ const routes: Routes = [
     MatCheckboxModule,
     ApplicationDetailsModule,
     MatSortModule,
+    DecisionModule,
   ],
 })
 export class ApplicationModule {}

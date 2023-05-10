@@ -6,3 +6,7 @@
   padding: rem(4);
   margin-bottom: rem(12) !important;
 }
+
+:host::ng-deep a {
+  font-size: rem(12);
+}

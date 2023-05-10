@@ -2,15 +2,23 @@
   <h2>Other Parcels in the Community</h2>
   <div class="step-description">
     <div>
-      Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
-      application are located and owned by the following owners:
+      <p>
+        Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
+        application are located and owned by the following owners:
+      </p>
       <ul>
+        <li *ngIf="owners.length === 0">No owners found</li>
         <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
       </ul>
+      <p>*All fields are required unless stated optional.</p>
+      <div class="step-documents">
+        <h6>Documents needed for this step:</h6>
+        <ul>
+          <li>Certificate of Title (if applicable)</li>
+        </ul>
+      </div>
     </div>
   </div>
-
-  <p>All fields are required unless stated optional.</p>
 
   <p *ngIf="hasCrownLandParcels">
     For applications involving Crown Land, it is not required to indicate other parcel(s) owned by the Crown.<br />
@@ -21,8 +29,10 @@
   <form [formGroup]="otherParcelsForm" class="other-parcels-form">
     <div class="full-row">
       <div for="hasOtherParcelsInCommunity">
-        Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
-        the <b>community</b> where the application parcel(s) is located?
+        <b>
+          Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
+          the <em>community</em> where the application parcel(s) is located?
+        </b>
       </div>
       <mat-button-toggle-group
         class="input"
@@ -65,13 +75,13 @@
         [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
       >
         <mat-expansion-panel-header>
-          <mat-panel-title> Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>
+          <mat-panel-title> Other Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>
         </mat-expansion-panel-header>
         <app-parcel-entry
           [parcel]="parcel"
           [$owners]="$owners"
           [fileId]="fileId"
-          [submissionUuid]='submissionUuid'
+          [submissionUuid]="submissionUuid"
           [enableOwners]="true"
           [enableCertificateOfTitleUpload]="false"
           [enableUserSignOff]="false"
@@ -89,7 +99,7 @@
               (click)="onSave()"
               [disabled]="formDisabled"
             >
-              Save Parcel #{{ parcelInd + 1 }} Details
+              Save Parcel {{ getLetterIndex(parcelInd) }} Details
             </button>
             <button
               class="margin-top-1-half"
@@ -98,7 +108,7 @@
               color="accent"
               (click)="onDelete(parcel.uuid, parcelInd + 1)"
             >
-              Delete Parcel #{{ parcelInd + 1 }} Details
+              Delete Parcel {{ getLetterIndex(parcelInd) }} Details
             </button>
           </div>
         </div>

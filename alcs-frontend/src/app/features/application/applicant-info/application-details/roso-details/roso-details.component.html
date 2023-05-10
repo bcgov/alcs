@@ -1,0 +1,111 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    Are you submitting this application as a follow-up to an ALC Notice of Intent (NOI)?
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilIsNOIFollowUp ? 'Yes' : 'No' }}
+  </div>
+  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="subheading2 grid-1">Notice of Intent (NOI) ID</div>
+  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="grid-double">
+    {{ _applicationSubmission.soilNOIIDs }}
+  </div>
+  <div class="subheading2 grid-1">Does this proposal have previous ALC authorization?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilHasPreviousALCAuthorization ? 'Yes' : 'No' }}
+  </div>
+  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="subheading2 grid-1">Application ID</div>
+  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="grid-double">
+    {{ _applicationSubmission.soilApplicationIDs }}
+  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    <span>{{ _applicationSubmission.soilPurpose }}</span>
+  </div>
+
+  <div class="subheading1 full-width">Soil to be Removed</div>
+  <div class="full-width soil-table">
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilToRemoveVolume }}
+      <span *ngIf="_applicationSubmission.soilToRemoveVolume">m<sup>3</sup></span>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilToRemoveArea }} <span *ngIf="_applicationSubmission.soilToRemoveArea">ha</span>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilToRemoveMaximumDepth }}
+      <span *ngIf="_applicationSubmission.soilToRemoveMaximumDepth">m</span>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilToRemoveAverageDepth }}
+      <span *ngIf="_applicationSubmission.soilToRemoveAverageDepth">m</span>
+    </div>
+  </div>
+
+  <div class="subheading1 full-width">Soil already Removed</div>
+  <div class="full-width soil-table">
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilAlreadyRemovedVolume }}
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedVolume">m<sup>3</sup></span>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilAlreadyRemovedArea }}
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea">ha</span>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilAlreadyRemovedMaximumDepth }}
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedMaximumDepth">m</span>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ _applicationSubmission.soilAlreadyRemovedAverageDepth }}
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedAverageDepth">m</span>
+    </div>
+  </div>
+
+  <div class="full-width">
+    <span class="subheading1">Project Duration</span>
+  </div>
+  <div class="subheading2 grid-1">Duration</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilProjectDurationUnit }}
+  </div>
+  <div class="subheading2 grid-1">Length</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.soilProjectDurationAmount }}
+  </div>
+
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+  <div class="grid-double">
+    <span>{{ _applicationSubmission.soilTypeRemoved }}</span>
+  </div>
+  <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+  <div class="grid-double">
+    <span>{{ _applicationSubmission.soilReduceNegativeImpacts }}</span>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
+  </div>
+  <div class="subheading2 grid-1">Cross Sections</div>
+  <div class="grid-double">
+    <a *ngFor="let file of crossSections" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
+  </div>
+  <div class="subheading2 grid-1">Reclamation Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
+  </div>
+</div>

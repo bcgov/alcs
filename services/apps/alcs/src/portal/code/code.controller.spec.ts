@@ -60,7 +60,7 @@ describe('CodeController', () => {
 
     portalController = app.get<CodeController>(CodeController);
 
-    mockLgService.list.mockResolvedValue([
+    mockLgService.listActive.mockResolvedValue([
       new ApplicationLocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
