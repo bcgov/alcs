@@ -6,13 +6,17 @@
 }
 
 .desktop-file-drag-drop {
-  border: 0.2rem dashed rgba(colors.$grey-dark, 0.5);
-  border-radius: 0.4rem;
-  width: 100%;
   display: none;
+  margin-top: rem(5);
+  width: 100%;
+  border-radius: rem(4);
+
+  &:hover {
+    background: #f9f9f9 !important;
+  }
 }
 
-.desktop-file-drag-drop[ng-reflect-disabled="true"] {
+.desktop-file-drag-drop[ng-reflect-disabled='true'] {
   background-color: #cbc9c9 !important;
 }
 
@@ -27,15 +31,13 @@ a {
 }
 
 .icon {
-  font-size: 8rem;
-  line-height: 8rem;
-  color: colors.$grey-dark;
+  font-size: 3rem;
+  color: colors.$grey;
 }
 
 .drag-text {
   color: colors.$grey-dark;
-  font-size: 1.6rem;
-  font-weight: bold;
+  font-size: 1.2rem;
   margin-top: 1rem;
 }
 
@@ -43,30 +45,41 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem 2rem 2rem;
 }
 
 .uploaded-file {
-  border: 1px solid colors.$black;
+  border: 1px solid colors.$grey;
   border-radius: rem(4);
-  padding: rem(8);
+  padding: rem(8) rem(16);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   flex-wrap: wrap;
+  margin-top: rem(5);
   margin-bottom: rem(8);
+
+  &:hover {
+    border-color: colors.$black;
+  }
 
   &.error {
     border: 2px solid colors.$error-color;
   }
 
-  .file-name {
+  .file-size-cta-container {
+    align-items: center;
     display: flex;
     justify-content: space-between;
-    width: 100%;
+    margin-top: rem(4);
   }
 
-  button {
-    margin-top: rem(6);
+  .file-size {
+    color: colors.$grey-dark;
+    display: flex;
+  }
+
+  .file-size-parentheses {
+    display: none;
   }
 }
 
@@ -87,15 +100,22 @@ a {
   .mobile-file-drag-drop {
     display: none;
   }
-  .uploaded-file {
-    display: flex;
-    justify-content: space-between;
 
-    .file-name {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      width: unset;
+  .file-name {
+    margin-right: rem(8) !important;
+  }
+
+  .uploaded-file {
+    align-items: center;
+    flex-direction: row;
+
+    .file-size-cta-container {
+      flex-grow: 2;
+      margin-top: unset;
+    }
+
+    .file-size-parentheses {
+      display: block;
     }
   }
 }
