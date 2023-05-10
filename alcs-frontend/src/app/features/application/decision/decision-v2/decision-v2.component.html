@@ -2,13 +2,12 @@
   <h3>Decision</h3>
   <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
     <button
-      [disabled]="isPaused"
+      [disabled]="isPaused || isDraftExists"
       mat-flat-button
       color="primary"
       [routerLink]="createDecision.path ? createDecision.path : './'"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: false }"
-      [disabled]="isDraftExists"
     >
       + Create Draft Decision
     </button>

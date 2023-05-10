@@ -1,7 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_TYPE,
@@ -14,9 +13,7 @@ import { ApplicationDecisionV2Service } from '../../../../../../services/applica
   templateUrl: './decision-document-upload-dialog.component.html',
   styleUrls: ['./decision-document-upload-dialog.component.scss'],
 })
-export class DecisionDocumentUploadDialogComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
-
+export class DecisionDocumentUploadDialogComponent implements OnInit {
   title = 'Create';
   isDirty = false;
   isSaving = false;
@@ -71,7 +68,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit, OnDestroy 
       const renamedFile = new File([file], this.name.getRawValue() ?? file.name);
       this.isSaving = true;
       if (this.data.existingDocument) {
-        debugger;
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
       }
       await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
@@ -79,11 +75,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit, OnDestroy 
       this.dialog.close(true);
       this.isSaving = false;
     }
-  }
-
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
   }
 
   uploadFile(event: Event) {
