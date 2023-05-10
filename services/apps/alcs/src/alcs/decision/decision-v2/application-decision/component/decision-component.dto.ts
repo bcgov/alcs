@@ -7,6 +7,10 @@ export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 export class UpdateApplicationDecisionComponentDto {
   @IsOptional()
   @IsString()
+  alrArea?: number;
+
+  @IsOptional()
+  @IsString()
   agCap?: string;
 
   @IsOptional()
@@ -43,6 +47,9 @@ export class CreateApplicationDecisionComponentDto extends UpdateApplicationDeci
 export class ApplicationDecisionComponentDto {
   @AutoMap()
   uuid: string;
+
+  @AutoMap()
+  alrArea?: number;
 
   @AutoMap()
   agCap?: string;

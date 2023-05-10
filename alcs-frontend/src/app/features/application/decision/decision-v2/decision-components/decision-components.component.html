@@ -1,0 +1,33 @@
+<section>
+  <div class="row">
+    <h4>Decision Components</h4>
+  </div>
+
+  <div class="row">
+    <button type="button" [matMenuTriggerFor]="decisionComponentMenu" mat-stroked-button color="primary">
+      ADD Decision component ▾
+    </button>
+  </div>
+
+  <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
+    <button
+      *ngFor="let componentType of decisionComponentTypes"
+      mat-menu-item
+      (click)="onAddNewCondition(componentType.code)"
+      [disabled]="componentType.isDisabled"
+    >
+      <div class="board-menu-item">
+        <span>{{ componentType.label }}</span>
+      </div>
+    </button>
+  </mat-menu>
+
+  <div class="component" *ngFor="let component of components; let index = index; trackBy: trackByFn">
+    <app-decision-component [(data)]="components[index]"></app-decision-component>
+    <div class="row">
+      <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove(index)">
+        Remove Component
+      </button>
+    </div>
+  </div>
+</section>

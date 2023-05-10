@@ -26,6 +26,7 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -40,6 +41,8 @@ export class ApplicationDecisionV2Service {
     private decisionMakerRepository: Repository<DecisionMakerCode>,
     @InjectRepository(CeoCriterionCode)
     private ceoCriterionRepository: Repository<CeoCriterionCode>,
+    @InjectRepository(ApplicationDecisionComponentType)
+    private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
   ) {}
@@ -512,12 +515,14 @@ export class ApplicationDecisionV2Service {
           number: 'ASC',
         },
       }),
+      this.decisionComponentTypeRepository.find(),
     ]);
 
     return {
       outcomes: values[0],
       decisionMakers: values[1],
       ceoCriterion: values[2],
+      decisionComponentTypes: values[3],
     };
   }
 

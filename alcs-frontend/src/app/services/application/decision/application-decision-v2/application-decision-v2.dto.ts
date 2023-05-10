@@ -39,6 +39,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
+  components?: DecisionComponentDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -69,6 +70,7 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
+  components?: DecisionComponentDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -86,6 +88,8 @@ export interface DecisionDocumentDto {
 
 export interface DecisionMakerDto extends BaseCodeDto {}
 
+export interface DecisionComponentTypeDto extends BaseCodeDto {}
+
 export interface CeoCriterionDto extends BaseCodeDto {
   number: number;
 }
@@ -95,3 +99,32 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 }
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
+
+export interface DecisionComponentDto {
+  uuid?: string;
+
+  alrArea?: number;
+
+  agCap?: string;
+
+  agCapSource?: string;
+
+  agCapMap?: string;
+
+  agCapConsultant?: string;
+
+  nfuUseType?: string;
+
+  nfuUseSubType?: string;
+
+  nfuEndDate?: number;
+
+  applicationDecisionComponentTypeCode: string;
+}
+
+export interface DecisionCodesDto {
+  outcomes: DecisionOutcomeCodeDto[];
+  decisionMakers: DecisionMakerDto[];
+  ceoCriterion: CeoCriterionDto[];
+  decisionComponentTypes: DecisionComponentTypeDto[];
+}

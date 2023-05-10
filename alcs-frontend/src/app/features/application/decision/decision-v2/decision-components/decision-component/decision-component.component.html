@@ -1,0 +1,58 @@
+<form [formGroup]="form" class="decision-component-form">
+  <div class="grid-3">
+    <mat-form-field appearance="outline">
+      <mat-label>ALR Area (hectares)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        id="alrArea"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        matInput
+        formControlName="alrArea"
+        required
+      />
+    </mat-form-field>
+
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="agCapOptions"
+        formControlName="agCap"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="AG Cap*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="agCapSourceOptions"
+        formControlName="agCapSource"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="AG Cap Source"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+  </div>
+
+  <div class="grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Ag Cap Map</mat-label>
+      <input matInput id="agCapMap" matInput formControlName="agCapMap" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ag Cap Consultant</mat-label>
+      <input matInput id="agCapConsultant" matInput formControlName="agCapConsultant" />
+    </mat-form-field>
+  </div>
+</form>

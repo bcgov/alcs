@@ -13,6 +13,8 @@ import { DecisionV2DialogComponent } from './decision-v2/decision-v2-dialog/deci
 import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { DecisionComponent } from './decision.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
+import { DecisionComponentComponent } from './decision-v2/decision-components/decision-component/decision-component.component';
+import { DecisionComponentsComponent } from './decision-v2/decision-components/decision-components.component';
 
 export const decisionChildRoutes = [
   {
@@ -45,6 +47,8 @@ export const decisionChildRoutes = [
     DecisionV1DialogComponent,
     InlineDatepickerComponent,
     ReleaseDialogComponent,
+    DecisionComponentComponent,
+    DecisionComponentsComponent,
   ],
   imports: [
     CommonModule,

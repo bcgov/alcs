@@ -198,6 +198,8 @@
       </div>
     </div>
 
+    <app-decision-components *ngIf="codes" [codes]="codes" [fileNumber]="fileNumber" [(components)]="components">
+    </app-decision-components>
     <div class="row">
       <h4>Audit and Chair Review Info</h4>
     </div>
@@ -227,6 +229,7 @@
           <mat-button-toggle value="false">Not Needed</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
+
       <mat-form-field
         *ngIf="form.get('chairReviewRequired')!.value === 'true'"
         appearance="outline"

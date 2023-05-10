@@ -15,6 +15,8 @@ import {
   DecisionOutcomeCodeDto,
 } from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
+import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/decision-component-type.entity';
+import { ApplicationDecisionComponentTypeDto } from '../../alcs/decision/decision-v2/application-decision/component/decision-component.dto';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
 
 @Injectable()
@@ -148,6 +150,11 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
+      createMap(
+        mapper,
+        ApplicationDecisionComponentType,
+        ApplicationDecisionComponentTypeDto,
+      );
       createMap(
         mapper,
         ApplicationDecisionChairReviewOutcomeType,

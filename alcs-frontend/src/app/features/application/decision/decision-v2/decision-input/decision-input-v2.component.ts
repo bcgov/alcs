@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,9 @@ import {
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionCodesDto,
+  DecisionComponentDto,
+  DecisionComponentTypeDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -53,14 +56,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
+  decisionComponentTypes: DecisionComponentTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
-  applicationStatusCodes = [];
+  codes?: DecisionCodesDto;
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
+
+  components: DecisionComponentDto[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -81,6 +87,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
     rescindedDate: new FormControl<Date | undefined>(undefined),
     rescindedComment: new FormControl<string | undefined>(undefined),
+    components: this.fb.array([]),
   });
 
   constructor(
@@ -91,7 +98,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -148,10 +156,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     await this.decisionService.loadDecisions(this.fileNumber);
 
-    const codes = await this.decisionService.fetchCodes();
-    this.outcomes = codes.outcomes;
-    this.decisionMakers = codes.decisionMakers;
-    this.ceoCriterion = codes.ceoCriterion;
+    this.codes = await this.decisionService.fetchCodes();
+    console.log(this.codes);
+    this.outcomes = this.codes.outcomes;
+    this.decisionMakers = this.codes.decisionMakers;
+    this.ceoCriterion = this.codes.ceoCriterion;
 
     await this.prepareDataForEdit();
   }
@@ -333,8 +342,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
+    console.log('components', this.components);
 
     const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
+    data.components = this.components;
 
     try {
       if (this.uuid) {
