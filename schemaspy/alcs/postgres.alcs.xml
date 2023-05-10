@@ -89,7 +89,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="outcome_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_d00682751a3d4cdd7c9a16ab041" implied="false" onDeleteCascade="false" schema="alcs" table="decision_outcome_code"/>
          </column>
-         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="resolution_number" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="11" name="resolution_number" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="resolution_year" nullable="false" remarks="" size="5" type="int2" typeCode="5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="13" name="decision_maker_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_9bfe649b67952a226317fc3c1ae" implied="false" onDeleteCascade="false" schema="alcs" table="decision_maker_code"/>
@@ -111,9 +111,21 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="20" name="reconsiders_uuid" nullable="true" remarks="" size="2147483647" type="uuid" typeCode="1111">
             <parent column="uuid" foreignKey="FK_36c741e57451dc780e6968fe485" implied="false" onDeleteCascade="false" schema="alcs" table="application_reconsideration"/>
          </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="21" name="is_draft" nullable="false" remarks="Indicates whether the decision is currently draft or not" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="is_subject_to_conditions" nullable="true" remarks="Indicates whether the decision is subject to conditions" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="23" name="decision_description" nullable="true" remarks="Staff input field for a description of the decision" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="24" name="is_stats_required" nullable="true" remarks="Indicates whether the stats are required for the decision" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="25" name="days_hide_from_public" nullable="true" remarks="Indicates how long the decision should stay hidden from public in days from decision date" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="26" name="rescinded_date" nullable="true" remarks="Date when decision was rescinded" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="27" name="rescinded_comment" nullable="true" remarks="Comment provided by the staff when the decision was rescinded" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="28" name="created_at" nullable="false" remarks="Date that indicates when decision was created. It is not editable by user." size="35" type="timestamptz" typeCode="93"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f1cbebd03275dcbe1a70d46cebf" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_9fd353dcf19ea98d0de8ff8be9" unique="true">
+            <column ascending="true" name="resolution_number"/>
+            <column ascending="true" name="resolution_year"/>
          </index>
          <index name="REL_336dee89b6eed32db8e13ea0fe" unique="true">
             <column ascending="true" name="modifies_uuid"/>
@@ -678,6 +690,35 @@
          <column autoUpdated="false" defaultValue="now()" digits="6" id="48" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="49" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="50" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="51" name="soil_is_noi_follow_up" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="52" name="soil_noi_ids" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="53" name="soil_has_previous_alc_authorization" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="54" name="soil_application_ids" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="55" name="soil_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="56" name="soil_type_removed" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="57" name="soil_reduce_negative_impacts" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="58" name="soil_to_remove_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="59" name="soil_to_remove_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="60" name="soil_to_remove_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="61" name="soil_to_remove_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="62" name="soil_already_removed_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="63" name="soil_already_removed_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="64" name="soil_already_removed_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="65" name="soil_already_removed_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="66" name="soil_project_duration_amount" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="67" name="soil_project_duration_unit" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="68" name="soil_fill_type_to_place" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="69" name="soil_alternative_measures" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="70" name="soil_to_place_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="71" name="soil_to_place_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="72" name="soil_to_place_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="73" name="soil_to_place_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="74" name="soil_already_placed_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="75" name="soil_already_placed_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="76" name="soil_already_placed_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="77" name="soil_already_placed_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="78" name="soil_is_extraction_or_mining" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="79" name="soil_has_submitted_notice" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_61e192975e82347bab189b34fcc" unique="true">
             <column ascending="true" name="uuid"/>

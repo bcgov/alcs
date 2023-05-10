@@ -319,7 +319,7 @@
                                     <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="resolution_number">resolution_number</span></td>
                                     <td>int4</td>
                                     <td>10</td>
-                                    <td title=''></td>
+                                    <td title='nullable'>√</td>
                                     <td title=''></td>
                                     <td>null</td>
                                     <td>
@@ -515,6 +515,142 @@
                                     </td>
                                     <td></td>
                                 </tr>
+                                <tr>
+                                    <td><span id="is_draft">is_draft</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>false</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Indicates whether the decision is currently draft or not</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="is_subject_to_conditions">is_subject_to_conditions</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Indicates whether the decision is subject to conditions</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="decision_description">decision_description</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Staff input field for a description of the decision</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="is_stats_required">is_stats_required</span></td>
+                                    <td>bool</td>
+                                    <td>1</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Indicates whether the stats are required for the decision</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="days_hide_from_public">days_hide_from_public</span></td>
+                                    <td>int4</td>
+                                    <td>10</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Indicates how long the decision should stay hidden from public in days from decision date</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="rescinded_date">rescinded_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Date when decision was rescinded</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="rescinded_comment">rescinded_comment</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Comment provided by the staff when the decision was rescinded</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="created_at">created_at</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title=''></td>
+                                    <td title=''></td>
+                                    <td>now()</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Date that indicates when decision was created. It is not editable by user.</p></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -550,6 +686,12 @@
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>uuid</td>
+                                </tr>
+                                <tr>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> IDX_9fd353dcf19ea98d0de8ff8be9</td>
+                                    <td>Must be unique</td>
+                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+                                    <td>resolution_number + resolution_year</td>
                                 </tr>
                                 <tr>
                                     <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_336dee89b6eed32db8e13ea0fe</td>
@@ -592,7 +734,7 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="865,64,1291,749">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="865,16,1291,936">
 <area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,785,308,1049">
 <area shape="rect" id="node3" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="473,333,700,509">
 <area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="352,527,821,673">
@@ -600,40 +742,40 @@
 <area shape="rect" id="node6" href="application_modification.html" target="_top" title="application_modification" alt="" coords="448,727,725,932">
 <area shape="rect" id="node7" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="453,5,720,152">
 <area shape="rect" id="node8" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="435,949,738,1184">
-<area shape="rect" id="node9" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1375,184,1609,360">
-<area shape="rect" id="node10" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1347,485,1637,608">
-<area shape="rect" id="node11" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1335,748,1649,871">
+<area shape="rect" id="node9" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1375,136,1609,312">
+<area shape="rect" id="node10" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1347,449,1637,572">
+<area shape="rect" id="node11" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1335,829,1649,952">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_decision.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="764,1045,933,1133">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,853,492,941">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,975,593,1063">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1009,232,1097">
-<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,1116,541,1204">
-<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1617,140,2043,825">
-<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1225,333,1452,509">
-<area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1104,632,1573,779">
-<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1215,169,1463,316">
-<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1200,832,1477,920">
-<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1205,5,1472,152">
-<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1187,527,1490,615">
-<area shape="rect" id="node18" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="650,785,1047,873">
-<area shape="rect" id="node19" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="637,541,1060,629">
-<area shape="rect" id="node20" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="676,647,1021,735">
-<area shape="rect" id="node13" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1181,1325,1496,1413">
-<area shape="rect" id="node14" href="application_document.html" target="_top" title="application_document" alt="" coords="2090,1180,2347,1268">
-<area shape="rect" id="node15" href="document.html" target="_top" title="document" alt="" coords="1749,975,1911,1063">
-<area shape="rect" id="node16" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1709,1184,1951,1272">
-<area shape="rect" id="node17" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1222,1184,1455,1272">
-<area shape="rect" id="node21" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1200,1431,1477,1519">
-<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1205,937,1472,1025">
-<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1175,1043,1502,1131">
-<area shape="rect" id="node24" href="decision_document.html" target="_top" title="decision_document" alt="" coords="2102,709,2335,885">
-<area shape="rect" id="node25" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="2103,399,2334,487">
-<area shape="rect" id="node26" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="2087,192,2351,280">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="764,1153,933,1241">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="377,961,492,1049">
+<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,1083,593,1171">
+<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1117,232,1205">
+<area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,1224,541,1312">
+<area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1617,84,2043,1004">
+<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1225,441,1452,617">
+<area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1104,740,1573,887">
+<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1215,277,1463,424">
+<area shape="rect" id="node10" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1200,940,1477,1028">
+<area shape="rect" id="node11" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1205,113,1472,260">
+<area shape="rect" id="node12" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1187,635,1490,723">
+<area shape="rect" id="node18" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="650,893,1047,981">
+<area shape="rect" id="node19" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="637,649,1060,737">
+<area shape="rect" id="node20" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="676,755,1021,843">
+<area shape="rect" id="node13" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1181,1433,1496,1521">
+<area shape="rect" id="node14" href="application_document.html" target="_top" title="application_document" alt="" coords="2090,1296,2347,1384">
+<area shape="rect" id="node15" href="document.html" target="_top" title="document" alt="" coords="1749,1100,1911,1188">
+<area shape="rect" id="node16" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1709,1292,1951,1380">
+<area shape="rect" id="node17" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1222,1292,1455,1380">
+<area shape="rect" id="node21" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1200,1539,1477,1627">
+<area shape="rect" id="node22" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1205,1045,1472,1133">
+<area shape="rect" id="node23" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1175,1151,1502,1239">
+<area shape="rect" id="node24" href="decision_document.html" target="_top" title="decision_document" alt="" coords="2102,744,2335,920">
+<area shape="rect" id="node25" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="2103,379,2334,467">
+<area shape="rect" id="node26" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="2087,127,2351,215">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
