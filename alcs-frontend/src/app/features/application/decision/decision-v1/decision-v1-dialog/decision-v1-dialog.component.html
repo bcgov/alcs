@@ -4,7 +4,7 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
     <div class="grid">
-      <mat-form-field appearance="outline" class="date-picker">
+      <mat-form-field (click)="datePicker.open()" appearance="outline" class="date-picker">
         <mat-label>Decision Date</mat-label>
         <input
           matInput
