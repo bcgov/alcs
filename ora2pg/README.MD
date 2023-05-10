@@ -9,7 +9,7 @@ The local install usage steps should work for any machine where ora2pg is instal
 
 ## Local Ubuntu Ora2pg install
 
-### Prerequisites
+### Prerequisites 
 
 - Ubuntu
 - Perl >5.10
