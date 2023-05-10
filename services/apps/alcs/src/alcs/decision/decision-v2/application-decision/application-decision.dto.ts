@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -7,6 +8,10 @@ import {
   IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../../common/dtos/base.dto';
+import {
+  ApplicationDecisionConditionDto,
+  UpdateApplicationDecisionConditionDto,
+} from '../../decision-condition/decision-condition.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import {
   ApplicationDecisionComponentDto,
@@ -100,6 +105,10 @@ export class UpdateApplicationDecisionDto {
 
   @IsOptional()
   decisionComponents?: CreateApplicationDecisionComponentDto[];
+
+  @IsOptional()
+  @IsArray()
+  conditions?: UpdateApplicationDecisionConditionDto[];
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -208,6 +217,9 @@ export class ApplicationDecisionDto {
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
   components?: ApplicationDecisionComponentDto[];
+
+  @AutoMap(() => [ApplicationDecisionConditionDto])
+  conditions?: ApplicationDecisionConditionDto[];
 }
 
 export class LinkedResolutionDto {

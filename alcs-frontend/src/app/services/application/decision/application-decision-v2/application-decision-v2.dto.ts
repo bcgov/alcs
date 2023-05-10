@@ -40,6 +40,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   reconsidersUuid: string | null;
   isDraft: boolean;
   decisionComponents?: DecisionComponentDto[];
+  conditions?: ApplicationDecisionConditionDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -71,6 +72,7 @@ export interface ApplicationDecisionDto {
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
   components?: DecisionComponentDto[];
+  conditions?: ApplicationDecisionConditionDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -134,8 +136,19 @@ export interface DecisionCodesDto {
   decisionMakers: DecisionMakerDto[];
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
+  decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
+}
+
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export interface ApplicationDecisionConditionDto {
+  uuid?: string;
+  approvalDependant?: boolean | null;
+  securityAmount?: number | null;
+  administrativeFee?: number | null;
+  description?: string | null;
+  type?: ApplicationDecisionConditionTypeDto | null;
 }

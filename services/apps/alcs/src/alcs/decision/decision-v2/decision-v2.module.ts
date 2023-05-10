@@ -17,6 +17,9 @@ import { ApplicationReconsiderationService } from '../application-reconsideratio
 import { ApplicationReconsiderationOutcomeType } from '../application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CeoCriterionCode } from '../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../decision-condition/decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../decision-condition/decision-condition.entity';
+import { DecisionConditionService } from '../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../decision-outcome-type/application-decision-outcome-type.entity';
@@ -43,6 +46,8 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
       ApplicationModificationOutcomeType,
       ApplicationDecisionComponent,
       ApplicationDecisionComponentType,
+      ApplicationDecisionCondition,
+      ApplicationDecisionConditionType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -61,6 +66,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
     ApplicationDecisionV2Service,
     ApplicationDecisionProfile,
     ApplicationDecisionComponentService,
+    DecisionConditionService,
   ],
   controllers: [ApplicationDecisionV2Controller],
   exports: [ApplicationDecisionV2Service],

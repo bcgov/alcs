@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { ApplicationReconsiderationDto } from '../../../../../services/applicati
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   CeoCriterion,
   CeoCriterionDto,
@@ -66,6 +67,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
   components: DecisionComponentDto[] = [];
+  conditions: ApplicationDecisionConditionDto[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -96,7 +98,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -307,6 +309,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (existingDecision?.components) {
       this.components = existingDecision.components;
     }
+
+    if (existingDecision.conditions) {
+      this.conditions = existingDecision.conditions;
+    }
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
@@ -412,6 +418,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
+      conditions: this.conditions,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
