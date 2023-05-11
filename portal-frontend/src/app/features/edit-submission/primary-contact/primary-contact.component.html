@@ -129,6 +129,7 @@
       (deleteFile)="onRemoveFile($event)"
       [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter || selectedThirdPartyAgent"
+      [disabled]="!needsAuthorizationLetter || !selectedThirdPartyAgent"
     ></app-file-drag-drop>
   </div>
 </section>
