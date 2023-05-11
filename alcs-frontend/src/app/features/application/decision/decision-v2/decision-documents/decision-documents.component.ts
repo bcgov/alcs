@@ -1,8 +1,10 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subject, takeUntil } from 'rxjs';
 import { DecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { ApplicationDecisionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -13,7 +15,9 @@ import { DecisionDocumentUploadDialogComponent } from '../decision-input/decisio
   templateUrl: './decision-documents.component.html',
   styleUrls: ['./decision-documents.component.scss'],
 })
-export class DecisionDocumentsComponent implements OnInit {
+export class DecisionDocumentsComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
+
   @Input() editable = true;
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
@@ -22,7 +26,7 @@ export class DecisionDocumentsComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<DecisionDocumentDto> = new MatTableDataSource<DecisionDocumentDto>();
-  private decisionUuid = '';
+  decision: ApplicationDecisionDto | undefined;
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
@@ -32,20 +36,24 @@ export class DecisionDocumentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.decisionService.$decision.subscribe((decision) => {
+    this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
       if (decision) {
         this.dataSource = new MatTableDataSource(decision.documents);
-        this.decisionUuid = decision.uuid;
+        this.decision = decision;
       }
     });
   }
 
   async openFile(fileUuid: string, fileName: string) {
-    await this.decisionService.downloadFile(this.decisionUuid, fileUuid, fileName);
+    if (this.decision) {
+      await this.decisionService.downloadFile(this.decision.uuid, fileUuid, fileName);
+    }
   }
 
   async downloadFile(fileUuid: string, fileName: string) {
-    await this.decisionService.downloadFile(this.decisionUuid, fileUuid, fileName, false);
+    if (this.decision) {
+      await this.decisionService.downloadFile(this.decision.uuid, fileUuid, fileName, false);
+    }
   }
 
   async onUploadFile() {
@@ -57,23 +65,25 @@ export class DecisionDocumentsComponent implements OnInit {
   }
 
   private openFileDialog(existingDocument?: DecisionDocumentDto) {
-    this.dialog
-      .open(DecisionDocumentUploadDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '800px',
-        width: '70%',
-        data: {
-          fileId: this.fileId,
-          decisionUuid: this.decisionUuid,
-          existingDocument: existingDocument,
-        },
-      })
-      .beforeClosed()
-      .subscribe((isDirty: boolean) => {
-        if (isDirty) {
-          this.decisionService.loadDecision(this.decisionUuid);
-        }
-      });
+    if (this.decision) {
+      this.dialog
+        .open(DecisionDocumentUploadDialogComponent, {
+          minWidth: '600px',
+          maxWidth: '800px',
+          width: '70%',
+          data: {
+            fileId: this.fileId,
+            decisionUuid: this.decision?.uuid,
+            existingDocument: existingDocument,
+          },
+        })
+        .beforeClosed()
+        .subscribe((isDirty: boolean) => {
+          if (isDirty && this.decision) {
+            this.decisionService.loadDecision(this.decision.uuid);
+          }
+        });
+    }
   }
 
   onDeleteFile(element: DecisionDocumentDto) {
@@ -82,11 +92,16 @@ export class DecisionDocumentsComponent implements OnInit {
         body: 'Are you sure you want to delete the selected file?',
       })
       .subscribe(async (accepted) => {
-        if (accepted) {
-          await this.decisionService.deleteFile(this.decisionUuid, element.uuid);
-          await this.decisionService.loadDecision(this.decisionUuid);
+        if (accepted && this.decision) {
+          await this.decisionService.deleteFile(this.decision.uuid, element.uuid);
+          await this.decisionService.loadDecision(this.decision.uuid);
           this.toastService.showSuccessToast('Document deleted');
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

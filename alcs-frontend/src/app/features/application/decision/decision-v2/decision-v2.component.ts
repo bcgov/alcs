@@ -19,7 +19,6 @@ import {
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { decisionChildRoutes } from '../decision.module';
-import { DecisionV2DialogComponent } from './decision-v2-dialog/decision-v2-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {
   reconsideredByResolutions: string[];
@@ -93,37 +92,26 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     });
   }
 
-  onCreate() {
+  async onCreate() {
     let minDate = new Date(0);
     if (this.decisions.length > 0) {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
 
-    this.dialog
-      .open(DecisionV2DialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        autoFocus: false,
-        data: {
-          isFirstDecision: this.decisions.length === 0,
-          minDate,
-          fileNumber: this.fileNumber,
-          outcomes: this.outcomes,
-          decisionMakers: this.decisionMakers,
-          ceoCriterion: this.ceoCriterion,
-        },
-      })
-      .afterClosed()
-      .subscribe((didCreate) => {
-        if (didCreate) {
-          this.applicationDetailService.loadApplication(this.fileNumber);
-        }
-      });
+    const newDecision = await this.decisionService.create({
+      resolutionYear: new Date().getFullYear(),
+      chairReviewRequired: false,
+      isDraft: true,
+      date: Date.now(),
+      applicationFileNumber: this.fileNumber,
+      modifiesUuid: null,
+      reconsidersUuid: null,
+    });
+
+    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit`]);
   }
 
-  onEdit(decision: LoadingDecision) {
+  async onEdit(decision: LoadingDecision) {
     const decisionIndex = this.decisions.indexOf(decision);
     // TODO set minDate for the decision in input
     let minDate = new Date(0);
@@ -131,7 +119,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       minDate = new Date(this.decisions[this.decisions.length - 1].date);
     }
 
-    this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
+    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 
   async deleteDecision(uuid: string) {
@@ -217,7 +205,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.decisionService.cleanDecisions()
+    this.decisionService.cleanDecisions();
     this.$destroy.next();
     this.$destroy.complete();
   }

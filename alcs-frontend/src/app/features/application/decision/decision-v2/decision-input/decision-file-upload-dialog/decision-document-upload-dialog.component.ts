@@ -1,10 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../../../../../services/application/application-document/application-document.service';
+import { DOCUMENT_SOURCE } from '../../../../../../services/application/application-document/application-document.service';
 import { DecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 
@@ -18,7 +15,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   isDirty = false;
   isSaving = false;
   allowsFileEdit = true;
-  sources = DOCUMENT_TYPE;
   documentType = 'Decision Package';
 
   name = new FormControl<string>('', [Validators.required]);
@@ -39,7 +35,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   });
 
   pendingFile: File | undefined;
-  existingFile: { name: string; size: number } | undefined;
+  existingFile: string | undefined;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -55,10 +51,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       this.form.patchValue({
         name: document.fileName,
       });
-      this.existingFile = {
-        name: document.fileName,
-        size: 0,
-      };
+      this.existingFile = document.fileName;
     }
   }
 

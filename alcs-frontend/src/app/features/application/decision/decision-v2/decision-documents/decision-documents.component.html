@@ -24,9 +24,8 @@
   </ng-container>
 
   <ng-container matColumnDef="visibilityFlags">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by visibility">
+    <th mat-header-cell *matHeaderCellDef matTooltip='* = Pending' mat-sort-header sortActionDescription="Sort by visibility">
       Visibility
-      <div class="body-small">* = Pending</div>
     </th>
     <td mat-cell *matCellDef="let element">
       <span matTooltip="Applicant">A*, </span>

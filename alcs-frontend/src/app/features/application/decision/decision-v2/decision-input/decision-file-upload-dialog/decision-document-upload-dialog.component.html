@@ -28,8 +28,7 @@
       </div>
       <div class="file" *ngIf="existingFile">
         <div>
-          <a (click)="openExistingFile()">{{ existingFile.name }}</a>
-          &nbsp;({{ existingFile.size | filesize }})
+          <a (click)="openExistingFile()">{{ existingFile }}</a>
         </div>
         <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
           <mat-icon>close</mat-icon>Remove
