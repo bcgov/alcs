@@ -1,15 +1,7 @@
 <div class="split">
   <h3>Decision</h3>
   <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
-    <button
-      [disabled]="isPaused"
-      mat-flat-button
-      color="primary"
-      [routerLink]="createDecision.path ? createDecision.path : './'"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: false }"
-      [disabled]="isDraftExists"
-    >
+    <button [disabled]="isPaused || isDraftExists" mat-flat-button color="primary" (click)="onCreate()">
       + Create Draft Decision
     </button>
   </div>

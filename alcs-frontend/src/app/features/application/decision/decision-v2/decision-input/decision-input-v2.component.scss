@@ -5,6 +5,7 @@
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 24px;
   grid-row-gap: 24px;
+  font-size: 16px;
 }
 
 .resolution-number-wrapper {
@@ -23,7 +24,6 @@
   .column {
     display: flex;
     flex-direction: column;
-    flex-basis: 100%;
     flex: 1;
   }
 
