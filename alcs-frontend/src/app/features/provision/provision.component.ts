@@ -15,10 +15,10 @@ export class ProvisionComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthenticationService, private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.$currentUser.pipe(takeUntil(this.destroy)).subscribe((user) => {
+    this.authService.$currentUser.pipe(takeUntil(this.destroy)).subscribe(async (user) => {
       if (user) {
         if (user.client_roles && user.client_roles.length > 0) {
-          this.router.navigateByUrl(environment.homeUrl);
+          await this.router.navigateByUrl(environment.homeUrl);
         } else {
           this.authService.clearTokens();
         }

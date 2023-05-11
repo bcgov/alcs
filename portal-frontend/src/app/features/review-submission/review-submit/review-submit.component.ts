@@ -213,8 +213,8 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  onNavigateToStep(step: number) {
-    this.router.navigateByUrl(`application/${this.fileId}/review/${step}?errors=t`);
+  async onNavigateToStep(step: number) {
+    await this.router.navigateByUrl(`application/${this.fileId}/review/${step}?errors=t`);
   }
 
   async onDownloadPdf() {

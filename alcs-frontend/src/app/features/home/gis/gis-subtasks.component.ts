@@ -81,8 +81,10 @@ export class GisSubtasksComponent implements OnInit {
     );
   }
 
-  openCard(subtask: HomepageSubtaskDto) {
-    this.router.navigateByUrl(`/board/${subtask.card.board.code}?card=${subtask.card.uuid}&type=${subtask.card.type}`);
+  async openCard(subtask: HomepageSubtaskDto) {
+    await this.router.navigateByUrl(
+      `/board/${subtask.card.board.code}?card=${subtask.card.uuid}&type=${subtask.card.type}`
+    );
   }
 
   async onAssigneeSelected(assignee: UserDto, uuid: string) {

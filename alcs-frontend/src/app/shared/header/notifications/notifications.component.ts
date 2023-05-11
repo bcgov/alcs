@@ -65,7 +65,7 @@ export class NotificationsComponent implements OnInit {
       const redirectLink = document.createElement('a');
       redirectLink.href = notification.link;
       const absoluteLink = redirectLink.pathname + redirectLink.search + redirectLink.hash;
-      this.router.navigateByUrl(absoluteLink);
+      await this.router.navigateByUrl(absoluteLink);
     } else {
       console.warn('Tried to navigate to external link');
       // Enable this if we want to allow external links

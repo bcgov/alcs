@@ -16,11 +16,13 @@ export class NfuDetailsComponent {
 
   constructor(private router: Router) {}
 
-  onEditSection(step: number) {
+  async onEditSection(step: number) {
     if (this.draftMode) {
-      this.router.navigateByUrl(`/alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(
+        `/alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+      );
     } else {
-      this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 }
