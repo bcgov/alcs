@@ -217,22 +217,22 @@ export class ParcelComponent {
     return false;
   }
 
-  onEditParcelsClick($event: any) {
+  async onEditParcelsClick($event: any) {
     $event.stopPropagation();
     if (this.draftMode) {
-      this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
+      await this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
     } else {
-      this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
+      await this.router.navigateByUrl(`application/${this.fileId}/edit/${this.navigationStepInd}?errors=t`);
     }
   }
 
-  onEditParcelClick(uuid: string) {
+  async onEditParcelClick(uuid: string) {
     if (this.draftMode) {
-      this.router.navigateByUrl(
+      await this.router.navigateByUrl(
         `alcs/application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
       );
     } else {
-      this.router.navigateByUrl(
+      await this.router.navigateByUrl(
         `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
       );
     }

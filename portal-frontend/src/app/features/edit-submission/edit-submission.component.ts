@@ -221,7 +221,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     // navigation to url will cause step change based on the index (index starts from 0)
     // The save will be triggered using canDeactivate guard
     this.showValidationErrors = this.customStepper.selectedIndex === EditApplicationSteps.ReviewAndSubmit;
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${index}`);
+    await this.router.navigateByUrl(`application/${this.fileId}/edit/${index}`);
   }
 
   onParcelDetailsInitialized() {

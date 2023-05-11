@@ -157,7 +157,7 @@ export class AssignedComponent implements OnInit {
     };
   }
 
-  onSelectCard(card: CardDto) {
-    this.router.navigateByUrl(`/board/${card.board.code}?card=${card.uuid}&type=${card.type}`);
+  async onSelectCard(card: CardDto) {
+    await this.router.navigateByUrl(`/board/${card.board.code}?card=${card.uuid}&type=${card.type}`);
   }
 }

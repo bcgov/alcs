@@ -213,7 +213,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     // navigation to url will cause step change based on the index (index starts from 0)
     // The save will be triggered using canDeactivate guard
     this.showValidationErrors = this.customStepper.selectedIndex === EditApplicationSteps.ReviewAndSubmit;
-    this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${index}`);
+    await this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${index}`);
   }
 
   onParcelDetailsInitialized() {
