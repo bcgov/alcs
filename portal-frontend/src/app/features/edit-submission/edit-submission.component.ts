@@ -7,6 +7,7 @@ import { ApplicationDocumentDto } from '../../services/application-document/appl
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { ApplicationTypeDto } from '../../services/code/code.dto';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
@@ -136,21 +137,23 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   async onApplicationTypeChangeClicked() {
-    this.dialog
-      .open(ChangeApplicationTypeDialogComponent, {
-        panelClass: 'no-padding',
-        disableClose: true,
-        autoFocus: false,
-        data: {
-          fileId: this.fileId,
-        },
-      })
-      .beforeClosed()
-      .subscribe((result) => {
-        if (result) {
-          this.loadApplication(this.fileId);
-        }
-      });
+    if (this.applicationSubmission) {
+      this.dialog
+        .open(ChangeApplicationTypeDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+          autoFocus: false,
+          data: {
+            submissionUuid: this.applicationSubmission.uuid,
+          },
+        })
+        .beforeClosed()
+        .subscribe((result) => {
+          if (result) {
+            this.loadApplication(this.fileId);
+          }
+        });
+    }
   }
 
   // this gets fired whenever applicant navigates away from edit page
