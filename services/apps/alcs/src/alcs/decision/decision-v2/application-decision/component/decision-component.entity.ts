@@ -81,6 +81,10 @@ export class ApplicationDecisionComponent extends Base {
   nfuEndDate?: Date | null;
 
   @AutoMap()
+  @Column({ nullable: false })
+  applicationDecisionComponentTypeCode: string;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationDecisionComponentType)
   applicationDecisionComponentType: ApplicationDecisionComponentType;
 

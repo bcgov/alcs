@@ -26,7 +26,9 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ComponentService } from './component/component.service';
 import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
+import { ApplicationDecisionComponent } from './component/decision-component.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -45,6 +47,7 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
+    private decisionComponentService: ComponentService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -152,6 +155,7 @@ export class ApplicationDecisionV2Service {
         reconsiders: {
           reconsidersDecisions: true,
         },
+        components: true,
       },
     });
 
@@ -233,6 +237,16 @@ export class ApplicationDecisionV2Service {
     if (updateDto.date && existingDecision.date !== new Date(updateDto.date)) {
       dateHasChanged = true;
       existingDecision.date = new Date(updateDto.date);
+    }
+
+    if (updateDto.decisionComponents) {
+      this.decisionComponentService.validate(updateDto.decisionComponents);
+      existingDecision.components =
+        await this.decisionComponentService.createOrUpdate(
+          updateDto.decisionComponents,
+        );
+    } else if (existingDecision.components) {
+      this.decisionComponentService.remove(existingDecision.components);
     }
 
     const updatedDecision = await this.appDecisionRepository.save(
@@ -322,6 +336,15 @@ export class ApplicationDecisionV2Service {
       );
     }
 
+    let decisionComponents: ApplicationDecisionComponent[] = [];
+    if (createDto.decisionComponents) {
+      this.decisionComponentService.validate(createDto.decisionComponents);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(
+        createDto.decisionComponents,
+        false,
+      );
+    }
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
@@ -351,6 +374,7 @@ export class ApplicationDecisionV2Service {
       application,
       modifies,
       reconsiders,
+      components: decisionComponents,
     });
 
     await this.validateDecisionChanges(createDto);
@@ -369,7 +393,9 @@ export class ApplicationDecisionV2Service {
       });
     }
 
-    const savedDecision = await this.appDecisionRepository.save(decision);
+    const savedDecision = await this.appDecisionRepository.save(decision, {
+      transaction: true,
+    });
 
     return this.get(savedDecision.uuid);
   }
@@ -404,6 +430,7 @@ export class ApplicationDecisionV2Service {
           document: true,
         },
         application: true,
+        components: true,
       },
     });
 
@@ -416,6 +443,10 @@ export class ApplicationDecisionV2Service {
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
+
+    await this.decisionComponentService.softRemove(
+      applicationDecision.components,
+    );
 
     //Clear potential links
     applicationDecision.reconsiders = null;

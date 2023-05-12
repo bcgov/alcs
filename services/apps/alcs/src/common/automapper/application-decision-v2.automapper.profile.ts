@@ -16,7 +16,11 @@ import {
 } from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/decision-component-type.entity';
-import { ApplicationDecisionComponentTypeDto } from '../../alcs/decision/decision-v2/application-decision/component/decision-component.dto';
+import {
+  ApplicationDecisionComponentDto,
+  ApplicationDecisionComponentTypeDto,
+} from '../../alcs/decision/decision-v2/application-decision/component/decision-component.dto';
+import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/decision-component.entity';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
 
 @Injectable()
@@ -145,9 +149,28 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.rescindedDate,
           mapFrom((a) => a.rescindedDate?.getTime()),
         ),
+        forMember(
+          (a) => a.components,
+          mapFrom((ad) => {
+            if (ad.components) {
+              return this.mapper.mapArray(
+                ad.components,
+                ApplicationDecisionComponent,
+                ApplicationDecisionComponentDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
       );
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
+      createMap(
+        mapper,
+        ApplicationDecisionComponent,
+        ApplicationDecisionComponentDto,
+      );
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
       createMap(

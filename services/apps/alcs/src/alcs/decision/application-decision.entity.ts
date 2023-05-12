@@ -212,6 +212,7 @@ export class ApplicationDecision extends Base {
   @OneToMany(
     () => ApplicationDecisionComponent,
     (component) => component.applicationDecision,
+    { cascade: ['insert'] },
   )
   components: ApplicationDecisionComponent[];
 }

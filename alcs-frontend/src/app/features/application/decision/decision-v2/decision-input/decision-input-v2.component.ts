@@ -345,7 +345,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     console.log('components', this.components);
 
     const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
-    data.components = this.components;
+    data.decisionComponents = this.components;
+    console.log('data', data);
 
     try {
       if (this.uuid) {
@@ -354,6 +355,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         const createdDecision = await this.decisionService.create({
           ...data,
           applicationFileNumber: this.fileNumber,
+          decisionComponents: this.components,
         });
         this.uuid = createdDecision.uuid;
       }

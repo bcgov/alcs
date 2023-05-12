@@ -39,6 +39,7 @@ export class DecisionComponentComponent {
 
   ngOnInit(): void {
     if (this.data) {
+      console.log('onInit data', this.data);
       this.alrArea.setValue(this.data.alrArea ?? null);
       this.agCap.setValue(this.data.agCap ?? null);
       this.agCapSource.setValue(this.data.agCapSource ?? null);
@@ -47,7 +48,6 @@ export class DecisionComponentComponent {
     }
 
     this.form.valueChanges.subscribe((changes) => {
-      console.log('this.agCap, this.agCapSource', this.agCap, this.agCapSource);
       this.dataChange.emit({
         alrArea: this.alrArea.value ?? undefined,
         agCap: this.agCap.value ?? undefined,

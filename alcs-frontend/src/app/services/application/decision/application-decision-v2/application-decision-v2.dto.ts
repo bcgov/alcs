@@ -39,7 +39,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
-  components?: DecisionComponentDto[];
+  decisionComponents?: DecisionComponentDto[];
 }
 
 export interface ApplicationDecisionDto {

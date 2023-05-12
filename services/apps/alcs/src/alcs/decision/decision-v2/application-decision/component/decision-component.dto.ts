@@ -5,6 +5,9 @@ import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
 export class UpdateApplicationDecisionComponentDto {
+  @IsString()
+  uuid: string;
+
   @IsOptional()
   @IsString()
   alrArea?: number;
@@ -37,12 +40,15 @@ export class UpdateApplicationDecisionComponentDto {
   @IsNumber()
   nfuEndDate?: number;
 
-  @IsOptional()
   @IsString()
-  applicationDecisionComponentTypeCode?: string;
+  applicationDecisionComponentTypeCode: string;
 }
 
-export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {}
+export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
+  @IsOptional()
+  @IsString()
+  override uuid: string;
+}
 
 export class ApplicationDecisionComponentDto {
   @AutoMap()

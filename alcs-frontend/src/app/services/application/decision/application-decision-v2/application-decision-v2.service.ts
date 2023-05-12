@@ -71,6 +71,7 @@ export class ApplicationDecisionV2Service {
 
   async update(uuid: string, data: UpdateApplicationDecisionDto) {
     try {
+      console.log('update', data);
       const res = await firstValueFrom(this.http.patch<ApplicationDecisionDto>(`${this.url}/${uuid}`, data));
       this.toastService.showSuccessToast('Decision updated');
       return res;
