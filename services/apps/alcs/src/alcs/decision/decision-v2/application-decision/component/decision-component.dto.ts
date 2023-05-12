@@ -78,6 +78,9 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   nfuEndDate?: number;
 
+  @AutoMap()
+  applicationDecisionUuid: string;
+
   @AutoMap(() => ApplicationDecisionComponentTypeDto)
   applicationDecisionComponentType;
 }

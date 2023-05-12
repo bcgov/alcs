@@ -120,6 +120,8 @@ export interface DecisionComponentDto {
   nfuEndDate?: number;
 
   applicationDecisionComponentTypeCode: string;
+
+  applicationDecisionUuid?: string;
 }
 
 export interface DecisionCodesDto {

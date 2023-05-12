@@ -157,7 +157,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     await this.decisionService.loadDecisions(this.fileNumber);
 
     this.codes = await this.decisionService.fetchCodes();
-    console.log(this.codes);
     this.outcomes = this.codes.outcomes;
     this.decisionMakers = this.codes.decisionMakers;
     this.ceoCriterion = this.codes.ceoCriterion;
@@ -313,6 +312,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (!existingDecision.resolutionNumber) {
       this.resolutionYearControl.enable();
     }
+
+    if (existingDecision?.components) {
+      this.components = existingDecision.components;
+    }
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
@@ -342,7 +345,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
-    console.log('components', this.components);
 
     const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
     data.decisionComponents = this.components;

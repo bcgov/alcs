@@ -55,6 +55,8 @@ export class DecisionComponentComponent {
         agCapMap: this.agCapMap.value ?? undefined,
         agCapConsultant: this.agCapConsultant.value ?? undefined,
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
+        applicationDecisionUuid: this.data.uuid,
+        uuid: this.data.uuid,
       });
     });
   }

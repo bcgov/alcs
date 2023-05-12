@@ -31,6 +31,8 @@ export class ComponentService {
         component = await this.getOneOrFail(updateDto.uuid);
       } else {
         component = new ApplicationDecisionComponent();
+        component.applicationDecisionComponentTypeCode =
+          updateDto.applicationDecisionComponentTypeCode;
       }
 
       component.alrArea = updateDto.alrArea;
@@ -38,8 +40,6 @@ export class ComponentService {
       component.agCapSource = updateDto.agCapSource;
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
-      component.applicationDecisionComponentTypeCode =
-        updateDto.applicationDecisionComponentTypeCode;
 
       //   parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
 

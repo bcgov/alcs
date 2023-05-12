@@ -244,6 +244,7 @@ export class ApplicationDecisionV2Service {
       existingDecision.components =
         await this.decisionComponentService.createOrUpdate(
           updateDto.decisionComponents,
+          false,
         );
     } else if (existingDecision.components) {
       this.decisionComponentService.remove(existingDecision.components);
@@ -251,6 +252,7 @@ export class ApplicationDecisionV2Service {
 
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
+      { transaction: true },
     );
 
     //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
