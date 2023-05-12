@@ -74,7 +74,7 @@ export class ComponentService {
     return true;
   }
 
-  softRemove(components: ApplicationDecisionComponent[]) {
-    this.componentRepository.softRemove(components);
+  async softRemove(components: ApplicationDecisionComponent[]) {
+    await this.componentRepository.softRemove(components);
   }
 }
