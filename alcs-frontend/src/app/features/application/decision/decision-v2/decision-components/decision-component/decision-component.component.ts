@@ -40,20 +40,20 @@ export class DecisionComponentComponent {
   ngOnInit(): void {
     if (this.data) {
       console.log('onInit data', this.data);
-      this.alrArea.setValue(this.data.alrArea ?? null);
-      this.agCap.setValue(this.data.agCap ?? null);
-      this.agCapSource.setValue(this.data.agCapSource ?? null);
-      this.agCapMap.setValue(this.data.agCapMap ?? null);
-      this.agCapConsultant.setValue(this.data.agCapConsultant ?? null);
+      this.alrArea.setValue(this.data.alrArea ? this.data.alrArea : null);
+      this.agCap.setValue(this.data.agCap ? this.data.agCap : null);
+      this.agCapSource.setValue(this.data.agCapSource ? this.data.agCapSource : null);
+      this.agCapMap.setValue(this.data.agCapMap ? this.data.agCapMap : null);
+      this.agCapConsultant.setValue(this.data.agCapConsultant ? this.data.agCapConsultant : null);
     }
 
     this.form.valueChanges.subscribe((changes) => {
       this.dataChange.emit({
-        alrArea: this.alrArea.value ?? undefined,
-        agCap: this.agCap.value ?? undefined,
-        agCapSource: this.agCapSource.value ?? undefined,
-        agCapMap: this.agCapMap.value ?? undefined,
-        agCapConsultant: this.agCapConsultant.value ?? undefined,
+        alrArea: this.alrArea.value ? this.alrArea.value : null,
+        agCap: this.agCap.value ? this.agCap.value : null,
+        agCapSource: this.agCapSource.value ? this.agCapSource.value : null,
+        agCapMap: this.agCapMap.value ? this.agCapMap.value : null,
+        agCapConsultant: this.agCapConsultant.value ? this.agCapConsultant.value : null,
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
         applicationDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,

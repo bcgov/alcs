@@ -103,21 +103,21 @@ export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 export interface DecisionComponentDto {
   uuid?: string;
 
-  alrArea?: number;
+  alrArea?: number | null;
 
-  agCap?: string;
+  agCap?: string | null;
 
-  agCapSource?: string;
+  agCapSource?: string | null;
 
-  agCapMap?: string;
+  agCapMap?: string | null;
 
-  agCapConsultant?: string;
+  agCapConsultant?: string | null;
 
-  nfuUseType?: string;
+  nfuUseType?: string | null;
 
-  nfuUseSubType?: string;
+  nfuUseSubType?: string | null;
 
-  nfuEndDate?: number;
+  nfuEndDate?: number | null;
 
   applicationDecisionComponentTypeCode: string;
 

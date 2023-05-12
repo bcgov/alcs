@@ -155,7 +155,9 @@ export class ApplicationDecisionV2Service {
         reconsiders: {
           reconsidersDecisions: true,
         },
-        components: true,
+        components: {
+          applicationDecisionComponentType: true,
+        },
       },
     });
 
@@ -239,16 +241,7 @@ export class ApplicationDecisionV2Service {
       existingDecision.date = new Date(updateDto.date);
     }
 
-    if (updateDto.decisionComponents) {
-      this.decisionComponentService.validate(updateDto.decisionComponents);
-      existingDecision.components =
-        await this.decisionComponentService.createOrUpdate(
-          updateDto.decisionComponents,
-          false,
-        );
-    } else if (existingDecision.components) {
-      this.decisionComponentService.remove(existingDecision.components);
-    }
+    await this.updateComponents(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
@@ -278,6 +271,36 @@ export class ApplicationDecisionV2Service {
     return this.get(existingDecision.uuid);
   }
 
+  private async updateComponents(
+    updateDto: UpdateApplicationDecisionDto,
+    existingDecision: Partial<ApplicationDecision>,
+  ) {
+    if (updateDto.decisionComponents) {
+      this.decisionComponentService.validate(updateDto.decisionComponents);
+
+      if (existingDecision?.components) {
+        const componentsToRemove = existingDecision.components.filter(
+          (component) =>
+            !updateDto.decisionComponents?.some(
+              (componentDto) => componentDto.uuid === component.uuid,
+            ),
+        );
+
+        await this.decisionComponentService.softRemove(componentsToRemove);
+      }
+
+      existingDecision.components =
+        await this.decisionComponentService.createOrUpdate(
+          updateDto.decisionComponents,
+          false,
+        );
+    } else if (existingDecision.components) {
+      await this.decisionComponentService.softRemove(
+        existingDecision.components,
+      );
+    }
+  }
+
   private async getOrFail(uuid: string) {
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
@@ -285,6 +308,7 @@ export class ApplicationDecisionV2Service {
       },
       relations: {
         application: true,
+        components: true,
       },
     });
 

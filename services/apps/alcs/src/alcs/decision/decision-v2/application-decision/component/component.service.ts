@@ -53,10 +53,6 @@ export class ComponentService {
     return updatedComponents;
   }
 
-  remove(components: ApplicationDecisionComponent[]) {
-    return this.componentRepository.softRemove(components);
-  }
-
   validate(components: CreateApplicationDecisionComponentDto[]) {
     if (!this.checkDuplicates(components)) {
       throw new ServiceValidationException(

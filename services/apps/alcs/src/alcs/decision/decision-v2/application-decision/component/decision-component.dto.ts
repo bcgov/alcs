@@ -81,6 +81,6 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   applicationDecisionUuid: string;
 
-  @AutoMap(() => ApplicationDecisionComponentTypeDto)
-  applicationDecisionComponentType;
+  @AutoMap()
+  applicationDecisionComponentTypeCode: string;
 }

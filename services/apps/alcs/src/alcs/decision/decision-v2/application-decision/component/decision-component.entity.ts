@@ -89,6 +89,6 @@ export class ApplicationDecisionComponent extends Base {
   applicationDecisionComponentType: ApplicationDecisionComponentType;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationDecision)
+  @ManyToOne(() => ApplicationDecision, { nullable: false })
   applicationDecision: ApplicationDecision;
 }

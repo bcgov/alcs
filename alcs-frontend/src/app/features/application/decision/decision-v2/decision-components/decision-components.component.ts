@@ -76,7 +76,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     this.updateComponentsMenuItems();
   }
 
-  onAddNewCondition(typeCode: string) {
+  onAddNewComponent(typeCode: string) {
     switch (typeCode) {
       case 'COPY':
         // TODO get the proposal data and populate fields
@@ -96,6 +96,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   }
 
   private updateComponentsMenuItems() {
+    console.log('updateComponentsMenuItems', this.components, this.decisionComponentTypes);
     this.decisionComponentTypes = this.decisionComponentTypes.map((e) => ({
       ...e,
       isDisabled: this.components.some((c) => c.applicationDecisionComponentTypeCode === e.code),

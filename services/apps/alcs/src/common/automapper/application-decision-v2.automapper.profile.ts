@@ -164,6 +164,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           }),
         ),
       );
+      // applicationDecisionComponentType
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(
