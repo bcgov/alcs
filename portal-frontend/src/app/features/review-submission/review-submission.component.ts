@@ -135,9 +135,9 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
         },
       })
       .beforeClosed()
-      .subscribe((result: boolean) => {
+      .subscribe(async (result: boolean) => {
         if (result) {
-          this.router.navigateByUrl('/home');
+          await this.router.navigateByUrl('/home');
         }
       });
   }
@@ -200,7 +200,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     this.showValidationErrors = this.isFirstNationGovernment
       ? this.customStepper.selectedIndex === ReviewApplicationFngSteps.ReviewAndSubmitFng
       : this.customStepper.selectedIndex === ReviewApplicationSteps.ReviewAndSubmit;
-    this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
+    await this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
   }
 
   async onStepChange($event: StepperSelectionEvent) {

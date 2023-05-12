@@ -2,7 +2,7 @@ import { environment } from '../../../environments/environment';
 
 export const DATE_FORMATS = {
   parse: {
-    dateInput: 'DD.MM.YYYY',
+    dateInput: 'YYYY-MMM-DD',
   },
   display: {
     dateInput: environment.dateFormat,

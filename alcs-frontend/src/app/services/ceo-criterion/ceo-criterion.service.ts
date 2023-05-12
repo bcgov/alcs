@@ -18,7 +18,7 @@ export class CeoCriterionService {
       return await firstValueFrom(this.http.get<CeoCriterionDto[]>(`${this.url}`));
     } catch (err) {
       console.error(err);
-      this.toastService.showErrorToast('Failed to fetch stat holidays');
+      this.toastService.showErrorToast('Failed to fetch ceo criterion');
     }
     return [];
   }

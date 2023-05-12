@@ -15,7 +15,8 @@ export class PlanningReviewService {
 
   async create(meeting: CreatePlanningReviewDto) {
     try {
-      return await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
+      await firstValueFrom(this.http.post<PlanningReviewDto>(`${this.url}`, meeting));
+      this.toastService.showSuccessToast('Planning meeting card created');
     } catch (err) {
       console.error(err);
       this.toastService.showErrorToast('Failed to create planning review');

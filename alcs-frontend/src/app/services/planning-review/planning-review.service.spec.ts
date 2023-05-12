@@ -40,7 +40,7 @@ describe('PlanningReviewService', () => {
       })
     );
 
-    const res = await service.create({
+    await service.create({
       fileNumber: '1',
       localGovernmentUuid: '',
       regionCode: '',
@@ -48,8 +48,6 @@ describe('PlanningReviewService', () => {
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
-    expect(res).toBeDefined();
-    expect(res!.fileNumber).toEqual('1');
   });
 
   it('should show an error toast message if create fails', async () => {

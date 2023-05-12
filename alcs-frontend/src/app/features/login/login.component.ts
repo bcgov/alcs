@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   async ngOnInit() {
     const hasToken = await this.authenticationService.getToken();
     if (hasToken) {
-      this.router.navigateByUrl(environment.homeUrl);
+      await this.router.navigateByUrl(environment.homeUrl);
     }
   }
 }

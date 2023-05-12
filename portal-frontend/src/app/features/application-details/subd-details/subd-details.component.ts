@@ -46,11 +46,13 @@ export class SubdDetailsComponent {
     private applicationParcelService: ApplicationParcelService
   ) {}
 
-  onEditSection(step: number) {
+  async onEditSection(step: number) {
     if (this.draftMode) {
-      this.router.navigateByUrl(`/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(
+        `/alcs/application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`
+      );
     } else {
-      this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(`application/${this._applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 

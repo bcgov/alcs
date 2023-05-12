@@ -1,6 +1,6 @@
 <section>
   <div class="row">
-    <h3>Decisions > {{ isEdit ? 'Edit' : 'Create' }} Decision Draft</h3>
+    <h3>Decisions > Edit Decision Draft</h3>
   </div>
 
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
@@ -182,20 +182,8 @@
       <input matInput formControlName="rescindedComment" />
     </mat-form-field>
 
-    <div class="row">
-      <div class="column">
-        <mat-label for="decisionDocBtn">Decision Document*</mat-label>
-        <button
-          type="button"
-          id="decisionDocBtn"
-          class="upload-button"
-          mat-flat-button
-          color="accent"
-          (click)="onUploadFile()"
-        >
-          Upload
-        </button>
-      </div>
+    <div>
+      <app-decision-documents></app-decision-documents>
     </div>
 
     <app-decision-components *ngIf="codes" [codes]="codes" [fileNumber]="fileNumber" [(components)]="components">

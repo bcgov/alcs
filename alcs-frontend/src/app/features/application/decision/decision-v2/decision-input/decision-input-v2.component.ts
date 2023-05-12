@@ -47,7 +47,6 @@ type MappedPostDecision = {
 export class DecisionInputV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   isLoading = false;
-  isEdit = false;
   minDate = new Date(0);
   isFirstDecision = false;
 
@@ -119,7 +118,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (uuid) {
       this.uuid = uuid;
-      this.isEdit = true;
     }
 
     if (fileNumber) {
@@ -135,11 +133,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       year.add(1, 'year');
     }
     this.resolutionYears.reverse();
-    if (!this.isEdit) {
-      this.form.patchValue({
-        resolutionYear: currentYear,
-      });
-    }
   }
 
   ngOnDestroy(): void {
@@ -235,7 +228,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code !== 'REF' && modification.resultingDecision === null)
+          (modification.reviewOutcome.code === 'APPR' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -249,7 +242,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.reviewOutcome?.code !== 'REF' && reconsideration.resultingDecision === null)
+          (reconsideration.reviewOutcome?.code === 'PRC' && reconsideration.resultingDecision === null)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
@@ -262,7 +255,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {
-    this.isEdit = true;
     this.form.patchValue({
       outcome: existingDecision.outcome.code,
       decisionMaker: existingDecision.decisionMaker?.code,
@@ -346,21 +338,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
 
-    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
-    data.decisionComponents = this.components;
-    console.log('data', data);
-
     try {
-      if (this.uuid) {
-        await this.decisionService.update(this.uuid, data);
-      } else {
-        const createdDecision = await this.decisionService.create({
-          ...data,
-          applicationFileNumber: this.fileNumber,
-          decisionComponents: this.components,
-        });
-        this.uuid = createdDecision.uuid;
-      }
+      await this.saveDecision(isDraft);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -369,6 +348,20 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
 
       this.isLoading = false;
+    }
+  }
+
+  async saveDecision(isDraft: boolean = true) {
+    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
+
+    if (this.uuid) {
+      await this.decisionService.update(this.uuid, data);
+    } else {
+      const createdDecision = await this.decisionService.create({
+        ...data,
+        applicationFileNumber: this.fileNumber,
+      });
+      this.uuid = createdDecision.uuid;
     }
   }
 
@@ -419,6 +412,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic: daysHideFromPublic,
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
+      decisionComponents: this.components,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -427,6 +421,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       data.isTimeExtension = null;
       data.isOther = null;
     }
+
     return data;
   }
 
@@ -456,10 +451,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         chairReviewDate: null,
       });
     }
-  }
-
-  async onUploadFile() {
-    console.log('There is a separate ticket for this');
   }
 
   onCancel() {
