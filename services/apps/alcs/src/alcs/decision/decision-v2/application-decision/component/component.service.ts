@@ -61,8 +61,8 @@ export class ComponentService {
     return updatedComponents;
   }
 
-  validate(components: CreateApplicationDecisionComponentDto[]) {
-    if (!this.checkDuplicates(components)) {
+  validate(componentsDto: CreateApplicationDecisionComponentDto[]) {
+    if (!this.checkDuplicates(componentsDto)) {
       throw new ServiceValidationException(
         'Only on component of each type is allowed',
       );

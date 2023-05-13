@@ -1,11 +1,15 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, Unique } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './decision-component-type.entity';
 
 @Entity()
+@Index(['applicationDecisionComponentTypeCode', 'applicationDecisionUuid'], {
+  unique: true,
+  where: '"audit_deleted_date_at" is null',
+})
 export class ApplicationDecisionComponent extends Base {
   constructor(data?: Partial<ApplicationDecisionComponent>) {
     super();
@@ -87,6 +91,9 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => ApplicationDecisionComponentType)
   applicationDecisionComponentType: ApplicationDecisionComponentType;
+
+  @Column({ nullable: false })
+  applicationDecisionUuid: string;
 
   @AutoMap()
   @ManyToOne(() => ApplicationDecision, { nullable: false })
