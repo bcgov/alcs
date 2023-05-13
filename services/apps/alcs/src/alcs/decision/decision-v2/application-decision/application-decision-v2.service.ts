@@ -275,6 +275,7 @@ export class ApplicationDecisionV2Service {
     updateDto: UpdateApplicationDecisionDto,
     existingDecision: Partial<ApplicationDecision>,
   ) {
+    console.log('updateComponents', updateDto.decisionComponents);
     if (updateDto.decisionComponents) {
       this.decisionComponentService.validate(updateDto.decisionComponents);
 

@@ -41,6 +41,14 @@ export class ComponentService {
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
 
+      if (component.applicationDecisionComponentTypeCode === 'NFUP') {
+        component.nfuEndDate = updateDto.nfuEndDate
+          ? new Date(updateDto.nfuEndDate)
+          : null;
+        component.nfuSubType = updateDto.nfuSubType;
+        component.nfuType = updateDto.nfuType;
+      }
+
       //   parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
 
       updatedComponents.push(component);

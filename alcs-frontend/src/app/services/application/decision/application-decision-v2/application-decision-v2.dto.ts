@@ -100,7 +100,12 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
-export interface DecisionComponentDto {
+export interface NfuDecisionComponentDto {
+  nfuType?: string | null;
+  nfuSubType?: string | null;
+  nfuEndDate?: number | null;
+}
+export interface DecisionComponentDto extends NfuDecisionComponentDto {
   uuid?: string;
 
   alrArea?: number | null;

@@ -63,7 +63,7 @@ export class ApplicationDecisionComponent extends Base {
     comment: 'Non-farm use type',
     nullable: true,
   })
-  nfuUseType?: string | null;
+  nfuType?: string | null;
 
   @AutoMap(() => String)
   @Column({
@@ -71,7 +71,7 @@ export class ApplicationDecisionComponent extends Base {
     comment: 'Non-farm use sub type',
     nullable: true,
   })
-  nfuUseSubType?: string | null;
+  nfuSubType?: string | null;
 
   @Column({
     type: 'timestamptz',

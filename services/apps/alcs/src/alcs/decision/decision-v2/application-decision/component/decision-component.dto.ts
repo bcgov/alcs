@@ -28,20 +28,20 @@ export class UpdateApplicationDecisionComponentDto {
   @IsString()
   agCapConsultant?: string;
 
-  @IsOptional()
   @IsString()
-  nfuUseTypeCode?: string;
+  applicationDecisionComponentTypeCode: string;
 
   @IsOptional()
   @IsString()
-  nfuUseSubTypeCode?: string;
+  nfuType?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuSubType?: string;
 
   @IsOptional()
   @IsNumber()
   nfuEndDate?: number;
-
-  @IsString()
-  applicationDecisionComponentTypeCode: string;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -70,10 +70,10 @@ export class ApplicationDecisionComponentDto {
   agCapConsultant?: string;
 
   @AutoMap()
-  nfuUseType?: string;
+  nfuType?: string;
 
   @AutoMap()
-  nfuUseSubType?: string;
+  nfuSubType?: string;
 
   @AutoMap()
   nfuEndDate?: number;

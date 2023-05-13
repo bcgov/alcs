@@ -10,6 +10,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
 import { DecisionComponentComponent } from './decision-v2/decision-components/decision-component/decision-component.component';
+import { NfuInputComponent } from './decision-v2/decision-components/decision-component/nfu-input/nfu-input.component';
 import { DecisionComponentsComponent } from './decision-v2/decision-components/decision-components.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionDocumentUploadDialogComponent } from './decision-v2/decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
@@ -52,6 +53,7 @@ export const decisionChildRoutes = [
     DecisionComponentsComponent,
     DecisionDocumentUploadDialogComponent,
     DecisionDocumentsComponent,
+    NfuInputComponent,
   ],
   imports: [
     CommonModule,

@@ -20,13 +20,18 @@
     grid-template-columns: 1fr 16px 0.7fr;
   }
 
+  .row-no-flex,
+  .row,
+  .btn-row {
+    width: 100%;
+    margin: 24px 0;
+  }
+
   .row,
   .btn-row {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 100%;
-    margin: 24px 0;
 
     .column {
       display: flex;

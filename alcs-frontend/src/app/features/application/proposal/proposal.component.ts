@@ -3,6 +3,7 @@ import { ApplicationDetailService } from '../../../services/application/applicat
 import { ApplicationDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
+// TODO move to code tables?
 export const AG_CAP_OPTIONS = [
   {
     label: 'Mixed Prime and Secondary',
@@ -52,7 +53,7 @@ export class ProposalComponent {
   agCapOptions = AG_CAP_OPTIONS;
 
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
-  
+
   alrArea: string | undefined;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}

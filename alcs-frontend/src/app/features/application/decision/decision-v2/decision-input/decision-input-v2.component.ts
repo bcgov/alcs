@@ -86,7 +86,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
     rescindedDate: new FormControl<Date | undefined>(undefined),
     rescindedComment: new FormControl<string | undefined>(undefined),
-    components: this.fb.array([]),
+    // components: this.fb.array([]),
   });
 
   constructor(
@@ -391,6 +391,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     const isPostDecisionReconsideration =
       selectedDecision && selectedDecision.type === PostDecisionType.Reconsideration;
 
+    console.log('mapDecisionDataForSave components', this.components);
     const data: CreateApplicationDecisionDto = {
       date: formatDateForApi(date!),
       resolutionNumber: parseInt(resolutionNumber!),
