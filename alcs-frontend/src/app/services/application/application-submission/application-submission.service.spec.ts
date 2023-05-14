@@ -29,6 +29,7 @@ describe('ApplicationSubmissionService', () => {
     westLandUseType: '',
     westLandUseTypeDescription: '',
     subdProposedLots: [],
+    typeCode: ''
   };
 
   beforeEach(() => {

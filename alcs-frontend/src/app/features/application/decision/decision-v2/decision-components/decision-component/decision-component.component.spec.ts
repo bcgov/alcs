@@ -8,12 +8,13 @@ describe('DecisionComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DecisionComponentComponent ]
-    })
-    .compileComponents();
+      declarations: [DecisionComponentComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DecisionComponentComponent);
     component = fixture.componentInstance;
+    component.data = { applicationDecisionComponentTypeCode: '' };
+
     fixture.detectChanges();
   });
 
