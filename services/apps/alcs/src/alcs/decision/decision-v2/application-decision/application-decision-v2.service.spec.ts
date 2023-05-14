@@ -24,6 +24,8 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ComponentService } from './component/component.service';
+import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -38,6 +40,10 @@ describe('ApplicationDecisionV2Service', () => {
   let mockCeoCriterionCodeRepository: DeepMocked<Repository<CeoCriterionCode>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
+  let mockApplicationDecisionComponentTypeRepository: DeepMocked<
+    Repository<ApplicationDecisionComponentType>
+  >;
+  let mockDecisionComponentService: DeepMocked<ComponentService>;
 
   let mockApplication;
   let mockDecision;
@@ -52,6 +58,8 @@ describe('ApplicationDecisionV2Service', () => {
     mockDecisionMakerCodeRepository =
       createMock<Repository<DecisionMakerCode>>();
     mockCeoCriterionCodeRepository = createMock<Repository<CeoCriterionCode>>();
+    mockApplicationDecisionComponentTypeRepository = createMock();
+    mockDecisionComponentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -89,6 +97,14 @@ describe('ApplicationDecisionV2Service', () => {
           provide: DocumentService,
           useValue: mockDocumentService,
         },
+        {
+          provide: getRepositoryToken(ApplicationDecisionComponentType),
+          useValue: mockApplicationDecisionComponentTypeRepository,
+        },
+        {
+          provide: ComponentService,
+          useValue: mockDecisionComponentService,
+        },
       ],
     }).compile();
 
@@ -114,6 +130,9 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
+
+    mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
+    mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -143,6 +162,7 @@ describe('ApplicationDecisionV2Service', () => {
         modifies: 'modified-uuid',
       });
       mockDecisionRepository.find.mockResolvedValue([]);
+      mockDecisionComponentService.softRemove.mockResolvedValue();
 
       await service.delete(mockDecision.uuid);
 

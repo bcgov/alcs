@@ -96,6 +96,7 @@ describe('ApplicationDecisionV2Controller', () => {
       ],
       ceoCriterion: [],
       decisionMakers: [],
+      decisionComponentTypes: [],
     });
   });
 
