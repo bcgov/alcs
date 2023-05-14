@@ -49,8 +49,6 @@ export class ComponentService {
         component.nfuType = updateDto.nfuType;
       }
 
-      //   parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
-
       updatedComponents.push(component);
     }
 
