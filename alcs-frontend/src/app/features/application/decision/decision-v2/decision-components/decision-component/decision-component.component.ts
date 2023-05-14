@@ -28,15 +28,12 @@ export class DecisionComponentComponent implements OnInit {
   agCapMap = new FormControl<string | null>(null);
   agCapConsultant = new FormControl<string | null>(null);
 
-  form = new FormGroup({
+  form: FormGroup = new FormGroup({
     alrArea: this.alrArea,
     agCap: this.agCap,
     agCapSource: this.agCapSource,
     agCapMap: this.agCapMap,
     agCapConsultant: this.agCapConsultant,
-    nfuType: this.nfuType,
-    nfuSubType: this.nfuSubType,
-    nfuEndDate: this.nfuEndDate,
   });
 
   ngOnInit(): void {
@@ -48,16 +45,15 @@ export class DecisionComponentComponent implements OnInit {
       this.agCapMap.setValue(this.data.agCapMap ? this.data.agCapMap : null);
       this.agCapConsultant.setValue(this.data.agCapConsultant ? this.data.agCapConsultant : null);
 
-      if (this.data.applicationDecisionComponentTypeCode === 'NFUP') {
-        console.log('init nfup fields');
-        this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
-        this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
-        this.nfuEndDate.setValue(this.data.nfuEndDate ? new Date(this.data.nfuEndDate) : null);
-      }
+      this.patchNfuFields();
     }
 
+    this.onFormValueChanges();
+  }
+
+  private onFormValueChanges() {
     this.form.valueChanges.subscribe((changes) => {
-      this.dataChange.emit({
+      let dataChange = {
         alrArea: this.alrArea.value ? this.alrArea.value : null,
         agCap: this.agCap.value ? this.agCap.value : null,
         agCapSource: this.agCapSource.value ? this.agCapSource.value : null,
@@ -66,11 +62,33 @@ export class DecisionComponentComponent implements OnInit {
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
         applicationDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,
-        // nfu
-        nfuType: this.nfuType.value ? this.nfuType.value : null,
-        nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
-        nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
-      });
+      };
+
+      if (dataChange.applicationDecisionComponentTypeCode === 'NFUP') {
+        dataChange = { ...dataChange, ...this.getNfuDataChange() };
+      }
+
+      this.dataChange.emit(dataChange);
     });
+  }
+
+  private patchNfuFields() {
+    if (this.data.applicationDecisionComponentTypeCode === 'NFUP') {
+      this.form.addControl('nfuType', this.nfuType);
+      this.form.addControl('nfuSubType', this.nfuSubType);
+      this.form.addControl('nfuEndDate', this.nfuEndDate);
+
+      this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
+      this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
+      this.nfuEndDate.setValue(this.data.nfuEndDate ? new Date(this.data.nfuEndDate) : null);
+    }
+  }
+
+  private getNfuDataChange() {
+    return {
+      nfuType: this.nfuType.value ? this.nfuType.value : null,
+      nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
+      nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
+    };
   }
 }

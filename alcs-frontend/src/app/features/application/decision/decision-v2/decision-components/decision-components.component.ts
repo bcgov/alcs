@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
+import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
+import { ApplicationDto } from '../../../../../services/application/application.dto';
 import {
   DecisionCodesDto,
   DecisionComponentDto,
@@ -30,16 +31,24 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
+  application!: ApplicationDto;
+
   constructor(
     private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
-    private applicationSubmissionService: ApplicationSubmissionService
+    private applicationDetailService: ApplicationDetailService
   ) {}
 
   ngOnInit(): void {
     this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
       if (decision && decision.components) {
         this.components = decision.components;
+      }
+    });
+
+    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+      if (application) {
+        this.application = application;
       }
     });
 
@@ -58,8 +67,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
       uiCode: e.code,
     }));
 
-    const submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
-    const mappedProposalType = decisionComponentTypes.find((e) => e.code === submission.typeCode);
+    const mappedProposalType = decisionComponentTypes.find((e) => e.code === this.application.type.code);
 
     if (mappedProposalType) {
       const proposalDecisionType: DecisionComponentTypeMenuItem = {
@@ -76,12 +84,24 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     this.updateComponentsMenuItems();
   }
 
-  onAddNewComponent(typeCode: string) {
-    switch (typeCode) {
+  onAddNewComponent(uiCode: string, typeCode: string) {
+    console.log(uiCode, typeCode);
+    switch (uiCode) {
       case 'COPY':
-        // TODO get the proposal data and populate fields
-        // add component
-        this.components.push({ applicationDecisionComponentTypeCode: typeCode } as DecisionComponentDto);
+        const component: DecisionComponentDto = {
+          applicationDecisionComponentTypeCode: typeCode,
+          alrArea: this.application.alrArea,
+          agCap: this.application.agCap,
+          agCapSource: this.application.agCapSource,
+          agCapMap: this.application.agCapMap,
+          agCapConsultant: this.application.agCapConsultant,
+          nfuType: this.application.nfuUseType,
+          nfuSubType: this.application.nfuUseSubType,
+          nfuEndDate: this.application.nfuEndDate,
+        };
+        console.log('onAddNewComponent', component);
+
+        this.components.push(component);
         break;
       case 'NFUP':
         this.components.push({

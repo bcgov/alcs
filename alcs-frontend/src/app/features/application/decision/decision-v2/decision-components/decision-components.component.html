@@ -22,7 +22,7 @@
     <button
       *ngFor="let componentType of decisionComponentTypes"
       mat-menu-item
-      (click)="onAddNewComponent(componentType.code)"
+      (click)="onAddNewComponent(componentType.uiCode, componentType.code)"
       [disabled]="componentType.isDisabled"
     >
       <div class="board-menu-item">
