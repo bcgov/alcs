@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { formatDateForApi } from '../../../../../../shared/utils/api-date-formatter';
-import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../proposal/proposal.component';
+import {
+  APPLICATION_DECISION_COMPONENT_TYPE,
+  DecisionComponentDto,
+} from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
+import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
 
 @Component({
   selector: 'app-decision-component',
@@ -38,7 +41,6 @@ export class DecisionComponentComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      console.log('DecisionComponentComponent onInit data', this.data);
       this.alrArea.setValue(this.data.alrArea ? this.data.alrArea : null);
       this.agCap.setValue(this.data.agCap ? this.data.agCap : null);
       this.agCapSource.setValue(this.data.agCapSource ? this.data.agCapSource : null);
@@ -64,7 +66,7 @@ export class DecisionComponentComponent implements OnInit {
         uuid: this.data.uuid,
       };
 
-      if (dataChange.applicationDecisionComponentTypeCode === 'NFUP') {
+      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
         dataChange = { ...dataChange, ...this.getNfuDataChange() };
       }
 
@@ -73,7 +75,7 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private patchNfuFields() {
-    if (this.data.applicationDecisionComponentTypeCode === 'NFUP') {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
       this.form.addControl('nfuType', this.nfuType);
       this.form.addControl('nfuSubType', this.nfuSubType);
       this.form.addControl('nfuEndDate', this.nfuEndDate);

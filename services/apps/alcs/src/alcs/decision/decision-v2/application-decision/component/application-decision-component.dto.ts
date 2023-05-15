@@ -84,3 +84,7 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   applicationDecisionComponentTypeCode: string;
 }
+
+export enum APPLICATION_DECISION_COMPONENT_TYPE {
+  NFUP = 'NFUP',
+}

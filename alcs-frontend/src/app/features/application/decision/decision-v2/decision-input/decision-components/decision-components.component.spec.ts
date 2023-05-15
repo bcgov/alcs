@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
-import { ApplicationDecisionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
-import { ToastService } from '../../../../../services/toast/toast.service';
+import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
+import { ApplicationDto } from '../../../../../../services/application/application.dto';
+import { ApplicationDecisionDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../../../../../services/toast/toast.service';
 
 import { DecisionComponentsComponent } from './decision-components.component';
 

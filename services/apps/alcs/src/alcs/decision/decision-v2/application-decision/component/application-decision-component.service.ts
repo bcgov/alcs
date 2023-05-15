@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
-import { CreateApplicationDecisionComponentDto } from './decision-component.dto';
-import { ApplicationDecisionComponent } from './decision-component.entity';
+import {
+  APPLICATION_DECISION_COMPONENT_TYPE,
+  CreateApplicationDecisionComponentDto,
+} from './application-decision-component.dto';
+import { ApplicationDecisionComponent } from './application-decision-component.entity';
 
 @Injectable()
-export class ComponentService {
+export class ApplicationDecisionComponentService {
   constructor(
     @InjectRepository(ApplicationDecisionComponent)
     private componentRepository: Repository<ApplicationDecisionComponent>,
@@ -41,12 +44,11 @@ export class ComponentService {
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
 
-      if (component.applicationDecisionComponentTypeCode === 'NFUP') {
-        component.nfuEndDate = updateDto.nfuEndDate
-          ? new Date(updateDto.nfuEndDate)
-          : null;
-        component.nfuSubType = updateDto.nfuSubType;
-        component.nfuType = updateDto.nfuType;
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.NFUP
+      ) {
+        this.patchNfuFields(component, updateDto);
       }
 
       updatedComponents.push(component);
@@ -57,6 +59,17 @@ export class ComponentService {
     }
 
     return updatedComponents;
+  }
+
+  private patchNfuFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.nfuEndDate = updateDto.nfuEndDate
+      ? new Date(updateDto.nfuEndDate)
+      : null;
+    component.nfuSubType = updateDto.nfuSubType;
+    component.nfuType = updateDto.nfuType;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {

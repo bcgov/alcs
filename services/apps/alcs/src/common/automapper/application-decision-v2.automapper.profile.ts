@@ -15,12 +15,12 @@ import {
   DecisionOutcomeCodeDto,
 } from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
-import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/decision-component-type.entity';
+import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component-type.entity';
 import {
   ApplicationDecisionComponentDto,
   ApplicationDecisionComponentTypeDto,
-} from '../../alcs/decision/decision-v2/application-decision/component/decision-component.dto';
-import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/decision-component.entity';
+} from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.dto';
+import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.entity';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
 
 @Injectable()

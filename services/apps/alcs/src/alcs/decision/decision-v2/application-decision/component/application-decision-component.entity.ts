@@ -1,9 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, Index, ManyToOne, Unique } from 'typeorm';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecision } from '../../../application-decision.entity';
-import { ApplicationDecisionComponentType } from './decision-component-type.entity';
+import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
 @Entity()
 @Index(['applicationDecisionComponentTypeCode', 'applicationDecisionUuid'], {

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { NFU_SUBTYPES_OPTIONS, NFU_TYPES_OPTIONS } from '../../../../../proposal/nfu/nfu.component';
+import { NFU_SUBTYPES_OPTIONS, NFU_TYPES_OPTIONS } from '../../../../../../proposal/nfu/nfu.component';
 
 @Component({
   selector: 'app-nfu-input',

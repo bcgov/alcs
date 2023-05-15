@@ -11,7 +11,7 @@ import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import {
   ApplicationDecisionComponentDto,
   CreateApplicationDecisionComponentDto,
-} from './component/decision-component.dto';
+} from './component/application-decision-component.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 export class UpdateApplicationDecisionDto {

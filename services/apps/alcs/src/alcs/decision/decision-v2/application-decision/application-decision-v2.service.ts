@@ -26,9 +26,9 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ComponentService } from './component/component.service';
-import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
-import { ApplicationDecisionComponent } from './component/decision-component.entity';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
+import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -47,7 +47,7 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
-    private decisionComponentService: ComponentService,
+    private decisionComponentService: ApplicationDecisionComponentService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -275,7 +275,6 @@ export class ApplicationDecisionV2Service {
     updateDto: UpdateApplicationDecisionDto,
     existingDecision: Partial<ApplicationDecision>,
   ) {
-    console.log('updateComponents', updateDto.decisionComponents);
     if (updateDto.decisionComponents) {
       this.decisionComponentService.validate(updateDto.decisionComponents);
 

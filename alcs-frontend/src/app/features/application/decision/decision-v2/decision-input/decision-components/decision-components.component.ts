@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
+import { ApplicationDto } from '../../../../../../services/application/application.dto';
 import {
+  APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionCodesDto,
   DecisionComponentDto,
   DecisionComponentTypeDto,
-} from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
-import { ToastService } from '../../../../../services/toast/toast.service';
+} from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../../../../../services/toast/toast.service';
 
 export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisabled: boolean; uiCode: string };
 
@@ -85,7 +86,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   }
 
   onAddNewComponent(uiCode: string, typeCode: string) {
-    console.log(uiCode, typeCode);
     switch (uiCode) {
       case 'COPY':
         const component: DecisionComponentDto = {
@@ -95,15 +95,15 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           agCapSource: this.application.agCapSource,
           agCapMap: this.application.agCapMap,
           agCapConsultant: this.application.agCapConsultant,
-          nfuType: this.application.nfuUseType,
-          nfuSubType: this.application.nfuUseSubType,
-          nfuEndDate: this.application.nfuEndDate,
         };
-        console.log('onAddNewComponent', component);
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
+          this.patchNfuFields(component);
+        }
 
         this.components.push(component);
         break;
-      case 'NFUP':
+      case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
         } as DecisionComponentDto);
@@ -115,8 +115,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     this.updateComponentsMenuItems();
   }
 
+  private patchNfuFields(component: DecisionComponentDto) {
+    component.nfuType = this.application.nfuUseType;
+    component.nfuSubType = this.application.nfuUseSubType;
+    component.nfuEndDate = this.application.nfuEndDate;
+  }
+
   private updateComponentsMenuItems() {
-    console.log('updateComponentsMenuItems', this.components, this.decisionComponentTypes);
     this.decisionComponentTypes = this.decisionComponentTypes.map((e) => ({
       ...e,
       isDisabled: this.components.some((c) => c.applicationDecisionComponentTypeCode === e.code),

@@ -32,8 +32,8 @@ import {
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
-import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
-import { ApplicationDecisionComponentTypeDto } from './component/decision-component.dto';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))

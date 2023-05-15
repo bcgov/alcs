@@ -391,7 +391,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     const isPostDecisionReconsideration =
       selectedDecision && selectedDecision.type === PostDecisionType.Reconsideration;
 
-    console.log('mapDecisionDataForSave components', this.components);
     const data: CreateApplicationDecisionDto = {
       date: formatDateForApi(date!),
       resolutionNumber: parseInt(resolutionNumber!),

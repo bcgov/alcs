@@ -135,3 +135,7 @@ export interface DecisionCodesDto {
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
 }
+
+export enum APPLICATION_DECISION_COMPONENT_TYPE {
+  NFUP = 'NFUP',
+}

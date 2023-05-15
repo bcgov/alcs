@@ -3,12 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
-import { ComponentService } from './component.service';
-import { CreateApplicationDecisionComponentDto } from './decision-component.dto';
-import { ApplicationDecisionComponent } from './decision-component.entity';
+import {
+  APPLICATION_DECISION_COMPONENT_TYPE,
+  CreateApplicationDecisionComponentDto,
+} from './application-decision-component.dto';
+import { ApplicationDecisionComponent } from './application-decision-component.entity';
+import { ApplicationDecisionComponentService } from './application-decision-component.service';
 
-describe('ComponentService', () => {
-  let service: ComponentService;
+describe('ApplicationDecisionComponentService', () => {
+  let service: ApplicationDecisionComponentService;
   let mockApplicationDecisionComponentRepository: DeepMocked<
     Repository<ApplicationDecisionComponent>
   >;
@@ -18,7 +21,7 @@ describe('ComponentService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ComponentService,
+        ApplicationDecisionComponentService,
         {
           provide: getRepositoryToken(ApplicationDecisionComponent),
           useValue: mockApplicationDecisionComponentRepository,
@@ -26,7 +29,9 @@ describe('ComponentService', () => {
       ],
     }).compile();
 
-    service = module.get<ComponentService>(ComponentService);
+    service = module.get<ApplicationDecisionComponentService>(
+      ApplicationDecisionComponentService,
+    );
   });
 
   it('should be defined', () => {
@@ -192,7 +197,8 @@ describe('ComponentService', () => {
   it('should update existing components NFU specific fields when given a DTO with a UUID of NFUP type', async () => {
     mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
       uuid: 'fake',
-      applicationDecisionComponentTypeCode: 'NFUP',
+      applicationDecisionComponentTypeCode:
+        APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
     } as ApplicationDecisionComponent);
 
     const mockDto = new CreateApplicationDecisionComponentDto();
@@ -202,7 +208,8 @@ describe('ComponentService', () => {
     mockDto.agCapSource = '3';
     mockDto.agCapMap = '4';
     mockDto.agCapConsultant = '5';
-    mockDto.applicationDecisionComponentTypeCode = 'NFUP';
+    mockDto.applicationDecisionComponentTypeCode =
+      APPLICATION_DECISION_COMPONENT_TYPE.NFUP;
     mockDto.nfuEndDate = 6;
     mockDto.nfuSubType = '7';
     mockDto.nfuType = '8';
@@ -225,7 +232,9 @@ describe('ComponentService', () => {
     expect(result[0].agCapSource).toEqual(mockDto.agCapSource);
     expect(result[0].agCapMap).toEqual(mockDto.agCapMap);
     expect(result[0].agCapConsultant).toEqual(mockDto.agCapConsultant);
-    expect(result[0].applicationDecisionComponentTypeCode).toEqual('NFUP');
+    expect(result[0].applicationDecisionComponentTypeCode).toEqual(
+      APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
+    );
     expect(result[0].nfuEndDate).toEqual(new Date(mockDto.nfuEndDate));
     expect(result[0].nfuSubType).toEqual(mockDto.nfuSubType);
     expect(result[0].nfuType).toEqual(mockDto.nfuType);

@@ -24,8 +24,8 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { ComponentService } from './component/component.service';
-import { ApplicationDecisionComponentType } from './component/decision-component-type.entity';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -43,7 +43,7 @@ describe('ApplicationDecisionV2Service', () => {
   let mockApplicationDecisionComponentTypeRepository: DeepMocked<
     Repository<ApplicationDecisionComponentType>
   >;
-  let mockDecisionComponentService: DeepMocked<ComponentService>;
+  let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
 
   let mockApplication;
   let mockDecision;
@@ -102,7 +102,7 @@ describe('ApplicationDecisionV2Service', () => {
           useValue: mockApplicationDecisionComponentTypeRepository,
         },
         {
-          provide: ComponentService,
+          provide: ApplicationDecisionComponentService,
           useValue: mockDecisionComponentService,
         },
       ],
