@@ -86,7 +86,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
     rescindedDate: new FormControl<Date | undefined>(undefined),
     rescindedComment: new FormControl<string | undefined>(undefined),
-    // components: this.fb.array([]),
   });
 
   constructor(
@@ -98,7 +97,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
     public dialog: MatDialog,
-    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
