@@ -180,6 +180,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
           if (decisions.length > 0) {
             let minDate = null;
+            this.isFirstDecision = true;
 
             for (const decision of decisions) {
               if (!minDate && decision.date) {
