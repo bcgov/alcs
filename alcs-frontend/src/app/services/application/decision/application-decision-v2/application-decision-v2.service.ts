@@ -8,6 +8,8 @@ import {
   ApplicationDecisionDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionCodesDto,
+  DecisionComponentTypeDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
@@ -41,17 +43,21 @@ export class ApplicationDecisionV2Service {
     let outcomes: DecisionOutcomeCodeDto[] = [];
     let decisionMakers: DecisionMakerDto[] = [];
     let ceoCriterion: CeoCriterionDto[] = [];
+    let decisionComponentTypes: DecisionComponentTypeDto[] = [];
+
     try {
       const res = await firstValueFrom(
         this.http.get<{
           outcomes: DecisionOutcomeCodeDto[];
           decisionMakers: DecisionMakerDto[];
           ceoCriterion: CeoCriterionDto[];
+          decisionComponentTypes: DecisionComponentTypeDto[];
         }>(`${this.url}/codes`)
       );
       outcomes = res.outcomes;
       decisionMakers = res.decisionMakers;
       ceoCriterion = res.ceoCriterion;
+      decisionComponentTypes = res.decisionComponentTypes;
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
@@ -59,7 +65,8 @@ export class ApplicationDecisionV2Service {
       outcomes,
       decisionMakers,
       ceoCriterion,
-    };
+      decisionComponentTypes,
+    } as DecisionCodesDto;
   }
 
   async update(uuid: string, data: UpdateApplicationDecisionDto) {

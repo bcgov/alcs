@@ -26,6 +26,9 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
+import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -40,8 +43,11 @@ export class ApplicationDecisionV2Service {
     private decisionMakerRepository: Repository<DecisionMakerCode>,
     @InjectRepository(CeoCriterionCode)
     private ceoCriterionRepository: Repository<CeoCriterionCode>,
+    @InjectRepository(ApplicationDecisionComponentType)
+    private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
+    private decisionComponentService: ApplicationDecisionComponentService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -149,6 +155,9 @@ export class ApplicationDecisionV2Service {
         reconsiders: {
           reconsidersDecisions: true,
         },
+        components: {
+          applicationDecisionComponentType: true,
+        },
       },
     });
 
@@ -232,8 +241,11 @@ export class ApplicationDecisionV2Service {
       existingDecision.date = new Date(updateDto.date);
     }
 
+    await this.updateComponents(updateDto, existingDecision);
+
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
+      { transaction: true },
     );
 
     //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
@@ -259,6 +271,36 @@ export class ApplicationDecisionV2Service {
     return this.get(existingDecision.uuid);
   }
 
+  private async updateComponents(
+    updateDto: UpdateApplicationDecisionDto,
+    existingDecision: Partial<ApplicationDecision>,
+  ) {
+    if (updateDto.decisionComponents) {
+      this.decisionComponentService.validate(updateDto.decisionComponents);
+
+      if (existingDecision?.components) {
+        const componentsToRemove = existingDecision.components.filter(
+          (component) =>
+            !updateDto.decisionComponents?.some(
+              (componentDto) => componentDto.uuid === component.uuid,
+            ),
+        );
+
+        await this.decisionComponentService.softRemove(componentsToRemove);
+      }
+
+      existingDecision.components =
+        await this.decisionComponentService.createOrUpdate(
+          updateDto.decisionComponents,
+          false,
+        );
+    } else if (existingDecision.components) {
+      await this.decisionComponentService.softRemove(
+        existingDecision.components,
+      );
+    }
+  }
+
   private async getOrFail(uuid: string) {
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
@@ -266,6 +308,7 @@ export class ApplicationDecisionV2Service {
       },
       relations: {
         application: true,
+        components: true,
       },
     });
 
@@ -319,6 +362,15 @@ export class ApplicationDecisionV2Service {
       );
     }
 
+    let decisionComponents: ApplicationDecisionComponent[] = [];
+    if (createDto.decisionComponents) {
+      this.decisionComponentService.validate(createDto.decisionComponents);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(
+        createDto.decisionComponents,
+        false,
+      );
+    }
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
@@ -348,6 +400,7 @@ export class ApplicationDecisionV2Service {
       application,
       modifies,
       reconsiders,
+      components: decisionComponents,
     });
 
     await this.validateDecisionChanges(createDto);
@@ -366,7 +419,9 @@ export class ApplicationDecisionV2Service {
       });
     }
 
-    const savedDecision = await this.appDecisionRepository.save(decision);
+    const savedDecision = await this.appDecisionRepository.save(decision, {
+      transaction: true,
+    });
 
     return this.get(savedDecision.uuid);
   }
@@ -401,6 +456,7 @@ export class ApplicationDecisionV2Service {
           document: true,
         },
         application: true,
+        components: true,
       },
     });
 
@@ -413,6 +469,10 @@ export class ApplicationDecisionV2Service {
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
+
+    await this.decisionComponentService.softRemove(
+      applicationDecision.components,
+    );
 
     //Clear potential links
     applicationDecision.reconsiders = null;
@@ -512,12 +572,14 @@ export class ApplicationDecisionV2Service {
           number: 'ASC',
         },
       }),
+      this.decisionComponentTypeRepository.find(),
     ]);
 
     return {
       outcomes: values[0],
       decisionMakers: values[1],
       ceoCriterion: values[2],
+      decisionComponentTypes: values[3],
     };
   }
 

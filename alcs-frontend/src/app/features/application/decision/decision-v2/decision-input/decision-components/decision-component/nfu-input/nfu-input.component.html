@@ -1,0 +1,45 @@
+<form [formGroup]="form" class="nfu-component-form">
+  <div class="grid-3">
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="nfuTypeOptions"
+        formControlName="nfuType"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="Non-Farm Use Type*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="nfuSubTypeOptions"
+        id="nonFarmUseSubType"
+        formControlName="nfuSubType"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="Non-Farm Use Sub-Type*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Use End Date</mat-label>
+      <input
+        matInput
+        (click)="nfuEndDatePicker.open()"
+        [matDatepicker]="nfuEndDatePicker"
+        formControlName="nfuEndDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="nfuEndDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #nfuEndDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

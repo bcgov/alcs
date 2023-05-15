@@ -8,6 +8,10 @@ import {
 } from 'class-validator';
 import { BaseCodeDto } from '../../../../common/dtos/base.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
+import {
+  ApplicationDecisionComponentDto,
+  CreateApplicationDecisionComponentDto,
+} from './component/application-decision-component.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 export class UpdateApplicationDecisionDto {
@@ -93,6 +97,9 @@ export class UpdateApplicationDecisionDto {
 
   @IsBoolean()
   isDraft: boolean;
+
+  @IsOptional()
+  decisionComponents?: CreateApplicationDecisionComponentDto[];
 }
 
 export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -200,6 +207,7 @@ export class ApplicationDecisionDto {
   modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
+  components?: ApplicationDecisionComponentDto[];
 }
 
 export class LinkedResolutionDto {

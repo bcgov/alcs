@@ -5,6 +5,13 @@ import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
 export class UpdateApplicationDecisionComponentDto {
+  @IsString()
+  uuid: string;
+
+  @IsOptional()
+  @IsString()
+  alrArea?: number;
+
   @IsOptional()
   @IsString()
   agCap?: string;
@@ -21,30 +28,36 @@ export class UpdateApplicationDecisionComponentDto {
   @IsString()
   agCapConsultant?: string;
 
-  @IsOptional()
   @IsString()
-  nfuUseTypeCode?: string;
+  applicationDecisionComponentTypeCode: string;
 
   @IsOptional()
   @IsString()
-  nfuUseSubTypeCode?: string;
+  nfuType?: string;
+
+  @IsOptional()
+  @IsString()
+  nfuSubType?: string;
 
   @IsOptional()
   @IsNumber()
   nfuEndDate?: number;
-
-  @IsOptional()
-  @IsString()
-  applicationDecisionComponentTypeCode?: string;
 }
 
-export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {}
+export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
+  @IsOptional()
+  @IsString()
+  override uuid: string;
+}
 
 export class ApplicationDecisionComponentDto {
   @AutoMap()
   uuid: string;
 
   @AutoMap()
+  alrArea?: number;
+
+  @AutoMap()
   agCap?: string;
 
   @AutoMap()
@@ -57,14 +70,21 @@ export class ApplicationDecisionComponentDto {
   agCapConsultant?: string;
 
   @AutoMap()
-  nfuUseType?: string;
+  nfuType?: string;
 
   @AutoMap()
-  nfuUseSubType?: string;
+  nfuSubType?: string;
 
   @AutoMap()
   nfuEndDate?: number;
 
-  @AutoMap(() => ApplicationDecisionComponentTypeDto)
-  applicationDecisionComponentType;
+  @AutoMap()
+  applicationDecisionUuid: string;
+
+  @AutoMap()
+  applicationDecisionComponentTypeCode: string;
+}
+
+export enum APPLICATION_DECISION_COMPONENT_TYPE {
+  NFUP = 'NFUP',
 }

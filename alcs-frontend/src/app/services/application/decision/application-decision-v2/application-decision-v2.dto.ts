@@ -39,6 +39,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
+  decisionComponents?: DecisionComponentDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -69,6 +70,7 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
+  components?: DecisionComponentDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -86,6 +88,8 @@ export interface DecisionDocumentDto {
 
 export interface DecisionMakerDto extends BaseCodeDto {}
 
+export interface DecisionComponentTypeDto extends BaseCodeDto {}
+
 export interface CeoCriterionDto extends BaseCodeDto {
   number: number;
 }
@@ -95,3 +99,43 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 }
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
+
+export interface NfuDecisionComponentDto {
+  nfuType?: string | null;
+  nfuSubType?: string | null;
+  nfuEndDate?: number | null;
+}
+export interface DecisionComponentDto extends NfuDecisionComponentDto {
+  uuid?: string;
+
+  alrArea?: number | null;
+
+  agCap?: string | null;
+
+  agCapSource?: string | null;
+
+  agCapMap?: string | null;
+
+  agCapConsultant?: string | null;
+
+  nfuUseType?: string | null;
+
+  nfuUseSubType?: string | null;
+
+  nfuEndDate?: number | null;
+
+  applicationDecisionComponentTypeCode: string;
+
+  applicationDecisionUuid?: string;
+}
+
+export interface DecisionCodesDto {
+  outcomes: DecisionOutcomeCodeDto[];
+  decisionMakers: DecisionMakerDto[];
+  ceoCriterion: CeoCriterionDto[];
+  decisionComponentTypes: DecisionComponentTypeDto[];
+}
+
+export enum APPLICATION_DECISION_COMPONENT_TYPE {
+  NFUP = 'NFUP',
+}

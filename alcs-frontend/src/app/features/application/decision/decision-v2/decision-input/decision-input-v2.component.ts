@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +15,9 @@ import {
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionCodesDto,
+  DecisionComponentDto,
+  DecisionComponentTypeDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -52,14 +55,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
+  decisionComponentTypes: DecisionComponentTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
-  applicationStatusCodes = [];
+  codes?: DecisionCodesDto;
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
+
+  components: DecisionComponentDto[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -90,7 +96,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -141,10 +147,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     await this.decisionService.loadDecisions(this.fileNumber);
 
-    const codes = await this.decisionService.fetchCodes();
-    this.outcomes = codes.outcomes;
-    this.decisionMakers = codes.decisionMakers;
-    this.ceoCriterion = codes.ceoCriterion;
+    this.codes = await this.decisionService.fetchCodes();
+    this.outcomes = this.codes.outcomes;
+    this.decisionMakers = this.codes.decisionMakers;
+    this.ceoCriterion = this.codes.ceoCriterion;
 
     await this.prepareDataForEdit();
   }
@@ -172,6 +178,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
           if (decisions.length > 0) {
             let minDate = null;
+            this.isFirstDecision = true;
 
             for (const decision of decisions) {
               if (!minDate && decision.date) {
@@ -296,6 +303,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (!existingDecision.resolutionNumber) {
       this.resolutionYearControl.enable();
     }
+
+    if (existingDecision?.components) {
+      this.components = existingDecision.components;
+    }
   }
 
   onSelectDecisionMaker(decisionMaker: DecisionMakerDto) {
@@ -400,6 +411,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic: daysHideFromPublic,
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
+      decisionComponents: this.components,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -408,6 +420,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       data.isTimeExtension = null;
       data.isOther = null;
     }
+
     return data;
   }
 

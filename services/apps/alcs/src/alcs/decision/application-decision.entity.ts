@@ -19,7 +19,7 @@ import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
 import { DecisionDocument } from './decision-document/decision-document.entity';
 import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-type/application-decision-outcome-type.entity';
-import { ApplicationDecisionComponent } from './decision-v2/application-decision/component/decision-component.entity';
+import { ApplicationDecisionComponent } from './decision-v2/application-decision/component/application-decision-component.entity';
 
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
@@ -212,6 +212,7 @@ export class ApplicationDecision extends Base {
   @OneToMany(
     () => ApplicationDecisionComponent,
     (component) => component.applicationDecision,
+    { cascade: ['insert', 'update'] },
   )
   components: ApplicationDecisionComponent[];
 }

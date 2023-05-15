@@ -1,11 +1,15 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecision } from '../../../application-decision.entity';
-import { ApplicationDecisionComponentType } from './decision-component-type.entity';
+import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
 @Entity()
+@Index(['applicationDecisionComponentTypeCode', 'applicationDecisionUuid'], {
+  unique: true,
+  where: '"audit_deleted_date_at" is null',
+})
 export class ApplicationDecisionComponent extends Base {
   constructor(data?: Partial<ApplicationDecisionComponent>) {
     super();
@@ -63,7 +67,7 @@ export class ApplicationDecisionComponent extends Base {
     comment: 'Non-farm use type',
     nullable: true,
   })
-  nfuUseType?: string | null;
+  nfuType?: string | null;
 
   @AutoMap(() => String)
   @Column({
@@ -71,7 +75,7 @@ export class ApplicationDecisionComponent extends Base {
     comment: 'Non-farm use sub type',
     nullable: true,
   })
-  nfuUseSubType?: string | null;
+  nfuSubType?: string | null;
 
   @Column({
     type: 'timestamptz',
@@ -81,10 +85,17 @@ export class ApplicationDecisionComponent extends Base {
   nfuEndDate?: Date | null;
 
   @AutoMap()
+  @Column({ nullable: false })
+  applicationDecisionComponentTypeCode: string;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationDecisionComponentType)
   applicationDecisionComponentType: ApplicationDecisionComponentType;
 
+  @Column({ nullable: false })
+  applicationDecisionUuid: string;
+
   @AutoMap()
-  @ManyToOne(() => ApplicationDecision)
+  @ManyToOne(() => ApplicationDecision, { nullable: false })
   applicationDecision: ApplicationDecision;
 }
