@@ -171,6 +171,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionComponent,
         ApplicationDecisionComponentDto,
+        forMember(
+          (ad) => ad.nfuEndDate,
+          mapFrom((a) => a.nfuEndDate?.getTime()),
+        ),
       );
       createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
       createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);

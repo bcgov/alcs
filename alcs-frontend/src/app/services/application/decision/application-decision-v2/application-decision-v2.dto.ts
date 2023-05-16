@@ -125,6 +125,7 @@ export interface DecisionComponentDto extends NfuDecisionComponentDto {
   nfuEndDate?: number | null;
 
   applicationDecisionComponentTypeCode: string;
+  applicationDecisionComponentType?: DecisionComponentTypeDto;
 
   applicationDecisionUuid?: string;
 }

@@ -13,8 +13,10 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import {
+  DRAFT_DECISION_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
+  RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
@@ -48,6 +50,8 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
   application: ApplicationDto | undefined;
+  dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
+  releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
 
   constructor(
     public dialog: MatDialog,
@@ -86,17 +90,19 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       }));
 
       this.isDraftExists = this.decisions.some((d) => d.isDraft);
+      console.log('isDraftExists', this.isDraftExists, this.decisions);
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
-        : 'You cannot create a decision if there are unpublished decisions.';
+        : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
     });
   }
 
   async onCreate() {
-    let minDate = new Date(0);
-    if (this.decisions.length > 0) {
-      minDate = new Date(this.decisions[this.decisions.length - 1].date);
-    }
+    // TODO check if date bellow populated correctly
+    // let minDate = new Date(0);
+    // if (this.decisions.length > 0) {
+    //   minDate = new Date(this.decisions[this.decisions.length - 1].date);
+    // }
 
     const newDecision = await this.decisionService.create({
       resolutionYear: new Date().getFullYear(),
@@ -112,12 +118,12 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async onEdit(decision: LoadingDecision) {
-    const decisionIndex = this.decisions.indexOf(decision);
-    // TODO set minDate for the decision in input
-    let minDate = new Date(0);
-    if (decisionIndex !== this.decisions.length - 1) {
-      minDate = new Date(this.decisions[this.decisions.length - 1].date);
-    }
+    // const decisionIndex = this.decisions.indexOf(decision);
+    // // TODO set minDate for the decision in input
+    // let minDate = new Date(0);
+    // if (decisionIndex !== this.decisions.length - 1) {
+    //   minDate = new Date(this.decisions[this.decisions.length - 1].date);
+    // }
 
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
@@ -160,34 +166,34 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     }
   }
 
-  async downloadFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-    await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName, false);
-  }
+  // async downloadFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+  //   await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName, false);
+  // }
 
-  async openFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-    await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName);
-  }
+  // async openFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+  //   await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName);
+  // }
 
-  async deleteFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Are you sure you want to delete the file ${fileName}?`,
-      })
-      .subscribe(async (confirmed) => {
-        if (confirmed) {
-          this.decisions = this.decisions.map((decision) => {
-            return {
-              ...decision,
-              loading: decision.uuid === decisionUuid,
-            };
-          });
+  // async deleteFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
+  //   this.confirmationDialogService
+  //     .openDialog({
+  //       body: `Are you sure you want to delete the file ${fileName}?`,
+  //     })
+  //     .subscribe(async (confirmed) => {
+  //       if (confirmed) {
+  //         this.decisions = this.decisions.map((decision) => {
+  //           return {
+  //             ...decision,
+  //             loading: decision.uuid === decisionUuid,
+  //           };
+  //         });
 
-          await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
-          await this.loadDecisions(this.fileNumber);
-          this.toastService.showSuccessToast('File deleted');
-        }
-      });
-  }
+  //         await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
+  //         await this.loadDecisions(this.fileNumber);
+  //         this.toastService.showSuccessToast('File deleted');
+  //       }
+  //     });
+  // }
 
   async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
     await this.decisionService.update(decisionUuid, {

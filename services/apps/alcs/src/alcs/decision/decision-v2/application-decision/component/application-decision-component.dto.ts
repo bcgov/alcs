@@ -83,6 +83,9 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap()
   applicationDecisionComponentTypeCode: string;
+
+  @AutoMap(() => ApplicationDecisionComponentTypeDto)
+  applicationDecisionComponentType: ApplicationDecisionComponentTypeDto;
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {

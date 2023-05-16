@@ -35,3 +35,23 @@ export const COVENANT_TYPE_LABEL = {
   description: 'Covenant',
   textColor: '#000',
 };
+
+export const DRAFT_DECISION_TYPE_LABEL = {
+  label: 'Draft',
+  code: 'Draft',
+  shortLabel: 'Draft',
+  backgroundColor: '#FEE9B5',
+  borderColor: '#FEE9B5',
+  description: 'Draft',
+  textColor: '#000',
+};
+
+export const RELEASED_DECISION_TYPE_LABEL = {
+  label: 'Released',
+  code: 'Released',
+  shortLabel: 'Released',
+  backgroundColor: '#A7C7E8',
+  borderColor: '#A7C7E8',
+  description: 'Draft',
+  textColor: '#000',
+};

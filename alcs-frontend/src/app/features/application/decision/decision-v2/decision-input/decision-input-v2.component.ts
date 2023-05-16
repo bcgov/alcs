@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +25,7 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
+import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper copy';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
@@ -96,7 +97,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -153,6 +154,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.ceoCriterion = this.codes.ceoCriterion;
 
     await this.prepareDataForEdit();
+    this.modificationService.fetchByApplication(this.fileNumber);
+    this.reconsiderationService.fetchByApplication(this.fileNumber);
   }
 
   private async prepareDataForEdit() {
@@ -223,11 +226,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     reconsiderations: ApplicationReconsiderationDto[],
     existingDecision?: ApplicationDecisionDto
   ) {
+    // debugger;
     const mappedModifications = modifications
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code === 'APPR' && modification.resultingDecision === null)
+          (modification.reviewOutcome.code === 'PRC' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -261,13 +265,13 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       date: existingDecision.date ? new Date(existingDecision.date) : undefined,
       resolutionYear: existingDecision.resolutionYear,
       resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
-      chairReviewRequired: existingDecision.chairReviewRequired ? 'true' : 'false',
+      chairReviewRequired: parseBooleanToString(existingDecision.chairReviewRequired),
       chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
       postDecision: existingDecision.modifies?.uuid || existingDecision.reconsiders?.uuid,
-      isSubjectToConditions: existingDecision.isSubjectToConditions ? 'true' : 'false',
+      isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
       decisionDescription: existingDecision.decisionDescription,
-      isStatsRequired: existingDecision.isStatsRequired ? 'true' : 'false',
+      isStatsRequired: parseBooleanToString(existingDecision.isStatsRequired),
       daysHideFromPublic: existingDecision.daysHideFromPublic,
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,

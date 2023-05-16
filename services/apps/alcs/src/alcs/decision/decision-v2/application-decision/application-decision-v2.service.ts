@@ -71,6 +71,9 @@ export class ApplicationDecisionV2Service {
           reconsidersDecisions: true,
         },
         chairReviewOutcome: true,
+        components: {
+          applicationDecisionComponentType: true,
+        },
       },
     });
 
