@@ -13,6 +13,7 @@
   >
     <form [formGroup]="form">
       <mat-button-toggle-group id="reviewOutcome" formControlName="reviewOutcome" name="reviewOutcome">
+        <mat-button-toggle value="PEN">Pending</mat-button-toggle>
         <mat-button-toggle value="PRC">Proceed</mat-button-toggle>
         <mat-button-toggle value="REF">Refuse</mat-button-toggle>
       </mat-button-toggle-group>

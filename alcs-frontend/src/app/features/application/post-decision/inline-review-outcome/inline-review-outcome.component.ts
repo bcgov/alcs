@@ -27,7 +27,7 @@ export class InlineReviewOutcomeComponent implements OnInit {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
-    this.selectedValue = 'PRC';
+    this.selectedValue = 'PEN';
     this.form = this.fb.group({
       reviewOutcome: this.selectedValue,
     });
