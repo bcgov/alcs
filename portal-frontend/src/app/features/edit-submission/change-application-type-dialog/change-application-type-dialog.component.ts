@@ -70,6 +70,17 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   async onAppTypeSelected(event: MatRadioChange) {
     this.selectedAppType = this.applicationTypes.find((e) => e.code === event.value);
     this.readMoreClicked = false;
+
+    setTimeout(() => {
+      const el = document.getElementById('warningBanner');
+      if (el) {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+      }
+    }, 300);
   }
 
   isEllipsisActive(e: string): boolean {
@@ -83,6 +94,19 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   onReadMoreClicked() {
     this.readMoreClicked = !this.readMoreClicked;
+
+    if (this.readMoreClicked) {
+      setTimeout(() => {
+        const el = document.getElementById('warningBanner');
+        if (el) {
+          el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest',
+          });
+        }
+      }, 300);
+    }
   }
 
   async next() {
