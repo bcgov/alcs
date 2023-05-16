@@ -16,14 +16,13 @@
     <ng-select
       appearance="outline"
       class="grid-half-2"
-      [items]="codes"
+      [items]="selectableComponents"
       formControlName="componentToCondition"
       appendTo="body"
       bindLabel="label"
-      bindValue="code"
+      bindValue="tempId"
       required
       placeholder="Component to Condition*"
-      [clearable]="false"
     ></ng-select>
 
     <div class="grid-1">

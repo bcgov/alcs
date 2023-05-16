@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationDecision } from '../application-decision.entity';
+import { ApplicationDecisionComponent } from '../decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './decision-condition-code.entity';
 
 @Entity()
@@ -51,4 +52,10 @@ export class ApplicationDecisionCondition extends Base {
 
   @Column()
   decisionUuid: string;
+
+  @ManyToOne(() => ApplicationDecisionComponent)
+  component: ApplicationDecisionComponent | null;
+
+  @Column({ type: 'uuid', nullable: true })
+  componentUuid: string | null;
 }

@@ -27,6 +27,7 @@ export interface UpdateApplicationDecisionDto {
   daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
+  conditions?: UpdateApplicationDecisionConditionDto[];
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -40,7 +41,6 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   reconsidersUuid: string | null;
   isDraft: boolean;
   decisionComponents?: DecisionComponentDto[];
-  conditions?: ApplicationDecisionConditionDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -71,8 +71,8 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
-  components?: DecisionComponentDto[];
-  conditions?: ApplicationDecisionConditionDto[];
+  components: DecisionComponentDto[];
+  conditions: ApplicationDecisionConditionDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -107,27 +107,15 @@ export interface NfuDecisionComponentDto {
   nfuSubType?: string | null;
   nfuEndDate?: number | null;
 }
+
 export interface DecisionComponentDto extends NfuDecisionComponentDto {
   uuid?: string;
-
   alrArea?: number | null;
-
   agCap?: string | null;
-
   agCapSource?: string | null;
-
   agCapMap?: string | null;
-
   agCapConsultant?: string | null;
-
-  nfuUseType?: string | null;
-
-  nfuUseSubType?: string | null;
-
-  nfuEndDate?: number | null;
-
   applicationDecisionComponentTypeCode: string;
-
   applicationDecisionUuid?: string;
 }
 
@@ -144,8 +132,21 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+
 export interface ApplicationDecisionConditionDto {
+  uuid: string;
+  componentUuid?: string;
+  approvalDependant?: boolean | null;
+  securityAmount?: number | null;
+  administrativeFee?: number | null;
+  description?: string | null;
+  type?: ApplicationDecisionConditionTypeDto | null;
+}
+
+export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;

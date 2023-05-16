@@ -1,6 +1,8 @@
+import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionComponent } from '../decision-v2/application-decision/component/application-decision-component.entity';
 import { UpdateApplicationDecisionConditionDto } from './decision-condition.dto';
 import { ApplicationDecisionCondition } from './decision-condition.entity';
 
@@ -19,33 +21,54 @@ export class DecisionConditionService {
 
   async createOrUpdate(
     updateDtos: UpdateApplicationDecisionConditionDto[],
+    allComponents: ApplicationDecisionComponent[],
     isPersist = true,
   ) {
-    const updatedComponents: ApplicationDecisionCondition[] = [];
+    const updatedConditions: ApplicationDecisionCondition[] = [];
 
     for (const updateDto of updateDtos) {
-      let component: ApplicationDecisionCondition | null = null;
+      let condition: ApplicationDecisionCondition | null = null;
 
       if (updateDto.uuid) {
-        component = await this.getOneOrFail(updateDto.uuid);
+        condition = await this.getOneOrFail(updateDto.uuid);
       } else {
-        component = new ApplicationDecisionCondition();
-        component.typeCode = updateDto.type ?? null;
+        condition = new ApplicationDecisionCondition();
+      }
+      condition.typeCode = updateDto.type?.code ?? null;
+      condition.administrativeFee = updateDto.administrativeFee ?? null;
+      condition.description = updateDto.description ?? null;
+      condition.securityAmount = updateDto.securityAmount ?? null;
+      condition.approvalDependant = updateDto.approvalDependant ?? null;
+
+      if (
+        updateDto.componentDecisionUuid &&
+        updateDto.componentToConditionType
+      ) {
+        const matchingComponent = allComponents.find(
+          (component) =>
+            component.applicationDecisionUuid ===
+              updateDto.componentDecisionUuid &&
+            component.applicationDecisionComponentType.code ===
+              updateDto.componentToConditionType,
+        );
+        if (!matchingComponent) {
+          throw new ServiceValidationException(
+            'Failed to find matching component',
+          );
+        }
+        condition.componentUuid = matchingComponent.uuid;
+      } else {
+        condition.componentUuid = null;
       }
 
-      component.administrativeFee = updateDto.administrativeFee ?? null;
-      component.description = updateDto.description ?? null;
-      component.securityAmount = updateDto.securityAmount ?? null;
-      component.approvalDependant = updateDto.approvalDependant ?? null;
-
-      updatedComponents.push(component);
+      updatedConditions.push(condition);
     }
 
     if (isPersist) {
-      return await this.repository.save(updatedComponents);
+      return await this.repository.save(updatedConditions);
     }
 
-    return updatedComponents;
+    return updatedConditions;
   }
 
   async remove(components: ApplicationDecisionCondition[]) {

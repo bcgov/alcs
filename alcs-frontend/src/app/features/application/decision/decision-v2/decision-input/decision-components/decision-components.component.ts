@@ -8,7 +8,6 @@ import {
   DecisionComponentDto,
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 
 export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisabled: boolean; uiCode: string };
@@ -19,34 +18,20 @@ export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisab
   styleUrls: ['./decision-components.component.scss'],
 })
 export class DecisionComponentsComponent implements OnInit, OnDestroy {
-  @Input()
-  codes!: DecisionCodesDto;
-  @Input()
-  fileNumber!: string;
-
-  @Input()
-  components: DecisionComponentDto[] = [];
-  @Output() componentsChange = new EventEmitter<DecisionComponentDto[]>();
-
-  decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
-
   $destroy = new Subject<void>();
 
-  application!: ApplicationDto;
+  @Input() codes!: DecisionCodesDto;
+  @Input() fileNumber!: string;
 
-  constructor(
-    private decisionService: ApplicationDecisionV2Service,
-    private toastService: ToastService,
-    private applicationDetailService: ApplicationDetailService
-  ) {}
+  @Input() components: DecisionComponentDto[] = [];
+  @Output() componentsChange = new EventEmitter<DecisionComponentDto[]>();
+
+  application!: ApplicationDto;
+  decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
+
+  constructor(private toastService: ToastService, private applicationDetailService: ApplicationDetailService) {}
 
   ngOnInit(): void {
-    this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
-      if (decision && decision.components) {
-        this.components = decision.components;
-      }
-    });
-
     this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.application = application;
@@ -113,6 +98,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     }
 
     this.updateComponentsMenuItems();
+    this.componentsChange.emit(this.components);
   }
 
   private patchNfuFields(component: DecisionComponentDto) {
@@ -131,9 +117,10 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   onRemove(index: number) {
     this.components.splice(index);
     this.updateComponentsMenuItems();
+    this.componentsChange.emit(this.components);
   }
 
-  trackByFn(index: any, item: any) {
-    return index;
+  trackByFn(index: any, item: DecisionComponentDto) {
+    return item.applicationDecisionComponentTypeCode;
   }
 }

@@ -96,4 +96,17 @@ export class ApplicationDecisionComponentService {
   async softRemove(components: ApplicationDecisionComponent[]) {
     await this.componentRepository.softRemove(components);
   }
+
+  async getAllByApplicationUuid(applicationUuid: string) {
+    return await this.componentRepository.find({
+      where: {
+        applicationDecision: {
+          applicationUuid,
+        },
+      },
+      relations: {
+        applicationDecisionComponentType: true,
+      },
+    });
+  }
 }
