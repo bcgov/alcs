@@ -74,7 +74,7 @@ describe('DecisionConditionService', () => {
 
     const updateDtos: UpdateApplicationDecisionConditionDto[] = [{}, {}];
 
-    const result = await service.createOrUpdate(updateDtos, false);
+    const result = await service.createOrUpdate(updateDtos, [], false);
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
@@ -94,7 +94,7 @@ describe('DecisionConditionService', () => {
       uuid: 'uuid',
     };
 
-    const result = await service.createOrUpdate([mockDto], false);
+    const result = await service.createOrUpdate([mockDto], [], false);
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
@@ -119,7 +119,7 @@ describe('DecisionConditionService', () => {
 
     const updateDtos: UpdateApplicationDecisionConditionDto[] = [{}];
 
-    const result = await service.createOrUpdate(updateDtos, true);
+    const result = await service.createOrUpdate(updateDtos, [], true);
 
     expect(result).toBeDefined();
     expect(
@@ -138,7 +138,7 @@ describe('DecisionConditionService', () => {
 
     const updateDtos: UpdateApplicationDecisionConditionDto[] = [{}];
 
-    const result = await service.createOrUpdate(updateDtos, false);
+    const result = await service.createOrUpdate(updateDtos, [], false);
 
     expect(result).toBeDefined();
     expect(

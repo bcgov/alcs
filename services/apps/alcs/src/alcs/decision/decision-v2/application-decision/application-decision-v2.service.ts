@@ -69,6 +69,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        components: true,
         modifies: {
           modifiesDecisions: true,
         },
@@ -315,7 +316,7 @@ export class ApplicationDecisionV2Service {
     existingDecision: Partial<ApplicationDecision>,
   ) {
     if (updateDto.conditions) {
-      if (existingDecision?.conditions) {
+      if (existingDecision.applicationUuid && existingDecision.conditions) {
         const conditionsToRemove = existingDecision.conditions.filter(
           (condition) =>
             !updateDto.conditions?.some(
@@ -326,9 +327,15 @@ export class ApplicationDecisionV2Service {
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
+      const allComponents =
+        await this.decisionComponentService.getAllByApplicationUuid(
+          existingDecision.applicationUuid!,
+        );
+
       existingDecision.conditions =
         await this.decisionConditionService.createOrUpdate(
           updateDto.conditions,
+          allComponents,
           false,
         );
     } else if (existingDecision.conditions) {

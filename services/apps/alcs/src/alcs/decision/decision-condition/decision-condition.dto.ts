@@ -1,5 +1,11 @@
 import { AutoMap } from '@automapper/classes';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
@@ -21,12 +27,23 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap(() => ApplicationDecisionConditionTypeDto)
   type: ApplicationDecisionConditionTypeDto;
+
+  @AutoMap(() => String)
+  componentUuid: string | null;
 }
 
 export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsString()
   uuid?: string;
+
+  @IsOptional()
+  @IsUUID()
+  componentDecisionUuid?: string;
+
+  @IsOptional()
+  @IsString()
+  componentToConditionType?: string;
 
   @IsOptional()
   @IsBoolean()
@@ -46,5 +63,5 @@ export class UpdateApplicationDecisionConditionDto {
 
   @IsOptional()
   @IsString()
-  type?: string;
+  type?: ApplicationDecisionConditionTypeDto;
 }

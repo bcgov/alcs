@@ -46,7 +46,7 @@ export class ApplicationDecisionV2Service {
     let decisionMakers: DecisionMakerDto[] = [];
     let ceoCriterion: CeoCriterionDto[] = [];
     let decisionComponentTypes: DecisionComponentTypeDto[] = [];
-    let decisionConditionTypes: ApplicationDecisionConditionDto[] = [];
+    let decisionConditionTypes: ApplicationDecisionConditionTypeDto[] = [];
 
     try {
       const res = await firstValueFrom(

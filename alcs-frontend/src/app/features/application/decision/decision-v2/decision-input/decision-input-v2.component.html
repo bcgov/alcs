@@ -186,15 +186,22 @@
       <app-decision-documents></app-decision-documents>
     </div>
 
-    <app-decision-components *ngIf="codes" [codes]="codes" [fileNumber]="fileNumber" [(components)]="components">
+    <app-decision-components
+      *ngIf="codes"
+      [codes]="codes"
+      [fileNumber]="fileNumber"
+      [components]="components"
+      (componentsChange)="onComponentChange($event)"
+    >
     </app-decision-components>
 
     <div>
       <app-decision-conditions
         *ngIf="codes"
         [codes]="codes"
-        [fileNumber]="fileNumber"
-        [(conditions)]="conditions"
+        [decisionUuid]="uuid"
+        [components]="components"
+        (conditionsChange)='onConditionsChange($event)'
       ></app-decision-conditions>
     </div>
 
