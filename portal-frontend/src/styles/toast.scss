@@ -1,19 +1,25 @@
 @use './colors';
 @use './functions' as *;
 
+.cdk-overlay-pane {
+  &:has(mat-snack-bar-container.mat-mdc-snack-bar-container) {
+    transform: translateY(100%) !important;
+
+    @media screen and (min-width: $midBreakpoint) {
+      transform: translate(-10%, 100%) !important;
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      transform: translate(-23%, 100%) !important;
+    }
+  }
+}
+
 .mat-mdc-snack-bar-container {
   padding: 0 !important;
-  transform: translateY(100%) !important;
 
-  @media screen and (min-width: $desktopBreakpoint) {
-    &.error,
-    &.warning {
-      transform: translate(-15%, 100%) !important;
-    }
-
-    &.success {
-      transform: translate(-20%, 100%) !important;
-    }
+  @media screen and (min-width: $midBreakpoint) {
+    margin: 0 !important;
   }
 
   .mat-mdc-simple-snackbar {
