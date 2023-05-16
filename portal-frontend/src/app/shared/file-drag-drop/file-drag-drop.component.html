@@ -30,13 +30,13 @@
   [disabled]="disabled"
   (files)="filesDropped($event)"
 >
-  <div class="content" (click)="onFileUploadClicked()">
+  <button class="content" type="button" (click)="onFileUploadClicked()">
     <div class="icon">
       <mat-icon inline="true">file_upload</mat-icon>
     </div>
     <button [disabled]="disabled" type="button" mat-flat-button color="accent">Choose file to Upload</button>
     <div class="drag-text">or drag and drop them here</div>
-  </div>
+  </button>
 </div>
 <button
   [disabled]="disabled"
