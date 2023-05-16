@@ -5,6 +5,8 @@ import { environment } from '../../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
 import { ToastService } from '../../../toast/toast.service';
 import {
+  ApplicationDecisionConditionDto,
+  ApplicationDecisionConditionTypeDto,
   ApplicationDecisionDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
@@ -44,6 +46,7 @@ export class ApplicationDecisionV2Service {
     let decisionMakers: DecisionMakerDto[] = [];
     let ceoCriterion: CeoCriterionDto[] = [];
     let decisionComponentTypes: DecisionComponentTypeDto[] = [];
+    let decisionConditionTypes: ApplicationDecisionConditionDto[] = [];
 
     try {
       const res = await firstValueFrom(
@@ -52,12 +55,14 @@ export class ApplicationDecisionV2Service {
           decisionMakers: DecisionMakerDto[];
           ceoCriterion: CeoCriterionDto[];
           decisionComponentTypes: DecisionComponentTypeDto[];
+          decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
         }>(`${this.url}/codes`)
       );
       outcomes = res.outcomes;
       decisionMakers = res.decisionMakers;
       ceoCriterion = res.ceoCriterion;
       decisionComponentTypes = res.decisionComponentTypes;
+      decisionConditionTypes = res.decisionConditionTypes;
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
@@ -66,6 +71,7 @@ export class ApplicationDecisionV2Service {
       decisionMakers,
       ceoCriterion,
       decisionComponentTypes,
+      decisionConditionTypes,
     } as DecisionCodesDto;
   }
 

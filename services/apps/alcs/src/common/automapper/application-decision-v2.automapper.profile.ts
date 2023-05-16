@@ -5,6 +5,12 @@ import { Injectable } from '@nestjs/common';
 import { DecisionOutcomeCode } from '../../alcs/decision/application-decision-outcome.entity';
 import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
 import { CeoCriterionCode } from '../../alcs/decision/ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../alcs/decision/decision-condition/decision-condition-code.entity';
+import {
+  ApplicationDecisionConditionDto,
+  ApplicationDecisionConditionTypeDto,
+} from '../../alcs/decision/decision-condition/decision-condition.dto';
+import { ApplicationDecisionCondition } from '../../alcs/decision/decision-condition/decision-condition.entity';
 import { DecisionDocument } from '../../alcs/decision/decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../alcs/decision/decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/decision/decision-outcome-type/application-decision-outcome-type.entity';
@@ -205,6 +211,17 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (a) => a.uploadedAt,
           mapFrom((ad) => ad.document.uploadedAt.getTime()),
         ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionCondition,
+        ApplicationDecisionConditionDto,
+      );
+      createMap(
+        mapper,
+        ApplicationDecisionConditionType,
+        ApplicationDecisionConditionTypeDto,
       );
     };
   }

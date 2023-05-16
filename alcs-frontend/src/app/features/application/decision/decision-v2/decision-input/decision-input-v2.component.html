@@ -188,6 +188,16 @@
 
     <app-decision-components *ngIf="codes" [codes]="codes" [fileNumber]="fileNumber" [(components)]="components">
     </app-decision-components>
+
+    <div>
+      <app-decision-conditions
+        *ngIf="codes"
+        [codes]="codes"
+        [fileNumber]="fileNumber"
+        [(conditions)]="conditions"
+      ></app-decision-conditions>
+    </div>
+
     <div class="row">
       <h4>Audit and Chair Review Info</h4>
     </div>

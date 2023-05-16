@@ -17,6 +17,8 @@ import { ApplicationService } from '../../../application/application.service';
 import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { DecisionConditionService } from '../../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
@@ -44,6 +46,7 @@ describe('ApplicationDecisionV2Service', () => {
     Repository<ApplicationDecisionComponentType>
   >;
   let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
+  let mockDecisionConditionService: DeepMocked<DecisionConditionService>;
 
   let mockApplication;
   let mockDecision;
@@ -60,6 +63,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockCeoCriterionCodeRepository = createMock<Repository<CeoCriterionCode>>();
     mockApplicationDecisionComponentTypeRepository = createMock();
     mockDecisionComponentService = createMock();
+    mockDecisionConditionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -104,6 +108,14 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: ApplicationDecisionComponentService,
           useValue: mockDecisionComponentService,
+        },
+        {
+          provide: DecisionConditionService,
+          useValue: mockDecisionConditionService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionType),
+          useValue: mockApplicationDecisionComponentTypeRepository,
         },
       ],
     }).compile();

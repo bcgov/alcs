@@ -23,6 +23,8 @@ import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { ApplicationDecisionConditionTypeDto } from '../../decision-condition/decision-condition.dto';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
@@ -88,6 +90,11 @@ export class ApplicationDecisionV2Controller {
         codes.decisionComponentTypes,
         ApplicationDecisionComponentType,
         ApplicationDecisionComponentTypeDto,
+      ),
+      decisionConditionTypes: await this.mapper.mapArrayAsync(
+        codes.decisionConditionTypes,
+        ApplicationDecisionConditionType,
+        ApplicationDecisionConditionTypeDto,
       ),
     };
   }
