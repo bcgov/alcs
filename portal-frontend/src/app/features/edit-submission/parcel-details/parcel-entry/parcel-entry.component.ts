@@ -299,10 +299,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
-    if (isSelected) {
-      const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== owner.uuid);
-      this.updateParcelOwners(updatedArray);
-    } else {
+    if (!isSelected) {
       const selectedOwners = [...this.parcel.owners, owner];
       this.updateParcelOwners(selectedOwners);
     }

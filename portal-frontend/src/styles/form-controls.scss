@@ -79,6 +79,10 @@ input.mat-input-element:disabled::placeholder {
   border-bottom-right-radius: rem(4);
 }
 
+mat-option.mat-mdc-option.mdc-list-item--disabled {
+  cursor: not-allowed;
+}
+
 mat-form-field.mat-form-field-disabled {
   cursor: not-allowed;
 
