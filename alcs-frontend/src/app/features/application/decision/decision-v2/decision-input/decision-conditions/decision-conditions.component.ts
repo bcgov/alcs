@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
   ApplicationDecisionConditionDto,
@@ -12,7 +12,7 @@ export type TempApplicationDecisionConditionDto = ApplicationDecisionConditionDt
   templateUrl: './decision-conditions.component.html',
   styleUrls: ['./decision-conditions.component.scss'],
 })
-export class DecisionConditionsComponent implements OnInit, OnDestroy {
+export class DecisionConditionsComponent implements OnDestroy {
   @Input()
   codes!: DecisionCodesDto;
   @Input()
@@ -25,10 +25,6 @@ export class DecisionConditionsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   constructor() {}
-
-  ngOnInit(): void {
-    //WHY
-  }
 
   ngOnDestroy(): void {
     this.$destroy.next();
