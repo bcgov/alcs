@@ -18,6 +18,7 @@ import { ApplicationParcelService } from '../../../../services/application-parce
 import { ParcelService } from '../../../../services/parcel/parcel.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
+import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
@@ -55,6 +56,7 @@ export class ParcelEntryComponent implements OnInit {
   @Input() enableAddNewOwner = true;
   @Input() showErrors = false;
   @Input() _disabled = false;
+  @Input() isDraft = false;
 
   @Input()
   public set disabled(disabled: boolean) {
@@ -249,8 +251,20 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   async deleteFile($event: ApplicationDocumentDto) {
-    await this.applicationDocumentService.deleteExternalFile($event.uuid);
-    this.parcel.certificateOfTitle = undefined;
+    if (this.isDraft) {
+      this.dialog
+        .open(RemoveFileConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            await this.applicationDocumentService.deleteExternalFile($event.uuid);
+            this.parcel.certificateOfTitle = undefined;
+          }
+        });
+    } else {
+      await this.applicationDocumentService.deleteExternalFile($event.uuid);
+      this.parcel.certificateOfTitle = undefined;
+    }
   }
 
   async openFile(uuid: string) {

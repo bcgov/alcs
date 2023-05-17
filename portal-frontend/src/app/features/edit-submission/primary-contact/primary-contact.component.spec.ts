@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -37,6 +38,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: MatDialog,
+          useValue: {},
         },
       ],
       declarations: [PrimaryContactComponent],

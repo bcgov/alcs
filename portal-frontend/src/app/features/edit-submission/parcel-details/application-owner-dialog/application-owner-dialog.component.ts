@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
@@ -18,6 +18,7 @@ import {
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { CodeService } from '../../../../services/code/code.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
+import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 
 @Component({
   selector: 'app-application-owner-dialog',
@@ -55,10 +56,12 @@ export class ApplicationOwnerDialogComponent {
     private appOwnerService: ApplicationOwnerService,
     private codeService: CodeService,
     private documentService: ApplicationDocumentService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileId: string;
       submissionUuid: string;
+      isDraft: boolean;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
     }
@@ -160,11 +163,26 @@ export class ApplicationOwnerDialogComponent {
   }
 
   removeCorporateSummary() {
-    if (this.pendingFile) {
-      this.pendingFile = undefined;
+    if (this.data.isDraft) {
+      this.dialog
+        .open(RemoveFileConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            if (this.pendingFile) {
+              this.pendingFile = undefined;
+            }
+            this.corporateSummary.setValue(null);
+            this.files = [];
+          }
+        });
+    } else {
+      if (this.pendingFile) {
+        this.pendingFile = undefined;
+      }
+      this.corporateSummary.setValue(null);
+      this.files = [];
     }
-    this.corporateSummary.setValue(null);
-    this.files = [];
   }
 
   async openCorporateSummary() {
