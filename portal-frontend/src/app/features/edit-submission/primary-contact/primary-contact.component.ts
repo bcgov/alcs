@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
@@ -9,6 +10,7 @@ import { ApplicationOwnerService } from '../../../services/application-owner/app
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { RemoveFileConfirmationDialogComponent } from '../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 
@@ -51,7 +53,8 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
-    private applicationOwnerService: ApplicationOwnerService
+    private applicationOwnerService: ApplicationOwnerService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -86,6 +89,21 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
   }
 
   async onRemoveFile(document: ApplicationDocumentDto) {
+    if (this.draftMode) {
+      this.dialog
+        .open(RemoveFileConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            this.removeFile(document);
+          }
+        });
+    } else {
+      await this.removeFile(document);
+    }
+  }
+
+  async removeFile(document: ApplicationDocumentDto) {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.deleteExternalFile(document.uuid);

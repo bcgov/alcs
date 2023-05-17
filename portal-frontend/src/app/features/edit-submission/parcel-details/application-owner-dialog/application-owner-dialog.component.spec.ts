@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
@@ -40,6 +40,10 @@ describe('ApplicationOwnerDialogComponent', () => {
         },
         {
           provide: MAT_DIALOG_DATA,
+          useValue: {},
+        },
+        {
+          provide: MatDialog,
           useValue: {},
         },
       ],
