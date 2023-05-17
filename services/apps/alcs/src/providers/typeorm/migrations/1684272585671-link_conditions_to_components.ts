@@ -13,6 +13,9 @@ export class linkConditionsToComponents1684272585671
       `ALTER TABLE "alcs"."application_decision_condition" ADD "component_uuid" uuid`,
     );
     await queryRunner.query(
+      `ALTER TABLE "alcs"."application_decision_condition" RENAME COLUMN "code_code" TO "type_code"`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "alcs"."application_decision_condition" ADD CONSTRAINT "FK_14b7fff6b85bf51b9ab527e64f6" FOREIGN KEY ("type_code") REFERENCES "alcs"."application_decision_condition_type"("code") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
