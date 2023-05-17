@@ -4,13 +4,13 @@
   .grid,
   .grid-3 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: calc(50% - 12px) calc(50% - 12px);
     grid-column-gap: 24px;
     grid-row-gap: 24px;
   }
 
   .grid-3 {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: calc(33% - 8px) calc(33% - 8px) calc(33% - 8px);
     grid-column-gap: 24px;
     grid-row-gap: 24px;
   }

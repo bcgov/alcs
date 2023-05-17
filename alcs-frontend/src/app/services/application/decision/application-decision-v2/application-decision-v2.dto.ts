@@ -116,6 +116,7 @@ export interface DecisionComponentDto extends NfuDecisionComponentDto {
   agCapMap?: string | null;
   agCapConsultant?: string | null;
   applicationDecisionComponentTypeCode: string;
+  applicationDecisionComponentType?: DecisionComponentTypeDto;
   applicationDecisionUuid?: string;
 }
 

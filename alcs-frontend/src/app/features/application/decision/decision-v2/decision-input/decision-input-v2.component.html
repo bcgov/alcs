@@ -183,7 +183,7 @@
     </mat-form-field>
 
     <div>
-      <app-decision-documents></app-decision-documents>
+      <app-decision-documents (beforeDocumentUpload)="onSubmit(true, true)"></app-decision-documents>
     </div>
 
     <app-decision-components

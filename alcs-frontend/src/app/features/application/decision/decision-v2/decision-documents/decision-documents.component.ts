@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -19,6 +19,8 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() editable = true;
+  @Input() decision: ApplicationDecisionDto | undefined;
+  @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: DecisionDocumentDto[] = [];
@@ -26,7 +28,6 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<DecisionDocumentDto> = new MatTableDataSource<DecisionDocumentDto>();
-  decision: ApplicationDecisionDto | undefined;
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
@@ -36,12 +37,16 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
-      if (decision) {
-        this.dataSource = new MatTableDataSource(decision.documents);
-        this.decision = decision;
-      }
-    });
+    if (this.decision && !this.editable) {
+      this.dataSource = new MatTableDataSource(this.decision.documents);
+    } else {
+      this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
+        if (decision) {
+          this.dataSource = new MatTableDataSource(decision.documents);
+          this.decision = decision;
+        }
+      });
+    }
   }
 
   async openFile(fileUuid: string, fileName: string) {
@@ -57,6 +62,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async onUploadFile() {
+    this.beforeDocumentUpload.emit();
     this.openFileDialog();
   }
 
