@@ -18,7 +18,6 @@ import {
   CreateApplicationDecisionDto,
   DecisionCodesDto,
   DecisionComponentDto,
-  DecisionComponentTypeDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -30,7 +29,6 @@ import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter
 import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper copy';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
-import { TempApplicationDecisionConditionDto } from './decision-conditions/decision-conditions.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -158,8 +156,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.ceoCriterion = this.codes.ceoCriterion;
 
     await this.prepareDataForEdit();
-    this.modificationService.fetchByApplication(this.fileNumber);
-    this.reconsiderationService.fetchByApplication(this.fileNumber);
   }
 
   private async prepareDataForEdit() {
