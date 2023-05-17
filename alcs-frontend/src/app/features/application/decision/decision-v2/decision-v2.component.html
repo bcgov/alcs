@@ -121,11 +121,14 @@
               <div class="subheading2">Subject To Conditions</div>
               {{ decision.isSubjectToConditions ? 'Yes' : 'No' }}
             </div>
-            <div>
-              <div class="subheading2">Decision Description</div>
-              {{ decision.decisionDescription ? decision.decisionDescription : 'No Data' }}
-            </div>
+          </div>
 
+          <div>
+            <div class="subheading2">Decision Description</div>
+            {{ decision.decisionDescription ? decision.decisionDescription : 'No Data' }}
+          </div>
+
+          <div class="decision-content grid-2">
             <div>
               <div class="subheading2">Days To Hide From Public</div>
               {{ decision.daysHideFromPublic ? decision.daysHideFromPublic : 'No Data' }}

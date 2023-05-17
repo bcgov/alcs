@@ -28,7 +28,7 @@ section {
 .post-decisions {
   padding: 6px 32px;
   background-color: colors.$grey-light;
-  grid-template-columns: 1fr 1fr 100px;
+  grid-template-columns: 50% 50%;;
   display: grid;
   min-height: 36px;
   text-transform: uppercase;

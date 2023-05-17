@@ -22,3 +22,19 @@
 a {
   word-break: break-all;
 }
+
+table {
+  box-shadow: none;
+
+  th {
+    font-weight: 700;
+    padding-bottom: 16px;
+
+    .subheading {
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 400;
+      position: absolute;
+    }
+  }
+}

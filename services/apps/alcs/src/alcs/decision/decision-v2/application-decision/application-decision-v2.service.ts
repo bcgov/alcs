@@ -69,7 +69,6 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        components: true,
         modifies: {
           modifiesDecisions: true,
         },
