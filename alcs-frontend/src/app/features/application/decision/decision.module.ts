@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
 import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
@@ -63,6 +64,7 @@ export const decisionChildRoutes = [
     MtxNativeDatetimeModule,
     MatCheckboxModule,
     MatSortModule,
+    MatTabsModule,
   ],
   exports: [InlineDatepickerComponent],
 })

@@ -19,7 +19,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() editable = true;
-  @Input() inputDocuments: DecisionDocumentDto[] = [];
+  @Input() decision: ApplicationDecisionDto | undefined;
   @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
@@ -28,7 +28,6 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<DecisionDocumentDto> = new MatTableDataSource<DecisionDocumentDto>();
-  decision: ApplicationDecisionDto | undefined;
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
@@ -38,8 +37,8 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.inputDocuments && !this.editable) {
-      this.dataSource = new MatTableDataSource(this.inputDocuments);
+    if (this.decision && !this.editable) {
+      this.dataSource = new MatTableDataSource(this.decision.documents);
     } else {
       this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
         if (decision) {
@@ -63,7 +62,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async onUploadFile() {
-    this.beforeDocumentUpload.emit()
+    this.beforeDocumentUpload.emit();
     this.openFileDialog();
   }
 

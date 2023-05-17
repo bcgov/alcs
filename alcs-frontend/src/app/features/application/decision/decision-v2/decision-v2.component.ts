@@ -90,7 +90,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       }));
 
       this.isDraftExists = this.decisions.some((d) => d.isDraft);
-      console.log('isDraftExists', this.isDraftExists, this.decisions);
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
         : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
@@ -208,6 +207,11 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       auditDate: formatDateForApi(auditReviewDate),
     });
     await this.loadDecisions(this.fileNumber);
+  }
+
+  onNavigateToConditions() {
+    // some other ticket
+    return false;
   }
 
   ngOnDestroy(): void {

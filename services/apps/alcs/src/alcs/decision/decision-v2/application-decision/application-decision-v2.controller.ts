@@ -57,8 +57,6 @@ export class ApplicationDecisionV2Controller {
       fileNumber,
     );
 
-    console.log('decisions', decisions);
-
     return await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
@@ -98,8 +96,6 @@ export class ApplicationDecisionV2Controller {
   @UserRoles(...ANY_AUTH_ROLE)
   async get(@Param('uuid') uuid: string): Promise<ApplicationDecisionDto> {
     const decision = await this.appDecisionService.get(uuid);
-
-    console.log('decision', decision);
 
     return this.mapper.mapAsync(
       decision,
