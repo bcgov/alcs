@@ -143,7 +143,7 @@
           </div>
 
           <!-- Components -->
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="decision.outcome?.code === 'APPA' || decision.outcome?.code === 'APPR'">
             <div class="row">
               <h5>Decision Components and Conditions</h5>
             </div>
@@ -182,7 +182,7 @@
             </div>
           </div>
 
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="decision.isSubjectToConditions">
             <h1 class="body-large">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
