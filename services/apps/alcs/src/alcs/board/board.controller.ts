@@ -1,7 +1,15 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationService } from '../application/application.service';
@@ -81,8 +89,9 @@ export class BoardController {
   async changeBoard(
     @Body()
     { cardUuid, boardCode }: { cardUuid: string; boardCode: string },
+    @Req() req,
   ) {
-    return this.boardService.changeBoard(cardUuid, boardCode);
+    return this.boardService.changeBoard(cardUuid, boardCode, req.user.entity);
   }
 
   @Post('/card')

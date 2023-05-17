@@ -23,7 +23,6 @@ import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { CardService } from '../card/card.service';
-import { NotificationService } from '../notification/notification.service';
 import {
   ApplicationDto,
   CreateApplicationDto,
@@ -37,7 +36,6 @@ import { ApplicationService } from './application.service';
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
-    private notificationService: NotificationService,
     private cardService: CardService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
@@ -146,12 +144,6 @@ export class ApplicationController {
       throw new ServiceValidationException(`Card ${cardUuid} not found`);
     }
 
-    await this.cardService.update(existingCard.uuid, {
-      statusCode: applicationUpdates.statusCode,
-      assigneeUuid: applicationUpdates.assigneeUuid,
-      highPriority: applicationUpdates.highPriority,
-    });
-
     const updatedCard = await this.cardService.getWithBoard(existingCard.uuid);
 
     if (!updatedCard) {
@@ -162,21 +154,17 @@ export class ApplicationController {
       updatedCard.uuid,
     );
 
-    if (
-      updatedCard.assigneeUuid &&
-      updatedCard.assigneeUuid !== existingCard.assigneeUuid &&
-      updatedCard.assigneeUuid !== req.user.entity.uuid
-    ) {
-      const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
-      this.notificationService.createNotificationForApplication({
-        actor: req.user.entity,
-        receiverUuid: updatedCard.assigneeUuid,
-        title: "You've been assigned",
-        body: `${application.fileNumber} (${application.applicant})`,
-        link: `${frontEnd}/board/${updatedCard.board.code}?card=${updatedCard.uuid}&type=${updatedCard.typeCode}`,
-        targetType: 'application',
-      });
-    }
+    const cardBody = `${application.fileNumber} (${application.applicant})`;
+    await this.cardService.update(
+      req.user.entity,
+      existingCard.uuid,
+      {
+        statusCode: applicationUpdates.statusCode,
+        assigneeUuid: applicationUpdates.assigneeUuid,
+        highPriority: applicationUpdates.highPriority,
+      },
+      cardBody,
+    );
 
     const mappedApps = await this.applicationService.mapToDtos([application]);
     return mappedApps[0];

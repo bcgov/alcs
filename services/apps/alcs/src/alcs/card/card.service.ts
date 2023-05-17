@@ -1,10 +1,14 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IConfig } from 'config';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
+import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
+import { NotificationService } from '../notification/notification.service';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
@@ -25,7 +29,9 @@ export class CardService {
     private cardRepository: Repository<Card>,
     @InjectRepository(CardType)
     private cardTypeRepository: Repository<CardType>,
+    @Inject(CONFIG_TOKEN) private config: IConfig,
     private subtaskService: CardSubtaskService,
+    private notificationService: NotificationService,
   ) {}
 
   async getCardTypes() {
@@ -68,9 +74,18 @@ export class CardService {
     });
   }
 
-  async update(cardUuid, card: CardUpdateServiceDto): Promise<Card> {
+  async update(
+    user: User,
+    cardUuid: string,
+    updateDto: CardUpdateServiceDto,
+    notificationBody?: string,
+  ): Promise<Card> {
     const existingCard = await this.cardRepository.findOne({
       where: { uuid: cardUuid },
+      relations: {
+        board: true,
+        type: true,
+      },
     });
 
     if (!existingCard) {
@@ -79,9 +94,27 @@ export class CardService {
       );
     }
 
-    const updatedCard = Object.assign(existingCard, card);
+    const shouldCreateNotification =
+      updateDto.assigneeUuid &&
+      updateDto.assigneeUuid !== existingCard.assigneeUuid &&
+      updateDto.assigneeUuid !== user.uuid;
 
-    return this.cardRepository.save(updatedCard);
+    const updatedCard = Object.assign(existingCard, updateDto);
+    const savedCard = await this.cardRepository.save(updatedCard);
+
+    if (shouldCreateNotification) {
+      const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
+      this.notificationService.saveNotification({
+        actor: user,
+        receiverUuid: savedCard.assigneeUuid,
+        title: "You've been assigned",
+        body: notificationBody ?? `Assigned to a ${savedCard.type.label}`,
+        link: `${frontEnd}/board/${savedCard.board.code}?card=${savedCard.uuid}&type=${savedCard.typeCode}`,
+        targetType: 'card',
+      });
+    }
+
+    return savedCard;
   }
 
   async create(typeCode: string, board: Board, persist = true) {

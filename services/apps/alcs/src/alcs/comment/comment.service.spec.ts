@@ -93,7 +93,7 @@ describe('CommentService', () => {
     } as Comment;
     mockCardService.getWithBoard.mockResolvedValue(fakeCard as Card);
     mockCommentRepository.save.mockResolvedValue({} as Comment);
-    mockNotificationService.create.mockResolvedValue();
+    mockNotificationService.createForCard.mockResolvedValue();
 
     await service.create(
       'file-number',
@@ -109,7 +109,7 @@ describe('CommentService', () => {
     expect(savedData.card).toEqual(fakeComment.card);
     expect(savedData.body).toEqual('new-comment');
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.createForCard).toHaveBeenCalledTimes(1);
   });
 
   it('should call soft remove when deleting', async () => {
@@ -136,7 +136,7 @@ describe('CommentService', () => {
     expect(savedData.body).toEqual('new-body');
     expect(savedData.edited).toBeTruthy();
     expect(mockCommentMentionService.updateMentions).toBeCalledTimes(1);
-    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.createForCard).toHaveBeenCalledTimes(1);
   });
 
   it('throw an exception when updating a comment body with empty string', async () => {

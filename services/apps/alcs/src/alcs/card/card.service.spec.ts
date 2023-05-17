@@ -1,15 +1,20 @@
+import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { getConfigToken } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import * as config from 'config';
 import { Repository } from 'typeorm';
 import {
   initBoardMockEntity,
   initCardMockEntity,
 } from '../../../test/mocks/mockEntities';
+import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
+import { NotificationService } from '../notification/notification.service';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
@@ -22,12 +27,14 @@ describe('CardService', () => {
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
   let mockCardEntity;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
+  let mockNotificationService: DeepMocked<NotificationService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
     cardTypeRepositoryMock = createMock<Repository<CardType>>();
     mockCardEntity = initCardMockEntity();
     mockSubtaskService = createMock();
+    mockNotificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -46,8 +53,16 @@ describe('CardService', () => {
           useValue: cardTypeRepositoryMock,
         },
         {
+          provide: CONFIG_TOKEN,
+          useValue: config,
+        },
+        {
           provide: CardSubtaskService,
           useValue: mockSubtaskService,
+        },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
         },
       ],
     }).compile();
@@ -74,7 +89,11 @@ describe('CardService', () => {
       boardUuid: mockCardEntity.boardUuid,
     };
 
-    const result = await service.update(mockCardEntity.uuid, payload);
+    const result = await service.update(
+      new User(),
+      mockCardEntity.uuid,
+      payload,
+    );
     expect(result).toStrictEqual(mockCardEntity);
     expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
     expect(cardRepositoryMock.save).toHaveBeenCalledWith(mockCardEntity);
@@ -90,7 +109,7 @@ describe('CardService', () => {
     cardRepositoryMock.findOne.mockResolvedValue(null);
 
     await expect(
-      service.update(mockCardEntity.uuid, payload),
+      service.update(new User(), mockCardEntity.uuid, payload),
     ).rejects.toMatchObject(
       new ServiceValidationException(
         `Card for with ${mockCardEntity.uuid} not found`,
@@ -149,5 +168,31 @@ describe('CardService', () => {
     const card = await service.getWithBoard('');
     expect(card).toBeDefined();
     expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+  });
+
+  it('should call notification service when assignee is changed', async () => {
+    const mockUserUuid = 'fake-user';
+    const mockUpdate = {
+      assigneeUuid: mockUserUuid,
+    };
+
+    const fakeAuthor = new User({
+      uuid: 'fake-author',
+    });
+
+    await service.update(fakeAuthor, 'fake', mockUpdate, 'Notification Text');
+
+    expect(mockNotificationService.saveNotification).toHaveBeenCalledTimes(1);
+
+    const createNotificationServiceDto =
+      mockNotificationService.saveNotification.mock.calls[0][0];
+    expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
+    expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
+      mockUserUuid,
+    );
+    expect(createNotificationServiceDto.title).toStrictEqual(
+      "You've been assigned",
+    );
+    expect(createNotificationServiceDto.targetType).toStrictEqual('card');
   });
 });

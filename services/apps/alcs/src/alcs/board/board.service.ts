@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
 import { Board } from './board.entity';
@@ -51,7 +52,7 @@ export class BoardService {
     });
   }
 
-  async changeBoard(cardUuid: string, code: string) {
+  async changeBoard(cardUuid: string, code: string, user: User) {
     const card = await this.cardService.get(cardUuid);
     if (!card) {
       throw new ServiceNotFoundException(
@@ -78,9 +79,14 @@ export class BoardService {
 
     card.status = initialStatus.status;
     card.board = board;
-    return this.cardService.update(card.uuid, {
-      boardUuid: card.board.uuid,
-      statusCode: card.status.code,
-    });
+    return this.cardService.update(
+      user,
+      card.uuid,
+      {
+        boardUuid: card.board.uuid,
+        statusCode: card.status.code,
+      },
+      '',
+    );
   }
 }

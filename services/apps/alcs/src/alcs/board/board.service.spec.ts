@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -90,13 +91,13 @@ describe('BoardsService', () => {
     mockRepository.findOne.mockResolvedValue(mockBoard);
     cardService.update.mockResolvedValue({} as Card);
 
-    await service.changeBoard(cardUuid, boardCode);
+    await service.changeBoard(cardUuid, boardCode, new User());
     expect(cardService.get).toHaveBeenCalledTimes(1);
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(cardService.update).toHaveBeenCalledTimes(1);
 
-    const updatedCardUuid = cardService.update.mock.calls[0][0];
-    const updatedCard = cardService.update.mock.calls[0][1];
+    const updatedCardUuid = cardService.update.mock.calls[0][1];
+    const updatedCard = cardService.update.mock.calls[0][2];
     expect(updatedCardUuid).toEqual(cardUuid);
     expect(updatedCard.boardUuid).toEqual(mockBoard.uuid);
     expect(updatedCard.statusCode).toEqual(zeroOrderStatus.status.code);
@@ -106,7 +107,7 @@ describe('BoardsService', () => {
     cardService.get.mockResolvedValue(null);
 
     await expect(
-      service.changeBoard('card-uuid', 'board-code'),
+      service.changeBoard('card-uuid', 'board-code', new User()),
     ).rejects.toMatchObject(
       new ServiceNotFoundException('Failed to find card with uuid card-uuid'),
     );
@@ -117,7 +118,7 @@ describe('BoardsService', () => {
     mockRepository.findOne.mockResolvedValue(null);
 
     await expect(
-      service.changeBoard('file-number', 'board-code'),
+      service.changeBoard('file-number', 'board-code', new User()),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Failed to find Board with code board-code`),
     );

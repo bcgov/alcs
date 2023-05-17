@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { initCardMockEntity } from '../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { User } from '../../user/user.entity';
 import { CardController } from './card.controller';
 import { CardUpdateDto } from './card.dto';
 import { Card } from './card.entity';
@@ -45,7 +46,11 @@ describe('CardController', () => {
       cardTypeCode: 'APP',
     } as unknown as CardUpdateDto;
 
-    const result = await controller.updateCard(mockCard.uuid, cardToUpdate);
+    const result = await controller.updateCard(mockCard.uuid, cardToUpdate, {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(cardService.update).toHaveBeenCalledTimes(1);
     expect(result).toEqual(mockCard);

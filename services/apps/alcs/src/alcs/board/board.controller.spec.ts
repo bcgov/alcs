@@ -3,6 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { User } from '../../user/user.entity';
 import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
@@ -136,7 +137,14 @@ describe('BoardController', () => {
     const boardCode = 'fake-board';
     const cardUuid = 'card-uuid';
 
-    await controller.changeBoard({ cardUuid, boardCode });
+    await controller.changeBoard(
+      { cardUuid, boardCode },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
 
     expect(boardService.changeBoard).toHaveBeenCalledTimes(1);
     expect(boardService.changeBoard.mock.calls[0][0]).toEqual(cardUuid);

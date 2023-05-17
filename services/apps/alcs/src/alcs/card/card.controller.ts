@@ -4,6 +4,7 @@ import {
   Delete,
   Param,
   Patch,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
@@ -29,8 +30,9 @@ export class CardController {
   async updateCard(
     @Param('uuid') uuid: string,
     @Body() cardToUpdate: CardUpdateDto,
+    @Req() req,
   ) {
-    return await this.cardService.update(uuid, {
+    return await this.cardService.update(req.user.entity, uuid, {
       statusCode: cardToUpdate.statusCode,
       assigneeUuid: cardToUpdate.assigneeUuid,
       highPriority: cardToUpdate.highPriority,
