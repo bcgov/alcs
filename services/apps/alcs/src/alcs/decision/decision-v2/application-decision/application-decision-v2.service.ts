@@ -20,6 +20,8 @@ import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { DecisionConditionService } from '../../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import {
@@ -45,9 +47,12 @@ export class ApplicationDecisionV2Service {
     private ceoCriterionRepository: Repository<CeoCriterionCode>,
     @InjectRepository(ApplicationDecisionComponentType)
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
+    @InjectRepository(ApplicationDecisionConditionType)
+    private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
+    private decisionConditionService: DecisionConditionService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -64,6 +69,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        components: true,
         modifies: {
           modifiesDecisions: true,
         },
@@ -161,6 +167,9 @@ export class ApplicationDecisionV2Service {
         components: {
           applicationDecisionComponentType: true,
         },
+        conditions: {
+          type: true,
+        },
       },
     });
 
@@ -245,6 +254,7 @@ export class ApplicationDecisionV2Service {
     }
 
     await this.updateComponents(updateDto, existingDecision);
+    await this.updateConditions(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
@@ -304,6 +314,38 @@ export class ApplicationDecisionV2Service {
     }
   }
 
+  private async updateConditions(
+    updateDto: UpdateApplicationDecisionDto,
+    existingDecision: Partial<ApplicationDecision>,
+  ) {
+    if (updateDto.conditions) {
+      if (existingDecision.applicationUuid && existingDecision.conditions) {
+        const conditionsToRemove = existingDecision.conditions.filter(
+          (condition) =>
+            !updateDto.conditions?.some(
+              (conditionDto) => conditionDto.uuid === condition.uuid,
+            ),
+        );
+
+        await this.decisionConditionService.remove(conditionsToRemove);
+      }
+
+      const allComponents =
+        await this.decisionComponentService.getAllByApplicationUuid(
+          existingDecision.applicationUuid!,
+        );
+
+      existingDecision.conditions =
+        await this.decisionConditionService.createOrUpdate(
+          updateDto.conditions,
+          allComponents,
+          false,
+        );
+    } else if (existingDecision.conditions) {
+      await this.decisionConditionService.remove(existingDecision.conditions);
+    }
+  }
+
   private async getOrFail(uuid: string) {
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
@@ -312,6 +354,7 @@ export class ApplicationDecisionV2Service {
       relations: {
         application: true,
         components: true,
+        conditions: true,
       },
     });
 
@@ -576,6 +619,7 @@ export class ApplicationDecisionV2Service {
         },
       }),
       this.decisionComponentTypeRepository.find(),
+      this.decisionConditionTypeRepository.find(),
     ]);
 
     return {
@@ -583,6 +627,7 @@ export class ApplicationDecisionV2Service {
       decisionMakers: values[1],
       ceoCriterion: values[2],
       decisionComponentTypes: values[3],
+      decisionConditionTypes: values[4],
     };
   }
 

@@ -1,19 +1,19 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NfuInputComponent } from './nfu-input.component';
+import { DecisionConditionComponent } from './decision-condition.component';
 
-describe('NfuInputComponent', () => {
-  let component: NfuInputComponent;
-  let fixture: ComponentFixture<NfuInputComponent>;
+describe('DecisionConditionComponent', () => {
+  let component: DecisionConditionComponent;
+  let fixture: ComponentFixture<DecisionConditionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [NfuInputComponent],
+      declarations: [DecisionConditionComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NfuInputComponent);
+    fixture = TestBed.createComponent(DecisionConditionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

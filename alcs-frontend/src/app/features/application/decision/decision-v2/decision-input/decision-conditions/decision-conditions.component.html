@@ -1,0 +1,17 @@
+<section>
+  <h5>Decision Condition(s)</h5>
+  <div class="condition" *ngFor="let condition of mappedConditions; let index = index; trackBy: trackByFn">
+    <app-decision-condition
+      [(data)]="mappedConditions[index]"
+      (dataChange)='onChanges()'
+      [codes]="codes.decisionConditionTypes"
+      [selectableComponents]="selectableComponents"
+    ></app-decision-condition>
+    <button class="remove-button" type="button" (click)="onRemoveCondition(index)" mat-stroked-button color="warn">
+      Remove Condition
+    </button>
+  </div>
+  <div class="buttons">
+    <button type="button" (click)="onAddNewCondition()" mat-stroked-button color="primary">Add New Condition</button>
+  </div>
+</section>

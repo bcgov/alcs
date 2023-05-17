@@ -186,8 +186,25 @@
       <app-decision-documents (beforeDocumentUpload)="onSubmit(true, true)"></app-decision-documents>
     </div>
 
-    <app-decision-components *ngIf="codes" [codes]="codes" [fileNumber]="fileNumber" [(components)]="components">
+    <app-decision-components
+      *ngIf="codes"
+      [codes]="codes"
+      [fileNumber]="fileNumber"
+      [components]="components"
+      (componentsChange)="onComponentChange($event)"
+    >
     </app-decision-components>
+
+    <div>
+      <app-decision-conditions
+        *ngIf="codes"
+        [codes]="codes"
+        [decisionUuid]="uuid"
+        [components]="components"
+        (conditionsChange)='onConditionsChange($event)'
+      ></app-decision-conditions>
+    </div>
+
     <div class="row">
       <h4>Audit and Chair Review Info</h4>
     </div>

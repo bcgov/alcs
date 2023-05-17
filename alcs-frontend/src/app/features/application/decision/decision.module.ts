@@ -10,6 +10,8 @@ import { InlineDatepickerComponent } from '../../../shared/inline-datepicker/inl
 import { SharedModule } from '../../../shared/shared.module';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
+import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
+import { DecisionConditionsComponent } from './decision-v2/decision-input/decision-conditions/decision-conditions.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
 import { NfuInputComponent } from './decision-v2/decision-input/decision-components/decision-component/nfu-input/nfu-input.component';
@@ -55,6 +57,8 @@ export const decisionChildRoutes = [
     DecisionDocumentUploadDialogComponent,
     DecisionDocumentsComponent,
     NfuInputComponent,
+    DecisionConditionComponent,
+    DecisionConditionsComponent,
   ],
   imports: [
     CommonModule,

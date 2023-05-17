@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApplicationDocumentDto, ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
+import { ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
 import { ApplicationTypeDto, LocalGovernmentDto, SubmissionTypeDto } from './code.dto';
 
 @Injectable({

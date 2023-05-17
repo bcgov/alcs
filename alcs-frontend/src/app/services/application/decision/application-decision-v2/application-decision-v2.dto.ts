@@ -27,6 +27,7 @@ export interface UpdateApplicationDecisionDto {
   daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
+  conditions?: UpdateApplicationDecisionConditionDto[];
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -70,7 +71,8 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
-  components?: DecisionComponentDto[];
+  components: DecisionComponentDto[];
+  conditions: ApplicationDecisionConditionDto[];
 }
 
 export interface LinkedResolutionDto {
@@ -105,28 +107,16 @@ export interface NfuDecisionComponentDto {
   nfuSubType?: string | null;
   nfuEndDate?: number | null;
 }
+
 export interface DecisionComponentDto extends NfuDecisionComponentDto {
   uuid?: string;
-
   alrArea?: number | null;
-
   agCap?: string | null;
-
   agCapSource?: string | null;
-
   agCapMap?: string | null;
-
   agCapConsultant?: string | null;
-
-  nfuUseType?: string | null;
-
-  nfuUseSubType?: string | null;
-
-  nfuEndDate?: number | null;
-
   applicationDecisionComponentTypeCode: string;
   applicationDecisionComponentType?: DecisionComponentTypeDto;
-
   applicationDecisionUuid?: string;
 }
 
@@ -135,8 +125,32 @@ export interface DecisionCodesDto {
   decisionMakers: DecisionMakerDto[];
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
+  decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
+}
+
+export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+
+export interface ApplicationDecisionConditionDto {
+  uuid: string;
+  componentUuid?: string;
+  approvalDependant?: boolean | null;
+  securityAmount?: number | null;
+  administrativeFee?: number | null;
+  description?: string | null;
+  type?: ApplicationDecisionConditionTypeDto | null;
+}
+
+export interface UpdateApplicationDecisionConditionDto {
+  uuid?: string;
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
+  approvalDependant?: boolean | null;
+  securityAmount?: number | null;
+  administrativeFee?: number | null;
+  description?: string | null;
+  type?: ApplicationDecisionConditionTypeDto | null;
 }

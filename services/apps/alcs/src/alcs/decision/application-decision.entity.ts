@@ -16,6 +16,7 @@ import { DecisionOutcomeCode } from './application-decision-outcome.entity';
 import { ApplicationModification } from './application-modification/application-modification.entity';
 import { ApplicationReconsideration } from './application-reconsideration/application-reconsideration.entity';
 import { CeoCriterionCode } from './ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionCondition } from './decision-condition/decision-condition.entity';
 import { DecisionDocument } from './decision-document/decision-document.entity';
 import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-type/application-decision-outcome-type.entity';
@@ -208,11 +209,19 @@ export class ApplicationDecision extends Base {
   @JoinColumn()
   reconsiders?: ApplicationReconsideration | null;
 
-  @AutoMap()
+  @AutoMap(() => [ApplicationDecisionComponent])
   @OneToMany(
     () => ApplicationDecisionComponent,
     (component) => component.applicationDecision,
     { cascade: ['insert', 'update'] },
   )
   components: ApplicationDecisionComponent[];
+
+  @AutoMap(() => [ApplicationDecisionCondition])
+  @OneToMany(
+    () => ApplicationDecisionCondition,
+    (component) => component.decision,
+    { cascade: ['insert', 'update'] },
+  )
+  conditions: ApplicationDecisionCondition[];
 }

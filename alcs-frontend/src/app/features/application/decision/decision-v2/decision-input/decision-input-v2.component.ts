@@ -11,6 +11,7 @@ import { ApplicationReconsiderationDto } from '../../../../../services/applicati
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   CeoCriterion,
   CeoCriterionDto,
@@ -21,6 +22,7 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
+  UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -28,6 +30,7 @@ import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter
 import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper copy';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
+import { TempApplicationDecisionConditionDto } from './decision-conditions/decision-conditions.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -56,7 +59,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
-  decisionComponentTypes: DecisionComponentTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
@@ -67,6 +69,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
   components: DecisionComponentDto[] = [];
+  conditions: ApplicationDecisionConditionDto[] = [];
+  conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -355,7 +359,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async saveDecision(isDraft: boolean = true) {
-    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
+    const data = this.mapDecisionDataForSave(isDraft);
 
     if (this.uuid) {
       await this.decisionService.update(this.uuid, data);
@@ -416,6 +420,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
+      conditions: this.conditionUpdates,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -507,5 +512,13 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
         }
       });
+  }
+
+  onComponentChange(components: DecisionComponentDto[]) {
+    this.components = Array.from(components);
+  }
+
+  onConditionsChange($event: UpdateApplicationDecisionConditionDto[]) {
+    this.conditionUpdates = $event;
   }
 }
