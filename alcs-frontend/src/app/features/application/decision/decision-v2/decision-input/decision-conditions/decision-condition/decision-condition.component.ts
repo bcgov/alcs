@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApplicationDecisionConditionTypeDto } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { parseStringToBoolean } from '../../../../../../../shared/utils/string-helper';
+import { parseStringToBoolean } from '../../../../../../../shared/utils/boolean-helper';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
 
 @Component({

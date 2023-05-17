@@ -26,8 +26,8 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
-import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper copy';
-import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
+import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
+import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
@@ -226,7 +226,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     reconsiderations: ApplicationReconsiderationDto[],
     existingDecision?: ApplicationDecisionDto
   ) {
-    // debugger;
     const mappedModifications = modifications
       .filter(
         (modification) =>

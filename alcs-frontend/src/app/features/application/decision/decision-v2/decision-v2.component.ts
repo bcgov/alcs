@@ -165,35 +165,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     }
   }
 
-  // async downloadFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-  //   await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName, false);
-  // }
-
-  // async openFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-  //   await this.decisionService.downloadFile(decisionUuid, decisionDocumentUuid, fileName);
-  // }
-
-  // async deleteFile(decisionUuid: string, decisionDocumentUuid: string, fileName: string) {
-  //   this.confirmationDialogService
-  //     .openDialog({
-  //       body: `Are you sure you want to delete the file ${fileName}?`,
-  //     })
-  //     .subscribe(async (confirmed) => {
-  //       if (confirmed) {
-  //         this.decisions = this.decisions.map((decision) => {
-  //           return {
-  //             ...decision,
-  //             loading: decision.uuid === decisionUuid,
-  //           };
-  //         });
-
-  //         await this.decisionService.deleteFile(decisionUuid, decisionDocumentUuid);
-  //         await this.loadDecisions(this.fileNumber);
-  //         this.toastService.showSuccessToast('File deleted');
-  //       }
-  //     });
-  // }
-
   async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
