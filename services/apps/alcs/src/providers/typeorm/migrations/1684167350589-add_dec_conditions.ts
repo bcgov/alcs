@@ -11,9 +11,6 @@ export class addDecConditions1684167350589 implements MigrationInterface {
       `CREATE TABLE "alcs"."application_decision_condition" ("audit_deleted_date_at" TIMESTAMP WITH TIME ZONE, "audit_created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "audit_updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "audit_created_by" character varying NOT NULL, "audit_updated_by" character varying, "uuid" uuid NOT NULL DEFAULT gen_random_uuid(), "approval_dependant" boolean, "security_amount" numeric(12,2), "administrative_fee" numeric(12,2), "description" text, "decision_uuid" uuid NOT NULL, "code_code" text, CONSTRAINT "PK_992b9bc08f066f248b0c25cbcc0" PRIMARY KEY ("uuid"))`,
     );
     await queryRunner.query(
-      `ALTER TABLE "alcs"."application_document" DROP COLUMN "type"`,
-    );
-    await queryRunner.query(
       `ALTER TABLE "alcs"."application_decision_condition" ADD CONSTRAINT "FK_d8795b5dbf575cf5996647d9afe" FOREIGN KEY ("code_code") REFERENCES "alcs"."application_decision_condition_type"("code") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -27,9 +24,6 @@ export class addDecConditions1684167350589 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "alcs"."application_decision_condition" DROP CONSTRAINT "FK_d8795b5dbf575cf5996647d9afe"`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "alcs"."application_document" ADD "type" character varying`,
     );
     await queryRunner.query(
       `DROP TABLE "alcs"."application_decision_condition"`,
