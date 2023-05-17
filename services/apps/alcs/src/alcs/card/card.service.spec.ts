@@ -182,10 +182,10 @@ describe('CardService', () => {
 
     await service.update(fakeAuthor, 'fake', mockUpdate, 'Notification Text');
 
-    expect(mockNotificationService.saveNotification).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.createNotification).toHaveBeenCalledTimes(1);
 
     const createNotificationServiceDto =
-      mockNotificationService.saveNotification.mock.calls[0][0];
+      mockNotificationService.createNotification.mock.calls[0][0];
     expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
     expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
       mockUserUuid,

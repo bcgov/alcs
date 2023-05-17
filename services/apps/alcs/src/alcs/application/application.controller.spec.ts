@@ -107,7 +107,7 @@ describe('ApplicationController', () => {
     });
 
     applicationService.mapToDtos.mockResolvedValue([mockApplicationDto]);
-    notificationService.saveNotification.mockResolvedValue();
+    notificationService.createNotification.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -162,7 +162,7 @@ describe('ApplicationController', () => {
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(notificationService.saveNotification).not.toHaveBeenCalled();
+    expect(notificationService.createNotification).not.toHaveBeenCalled();
     expect(applicationService.update).toHaveBeenCalledWith(
       mockApplicationEntity,
       mockUpdate,

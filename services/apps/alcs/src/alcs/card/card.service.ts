@@ -104,7 +104,7 @@ export class CardService {
 
     if (shouldCreateNotification) {
       const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
-      this.notificationService.saveNotification({
+      this.notificationService.createNotification({
         actor: user,
         receiverUuid: savedCard.assigneeUuid,
         title: "You've been assigned",

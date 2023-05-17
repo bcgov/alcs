@@ -45,7 +45,7 @@ export class NotificationService {
     });
   }
 
-  async saveNotification(notificationDto: CreateNotificationServiceDto) {
+  async createNotification(notificationDto: CreateNotificationServiceDto) {
     const notification = new Notification({
       ...notificationDto,
     });
