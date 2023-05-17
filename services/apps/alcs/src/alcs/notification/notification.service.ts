@@ -45,9 +45,7 @@ export class NotificationService {
     });
   }
 
-  async createNotificationForApplication(
-    notificationDto: CreateNotificationServiceDto,
-  ) {
+  async createNotification(notificationDto: CreateNotificationServiceDto) {
     const notification = new Notification({
       ...notificationDto,
     });
@@ -83,7 +81,7 @@ export class NotificationService {
     });
   }
 
-  async create(
+  async createForCard(
     author: User,
     receiverUuid: string,
     body: string,

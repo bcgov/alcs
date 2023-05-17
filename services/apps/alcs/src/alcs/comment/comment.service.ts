@@ -137,7 +137,7 @@ export class CommentService {
     await this.commentMentionService.updateMentions(comment.uuid, mentions);
 
     mentions.forEach((mention) => {
-      this.notificationService.create(
+      this.notificationService.createForCard(
         comment.author,
         mention.userUuid,
         `${comment.author.name} mentioned you in a comment`,
