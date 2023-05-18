@@ -4,6 +4,7 @@ import { RouterModule } from '@nestjs/core';
 import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
 import { DocumentModule } from '../document/document.module';
+import { PortalApplicationDecisionModule } from './application-decision/application-decision.module';
 import { PortalApplicationDocumentModule } from './application-document/application-document.module';
 import { ApplicationSubmissionDraftModule } from './application-submission-draft/application-submission-draft.module';
 import { ApplicationSubmissionReviewModule } from './application-submission-review/application-submission-review.module';
@@ -26,6 +27,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
     PortalApplicationDocumentModule,
     ApplicationSubmissionDraftModule,
     PdfGenerationModule,
+    PortalApplicationDecisionModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: ParcelModule },
@@ -34,6 +36,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
       { path: 'portal', module: PortalApplicationDocumentModule },
       { path: 'portal', module: ApplicationSubmissionDraftModule },
       { path: 'portal', module: PdfGenerationModule },
+      { path: 'portal', module: PortalApplicationDecisionModule },
     ]),
   ],
   controllers: [CodeController],

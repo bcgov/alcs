@@ -30,7 +30,14 @@
   <div *ngIf="application.status.code === APPLICATION_STATUS.REFUSED_TO_FORWARD" class="warning">
     Application not subject to Agricultural Land Commission review.
   </div>
-  <div *ngIf="application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC" class="warning">
+  <div
+    *ngIf="
+      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC ||
+      application.status.code === APPLICATION_STATUS.ALC_DECISION ||
+      application.status.code === APPLICATION_STATUS.CEO_DECISION
+    "
+  >
+    <app-decisions [fileNumber]="application.fileNumber"></app-decisions>
     <app-submission-documents [$applicationDocuments]="$applicationDocuments"></app-submission-documents>
   </div>
 </div>
