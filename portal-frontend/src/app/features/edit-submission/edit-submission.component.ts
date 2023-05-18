@@ -25,6 +25,7 @@ import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.co
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
+import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -165,8 +166,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onStepChange($event: StepperSelectionEvent) {
     // scrolls to step if step selected programmatically
-    const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
-    el?.scrollIntoView({ behavior: 'smooth' });
+    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
   }
 
   async saveApplication(step: number) {
