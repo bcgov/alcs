@@ -3,7 +3,7 @@
 		od.alr_application_id ,
 		document_id ,
 		document_code ,
-		file_name
+		file_name , od.who_created
 		
 	from oats.oats_documents od 
 		left join oats.oats_subject_properties osp 
@@ -22,7 +22,12 @@
       'oats_etl' AS audit_created_by,
       '/migrate/' || alr_application_id || '/' || document_id || '_' || file_name AS file_key,
       'pdf' AS mime_type,
-	  '{"ORCS Classification: 85100-20"}'::text[] as tags
+	  '{"ORCS Classification: 85100-20"}'::text[] as tags,
+	  CASE
+		 WHEN who_created = 'PROXY_OATS_LOCGOV' THEN 'OATS_P'
+		 WHEN who_created = 'PROXY_OATS_APPLICANT' THEN 'OATS_P'
+		 ELSE 'OATS'
+		END AS "system"
     FROM 
       oats_documents_to_insert oti
       JOIN alcs.application a ON a.file_number = oti.alr_application_id::text

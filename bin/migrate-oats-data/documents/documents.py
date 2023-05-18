@@ -15,7 +15,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
     documents_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
         INSERT INTO alcs."document" (oats_document_id, file_name, oats_application_id, "source", 
-                                    audit_created_by, file_key, mime_type, tags) 
+                                    audit_created_by, file_key, mime_type, tags, "system") 
         VALUES {documents_to_insert} 
         ON CONFLICT (oats_document_id) DO UPDATE SET 
             oats_document_id = EXCLUDED.oats_document_id, 
@@ -25,7 +25,8 @@ def compile_document_insert_query(number_of_rows_to_insert):
             audit_created_by = EXCLUDED.audit_created_by, 
             file_key = EXCLUDED.file_key, 
             mime_type = EXCLUDED.mime_type,
-            tags = EXCLUDED.tags
+            tags = EXCLUDED.tags,
+            "system" = EXCLUDED."system"
     """
 
 
