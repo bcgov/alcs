@@ -3,11 +3,16 @@
 
 .ng-select {
   padding-bottom: 0 !important;
+  font-size: 16px;
 }
 
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:after,
 .ng-select.ng-select-focused .ng-select-container.ng-appearance-outline:hover:after {
   border-color: colors.$primary-color;
+}
+
+.ng-select .ng-select-container.ng-appearance-outline {
+  padding: 0 0.8em !important;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
@@ -37,8 +42,8 @@
 }
 
 .ng-select .ng-select-container .ng-value-container {
-  border-top: 0.5em;
-  padding: 1em 0;
+  border-top: 0.5em !important;
+  padding: 1.4em 0 1em !important;
 }
 
 .ng-select .ng-select-container.ng-appearance-outline {
