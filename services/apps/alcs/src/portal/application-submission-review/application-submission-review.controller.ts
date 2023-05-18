@@ -329,7 +329,15 @@ export class ApplicationSubmissionReviewController {
 
       await this.applicationReviewService.delete(applicationReview);
 
-      applicationSubmission.returnedComment = returnDto.applicantComment;
+      if (returnDto.applicantComment) {
+        await this.applicationSubmissionService.update(
+          applicationSubmission.uuid,
+          {
+            returnedComment: returnDto.applicantComment,
+          },
+        );
+      }
+
       if (returnDto.reasonForReturn === 'incomplete') {
         await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
