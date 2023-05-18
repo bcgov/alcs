@@ -4,6 +4,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ApplicationTypeDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
+import { scrollToElement } from '../../../shared/utils/scroll-helper';
 
 export enum ApplicationChangeTypeStepsEnum {
   warning = 0,
@@ -72,14 +73,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
     this.readMoreClicked = false;
 
     setTimeout(() => {
-      const el = document.getElementById('warningBanner');
-      if (el) {
-        el.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center',
-        });
-      }
+      scrollToElement({ id: 'warningBanner', center: true });
     }, 300);
   }
 
@@ -97,14 +91,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
     if (this.readMoreClicked) {
       setTimeout(() => {
-        const el = document.getElementById('warningBanner');
-        if (el) {
-          el.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest',
-          });
-        }
+        scrollToElement({ id: 'warningBanner', center: false });
       }, 300);
     }
   }
