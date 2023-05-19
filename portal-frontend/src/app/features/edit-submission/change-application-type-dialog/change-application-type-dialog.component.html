@@ -27,15 +27,15 @@
         </mat-radio-button>
       </mat-radio-group>
 
-      <div class="app-type-step-extension" *ngIf="stepIdx === applicationTypeStep">
+      <div *ngIf="stepIdx === applicationTypeStep">
         <div id="warningBanner" class="warning-banner" *ngIf="selectedAppType">
           <div>
-            <b class="app-type-label">{{ selectedAppType?.portalLabel }}</b>
+            <b class="app-type-label">{{ selectedAppType.portalLabel }}</b>
           </div>
           <div
             id="appTypeDescription"
             [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-            [innerHtml]="selectedAppType?.htmlDescription"
+            [innerHtml]="selectedAppType.htmlDescription"
           ></div>
           <span
             class="read-more-btn"
@@ -64,7 +64,14 @@
 
   <div *ngIf="stepIdx === applicationTypeStep" class="dialog-controls-wrapper">
     <button mat-stroked-button color="primary" (click)="back()">back</button>
-    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="!selectedAppType || selectedAppType.code === submissionTypeCode"
+      (click)="next()"
+    >
+      update
+    </button>
   </div>
 
   <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">

@@ -24,10 +24,6 @@
     }
   }
 
-  .app-type-step-extension {
-    margin-bottom: rem(16);
-  }
-
   .app-type-radio-group {
     display: flex;
     flex-direction: column;
@@ -79,7 +75,6 @@
   .dialog-container {
     max-height: unset;
     width: 70vw;
-    border: solid pink;
   }
 
   .dialog-controls-wrapper {
