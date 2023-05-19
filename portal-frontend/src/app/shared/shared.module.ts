@@ -33,6 +33,7 @@ import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
+import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
@@ -96,6 +97,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CdkStepperModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MomentPipe,
   ],
   declarations: [
     FileDragDropComponent,
@@ -109,6 +111,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     UpdatedBannerComponent,
     ValidationErrorComponent,
     CustomStepperComponent,
+    MomentPipe,
   ],
 })
 export class SharedModule {

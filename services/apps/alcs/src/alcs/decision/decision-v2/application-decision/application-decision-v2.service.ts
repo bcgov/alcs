@@ -55,6 +55,32 @@ export class ApplicationDecisionV2Service {
     private decisionConditionService: DecisionConditionService,
   ) {}
 
+  async getForPortal(fileNumber: string) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    return await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+        isDraft: false,
+      },
+      relations: {
+        outcome: true,
+        documents: {
+          document: true,
+        },
+        modifies: {
+          modifiesDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
+        },
+      },
+      order: {
+        auditCreatedAt: 'DESC',
+      },
+    });
+  }
+
   async getByAppFileNumber(number: string) {
     const application = await this.applicationService.getOrFail(number);
 

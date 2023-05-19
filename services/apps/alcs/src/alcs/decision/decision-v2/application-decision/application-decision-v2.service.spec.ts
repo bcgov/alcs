@@ -442,6 +442,11 @@ describe('ApplicationDecisionV2Service', () => {
       await service.fetchCodes();
       expect(mockDecisionOutcomeRepository.find).toHaveBeenCalledTimes(1);
     });
+
+    it('should call through for get for applicant', async () => {
+      await service.getForPortal('');
+      expect(mockDecisionRepository.find).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('ApplicationDecisionService File Tests', () => {

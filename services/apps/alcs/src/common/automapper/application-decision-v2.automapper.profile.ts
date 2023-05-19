@@ -28,6 +28,7 @@ import {
 } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.entity';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
+import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -222,10 +223,45 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
       );
+
       createMap(
         mapper,
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecision,
+        PortalDecisionDto,
+        forMember(
+          (a) => a.reconsiders,
+          mapFrom((dec) =>
+            dec.reconsiders
+              ? {
+                  uuid: dec.reconsiders.uuid,
+                  linkedResolutions: dec.reconsiders.reconsidersDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
+        forMember(
+          (a) => a.modifies,
+          mapFrom((dec) =>
+            dec.modifies
+              ? {
+                  uuid: dec.modifies.uuid,
+                  linkedResolutions: dec.modifies.modifiesDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
       );
     };
   }

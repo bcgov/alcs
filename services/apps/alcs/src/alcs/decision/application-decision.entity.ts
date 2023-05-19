@@ -175,7 +175,7 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'uuid' })
   applicationUuid: string;
 
-  @AutoMap()
+  @AutoMap(() => [DecisionDocument])
   @OneToMany(() => DecisionDocument, (document) => document.decision)
   documents: DecisionDocument[];
 
