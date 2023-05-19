@@ -498,7 +498,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         maxHeight: '80vh',
         width: '90%',
         autoFocus: false,
-        data: {},
+        data: {
+          wasReleased: this.existingDecision?.wasReleased,
+        },
       })
       .afterClosed()
       .subscribe(async (submissionType) => {

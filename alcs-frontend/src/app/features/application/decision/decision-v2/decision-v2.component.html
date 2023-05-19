@@ -87,7 +87,12 @@
               matTooltip="{{ disabledCreateBtnTooltip }}"
               [matTooltipDisabled]="!isPaused && !isDraftExists"
             >
-              <button mat-stroked-button color="primary" (click)="onEdit(decision)" [disabled]="isDraftExists">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="onRevertToDraft(decision.uuid)"
+                [disabled]="isDraftExists"
+              >
                 Revert to draft
               </button>
             </div>

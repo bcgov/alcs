@@ -20,6 +20,7 @@ import { DecisionDocumentUploadDialogComponent } from './decision-v2/decision-in
 import { DecisionInputV2Component } from './decision-v2/decision-input/decision-input-v2.component';
 import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
+import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
 
 export const decisionChildRoutes = [
@@ -55,6 +56,7 @@ export const decisionChildRoutes = [
     DecisionComponentComponent,
     DecisionComponentsComponent,
     DecisionDocumentUploadDialogComponent,
+    RevertToDraftDialogComponent,
     DecisionDocumentsComponent,
     NfuInputComponent,
     DecisionConditionComponent,

@@ -48,6 +48,10 @@ export class ApplicationDecision extends Base {
   chairReviewRequired: boolean;
 
   @AutoMap()
+  @Column({ type: 'boolean', default: false })
+  wasReleased: boolean;
+
+  @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
   chairReviewDate: Date | null;
 

@@ -28,6 +28,7 @@ export interface UpdateApplicationDecisionDto {
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
+  isDraft?: boolean;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
@@ -61,6 +62,7 @@ export interface ApplicationDecisionDto {
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
   isDraft: boolean;
+  wasReleased: boolean;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
   isStatsRequired?: boolean | null;

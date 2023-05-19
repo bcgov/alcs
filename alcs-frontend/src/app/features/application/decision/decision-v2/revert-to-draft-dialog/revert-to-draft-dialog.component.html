@@ -1,0 +1,33 @@
+<div mat-dialog-title>
+  <h2 class="card-title">Confirm Revert to Draft</h2>
+</div>
+<mat-dialog-content style="height: 100%">
+  <div class="grid">
+    <p>
+      This decision and document will be reverted into draft form, providing you with full editing capabilities but
+      hiding it from the Applicant, Local/First Nation Government, and the Public.
+    </p>
+
+    <ng-select
+      appearance="outline"
+      [items]="statuses"
+      bindLabel="label"
+      bindValue="code"
+      placeholder="Please select the portal status (optional)"
+      [clearable]="false"
+      [(ngModel)]="selectedApplicationStatus"
+    ></ng-select>
+
+    <p>
+      The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
+      notification manually.
+    </p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div class="button-container">
+    <button mat-stroked-button color="accent" [mat-dialog-close]="false">Cancel</button>
+    <button mat-flat-button color="accent" type="button" (click)="onConfirm()">Confirm Revert to Draft</button>
+  </div>
+</mat-dialog-actions>
