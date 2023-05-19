@@ -1,81 +1,74 @@
-<ng-template #startStepControls>
-  <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
-  <button mat-flat-button color="primary" (click)="next()">continue</button>
-</ng-template>
-
-<ng-template #intermediateStepControls>
-  <button mat-stroked-button color="primary" (click)="back()">back</button>
-  <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
-</ng-template>
-
-<ng-template #lastStepControls>
-  <button mat-stroked-button color="primary" (click)="back()">back</button>
-  <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
-</ng-template>
-
-<div mat-dialog-title>
-  <h4>Change Application Type</h4>
-</div>
-<div mat-dialog-content class="change-app-type-modal">
-  <div *ngIf="stepIdx === warningStep">
-    <div class="step-body">
-      <app-warning-banner>
-        <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
-        continue?
-      </app-warning-banner>
-    </div>
-
-    <div class="step-controls">
-      <ng-container *ngTemplateOutlet="startStepControls"></ng-container>
-    </div>
+<div class="dialog-container">
+  <div mat-dialog-title>
+    <h4>Change Application Type</h4>
   </div>
 
-  <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
-    <mat-radio-group
-      class="app-type-radio-group"
-      aria-labelledby="radio-label"
-      (change)="onAppTypeSelected($event)"
-      color="primary"
-      required
-    >
-      <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
-        {{ appType.portalLabel }}
-      </mat-radio-button>
-    </mat-radio-group>
-  </div>
-
-  <div class="app-type-step-extension" *ngIf="stepIdx === applicationTypeStep">
-    <div id="warningBanner" class="warning-banner margin-bottom-1">
-      <div *ngIf="!selectedAppType">Select an option to learn more about the application type</div>
-      <div>
-        <b class="app-type-label">{{ selectedAppType?.portalLabel }}</b>
+  <div mat-dialog-content class="change-app-type-modal">
+    <div *ngIf="stepIdx === warningStep">
+      <div class="step-body">
+        <app-warning-banner>
+          <b>Warning:</b> Changing application type will remove some inputs from your saved progress. Do you want to
+          continue?
+        </app-warning-banner>
       </div>
-      <div
-        id="appTypeDescription"
-        [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
-        [innerHtml]="selectedAppType?.htmlDescription"
-      ></div>
-      <span
-        class="read-more-btn"
-        [ngClass]="{ 'display-none': !isReadMoreVisible }"
-        *ngIf="!!selectedAppType"
-        (click)="onReadMoreClicked()"
-        ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
-      >
     </div>
 
-    <div class="step-controls">
-      <ng-container *ngTemplateOutlet="intermediateStepControls"></ng-container>
+    <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
+      <div class="step-description">Select an option to learn more about the application type.</div>
+      <mat-radio-group
+        class="app-type-radio-group"
+        aria-labelledby="radio-label"
+        (change)="onAppTypeSelected($event)"
+        color="primary"
+        required
+      >
+        <mat-radio-button *ngFor="let appType of applicationTypes" [value]="appType.code" class="radio-option">
+          {{ appType.portalLabel }}
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <div class="app-type-step-extension" *ngIf="stepIdx === applicationTypeStep">
+        <div id="warningBanner" class="warning-banner" *ngIf="selectedAppType">
+          <div>
+            <b class="app-type-label">{{ selectedAppType?.portalLabel }}</b>
+          </div>
+          <div
+            id="appTypeDescription"
+            [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+            [innerHtml]="selectedAppType?.htmlDescription"
+          ></div>
+          <span
+            class="read-more-btn"
+            [ngClass]="{ 'display-none': !isReadMoreVisible }"
+            *ngIf="!!selectedAppType"
+            (click)="onReadMoreClicked()"
+            ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="stepIdx === confirmationStep">
+      <div class="step-header">
+        <h5>Are you sure you want to change your application type?</h5>
+      </div>
     </div>
   </div>
+</div>
 
-  <div *ngIf="stepIdx === confirmationStep">
-    <div class="step-header">
-      <h5>Are you sure you want to change your application type?</h5>
-    </div>
+<div mat-dialog-action class="dialog-action-container">
+  <div *ngIf="stepIdx === warningStep" class="dialog-controls-wrapper">
+    <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+    <button mat-flat-button color="primary" (click)="next()">continue</button>
+  </div>
 
-    <div class="step-controls">
-      <ng-container *ngTemplateOutlet="lastStepControls"></ng-container>
-    </div>
+  <div *ngIf="stepIdx === applicationTypeStep" class="dialog-controls-wrapper">
+    <button mat-stroked-button color="primary" (click)="back()">back</button>
+    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
+  </div>
+
+  <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">
+    <button mat-stroked-button color="primary" (click)="back()">back</button>
+    <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
   </div>
 </div>

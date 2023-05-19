@@ -1,10 +1,6 @@
 @use '../../../../styles/functions' as *;
 @use '../../../../styles/colors';
 
-.margin-bottom-1 {
-  margin-bottom: rem(16);
-}
-
 .step-header {
   padding: rem(16) 0;
 }
@@ -28,11 +24,6 @@
     }
   }
 
-  .step-controls {
-    display: flex;
-    justify-content: space-between;
-  }
-
   .app-type-step-extension {
     margin-bottom: rem(16);
   }
@@ -41,22 +32,65 @@
     display: flex;
     flex-direction: column;
   }
+}
 
-  @media screen and (min-width: $desktopBreakpoint) {
-    .warning-banner {
-      padding: 2rem 3rem;
+.dialog-action-container {
+  margin: rem(4) 0;
+  padding: 0 rem(24);
+}
 
-      .ellipsis-3 {
-        display: block;
-      }
+.dialog-controls-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  button {
+    width: rem(116);
+  }
+}
+
+.dialog-container {
+  max-height: 80vh !important;
+}
+
+.dialog-action-container {
+  margin: rem(4) 0;
+  padding: 0 rem(24);
+}
+
+.step-description {
+  margin-bottom: rem(8);
+}
+
+@media screen and (min-width: $minWidth) {
+  .dialog-action-container {
+    margin: rem(8) 0 rem(24);
+  }
+}
+
+@media screen and (min-width: $tabletBreakpoint) {
+  .warning-banner {
+    padding: 2rem 3rem;
+
+    .ellipsis-3 {
+      display: block;
     }
+  }
 
-    .step-controls {
-      justify-content: flex-end;
+  .dialog-container {
+    max-height: unset;
+    width: 70vw;
+    border: solid pink;
+  }
 
-      button {
-        margin-left: rem(25) !important;
-      }
+  .dialog-controls-wrapper {
+    justify-content: flex-end;
+
+    button {
+      margin-left: rem(16) !important;
     }
+  }
+
+  .dialog-action-container {
+    margin: rem(24) 0;
   }
 }
