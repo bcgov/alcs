@@ -204,11 +204,16 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
+          <mat-option
+            (click)="onSelectOwner(option, option.isSelected)"
+            *ngFor="let option of filteredOwners"
+            [disabled]="option.isSelected"
+          >
             <div class="owner-option">
               <div>{{ option.displayName }}</div>
-              <button *ngIf="!option.isSelected" mat-flat-button color="primary">Add</button>
-              <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
+              <button mat-flat-button color="primary" [disabled]="option.isSelected">
+                {{ option.isSelected ? 'Added' : 'Add' }}
+              </button>
             </div>
           </mat-option>
           <mat-option class="option" *ngIf="filteredOwners.length === 0 && enableAddNewOwner" (click)="onAddNewOwner()">
@@ -278,11 +283,16 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
+          <mat-option
+            (click)="onSelectOwner(option, option.isSelected)"
+            *ngFor="let option of filteredOwners"
+            [disabled]="option.isSelected"
+          >
             <div class="owner-option">
               <div>{{ option.displayName }}</div>
-              <button *ngIf="!option.isSelected" mat-flat-button color="primary">Add</button>
-              <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
+              <button mat-flat-button color="primary" [disabled]="option.isSelected">
+                {{ option.isSelected ? 'Added' : 'Add' }}
+              </button>
             </div>
           </mat-option>
           <mat-option

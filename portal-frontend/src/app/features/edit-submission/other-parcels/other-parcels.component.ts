@@ -254,7 +254,6 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
           } else {
             this.hasOtherParcelsInCommunity.patchValue('true');
             this.formDisabled = false;
-            await this.setHasOtherParcelsInCommunity(true);
           }
         });
     } else {

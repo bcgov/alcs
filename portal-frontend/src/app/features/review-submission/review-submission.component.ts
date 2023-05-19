@@ -16,6 +16,7 @@ import { ReviewContactInformationComponent } from './review-contact-information/
 import { ReviewOcpComponent } from './review-ocp/review-ocp.component';
 import { ReviewResolutionComponent } from './review-resolution/review-resolution.component';
 import { ReviewZoningComponent } from './review-zoning/review-zoning.component';
+import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 export enum ReviewApplicationSteps {
   ContactInformation = 0,
@@ -204,8 +205,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onStepChange($event: StepperSelectionEvent) {
-    const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
-    el?.scrollIntoView({ behavior: 'smooth' });
+    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
   }
 
   private async loadApplicationDocuments(fileId: any) {

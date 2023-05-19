@@ -4,6 +4,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { ApplicationTypeDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
+import { scrollToElement } from '../../../shared/utils/scroll-helper';
 
 export enum ApplicationChangeTypeStepsEnum {
   warning = 0,
@@ -70,6 +71,10 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   async onAppTypeSelected(event: MatRadioChange) {
     this.selectedAppType = this.applicationTypes.find((e) => e.code === event.value);
     this.readMoreClicked = false;
+
+    setTimeout(() => {
+      scrollToElement({ id: 'warningBanner', center: true });
+    }, 300);
   }
 
   isEllipsisActive(e: string): boolean {
@@ -83,6 +88,12 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   onReadMoreClicked() {
     this.readMoreClicked = !this.readMoreClicked;
+
+    if (this.readMoreClicked) {
+      setTimeout(() => {
+        scrollToElement({ id: 'warningBanner', center: false });
+      }, 300);
+    }
   }
 
   async next() {
