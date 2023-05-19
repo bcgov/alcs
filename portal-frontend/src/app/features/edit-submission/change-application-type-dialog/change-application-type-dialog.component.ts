@@ -54,7 +54,9 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
-    this.applicationTypes = codes.applicationTypes.filter((type) => !!type.portalLabel);
+    this.applicationTypes = codes.applicationTypes
+      .filter((type) => !!type.portalLabel)
+      .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
   }
 
   async onCancel(dialogResult: boolean = false) {
