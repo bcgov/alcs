@@ -19,6 +19,7 @@ export enum ApplicationChangeTypeStepsEnum {
 })
 export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewChecked {
   submissionUuid: string;
+  submissionTypeCode: string;
 
   applicationTypes: ApplicationTypeDto[] = [];
   selectedAppType: ApplicationTypeDto | undefined = undefined;
@@ -39,6 +40,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
     @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent
   ) {
     this.submissionUuid = data.submissionUuid;
+    this.submissionTypeCode = data.submissionTypeCode;
   }
 
   ngAfterViewChecked(): void {
@@ -52,7 +54,9 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   private async loadCodes() {
     const codes = await this.codeService.loadCodes();
-    this.applicationTypes = codes.applicationTypes.filter((type) => !!type.portalLabel);
+    this.applicationTypes = codes.applicationTypes
+      .filter((type) => !!type.portalLabel)
+      .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
   }
 
   async onCancel(dialogResult: boolean = false) {

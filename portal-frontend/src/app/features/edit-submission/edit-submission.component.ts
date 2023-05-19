@@ -146,6 +146,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
           autoFocus: false,
           data: {
             submissionUuid: this.applicationSubmission.uuid,
+            submissionTypeCode: this.applicationSubmission.typeCode,
           },
         })
         .beforeClosed()
