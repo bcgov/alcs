@@ -24,7 +24,7 @@ export class DecisionsComponent implements OnInit, OnChanges {
   async openFile(uuid: string) {
     const res = await this.decisionService.openFile(uuid);
     if (res) {
-      window.open(res?.url, '_blank');
+      window.open(res.url, '_blank');
     }
   }
 
