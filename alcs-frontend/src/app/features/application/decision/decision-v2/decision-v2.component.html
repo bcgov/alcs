@@ -110,9 +110,9 @@
 
             <div>
               <div class="subheading2">Decision Outcome</div>
-              {{ decision.outcome.label }} {{ decision.modifies?.linkedResolutions?.join(', ') }}
-              {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
+              {{ decision.outcome.label }} {{ decision.isSubjectToConditions ? '- Subject to Conditions' : '' }}
             </div>
+
             <div>
               <div *ngIf="decision.ceoCriterion" class="subheading2">CEO Criterion</div>
               {{ decision.ceoCriterion?.label }}
@@ -123,8 +123,13 @@
             </div>
 
             <div>
-              <div class="subheading2">Subject To Conditions</div>
-              {{ decision.isSubjectToConditions ? 'Yes' : 'No' }}
+              <div *ngIf="!!decision.modifies || !!decision.reconsiders" class="subheading2">
+                <span *ngIf="!!decision.modifies">Modification Outcome</span>
+                <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
+              </div>
+              {{ decision.linkedResolutionOutcome ? decision.linkedResolutionOutcome.label : 'No Data' }}
+              {{ decision.modifies?.linkedResolutions?.join(', ') }}
+              {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
             </div>
           </div>
 
@@ -187,7 +192,7 @@
             </div>
           </div>
 
-          <div class="decision-content" *ngIf="decision.isSubjectToConditions">
+          <div class="decision-content">
             <h1 class="body-large">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
@@ -215,7 +220,7 @@
               </div>
               <div *ngIf="decision.chairReviewRequired">
                 <div class="subheading2">Chair Review Outcome</div>
-                <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome?.label }}</span>
+                <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome.label }}</span>
                 <span *ngIf="decision.chairReviewOutcome === null">No Data</span>
               </div>
             </div>

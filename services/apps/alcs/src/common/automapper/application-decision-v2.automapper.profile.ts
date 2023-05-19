@@ -19,6 +19,7 @@ import {
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
+  LinkedResolutionOutcomeTypeDto,
 } from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component-type.entity';
@@ -29,6 +30,7 @@ import {
 import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.entity';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
 import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
+import { LinkedResolutionOutcomeType } from '../../alcs/decision/decision-v2/application-decision/linked-resolution-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -111,36 +113,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.decisionMaker,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.decisionMaker,
-              DecisionMakerCode,
-              DecisionMakerCodeDto,
-            ),
-          ),
-        ),
-        forMember(
-          (ad) => ad.ceoCriterion,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.ceoCriterion,
-              CeoCriterionCode,
-              CeoCriterionCodeDto,
-            ),
-          ),
-        ),
-        forMember(
-          (ad) => ad.chairReviewOutcome,
-          mapFrom((a) =>
-            this.mapper.map(
-              a.chairReviewOutcome,
-              ApplicationDecisionChairReviewOutcomeType,
-              ChairReviewOutcomeCodeDto,
-            ),
-          ),
-        ),
-        forMember(
           (ad) => ad.date,
           mapFrom((a) => a.date.getTime()),
         ),
@@ -171,7 +143,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           }),
         ),
       );
-      // applicationDecisionComponentType
 
       createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(
@@ -262,6 +233,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : undefined,
           ),
         ),
+      );
+      
+      createMap(
+        mapper,
+        LinkedResolutionOutcomeType,
+        LinkedResolutionOutcomeTypeDto,
       );
     };
   }

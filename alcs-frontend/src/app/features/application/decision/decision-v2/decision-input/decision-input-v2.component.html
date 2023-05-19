@@ -61,6 +61,33 @@
       </mat-form-field>
 
       <ng-select
+        *ngIf="!isFirstDecision"
+        appearance="outline"
+        class="card-post-decision"
+        [items]="postDecisions"
+        appendTo="body"
+        placeholder="Linked Recon or Modification Request *"
+        bindLabel="label"
+        bindValue="uuid"
+        [clearable]="false"
+        formControlName="postDecision"
+        (change)="onSelectPostDecision($event)"
+      >
+      </ng-select>
+
+      <ng-select
+        *ngIf="!isFirstDecision"
+        appearance="outline"
+        [items]="linkedResolutionOutcomes"
+        formControlName="linkedResolutionOutcome"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        required
+        placeholder="Linked Resolution Outcome *"
+      ></ng-select>
+
+      <ng-select
         appearance="outline"
         [items]="decisionMakers"
         formControlName="decisionMaker"
@@ -71,19 +98,6 @@
         (change)="onSelectDecisionMaker($event)"
         [clearable]="false"
         required
-      ></ng-select>
-
-      <ng-select
-        appearance="outline"
-        class="decision-outcome"
-        [items]="outcomes"
-        formControlName="outcome"
-        appendTo="body"
-        bindLabel="label"
-        bindValue="code"
-        required
-        placeholder="Decision Outcome *"
-        [clearable]="false"
       ></ng-select>
 
       <ng-select
@@ -114,39 +128,38 @@
         </mat-select>
       </mat-form-field>
 
+      <ng-select
+        appearance="outline"
+        class="decision-outcome"
+        [items]="outcomes"
+        formControlName="outcome"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        required
+        placeholder="Decision Outcome *"
+        [clearable]="false"
+        (change)="onChangeDecisionOutcome($event)"
+      ></ng-select>
+
       <div>
         <mat-label class="toggle-label">Subject to Conditions*</mat-label>
         <mat-button-toggle-group
           id="isSubjectToConditions"
           formControlName="isSubjectToConditions"
           name="isSubjectToConditions"
+          (change)="onChangeSubjectToConditons($event)"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-    </div>
 
-    <mat-form-field appearance="outline" class="row">
-      <mat-label>Decision Description</mat-label>
-      <input matInput formControlName="decisionDescription" required />
-    </mat-form-field>
-
-    <div class="grid">
-      <div class="full-width" *ngIf="!isFirstDecision">
-        <ng-select
-          appearance="outline"
-          class="card-post-decision"
-          [items]="postDecisions"
-          appendTo="body"
-          placeholder="Linked Recon or Modification Request *"
-          bindLabel="label"
-          bindValue="uuid"
-          [clearable]="false"
-          formControlName="postDecision"
-          (change)="onSelectPostDecision($event)"
-        >
-        </ng-select>
+      <div class="full-width">
+        <mat-form-field style="width: 100%" appearance="outline">
+          <mat-label>Decision Description</mat-label>
+          <input matInput formControlName="decisionDescription" required />
+        </mat-form-field>
       </div>
 
       <div>
@@ -187,7 +200,7 @@
     </div>
 
     <app-decision-components
-      *ngIf="codes"
+      *ngIf="codes && showComponents"
       [codes]="codes"
       [fileNumber]="fileNumber"
       [components]="components"
@@ -197,11 +210,11 @@
 
     <div>
       <app-decision-conditions
-        *ngIf="codes"
+        *ngIf="codes && showComponents && showConditions"
         [codes]="codes"
         [decisionUuid]="uuid"
         [components]="components"
-        (conditionsChange)='onConditionsChange($event)'
+        (conditionsChange)="onConditionsChange($event)"
       ></app-decision-conditions>
     </div>
 
@@ -270,7 +283,9 @@
     <button
       class="release-decision-btn"
       type="button"
-      [disabled]="!form.valid"
+      [disabled]="
+        !form.valid || (components.length === 0 && showComponents) || (conditions.length === 0 && showConditions)
+      "
       (click)="onRelease()"
       mat-flat-button
       color="primary"

@@ -31,12 +31,14 @@ import {
   ApplicationDecisionDto,
   CreateApplicationDecisionDto,
   DecisionOutcomeCodeDto,
+  LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -95,6 +97,11 @@ export class ApplicationDecisionV2Controller {
         codes.decisionConditionTypes,
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
+      ),
+      linkedResolutionOutcomeTypes: await this.mapper.mapArrayAsync(
+        codes.linkedResolutionOutcomeType,
+        LinkedResolutionOutcomeType,
+        LinkedResolutionOutcomeTypeDto,
       ),
     };
   }

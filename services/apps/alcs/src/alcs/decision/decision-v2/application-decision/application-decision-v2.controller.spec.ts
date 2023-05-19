@@ -98,6 +98,7 @@ describe('ApplicationDecisionV2Controller', () => {
       decisionMakers: [],
       decisionComponentTypes: [],
       decisionConditionTypes: [],
+      linkedResolutionOutcomeType: [],
     });
   });
 

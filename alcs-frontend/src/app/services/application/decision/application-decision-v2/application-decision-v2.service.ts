@@ -5,7 +5,6 @@ import { environment } from '../../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
 import { ToastService } from '../../../toast/toast.service';
 import {
-  ApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
   ApplicationDecisionDto,
   CeoCriterionDto,
@@ -41,38 +40,20 @@ export class ApplicationDecisionV2Service {
     return decisions;
   }
 
-  async fetchCodes() {
-    let outcomes: DecisionOutcomeCodeDto[] = [];
-    let decisionMakers: DecisionMakerDto[] = [];
-    let ceoCriterion: CeoCriterionDto[] = [];
-    let decisionComponentTypes: DecisionComponentTypeDto[] = [];
-    let decisionConditionTypes: ApplicationDecisionConditionTypeDto[] = [];
-
+  async fetchCodes(): Promise<DecisionCodesDto> {
     try {
-      const res = await firstValueFrom(
-        this.http.get<{
-          outcomes: DecisionOutcomeCodeDto[];
-          decisionMakers: DecisionMakerDto[];
-          ceoCriterion: CeoCriterionDto[];
-          decisionComponentTypes: DecisionComponentTypeDto[];
-          decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
-        }>(`${this.url}/codes`)
-      );
-      outcomes = res.outcomes;
-      decisionMakers = res.decisionMakers;
-      ceoCriterion = res.ceoCriterion;
-      decisionComponentTypes = res.decisionComponentTypes;
-      decisionConditionTypes = res.decisionConditionTypes;
+      return await firstValueFrom(this.http.get<DecisionCodesDto>(`${this.url}/codes`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
     return {
-      outcomes,
-      decisionMakers,
-      ceoCriterion,
-      decisionComponentTypes,
-      decisionConditionTypes,
-    } as DecisionCodesDto;
+      outcomes: [],
+      decisionMakers: [],
+      ceoCriterion: [],
+      decisionComponentTypes: [],
+      decisionConditionTypes: [],
+      linkedResolutionOutcomeTypes: [],
+    };
   }
 
   async update(uuid: string, data: UpdateApplicationDecisionDto) {

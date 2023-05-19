@@ -31,6 +31,7 @@ import {
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -49,6 +50,8 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     @InjectRepository(ApplicationDecisionConditionType)
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(LinkedResolutionOutcomeType)
+    private linkedResolutionOutcomeTypeRepository: Repository<LinkedResolutionOutcomeType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
@@ -95,6 +98,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        linkedResolutionOutcome: true,
         modifies: {
           modifiesDecisions: true,
         },
@@ -180,6 +184,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        linkedResolutionOutcome: true,
         documents: {
           document: true,
         },
@@ -259,6 +264,8 @@ export class ApplicationDecisionV2Service {
     existingDecision.rescindedComment = updateDto.rescindedComment;
     existingDecision.wasReleased =
       existingDecision.wasReleased || !updateDto.isDraft;
+    existingDecision.linkedResolutionOutcomeCode =
+      updateDto.linkedResolutionOutcomeCode;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -457,6 +464,7 @@ export class ApplicationDecisionV2Service {
         ? new Date(createDto.chairReviewDate)
         : undefined,
       chairReviewOutcomeCode: createDto.chairReviewOutcomeCode,
+      linkedResolutionOutcomeCode: createDto.linkedResolutionOutcomeCode,
       ceoCriterionCode: createDto.ceoCriterionCode,
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
@@ -647,6 +655,7 @@ export class ApplicationDecisionV2Service {
       }),
       this.decisionComponentTypeRepository.find(),
       this.decisionConditionTypeRepository.find(),
+      this.linkedResolutionOutcomeTypeRepository.find(),
     ]);
 
     return {
@@ -655,6 +664,7 @@ export class ApplicationDecisionV2Service {
       ceoCriterion: values[2],
       decisionComponentTypes: values[3],
       decisionConditionTypes: values[4],
+      linkedResolutionOutcomeType: values[5],
     };
   }
 

@@ -21,6 +21,7 @@ import {
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
+  LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
@@ -51,12 +52,15 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   isLoading = false;
   minDate = new Date(0);
   isFirstDecision = false;
+  showComponents = false;
+  showConditions = false;
 
   fileNumber: string = '';
   uuid: string = '';
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
+  linkedResolutionOutcomes: LinkedResolutionOutcomeTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
@@ -80,6 +84,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
     chairReviewDate: new FormControl<Date | null>(null),
     chairReviewOutcome: new FormControl<string | null>(null),
+    linkedResolutionOutcome: new FormControl<string | null>(null),
     auditDate: new FormControl<Date | null>(null),
     criterionModification: new FormControl<string[]>([]),
     ceoCriterion: new FormControl<string | null>(null),
@@ -154,6 +159,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.outcomes = this.codes.outcomes;
     this.decisionMakers = this.codes.decisionMakers;
     this.ceoCriterion = this.codes.ceoCriterion;
+    this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
 
     await this.prepareDataForEdit();
   }
@@ -207,7 +213,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
             if (!this.isFirstDecision) {
               this.form.controls.postDecision.addValidators([Validators.required]);
               this.form.controls.decisionMaker.disable();
-              this.form.controls.outcome.disable();
               this.onSelectPostDecision({
                 type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
               });
@@ -274,6 +279,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic: existingDecision.daysHideFromPublic,
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
+      linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
     });
 
     if (existingDecision.reconsiders) {
@@ -297,6 +303,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       criterionModification: selectedCriterion,
     });
 
+    if (existingDecision.isSubjectToConditions) {
+      this.showConditions = true;
+    }
+
     if (existingDecision.chairReviewOutcome !== null) {
       this.form.patchValue({
         chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
@@ -309,6 +319,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (existingDecision?.components) {
       this.components = existingDecision.components;
+    }
+
+    if (existingDecision.outcome.code === 'APPR' || existingDecision.outcome.code === 'APPA') {
+      this.showComponents = true;
     }
   }
 
@@ -387,6 +401,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic,
       rescindedDate,
       rescindedComment,
+      linkedResolutionOutcome,
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
@@ -416,6 +431,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
       conditions: this.conditionUpdates,
+      linkedResolutionOutcomeCode: linkedResolutionOutcome,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -431,17 +447,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
     if (postDecision.type === PostDecisionType.Modification) {
       this.form.controls.ceoCriterion.disable();
-      this.form.controls.outcome.disable();
+      this.form.controls.linkedResolutionOutcome.disable();
       this.form.controls.decisionMaker.disable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION);
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
         ceoCriterion: CeoCriterion.MODIFICATION,
-        outcome: 'VARY',
+        linkedResolutionOutcome: 'VARY',
       });
     } else {
       this.form.controls.decisionMaker.enable();
-      this.form.controls.outcome.enable();
+      this.form.controls.linkedResolutionOutcome.enable();
       this.form.controls.ceoCriterion.enable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION);
     }
@@ -517,5 +533,32 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   onConditionsChange($event: UpdateApplicationDecisionConditionDto[]) {
     this.conditionUpdates = $event;
+  }
+
+  onChangeDecisionOutcome($event: any) {
+    if ($event.code === 'APPR' || $event.code === 'APPA') {
+      this.showComponents = true;
+      this.form.controls.isSubjectToConditions.enable();
+      this.form.patchValue({
+        isSubjectToConditions: null,
+      });
+    } else {
+      this.showComponents = false;
+      this.components = [];
+      this.conditions = [];
+      this.form.controls.isSubjectToConditions.disable();
+      this.form.patchValue({
+        isSubjectToConditions: 'false',
+      });
+    }
+  }
+
+  onChangeSubjectToConditons($event: MatButtonToggleChange) {
+    if ($event.value === 'true') {
+      this.showConditions = true;
+    } else {
+      this.conditions = [];
+      this.showConditions = false;
+    }
   }
 }

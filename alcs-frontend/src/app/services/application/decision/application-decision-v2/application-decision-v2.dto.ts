@@ -28,6 +28,7 @@ export interface UpdateApplicationDecisionDto {
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
+  linkedResolutionOutcomeCode?: string | null;
   isDraft?: boolean;
 }
 
@@ -56,7 +57,8 @@ export interface ApplicationDecisionDto {
   decisionMaker?: DecisionMakerDto;
   ceoCriterion?: CeoCriterionDto;
   chairReviewRequired: boolean;
-  chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
+  chairReviewOutcome: ChairReviewOutcomeCodeDto | null;
+  linkedResolutionOutcome: LinkedResolutionOutcomeTypeDto | null;
   applicationFileNumber: string;
   documents: DecisionDocumentDto[];
   isTimeExtension?: boolean | null;
@@ -128,6 +130,7 @@ export interface DecisionCodesDto {
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
   decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
+  linkedResolutionOutcomeTypes: LinkedResolutionOutcomeTypeDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -135,6 +138,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
+export interface LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {
   uuid: string;
