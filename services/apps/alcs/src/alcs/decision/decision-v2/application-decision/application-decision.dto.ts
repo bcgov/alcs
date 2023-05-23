@@ -68,6 +68,10 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   chairReviewOutcomeCode?: string | null;
 
+  @IsString()
+  @IsOptional()
+  linkedResolutionOutcomeCode?: string | null;
+
   @IsUUID()
   @IsOptional()
   modifiesUuid?: string | null;
@@ -142,6 +146,8 @@ export class DecisionOutcomeCodeDto extends BaseCodeDto {
 
 export class ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
+export class LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
+
 export class ApplicationDecisionDto {
   @AutoMap()
   uuid: string;
@@ -152,7 +158,7 @@ export class ApplicationDecisionDto {
   @AutoMap()
   date: number;
 
-  @AutoMap()
+  @AutoMap(() => DecisionOutcomeCodeDto)
   outcome: DecisionOutcomeCodeDto;
 
   @AutoMap()
@@ -164,22 +170,28 @@ export class ApplicationDecisionDto {
   @AutoMap()
   chairReviewRequired: boolean;
 
+  @AutoMap(() => Boolean)
+  isSubjectToConditions: boolean | null;
+
   @AutoMap()
   auditDate?: number | null;
 
   @AutoMap()
   chairReviewDate?: number | null;
 
-  @AutoMap()
+  @AutoMap(() => ChairReviewOutcomeCodeDto)
   chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
 
-  @AutoMap()
+  @AutoMap(() => LinkedResolutionOutcomeTypeDto)
+  linkedResolutionOutcome?: LinkedResolutionOutcomeTypeDto | null;
+
+  @AutoMap(() => [DecisionDocumentDto])
   documents: DecisionDocumentDto[];
 
-  @AutoMap()
+  @AutoMap(() => DecisionMakerCodeDto)
   decisionMaker?: DecisionMakerCodeDto | null;
 
-  @AutoMap()
+  @AutoMap(() => CeoCriterionCodeDto)
   ceoCriterion?: CeoCriterionCodeDto | null;
 
   @AutoMap(() => Boolean)
@@ -190,9 +202,6 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Boolean)
   isDraft: boolean;
-
-  @AutoMap(() => Boolean)
-  isSubjectToConditions?: boolean | null;
 
   @AutoMap(() => String)
   decisionDescription?: string | null;

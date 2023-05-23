@@ -2,7 +2,7 @@
   <div class="condition">
     <ng-select
       appearance="outline"
-      class="grid-half-1"
+      class="condition-grid-half-1"
       [items]="codes"
       formControlName="type"
       appendTo="body"
@@ -15,7 +15,7 @@
 
     <ng-select
       appearance="outline"
-      class="grid-half-2"
+      class="condition-grid-half-2"
       [items]="selectableComponents"
       formControlName="componentToCondition"
       appendTo="body"
@@ -25,7 +25,7 @@
       placeholder="Component to Condition*"
     ></ng-select>
 
-    <div class="grid-1">
+    <div class="condition-grid-1">
       <mat-label>Approval Dependent*</mat-label>
       <mat-button-toggle-group required formControlName="approvalDependant">
         <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -33,7 +33,7 @@
       </mat-button-toggle-group>
     </div>
 
-    <mat-form-field appearance="outline" class="grid-2">
+    <mat-form-field appearance="outline" class="condition-grid-2">
       <mat-label>Security Amount</mat-label>
       <input
         matInput
@@ -44,7 +44,7 @@
       />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="grid-3">
+    <mat-form-field appearance="outline" class="condition-grid-3">
       <mat-label>Administrative Fee Amount</mat-label>
       <input
         matInput
@@ -55,7 +55,7 @@
       />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="outline" class="condition-full-width">
       <mat-label>Description</mat-label>
       <input matInput type="text" formControlName="description" />
     </mat-form-field>

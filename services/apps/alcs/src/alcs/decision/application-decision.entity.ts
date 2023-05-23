@@ -21,6 +21,7 @@ import { DecisionDocument } from './decision-document/decision-document.entity';
 import { DecisionMakerCode } from './decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationDecisionComponent } from './decision-v2/application-decision/component/application-decision-component.entity';
+import { LinkedResolutionOutcomeType } from './decision-v2/application-decision/linked-resolution-outcome-type.entity';
 
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
@@ -55,6 +56,7 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'timestamptz', nullable: true })
   chairReviewDate: Date | null;
 
+  @AutoMap(() => DecisionOutcomeCode)
   @ManyToOne(() => DecisionOutcomeCode, {
     nullable: false,
   })
@@ -76,7 +78,7 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'smallint' })
   resolutionYear: number;
 
-  @AutoMap()
+  @AutoMap(() => DecisionMakerCode)
   @ManyToOne(() => DecisionMakerCode, { nullable: true })
   decisionMaker?: DecisionMakerCode;
 
@@ -84,7 +86,7 @@ export class ApplicationDecision extends Base {
   @Column({ type: 'text', nullable: true })
   decisionMakerCode: string | null;
 
-  @AutoMap()
+  @AutoMap(() => CeoCriterionCode)
   @ManyToOne(() => CeoCriterionCode, { nullable: true })
   ceoCriterion?: CeoCriterionCode;
 
@@ -99,10 +101,6 @@ export class ApplicationDecision extends Base {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   isOther: boolean | null;
-
-  @AutoMap()
-  @Column({ nullable: true, type: 'text' })
-  chairReviewOutcomeCode: string | null;
 
   @AutoMap()
   @Column({
@@ -169,11 +167,25 @@ export class ApplicationDecision extends Base {
   })
   createdAt: Date;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationDecisionChairReviewOutcomeType)
   @ManyToOne(() => ApplicationDecisionChairReviewOutcomeType, {
     nullable: true,
   })
   chairReviewOutcome: ApplicationDecisionChairReviewOutcomeType;
+
+  @AutoMap()
+  @Column({ nullable: true, type: 'text' })
+  chairReviewOutcomeCode: string | null;
+
+  @AutoMap(() => LinkedResolutionOutcomeType)
+  @ManyToOne(() => LinkedResolutionOutcomeType, {
+    nullable: true,
+  })
+  linkedResolutionOutcome: LinkedResolutionOutcomeType | null;
+
+  @AutoMap()
+  @Column({ nullable: true, type: 'text' })
+  linkedResolutionOutcomeCode: string | null;
 
   @AutoMap()
   @Column({ type: 'uuid' })
@@ -195,7 +207,7 @@ export class ApplicationDecision extends Base {
   )
   modifiedBy: ApplicationModification[];
 
-  @AutoMap()
+  @AutoMap(() => ApplicationModification)
   @OneToOne(
     () => ApplicationModification,
     (modification) => modification.resultingDecision,
@@ -204,7 +216,7 @@ export class ApplicationDecision extends Base {
   @JoinColumn()
   modifies?: ApplicationModification | null;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationReconsideration)
   @OneToOne(
     () => ApplicationReconsideration,
     (reconsideration) => reconsideration.resultingDecision,

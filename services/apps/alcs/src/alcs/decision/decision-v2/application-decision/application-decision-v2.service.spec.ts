@@ -28,6 +28,7 @@ import {
 } from './application-decision.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -40,6 +41,9 @@ describe('ApplicationDecisionV2Service', () => {
     Repository<DecisionMakerCode>
   >;
   let mockCeoCriterionCodeRepository: DeepMocked<Repository<CeoCriterionCode>>;
+  let mockLinkedResolutionOutcomeRepository: DeepMocked<
+    Repository<LinkedResolutionOutcomeType>
+  >;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockApplicationDecisionComponentTypeRepository: DeepMocked<
@@ -64,6 +68,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockApplicationDecisionComponentTypeRepository = createMock();
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
+    mockLinkedResolutionOutcomeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -92,6 +97,10 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: getRepositoryToken(DecisionOutcomeCode),
           useValue: mockDecisionOutcomeRepository,
+        },
+        {
+          provide: getRepositoryToken(LinkedResolutionOutcomeType),
+          useValue: mockLinkedResolutionOutcomeRepository,
         },
         {
           provide: ApplicationService,
@@ -142,6 +151,7 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
+    mockLinkedResolutionOutcomeRepository.find.mockResolvedValue([]);
 
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);

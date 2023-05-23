@@ -29,6 +29,7 @@ import { ApplicationDecisionV2Service } from './application-decision/application
 import { ApplicationDecisionComponentType } from './application-decision/component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
       ApplicationDecisionComponentType,
       ApplicationDecisionCondition,
       ApplicationDecisionConditionType,
+      LinkedResolutionOutcomeType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
