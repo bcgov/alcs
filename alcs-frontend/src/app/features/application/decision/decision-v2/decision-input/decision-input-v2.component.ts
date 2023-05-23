@@ -92,8 +92,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
-    rescindedDate: new FormControl<Date | undefined>(undefined),
-    rescindedComment: new FormControl<string | undefined>(undefined),
+    rescindedDate: new FormControl<Date | null>({ disabled: true, value: null }),
+    rescindedComment: new FormControl<string | null>({ disabled: true, value: null }),
   });
 
   constructor(
@@ -321,8 +321,15 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.components = existingDecision.components;
     }
 
-    if (existingDecision.outcome.code === 'APPR' || existingDecision.outcome.code === 'APPA') {
+    if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
       this.showComponents = true;
+    }
+
+    if (existingDecision.outcome.code === 'RESC') {
+      this.form.controls.rescindedComment.enable();
+      this.form.controls.rescindedDate.enable();
+      this.form.controls.rescindedComment.setValidators([Validators.required]);
+      this.form.controls.rescindedDate.setValidators([Validators.required]);
     }
   }
 
@@ -535,14 +542,16 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.conditionUpdates = $event;
   }
 
-  onChangeDecisionOutcome($event: any) {
-    if ($event.code === 'APPR' || $event.code === 'APPA') {
-      this.showComponents = true;
-      this.form.controls.isSubjectToConditions.enable();
-      this.form.patchValue({
-        isSubjectToConditions: null,
-      });
-    } else {
+  onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
+    if (['APPR', 'APPA', 'RESC'].includes(selectedOutcome.code)) {
+      if (this.form.controls.isSubjectToConditions.disabled) {
+        this.showComponents = true;
+        this.form.controls.isSubjectToConditions.enable();
+        this.form.patchValue({
+          isSubjectToConditions: null,
+        });
+      }
+    } else if (this.form.controls.isSubjectToConditions.enabled) {
       this.showComponents = false;
       this.components = [];
       this.conditions = [];
@@ -550,6 +559,24 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.form.patchValue({
         isSubjectToConditions: 'false',
       });
+    }
+
+    if (selectedOutcome.code === 'RESC' && this.form.controls.rescindedComment.disabled) {
+      this.form.controls.rescindedComment.enable();
+      this.form.controls.rescindedDate.enable();
+      this.form.controls.rescindedComment.setValidators([Validators.required]);
+      this.form.controls.rescindedDate.setValidators([Validators.required]);
+      this.form.controls.rescindedComment.updateValueAndValidity();
+      this.form.controls.rescindedDate.updateValueAndValidity();
+    } else if (this.form.controls.rescindedComment.enabled) {
+      this.form.controls.rescindedComment.disable();
+      this.form.controls.rescindedDate.disable();
+      this.form.controls.rescindedComment.setValue(null);
+      this.form.controls.rescindedDate.setValue(null);
+      this.form.controls.rescindedComment.setValidators([]);
+      this.form.controls.rescindedDate.setValidators([]);
+      this.form.controls.rescindedComment.updateValueAndValidity();
+      this.form.controls.rescindedDate.updateValueAndValidity();
     }
   }
 
