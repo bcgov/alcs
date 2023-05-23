@@ -21,6 +21,7 @@ import {
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { decisionChildRoutes } from '../decision.module';
+import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
 type LoadingDecision = ApplicationDecisionDto & {
   reconsideredByResolutions: string[];
@@ -125,6 +126,21 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     // }
 
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
+  }
+
+  async onRevertToDraft(uuid: string) {
+    this.dialog
+      .open(RevertToDraftDialogComponent)
+      .beforeClosed()
+      .subscribe(async (result) => {
+        if (result) {
+          await this.decisionService.update(uuid, {
+            isDraft: true,
+          });
+
+          await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit`]);
+        }
+      });
   }
 
   async deleteDecision(uuid: string) {

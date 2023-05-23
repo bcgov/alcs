@@ -212,6 +212,9 @@ export class ApplicationDecisionDto {
   @AutoMap(() => Number)
   createdAt?: number | null;
 
+  @AutoMap(() => Boolean)
+  wasReleased: boolean;
+
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];

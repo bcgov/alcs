@@ -257,6 +257,8 @@ export class ApplicationDecisionV2Service {
       updateDto.rescindedDate,
     );
     existingDecision.rescindedComment = updateDto.rescindedComment;
+    existingDecision.wasReleased =
+      existingDecision.wasReleased || !updateDto.isDraft;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(

@@ -1,16 +1,16 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationStatusTypeDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 
-import { ReleaseDialogComponent } from './release-dialog.component';
+import { RevertToDraftDialogComponent } from './revert-to-draft-dialog.component';
 
-describe('ReleaseDialogComponent', () => {
-  let component: ReleaseDialogComponent;
-  let fixture: ComponentFixture<ReleaseDialogComponent>;
+describe('RevertToDraftDialogComponent', () => {
+  let component: RevertToDraftDialogComponent;
+  let fixture: ComponentFixture<RevertToDraftDialogComponent>;
   let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
@@ -18,22 +18,18 @@ describe('ReleaseDialogComponent', () => {
     mockApplicationService.$applicationStatuses = new BehaviorSubject<ApplicationStatusTypeDto[]>([]);
 
     await TestBed.configureTestingModule({
-      declarations: [ReleaseDialogComponent],
+      declarations: [RevertToDraftDialogComponent],
       providers: [
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
         },
         { provide: MatDialogRef, useValue: {} },
-        {
-          provide: MAT_DIALOG_DATA,
-          useValue: {},
-        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ReleaseDialogComponent);
+    fixture = TestBed.createComponent(RevertToDraftDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
