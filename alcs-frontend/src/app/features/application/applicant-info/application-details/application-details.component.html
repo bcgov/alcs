@@ -25,38 +25,31 @@
   </div>
 </section>
 <section>
-  <h3>Primary Contact</h3>
+  <h3>Primary Contact Information</h3>
   <div *ngIf="submittedApplication" class="review-table">
-    <div class="subheading2 grid-1">Primary Contact</div>
-    <div *ngIf="submittedApplication.primaryContact" class="grid-double">
-      {{ submittedApplication.primaryContact.displayName }}
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ submittedApplication.primaryContact.firstName }}
     </div>
-    <ng-container>
-      <div *ngIf="submittedApplication.primaryContact.type === 'AGEN'">Third Party Agent</div>
-      <ng-container *ngIf="submittedApplication.primaryContact.type === 'AGEN'">
-        <div class="full-width subheading1">Agent Contact Information</div>
-        <div class="subheading2 grid-1">First Name</div>
-        <div class="grid-double">
-          {{ submittedApplication.primaryContact.firstName }}
-        </div>
-        <div class="subheading2 grid-1">Last Name</div>
-        <div class="grid-double">
-          {{ submittedApplication.primaryContact.lastName }}
-        </div>
-        <div class="subheading2 grid-1">Organization</div>
-        <div class="grid-double">
-          {{ submittedApplication.primaryContact.organizationName }}
-        </div>
-        <div class="subheading2 grid-1">Phone</div>
-        <div class="grid-double">
-          {{ submittedApplication.primaryContact.phoneNumber }}
-        </div>
-        <div class="subheading2 grid-1">Email</div>
-        <div class="grid-double">
-          {{ submittedApplication.primaryContact.email }}
-        </div>
-      </ng-container>
-    </ng-container>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ submittedApplication.primaryContact.lastName }}
+    </div>
+    <div class="subheading2 grid-1">
+      <span *ngIf='submittedApplication.primaryContact.type !== "CRWN"'>Organization</span>
+      <span *ngIf='submittedApplication.primaryContact.type === "CRWN"'>Ministry/Department Responsible</span>
+    </div>
+    <div class="grid-double">
+      {{ submittedApplication.primaryContact.organizationName }}
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ submittedApplication.primaryContact.phoneNumber }}
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ submittedApplication.primaryContact.email }}
+    </div>
     <ng-container *ngIf="authorizationLetters.length > 0">
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">

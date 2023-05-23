@@ -18,48 +18,39 @@
   ></app-parcel>
 </section>
 <section>
-  <h3>3. Primary Contact</h3>
+  <h3>3. Primary Contact <app-updated-banner *ngIf="updatedFields.includes('primaryContactOwnerUuid')"></app-updated-banner></h3>
   <div *ngIf="applicationSubmission" class="review-table">
-    <div class="subheading2 grid-1">
-      Primary Contact
-      <app-updated-banner *ngIf="updatedFields.includes('primaryContactOwnerUuid')"></app-updated-banner>
-    </div>
-    <div class="grid-double" *ngIf="primaryContact?.type?.code !== 'AGEN'">
-      {{ primaryContact?.displayName }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact"></app-no-data>
-    </div>
     <ng-container *ngIf="primaryContact">
-      <div *ngIf="primaryContact.type.code === 'AGEN'">Third Party Agent</div>
-      <ng-container *ngIf="primaryContact.type.code === 'AGEN'">
-        <div class="full-width subheading1">Agent Contact Information</div>
-        <div class="subheading2 grid-1">First Name</div>
-        <div class="grid-double">
-          {{ primaryContact.firstName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.firstName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1">Last Name</div>
-        <div class="grid-double">
-          {{ primaryContact.lastName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.lastName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1">Organization (optional)</div>
-        <div class="grid-double">
-          {{ primaryContact.organizationName }}
-          <app-no-data *ngIf="!primaryContact.organizationName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1">Phone</div>
-        <div class="grid-double">
-          {{ primaryContact.phoneNumber }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.phoneNumber"></app-no-data>
-          <app-validation-error *ngIf="!(primaryContact.phoneNumber | phoneValid)">Invalid Format</app-validation-error>
-        </div>
-        <div class="subheading2 grid-1">Email</div>
-        <div class="grid-double">
-          {{ primaryContact.email }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.email"></app-no-data>
-          <app-validation-error *ngIf="!(primaryContact.email | emailValid)">Invalid Format</app-validation-error>
-        </div>
-      </ng-container>
+      <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double">
+        {{ primaryContact.firstName }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.firstName"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">Last Name</div>
+      <div class="grid-double">
+        {{ primaryContact.lastName }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.lastName"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">
+        <span *ngIf='primaryContact.type.code !== APPLICATION_OWNER.CROWN'>Organization (optional)</span>
+        <span *ngIf='primaryContact.type.code === APPLICATION_OWNER.CROWN'>Ministry/Department Responsible</span>
+      </div>
+      <div class="grid-double">
+        {{ primaryContact.organizationName }}
+        <app-no-data *ngIf="!primaryContact.organizationName"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">Phone</div>
+      <div class="grid-double">
+        {{ primaryContact.phoneNumber }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.phoneNumber"></app-no-data>
+        <app-validation-error *ngIf="!(primaryContact.phoneNumber | phoneValid)">Invalid Format</app-validation-error>
+      </div>
+      <div class="subheading2 grid-1">Email</div>
+      <div class="grid-double">
+        {{ primaryContact.email }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.email"></app-no-data>
+        <app-validation-error *ngIf="!(primaryContact.email | emailValid)">Invalid Format</app-validation-error>
+      </div>
     </ng-container>
     <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
