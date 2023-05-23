@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class InlineReviewOutcomeComponent implements OnInit {
   @Input() selectedValue?: string | null;
+  @Input() isModification = false;
 
   @Output() save = new EventEmitter<string>();
 

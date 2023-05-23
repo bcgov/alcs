@@ -78,10 +78,10 @@
       </div>
       <span *ngIf="reconsideration.reviewDate">{{ reconsideration.reviewDate | momentFormat }}</span>
       <span *ngIf="!reconsideration.reviewDate">
-          <app-inline-datepicker
-            (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
+        <app-inline-datepicker
+          (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
+        ></app-inline-datepicker>
+      </span>
     </div>
   </div>
 </section>
@@ -124,6 +124,7 @@
         <div class="subheading2">Review Outcome</div>
         <span *ngIf="modification.reviewOutcome.code === 'PEN'">
           <app-inline-review-outcome
+            [isModification]="true"
             (save)="onSaveModificationOutcome(modification.uuid, $event)"
           ></app-inline-review-outcome>
         </span>
@@ -150,10 +151,8 @@
       </div>
       <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
       <span *ngIf="!modification.reviewDate">
-          <app-inline-datepicker
-            (save)="onSaveModificationReviewDate(modification.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
+        <app-inline-datepicker (save)="onSaveModificationReviewDate(modification.uuid, $event)"></app-inline-datepicker>
+      </span>
     </div>
   </div>
 </section>
