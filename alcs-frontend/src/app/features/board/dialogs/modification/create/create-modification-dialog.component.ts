@@ -74,7 +74,6 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
       this.localGovernments = res;
     });
 
-    this.modifiesDecisions.disable();
     this.initApplicationFileNumberAutocomplete();
   }
 
