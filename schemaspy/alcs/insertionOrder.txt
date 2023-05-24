@@ -3,6 +3,8 @@ application_region
 board
 card_status
 application_decision_chair_review_outcome_type
+application_decision_component_type
+application_decision_condition_type
 application_document_code
 application_meeting_type
 application_modification_outcome_type
@@ -17,16 +19,18 @@ card_type
 ceo_criterion_code
 decision_maker_code
 decision_outcome_code
+linked_resolution_outcome_type
 card
 application_local_government
 document
 application
-application_document
 application_modification
-application_submission
 application_reconsideration
 application_decision
+application_document
+application_submission
 application_paused
+application_decision_component
 comment
 application_owner
 application_parcel
@@ -41,6 +45,7 @@ decision_document
 modified_decisions
 notification
 reconsidered_decisions
+application_decision_condition
 card_subtask
 covenant
 planning_review

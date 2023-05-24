@@ -7,6 +7,7 @@ application_meeting
 planning_review
 covenant
 card_subtask
+application_decision_condition
 reconsidered_decisions
 notification
 modified_decisions
@@ -21,16 +22,18 @@ application_decision_meeting
 application_parcel
 application_owner
 comment
+application_decision_component
 application_paused
+application_submission
+application_document
 application_decision
 application_reconsideration
-application_submission
 application_modification
-application_document
 application
 document
 application_local_government
 card
+linked_resolution_outcome_type
 decision_outcome_code
 decision_maker_code
 ceo_criterion_code
@@ -45,6 +48,8 @@ application_owner_type
 application_modification_outcome_type
 application_meeting_type
 application_document_code
+application_decision_condition_type
+application_decision_component_type
 application_decision_chair_review_outcome_type
 card_status
 board
