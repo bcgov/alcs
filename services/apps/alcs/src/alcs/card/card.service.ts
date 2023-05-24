@@ -177,6 +177,11 @@ export class CardService {
     await this.cardRepository.softRemove(card);
   }
 
+  async save(card: Card) {
+    await this.cardRepository.save(card);
+    return this.get(card.uuid);
+  }
+
   async recover(uuid: string) {
     const card = await this.cardRepository.findOneOrFail({
       where: {
