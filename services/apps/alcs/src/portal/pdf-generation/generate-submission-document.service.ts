@@ -14,6 +14,7 @@ import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
+import { APPLICATION_OWNER } from '../application-submission/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { PARCEL_TYPE } from '../application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
@@ -214,11 +215,11 @@ export class GenerateSubmissionDocumentService {
       localGovernment: localGovernment?.name,
       status: submission.status,
       applicant: submission.applicant,
-      primaryContact: ['INDV', 'ORGZ'].includes(
-        primaryContact?.type.code ?? 'NULL',
-      )
-        ? `${primaryContact?.firstName} ${primaryContact?.lastName}`
-        : primaryContact?.organizationName,
+      primaryContact,
+      organizationText:
+        primaryContact?.type.code === APPLICATION_OWNER.CROWN
+          ? 'Ministry/Department Responsible'
+          : 'Organization (If Applicable)',
 
       // Land use
       parcelsAgricultureDescription: submission.parcelsAgricultureDescription,

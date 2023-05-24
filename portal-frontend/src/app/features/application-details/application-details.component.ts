@@ -37,6 +37,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   otherFiles: ApplicationDocumentDto[] = [];
   needsAuthorizationLetter = true;
   appDocuments: ApplicationDocumentDto[] = [];
+  APPLICATION_OWNER = APPLICATION_OWNER;
 
   private localGovernments: LocalGovernmentDto[] = [];
   private otherFileTypes = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
