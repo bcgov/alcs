@@ -242,7 +242,7 @@ export class DecisionV1DialogComponent implements OnInit {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code === 'APPR' && modification.resultingDecision === null)
+          (modification.reviewOutcome.code === 'PRC' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
