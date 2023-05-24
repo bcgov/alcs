@@ -41,15 +41,6 @@
         {{ reconsideration.type.code }}
       </div>
       <div></div>
-      <div *ngIf="reconsideration.type.code === '33'">
-        <div class="subheading2">Review Date</div>
-        <span *ngIf="reconsideration.reviewDate">{{ reconsideration.reviewDate | momentFormat }}</span>
-        <span *ngIf="!reconsideration.reviewDate">
-          <app-inline-datepicker
-            (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
-      </div>
       <div>
         <ng-container *ngIf="reconsideration.type.code === '33'">
           <div class="subheading2">Review Outcome</div>
@@ -63,7 +54,6 @@
           }}</span>
         </ng-container>
       </div>
-      <div></div>
       <div *ngIf="reconsideration.type.code === '33.1'"></div>
       <div>
         <div class="subheading2">Resolutions to be Reconsidered</div>
@@ -77,6 +67,21 @@
           }}
         </ng-container>
       </div>
+    </div>
+    <div></div>
+    <div *ngIf="reconsideration.type.code === '33'">
+      <div class="subheading2 left">
+        Outcome Notification Date
+        <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
+          info
+        </mat-icon>
+      </div>
+      <span *ngIf="reconsideration.reviewDate">{{ reconsideration.reviewDate | momentFormat }}</span>
+      <span *ngIf="!reconsideration.reviewDate">
+        <app-inline-datepicker
+          (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
+        ></app-inline-datepicker>
+      </span>
     </div>
   </div>
 </section>
@@ -116,24 +121,15 @@
       </div>
       <div></div>
       <div>
-        <div class="subheading2">Review Date</div>
-        <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
-        <span *ngIf="!modification.reviewDate">
-          <app-inline-datepicker
-            (save)="onSaveModificationReviewDate(modification.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
-      </div>
-      <div>
         <div class="subheading2">Review Outcome</div>
         <span *ngIf="modification.reviewOutcome.code === 'PEN'">
           <app-inline-review-outcome
+            [isModification]="true"
             (save)="onSaveModificationOutcome(modification.uuid, $event)"
           ></app-inline-review-outcome>
         </span>
         <span *ngIf="modification.reviewOutcome.code !== 'PEN'">{{ modification.reviewOutcome.label }}</span>
       </div>
-      <div></div>
       <div>
         <div class="subheading2">Resolutions to be Modified</div>
         <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
@@ -144,6 +140,19 @@
           #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
         </ng-container>
       </div>
+    </div>
+    <div></div>
+    <div>
+      <div class="subheading2 left">
+        Outcome Notification Date
+        <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
+          info
+        </mat-icon>
+      </div>
+      <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
+      <span *ngIf="!modification.reviewDate">
+        <app-inline-datepicker (save)="onSaveModificationReviewDate(modification.uuid, $event)"></app-inline-datepicker>
+      </span>
     </div>
   </div>
 </section>

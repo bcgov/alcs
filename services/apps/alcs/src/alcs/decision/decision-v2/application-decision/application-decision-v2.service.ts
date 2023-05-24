@@ -20,12 +20,18 @@ import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { DecisionConditionService } from '../../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
+import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -40,9 +46,43 @@ export class ApplicationDecisionV2Service {
     private decisionMakerRepository: Repository<DecisionMakerCode>,
     @InjectRepository(CeoCriterionCode)
     private ceoCriterionRepository: Repository<CeoCriterionCode>,
+    @InjectRepository(ApplicationDecisionComponentType)
+    private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
+    @InjectRepository(ApplicationDecisionConditionType)
+    private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(LinkedResolutionOutcomeType)
+    private linkedResolutionOutcomeTypeRepository: Repository<LinkedResolutionOutcomeType>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
+    private decisionComponentService: ApplicationDecisionComponentService,
+    private decisionConditionService: DecisionConditionService,
   ) {}
+
+  async getForPortal(fileNumber: string) {
+    const application = await this.applicationService.getOrFail(fileNumber);
+
+    return await this.appDecisionRepository.find({
+      where: {
+        applicationUuid: application.uuid,
+        isDraft: false,
+      },
+      relations: {
+        outcome: true,
+        documents: {
+          document: true,
+        },
+        modifies: {
+          modifiesDecisions: true,
+        },
+        reconsiders: {
+          reconsidersDecisions: true,
+        },
+      },
+      order: {
+        auditCreatedAt: 'DESC',
+      },
+    });
+  }
 
   async getByAppFileNumber(number: string) {
     const application = await this.applicationService.getOrFail(number);
@@ -58,6 +98,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        linkedResolutionOutcome: true,
         modifies: {
           modifiesDecisions: true,
         },
@@ -65,6 +106,9 @@ export class ApplicationDecisionV2Service {
           reconsidersDecisions: true,
         },
         chairReviewOutcome: true,
+        components: {
+          applicationDecisionComponentType: true,
+        },
       },
     });
 
@@ -140,6 +184,7 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
+        linkedResolutionOutcome: true,
         documents: {
           document: true,
         },
@@ -148,6 +193,12 @@ export class ApplicationDecisionV2Service {
         },
         reconsiders: {
           reconsidersDecisions: true,
+        },
+        components: {
+          applicationDecisionComponentType: true,
+        },
+        conditions: {
+          type: true,
         },
       },
     });
@@ -211,6 +262,10 @@ export class ApplicationDecisionV2Service {
       updateDto.rescindedDate,
     );
     existingDecision.rescindedComment = updateDto.rescindedComment;
+    existingDecision.wasReleased =
+      existingDecision.wasReleased || !updateDto.isDraft;
+    existingDecision.linkedResolutionOutcomeCode =
+      updateDto.linkedResolutionOutcomeCode;
 
     if (updateDto.outcomeCode) {
       existingDecision.outcome = await this.getOutcomeByCode(
@@ -232,8 +287,12 @@ export class ApplicationDecisionV2Service {
       existingDecision.date = new Date(updateDto.date);
     }
 
+    await this.updateComponents(updateDto, existingDecision);
+    await this.updateConditions(updateDto, existingDecision);
+
     const updatedDecision = await this.appDecisionRepository.save(
       existingDecision,
+      { transaction: true },
     );
 
     //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
@@ -259,6 +318,68 @@ export class ApplicationDecisionV2Service {
     return this.get(existingDecision.uuid);
   }
 
+  private async updateComponents(
+    updateDto: UpdateApplicationDecisionDto,
+    existingDecision: Partial<ApplicationDecision>,
+  ) {
+    if (updateDto.decisionComponents) {
+      this.decisionComponentService.validate(updateDto.decisionComponents);
+
+      if (existingDecision?.components) {
+        const componentsToRemove = existingDecision.components.filter(
+          (component) =>
+            !updateDto.decisionComponents?.some(
+              (componentDto) => componentDto.uuid === component.uuid,
+            ),
+        );
+
+        await this.decisionComponentService.softRemove(componentsToRemove);
+      }
+
+      existingDecision.components =
+        await this.decisionComponentService.createOrUpdate(
+          updateDto.decisionComponents,
+          false,
+        );
+    } else if (existingDecision.components) {
+      await this.decisionComponentService.softRemove(
+        existingDecision.components,
+      );
+    }
+  }
+
+  private async updateConditions(
+    updateDto: UpdateApplicationDecisionDto,
+    existingDecision: Partial<ApplicationDecision>,
+  ) {
+    if (updateDto.conditions) {
+      if (existingDecision.applicationUuid && existingDecision.conditions) {
+        const conditionsToRemove = existingDecision.conditions.filter(
+          (condition) =>
+            !updateDto.conditions?.some(
+              (conditionDto) => conditionDto.uuid === condition.uuid,
+            ),
+        );
+
+        await this.decisionConditionService.remove(conditionsToRemove);
+      }
+
+      const allComponents =
+        await this.decisionComponentService.getAllByApplicationUuid(
+          existingDecision.applicationUuid!,
+        );
+
+      existingDecision.conditions =
+        await this.decisionConditionService.createOrUpdate(
+          updateDto.conditions,
+          allComponents,
+          false,
+        );
+    } else if (existingDecision.conditions) {
+      await this.decisionConditionService.remove(existingDecision.conditions);
+    }
+  }
+
   private async getOrFail(uuid: string) {
     const existingDecision = await this.appDecisionRepository.findOne({
       where: {
@@ -266,6 +387,8 @@ export class ApplicationDecisionV2Service {
       },
       relations: {
         application: true,
+        components: true,
+        conditions: true,
       },
     });
 
@@ -319,6 +442,15 @@ export class ApplicationDecisionV2Service {
       );
     }
 
+    let decisionComponents: ApplicationDecisionComponent[] = [];
+    if (createDto.decisionComponents) {
+      this.decisionComponentService.validate(createDto.decisionComponents);
+      decisionComponents = await this.decisionComponentService.createOrUpdate(
+        createDto.decisionComponents,
+        false,
+      );
+    }
+
     const decision = new ApplicationDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
       date: new Date(createDto.date),
@@ -332,6 +464,7 @@ export class ApplicationDecisionV2Service {
         ? new Date(createDto.chairReviewDate)
         : undefined,
       chairReviewOutcomeCode: createDto.chairReviewOutcomeCode,
+      linkedResolutionOutcomeCode: createDto.linkedResolutionOutcomeCode,
       ceoCriterionCode: createDto.ceoCriterionCode,
       decisionMakerCode: createDto.decisionMakerCode,
       isTimeExtension: createDto.isTimeExtension,
@@ -348,6 +481,7 @@ export class ApplicationDecisionV2Service {
       application,
       modifies,
       reconsiders,
+      components: decisionComponents,
     });
 
     await this.validateDecisionChanges(createDto);
@@ -366,7 +500,9 @@ export class ApplicationDecisionV2Service {
       });
     }
 
-    const savedDecision = await this.appDecisionRepository.save(decision);
+    const savedDecision = await this.appDecisionRepository.save(decision, {
+      transaction: true,
+    });
 
     return this.get(savedDecision.uuid);
   }
@@ -401,6 +537,7 @@ export class ApplicationDecisionV2Service {
           document: true,
         },
         application: true,
+        components: true,
       },
     });
 
@@ -413,6 +550,10 @@ export class ApplicationDecisionV2Service {
     for (const document of applicationDecision.documents) {
       await this.documentService.softRemove(document.document);
     }
+
+    await this.decisionComponentService.softRemove(
+      applicationDecision.components,
+    );
 
     //Clear potential links
     applicationDecision.reconsiders = null;
@@ -512,12 +653,18 @@ export class ApplicationDecisionV2Service {
           number: 'ASC',
         },
       }),
+      this.decisionComponentTypeRepository.find(),
+      this.decisionConditionTypeRepository.find(),
+      this.linkedResolutionOutcomeTypeRepository.find(),
     ]);
 
     return {
       outcomes: values[0],
       decisionMakers: values[1],
       ceoCriterion: values[2],
+      decisionComponentTypes: values[3],
+      decisionConditionTypes: values[4],
+      linkedResolutionOutcomeType: values[5],
     };
   }
 

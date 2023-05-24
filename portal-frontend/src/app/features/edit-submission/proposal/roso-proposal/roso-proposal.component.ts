@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
@@ -11,6 +12,7 @@ import { ApplicationSubmissionUpdateDto } from '../../../../services/application
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
+import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { StepComponent } from '../../step.partial';
 import { SoilTableData } from '../soil-table/soil-table.component';
@@ -60,7 +62,8 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -141,7 +144,22 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     }
   }
 
-  async deleteFile($event: ApplicationDocumentDto) {
+  async onDeleteFile($event: ApplicationDocumentDto) {
+    if (this.draftMode) {
+      this.dialog
+        .open(RemoveFileConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            this.deleteFile($event);
+          }
+        });
+    } else {
+      await this.deleteFile($event);
+    }
+  }
+
+  private async deleteFile($event: ApplicationDocumentDto) {
     await this.applicationDocumentService.deleteExternalFile($event.uuid);
     if (this.fileId) {
       const documents = await this.applicationDocumentService.getByFileId(this.fileId);

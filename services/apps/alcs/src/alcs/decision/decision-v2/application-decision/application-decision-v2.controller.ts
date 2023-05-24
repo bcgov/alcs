@@ -23,16 +23,22 @@ import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { ApplicationDecisionConditionTypeDto } from '../../decision-condition/decision-condition.dto';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
   ApplicationDecisionDto,
   CreateApplicationDecisionDto,
   DecisionOutcomeCodeDto,
+  LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -81,6 +87,21 @@ export class ApplicationDecisionV2Controller {
         codes.ceoCriterion,
         CeoCriterionCode,
         CeoCriterionCodeDto,
+      ),
+      decisionComponentTypes: await this.mapper.mapArrayAsync(
+        codes.decisionComponentTypes,
+        ApplicationDecisionComponentType,
+        ApplicationDecisionComponentTypeDto,
+      ),
+      decisionConditionTypes: await this.mapper.mapArrayAsync(
+        codes.decisionConditionTypes,
+        ApplicationDecisionConditionType,
+        ApplicationDecisionConditionTypeDto,
+      ),
+      linkedResolutionOutcomeTypes: await this.mapper.mapArrayAsync(
+        codes.linkedResolutionOutcomeType,
+        LinkedResolutionOutcomeType,
+        LinkedResolutionOutcomeTypeDto,
       ),
     };
   }

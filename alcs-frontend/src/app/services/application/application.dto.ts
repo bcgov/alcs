@@ -112,6 +112,7 @@ export interface ApplicationSubmissionDto {
   southLandUseTypeDescription: string;
   westLandUseType: string;
   westLandUseTypeDescription: string;
+  typeCode: string;
 
   //NFU Data
   nfuHectares?: string;

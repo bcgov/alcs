@@ -67,10 +67,8 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
         type: formValues.type!,
       };
 
-      await this.planningReviewService.create(planningReview);
-
+      const res = await this.planningReviewService.create(planningReview);
       this.dialogRef.close(true);
-      this.toastService.showSuccessToast('Planning meeting card created');
     } finally {
       this.isLoading = false;
     }

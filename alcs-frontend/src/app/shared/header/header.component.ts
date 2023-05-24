@@ -90,8 +90,8 @@ export class HeaderComponent implements OnInit {
     return 0;
   }
 
-  onSelectBoard(dmCode: string) {
-    this.router.navigateByUrl(`/board/${dmCode}`);
+  async onSelectBoard(dmCode: string) {
+    await this.router.navigateByUrl(`/board/${dmCode}`);
   }
 
   private async loadNotifications() {
@@ -102,7 +102,7 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
   }
 
-  onAdmin() {
-    this.router.navigateByUrl('/admin');
+  async onAdmin() {
+    await this.router.navigateByUrl('/admin');
   }
 }

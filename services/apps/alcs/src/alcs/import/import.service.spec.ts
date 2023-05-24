@@ -218,6 +218,7 @@ describe('ImportService', () => {
     expect(mockBoardService.changeBoard).toHaveBeenCalledWith(
       mockApplication.cardUuid,
       'exec',
+      {},
     );
   });
 

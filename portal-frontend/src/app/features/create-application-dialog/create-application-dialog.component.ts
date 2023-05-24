@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { ApplicationTypeDto, SubmissionTypeDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
+import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 export enum ApplicationCreateDialogStepsEnum {
   submissionType = 0,
@@ -79,11 +80,20 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
 
   onReadMoreClicked() {
     this.readMoreClicked = !this.readMoreClicked;
+
+    if (this.readMoreClicked) {
+      setTimeout(() => {
+        scrollToElement({ id: 'warningBanner', center: false });
+      }, 300);
+    }
   }
 
   onAppTypeSelected(event: MatRadioChange) {
     this.selectedAppType = this.applicationTypes.find((e) => e.code === event.value);
     this.readMoreClicked = false;
+    setTimeout(() => {
+      scrollToElement({ id: 'warningBanner', center: true });
+    }, 300);
   }
 
   isEllipsisActive(e: string): boolean {

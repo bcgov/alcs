@@ -29,6 +29,7 @@ export class ParcelOwnersComponent {
   @Input() fileId!: string;
   @Input() parcelUuid?: string | undefined;
   @Input() isCrown = false;
+  @Input() isDraft = false;
 
   _owners: ApplicationOwnerDto[] = [];
   _disabled = false;
@@ -45,6 +46,7 @@ export class ParcelOwnersComponent {
     if (owner.type.code === APPLICATION_OWNER.CROWN) {
       dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
         data: {
+          isDraft: this.isDraft,
           parcelUuid: this.parcelUuid,
           existingOwner: owner,
           submissionUuid: this.submissionUuid,
@@ -53,6 +55,7 @@ export class ParcelOwnersComponent {
     } else {
       dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
         data: {
+          isDraft: this.isDraft,
           fileId: this.fileId,
           submissionUuid: this.submissionUuid,
           parcelUuid: this.parcelUuid,

@@ -107,7 +107,7 @@ describe('ApplicationController', () => {
     });
 
     applicationService.mapToDtos.mockResolvedValue([mockApplicationDto]);
-    notificationService.createNotificationForApplication.mockResolvedValue();
+    notificationService.createNotification.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -162,9 +162,7 @@ describe('ApplicationController', () => {
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(
-      notificationService.createNotificationForApplication,
-    ).not.toHaveBeenCalled();
+    expect(notificationService.createNotification).not.toHaveBeenCalled();
     expect(applicationService.update).toHaveBeenCalledWith(
       mockApplicationEntity,
       mockUpdate,
@@ -245,59 +243,6 @@ describe('ApplicationController', () => {
     expect(savedData.regionCode).toEqual(mockRegion);
   });
 
-  it('should call notification service when assignee is changed', async () => {
-    const mockUserUuid = 'fake-user';
-    const mockUpdate = {
-      assigneeUuid: mockUserUuid,
-    };
-
-    const fakeAuthor = {
-      uuid: 'fake-author',
-    };
-
-    applicationService.getOrFail.mockResolvedValue({
-      ...mockApplicationEntity,
-    } as Application);
-    applicationService.getByCard.mockResolvedValue({
-      ...mockApplicationEntity,
-    } as Application);
-
-    const updatedCard = { ...mockApplicationEntity.card } as Card;
-    updatedCard.assigneeUuid = mockUserUuid;
-    cardService.get.mockResolvedValue(mockApplicationEntity.card);
-    cardService.update.mockResolvedValue(updatedCard);
-    cardService.getWithBoard.mockResolvedValue(updatedCard);
-
-    await controller.updateCard('fake', mockUpdate, {
-      user: {
-        entity: fakeAuthor,
-      },
-    });
-
-    expect(cardService.update).toHaveBeenCalledTimes(1);
-    expect(
-      notificationService.createNotificationForApplication,
-    ).toHaveBeenCalledTimes(1);
-    const savedData = cardService.update.mock.calls[0][1];
-    expect(savedData.assigneeUuid).toEqual(mockUserUuid);
-
-    const createNotificationServiceDto =
-      notificationService.createNotificationForApplication.mock.calls[0][0];
-    expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
-    expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
-      mockUserUuid,
-    );
-    expect(createNotificationServiceDto.title).toStrictEqual(
-      "You've been assigned",
-    );
-    expect(createNotificationServiceDto.body).toStrictEqual(
-      `${mockApplicationEntity.fileNumber} (${mockApplicationEntity.applicant})`,
-    );
-    expect(createNotificationServiceDto.targetType).toStrictEqual(
-      'application',
-    );
-  });
-
   it('should not update card entity even if passed', async () => {
     const mockUserUuid = 'fake-author';
     const mockUpdate = {
@@ -313,7 +258,7 @@ describe('ApplicationController', () => {
     await controller.update('11', mockUpdate);
 
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(notificationService.create).not.toHaveBeenCalled();
+    expect(notificationService.createForCard).not.toHaveBeenCalled();
   });
 
   it('should throw service validation exceptions on update if card/application does not exist', async () => {
@@ -339,7 +284,7 @@ describe('ApplicationController', () => {
     ).rejects.toMatchObject(new Error(`Card ${cardUuid} not found`));
 
     expect(cardService.update).toBeCalledTimes(0);
-    expect(notificationService.create).toBeCalledTimes(0);
+    expect(notificationService.createForCard).toBeCalledTimes(0);
   });
 
   it('should update card status if it changed', async () => {

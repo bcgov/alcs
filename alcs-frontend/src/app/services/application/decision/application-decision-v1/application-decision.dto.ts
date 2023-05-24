@@ -70,6 +70,7 @@ export interface DecisionDocumentDto {
 }
 
 export interface DecisionMakerDto extends BaseCodeDto {}
+export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
 export interface CeoCriterionDto extends BaseCodeDto {
   number: number;
@@ -78,5 +79,3 @@ export interface CeoCriterionDto extends BaseCodeDto {
 export interface DecisionOutcomeCodeDto extends BaseCodeDto {
   isFirstDecision: boolean;
 }
-
-export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}

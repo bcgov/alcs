@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationStatusTypeDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -25,6 +25,10 @@ describe('ReleaseDialogComponent', () => {
           useValue: mockApplicationService,
         },
         { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {},
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

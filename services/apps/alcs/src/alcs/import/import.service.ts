@@ -5,6 +5,7 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
+import { User } from '../../user/user.entity';
 import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
 import { ApplicationMeetingService } from '../application/application-meeting/application-meeting.service';
 import { ApplicationPausedService } from '../application/application-paused/application-paused.service';
@@ -192,10 +193,18 @@ export class ImportService {
             mappedRow.decisionMaker === ''
           ) {
             const boardCode = REGION_BOARD_MAP[mappedRow.region];
-            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
+            await this.boardService.changeBoard(
+              updatedApp.cardUuid,
+              boardCode,
+              new User(),
+            );
           } else if (mappedRow.decisionMaker) {
             const boardCode = DECISION_MAKER_BOARD_MAP[mappedRow.decisionMaker];
-            await this.boardService.changeBoard(updatedApp.cardUuid, boardCode);
+            await this.boardService.changeBoard(
+              updatedApp.cardUuid,
+              boardCode,
+              new User(),
+            );
           }
         }
       } catch (e) {

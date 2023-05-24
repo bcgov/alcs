@@ -11,18 +11,24 @@ import { ApplicationReconsiderationDto } from '../../../../../services/applicati
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionCodesDto,
+  DecisionComponentDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
+  LinkedResolutionOutcomeTypeDto,
+  UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
-import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
+import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
+import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
@@ -44,23 +50,29 @@ type MappedPostDecision = {
 export class DecisionInputV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   isLoading = false;
-  isEdit = false;
   minDate = new Date(0);
   isFirstDecision = false;
+  showComponents = false;
+  showConditions = false;
 
   fileNumber: string = '';
   uuid: string = '';
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterion: CeoCriterionDto[] = [];
+  linkedResolutionOutcomes: LinkedResolutionOutcomeTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
-  applicationStatusCodes = [];
+  codes?: DecisionCodesDto;
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
+
+  components: DecisionComponentDto[] = [];
+  conditions: ApplicationDecisionConditionDto[] = [];
+  conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -72,6 +84,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
     chairReviewDate: new FormControl<Date | null>(null),
     chairReviewOutcome: new FormControl<string | null>(null),
+    linkedResolutionOutcome: new FormControl<string | null>(null),
     auditDate: new FormControl<Date | null>(null),
     criterionModification: new FormControl<string[]>([]),
     ceoCriterion: new FormControl<string | null>(null),
@@ -79,8 +92,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
-    rescindedDate: new FormControl<Date | undefined>(undefined),
-    rescindedComment: new FormControl<string | undefined>(undefined),
+    rescindedDate: new FormControl<Date | null>({ disabled: true, value: null }),
+    rescindedComment: new FormControl<string | null>({ disabled: true, value: null }),
   });
 
   constructor(
@@ -111,7 +124,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (uuid) {
       this.uuid = uuid;
-      this.isEdit = true;
     }
 
     if (fileNumber) {
@@ -127,11 +139,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       year.add(1, 'year');
     }
     this.resolutionYears.reverse();
-    if (!this.isEdit) {
-      this.form.patchValue({
-        resolutionYear: currentYear,
-      });
-    }
   }
 
   ngOnDestroy(): void {
@@ -148,10 +155,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     await this.decisionService.loadDecisions(this.fileNumber);
 
-    const codes = await this.decisionService.fetchCodes();
-    this.outcomes = codes.outcomes;
-    this.decisionMakers = codes.decisionMakers;
-    this.ceoCriterion = codes.ceoCriterion;
+    this.codes = await this.decisionService.fetchCodes();
+    this.outcomes = this.codes.outcomes;
+    this.decisionMakers = this.codes.decisionMakers;
+    this.ceoCriterion = this.codes.ceoCriterion;
+    this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
 
     await this.prepareDataForEdit();
   }
@@ -179,6 +187,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
           if (decisions.length > 0) {
             let minDate = null;
+            this.isFirstDecision = true;
 
             for (const decision of decisions) {
               if (!minDate && decision.date) {
@@ -204,7 +213,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
             if (!this.isFirstDecision) {
               this.form.controls.postDecision.addValidators([Validators.required]);
               this.form.controls.decisionMaker.disable();
-              this.form.controls.outcome.disable();
               this.onSelectPostDecision({
                 type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
               });
@@ -227,7 +235,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code !== 'REF' && modification.resultingDecision === null)
+          (modification.reviewOutcome.code === 'PRC' && modification.resultingDecision === null)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -241,7 +249,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.reviewOutcome?.code !== 'REF' && reconsideration.resultingDecision === null)
+          (reconsideration.reviewOutcome?.code === 'PRC' && reconsideration.resultingDecision === null)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
@@ -254,7 +262,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private patchFormWithExistingData(existingDecision: ApplicationDecisionDto) {
-    this.isEdit = true;
     this.form.patchValue({
       outcome: existingDecision.outcome.code,
       decisionMaker: existingDecision.decisionMaker?.code,
@@ -262,16 +269,17 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       date: existingDecision.date ? new Date(existingDecision.date) : undefined,
       resolutionYear: existingDecision.resolutionYear,
       resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
-      chairReviewRequired: existingDecision.chairReviewRequired ? 'true' : 'false',
+      chairReviewRequired: parseBooleanToString(existingDecision.chairReviewRequired),
       chairReviewDate: existingDecision.chairReviewDate ? new Date(existingDecision.chairReviewDate) : undefined,
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
       postDecision: existingDecision.modifies?.uuid || existingDecision.reconsiders?.uuid,
-      isSubjectToConditions: existingDecision.isSubjectToConditions ? 'true' : 'false',
+      isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
       decisionDescription: existingDecision.decisionDescription,
-      isStatsRequired: existingDecision.isStatsRequired ? 'true' : 'false',
+      isStatsRequired: parseBooleanToString(existingDecision.isStatsRequired),
       daysHideFromPublic: existingDecision.daysHideFromPublic,
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
+      linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
     });
 
     if (existingDecision.reconsiders) {
@@ -295,6 +303,10 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       criterionModification: selectedCriterion,
     });
 
+    if (existingDecision.isSubjectToConditions) {
+      this.showConditions = true;
+    }
+
     if (existingDecision.chairReviewOutcome !== null) {
       this.form.patchValue({
         chairReviewOutcome: existingDecision.chairReviewOutcome?.code,
@@ -303,6 +315,21 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (!existingDecision.resolutionNumber) {
       this.resolutionYearControl.enable();
+    }
+
+    if (existingDecision?.components) {
+      this.components = existingDecision.components;
+    }
+
+    if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
+      this.showComponents = true;
+    }
+
+    if (existingDecision.outcome.code === 'RESC') {
+      this.form.controls.rescindedComment.enable();
+      this.form.controls.rescindedDate.enable();
+      this.form.controls.rescindedComment.setValidators([Validators.required]);
+      this.form.controls.rescindedDate.setValidators([Validators.required]);
     }
   }
 
@@ -334,18 +361,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   async onSubmit(isStayOnPage: boolean = false, isDraft: boolean = true) {
     this.isLoading = true;
 
-    const data: CreateApplicationDecisionDto = this.mapDecisionDataForSave(isDraft);
-
     try {
-      if (this.uuid) {
-        await this.decisionService.update(this.uuid, data);
-      } else {
-        const createdDecision = await this.decisionService.create({
-          ...data,
-          applicationFileNumber: this.fileNumber,
-        });
-        this.uuid = createdDecision.uuid;
-      }
+      await this.saveDecision(isDraft);
     } finally {
       if (!isStayOnPage) {
         this.onCancel();
@@ -354,6 +371,20 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
 
       this.isLoading = false;
+    }
+  }
+
+  async saveDecision(isDraft: boolean = true) {
+    const data = this.mapDecisionDataForSave(isDraft);
+
+    if (this.uuid) {
+      await this.decisionService.update(this.uuid, data);
+    } else {
+      const createdDecision = await this.decisionService.create({
+        ...data,
+        applicationFileNumber: this.fileNumber,
+      });
+      this.uuid = createdDecision.uuid;
     }
   }
 
@@ -377,6 +408,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic,
       rescindedDate,
       rescindedComment,
+      linkedResolutionOutcome,
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
@@ -404,6 +436,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       daysHideFromPublic: daysHideFromPublic,
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
+      decisionComponents: this.components,
+      conditions: this.conditionUpdates,
+      linkedResolutionOutcomeCode: linkedResolutionOutcome,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -412,23 +447,24 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       data.isTimeExtension = null;
       data.isOther = null;
     }
+
     return data;
   }
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
     if (postDecision.type === PostDecisionType.Modification) {
       this.form.controls.ceoCriterion.disable();
-      this.form.controls.outcome.disable();
+      this.form.controls.linkedResolutionOutcome.disable();
       this.form.controls.decisionMaker.disable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION);
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
         ceoCriterion: CeoCriterion.MODIFICATION,
-        outcome: 'VARY',
+        linkedResolutionOutcome: 'VARY',
       });
     } else {
       this.form.controls.decisionMaker.enable();
-      this.form.controls.outcome.enable();
+      this.form.controls.linkedResolutionOutcome.enable();
       this.form.controls.ceoCriterion.enable();
       this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION);
     }
@@ -441,10 +477,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         chairReviewDate: null,
       });
     }
-  }
-
-  async onUploadFile() {
-    console.log('There is a separate ticket for this');
   }
 
   onCancel() {
@@ -489,7 +521,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         maxHeight: '80vh',
         width: '90%',
         autoFocus: false,
-        data: {},
+        data: {
+          wasReleased: this.existingDecision?.wasReleased,
+        },
       })
       .afterClosed()
       .subscribe(async (submissionType) => {
@@ -498,5 +532,60 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
         }
       });
+  }
+
+  onComponentChange(components: DecisionComponentDto[]) {
+    this.components = Array.from(components);
+  }
+
+  onConditionsChange($event: UpdateApplicationDecisionConditionDto[]) {
+    this.conditionUpdates = $event;
+  }
+
+  onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
+    if (['APPR', 'APPA', 'RESC'].includes(selectedOutcome.code)) {
+      if (this.form.controls.isSubjectToConditions.disabled) {
+        this.showComponents = true;
+        this.form.controls.isSubjectToConditions.enable();
+        this.form.patchValue({
+          isSubjectToConditions: null,
+        });
+      }
+    } else if (this.form.controls.isSubjectToConditions.enabled) {
+      this.showComponents = false;
+      this.components = [];
+      this.conditions = [];
+      this.form.controls.isSubjectToConditions.disable();
+      this.form.patchValue({
+        isSubjectToConditions: 'false',
+      });
+    }
+
+    if (selectedOutcome.code === 'RESC' && this.form.controls.rescindedComment.disabled) {
+      this.form.controls.rescindedComment.enable();
+      this.form.controls.rescindedDate.enable();
+      this.form.controls.rescindedComment.setValidators([Validators.required]);
+      this.form.controls.rescindedDate.setValidators([Validators.required]);
+      this.form.controls.rescindedComment.updateValueAndValidity();
+      this.form.controls.rescindedDate.updateValueAndValidity();
+    } else if (this.form.controls.rescindedComment.enabled) {
+      this.form.controls.rescindedComment.disable();
+      this.form.controls.rescindedDate.disable();
+      this.form.controls.rescindedComment.setValue(null);
+      this.form.controls.rescindedDate.setValue(null);
+      this.form.controls.rescindedComment.setValidators([]);
+      this.form.controls.rescindedDate.setValidators([]);
+      this.form.controls.rescindedComment.updateValueAndValidity();
+      this.form.controls.rescindedDate.updateValueAndValidity();
+    }
+  }
+
+  onChangeSubjectToConditons($event: MatButtonToggleChange) {
+    if ($event.value === 'true') {
+      this.showConditions = true;
+    } else {
+      this.conditions = [];
+      this.showConditions = false;
+    }
   }
 }

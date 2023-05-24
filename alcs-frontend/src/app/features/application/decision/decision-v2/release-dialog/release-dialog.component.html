@@ -1,5 +1,6 @@
 <div mat-dialog-title>
-  <h2 class="card-title">Confirm Release Decision</h2>
+  <h2 *ngIf="!wasReleased" class="card-title">Confirm Release Decision</h2>
+  <h2 *ngIf="wasReleased" class="card-title">Confirm Decision Re-release</h2>
 </div>
 <mat-dialog-content style="height: 100%">
   <div class="grid">
@@ -19,7 +20,13 @@
       [(ngModel)]="selectedApplicationStatus"
     ></ng-select>
 
-    <p>Applicant and Local/First Nation Government will receive an automatic email notification from the Portal.</p>
+    <p *ngIf="!wasReleased">
+      Applicant and Local/First Nation Government will receive an automatic email notification from the Portal.
+    </p>
+    <p *ngIf="wasReleased">
+      The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
+      notification manually.
+    </p>
   </div>
 </mat-dialog-content>
 

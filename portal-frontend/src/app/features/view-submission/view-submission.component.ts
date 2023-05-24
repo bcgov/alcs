@@ -113,8 +113,8 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  onNavigateHome() {
-    this.router.navigateByUrl(`home`);
+  async onNavigateHome() {
+    await this.router.navigateByUrl(`home`);
   }
 
   private async loadApplicationDocuments(fileId: string) {

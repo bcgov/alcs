@@ -23,6 +23,7 @@
     </mat-expansion-panel-header>
 
     <app-parcel-entry
+      [isDraft]='draftMode'
       [parcel]="parcel"
       [$owners]="$owners"
       [fileId]="fileId"

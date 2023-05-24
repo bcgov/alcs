@@ -1,9 +1,5 @@
 @use '../../../../../styles/colors';
 
-h3 {
-  margin-bottom: 24px !important;
-}
-
 section {
   margin-bottom: 64px;
 }
@@ -29,27 +25,14 @@ section {
   justify-content: center;
 }
 
-.days {
-  display: inline-block;
-  margin-right: 6px;
-
-  .mat-icon {
-    font-size: 19px !important;
-    line-height: 21px !important;
-    width: 19px;
-    vertical-align: middle;
-  }
-}
-
 .post-decisions {
   padding: 6px 32px;
-  background-color: colors.$accent-color-light;
-  grid-template-columns: 1fr 1fr 100px;
+  background-color: colors.$grey-light;
+  grid-template-columns: 50% 50%;;
   display: grid;
   min-height: 36px;
   text-transform: uppercase;
   border-radius: 4px 4px 0 0;
-  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .decision-menu {
@@ -60,34 +43,28 @@ section {
   background: colors.$accent-color;
   box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0 4px 0 10px;
-
-  button {
-    color: colors.$white;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-  }
-
-  mat-icon {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    font-size: 21px;
-    width: 20px;
-    height: 36px;
-  }
 }
 
 .decision-padding {
   padding: 18px 32px 32px 32px;
 }
 
-.decision-content {
-  margin-top: 16px;
-  margin-bottom: 32px;
+.grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr 100px;
+  grid-template-columns: 50% 50%;
   grid-row-gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-row-gap: 24px;
+}
+
+.decision-content,
+.grid-2 {
+  margin-top: 16px;
+  margin-bottom: 16px;
 
   .subheading2 {
     margin-bottom: 6px !important;
@@ -98,25 +75,36 @@ section {
   }
 }
 
-.decision-documents {
-  margin-top: 4px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 100px;
-  grid-row-gap: 4px;
+.header {
+  display: flex;
+  justify-content: space-between;
 
-  div {
+  .title {
     display: flex;
     align-items: center;
-    font-size: 16px !important;
+    justify-content: space-between;
+    gap: 16px;
+
+    .days {
+      display: inline-block;
+      margin-right: 6px;
+
+      .mat-icon {
+        font-size: 19px !important;
+        line-height: 21px !important;
+        width: 19px;
+        vertical-align: middle;
+      }
+    }
   }
 }
 
-.file-actions {
-  margin-left: -12px;
+.row {
+  margin: 16px 0;
 }
 
-.delete-file-icon {
-  color: colors.$error-color;
+.conditions-link-icon {
+  position: absolute;
 }
 
 .no-decisions {
@@ -128,13 +116,27 @@ section {
   height: 72px;
 }
 
-.no-files {
-  grid-column: 1/4;
-  margin-top: 16px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-color: colors.$grey-light;
+:host ::ng-deep {
+  .decision-documents .subheading1 {
+    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif !important;
+    font-size: 19px !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+    line-height: 24px;
+    color: #565656 !important;
+  }
+
+  .application-pill-wrapper,
+  .application-pill {
+    margin-right: 0 !important;
+  }
+
+  .decision-tabs {
+    .mdc-tab__text-label {
+      color: colors.$black !important;
+    }
+    .mdc-tab {
+      margin-left: 8px;
+    }
+  }
 }

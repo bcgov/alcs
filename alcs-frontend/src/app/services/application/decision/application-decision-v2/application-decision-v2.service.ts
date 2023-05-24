@@ -5,9 +5,12 @@ import { environment } from '../../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/file';
 import { ToastService } from '../../../toast/toast.service';
 import {
+  ApplicationDecisionConditionTypeDto,
   ApplicationDecisionDto,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
+  DecisionCodesDto,
+  DecisionComponentTypeDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
@@ -18,6 +21,8 @@ import {
 })
 export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
+  private decision: ApplicationDecisionDto | undefined;
+  private decisions: ApplicationDecisionDto[] = [];
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
   $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
 
@@ -35,28 +40,19 @@ export class ApplicationDecisionV2Service {
     return decisions;
   }
 
-  async fetchCodes() {
-    let outcomes: DecisionOutcomeCodeDto[] = [];
-    let decisionMakers: DecisionMakerDto[] = [];
-    let ceoCriterion: CeoCriterionDto[] = [];
+  async fetchCodes(): Promise<DecisionCodesDto> {
     try {
-      const res = await firstValueFrom(
-        this.http.get<{
-          outcomes: DecisionOutcomeCodeDto[];
-          decisionMakers: DecisionMakerDto[];
-          ceoCriterion: CeoCriterionDto[];
-        }>(`${this.url}/codes`)
-      );
-      outcomes = res.outcomes;
-      decisionMakers = res.decisionMakers;
-      ceoCriterion = res.ceoCriterion;
+      return await firstValueFrom(this.http.get<DecisionCodesDto>(`${this.url}/codes`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
     return {
-      outcomes,
-      decisionMakers,
-      ceoCriterion,
+      outcomes: [],
+      decisionMakers: [],
+      ceoCriterion: [],
+      decisionComponentTypes: [],
+      decisionConditionTypes: [],
+      linkedResolutionOutcomeTypes: [],
     };
   }
 
@@ -140,13 +136,13 @@ export class ApplicationDecisionV2Service {
   }
 
   async loadDecision(uuid: string) {
-    const decision = await this.getByUuid(uuid);
-    this.$decision.next(decision);
+    this.decision = await this.getByUuid(uuid);
+    this.$decision.next(this.decision);
   }
 
   async loadDecisions(fileNumber: string) {
-    const decisions = await this.fetchByApplication(fileNumber);
-    this.$decisions.next(decisions);
+    this.decisions = await this.fetchByApplication(fileNumber);
+    this.$decisions.next(this.decisions);
   }
 
   async cleanDecision() {

@@ -40,7 +40,7 @@ describe('CommentController', () => {
 
     comment = initCommentMock(user);
 
-    mockNotificationService.create.mockResolvedValue();
+    mockNotificationService.createForCard.mockResolvedValue();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [

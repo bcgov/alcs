@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+  <div class="condition">
+    <ng-select
+      appearance="outline"
+      class="condition-grid-half-1"
+      [items]="codes"
+      formControlName="type"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="code"
+      required
+      placeholder="Condition Type*"
+      [clearable]="false"
+    ></ng-select>
+
+    <ng-select
+      appearance="outline"
+      class="condition-grid-half-2"
+      [items]="selectableComponents"
+      formControlName="componentToCondition"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="tempId"
+      required
+      placeholder="Component to Condition*"
+    ></ng-select>
+
+    <div class="condition-grid-1">
+      <mat-label>Approval Dependent*</mat-label>
+      <mat-button-toggle-group required formControlName="approvalDependant">
+        <mat-button-toggle value="true">Yes</mat-button-toggle>
+        <mat-button-toggle value="false">No</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-form-field appearance="outline" class="condition-grid-2">
+      <mat-label>Security Amount</mat-label>
+      <input
+        matInput
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="99999999"
+        formControlName="securityAmount"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="condition-grid-3">
+      <mat-label>Administrative Fee Amount</mat-label>
+      <input
+        matInput
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="99999999"
+        formControlName="administrativeFee"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="condition-full-width">
+      <mat-label>Description</mat-label>
+      <input matInput type="text" formControlName="description" />
+    </mat-form-field>
+  </div>
+</form>

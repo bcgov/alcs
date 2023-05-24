@@ -17,6 +17,7 @@
     align-items: center;
     flex-wrap: wrap;
     margin-top: rem(16);
+    width: 100%;
 
     button {
       width: 100%;
@@ -45,6 +46,7 @@
   @media screen and (min-width: $tabletBreakpoint) {
     .header-btn-wrapper {
       margin-top: 0;
+      width: unset;
 
       button {
         width: auto;

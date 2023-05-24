@@ -223,6 +223,9 @@ export class SubmittedApplicationDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  @AutoMap()
+  typeCode: string;
 }
 
 export class CreateApplicationDto {

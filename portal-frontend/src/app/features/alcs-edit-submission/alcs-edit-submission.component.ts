@@ -28,6 +28,7 @@ import { SubdProposalComponent } from '../edit-submission/proposal/subd-proposal
 import { TurProposalComponent } from '../edit-submission/proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from '../edit-submission/select-government/select-government.component';
 import { ConfirmPublishDialogComponent } from './confirm-publish-dialog/confirm-publish-dialog.component';
+import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 @Component({
   selector: 'app-alcs-edit-submission',
@@ -154,8 +155,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   async onStepChange($event: StepperSelectionEvent) {
     // scrolls to step if step selected programmatically
-    const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
-    el?.scrollIntoView({ behavior: 'smooth' });
+    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
   }
 
   async saveApplication(step: number) {
@@ -213,7 +213,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     // navigation to url will cause step change based on the index (index starts from 0)
     // The save will be triggered using canDeactivate guard
     this.showValidationErrors = this.customStepper.selectedIndex === EditApplicationSteps.ReviewAndSubmit;
-    this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${index}`);
+    await this.router.navigateByUrl(`alcs/application/${this.fileId}/edit/${index}`);
   }
 
   onParcelDetailsInitialized() {

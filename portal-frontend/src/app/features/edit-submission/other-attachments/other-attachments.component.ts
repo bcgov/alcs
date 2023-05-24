@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
@@ -13,6 +14,7 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../services/code/code.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
+import { RemoveFileConfirmationDialogComponent } from '../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
 
@@ -42,7 +44,8 @@ export class OtherAttachmentsComponent extends StepComponent implements OnInit, 
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
-    private codeService: CodeService
+    private codeService: CodeService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -86,7 +89,22 @@ export class OtherAttachmentsComponent extends StepComponent implements OnInit, 
     }
   }
 
-  async onRemoveFile(uuid: any) {
+  async onRemoveFile(uuid: string) {
+    if (this.draftMode) {
+      this.dialog
+        .open(RemoveFileConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            this.removeFile(uuid);
+          }
+        });
+    } else {
+      await this.removeFile(uuid);
+    }
+  }
+
+  private async removeFile(uuid: string) {
     if (this.fileId) {
       await this.onSave();
       await this.applicationDocumentService.deleteExternalFile(uuid);

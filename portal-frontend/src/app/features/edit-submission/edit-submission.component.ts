@@ -7,6 +7,7 @@ import { ApplicationDocumentDto } from '../../services/application-document/appl
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { ApplicationTypeDto } from '../../services/code/code.dto';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
@@ -24,6 +25,7 @@ import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.co
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
+import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -136,21 +138,24 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   async onApplicationTypeChangeClicked() {
-    this.dialog
-      .open(ChangeApplicationTypeDialogComponent, {
-        panelClass: 'no-padding',
-        disableClose: true,
-        autoFocus: false,
-        data: {
-          fileId: this.fileId,
-        },
-      })
-      .beforeClosed()
-      .subscribe((result) => {
-        if (result) {
-          this.loadApplication(this.fileId);
-        }
-      });
+    if (this.applicationSubmission) {
+      this.dialog
+        .open(ChangeApplicationTypeDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+          autoFocus: false,
+          data: {
+            submissionUuid: this.applicationSubmission.uuid,
+            submissionTypeCode: this.applicationSubmission.typeCode,
+          },
+        })
+        .beforeClosed()
+        .subscribe((result) => {
+          if (result) {
+            this.loadApplication(this.fileId);
+          }
+        });
+    }
   }
 
   // this gets fired whenever applicant navigates away from edit page
@@ -162,8 +167,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onStepChange($event: StepperSelectionEvent) {
     // scrolls to step if step selected programmatically
-    const el = document.getElementById(`stepWrapper_${$event.selectedIndex}`);
-    el?.scrollIntoView({ behavior: 'smooth' });
+    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
   }
 
   async saveApplication(step: number) {
@@ -221,7 +225,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     // navigation to url will cause step change based on the index (index starts from 0)
     // The save will be triggered using canDeactivate guard
     this.showValidationErrors = this.customStepper.selectedIndex === EditApplicationSteps.ReviewAndSubmit;
-    this.router.navigateByUrl(`application/${this.fileId}/edit/${index}`);
+    await this.router.navigateByUrl(`application/${this.fileId}/edit/${index}`);
   }
 
   onParcelDetailsInitialized() {

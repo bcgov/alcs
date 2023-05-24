@@ -72,7 +72,10 @@
     <div class="full-row">
       <mat-expansion-panel
         *ngFor="let parcel of otherParcels; let parcelInd = index"
-        [expanded]="otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1)"
+        [expanded]="
+          hasOtherParcelsInCommunity.value !== 'false' &&
+          (otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1))
+        "
       >
         <mat-expansion-panel-header>
           <mat-panel-title> Other Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>

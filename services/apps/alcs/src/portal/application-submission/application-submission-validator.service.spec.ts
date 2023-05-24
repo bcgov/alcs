@@ -10,6 +10,7 @@ import {
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -18,7 +19,6 @@ import { ApplicationParcel } from './application-parcel/application-parcel.entit
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
-import { Document } from '../../document/document.entity';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);

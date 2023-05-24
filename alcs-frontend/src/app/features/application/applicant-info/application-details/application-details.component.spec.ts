@@ -44,6 +44,7 @@ describe('ApplicationDetailsComponent', () => {
       westLandUseType: '',
       westLandUseTypeDescription: '',
       subdProposedLots: [],
+      typeCode:''
     };
     component.applicationType = 'NFUP';
     component.fileNumber = 'fake';

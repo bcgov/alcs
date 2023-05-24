@@ -14,7 +14,7 @@
 >
   <ng-container matColumnDef="type">
     <th mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell *matCellDef="let element">{{ element.type.label }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.type?.label }}</td>
   </ng-container>
 
   <ng-container matColumnDef="fileName">

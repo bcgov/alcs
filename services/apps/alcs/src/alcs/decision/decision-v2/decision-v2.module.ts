@@ -17,12 +17,19 @@ import { ApplicationReconsiderationService } from '../application-reconsideratio
 import { ApplicationReconsiderationOutcomeType } from '../application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CeoCriterionCode } from '../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../decision-condition/decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../decision-condition/decision-condition.entity';
+import { DecisionConditionService } from '../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../decision-maker/decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationDecisionV1Service } from '../decision-v1/application-decision/application-decision-v1.service';
 import { ApplicationDecisionV2Controller } from './application-decision/application-decision-v2.controller';
 import { ApplicationDecisionV2Service } from './application-decision/application-decision-v2.service';
+import { ApplicationDecisionComponentType } from './application-decision/component/application-decision-component-type.entity';
+import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
+import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
 
 @Module({
   imports: [
@@ -38,6 +45,11 @@ import { ApplicationDecisionV2Service } from './application-decision/application
       ApplicationDecisionChairReviewOutcomeType,
       ApplicationReconsiderationOutcomeType,
       ApplicationModificationOutcomeType,
+      ApplicationDecisionComponent,
+      ApplicationDecisionComponentType,
+      ApplicationDecisionCondition,
+      ApplicationDecisionConditionType,
+      LinkedResolutionOutcomeType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -55,6 +67,8 @@ import { ApplicationDecisionV2Service } from './application-decision/application
     ReconsiderationProfile,
     ApplicationDecisionV2Service,
     ApplicationDecisionProfile,
+    ApplicationDecisionComponentService,
+    DecisionConditionService,
   ],
   controllers: [ApplicationDecisionV2Controller],
   exports: [ApplicationDecisionV2Service],

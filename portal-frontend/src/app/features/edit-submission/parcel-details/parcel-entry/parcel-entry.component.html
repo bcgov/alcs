@@ -119,7 +119,7 @@
 
     <div *ngIf="!isCrownLand">
       <label for="purchase-date">Parcel Purchase Date</label>
-      <mat-form-field class="full-width-input date-picker" appearance="outline">
+      <mat-form-field (click)="purchaseDatePicker.open()" class="full-width-input date-picker" appearance="outline">
         <input
           id="purchase-date"
           matInput
@@ -129,7 +129,7 @@
           [placeholder]="isCrownLand ? 'Fee Simple Only' : 'YYYY-MMM-DD'"
         />
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #purchaseDatePicker startView="year"></mat-datepicker>
+        <mat-datepicker #purchaseDatePicker startView="multi-year"></mat-datepicker>
       </mat-form-field>
       <div>
         <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
@@ -204,11 +204,16 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
+          <mat-option
+            (click)="onSelectOwner(option, option.isSelected)"
+            *ngFor="let option of filteredOwners"
+            [disabled]="option.isSelected"
+          >
             <div class="owner-option">
               <div>{{ option.displayName }}</div>
-              <button *ngIf="!option.isSelected" mat-flat-button color="primary">Add</button>
-              <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
+              <button mat-flat-button color="primary" [disabled]="option.isSelected">
+                {{ option.isSelected ? 'Added' : 'Add' }}
+              </button>
             </div>
           </mat-option>
           <mat-option class="option" *ngIf="filteredOwners.length === 0 && enableAddNewOwner" (click)="onAddNewOwner()">
@@ -238,6 +243,7 @@
       </button>
       <div>
         <app-parcel-owners
+          [isDraft]='isDraft'
           [fileId]="fileId"
           [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
@@ -277,11 +283,16 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="onSelectOwner(option, option.isSelected)" *ngFor="let option of filteredOwners">
+          <mat-option
+            (click)="onSelectOwner(option, option.isSelected)"
+            *ngFor="let option of filteredOwners"
+            [disabled]="option.isSelected"
+          >
             <div class="owner-option">
               <div>{{ option.displayName }}</div>
-              <button *ngIf="!option.isSelected" mat-flat-button color="primary">Add</button>
-              <button *ngIf="option.isSelected" mat-stroked-button color="primary">Added</button>
+              <button mat-flat-button color="primary" [disabled]="option.isSelected">
+                {{ option.isSelected ? 'Added' : 'Add' }}
+              </button>
             </div>
           </mat-option>
           <mat-option

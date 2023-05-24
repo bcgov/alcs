@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class InlineReviewOutcomeComponent implements OnInit {
   @Input() selectedValue?: string | null;
+  @Input() isModification = false;
 
   @Output() save = new EventEmitter<string>();
 
@@ -27,7 +28,7 @@ export class InlineReviewOutcomeComponent implements OnInit {
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
-    this.selectedValue = 'PRC';
+    this.selectedValue = 'PEN';
     this.form = this.fb.group({
       reviewOutcome: this.selectedValue,
     });

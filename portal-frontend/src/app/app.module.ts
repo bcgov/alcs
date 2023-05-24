@@ -26,6 +26,7 @@ import { ConfirmationDialogService } from './shared/confirmation-dialog/confirma
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
+import { DecisionsComponent } from './features/view-submission/alc-review/decisions/decisions.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { SharedModule } from './shared/shared.module';
     LfngReviewComponent,
     AlcReviewComponent,
     SubmissionDocumentsComponent,
+    DecisionsComponent,
   ],
   imports: [
     BrowserModule,

@@ -418,6 +418,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
+        uuid: 'submission-uuid',
         statusCode: APPLICATION_STATUS.IN_REVIEW,
       }),
     );
@@ -425,6 +426,9 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppReviewService.delete.mockResolvedValue();
     mockAppDocService.delete.mockResolvedValue({} as any);
+    mockAppSubmissionService.update.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
 
     const documents = [
       new ApplicationDocument({
@@ -472,6 +476,13 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       APPLICATION_STATUS.INCOMPLETE,
     );
+    expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(
+      'submission-uuid',
+    );
+    expect(mockAppSubmissionService.update.mock.calls[0][1]).toEqual({
+      returnedComment: 'test-comment',
+    });
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {

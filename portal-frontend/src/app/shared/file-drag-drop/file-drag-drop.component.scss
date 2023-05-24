@@ -17,7 +17,8 @@
 }
 
 .desktop-file-drag-drop[ng-reflect-disabled='true'] {
-  background-color: #cbc9c9 !important;
+  background-color: rgba(colors.$grey, 0.2) !important;
+  cursor: not-allowed;
 }
 
 .mobile-file-drag-drop {
@@ -42,10 +43,18 @@ a {
 }
 
 .content {
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem 2rem 2rem;
+
+  // Remove button element default styling
+  background: none;
+  border: none;
+  font-weight: unset;
+  text-transform: unset;
+  width: 100%;
 }
 
 .uploaded-file {

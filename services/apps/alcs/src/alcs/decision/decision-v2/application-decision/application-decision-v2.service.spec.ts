@@ -17,6 +17,8 @@ import { ApplicationService } from '../../../application/application.service';
 import { DecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { CeoCriterionCode } from '../../ceo-criterion/ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../decision-condition/decision-condition-code.entity';
+import { DecisionConditionService } from '../../decision-condition/decision-condition.service';
 import { DecisionDocument } from '../../decision-document/decision-document.entity';
 import { DecisionMakerCode } from '../../decision-maker/decision-maker.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
@@ -24,6 +26,9 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
+import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -36,8 +41,16 @@ describe('ApplicationDecisionV2Service', () => {
     Repository<DecisionMakerCode>
   >;
   let mockCeoCriterionCodeRepository: DeepMocked<Repository<CeoCriterionCode>>;
+  let mockLinkedResolutionOutcomeRepository: DeepMocked<
+    Repository<LinkedResolutionOutcomeType>
+  >;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
+  let mockApplicationDecisionComponentTypeRepository: DeepMocked<
+    Repository<ApplicationDecisionComponentType>
+  >;
+  let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
+  let mockDecisionConditionService: DeepMocked<DecisionConditionService>;
 
   let mockApplication;
   let mockDecision;
@@ -52,6 +65,10 @@ describe('ApplicationDecisionV2Service', () => {
     mockDecisionMakerCodeRepository =
       createMock<Repository<DecisionMakerCode>>();
     mockCeoCriterionCodeRepository = createMock<Repository<CeoCriterionCode>>();
+    mockApplicationDecisionComponentTypeRepository = createMock();
+    mockDecisionComponentService = createMock();
+    mockDecisionConditionService = createMock();
+    mockLinkedResolutionOutcomeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -82,12 +99,32 @@ describe('ApplicationDecisionV2Service', () => {
           useValue: mockDecisionOutcomeRepository,
         },
         {
+          provide: getRepositoryToken(LinkedResolutionOutcomeType),
+          useValue: mockLinkedResolutionOutcomeRepository,
+        },
+        {
           provide: ApplicationService,
           useValue: mockApplicationService,
         },
         {
           provide: DocumentService,
           useValue: mockDocumentService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionComponentType),
+          useValue: mockApplicationDecisionComponentTypeRepository,
+        },
+        {
+          provide: ApplicationDecisionComponentService,
+          useValue: mockDecisionComponentService,
+        },
+        {
+          provide: DecisionConditionService,
+          useValue: mockDecisionConditionService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionType),
+          useValue: mockApplicationDecisionComponentTypeRepository,
         },
       ],
     }).compile();
@@ -114,6 +151,10 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
+    mockLinkedResolutionOutcomeRepository.find.mockResolvedValue([]);
+
+    mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
+    mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -143,6 +184,7 @@ describe('ApplicationDecisionV2Service', () => {
         modifies: 'modified-uuid',
       });
       mockDecisionRepository.find.mockResolvedValue([]);
+      mockDecisionComponentService.softRemove.mockResolvedValue();
 
       await service.delete(mockDecision.uuid);
 
@@ -409,6 +451,11 @@ describe('ApplicationDecisionV2Service', () => {
     it('should call through for get code', async () => {
       await service.fetchCodes();
       expect(mockDecisionOutcomeRepository.find).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call through for get for applicant', async () => {
+      await service.getForPortal('');
+      expect(mockDecisionRepository.find).toHaveBeenCalledTimes(1);
     });
   });
 

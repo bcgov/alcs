@@ -1,0 +1,30 @@
+.condition {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+
+  .condition-grid-1 {
+    grid-column: 1/3;
+  }
+
+  .condition-grid-2 {
+    grid-column: 3/5;
+  }
+
+  .condition-grid-3 {
+    grid-column: 5/7;
+  }
+
+  .condition-grid-half-1 {
+    grid-column: 1/4;
+  }
+
+  .condition-grid-half-2 {
+    grid-column: 4/7;
+  }
+
+  .condition-full-width {
+    grid-column: 1/7;
+  }
+}
