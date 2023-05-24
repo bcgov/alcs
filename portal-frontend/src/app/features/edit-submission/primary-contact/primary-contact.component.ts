@@ -197,8 +197,6 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.owners = owners;
-      if (selectedOwner) {
-      }
 
       if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
         this.selectedOwnerUuid = selectedOwner.uuid;
