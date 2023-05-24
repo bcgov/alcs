@@ -88,26 +88,25 @@ describe('BoardsService', () => {
       status: { code: 'fake-status' },
       board: { uuid: 'fake-board' },
     } as Card);
+    cardService.save.mockResolvedValue(new Card());
     mockRepository.findOne.mockResolvedValue(mockBoard);
     cardService.update.mockResolvedValue({} as Card);
 
-    await service.changeBoard(cardUuid, boardCode, new User());
+    await service.changeBoard(cardUuid, boardCode);
     expect(cardService.get).toHaveBeenCalledTimes(1);
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(cardService.update).toHaveBeenCalledTimes(1);
+    expect(cardService.save).toHaveBeenCalledTimes(1);
 
-    const updatedCardUuid = cardService.update.mock.calls[0][1];
-    const updatedCard = cardService.update.mock.calls[0][2];
-    expect(updatedCardUuid).toEqual(cardUuid);
-    expect(updatedCard.boardUuid).toEqual(mockBoard.uuid);
-    expect(updatedCard.statusCode).toEqual(zeroOrderStatus.status.code);
+    const updatedCard = cardService.save.mock.calls[0][0];
+    expect(updatedCard.board.uuid).toEqual(mockBoard.uuid);
+    expect(updatedCard.status.code).toEqual(zeroOrderStatus.status.code);
   });
 
   it("should throw an exception when updating an card that doesn't exist", async () => {
     cardService.get.mockResolvedValue(null);
 
     await expect(
-      service.changeBoard('card-uuid', 'board-code', new User()),
+      service.changeBoard('card-uuid', 'board-code'),
     ).rejects.toMatchObject(
       new ServiceNotFoundException('Failed to find card with uuid card-uuid'),
     );
@@ -118,7 +117,7 @@ describe('BoardsService', () => {
     mockRepository.findOne.mockResolvedValue(null);
 
     await expect(
-      service.changeBoard('file-number', 'board-code', new User()),
+      service.changeBoard('file-number', 'board-code'),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Failed to find Board with code board-code`),
     );

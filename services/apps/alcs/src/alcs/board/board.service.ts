@@ -52,7 +52,7 @@ export class BoardService {
     });
   }
 
-  async changeBoard(cardUuid: string, code: string, user: User) {
+  async changeBoard(cardUuid: string, code: string) {
     const card = await this.cardService.get(cardUuid);
     if (!card) {
       throw new ServiceNotFoundException(
@@ -79,14 +79,6 @@ export class BoardService {
 
     card.status = initialStatus.status;
     card.board = board;
-    return this.cardService.update(
-      user,
-      card.uuid,
-      {
-        boardUuid: card.board.uuid,
-        statusCode: card.status.code,
-      },
-      '',
-    );
+    return this.cardService.save(card);
   }
 }
