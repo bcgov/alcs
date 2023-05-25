@@ -2,6 +2,7 @@ import { ServiceValidationException } from '@app/common/exceptions/base.exceptio
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateApplicationDecisionComponentDto } from '../decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../decision-v2/application-decision/component/application-decision-component.entity';
 import { UpdateApplicationDecisionConditionDto } from './decision-condition.dto';
 import { ApplicationDecisionCondition } from './decision-condition.entity';
@@ -22,6 +23,7 @@ export class DecisionConditionService {
   async createOrUpdate(
     updateDtos: UpdateApplicationDecisionConditionDto[],
     allComponents: ApplicationDecisionComponent[],
+    newComponents: ApplicationDecisionComponent[],
     isPersist = true,
   ) {
     const updatedConditions: ApplicationDecisionCondition[] = [];
@@ -51,17 +53,30 @@ export class DecisionConditionService {
             component.applicationDecisionComponentType.code ===
               updateDto.componentToConditionType,
         );
-        if (!matchingComponent) {
-          throw new ServiceValidationException(
-            'Failed to find matching component',
-          );
+        if (matchingComponent) {
+          condition.componentUuid = matchingComponent.uuid;
+          updatedConditions.push(condition);
+          continue;
         }
-        condition.componentUuid = matchingComponent.uuid;
+
+        const matchingComponent2 = newComponents.find(
+          (component) =>
+            component.applicationDecisionComponentTypeCode ===
+            updateDto.componentToConditionType,
+        );
+        if (matchingComponent2) {
+          condition.component = matchingComponent2;
+          updatedConditions.push(condition);
+          continue;
+        }
+
+        throw new ServiceValidationException(
+          'Failed to find matching component',
+        );
       } else {
         condition.componentUuid = null;
+        updatedConditions.push(condition);
       }
-
-      updatedConditions.push(condition);
     }
 
     if (isPersist) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,6 +54,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   isFirstDecision = false;
   showComponents = false;
   showConditions = false;
+  conditionsValid = true;
+  componentsValid = true;
 
   fileNumber: string = '';
   uuid: string = '';
@@ -323,6 +325,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
       this.showComponents = true;
+    } else {
+      this.form.controls.isSubjectToConditions.disable();
     }
 
     if (existingDecision.outcome.code === 'RESC') {
@@ -534,12 +538,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       });
   }
 
-  onComponentChange(components: DecisionComponentDto[]) {
-    this.components = Array.from(components);
+  onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {
+    this.components = Array.from($event.components);
+    this.componentsValid = $event.isValid;
   }
 
-  onConditionsChange($event: UpdateApplicationDecisionConditionDto[]) {
-    this.conditionUpdates = $event;
+  onConditionsChange($event: { conditions: UpdateApplicationDecisionConditionDto[]; isValid: boolean }) {
+    this.conditionUpdates = $event.conditions;
+    this.conditionsValid = $event.isValid;
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
@@ -580,7 +586,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  onChangeSubjectToConditons($event: MatButtonToggleChange) {
+  onChangeSubjectToConditions($event: MatButtonToggleChange) {
     if ($event.value === 'true') {
       this.showConditions = true;
     } else {

@@ -148,7 +148,7 @@
           id="isSubjectToConditions"
           formControlName="isSubjectToConditions"
           name="isSubjectToConditions"
-          (change)="onChangeSubjectToConditons($event)"
+          (change)="onChangeSubjectToConditions($event)"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
@@ -212,7 +212,6 @@
       <app-decision-conditions
         *ngIf="codes && showComponents && showConditions"
         [codes]="codes"
-        [decisionUuid]="uuid"
         [components]="components"
         (conditionsChange)="onConditionsChange($event)"
       ></app-decision-conditions>
@@ -284,7 +283,11 @@
       class="release-decision-btn"
       type="button"
       [disabled]="
-        !form.valid || (components.length === 0 && showComponents) || (conditions.length === 0 && showConditions)
+        !form.valid ||
+        !conditionsValid ||
+        !componentsValid ||
+        (components.length === 0 && showComponents) ||
+        (conditionUpdates.length === 0 && showConditions)
       "
       (click)="onRelease()"
       mat-flat-button

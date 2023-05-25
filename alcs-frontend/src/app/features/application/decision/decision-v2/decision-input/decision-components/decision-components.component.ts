@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChildren } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../../../services/application/application.dto';
@@ -9,6 +9,7 @@ import {
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
+import { DecisionComponentComponent } from './decision-component/decision-component.component';
 
 export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisabled: boolean; uiCode: string };
 
@@ -24,7 +25,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   @Input() fileNumber!: string;
 
   @Input() components: DecisionComponentDto[] = [];
-  @Output() componentsChange = new EventEmitter<DecisionComponentDto[]>();
+  @Output() componentsChange = new EventEmitter<{
+    components: DecisionComponentDto[];
+    isValid: boolean;
+  }>();
+  @ViewChildren(DecisionComponentComponent) childComponents: DecisionComponentComponent[] = [];
 
   application!: ApplicationDto;
   decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
@@ -98,7 +103,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     }
 
     this.updateComponentsMenuItems();
-    this.componentsChange.emit(this.components);
+    this.onChange();
   }
 
   private patchNfuFields(component: DecisionComponentDto) {
@@ -117,10 +122,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   onRemove(index: number) {
     this.components.splice(index);
     this.updateComponentsMenuItems();
-    this.componentsChange.emit(this.components);
+    this.onChange();
   }
 
   trackByFn(index: any, item: DecisionComponentDto) {
     return item.applicationDecisionComponentTypeCode;
+  }
+
+  onChange() {
+    this.componentsChange.emit({
+      components: this.components,
+      isValid: this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+    });
   }
 }
