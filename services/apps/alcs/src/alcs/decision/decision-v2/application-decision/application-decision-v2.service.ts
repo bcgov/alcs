@@ -288,6 +288,8 @@ export class ApplicationDecisionV2Service {
     }
 
     await this.updateComponents(updateDto, existingDecision);
+
+    //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(
@@ -341,7 +343,10 @@ export class ApplicationDecisionV2Service {
           updateDto.decisionComponents,
           false,
         );
-    } else if (existingDecision.components) {
+    } else if (
+      updateDto.decisionComponents === null &&
+      existingDecision.components
+    ) {
       await this.decisionComponentService.softRemove(
         existingDecision.components,
       );
@@ -364,6 +369,7 @@ export class ApplicationDecisionV2Service {
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
+      //THIS WON"T WORK AS THE COMPONENTS HAVEN"T SAVED YET
       const allComponents =
         await this.decisionComponentService.getAllByApplicationUuid(
           existingDecision.applicationUuid!,
@@ -373,6 +379,7 @@ export class ApplicationDecisionV2Service {
         await this.decisionConditionService.createOrUpdate(
           updateDto.conditions,
           allComponents,
+          existingDecision.components ?? [],
           false,
         );
     } else if (existingDecision.conditions) {
