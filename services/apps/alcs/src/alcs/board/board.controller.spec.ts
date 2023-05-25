@@ -12,6 +12,7 @@ import { CardService } from '../card/card.service';
 import { BoardAutomapperProfile } from '../../common/automapper/board.automapper.profile';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { CovenantService } from '../covenant/covenant.service';
+import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
@@ -28,15 +29,17 @@ describe('BoardController', () => {
   let cardService: DeepMocked<CardService>;
   let planningReviewService: DeepMocked<PlanningReviewService>;
   let covenantService: DeepMocked<CovenantService>;
+  let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
-    boardService = createMock<BoardService>();
-    appService = createMock<ApplicationService>();
-    appReconsiderationService = createMock<ApplicationReconsiderationService>();
-    modificationService = createMock<ApplicationModificationService>();
-    planningReviewService = createMock<PlanningReviewService>();
-    cardService = createMock<CardService>();
-    covenantService = createMock<CovenantService>();
+    boardService = createMock();
+    appService = createMock();
+    appReconsiderationService = createMock();
+    modificationService = createMock();
+    planningReviewService = createMock();
+    cardService = createMock();
+    covenantService = createMock();
+    noticeOfIntentService = createMock();
 
     boardService.getApplicationsByCode.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
@@ -48,6 +51,8 @@ describe('BoardController', () => {
     modificationService.mapToDtos.mockResolvedValue([]);
     covenantService.getByBoardCode.mockResolvedValue([]);
     covenantService.mapToDtos.mockResolvedValue([]);
+    noticeOfIntentService.getByBoardCode.mockResolvedValue([]);
+    noticeOfIntentService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -72,6 +77,10 @@ describe('BoardController', () => {
           useValue: planningReviewService,
         },
         { provide: CovenantService, useValue: covenantService },
+        {
+          provide: NoticeOfIntentService,
+          useValue: noticeOfIntentService,
+        },
         {
           provide: ClsService,
           useValue: {},

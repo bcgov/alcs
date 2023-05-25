@@ -15,12 +15,15 @@ import { BoardService, BoardWithFavourite } from '../../services/board/board.ser
 import { CardService } from '../../services/card/card.service';
 import { CovenantDto } from '../../services/covenant/covenant.dto';
 import { CovenantService } from '../../services/covenant/covenant.service';
+import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
+  NOTICE_OF_INTENT_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
@@ -32,6 +35,8 @@ import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.comp
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
 import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
 import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
+import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
+import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -53,16 +58,17 @@ export class BoardComponent implements OnInit, OnDestroy {
   cards: CardData[] = [];
   columns: DragDropColumn[] = [];
   boardTitle = '';
-  boardIsFavourite: boolean = false;
-  boardHasPlanningReviews: boolean = false;
-  boardHasModifications: boolean = false;
-  boardHasCovenant: boolean = false;
-  createCardTitle = '';
-  currentBoardCode: string = '';
+  boardIsFavourite = false;
+  boardHasApplication = false;
+  boardHasPlanningReviews = false;
+  boardHasReconsiderations = false;
+  boardHasModifications = false;
+  boardHasCovenant = false;
+  boardHasNOI = false;
+  currentBoardCode = '';
 
   selectedBoardCode?: string;
   boards: BoardWithFavourite[] = [];
-  cardDialogType: any = CreateApplicationDialogComponent;
 
   constructor(
     private applicationService: ApplicationService,
@@ -76,6 +82,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
+    private noticeOfIntentService: NoticeOfIntentService,
     private titleService: Title
   ) {}
 
@@ -90,7 +97,6 @@ export class BoardComponent implements OnInit, OnDestroy {
           this.setupBoard(selectedBoard);
         }
         this.currentBoardCode = boardCode;
-        this.setupCreateCardButton(boardCode);
       }
     });
 
@@ -120,13 +126,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.setUrl(card.uuid, card.cardType);
   }
 
-  async onCreate() {
-    this.openDialog(this.cardDialogType, {
+  onApplicationCreate() {
+    this.openDialog(CreateApplicationDialogComponent, {
       currentBoardCode: this.selectedBoardCode,
     });
   }
 
-  async onReconsiderationCreate() {
+  onReconsiderationCreate() {
     this.openDialog(CreateReconsiderationDialogComponent, {
       currentBoardCode: this.selectedBoardCode,
     });
@@ -150,6 +156,12 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
+  onCreateNoticeOfIntent() {
+    this.openDialog(CreateNoticeOfIntentDialogComponent, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
   onDropped($event: { id: string; status: string; cardTypeCode: CardType }) {
     switch ($event.cardTypeCode) {
       case CardType.APP:
@@ -165,6 +177,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.PLAN:
       case CardType.MODI:
       case CardType.COV:
+      case CardType.NOI:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -179,22 +192,18 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setupCreateCardButton(boardCode: string = '') {
-    if (boardCode === BOARD_TYPE_CODES.VETT) {
-      this.createCardTitle = '+ New Application';
-      this.cardDialogType = CreateApplicationDialogComponent;
-    }
-  }
-
   private setupBoard(board: BoardWithFavourite) {
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
 
     this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
+    this.boardHasApplication = board.code === BOARD_TYPE_CODES.VETT;
     this.boardHasPlanningReviews = board.code === BOARD_TYPE_CODES.EXEC;
+    this.boardHasReconsiderations = board.code !== BOARD_TYPE_CODES.VETT;
     this.boardHasModifications = board.code === BOARD_TYPE_CODES.CEO;
     this.boardHasCovenant = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasNOI = board.code === BOARD_TYPE_CODES.VETT;
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
     this.columns = board.statuses.map((status) => ({
@@ -211,8 +220,15 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedReviewMeetings = thingsWithCards.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
     const mappedModifications = thingsWithCards.modifications.map(this.mapModificationToCard.bind(this));
     const mappedCovenants = thingsWithCards.covenants.map(this.mapCovenantToCard.bind(this));
+    const mappedNoticeOfIntents = thingsWithCards.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
-      this.cards = [...mappedApps, ...mappedRecons, ...mappedReviewMeetings, ...mappedCovenants].sort((a, b) => {
+      this.cards = [
+        ...mappedApps,
+        ...mappedRecons,
+        ...mappedReviewMeetings,
+        ...mappedCovenants,
+        ...mappedNoticeOfIntents,
+      ].sort((a, b) => {
         if (a.highPriority === b.highPriority) {
           return b.dateReceived - a.dateReceived;
         }
@@ -222,12 +238,14 @@ export class BoardComponent implements OnInit, OnDestroy {
       const sorted = [];
       sorted.push(
         // high priority
+        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        // none high priority
+        // non-high priority
+        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
@@ -322,6 +340,23 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapNoticeOfIntentToCard(noticeOfIntent: NoticeOfIntentDto): CardData {
+    return {
+      status: noticeOfIntent.card.status.code,
+      title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
+      titleTooltip: noticeOfIntent.applicant,
+      assignee: noticeOfIntent.card.assignee,
+      id: noticeOfIntent.card.uuid,
+      labels: [NOTICE_OF_INTENT_TYPE_LABEL],
+      cardType: CardType.NOI,
+      paused: false,
+      highPriority: noticeOfIntent.card.highPriority,
+      cardUuid: noticeOfIntent.card.uuid,
+      dateReceived: noticeOfIntent.card.createdAt,
+      cssClasses: ['notice-of-intent'],
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -369,6 +404,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.COV:
           const covenant = await this.covenantService.fetchByCardUuid(card.uuid);
           this.openDialog(CovenantDialogComponent, covenant);
+          break;
+        case CardType.NOI:
+          const notceOfIntent = await this.noticeOfIntentService.fetchByCardUuid(card.uuid);
+          this.openDialog(NoticeOfIntentDialogComponent, notceOfIntent);
           break;
         default:
           console.error('Card type is not configured for a dialog');

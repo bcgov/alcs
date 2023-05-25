@@ -36,6 +36,16 @@ export const COVENANT_TYPE_LABEL = {
   textColor: '#000',
 };
 
+export const NOTICE_OF_INTENT_TYPE_LABEL = {
+  label: 'Notice of Intent',
+  code: 'NOI',
+  shortLabel: 'NOI',
+  backgroundColor: '#fff',
+  borderColor: '#228820',
+  description: 'Covenant',
+  textColor: '#000',
+};
+
 export const DRAFT_DECISION_TYPE_LABEL = {
   label: 'Draft',
   code: 'Draft',

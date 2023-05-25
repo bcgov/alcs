@@ -25,6 +25,8 @@ import { CovenantService } from '../covenant/covenant.service';
 import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BOARD_CODES, BoardDto } from './board.dto';
@@ -43,6 +45,7 @@ export class BoardController {
     private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
+    private noticeOfIntentService: NoticeOfIntentService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -62,6 +65,9 @@ export class BoardController {
 
     const recons = await this.reconsiderationService.getByBoardCode(boardCode);
     const covenants = await this.covenantService.getByBoardCode(boardCode);
+    const noticeOfIntents = await this.noticeOfIntentService.getByBoardCode(
+      boardCode,
+    );
 
     let planningReviews: PlanningReview[] = [];
     if (boardCode === 'exec') {
@@ -81,6 +87,9 @@ export class BoardController {
       ),
       modifications: await this.modificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
+      noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
+        noticeOfIntents,
+      ),
     };
   }
 

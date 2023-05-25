@@ -5,7 +5,7 @@ import { ApplicationReconsiderationDto } from '../../../services/application/app
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { CardDto } from '../../../services/card/card.dto';
-import { CovenantDto } from '../../../services/covenant/covenant.dto';
+import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import { ApplicationPill } from '../../../shared/application-type-pill/application-type-pill.component';
@@ -101,7 +101,7 @@ export class AssignedComponent implements OnInit {
     this.sortedFiles = sorted;
   }
 
-  private mapCovenant(c: CovenantDto): AssignedToMeFile {
+  private mapCovenant(c: NoticeOfIntentDto): AssignedToMeFile {
     return {
       title: `${c.fileNumber} (${c.applicant})`,
       type: c.card.type,

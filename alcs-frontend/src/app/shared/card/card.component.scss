@@ -22,6 +22,16 @@ $date-ht: 48px;
       border-color: colors.$primary-color;
     }
   }
+
+  &.notice-of-intent {
+    border-bottom: 2px solid colors.$primary-color-light;
+
+    &:hover {
+      border: 2px solid transparent;
+      border-bottom-color: colors.$primary-color-dark;
+      transition: all 100ms ease-in-out;
+    }
+  }
 }
 
 .card.paused {
