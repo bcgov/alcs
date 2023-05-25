@@ -369,8 +369,7 @@ export class ApplicationDecisionV2Service {
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
-      //THIS WON"T WORK AS THE COMPONENTS HAVEN"T SAVED YET
-      const allComponents =
+      const existingComponents =
         await this.decisionComponentService.getAllByApplicationUuid(
           existingDecision.applicationUuid!,
         );
@@ -378,7 +377,7 @@ export class ApplicationDecisionV2Service {
       existingDecision.conditions =
         await this.decisionConditionService.createOrUpdate(
           updateDto.conditions,
-          allComponents,
+          existingComponents,
           existingDecision.components ?? [],
           false,
         );

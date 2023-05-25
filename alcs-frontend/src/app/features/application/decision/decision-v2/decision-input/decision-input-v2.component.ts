@@ -549,7 +549,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
-    debugger;
     if (['APPR', 'APPA', 'RESC'].includes(selectedOutcome.code)) {
       if (this.form.controls.isSubjectToConditions.disabled) {
         this.showComponents = true;
