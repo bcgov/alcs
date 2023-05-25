@@ -202,11 +202,11 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.find).toHaveBeenCalledTimes(1);
   });
 
-  it('should call update for the application with the first parcels name', async () => {
+  it('should call update for the application with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [
       new ApplicationOwner({
-        firstName: 'A',
+        firstName: 'B',
         lastName: 'A',
       }),
     ];
@@ -221,27 +221,27 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A A',
+      'A',
     );
   });
 
-  it('should call update for the application with the first parcels name', async () => {
+  it('should call update for the application with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [
       new ApplicationOwner({
-        firstName: 'B',
+        firstName: 'F',
         lastName: 'B',
       }),
       new ApplicationOwner({
-        firstName: 'A',
+        firstName: 'F',
         lastName: 'A',
       }),
       new ApplicationOwner({
-        firstName: '1',
+        firstName: 'F',
         lastName: '1',
       }),
       new ApplicationOwner({
-        firstName: 'C',
+        firstName: 'F',
         lastName: 'C',
       }),
     ];
@@ -256,11 +256,11 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A A et al.',
+      'A et al.',
     );
   });
 
-  it('should call update for the application with the number owners name', async () => {
+  it('should call update for the application with the number owners last name', async () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [
       new ApplicationOwner({
@@ -283,7 +283,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      '1 1 et al.',
+      '1 et al.',
     );
   });
 
@@ -318,7 +318,7 @@ describe('ApplicationOwnerService', () => {
 
     expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
     expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A A et al.',
+      'A et al.',
     );
   });
 });

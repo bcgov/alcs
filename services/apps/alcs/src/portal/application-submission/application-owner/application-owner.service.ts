@@ -264,7 +264,7 @@ export class ApplicationOwnerService {
         const alphabetOwners = firstParcel.owners.filter((owner) =>
           isNaN(
             parseInt(
-              (owner.organizationName ?? owner.firstName ?? '').charAt(0),
+              (owner.organizationName ?? owner.lastName ?? '').charAt(0),
             ),
           ),
         );
@@ -275,14 +275,14 @@ export class ApplicationOwnerService {
         }
 
         const firstOwner = alphabetOwners.sort((a, b) => {
-          const mappedA = a.organizationName ?? a.firstName ?? '';
-          const mappedB = b.organizationName ?? b.firstName ?? '';
+          const mappedA = a.organizationName ?? a.lastName ?? '';
+          const mappedB = b.organizationName ?? b.lastName ?? '';
           return mappedA.localeCompare(mappedB);
         })[0];
         if (firstOwner) {
           let applicantName = firstOwner.organizationName
             ? firstOwner.organizationName
-            : `${firstOwner.firstName} ${firstOwner.lastName}`;
+            : firstOwner.lastName;
           if (ownerCount > 1) {
             applicantName += ' et al.';
           }
