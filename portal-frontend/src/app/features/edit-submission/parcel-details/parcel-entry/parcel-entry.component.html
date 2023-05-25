@@ -1,4 +1,4 @@
-<form [formGroup]="parcelForm">
+<form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
     <label>Select ownership type:</label>
     <div class="warning">
