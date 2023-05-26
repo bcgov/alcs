@@ -8,10 +8,25 @@ from documents import (
 )
 from rich.console import Console
 from db import connection_pool
-from applications import process_applications, clean_applications
+from batch_applications import process_applications, clean_applications
 
+application_import_batch_size = 10000
 document_import_batch_size = 10000
 application_document_import_batch_size = 10000
+
+def application_import_command_parser(application_import_batch_size, subparsers):
+    application_import_command = subparsers.add_parser(
+        "application-import",
+        help=f"Import application with specified batch size: (default: {application_import_batch_size})",
+    )
+    application_import_command.add_argument(
+        "--batch-size",
+        type=int,
+        default=application_import_batch_size,
+        metavar="",
+        help=f"batch size (default: {application_import_batch_size})",
+    )
+    application_import_command.set_defaults(func=process_applications)
 
 
 def document_import_command_parser(document_import_batch_size, subparsers):
@@ -68,6 +83,7 @@ def setup_menu_args_parser(document_import_batch_size):
 
     # Add subcommands to parser
     subparsers = parser.add_subparsers(dest="command")
+    application_import_command_parser(application_import_batch_size, subparsers)
     document_import_command_parser(document_import_batch_size, subparsers)
     application_document_import_command_parser(document_import_batch_size, subparsers)
     import_command_parser(subparsers)
@@ -105,6 +121,9 @@ if __name__ == "__main__":
                     if args and args.batch_size:
                         document_import_batch_size = args.batch_size
 
+                    console.log("Batching applications:")
+                    process_applications(batch_size=application_import_batch_size)
+
                     console.log("Processing documents:")
                     process_documents(batch_size=document_import_batch_size)
 
@@ -120,6 +139,7 @@ if __name__ == "__main__":
 
                     clean_application_documents()
                     clean_documents()
+                    clean_applications()
 
                     console.log("Done")
             case "document-import":
