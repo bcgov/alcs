@@ -1,24 +1,24 @@
 -- Step 1: Create helper table to lookup uids and deal with duplicates
-DROP TABLE IF EXISTS application_etl;
+-- DROP TABLE IF EXISTS application_etl;
 
-CREATE TEMPORARY TABLE application_etl (
-    id SERIAL PRIMARY KEY,
-    application_id int,
-    card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
-    duplicated bool DEFAULT false
-);
+-- CREATE TEMPORARY TABLE application_etl (
+--     id SERIAL PRIMARY KEY,
+--     application_id int,
+--     card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+--     duplicated bool DEFAULT false
+-- );
 
-INSERT INTO
-    application_etl (application_id, duplicated)
-SELECT
-    DISTINCT oa.alr_application_id AS application_id,
-    CASE
-        WHEN a.uuid IS NOT NULL THEN TRUE
-        ELSE false
-    END AS duplicated
-FROM
-    oats.oats_alr_applications AS oa
-    LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number;
+-- INSERT INTO
+--     application_etl (application_id, duplicated)
+-- SELECT
+--     DISTINCT oa.alr_application_id AS application_id,
+--     CASE
+--         WHEN a.uuid IS NOT NULL THEN TRUE
+--         ELSE false
+--     END AS duplicated
+-- FROM
+--     oats.oats_alr_applications AS oa
+--     LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number;
 
 -- Step 2: Create associated card
 -- INSERT INTO

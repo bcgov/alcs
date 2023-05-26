@@ -85,7 +85,7 @@ def process_applications(conn=None, batch_size=10000):
                 cursor.execute(
                     f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id"
                 )
-                print("batch size ", batch_size)
+                
                 rows = cursor.fetchmany(batch_size)
                 if not rows:
                     break
@@ -118,11 +118,14 @@ def process_applications(conn=None, batch_size=10000):
 
 @inject_conn_pool
 def clean_applications(conn=None):
+    print("Start applications cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )
+        print(f"Deleted application items count = {cursor.rowcount}")
         cursor.execute("DELETE FROM alcs.card c WHERE c.audit_created_by = 'oats_etl'")
+        print(f"Deleted cards count = {cursor.rowcount}")
 
 
         
