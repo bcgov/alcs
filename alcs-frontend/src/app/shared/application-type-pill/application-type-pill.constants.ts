@@ -42,7 +42,7 @@ export const NOTICE_OF_INTENT_TYPE_LABEL = {
   shortLabel: 'NOI',
   backgroundColor: '#fff',
   borderColor: '#228820',
-  description: 'Covenant',
+  description: 'Notice of Intent',
   textColor: '#000',
 };
 

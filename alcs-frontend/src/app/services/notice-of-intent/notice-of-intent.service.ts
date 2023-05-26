@@ -21,7 +21,7 @@ export class NoticeOfIntentService {
       if (e instanceof HttpErrorResponse && e.status === 400) {
         this.toastService.showErrorToast(`Covenant or Application with File ID ${createDto.fileNumber} already exists`);
       } else {
-        this.toastService.showErrorToast('Failed to create Covenant');
+        this.toastService.showErrorToast('Failed to create Notice of Intent');
       }
       throw e;
     }
@@ -32,7 +32,7 @@ export class NoticeOfIntentService {
       return await firstValueFrom(this.http.get<NoticeOfIntentDto>(`${this.url}/card/${id}`));
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to fetch covenant');
+      this.toastService.showErrorToast('Failed to fetch Notice of Intent');
     }
     return;
   }

@@ -245,7 +245,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
-        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntents.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),

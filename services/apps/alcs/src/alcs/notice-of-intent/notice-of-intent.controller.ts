@@ -31,8 +31,8 @@ export class NoticeOfIntentController {
   @Get('/card/:uuid')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getByCard(@Param('uuid') cardUuid: string) {
-    const covenant = await this.noticeOfIntentService.getByCardUuid(cardUuid);
-    const mapped = await this.noticeOfIntentService.mapToDtos([covenant]);
+    const noi = await this.noticeOfIntentService.getByCardUuid(cardUuid);
+    const mapped = await this.noticeOfIntentService.mapToDtos([noi]);
     return mapped[0];
   }
 }
