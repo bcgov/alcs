@@ -1,5 +1,8 @@
 from db import inject_conn_pool
 def application_etl_temp_table():
+    """
+    function creates a temporary table to be used by .sql files called later in script
+    """
     return f"""
         DROP TABLE IF EXISTS application_etl;
 
@@ -12,6 +15,10 @@ def application_etl_temp_table():
     """
 
 def application_etl_insert():
+    """
+    function inserts data into prevoisly created table and decipers duplication of uuids
+    application_id is copied from oats.oats_alr_applications.alr_application_id
+    """
     return f"""
         INSERT INTO
             application_etl (application_id, duplicated)
@@ -40,6 +47,9 @@ def application_etl_insert():
 #     """
 
 def compile_application_insert_query(number_of_rows_to_insert):
+    """
+    function takes the number of rows to insert and generates an SQL insert statement with upserts using the ON CONFLICT clause
+    """
 
     applications_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
@@ -60,7 +70,7 @@ def compile_application_insert_query(number_of_rows_to_insert):
 @inject_conn_pool
 def process_applications(conn=None, batch_size=10000):
     """
-    comments
+    function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of non duplicate applications and prints it to the console. Then, it fetches the applications to insert in batches using application IDs / file_number, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
         cursor.execute(application_etl_temp_table())
