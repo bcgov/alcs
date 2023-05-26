@@ -100,20 +100,20 @@
       </div>
     </ng-container>
     <div class="subheading2 grid-1">
-      Civic Address
-      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ parcel.civicAddress }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
       Farm Classification
       <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Civic Address
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
     <ng-container *ngIf="parcel.validation?.isCrownSelectionMandatory">
       <div class="subheading2 grid-1">Crown Selection</div>
