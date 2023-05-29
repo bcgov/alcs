@@ -10,6 +10,7 @@ import { CardService } from '../../../../../services/card/card.service';
 import { CreateNoticeOfIntentDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
+import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 
 @Component({
   selector: 'app-create-notice-of-intent-dialog',
@@ -27,12 +28,14 @@ export class CreateNoticeOfIntentDialogComponent implements OnInit, OnDestroy {
   regionControl = new FormControl<string | null>(null, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
   applicantControl = new FormControl<string | any>('', [Validators.required]);
+  dateSubmitted = new FormControl<Date | null>(null, [Validators.required]);
 
   createForm = new FormGroup({
     fileNumber: this.fileNumberControl,
     region: this.regionControl,
     localGovernment: this.localGovernmentControl,
     applicant: this.applicantControl,
+    dateSubmitted: this.dateSubmitted,
   });
 
   constructor(
@@ -68,6 +71,7 @@ export class CreateNoticeOfIntentDialogComponent implements OnInit, OnDestroy {
         localGovernmentUuid: formValues.localGovernment!,
         applicant: formValues.applicant!.trim(),
         boardCode: this.currentBoardCode,
+        dateSubmittedToAlc: formatDateForApi(formValues.dateSubmitted!),
       };
 
       await this.noticeOfIntentService.create(noticeOfIntent);

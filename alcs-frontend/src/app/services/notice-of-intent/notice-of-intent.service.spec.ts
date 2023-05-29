@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -47,6 +47,7 @@ describe('NoticeOfIntentService', () => {
       fileNumber: '',
       localGovernmentUuid: '',
       regionCode: '',
+      dateSubmittedToAlc: 0,
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
@@ -66,6 +67,7 @@ describe('NoticeOfIntentService', () => {
       fileNumber: '',
       localGovernmentUuid: '',
       regionCode: '',
+      dateSubmittedToAlc: 0,
     });
 
     await expect(promise).rejects.toMatchObject(new Error('Error'));

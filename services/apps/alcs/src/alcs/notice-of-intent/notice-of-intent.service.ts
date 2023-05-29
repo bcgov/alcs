@@ -13,12 +13,15 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../utils/undefined';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
   CreateNoticeOfIntentDto,
   NoticeOfIntentDto,
+  UpdateNoticeOfIntentDto,
 } from './notice-of-intent.dto';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 
@@ -73,6 +76,7 @@ export class NoticeOfIntentService {
       fileNumber: data.fileNumber,
       regionCode: data.regionCode,
       applicant: data.applicant,
+      dateSubmittedToAlc: formatIncomingDate(data.dateSubmittedToAlc),
     });
 
     noticeOfIntent.card = await this.cardService.create('NOI', board, false);
@@ -172,5 +176,50 @@ export class NoticeOfIntentService {
         },
       },
     });
+  }
+
+  async getByFileNumber(fileNumber: string) {
+    return this.repository.findOneOrFail({
+      where: { fileNumber },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async update(fileNumber: string, updateDto: UpdateNoticeOfIntentDto) {
+    const noticeOfIntent = await this.getByFileNumber(fileNumber);
+
+    noticeOfIntent.summary = filterUndefined(
+      updateDto.summary,
+      noticeOfIntent.summary,
+    );
+
+    noticeOfIntent.dateAcknowledgedComplete = filterUndefined(
+      formatIncomingDate(updateDto.dateAcknowledgedComplete),
+      noticeOfIntent.dateAcknowledgedComplete,
+    );
+
+    noticeOfIntent.dateAcknowledgedIncomplete = filterUndefined(
+      formatIncomingDate(updateDto.dateAcknowledgedIncomplete),
+      noticeOfIntent.dateAcknowledgedIncomplete,
+    );
+
+    noticeOfIntent.dateReceivedAllItems = filterUndefined(
+      formatIncomingDate(updateDto.dateReceivedAllItems),
+      noticeOfIntent.dateReceivedAllItems,
+    );
+
+    noticeOfIntent.feePaidDate = filterUndefined(
+      formatIncomingDate(updateDto.feePaidDate),
+      noticeOfIntent.feePaidDate,
+    );
+
+    noticeOfIntent.dateSubmittedToAlc = filterUndefined(
+      formatIncomingDate(updateDto.dateSubmittedToAlc),
+      noticeOfIntent.dateSubmittedToAlc,
+    );
+
+    await this.repository.save(noticeOfIntent);
+
+    return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 }

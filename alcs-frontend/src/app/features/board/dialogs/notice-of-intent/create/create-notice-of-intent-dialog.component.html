@@ -50,6 +50,7 @@
           This field is required.
         </mat-error>
       </mat-form-field>
+
       <div>
         <ng-select
           appearance="outline"
@@ -82,6 +83,19 @@
         >
         </ng-select>
       </div>
+
+      <mat-form-field class="date-picker" appearance="outline">
+        <mat-label>Date Submitted to ALC</mat-label>
+        <input
+          matInput
+          (click)="datePicker.open()"
+          [matDatepicker]="datePicker"
+          formControlName="dateSubmitted"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker type="date"> </mat-datepicker>
+      </mat-form-field>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

@@ -70,6 +70,7 @@ describe('NoticeOfIntentService', () => {
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
         boardCode: 'fake',
+        dateSubmittedToAlc: 0,
       },
       fakeBoard,
     );
@@ -96,6 +97,7 @@ describe('NoticeOfIntentService', () => {
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
         boardCode: 'fake',
+        dateSubmittedToAlc: 0,
       },
       fakeBoard,
     );
@@ -111,7 +113,7 @@ describe('NoticeOfIntentService', () => {
     expect(mockRepository.save).not.toHaveBeenCalled();
   });
 
-  it('should throw an exception when creating a covenant with an existing application file ID', async () => {
+  it('should throw an exception when creating a notice of intent with an existing application file ID', async () => {
     const mockCard = {} as Card;
     const fakeBoard = {} as Board;
     const existingFileNumber = '1512311';
@@ -128,6 +130,7 @@ describe('NoticeOfIntentService', () => {
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
         boardCode: 'fake',
+        dateSubmittedToAlc: 0,
       },
       fakeBoard,
     );
@@ -179,6 +182,29 @@ describe('NoticeOfIntentService', () => {
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
+  });
+
+  it('should call through to the repo for getByFileNumber', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(new NoticeOfIntent());
+    await service.getByFileNumber('file');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set values and call save for update', async () => {
+    const notice = new NoticeOfIntent({
+      summary: 'old-summary',
+    });
+    mockRepository.findOneOrFail.mockResolvedValue(notice);
+    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
+    const res = await service.update('file', {
+      summary: 'new-summary',
+    });
+
+    expect(res).toBeDefined();
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(notice.summary).toEqual('new-summary');
   });
 
   it('should load deleted cards', async () => {

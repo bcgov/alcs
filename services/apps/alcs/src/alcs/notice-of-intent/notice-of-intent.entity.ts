@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
@@ -41,4 +42,42 @@ export class NoticeOfIntent extends Base {
 
   @Column()
   regionCode: string;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  summary: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateSubmittedToAlc: Date | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  feePaidDate: Date | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedIncomplete: Date | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateReceivedAllItems: Date | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateAcknowledgedComplete: Date | null;
 }

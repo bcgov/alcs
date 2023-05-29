@@ -20,14 +20,14 @@ import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { NoticeOfIntentDialogComponent } from './notice-of-intent-dialog.component';
 
-describe('CovenantDialogComponent', () => {
+describe('NoticeOfIntentDialogComponent', () => {
   let component: NoticeOfIntentDialogComponent;
   let fixture: ComponentFixture<NoticeOfIntentDialogComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
   let authenticationService: DeepMocked<AuthenticationService>;
 
-  const mockCovenantDto: NoticeOfIntentDto = {
+  const mockDto: NoticeOfIntentDto = {
     applicant: 'fake-type',
     region: {
       code: 'region-code',
@@ -48,6 +48,10 @@ describe('CovenantDialogComponent', () => {
         code: 'FAKE_BOARD',
       },
     } as CardDto,
+    activeDays: 0,
+    paused: false,
+    pausedDays: 0,
+    uuid: '',
   };
 
   beforeEach(async () => {
@@ -71,7 +75,7 @@ describe('CovenantDialogComponent', () => {
       providers: [
         {
           provide: MAT_DIALOG_DATA,
-          useValue: mockCovenantDto,
+          useValue: mockDto,
         },
         {
           provide: UserService,
@@ -109,7 +113,7 @@ describe('CovenantDialogComponent', () => {
 
     fixture = TestBed.createComponent(NoticeOfIntentDialogComponent);
     component = fixture.componentInstance;
-    component.data = mockCovenantDto;
+    component.data = mockDto;
     fixture.detectChanges();
   });
 
