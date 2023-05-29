@@ -32,19 +32,7 @@ def application_etl_insert():
             oats.oats_alr_applications AS oa
             LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number
     """
-# def associated_card():
-#     return f"""
-#         INSERT INTO alcs.card (uuid, audit_created_by)
 
-#         SELECT
-#             ae.card_uuid,
-#             'oats_etl'
-#         FROM
-#             application_etl ae
-#         WHERE
-#             ae.duplicated IS false;
-
-#     """
 
 def compile_application_insert_query(number_of_rows_to_insert):
     """
@@ -66,6 +54,14 @@ def compile_application_insert_query(number_of_rows_to_insert):
             local_government_uuid = EXCLUDED.local_government_uuid,
             audit_created_by = EXCLUDED.audit_created_by
     """
+# ON CONFLICT needs confirmation of what value is kept
+def drop_etl_temp_table():
+    """
+    remove the table
+    """
+    return f"""
+    DROP TABLE application_etl;
+    """
 
 @inject_conn_pool
 def process_applications(conn=None, batch_size=10000):
@@ -75,7 +71,6 @@ def process_applications(conn=None, batch_size=10000):
     with conn.cursor() as cursor:
         cursor.execute(application_etl_temp_table())
         cursor.execute(application_etl_insert())
-        # cursor.execute(associated_card())
         with open(
             "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
         ) as sql_file:
@@ -120,11 +115,19 @@ def process_applications(conn=None, batch_size=10000):
                 except Exception as e:
                     conn.rollback()
                     print("Error", e)
-                    failed_inserts += len(rows)
+                    failed_inserts  = count_total - successful_inserts_count
                     last_application_id = last_application_id +1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
+    if failed_inserts == 0:
+        with conn.cursor() as cursor:
+            cursor.execute(drop_etl_temp_table())
+            print("temp table removed")
+    else:
+        print("Table not deleted, inserts failed")
+        #keep only the failed rows
+
 
 @inject_conn_pool
 def clean_applications(conn=None):
@@ -133,9 +136,7 @@ def clean_applications(conn=None):
         cursor.execute(
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )
-        print(f"Deleted application items count = {cursor.rowcount}")
-        cursor.execute("DELETE FROM alcs.card c WHERE c.audit_created_by = 'oats_etl'")
-        print(f"Deleted cards count = {cursor.rowcount}")
+        print(f"Deleted items count = {cursor.rowcount}")
 
 
         
