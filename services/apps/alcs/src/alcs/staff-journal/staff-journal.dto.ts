@@ -30,7 +30,17 @@ export class CreateApplicationStaffJournalDto {
   body: string;
 }
 
-export class UpdateApplicationStaffJournalDto {
+export class CreateNoticeOfIntentStaffJournalDto {
+  @IsString()
+  @IsNotEmpty()
+  noticeOfIntentUuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class UpdateStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   uuid: string;

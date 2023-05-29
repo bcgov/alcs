@@ -3,7 +3,12 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
-import { StaffJournalDto, CreateStaffJournalDto, UpdateStaffJournalDto } from './staff-journal.dto';
+import {
+  StaffJournalDto,
+  CreateApplicationStaffJournalDto,
+  UpdateStaffJournalDto,
+  CreateNoticeOfIntentStaffJournalDto,
+} from './staff-journal.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +21,14 @@ export class StaffJournalService {
     return firstValueFrom(this.http.get<StaffJournalDto[]>(`${this.baseUrl}/${applicationUuid}`));
   }
 
-  async createNote(note: CreateStaffJournalDto) {
-    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(this.baseUrl, note));
+  async createNoteForApplication(note: CreateApplicationStaffJournalDto) {
+    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/application`, note));
+    this.toastService.showSuccessToast('Journal note created');
+    return createdNote;
+  }
+
+  async createNoteForNoticeOfIntent(note: CreateNoticeOfIntentStaffJournalDto) {
+    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/notice-of-intent`, note));
     this.toastService.showSuccessToast('Journal note created');
     return createdNote;
   }

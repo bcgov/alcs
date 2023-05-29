@@ -49,7 +49,7 @@ describe('ApplicationStaffJournalService', () => {
     expect(res[0].uuid).toEqual('1');
   });
 
-  it('should create a note', async () => {
+  it('should create a note for applications', async () => {
     httpClient.post.mockReturnValue(
       of([
         {
@@ -58,7 +58,22 @@ describe('ApplicationStaffJournalService', () => {
       ])
     );
 
-    await service.createNote({ body: '', applicationUuid: '' });
+    await service.createNoteForApplication({ body: '', applicationUuid: '' });
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+    expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should create a note for notice of intents', async () => {
+    httpClient.post.mockReturnValue(
+      of([
+        {
+          uuid: '1',
+        },
+      ])
+    );
+
+    await service.createNoteForNoticeOfIntent({ body: '', noticeOfIntentUuid: '' });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);

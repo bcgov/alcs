@@ -7,8 +7,13 @@ export interface StaffJournalDto {
   isEditable: boolean;
 }
 
-export interface CreateStaffJournalDto {
+export interface CreateApplicationStaffJournalDto {
   applicationUuid: string;
+  body: string;
+}
+
+export interface CreateNoticeOfIntentStaffJournalDto {
+  noticeOfIntentUuid: string;
   body: string;
 }
 

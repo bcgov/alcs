@@ -1,12 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   StaffJournalDto,
-  CreateStaffJournalDto,
   UpdateStaffJournalDto,
 } from '../../services/application/application-staff-journal/staff-journal.dto';
 import { StaffJournalService } from '../../services/application/application-staff-journal/staff-journal.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-dialog.service';
+
 @Component({
   selector: 'app-staff-journal',
   templateUrl: './staff-journal.component.html',
@@ -14,6 +14,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 })
 export class StaffJournalComponent implements OnChanges {
   @Input() parentUuid: string = '';
+  @Input() parentType: 'Application' | 'NOI' = 'Application';
 
   labelText = 'Add a journal note';
 
@@ -54,11 +55,20 @@ export class StaffJournalComponent implements OnChanges {
     this.newNote = '';
   }
 
-  async onSave(note: CreateStaffJournalDto) {
+  async onSave(note: string) {
     this.isSaving = true;
-    note.applicationUuid = this.parentUuid;
 
-    await this.staffJournalService.createNote(note);
+    if (this.parentType === 'Application') {
+      await this.staffJournalService.createNoteForApplication({
+        applicationUuid: this.parentUuid,
+        body: note,
+      });
+    } else {
+      await this.staffJournalService.createNoteForNoticeOfIntent({
+        noticeOfIntentUuid: this.parentUuid,
+        body: note,
+      });
+    }
 
     this.isSaving = false;
     await this.loadNotes(this.parentUuid);
@@ -66,7 +76,7 @@ export class StaffJournalComponent implements OnChanges {
     this.newNote = '';
   }
 
-  async onEditNote(update: UpdateStaffJournalDto | any) {
+  async onEditNote(update: UpdateStaffJournalDto) {
     this.labelText = 'Edit note';
 
     await this.staffJournalService.updateNote(update);

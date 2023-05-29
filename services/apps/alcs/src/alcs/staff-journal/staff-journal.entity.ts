@@ -2,6 +2,8 @@ import { AutoMap } from '@automapper/classes';
 import { Column, CreateDateColumn, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { Application } from '../application/application.entity';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 
 @Entity()
 export class StaffJournal extends Base {
@@ -26,7 +28,16 @@ export class StaffJournal extends Base {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 
-  @Column()
+  @ManyToOne(() => Application)
+  application: Application | null;
+  @Column({ nullable: true })
   @Index()
-  parentUuid: string;
+  applicationUuid: string;
+
+  @ManyToOne(() => NoticeOfIntent)
+  noticeOfIntent: NoticeOfIntent | null;
+
+  @Column({ nullable: true })
+  @Index()
+  noticeOfIntentUuid: string;
 }

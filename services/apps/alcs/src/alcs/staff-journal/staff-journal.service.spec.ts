@@ -4,24 +4,19 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { User } from '../../user/user.entity';
-import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
 import { StaffJournal } from './staff-journal.entity';
 import { StaffJournalService } from './staff-journal.service';
 
 describe('ApplicationStaffJournalService', () => {
   let service: StaffJournalService;
-  let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationStaffJournalRepository: DeepMocked<
     Repository<StaffJournal>
   >;
 
   let note;
   let user;
-  let application;
 
   beforeEach(async () => {
-    mockApplicationService = createMock();
     mockApplicationStaffJournalRepository = createMock();
 
     user = {
@@ -29,8 +24,6 @@ describe('ApplicationStaffJournalService', () => {
       email: 'fake-email',
       uuid: 'user-uuid',
     } as User;
-
-    application = new Application({ uuid: 'fake_application_uuid' });
 
     note = new StaffJournal({
       body: 'fake',
@@ -44,10 +37,6 @@ describe('ApplicationStaffJournalService', () => {
         {
           provide: getRepositoryToken(StaffJournal),
           useValue: mockApplicationStaffJournalRepository,
-        },
-        {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
         },
       ],
     }).compile();
@@ -80,18 +69,26 @@ describe('ApplicationStaffJournalService', () => {
     expect(loadedNote).toEqual(note);
   });
 
-  it('should save the new note with the user', async () => {
-    const fakeNote = {
-      uuid: 'fake',
-      parentUuid: application.uuid,
-    } as StaffJournal;
-
-    mockApplicationService.getByUuidOrFail.mockResolvedValue(application);
+  it('should save the application note with the user', async () => {
     mockApplicationStaffJournalRepository.save.mockResolvedValue(
       {} as StaffJournal,
     );
 
-    await service.create(application.uuid, 'new-note', user);
+    await service.createForApplication('fake-uuid', 'new-note', user);
+
+    expect(mockApplicationStaffJournalRepository.save).toHaveBeenCalledTimes(1);
+    const savedData =
+      mockApplicationStaffJournalRepository.save.mock.calls[0][0];
+    expect(savedData.author).toEqual(user);
+    expect(savedData.body).toEqual('new-note');
+  });
+
+  it('should save the notice of intent note with the user', async () => {
+    mockApplicationStaffJournalRepository.save.mockResolvedValue(
+      {} as StaffJournal,
+    );
+
+    await service.createForNoticeOfIntent('fake-uuid', 'new-note', user);
 
     expect(mockApplicationStaffJournalRepository.save).toHaveBeenCalledTimes(1);
     const savedData =
@@ -117,7 +114,6 @@ describe('ApplicationStaffJournalService', () => {
   });
 
   it('should set the edited flag when editing', async () => {
-    mockApplicationService.getByUuidOrFail.mockResolvedValue(application);
     mockApplicationStaffJournalRepository.findOne.mockResolvedValue(note);
     mockApplicationStaffJournalRepository.save.mockResolvedValue(
       {} as StaffJournal,

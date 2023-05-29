@@ -22,9 +22,14 @@ export class StaffJournalService {
 
   async fetch(parentUuid: string) {
     return this.staffJournalRepository.find({
-      where: {
-        parentUuid,
-      },
+      where: [
+        {
+          applicationUuid: parentUuid,
+        },
+        {
+          noticeOfIntentUuid: parentUuid,
+        },
+      ],
       relations: this.DEFAULT_STAFF_JOURNAL_RELATIONS,
       order: {
         createdAt: 'DESC',
@@ -41,10 +46,28 @@ export class StaffJournalService {
     });
   }
 
-  async create(parentUuid: string, noteBody: string, author: User) {
+  async createForApplication(
+    applicationUuid: string,
+    noteBody: string,
+    author: User,
+  ) {
     const record = new StaffJournal({
       body: noteBody,
-      parentUuid,
+      applicationUuid,
+      author,
+    });
+
+    return await this.staffJournalRepository.save(record);
+  }
+
+  async createForNoticeOfIntent(
+    noticeOfIntentUuid: string,
+    noteBody: string,
+    author: User,
+  ) {
+    const record = new StaffJournal({
+      body: noteBody,
+      noticeOfIntentUuid,
       author,
     });
 

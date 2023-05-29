@@ -21,7 +21,8 @@ import { UserRoles } from '../../common/authorization/roles.decorator';
 import {
   StaffJournalDto,
   CreateApplicationStaffJournalDto,
-  UpdateApplicationStaffJournalDto,
+  UpdateStaffJournalDto,
+  CreateNoticeOfIntentStaffJournalDto,
 } from './staff-journal.dto';
 import { StaffJournal } from './staff-journal.entity';
 import { StaffJournalService } from './staff-journal.service';
@@ -35,24 +36,39 @@ export class StaffJournalController {
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
-  @Get('/:applicationUuid')
+  @Get('/:parentUuid')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async get(
-    @Param('applicationUuid') applicationUuid,
+    @Param('parentUuid') parentUuid,
     @Req() req,
   ): Promise<StaffJournalDto[]> {
-    const records = await this.staffJournalService.fetch(applicationUuid);
+    const records = await this.staffJournalService.fetch(parentUuid);
     return this.mapToDto(records, req.user.entity.uuid);
   }
 
-  @Post()
+  @Post('/application')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async create(
+  async createForApplication(
     @Body() record: CreateApplicationStaffJournalDto,
     @Req() req,
   ): Promise<StaffJournalDto> {
-    const newRecord = await this.staffJournalService.create(
+    const newRecord = await this.staffJournalService.createForApplication(
       record.applicationUuid,
+      record.body,
+      req.user.entity,
+    );
+
+    return this.autoMapper.map(newRecord, StaffJournal, StaffJournalDto);
+  }
+
+  @Post('/notice-of-intent')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async createForNoticeOfIntent(
+    @Body() record: CreateNoticeOfIntentStaffJournalDto,
+    @Req() req,
+  ): Promise<StaffJournalDto> {
+    const newRecord = await this.staffJournalService.createForNoticeOfIntent(
+      record.noticeOfIntentUuid,
       record.body,
       req.user.entity,
     );
@@ -63,7 +79,7 @@ export class StaffJournalController {
   @Patch()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async update(
-    @Body() record: UpdateApplicationStaffJournalDto,
+    @Body() record: UpdateStaffJournalDto,
     @Req() req,
   ): Promise<StaffJournalDto> {
     const existingNote = await this.staffJournalService.get(record.uuid);

@@ -40,11 +40,11 @@ export class StaffJournalNoteComponent implements OnInit {
     this.isEditing = false;
   }
 
-  onSave(note: UpdateStaffJournalDto) {
+  onSave(updateDto: UpdateStaffJournalDto) {
     this.isEditing = false;
     this.edit.emit({
-      uuid: note.uuid,
-      body: note.body,
+      body: updateDto.body,
+      uuid: updateDto.uuid,
     });
   }
 }

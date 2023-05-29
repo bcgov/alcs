@@ -22,7 +22,7 @@ export class StaffJournalNoteInputComponent implements OnInit {
   };
 
   @Output() save = new EventEmitter<UpdateStaffJournalDto>();
-  @Output() create = new EventEmitter();
+  @Output() create = new EventEmitter<string>();
   @Output() cancel = new EventEmitter<string>();
 
   @ViewChild('textarea') private textAreaDiv!: ElementRef;
@@ -41,9 +41,7 @@ export class StaffJournalNoteInputComponent implements OnInit {
     this.isSaving = true;
 
     if (this.isNewNote) {
-      this.create.emit({
-        body: this.note.body,
-      });
+      this.create.emit(this.note.body);
     } else {
       this.save.emit({
         uuid: this.note.uuid,

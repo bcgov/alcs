@@ -79,9 +79,11 @@ describe('StaffJournalController', () => {
   });
 
   it('should pass the new note to the service', async () => {
-    mockApplicationStaffJournalService.create.mockResolvedValue(note);
+    mockApplicationStaffJournalService.createForApplication.mockResolvedValue(
+      note,
+    );
 
-    await controller.create(
+    await controller.createForApplication(
       {
         body: 'note-body',
         applicationUuid: 'fake',
@@ -89,8 +91,11 @@ describe('StaffJournalController', () => {
       request,
     );
 
-    expect(mockApplicationStaffJournalService.create).toHaveBeenCalledTimes(1);
-    const passedData = mockApplicationStaffJournalService.create.mock.calls[0];
+    expect(
+      mockApplicationStaffJournalService.createForApplication,
+    ).toHaveBeenCalledTimes(1);
+    const passedData =
+      mockApplicationStaffJournalService.createForApplication.mock.calls[0];
     expect(passedData[0]).toEqual('fake');
     expect(passedData[1]).toEqual('note-body');
   });
