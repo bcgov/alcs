@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div class="close">
-    <h6 class="card-type-label">Application</h6>
+    <h6 class="card-type-label">Notice of Intent</h6>
     <button mat-icon-button [mat-dialog-close]="isDirty">
       <mat-icon>close</mat-icon>
     </button>
@@ -9,38 +9,23 @@
     <div class="left">
       <h3 class="card-title">
         <span class="margin-right">{{ cardTitle }}</span>
-        <app-application-type-pill [type]="application.type"></app-application-type-pill>
       </h3>
     </div>
     <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
-        <button [mat-dialog-close]="isDirty" [routerLink]="['application', application.fileNumber]" mat-menu-item>
-          View Detail
-        </button>
-        <button
-          [mat-dialog-close]="isDirty"
-          [routerLink]="['application', application.fileNumber, 'info-request']"
-          mat-menu-item
-        >
-          Add Info Request
-        </button>
-        <button
-          [mat-dialog-close]="isDirty"
-          [routerLink]="['application', application.fileNumber, 'site-visit-meeting']"
-          mat-menu-item
-        >
-          Add Site Visit / Meeting
-        </button>
+        <button [mat-dialog-close]="isDirty" mat-menu-item>View Detail</button>
+        <button [mat-dialog-close]="isDirty" mat-menu-item>Add Info Request</button>
+        <button [mat-dialog-close]="isDirty" mat-menu-item>Add Site Visit / Meeting</button>
       </mat-menu>
     </div>
   </div>
   <div>
-    <span class="region">{{ application.localGovernment.name }} - {{ application.region.label }} Region</span>
+    <span class="region">{{ noticeOfIntent.localGovernment.name }} - {{ noticeOfIntent.region.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left">
-      <app-application-time-tracker [application]="application"></app-application-time-tracker>
+      <app-application-time-tracker [application]="undefined"></app-application-time-tracker>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
@@ -53,7 +38,7 @@
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
             </span>
             <span>{{ board.title }}</span>
-            <span *ngIf="card && card!.board.code === board.code"
+            <span *ngIf="card && card.board.code === board.code"
               ><mat-icon class="selected-board-icon">check</mat-icon></span
             >
           </div>
@@ -90,8 +75,8 @@
   <div class="select-container">
     <ng-select
       class="card-type"
-      [items]="boardStatuses"
       appearance="outline"
+      [items]="boardStatuses"
       placeholder="Workflow Stage"
       bindLabel="label"
       bindValue="statusCode"
@@ -110,7 +95,7 @@
       class="card-assignee"
       appearance="outline"
       [items]="$users | async"
-      placeholder="Assigned Planner"
+      placeholder="Assigned Soil Officer"
       bindLabel="prettyName"
       bindValue="prettyName"
       [(ngModel)]="selectedAssigneeName"
@@ -125,15 +110,10 @@
       </ng-template>
     </ng-select>
   </div>
-  <div class="subtasks-wrapper">
-    <app-subtasks *ngIf="card" [cardUuid]="card.uuid"></app-subtasks>
+  <div *ngIf="card" class="subtasks-wrapper">
+    <app-subtasks [cardUuid]="card.uuid"></app-subtasks>
   </div>
-  <div class="card-comments-wrapper">
-    <app-comments
-      *ngIf="card"
-      [cardUuid]="card.uuid"
-      [fileNumber]="application.fileNumber"
-      [notificationTitle]="cardTitle"
-    ></app-comments>
+  <div *ngIf="card" class="card-comments-wrapper">
+    <app-comments [cardUuid]="card.uuid" [notificationTitle]="cardTitle"></app-comments>
   </div>
 </mat-dialog-content>

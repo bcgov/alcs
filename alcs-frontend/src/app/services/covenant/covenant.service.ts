@@ -19,7 +19,7 @@ export class CovenantService {
     } catch (e) {
       console.error(e);
       if (e instanceof HttpErrorResponse && e.status === 400) {
-        this.toastService.showErrorToast(`Covenant or Application with File ID ${covenant.fileNumber} already exists`);
+        this.toastService.showErrorToast(`Covenant/Application/NOI with File ID ${covenant.fileNumber} already exists`);
       } else {
         this.toastService.showErrorToast('Failed to create Covenant');
       }

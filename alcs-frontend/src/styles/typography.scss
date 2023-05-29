@@ -39,6 +39,10 @@ h5 {
   @include typography-style(20px, 700);
 }
 
+h6 {
+  @include typography-style(18px, 700);
+}
+
 .subheading1 {
   @include typography-style(18px, 700);
 }

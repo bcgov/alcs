@@ -56,7 +56,7 @@
   width: 100%;
 }
 
-::ng-deep .mat-mdc-menu-item .mdc-list-item__primary-text {
+:host::ng-deep .mat-mdc-menu-item .mdc-list-item__primary-text {
   width: 100%;
 }
 

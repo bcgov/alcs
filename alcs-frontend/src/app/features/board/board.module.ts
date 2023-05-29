@@ -19,6 +19,8 @@ import { ApplicationDialogComponent } from './dialogs/application/application-di
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
+import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
+import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -53,6 +55,8 @@ const routes: Routes = [
     ModificationDialogComponent,
     CovenantDialogComponent,
     CreateCovenantDialogComponent,
+    NoticeOfIntentDialogComponent,
+    CreateNoticeOfIntentDialogComponent,
   ],
   imports: [
     CommonModule,
