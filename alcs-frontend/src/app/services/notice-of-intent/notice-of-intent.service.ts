@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { CreateNoticeOfIntentDto, NoticeOfIntentDto } from './notice-of-intent.dto';
+import { CreateNoticeOfIntentDto, NoticeOfIntentDto, UpdateNoticeOfIntentDto } from './notice-of-intent.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -37,5 +37,25 @@ export class NoticeOfIntentService {
       this.toastService.showErrorToast('Failed to fetch Notice of Intent');
     }
     return;
+  }
+
+  async fetchByFileNumber(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.get<NoticeOfIntentDto>(`${this.url}/${fileNumber}`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to fetch Notice of Intent');
+    }
+    return;
+  }
+
+  async update(fileNumber: string, updateDto: UpdateNoticeOfIntentDto) {
+    try {
+      return await firstValueFrom(this.http.post<NoticeOfIntentDto>(`${this.url}/${fileNumber}`, updateDto));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to create Notice of Intent');
+      return undefined;
+    }
   }
 }

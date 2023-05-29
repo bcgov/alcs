@@ -54,6 +54,7 @@ describe('NoticeOfIntentController', () => {
       fileNumber: 'file-number',
       regionCode: 'region-code',
       boardCode: 'fake',
+      dateSubmittedToAlc: 0,
     });
 
     expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);

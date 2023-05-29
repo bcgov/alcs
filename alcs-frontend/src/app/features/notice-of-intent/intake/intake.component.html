@@ -1,0 +1,46 @@
+<div class="intake">
+  <h3>ALC Intake</h3>
+  <div>
+    <h5>Submitted to ALC</h5>
+    <app-inline-datepicker
+      [value]="noticeOfIntent?.dateSubmittedToAlc"
+      (save)="updateDate('dateSubmittedToAlc', $event)"
+    ></app-inline-datepicker>
+  </div>
+</div>
+<div class="payment-section">
+  <div>
+    <h5>Fee Received Date</h5>
+    <app-inline-datepicker
+      [value]="noticeOfIntent?.feePaidDate"
+      (save)="updateDate('feePaidDate', $event)"
+    ></app-inline-datepicker>
+  </div>
+  <div>
+    <h5>Acknowledged Incomplete</h5>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateAcknowledgedIncomplete"
+        (save)="updateDate('dateAcknowledgedIncomplete', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+  <div>
+    <h5>Received All Items</h5>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateReceivedAllItems"
+        (save)="updateDate('dateReceivedAllItems', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+  <div>
+    <h5>Acknowledged Complete</h5>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateAcknowledgedComplete"
+        (save)="updateDate('dateAcknowledgedComplete', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+</div>

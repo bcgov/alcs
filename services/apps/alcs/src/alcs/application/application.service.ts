@@ -16,6 +16,7 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
@@ -76,37 +77,30 @@ export class ApplicationService {
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    private fileNumberService: FileNumberService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
   async create(
-    application: CreateApplicationServiceDto,
+    createDto: CreateApplicationServiceDto,
     persist = true,
     createCard = true,
   ): Promise<Application> {
-    const existingApplication = await this.applicationRepository.findOne({
-      where: { fileNumber: application.fileNumber },
-    });
+    await this.fileNumberService.checkValidFileNumber(createDto.fileNumber);
 
-    if (existingApplication) {
-      throw new ServiceValidationException(
-        'Application with file number already exists',
-      );
-    }
-
-    const region = application.regionCode
-      ? await this.codeService.fetchRegion(application.regionCode)
+    const region = createDto.regionCode
+      ? await this.codeService.fetchRegion(createDto.regionCode)
       : undefined;
 
     const newApplication = new Application({
-      fileNumber: application.fileNumber,
-      applicant: application.applicant,
-      dateSubmittedToAlc: application.dateSubmittedToAlc || undefined,
-      localGovernmentUuid: application.localGovernmentUuid,
-      typeCode: application.typeCode,
+      fileNumber: createDto.fileNumber,
+      applicant: createDto.applicant,
+      dateSubmittedToAlc: createDto.dateSubmittedToAlc || undefined,
+      localGovernmentUuid: createDto.localGovernmentUuid,
+      typeCode: createDto.typeCode,
       region,
-      statusHistory: application.statusHistory,
-      source: application.source,
+      statusHistory: createDto.statusHistory,
+      source: createDto.source,
     });
 
     if (createCard) {
@@ -115,7 +109,7 @@ export class ApplicationService {
 
     if (persist) {
       await this.applicationRepository.save(newApplication);
-      return this.getOrFail(application.fileNumber);
+      return this.getOrFail(createDto.fileNumber);
     } else {
       return newApplication;
     }

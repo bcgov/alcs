@@ -4,8 +4,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { Application } from '../application/application.entity';
-import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -14,14 +14,14 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 
 describe('NoticeOfIntentService', () => {
   let service: NoticeOfIntentService;
-  let mockAppService: DeepMocked<ApplicationService>;
   let mockCardService: DeepMocked<CardService>;
   let mockRepository: DeepMocked<Repository<NoticeOfIntent>>;
+  let mockFileNumberService: DeepMocked<FileNumberService>;
 
   beforeEach(async () => {
-    mockAppService = createMock();
     mockCardService = createMock();
     mockRepository = createMock();
+    mockFileNumberService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -32,16 +32,16 @@ describe('NoticeOfIntentService', () => {
       providers: [
         NoticeOfIntentService,
         {
-          provide: ApplicationService,
-          useValue: mockAppService,
-        },
-        {
           provide: getRepositoryToken(NoticeOfIntent),
           useValue: mockRepository,
         },
         {
           provide: CardService,
           useValue: mockCardService,
+        },
+        {
+          provide: FileNumberService,
+          useValue: mockFileNumberService,
         },
       ],
     }).compile();
@@ -57,11 +57,10 @@ describe('NoticeOfIntentService', () => {
     const mockCard = {} as Card;
     const fakeBoard = {} as Board;
 
-    mockRepository.findOne.mockResolvedValueOnce(null);
-    mockRepository.findOne.mockResolvedValueOnce(new NoticeOfIntent());
+    mockRepository.findOne.mockResolvedValue(new NoticeOfIntent());
     mockRepository.save.mockResolvedValue(new NoticeOfIntent());
     mockCardService.create.mockResolvedValue(mockCard);
-    mockAppService.get.mockResolvedValue(null);
+    mockFileNumberService.checkValidFileNumber.mockResolvedValue(true);
 
     const res = await service.create(
       {
@@ -70,77 +69,16 @@ describe('NoticeOfIntentService', () => {
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
         boardCode: 'fake',
+        dateSubmittedToAlc: 0,
       },
       fakeBoard,
     );
 
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+    expect(mockFileNumberService.checkValidFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockCardService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
-  });
-
-  it('should throw an exception when creating an NOI with an existing file ID', async () => {
-    const mockCard = {} as Card;
-    const fakeBoard = {} as Board;
-    const existingFileNumber = '1512311';
-
-    mockRepository.findOne.mockResolvedValueOnce(new NoticeOfIntent());
-    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
-    mockCardService.create.mockResolvedValue(mockCard);
-
-    const promise = service.create(
-      {
-        applicant: 'fake-applicant',
-        fileNumber: existingFileNumber,
-        localGovernmentUuid: 'fake-uuid',
-        regionCode: 'region-code',
-        boardCode: 'fake',
-      },
-      fakeBoard,
-    );
-
-    await expect(promise).rejects.toMatchObject(
-      new Error(
-        `Notice of Intent already exists with File ID ${existingFileNumber}`,
-      ),
-    );
-
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(mockCardService.create).not.toHaveBeenCalled();
-    expect(mockRepository.save).not.toHaveBeenCalled();
-  });
-
-  it('should throw an exception when creating a covenant with an existing application file ID', async () => {
-    const mockCard = {} as Card;
-    const fakeBoard = {} as Board;
-    const existingFileNumber = '1512311';
-
-    mockRepository.findOne.mockResolvedValue(null);
-    mockAppService.get.mockResolvedValue(new Application());
-    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
-    mockCardService.create.mockResolvedValue(mockCard);
-
-    const promise = service.create(
-      {
-        applicant: 'fake-applicant',
-        fileNumber: existingFileNumber,
-        localGovernmentUuid: 'fake-uuid',
-        regionCode: 'region-code',
-        boardCode: 'fake',
-      },
-      fakeBoard,
-    );
-
-    await expect(promise).rejects.toMatchObject(
-      new Error(
-        `Application already exists with File ID ${existingFileNumber}`,
-      ),
-    );
-
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(mockCardService.create).not.toHaveBeenCalled();
-    expect(mockRepository.save).not.toHaveBeenCalled();
   });
 
   it('should call through to the repo for get by card', async () => {
@@ -179,6 +117,29 @@ describe('NoticeOfIntentService', () => {
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
+  });
+
+  it('should call through to the repo for getByFileNumber', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(new NoticeOfIntent());
+    await service.getByFileNumber('file');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set values and call save for update', async () => {
+    const notice = new NoticeOfIntent({
+      summary: 'old-summary',
+    });
+    mockRepository.findOneOrFail.mockResolvedValue(notice);
+    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
+    const res = await service.update('file', {
+      summary: 'new-summary',
+    });
+
+    expect(res).toBeDefined();
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(notice.summary).toEqual('new-summary');
   });
 
   it('should load deleted cards', async () => {

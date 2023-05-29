@@ -1,0 +1,59 @@
+@use '../../../styles/colors';
+
+.heading {
+  color: colors.$primary-color-dark;
+  margin-bottom: 8px;
+}
+
+.application-type {
+  margin-left: 16px;
+}
+
+.header {
+  padding: 16px 80px;
+  border-bottom: 1px solid colors.$primary-color-dark;
+
+  .first-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    line-height: 32px;
+
+    h5 {
+      margin-right: 8px !important;
+    }
+  }
+
+  .labels {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -8px;
+    margin-right: 8px;
+
+    app-application-type-pill {
+      margin-top: 8px;
+    }
+  }
+
+  .sub-heading {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .subheading2 {
+    margin-bottom: 6px !important;
+  }
+}
+
+.inactive-timer {
+  opacity: 0.3;
+}

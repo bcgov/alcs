@@ -1,0 +1,49 @@
+<div class="header">
+  <div>
+    <span class="subtext heading">{{ heading }}</span>
+  </div>
+  <div *ngIf="_application" class="first-row">
+    <div class="title">
+      <h5>{{ _application.fileNumber }} ({{ _application.applicant }})</h5>
+      <div class="labels">
+        <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>
+        <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
+        <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
+      </div>
+    </div>
+    <div class="center">
+      <button
+        *ngIf="linkedCards.length === 1"
+        class="menu-item"
+        mat-flat-button
+        color="accent"
+        (click)="onGoToCard(linkedCards[0])"
+      >
+        <div class="center">
+          Go to card
+          <mat-icon style="transform: scale(1.1)">arrow_right_alt</mat-icon>
+        </div>
+      </button>
+      <ng-container *ngIf="linkedCards.length > 1">
+        <button class="menu-item center" mat-flat-button color="accent" [matMenuTriggerFor]="goToMenu">
+          Go to card ▾
+        </button>
+        <mat-menu class="move-board-menu" xPosition="before" #goToMenu="matMenu">
+          <button *ngFor="let card of linkedCards" mat-menu-item (click)="onGoToCard(card)">
+            {{ card.displayName }}
+          </button>
+        </mat-menu>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="_application" class="sub-heading">
+    <div>
+      <div class="subheading2">Local Government:</div>
+      <div class="body1-text">{{ _application.localGovernment.name }}</div>
+    </div>
+    <div *ngIf="!_application.hasOwnProperty('decisionDate')">
+      <div class="subheading2">Business Days:</div>
+      <app-time-tracker [application]="_application"></app-time-tracker>
+    </div>
+  </div>
+</div>
