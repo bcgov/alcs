@@ -5,6 +5,7 @@ import { ApplicationParcelProfile } from '../../common/automapper/application-pa
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
+import { FileNumberModule } from '../../file-number/file-number.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
@@ -53,6 +54,7 @@ import { ApplicationService } from './application.service';
     DocumentModule,
     CardModule,
     CodeModule,
+    FileNumberModule,
   ],
   providers: [
     ApplicationService,

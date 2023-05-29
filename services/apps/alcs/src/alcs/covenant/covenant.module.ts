@@ -1,10 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationModule } from '../application/application.module';
+import { CovenantProfile } from '../../common/automapper/covenant.automapper.profile';
+import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { CodeModule } from '../code/code.module';
-import { CovenantProfile } from '../../common/automapper/covenant.automapper.profile';
 import { CovenantController } from './covenant.controller';
 import { Covenant } from './covenant.entity';
 import { CovenantService } from './covenant.service';
@@ -13,9 +12,8 @@ import { CovenantService } from './covenant.service';
   imports: [
     TypeOrmModule.forFeature([Covenant]),
     forwardRef(() => BoardModule),
-    ApplicationModule,
     CardModule,
-    CodeModule,
+    FileNumberModule,
   ],
   providers: [CovenantService, CovenantProfile],
   controllers: [CovenantController],
