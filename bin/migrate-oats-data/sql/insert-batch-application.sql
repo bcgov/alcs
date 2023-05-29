@@ -1,15 +1,4 @@
--- Step 1: Create associated card
--- INSERT INTO
---     alcs.card (uuid, audit_created_by)
--- SELECT
---     ae.card_uuid,
---     'oats_etl'
--- FROM
---     application_etl ae
--- WHERE
---     ae.duplicated IS false;
-
--- Step 2: Perform a lookup to retrieve the applicant's name or organization for each application ID
+-- Step 1: Perform a lookup to retrieve the applicant's name or organization for each application ID
 WITH applicant_lookup AS (
     SELECT
         DISTINCT oaap.alr_application_id AS application_id,
@@ -35,7 +24,7 @@ WITH applicant_lookup AS (
     GROUP BY
         oaap.alr_application_id
 ),
--- Step 3: Perform a lookup to retrieve the region code for each application ID
+-- Step 2: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
     SELECT
         DISTINCT oaap.alr_application_id AS application_id,
@@ -48,10 +37,9 @@ panel_lookup AS (
     WHERE
         oo2.organization_type_cd = 'PANEL'
 ) 
--- Step 4: Insert new records into the alcs_applications table
+-- Step 3: Insert new records into the alcs_applications table
 SELECT
     oa.alr_application_id :: text AS file_number,
-    -- ae.card_uuid AS card_uuid,
     -- TODO: type code lookup
     'NARU',
     CASE
