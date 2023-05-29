@@ -137,14 +137,7 @@ describe('BoardController', () => {
     const boardCode = 'fake-board';
     const cardUuid = 'card-uuid';
 
-    await controller.changeBoard(
-      { cardUuid, boardCode },
-      {
-        user: {
-          entity: new User(),
-        },
-      },
-    );
+    await controller.changeBoard({ cardUuid, boardCode });
 
     expect(boardService.changeBoard).toHaveBeenCalledTimes(1);
     expect(boardService.changeBoard.mock.calls[0][0]).toEqual(cardUuid);

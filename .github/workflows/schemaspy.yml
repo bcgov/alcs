@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-
 env:
   NODE_ENV: test
 
@@ -29,20 +28,18 @@ jobs:
           sudo apt-get install --yes --no-install-recommends postgresql-client
       - run: |
           export PGPASSWORD='postgres';
-          psql -h 127.0.0.1 -U postgres -c 'CREATE SCHEMA IF NOT EXISTS portal;'
           psql -h 127.0.0.1 -U postgres -c 'CREATE SCHEMA IF NOT EXISTS alcs;'
       - name: Setup Database
         run: |
           npm install
           npm run alcs:migration:run
-          npm run portal:migration:run
         working-directory: services
       - name: Create Output Folder
         run: |
           mkdir output
           chmod a+rwx -R output
       - name: Run Schemaspy
-        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs,portal
+        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs
       - name: Deploy to Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

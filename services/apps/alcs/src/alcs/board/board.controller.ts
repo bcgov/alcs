@@ -89,9 +89,8 @@ export class BoardController {
   async changeBoard(
     @Body()
     { cardUuid, boardCode }: { cardUuid: string; boardCode: string },
-    @Req() req,
   ) {
-    return this.boardService.changeBoard(cardUuid, boardCode, req.user.entity);
+    return this.boardService.changeBoard(cardUuid, boardCode);
   }
 
   @Post('/card')

@@ -28,6 +28,9 @@ export class CommissionerApplicationDto {
   @AutoMap()
   localGovernment: ApplicationLocalGovernmentDto;
 
+  @AutoMap()
+  decisionDate: number;
+
   hasRecons: boolean;
   hasModifications: boolean;
 }
