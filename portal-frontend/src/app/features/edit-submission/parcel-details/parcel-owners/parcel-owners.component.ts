@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto, APPLICATION_OWNER } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
@@ -33,7 +33,7 @@ export class ParcelOwnersComponent {
 
   _owners: ApplicationOwnerDto[] = [];
   _disabled = false;
-  displayedColumns = ['position', 'displayName', 'phone', 'email', 'type', 'actions'];
+  displayedColumns = ['type', 'position', 'displayName', 'organizationName', 'phone', 'email', 'actions'];
 
   constructor(
     private dialog: MatDialog,

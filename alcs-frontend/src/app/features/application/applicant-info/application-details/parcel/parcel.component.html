@@ -69,13 +69,21 @@
     <div class="full-width subheading1">Owner Information</div>
     <div class="full-width owner-information">
       <div class="subheading2">Type</div>
-      <div class="subheading2">Full Name/ Organization</div>
+      <div class="subheading2">Full Name</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        Ministry/ Department
+      </div>
       <div class="subheading2">Phone</div>
       <div class="subheading2">Email</div>
       <div class="subheading2">Corporate Summary</div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.type.label }}</div>
         <div>{{ owner.displayName }}</div>
+        <div>
+          <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
+          <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+        </div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>
