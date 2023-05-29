@@ -80,10 +80,7 @@
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.type.label }}</div>
         <div>{{ owner.displayName }}</div>
-        <div>
-          <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
-          <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
-        </div>
+        <div>{{ owner.organizationName }}</div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>

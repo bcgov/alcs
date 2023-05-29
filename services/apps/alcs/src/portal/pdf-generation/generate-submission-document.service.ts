@@ -266,10 +266,11 @@ export class GenerateSubmissionDocumentService {
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,
-        name:
-          o.type.code === 'INDV'
-            ? `${o.firstName} ${o.lastName}`
-            : o.organizationName,
+        // double check name field with UI
+        name: o.organizationName
+          ? o.organizationName
+          : `${o.firstName} ${o.lastName}`,
+        organizationName: o.organizationName,
         corporateSummary: o.corporateSummary?.document.fileName,
       })),
     }));
