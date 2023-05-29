@@ -48,12 +48,10 @@
           </div>
         </div>
         <div class="left">
-          <span class="body-small">Created: {{ subtask.createdAt | momentFormat }}</span>
+          <span class="subtext">Created: {{ subtask.createdAt | momentFormat }}</span>
         </div>
         <div class="left">
-          <span class="body-small" *ngIf="subtask.completedAt"
-            >Completed: {{ subtask.completedAt | momentFormat }}</span
-          >
+          <span class="subtext" *ngIf="subtask.completedAt">Completed: {{ subtask.completedAt | momentFormat }}</span>
         </div>
         <div class="center">
           <button

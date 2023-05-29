@@ -14,6 +14,10 @@ $date-ht: 48px;
   display: flex;
   flex-direction: column;
 
+  .subtext {
+    color: colors.$primary-color-dark;
+  }
+
   &:hover {
     border-color: colors.$primary-color;
     transition: all 100ms ease-in-out;

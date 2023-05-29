@@ -9,19 +9,19 @@
       <div class="col right">
         <div *ngIf="hasRoles">
           <a [routerLink]="homeUrl">
-            <button class="menu-item">Home</button>
+            <button class="menu-item subheading1">Home</button>
           </a>
         </div>
         <div *ngIf="hasRoles && !isCommissioner">
           <a routerLink="/schedule">
-            <button class="menu-item">Schedule</button>
+            <button class="menu-item subheading1">Schedule</button>
           </a>
         </div>
       </div>
       <div class="col">
         <button
           *ngIf="hasRoles && !isCommissioner"
-          class="menu-item"
+          class="menu-item subheading1"
           [class.open]="menuTrigger.menuOpen"
           #menuTrigger="matMenuTrigger"
           [matMenuTriggerFor]="navigationMenu"
