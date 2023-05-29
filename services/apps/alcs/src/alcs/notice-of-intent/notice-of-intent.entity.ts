@@ -20,13 +20,13 @@ export class NoticeOfIntent extends Base {
   @Column()
   applicant: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: true })
   cardUuid: string;
 
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
-  card: Card;
+  card: Card | null;
 
   @ManyToOne(() => ApplicationLocalGovernment)
   localGovernment: ApplicationLocalGovernment;

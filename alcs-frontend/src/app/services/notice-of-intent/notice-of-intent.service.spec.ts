@@ -56,21 +56,19 @@ describe('NoticeOfIntentService', () => {
   it('should show an error toast message if create fails', async () => {
     httpClient.post.mockReturnValue(
       throwError(() => {
-        new Error('');
+        return new Error('Error');
       })
     );
 
-    try {
-      await service.create({
-        applicant: '',
-        boardCode: '',
-        fileNumber: '',
-        localGovernmentUuid: '',
-        regionCode: '',
-      });
-    } catch (e) {
-      //OM NOM NOM
-    }
+    const promise = service.create({
+      applicant: '',
+      boardCode: '',
+      fileNumber: '',
+      localGovernmentUuid: '',
+      regionCode: '',
+    });
+
+    await expect(promise).rejects.toMatchObject(new Error('Error'));
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
