@@ -7,6 +7,8 @@ import { CardModule } from '../card/card.module';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
+import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
+import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
 
 @Module({
   imports: [
@@ -15,8 +17,8 @@ import { NoticeOfIntentController } from './notice-of-intent.controller';
     CardModule,
     FileNumberModule,
   ],
-  providers: [NoticeOfIntentService, NoticeOfIntentProfile],
-  controllers: [NoticeOfIntentController],
+  providers: [NoticeOfIntentService, NoticeOfIntentProfile, NoticeOfIntentMeetingService],
+  controllers: [NoticeOfIntentController, NoticeOfIntentMeetingController],
   exports: [NoticeOfIntentService],
 })
 export class NoticeOfIntentModule {}
