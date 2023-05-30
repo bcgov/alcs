@@ -44,6 +44,14 @@
               <h3>Applicant Submission</h3>
               <div class="btns-wrapper">
                 <button
+                  *ngIf="application.canEdit || application.canReview"
+                  mat-stroked-button
+                  color="warn"
+                  (click)="onCancel(application.uuid)"
+                >
+                  Cancel Application
+                </button>
+                <button
                   [routerLink]="'/application/' + application.fileNumber + '/edit'"
                   *ngIf="application.canEdit"
                   mat-flat-button
@@ -108,6 +116,7 @@
           <app-lfng-review
             [$application]="$application"
             [$applicationDocuments]="$applicationDocuments"
+            (onCancel)="onCancelWrapper($event)"
           ></app-lfng-review>
         </div>
       </mat-tab>
@@ -172,18 +181,13 @@
       ></app-application-details>
       <div class="buttons" *ngIf="application">
         <div>
-          <button
-            *ngIf="application.canEdit"
-            mat-stroked-button
-            color="warn"
-            (click)="onCancel(application.fileNumber)"
-          >
+          <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.uuid)">
             Cancel Application
           </button>
         </div>
         <div>
           <button
-            [routerLink]="'/application/' + application.fileNumber + '/edit'"
+            [routerLink]="'/application/' + application.uuid + '/edit'"
             *ngIf="application.canEdit"
             mat-flat-button
             color="primary"
@@ -206,7 +210,7 @@
     <app-lfng-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-lfng-review>
     <div class="buttons" *ngIf="application">
       <div>
-        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.fileNumber)">
+        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.uuid)">
           Cancel Application
         </button>
       </div>
