@@ -1,12 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSortModule } from '@angular/material/sort';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
-import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
-import { InlineDatepickerComponent } from '../../../shared/inline-datepicker/inline-datepicker.component';
 import { SharedModule } from '../../../shared/shared.module';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
@@ -51,7 +45,6 @@ export const decisionChildRoutes = [
     DecisionInputV2Component,
     DecisionV1Component,
     DecisionV1DialogComponent,
-    InlineDatepickerComponent,
     ReleaseDialogComponent,
     DecisionComponentComponent,
     DecisionComponentsComponent,
@@ -62,16 +55,6 @@ export const decisionChildRoutes = [
     DecisionConditionComponent,
     DecisionConditionsComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule.forRoot(),
-    RouterModule.forChild(decisionChildRoutes),
-    MtxDatetimepickerModule,
-    MtxNativeDatetimeModule,
-    MatCheckboxModule,
-    MatSortModule,
-    MatTabsModule,
-  ],
-  exports: [InlineDatepickerComponent],
+  imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })
 export class DecisionModule {}

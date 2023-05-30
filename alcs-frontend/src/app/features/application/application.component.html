@@ -1,10 +1,11 @@
 <div class="layout">
   <div class="application">
-    <app-application-header
+    <app-details-header
       [application]="application"
       [reconsiderations]="reconsiderations"
       [modifications]="modifications"
-    ></app-application-header>
+      heading='Application'
+    ></app-details-header>
     <div class="content">
       <div class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
@@ -12,15 +13,15 @@
             *ngIf="route.requiresAuthorization ? isAuthorized : true"
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: route.path === '' ? true : false }"
-            class="nav-item"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
             {{ route.menuTitle }}
           </div>
           <div
             *ngIf="route.requiresAuthorization ? !isAuthorized : false"
-            class="nav-item disabled"
+            class="nav-item nav-text disabled"
             matTooltip="Application not subject to ALC Review"
           >
             <mat-icon>{{ route.icon }}</mat-icon>

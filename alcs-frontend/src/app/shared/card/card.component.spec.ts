@@ -17,6 +17,7 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
+      typeLabel: 'typeLabel',
       title: 'Title',
       titleTooltip: 'Tooltip',
       activeDays: 2,
@@ -59,6 +60,7 @@ describe('CardComponent', () => {
     component.cardData = {
       id: '1',
       status: '',
+      typeLabel: 'typeLabel',
       title: 'Title',
       titleTooltip: 'tooltip',
       activeDays: 2,

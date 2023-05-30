@@ -8,14 +8,13 @@ import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserService } from '../../../../services/user/user.service';
-import { NOTICE_OF_INTENT_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
   selector: 'app-notice-of-intent-dialog',
   templateUrl: './notice-of-intent-dialog.component.html',
-  styleUrls: ['./notice-of-intent-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class NoticeOfIntentDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

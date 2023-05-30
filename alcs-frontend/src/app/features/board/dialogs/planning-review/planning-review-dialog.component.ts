@@ -13,7 +13,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 @Component({
   selector: 'app-detail-dialog',
   templateUrl: './planning-review-dialog.component.html',
-  styleUrls: ['./planning-review-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class PlanningReviewDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

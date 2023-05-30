@@ -15,7 +15,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 @Component({
   selector: 'app-covenant-dialog',
   templateUrl: './covenant-dialog.component.html',
-  styleUrls: ['./covenant-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class CovenantDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;

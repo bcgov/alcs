@@ -1,10 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
-import { ApplicationModule } from '../application/application.module';
+import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { CodeModule } from '../code/code.module';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
@@ -13,9 +12,8 @@ import { NoticeOfIntentController } from './notice-of-intent.controller';
   imports: [
     TypeOrmModule.forFeature([NoticeOfIntent]),
     forwardRef(() => BoardModule),
-    ApplicationModule,
     CardModule,
-    CodeModule,
+    FileNumberModule,
   ],
   providers: [NoticeOfIntentService, NoticeOfIntentProfile],
   controllers: [NoticeOfIntentController],

@@ -1,7 +1,4 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -13,12 +10,15 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { ApplicationService } from '../application/application.service';
+import { FileNumberService } from '../../file-number/file-number.service';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
 import {
   CreateNoticeOfIntentDto,
   NoticeOfIntentDto,
+  UpdateNoticeOfIntentDto,
 } from './notice-of-intent.dto';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 
@@ -40,39 +40,18 @@ export class NoticeOfIntentService {
     @InjectRepository(NoticeOfIntent)
     private repository: Repository<NoticeOfIntent>,
     @InjectMapper() private mapper: Mapper,
-    private applicationService: ApplicationService,
+    private fileNumberService: FileNumberService,
   ) {}
 
-  async create(data: CreateNoticeOfIntentDto, board: Board) {
-    const existingNoticeOfIntent = await this.repository.findOne({
-      where: {
-        fileNumber: data.fileNumber,
-      },
-    });
-
-    //TODO: Also Check Covenants?
-
-    if (existingNoticeOfIntent) {
-      throw new ServiceValidationException(
-        `Notice of Intent already exists with File ID ${data.fileNumber}`,
-      );
-    }
-
-    const existingApplication = await this.applicationService.get(
-      data.fileNumber,
-    );
-
-    if (existingApplication) {
-      throw new ServiceValidationException(
-        `Application already exists with File ID ${data.fileNumber}`,
-      );
-    }
+  async create(createDto: CreateNoticeOfIntentDto, board: Board) {
+    await this.fileNumberService.checkValidFileNumber(createDto.fileNumber);
 
     const noticeOfIntent = new NoticeOfIntent({
-      localGovernmentUuid: data.localGovernmentUuid,
-      fileNumber: data.fileNumber,
-      regionCode: data.regionCode,
-      applicant: data.applicant,
+      localGovernmentUuid: createDto.localGovernmentUuid,
+      fileNumber: createDto.fileNumber,
+      regionCode: createDto.regionCode,
+      applicant: createDto.applicant,
+      dateSubmittedToAlc: formatIncomingDate(createDto.dateSubmittedToAlc),
     });
 
     noticeOfIntent.card = await this.cardService.create('NOI', board, false);
@@ -172,5 +151,50 @@ export class NoticeOfIntentService {
         },
       },
     });
+  }
+
+  async getByFileNumber(fileNumber: string) {
+    return this.repository.findOneOrFail({
+      where: { fileNumber },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
+  async update(fileNumber: string, updateDto: UpdateNoticeOfIntentDto) {
+    const noticeOfIntent = await this.getByFileNumber(fileNumber);
+
+    noticeOfIntent.summary = filterUndefined(
+      updateDto.summary,
+      noticeOfIntent.summary,
+    );
+
+    noticeOfIntent.dateAcknowledgedComplete = filterUndefined(
+      formatIncomingDate(updateDto.dateAcknowledgedComplete),
+      noticeOfIntent.dateAcknowledgedComplete,
+    );
+
+    noticeOfIntent.dateAcknowledgedIncomplete = filterUndefined(
+      formatIncomingDate(updateDto.dateAcknowledgedIncomplete),
+      noticeOfIntent.dateAcknowledgedIncomplete,
+    );
+
+    noticeOfIntent.dateReceivedAllItems = filterUndefined(
+      formatIncomingDate(updateDto.dateReceivedAllItems),
+      noticeOfIntent.dateReceivedAllItems,
+    );
+
+    noticeOfIntent.feePaidDate = filterUndefined(
+      formatIncomingDate(updateDto.feePaidDate),
+      noticeOfIntent.feePaidDate,
+    );
+
+    noticeOfIntent.dateSubmittedToAlc = filterUndefined(
+      formatIncomingDate(updateDto.dateSubmittedToAlc),
+      noticeOfIntent.dateSubmittedToAlc,
+    );
+
+    await this.repository.save(noticeOfIntent);
+
+    return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 }

@@ -8,12 +8,34 @@ export interface CreateNoticeOfIntentDto {
   regionCode: string;
   applicant: string;
   boardCode: string;
+  dateSubmittedToAlc: number;
 }
 
 export interface NoticeOfIntentDto {
+  uuid: string;
   fileNumber: string;
   card: CardDto;
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   applicant: string;
+
+  dateSubmittedToAlc?: number;
+  feePaidDate?: number;
+  dateAcknowledgedIncomplete?: number;
+  dateReceivedAllItems?: number;
+  dateAcknowledgedComplete?: number;
+  summary?: string;
+
+  activeDays: number;
+  pausedDays: number;
+  paused: boolean;
+}
+
+export interface UpdateNoticeOfIntentDto {
+  dateSubmittedToAlc?: number;
+  feePaidDate?: number;
+  dateAcknowledgedIncomplete?: number;
+  dateReceivedAllItems?: number;
+  dateAcknowledgedComplete?: number;
+  summary?: string;
 }

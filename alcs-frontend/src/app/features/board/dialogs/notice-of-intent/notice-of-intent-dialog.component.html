@@ -14,7 +14,13 @@
     <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
-        <button [mat-dialog-close]="isDirty" mat-menu-item>View Detail</button>
+        <button
+          [mat-dialog-close]="isDirty"
+          mat-menu-item
+          [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber]"
+        >
+          View Detail
+        </button>
         <button [mat-dialog-close]="isDirty" mat-menu-item>Add Info Request</button>
         <button [mat-dialog-close]="isDirty" mat-menu-item>Add Site Visit / Meeting</button>
       </mat-menu>
@@ -25,7 +31,7 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <app-application-time-tracker [application]="undefined"></app-application-time-tracker>
+      <app-time-tracker [application]="noticeOfIntent"></app-time-tracker>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>

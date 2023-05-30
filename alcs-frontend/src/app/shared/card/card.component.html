@@ -1,5 +1,5 @@
 <mat-card
-  class="card body1-text {{ cardData.cssClasses?.join(' ') }}"
+  class="card body-text {{ cardData.cssClasses?.join(' ') }}"
   [ngClass]="{ paused: cardData.paused, 'decision-date': cardData.latestDecisionDate }"
   cdkDrag
   [cdkDragData]="cardData"
@@ -10,6 +10,9 @@
   </div>
   <div class="card-content">
     <div class="upper-card">
+      <div class="subtext">
+        {{ cardData.typeLabel }}
+      </div>
       <span
         class="ellipsis"
         [id]="cardData.id"
