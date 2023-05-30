@@ -14,7 +14,7 @@
         Review Application
       </button>
       <button
-        [disabled]="!applicationReview"
+        [disabled]="!application.canReview && !applicationReview"
         (click)="onDownloadReviewPdf(application.fileNumber)"
         mat-flat-button
         color="accent"
