@@ -266,10 +266,8 @@ export class GenerateSubmissionDocumentService {
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,
-        name:
-          o.type.code === 'INDV'
-            ? `${o.firstName} ${o.lastName}`
-            : o.organizationName,
+        name: `${o.firstName} ${o.lastName}`,
+        organizationName: o.organizationName,
         corporateSummary: o.corporateSummary?.document.fileName,
       })),
     }));
