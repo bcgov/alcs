@@ -49,7 +49,7 @@ export class CovenantDialogComponent extends CardDialogComponent implements OnIn
 
   populateData(covenant: CovenantDto) {
     this.covenant = covenant;
-    super.populateCardDate(covenant.card);
+    super.populateCardData(covenant.card);
     this.selectedRegion = covenant.region.code;
     this.userService.fetchAssignableUsers();
     this.cardTitle = `${covenant.fileNumber} (${covenant.applicant})`;

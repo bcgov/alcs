@@ -1,9 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ApplicationModificationDto } from '../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
-import { BoardService } from '../../../../services/board/board.service';
+import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardService } from '../../../../services/card/card.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserService } from '../../../../services/user/user.service';
@@ -28,6 +29,7 @@ export class ModificationDialogComponent extends CardDialogComponent implements 
     @Inject(MAT_DIALOG_DATA) public data: ApplicationModificationDto,
     private dialogRef: MatDialogRef<ModificationDialogComponent>,
     private modificationService: ApplicationModificationService,
+    private router: Router,
     userService: UserService,
     cardService: CardService,
     boardService: BoardService,
@@ -47,8 +49,35 @@ export class ModificationDialogComponent extends CardDialogComponent implements 
 
   populateData(modification: ApplicationModificationDto) {
     this.modification = modification;
-    super.populateCardDate(modification.card);
+    super.populateCardData(modification.card);
     this.selectedRegion = modification.application.region.code;
     this.cardTitle = `${modification.application.fileNumber} (${modification.application.applicant})`;
+  }
+
+  async onBoardSelected(board: BoardWithFavourite) {
+    this.selectedBoard = board.code;
+    try {
+      await this.boardService.changeBoard(this.data.card.uuid, board.code);
+      const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
+      if (loadedBoard) {
+        this.boardStatuses = loadedBoard.statuses;
+      }
+
+      this.isDirty = true;
+      const toast = this.toastService.showSuccessToast(`Modification moved to ${board.title}`, 'Go to Board');
+      toast.onAction().subscribe(() => {
+        this.router.navigate(['/board', board.code]);
+      });
+      await this.reload();
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to move to new board');
+    }
+  }
+
+  private async reload() {
+    const res = await this.modificationService.fetchByCardUuid(this.modification.card.uuid);
+    if (res) {
+      this.modification = res;
+    }
   }
 }
