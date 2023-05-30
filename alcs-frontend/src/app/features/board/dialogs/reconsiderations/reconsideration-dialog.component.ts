@@ -15,7 +15,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 @Component({
   selector: 'app-recon-detail-dialog',
   templateUrl: './reconsideration-dialog.component.html',
-  styleUrls: ['./reconsideration-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class ReconsiderationDialogComponent extends CardDialogComponent implements OnInit, OnDestroy {
   selectedRegion?: string;

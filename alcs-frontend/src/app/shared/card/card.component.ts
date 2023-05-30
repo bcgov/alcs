@@ -5,6 +5,7 @@ import { ApplicationPill } from '../application-type-pill/application-type-pill.
 
 export interface CardData {
   id: string;
+  typeLabel: string;
   title: string;
   titleTooltip: string;
   cssClasses?: string[];
