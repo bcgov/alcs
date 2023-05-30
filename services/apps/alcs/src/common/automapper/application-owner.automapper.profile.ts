@@ -27,11 +27,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ApplicationOwnerDto,
         forMember(
           (pd) => pd.displayName,
-          mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
-          ),
+          mapFrom((p) => `${p.firstName} ${p.lastName}`),
         ),
         forMember(
           (pd) => pd.corporateSummary,
@@ -53,11 +49,7 @@ export class ApplicationOwnerProfile extends AutomapperProfile {
         ApplicationOwnerDetailedDto,
         forMember(
           (pd) => pd.displayName,
-          mapFrom((p) =>
-            p.organizationName
-              ? p.organizationName
-              : `${p.firstName} ${p.lastName}`,
-          ),
+          mapFrom((p) => `${p.firstName} ${p.lastName}`),
         ),
         forMember(
           (ad) => ad.parcels,

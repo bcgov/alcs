@@ -267,9 +267,7 @@ export class GenerateSubmissionDocumentService {
         ...o,
         noData: NO_DATA,
         // double check name field with UI
-        name: o.organizationName
-          ? o.organizationName
-          : `${o.firstName} ${o.lastName}`,
+        name: `${o.firstName} ${o.lastName}`,
         organizationName: o.organizationName,
         corporateSummary: o.corporateSummary?.document.fileName,
       })),
