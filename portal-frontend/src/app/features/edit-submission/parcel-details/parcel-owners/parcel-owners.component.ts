@@ -30,6 +30,7 @@ export class ParcelOwnersComponent {
   @Input() parcelUuid?: string | undefined;
   @Input() isCrown = false;
   @Input() isDraft = false;
+  @Input() isShowAllOwners = false;
 
   _owners: ApplicationOwnerDto[] = [];
   _disabled = false;
