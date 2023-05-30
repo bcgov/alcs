@@ -48,7 +48,8 @@ SELECT
         ELSE 'Unknown'
     END AS applicant,
     -- TODO: panel region lookup
-    'INTR',
+    -- 'INTR',
+	ar.code as region_code,
     --Peace river TODO: local government lookup
     '001cfdad-bc6e-4d25-9294-1550603da980',
     'oats_etl'
@@ -57,3 +58,4 @@ FROM
     JOIN application_etl AS ae ON oa.alr_application_id = ae.application_id AND ae.duplicated IS false
     LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
+	LEFT JOIN alcs.application_region ar on panel_lookup.panel_region = ar."label"
