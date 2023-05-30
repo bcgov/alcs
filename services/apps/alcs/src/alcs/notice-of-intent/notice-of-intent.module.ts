@@ -4,11 +4,11 @@ import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
+import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
+import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
+import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
-import { NoticeOfIntentController } from './notice-of-intent.controller';
-import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
-import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
 
 @Module({
   imports: [
@@ -17,7 +17,11 @@ import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/noti
     CardModule,
     FileNumberModule,
   ],
-  providers: [NoticeOfIntentService, NoticeOfIntentProfile, NoticeOfIntentMeetingService],
+  providers: [
+    NoticeOfIntentService,
+    NoticeOfIntentProfile,
+    NoticeOfIntentMeetingService,
+  ],
   controllers: [NoticeOfIntentController, NoticeOfIntentMeetingController],
   exports: [NoticeOfIntentService],
 })
