@@ -10,5 +10,7 @@ export class seedNoticeOfIntentMeetingType1685481264021
         `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // not needed
+  }
 }
