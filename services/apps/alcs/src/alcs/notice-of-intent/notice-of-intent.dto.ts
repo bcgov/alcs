@@ -12,7 +12,11 @@ import { ApplicationLocalGovernmentDto } from '../application/application-code/a
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 
-export class NoticeOfIntentSubtypeDto extends BaseCodeDto {}
+export class NoticeOfIntentSubtypeDto extends BaseCodeDto {
+  @AutoMap()
+  @IsBoolean()
+  isActive: boolean;
+}
 
 export class CreateNoticeOfIntentDto {
   @IsNumber()

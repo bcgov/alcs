@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
+import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
 
 export const childRoutes = [
@@ -20,9 +21,15 @@ export const childRoutes = [
   },
   {
     path: 'ceo',
-    menuTitle: 'CEO Criterion',
+    menuTitle: 'CEO Criteria',
     icon: 'psychology',
     component: CeoCriterionComponent,
+  },
+  {
+    path: 'noi',
+    menuTitle: 'NOI Subtypes',
+    icon: 'style',
+    component: NoiSubtypeComponent,
   },
   {
     path: 'unarchive',

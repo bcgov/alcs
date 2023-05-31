@@ -216,6 +216,13 @@ export class NoticeOfIntentService {
   }
 
   async listSubtypes() {
-    return this.subtypeRepository.find();
+    return this.subtypeRepository.find({
+      where: {
+        isActive: true,
+      },
+      order: {
+        label: 'ASC',
+      },
+    });
   }
 }

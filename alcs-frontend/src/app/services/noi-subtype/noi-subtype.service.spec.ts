@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
-import { CeoCriterionService } from './ceo-criterion.service';
+import { NoiSubtypeService } from './noi-subtype.service';
 
-describe('CeoCriterionService', () => {
-  let service: CeoCriterionService;
+describe('NoiSubtypeService', () => {
+  let service: NoiSubtypeService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
@@ -26,7 +26,7 @@ describe('CeoCriterionService', () => {
         },
       ],
     });
-    service = TestBed.inject(CeoCriterionService);
+    service = TestBed.inject(NoiSubtypeService);
   });
 
   it('should be created', () => {
@@ -42,7 +42,7 @@ describe('CeoCriterionService', () => {
 
     const res = await service.create({
       code: '',
-      number: 0,
+      isActive: true,
       label: '',
       description: '',
     });
@@ -61,7 +61,7 @@ describe('CeoCriterionService', () => {
 
     const res = await service.create({
       code: '',
-      number: 0,
+      isActive: true,
       label: '',
       description: '',
     });
@@ -80,7 +80,7 @@ describe('CeoCriterionService', () => {
 
     const res = await service.update('fake', {
       code: '',
-      number: 0,
+      isActive: true,
       label: '',
       description: '',
     });
@@ -99,7 +99,7 @@ describe('CeoCriterionService', () => {
 
     const res = await service.update('mock', {
       code: '',
-      number: 0,
+      isActive: true,
       label: '',
       description: '',
     });

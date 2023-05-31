@@ -73,4 +73,8 @@ export class NoticeOfIntentService {
       return undefined;
     }
   }
+
+  async deleteSubtype(code: string) {
+    //TODO
+  }
 }
