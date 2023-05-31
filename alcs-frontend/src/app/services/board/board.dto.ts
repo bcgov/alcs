@@ -10,6 +10,7 @@ export interface BoardDto {
   title: string;
   decisionMaker: string;
   statuses: BoardStatusDto[];
+  allowedCardTypes: string[];
 }
 
 export interface BoardStatusDto {

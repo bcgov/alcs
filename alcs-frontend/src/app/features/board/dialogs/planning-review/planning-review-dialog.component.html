@@ -16,6 +16,22 @@
   <div class="split">
     <span class="region">{{ planningReview.localGovernment.name }} - {{ planningReview.region.label }} Region</span>
     <div class="right">
+      <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <mat-icon>move_down</mat-icon>
+      </button>
+      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
+        <button (click)="onBoardSelected(board)" *ngFor="let board of allowedBoards" mat-menu-item>
+          <div class="board-menu-item">
+            <span class="favourite-board-icon-container"
+              ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+            </span>
+            <span>{{ board.title }}</span>
+            <span *ngIf="card && card.board.code === board.code"
+              ><mat-icon class="selected-board-icon">check</mat-icon></span
+            >
+          </div>
+        </button>
+      </mat-menu>
       <button
         *ngIf="canArchive"
         matTooltip="Archive Card"
@@ -25,7 +41,8 @@
       >
         <mat-icon>archive</mat-icon>
       </button>
-      <button *ngIf='card'
+      <button
+        *ngIf="card"
         [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
@@ -81,10 +98,10 @@
       </ng-template>
     </ng-select>
   </div>
-  <div *ngIf='card' class="subtasks-wrapper">
+  <div *ngIf="card" class="subtasks-wrapper">
     <app-subtasks [cardUuid]="card.uuid"></app-subtasks>
   </div>
-  <div *ngIf='card' class="card-comments-wrapper">
+  <div *ngIf="card" class="card-comments-wrapper">
     <app-comments [cardUuid]="card.uuid" [notificationTitle]="cardTitle"></app-comments>
   </div>
 </mat-dialog-content>

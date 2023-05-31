@@ -181,6 +181,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -199,6 +200,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -222,6 +224,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -248,6 +251,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -296,6 +300,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 

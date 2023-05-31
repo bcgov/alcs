@@ -34,6 +34,22 @@
   <div class="header-row">
     <div class="left"></div>
     <div style="margin-right: -16px" class="right">
+      <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
+        <mat-icon>move_down</mat-icon>
+      </button>
+      <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
+        <button (click)="onBoardSelected(board)" *ngFor="let board of allowedBoards" mat-menu-item>
+          <div class="board-menu-item">
+            <span class="favourite-board-icon-container"
+            ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
+            </span>
+            <span>{{ board.title }}</span>
+            <span *ngIf="card && card.board.code === board.code"
+            ><mat-icon class="selected-board-icon">check</mat-icon></span
+            >
+          </div>
+        </button>
+      </mat-menu>
       <button
         *ngIf="canArchive"
         matTooltip="Archive Card"
