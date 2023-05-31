@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 import { ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { CardSubtaskService } from '../../../services/card/card-subtask/card-subtask.service';
@@ -17,13 +16,17 @@ import {
 import { CardType } from '../../../shared/card/card.component';
 
 @Component({
-  selector: 'app-agro-subtasks',
-  templateUrl: './agrologist.component.html',
-  styleUrls: ['./agrologist.component.scss'],
+  selector: 'app-subtask-table',
+  templateUrl: './subtask-table.component.html',
+  styleUrls: ['./subtask-table.component.scss'],
 })
-export class AgrologistComponent implements OnInit {
+export class SubtaskTableComponent implements OnInit {
+  @Input() subtaskType: CARD_SUBTASK_TYPE = CARD_SUBTASK_TYPE.AUDIT;
+  @Input() subtaskLabel = 'Set Please';
+  @Input() assignableRoles = [ROLES.LUP, ROLES.APP_SPECIALIST];
+
   subtasks: MatTableDataSource<HomepageSubtaskDto> = new MatTableDataSource();
-  public agrologistUsers: AssigneeDto[] = [];
+  public users: AssigneeDto[] = [];
   displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage', 'assignee', 'action'];
 
   MODIFICATION_LABEL = MODIFICATION_TYPE_LABEL;
@@ -40,7 +43,7 @@ export class AgrologistComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.$assignableUsers.subscribe((users) => {
-      this.agrologistUsers = users.filter((user) => user.clientRoles.includes(ROLES.AGROLOGIST));
+      this.users = users.filter((user) => user.clientRoles.some((role) => this.assignableRoles.includes(role)));
     });
     this.userService.fetchAssignableUsers();
 
@@ -48,21 +51,24 @@ export class AgrologistComponent implements OnInit {
   }
 
   private async loadSubtasks() {
-    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(CARD_SUBTASK_TYPE.AGROLOGIST);
+    const nonOrderedSubtasks = await this.homeService.fetchSubtasks(this.subtaskType);
     const applications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.APP);
     const reconsiderations = nonOrderedSubtasks.filter((s) => s.card.type === CardType.RECON);
     const planningReviews = nonOrderedSubtasks.filter((s) => s.card.type === CardType.PLAN);
     const modifications = nonOrderedSubtasks.filter((s) => s.card.type === CardType.MODI);
     const covenants = nonOrderedSubtasks.filter((s) => s.card.type === CardType.COV);
+    const nois = nonOrderedSubtasks.filter((s) => s.card.type === CardType.NOI);
 
     const sortedSubtasks = [
       // high priority
+      ...nois.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...planningReviews.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...covenants.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       // none high priority
+      ...nois.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...applications.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
       ...modifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...reconsiderations.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),

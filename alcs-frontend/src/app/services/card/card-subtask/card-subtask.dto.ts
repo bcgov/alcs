@@ -35,4 +35,5 @@ export enum CARD_SUBTASK_TYPE {
   GIS = 'GIS',
   AUDIT = 'AUDT',
   AGROLOGIST = 'AGRO',
+  PEER_REVIEW = 'PEER',
 }
