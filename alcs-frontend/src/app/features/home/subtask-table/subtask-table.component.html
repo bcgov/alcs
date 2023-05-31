@@ -1,5 +1,5 @@
 <div class="assignee">
-  <h4>Agrologist Subtasks: {{ subtasks.data.length }}</h4>
+  <h4>{{ subtaskLabel }} Subtasks: {{ subtasks.data.length }}</h4>
 
   <table mat-table [dataSource]="subtasks" class="mat-elevation-z3 assigned-table">
     <ng-container matColumnDef="highPriority">
@@ -19,31 +19,32 @@
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell class="labels" *matCellDef="let element">
-        <app-application-type-pill
-          [useShortLabel]="true"
-          *ngIf="element.appType"
-          [type]="element.appType"
-        ></app-application-type-pill>
+        <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
+        </app-application-type-pill>
         <app-application-type-pill
           [useShortLabel]="true"
           *ngIf="element.parentType === 'modification'"
           [type]="MODIFICATION_LABEL"
-        ></app-application-type-pill>
+        >
+        </app-application-type-pill>
         <app-application-type-pill
           [useShortLabel]="true"
           *ngIf="element.parentType === 'reconsideration'"
           [type]="RECONSIDERATION_LABEL"
-        ></app-application-type-pill>
+        >
+        </app-application-type-pill>
         <app-application-type-pill
           [useShortLabel]="true"
           *ngIf="element.parentType === 'covenant'"
           [type]="COVENANT_LABEL"
-        ></app-application-type-pill>
+        >
+        </app-application-type-pill>
         <app-application-type-pill
           [useShortLabel]="true"
           *ngIf="element.parentType === 'planning-review'"
           [type]="PLANNING_REVIEW_LABEL"
-        ></app-application-type-pill>
+        >
+        </app-application-type-pill>
       </td>
     </ng-container>
 
@@ -64,7 +65,7 @@
       <td class="assignee-column" mat-cell *matCellDef="let element">
         <ng-select
           class="subtask-assignee"
-          [items]="agrologistUsers"
+          [items]="users"
           bindLabel="prettyName"
           bindValue="prettyName"
           [ngModel]="element.assignee?.prettyName"

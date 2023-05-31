@@ -366,7 +366,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
-      maxWidth: '900px',
+      maxWidth: '1100px',
       maxHeight: '80vh',
       width: '90%',
       data,

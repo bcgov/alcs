@@ -27,6 +27,9 @@ import { ApplicationModificationService } from '../decision/application-modifica
 import { ApplicationReconsiderationDto } from '../decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -50,11 +53,13 @@ export class HomeController {
     private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
   @Get('/assigned')
   @UserRoles(...ANY_AUTH_ROLE)
   async getAssignedToMe(@Req() req): Promise<{
+    noticeOfIntents: NoticeOfIntentDto[];
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
@@ -89,7 +94,14 @@ export class HomeController {
 
       const covenants = await this.covenantService.getBy(assignedFindOptions);
 
+      const noticeOfIntents = await this.noticeOfIntentService.getBy(
+        assignedFindOptions,
+      );
+
       return {
+        noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
+          noticeOfIntents,
+        ),
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
           reconsiderations,
@@ -102,6 +114,7 @@ export class HomeController {
       };
     } else {
       return {
+        noticeOfIntents: [],
         applications: [],
         reconsiderations: [],
         planningReviews: [],
@@ -148,7 +161,14 @@ export class HomeController {
       await this.covenantService.getWithIncompleteSubtaskByType(subtaskType);
     const covenantReviewSubtasks = this.mapCovenantToDtos(covenantWithSubtasks);
 
+    const noiSubtasks =
+      await this.noticeOfIntentService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
+    const noticeOfIntentSubtasks = this.mapNoticeOfIntentToDtos(noiSubtasks);
+
     return [
+      ...noticeOfIntentSubtasks,
       ...applicationSubtasks,
       ...reconSubtasks,
       ...modificationSubtasks,
@@ -249,6 +269,28 @@ export class HomeController {
           title: `${covenant.fileNumber} (${covenant.applicant})`,
           parentType: 'covenant',
         });
+      }
+    }
+    return result;
+  }
+
+  private mapNoticeOfIntentToDtos(noticeOfIntents: NoticeOfIntent[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const noticeOfIntent of noticeOfIntents) {
+      if (noticeOfIntent.card) {
+        for (const subtask of noticeOfIntent.card.subtasks) {
+          result.push({
+            type: subtask.type,
+            createdAt: subtask.createdAt.getTime(),
+            assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+            uuid: subtask.uuid,
+            card: this.mapper.map(noticeOfIntent.card, Card, CardDto),
+            completedAt: subtask.completedAt?.getTime(),
+            paused: false,
+            title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
+            parentType: 'covenant',
+          });
+        }
       }
     }
     return result;
