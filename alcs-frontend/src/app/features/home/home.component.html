@@ -6,31 +6,27 @@
     <app-assigned></app-assigned>
   </div>
   <div *ngIf="hasGIS">
-    <app-subtask-table
-      subtaskLabel="GIS"
-      [assignableRoles]="[ROLES.GIS]"
-      [subtaskType]="SUBTASK_TYPE.GIS"
-    ></app-subtask-table>
+    <app-subtask subtaskLabel="GIS" [assignableRoles]="[ROLES.GIS]" [subtaskType]="SUBTASK_TYPE.GIS"></app-subtask>
     <iframe [src]="GIS_DASHBOARD_URL | safe" frameborder="0" width="350" height="400" allowtransparency></iframe>
   </div>
   <div *ngIf="hasCommissioner">
     <app-meeting-overview></app-meeting-overview>
   </div>
   <div *ngIf="hasApplicationSpecialist">
-    <app-subtask-table subtaskLabel="Audit" [subtaskType]="SUBTASK_TYPE.AUDIT"></app-subtask-table>
+    <app-subtask subtaskLabel="Audit" [subtaskType]="SUBTASK_TYPE.AUDIT"></app-subtask>
   </div>
   <div *ngIf="hasAgrologist">
-    <app-subtask-table
+    <app-subtask
       subtaskLabel="Agrologist"
       [assignableRoles]="[ROLES.AGROLOGIST]"
       [subtaskType]="SUBTASK_TYPE.AGROLOGIST"
-    ></app-subtask-table>
+    ></app-subtask>
   </div>
   <div *ngIf="showPeerReview">
-    <app-subtask-table
+    <app-subtask
       subtaskLabel="Peer Review"
       [assignableRoles]="[ROLES.LUP, ROLES.SOIL_OFFICER]"
       [subtaskType]="SUBTASK_TYPE.PEER_REVIEW"
-    ></app-subtask-table>
+    ></app-subtask>
   </div>
 </div>
