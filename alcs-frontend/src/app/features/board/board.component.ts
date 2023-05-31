@@ -23,7 +23,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  NOTICE_OF_INTENT_TYPE_LABEL,
+  RETROACTIVE_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
@@ -353,7 +353,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       titleTooltip: noticeOfIntent.applicant,
       assignee: noticeOfIntent.card.assignee,
       id: noticeOfIntent.card.uuid,
-      labels: [NOTICE_OF_INTENT_TYPE_LABEL],
+      labels: noticeOfIntent.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
       cardType: CardType.NOI,
       paused: false,
       highPriority: noticeOfIntent.card.highPriority,

@@ -4,13 +4,14 @@ import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
+import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NoticeOfIntent]),
+    TypeOrmModule.forFeature([NoticeOfIntent, NoticeOfIntentSubtype]),
     forwardRef(() => BoardModule),
     CardModule,
     FileNumberModule,

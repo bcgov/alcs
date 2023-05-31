@@ -8,7 +8,11 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
-import { MODIFICATION_TYPE_LABEL, RECON_TYPE_LABEL } from '../application-type-pill/application-type-pill.constants';
+import {
+  MODIFICATION_TYPE_LABEL,
+  RECON_TYPE_LABEL,
+  RETROACTIVE_TYPE_LABEL,
+} from '../application-type-pill/application-type-pill.constants';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -37,6 +41,9 @@ export class DetailsHeaderComponent {
       if ('hasModifications' in application) {
         this.showModificationLabel = application.hasModifications;
       }
+      if ('retroactive' in application) {
+        this.showRetroLabel = !!application.retroactive;
+      }
     }
   }
 
@@ -58,8 +65,10 @@ export class DetailsHeaderComponent {
 
   reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
+  retroactiveLabel = RETROACTIVE_TYPE_LABEL;
   showModificationLabel = false;
   showReconLabel = false;
+  showRetroLabel = false;
 
   constructor(private router: Router) {}
 

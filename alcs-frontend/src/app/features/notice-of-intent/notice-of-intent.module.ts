@@ -7,6 +7,7 @@ import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { IntakeComponent } from './intake/intake.component';
 import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.component';
 import { OverviewComponent } from './overview/overview.component';
+import { PreparationComponent } from './preparation/preparation.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
       useValue: DATE_FORMATS,
     },
   ],
-  declarations: [NoticeOfIntentComponent, OverviewComponent, IntakeComponent],
+  declarations: [NoticeOfIntentComponent, OverviewComponent, IntakeComponent, PreparationComponent],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],
 })
 export class NoticeOfIntentModule {}

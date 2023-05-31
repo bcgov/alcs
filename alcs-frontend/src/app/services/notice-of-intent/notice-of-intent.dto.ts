@@ -1,6 +1,9 @@
+import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
+
+export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {}
 
 export interface CreateNoticeOfIntentDto {
   fileNumber: string;
@@ -25,6 +28,8 @@ export interface NoticeOfIntentDto {
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
   summary?: string;
+  subtype: NoticeOfIntentSubtypeDto[];
+  retroactive: boolean | null;
 
   activeDays: number;
   pausedDays: number;
@@ -38,4 +43,6 @@ export interface UpdateNoticeOfIntentDto {
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
   summary?: string;
+  retroactive?: boolean;
+  subtype?: string[];
 }
