@@ -75,9 +75,9 @@ export class ModificationDialogComponent extends CardDialogComponent implements 
   }
 
   private async reload() {
-    const res = await this.modificationService.fetchByCardUuid(this.modification.card.uuid);
-    if (res) {
-      this.modification = res;
+    const modification = await this.modificationService.fetchByCardUuid(this.modification.card.uuid);
+    if (modification) {
+      this.modification = modification;
     }
   }
 }

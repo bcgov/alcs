@@ -53,9 +53,9 @@ export class PlanningReviewDialogComponent extends CardDialogComponent implement
   }
 
   private async reload() {
-    const noticeOfIntent = await this.planningReviewService.fetchByCardUuid(this.planningReview.card.uuid);
-    if (noticeOfIntent) {
-      this.populateCardData(noticeOfIntent.card);
+    const planningReview = await this.planningReviewService.fetchByCardUuid(this.planningReview.card.uuid);
+    if (planningReview) {
+      this.populateCardData(planningReview.card);
     }
   }
 
