@@ -1,13 +1,26 @@
-@use '../../../../styles/colors';
+@use '../../../../../styles/colors';
 
 .assignee {
   margin: 18px 0;
 }
 
 .assigned-table {
-  margin-top: 24px;
-  margin-bottom: 48px;
+  margin-top: 12px;
   width: 100%;
+
+  td,
+  th {
+    font-size: 16px;
+    width: 25%;
+  }
+
+  .high-priority-cell {
+    width: 35px;
+  }
+
+  .type-cell {
+    width: 110px;
+  }
 
   .paused {
     background-color: #efefef;

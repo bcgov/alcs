@@ -8,11 +8,11 @@ import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto } from '../../../services/user/user.dto';
 import { UserService } from '../../../services/user/user.service';
 
-import { SubtaskTableComponent } from './subtask-table.component';
+import { SubtaskComponent } from './subtask.component';
 
 describe('AuditComponent', () => {
-  let component: SubtaskTableComponent;
-  let fixture: ComponentFixture<SubtaskTableComponent>;
+  let component: SubtaskComponent;
+  let fixture: ComponentFixture<SubtaskComponent>;
   let mockUserService: DeepMocked<UserService>;
 
   beforeEach(async () => {
@@ -32,11 +32,11 @@ describe('AuditComponent', () => {
         },
         { provide: HomeService, useValue: {} },
       ],
-      declarations: [SubtaskTableComponent],
+      declarations: [SubtaskComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SubtaskTableComponent);
+    fixture = TestBed.createComponent(SubtaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

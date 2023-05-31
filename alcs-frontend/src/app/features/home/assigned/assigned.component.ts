@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
-import { CardDto } from '../../../services/card/card.dto';
 import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
-import { ApplicationPill } from '../../../shared/application-type-pill/application-type-pill.component';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
@@ -17,17 +14,7 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../../../shared/application-type-pill/application-type-pill.constants';
-
-interface AssignedToMeFile {
-  title: string;
-  activeDays?: number;
-  type: string;
-  date?: number;
-  paused?: boolean;
-  card: CardDto;
-  highPriority?: boolean;
-  labels: ApplicationPill[];
-}
+import { AssignedToMeFile } from './assigned-table/assigned-table.component';
 
 @Component({
   selector: 'app-assigned',
@@ -35,14 +22,12 @@ interface AssignedToMeFile {
   styleUrls: ['./assigned.component.scss'],
 })
 export class AssignedComponent implements OnInit {
-  sortedFiles: AssignedToMeFile[] = [];
-  displayedColumns = ['highPriority', 'title', 'type', 'activeDays', 'stage'];
+  noticeOfIntents: AssignedToMeFile[] = [];
+  applications: AssignedToMeFile[] = [];
+  nonApplications: AssignedToMeFile[] = [];
+  totalFiles = 0;
 
-  constructor(
-    private homeService: HomeService,
-    private applicationService: ApplicationService,
-    private router: Router
-  ) {}
+  constructor(private homeService: HomeService, private applicationService: ApplicationService) {}
 
   ngOnInit(): void {
     this.applicationService.setup();
@@ -53,13 +38,17 @@ export class AssignedComponent implements OnInit {
     const { applications, reconsiderations, planningReviews, modifications, covenants, noticeOfIntents } =
       await this.homeService.fetchAssignedToMe();
 
-    const sorted = [];
-    sorted.push(
-      // high priority
+    this.noticeOfIntents = [
       ...noticeOfIntents
         .filter((a) => a.card!.highPriority)
         .map((a) => this.mapNoticeOfIntent(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noticeOfIntents
+        .filter((a) => !a.card!.highPriority)
+        .map((a) => this.mapNoticeOfIntent(a))
+        .sort((a, b) => b.activeDays! - a.activeDays!),
+    ];
+    this.applications = [
       ...applications
         .filter((a) => a.card!.highPriority)
         .map((a) => this.mapApplication(a))
@@ -72,20 +61,6 @@ export class AssignedComponent implements OnInit {
         .filter((r) => r.card.highPriority)
         .map((r) => this.mapReconsideration(r))
         .sort((a, b) => a.date! - b.date!),
-      ...planningReviews
-        .filter((r) => r.card.highPriority)
-        .map((r) => this.mapPlanning(r))
-        .sort((a, b) => a.date! - b.date!),
-      ...covenants
-        .filter((r) => r.card.highPriority)
-        .map((r) => this.mapCovenant(r))
-        .sort((a, b) => a.date! - b.date!),
-
-      // none high priority
-      ...noticeOfIntents
-        .filter((a) => !a.card!.highPriority)
-        .map((a) => this.mapNoticeOfIntent(a))
-        .sort((a, b) => b.activeDays! - a.activeDays!),
       ...applications
         .filter((a) => !a.card!.highPriority)
         .map((a) => this.mapApplication(a))
@@ -98,6 +73,17 @@ export class AssignedComponent implements OnInit {
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapReconsideration(r))
         .sort((a, b) => a.date! - b.date!),
+    ];
+
+    this.nonApplications = [
+      ...planningReviews
+        .filter((r) => r.card.highPriority)
+        .map((r) => this.mapPlanning(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...covenants
+        .filter((r) => r.card.highPriority)
+        .map((r) => this.mapCovenant(r))
+        .sort((a, b) => a.date! - b.date!),
       ...planningReviews
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapPlanning(r))
@@ -105,10 +91,10 @@ export class AssignedComponent implements OnInit {
       ...covenants
         .filter((r) => !r.card.highPriority)
         .map((r) => this.mapCovenant(r))
-        .sort((a, b) => a.date! - b.date!)
-    );
+        .sort((a, b) => a.date! - b.date!),
+    ];
 
-    this.sortedFiles = sorted;
+    this.totalFiles = this.applications.length + this.nonApplications.length + this.noticeOfIntents.length;
   }
 
   private mapCovenant(c: CovenantDto): AssignedToMeFile {
@@ -150,10 +136,10 @@ export class AssignedComponent implements OnInit {
       activeDays: a.activeDays,
       type: a.card!.type,
       paused: a.paused,
-      card: a.card,
+      card: a.card!,
       highPriority: a.card!.highPriority,
       labels: [a.type],
-    } as AssignedToMeFile;
+    };
   }
 
   private mapModification(r: ApplicationModificationDto): AssignedToMeFile {
@@ -176,10 +162,6 @@ export class AssignedComponent implements OnInit {
       card: a.card,
       highPriority: a.card!.highPriority,
       labels: a.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
-    } as AssignedToMeFile;
-  }
-
-  async onSelectCard(card: CardDto) {
-    await this.router.navigateByUrl(`/board/${card.board.code}?card=${card.uuid}&type=${card.type}`);
+    };
   }
 }
