@@ -60,7 +60,7 @@
         <mat-icon>archive</mat-icon>
       </button>
       <button
-        *ngIf='card'
+        *ngIf="card"
         [matTooltip]="card.highPriority ? 'Remove Priority' : 'Add Priority'"
         class="toggle-priority"
         (click)="onTogglePriority()"
@@ -116,10 +116,10 @@
       </ng-template>
     </ng-select>
   </div>
-  <div *ngIf='card' class="subtasks-wrapper">
+  <div *ngIf="card" class="subtasks-wrapper">
     <app-subtasks [cardUuid]="card.uuid"></app-subtasks>
   </div>
-  <div *ngIf='card' class="card-comments-wrapper">
+  <div *ngIf="card" class="card-comments-wrapper">
     <app-comments [notificationTitle]="cardTitle" [cardUuid]="card.uuid"></app-comments>
   </div>
 </mat-dialog-content>

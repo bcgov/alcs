@@ -1,7 +1,11 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { NoticeOfIntentDto } from '../../alcs/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentSubtype } from '../../alcs/notice-of-intent/notice-of-intent-subtype.entity';
+import {
+  NoticeOfIntentDto,
+  NoticeOfIntentSubtypeDto,
+} from '../../alcs/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 
 @Injectable()
@@ -12,6 +16,8 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(mapper, NoticeOfIntentSubtype, NoticeOfIntentSubtypeDto);
+
       createMap(
         mapper,
         NoticeOfIntent,

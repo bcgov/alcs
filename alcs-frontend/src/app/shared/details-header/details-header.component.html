@@ -9,6 +9,7 @@
         <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>
         <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
         <app-application-type-pill *ngIf="showModificationLabel" [type]="modificationLabel"></app-application-type-pill>
+        <app-application-type-pill *ngIf="showRetroLabel" [type]="retroactiveLabel"></app-application-type-pill>
       </div>
     </div>
     <div class="center">

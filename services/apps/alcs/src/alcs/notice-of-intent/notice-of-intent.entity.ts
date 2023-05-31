@@ -1,10 +1,19 @@
 import { AutoMap } from '@automapper/classes';
 import { Type } from 'class-transformer';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { Base } from '../../common/entities/base.entity';
+import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 
 @Entity()
 export class NoticeOfIntent extends Base {
@@ -40,12 +49,21 @@ export class NoticeOfIntent extends Base {
   @ManyToOne(() => ApplicationRegion)
   region: ApplicationRegion;
 
+  @ManyToMany(() => NoticeOfIntentSubtype)
+  @JoinTable()
+  @AutoMap(() => [NoticeOfIntentSubtype])
+  subtype: NoticeOfIntentSubtype[];
+
   @Column()
   regionCode: string;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   summary: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  retroactive: boolean | null;
 
   @Column({
     type: 'timestamptz',

@@ -6,16 +6,17 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
   styleUrls: ['./inline-dropdown.component.scss'],
 })
 export class InlineDropdownComponent implements AfterContentChecked {
-  @Input() value?: string | undefined;
+  @Input() value?: string | string[] | undefined;
   @Input() placeholder: string = 'Enter a value';
   @Input() options: { label: string; value: string }[] = [];
+  @Input() multiple = false;
 
-  @Output() save = new EventEmitter<string | null>();
+  @Output() save = new EventEmitter<string | string[] | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
 
   isEditing = false;
-  pendingValue: undefined | string;
+  pendingValue: undefined | string | string[];
 
   constructor() {}
 
@@ -32,7 +33,7 @@ export class InlineDropdownComponent implements AfterContentChecked {
 
   confirmEdit() {
     if (this.pendingValue !== this.value) {
-      this.save.emit(this.pendingValue?.toString() ?? null);
+      this.save.emit(this.pendingValue ?? null);
       this.value = this.pendingValue;
     }
 
@@ -42,5 +43,12 @@ export class InlineDropdownComponent implements AfterContentChecked {
   cancelEdit() {
     this.isEditing = false;
     this.pendingValue = this.value;
+  }
+
+  coerceArray(value: string | string[] | undefined) {
+    if (value instanceof Array) {
+      return value;
+    }
+    return undefined;
   }
 }

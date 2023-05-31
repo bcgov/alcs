@@ -5,8 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { ProposalComponent } from '../application/proposal/proposal.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
+import { PreparationComponent } from './preparation/preparation.component';
 
 export const childRoutes = [
   {
@@ -20,6 +22,12 @@ export const childRoutes = [
     menuTitle: 'ALC Intake',
     icon: 'content_paste',
     component: IntakeComponent,
+  },
+  {
+    path: 'prep',
+    menuTitle: 'NOI Prep',
+    icon: 'task',
+    component: PreparationComponent,
   },
 ];
 

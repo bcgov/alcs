@@ -1,9 +1,13 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { BoardService } from '../board/board.service';
+import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentDto,
+  NoticeOfIntentSubtypeDto,
   UpdateNoticeOfIntentDto,
 } from './notice-of-intent.dto';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -13,6 +17,7 @@ export class NoticeOfIntentController {
   constructor(
     private noticeOfIntentService: NoticeOfIntentService,
     private boardService: BoardService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/:fileNumber')
@@ -23,6 +28,17 @@ export class NoticeOfIntentController {
     );
     const mapped = await this.noticeOfIntentService.mapToDtos([noticeOfIntent]);
     return mapped[0];
+  }
+
+  @Get('/types')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async getSubtypes() {
+    const subtypes = await this.noticeOfIntentService.listSubtypes();
+    return this.mapper.mapArray(
+      subtypes,
+      NoticeOfIntentSubtype,
+      NoticeOfIntentSubtypeDto,
+    );
   }
 
   @Post()

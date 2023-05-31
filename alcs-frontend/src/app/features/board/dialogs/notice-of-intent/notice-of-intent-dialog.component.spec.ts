@@ -25,6 +25,7 @@ describe('NoticeOfIntentDialogComponent', () => {
   let fixture: ComponentFixture<NoticeOfIntentDialogComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let mockNOIService: DeepMocked<NoticeOfIntentService>;
   let authenticationService: DeepMocked<AuthenticationService>;
 
   const mockDto: NoticeOfIntentDto = {
@@ -52,6 +53,8 @@ describe('NoticeOfIntentDialogComponent', () => {
     paused: false,
     pausedDays: 0,
     uuid: '',
+    retroactive: null,
+    subtype: [],
   };
 
   beforeEach(async () => {
@@ -69,6 +72,8 @@ describe('NoticeOfIntentDialogComponent', () => {
 
     authenticationService = createMock();
     authenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+
+    mockNOIService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [NoticeOfIntentDialogComponent],
@@ -100,6 +105,10 @@ describe('NoticeOfIntentDialogComponent', () => {
         {
           provide: ConfirmationDialogService,
           useValue: {},
+        },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNOIService,
         },
         {
           provide: AuthenticationService,
