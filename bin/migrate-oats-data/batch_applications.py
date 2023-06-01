@@ -63,6 +63,49 @@ def drop_etl_temp_table():
     DROP TABLE application_etl;
     """
 
+def appl_code_lut():
+    """
+    Create temporary table to match codes from OATS to ALCS
+    """
+    return f"""
+        DROP TABLE IF EXISTS appl_code_lut;
+
+        CREATE TEMPORARY TABLE appl_code_lut (
+            oats_code VARCHAR,
+            alcs_code VARCHAR
+        )
+    """
+def insert_appl_code_lut():
+    """
+    Insert LUT values
+    """
+    return f"""
+
+        INSERT INTO 
+            appl_code_lut (oats_code, alcs_code)
+
+        VALUES ('TUR','TURP'),
+            ('INC','INCL'),
+            ('EXC','EXCL'),
+            ('SDV','SUBD'),
+            ('NFU','NFUP'),
+            ('SCH','PFRS'),
+            ('EXT','ROSO'),
+            ('FILL','POFO'),
+            ('SRW','TODOSRW'),
+            ('CSC','TODOCSC'),
+            ('NAR','NARU')
+
+    """
+
+def drop_appl_code_temp_table():
+    """
+    remove the table
+    """
+    return f"""
+    DROP TABLE appl_code_lut;
+    """
+
 @inject_conn_pool
 def process_applications(conn=None, batch_size=10000):
     """
@@ -83,6 +126,10 @@ def process_applications(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_application_id = 0
         
+        cursor.execute(appl_code_lut())
+        print("inserting LUT")
+        cursor.execute(insert_appl_code_lut())
+        print("inserted")
 
         with open("sql/insert-batch-application.sql", "r", encoding="utf-8") as sql_file:
             application_sql = sql_file.read()
@@ -123,7 +170,10 @@ def process_applications(conn=None, batch_size=10000):
     if failed_inserts == 0:
         with conn.cursor() as cursor:
             cursor.execute(drop_etl_temp_table())
-            print("temp table removed")
+            print("etl temp table removed")
+            cursor.execute(drop_appl_code_temp_table())
+            print("code lut removed")
+
     else:
         print("Table not deleted, inserts failed")
         #keep only the failed rows

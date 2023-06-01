@@ -1,3 +1,45 @@
+DROP TABLE IF EXISTS application_etl;
+
+        CREATE TEMPORARY TABLE application_etl (
+            id SERIAL PRIMARY KEY,
+            application_id int,
+            card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+            duplicated bool DEFAULT false
+        );
+INSERT INTO
+            application_etl (application_id, duplicated)
+        SELECT
+            DISTINCT oa.alr_application_id AS application_id,
+            CASE
+                WHEN a.uuid IS NOT NULL THEN TRUE
+                ELSE false
+            END AS duplicated
+        FROM
+            oats.oats_alr_applications AS oa
+            LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number;
+
+DROP TABLE IF EXISTS appl_code_lut;
+
+        CREATE TEMPORARY TABLE appl_code_lut (
+            oats_code VARCHAR,
+            alcs_code VARCHAR
+        );
+INSERT INTO 
+            appl_code_lut (oats_code, alcs_code)
+
+        VALUES ('TUR','TURP'),
+            ('INC','INCL'),
+            ('EXC','EXCL'),
+            ('SDV','SUBD'),
+            ('NFU','NFUP'),
+            ('SCH','PFRS'),
+            ('EXT','ROSO'),
+            ('FILL','POFO'),
+            ('SRW','TODOSRW'),
+            ('CSC','TODOCSC'),
+            ('NAR','NARU');
+
+
 -- Step 1: Perform a lookup to retrieve the applicant's name or organization for each application ID
 WITH applicant_lookup AS (
     SELECT
@@ -36,12 +78,29 @@ panel_lookup AS (
         JOIN oats.oats_organizations oo2 ON oo.parent_organization_id = oo2.organization_id
     WHERE
         oo2.organization_type_cd = 'PANEL'
-) 
+),
+-- Step X: Perform lookup to retrieve type code
+application_type_lookup AS (
+    SELECT
+        DISTINCT  oaac.alr_application_id AS application_id,
+        oacc."description" AS "description",
+        oaac.alr_change_code AS code,
+        acl.alcs_code AS alcs_code
+
+    FROM
+        oats.oats_alr_appl_components AS oaac
+        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
+        JOIN appl_code_lut AS acl ON oaac.alr_change_code = acl.oats_code
+
+        
+)
+
 -- Step 3: Insert new records into the alcs_applications table
 SELECT
     oa.alr_application_id :: text AS file_number,
     -- TODO: type code lookup
-    'NARU',
+    -- 'NARU',
+    atl.alcs_code as type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
@@ -58,4 +117,5 @@ FROM
     JOIN application_etl AS ae ON oa.alr_application_id = ae.application_id AND ae.duplicated IS false
     LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
-	LEFT JOIN alcs.application_region ar on panel_lookup.panel_region = ar."label"
+	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
+    LEFT JOIN application_type_lookup atl ON oa.alr_application_id = atl.application_id
