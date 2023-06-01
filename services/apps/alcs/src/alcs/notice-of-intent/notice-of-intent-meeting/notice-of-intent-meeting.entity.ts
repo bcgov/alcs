@@ -3,7 +3,6 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting-type.entity';
-// import { ApplicationPaused } from '../application-paused.entity';
 
 @Entity()
 export class NoticeOfIntentMeeting extends Base {
@@ -17,6 +16,18 @@ export class NoticeOfIntentMeeting extends Base {
   @AutoMap()
   @Column({ nullable: true, type: 'text' })
   description?: string;
+
+  @Column({
+    type: 'timestamptz',
+    default: () => 'NOW()',
+  })
+  startDate: Date;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  endDate?: Date | null;
 
   @Column()
   typeCode: string;
@@ -33,32 +44,4 @@ export class NoticeOfIntentMeeting extends Base {
   @AutoMap()
   @ManyToOne(() => NoticeOfIntent)
   noticeOfIntent: NoticeOfIntent;
-
-  @AutoMap()
-  @Column({ type: 'uuid', nullable: true })
-  meetingPauseUuid: string;
-
-  // @AutoMap()
-  // @OneToOne(() => ApplicationPaused, {
-  //   cascade: true,
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn()
-  // @Type(() => ApplicationPaused)
-  // meetingPause: ApplicationPaused | null;
-
-  // @AutoMap()
-  // @Column({ type: 'uuid', nullable: true })
-  // reportPauseUuid: string;
-
-  // @AutoMap()
-  // @OneToOne(() => ApplicationPaused, {
-  //   cascade: true,
-  //   onDelete: 'SET NULL',
-  //   onUpdate: 'CASCADE',
-  // })
-  // @JoinColumn()
-  // @Type(() => ApplicationPaused)
-  // reportPause?: ApplicationPaused | null;
 }

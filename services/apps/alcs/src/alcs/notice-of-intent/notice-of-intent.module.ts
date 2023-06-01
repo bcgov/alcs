@@ -4,7 +4,9 @@ import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
+import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting/notice-of-intent-meeting-type.entity';
 import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
+import { NoticeOfIntentMeeting } from './notice-of-intent-meeting/notice-of-intent-meeting.entity';
 import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
@@ -12,7 +14,11 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([NoticeOfIntent]),
+    TypeOrmModule.forFeature([
+      NoticeOfIntent,
+      NoticeOfIntentMeeting,
+      NoticeOfIntentMeetingType,
+    ]),
     forwardRef(() => BoardModule),
     CardModule,
     FileNumberModule,
