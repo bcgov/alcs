@@ -1,6 +1,13 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+
+import { NoticeOfIntentMeetingType } from '../../alcs/notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting-type.entity';
+import {
+  NoticeOfIntentMeetingDto,
+  NoticeOfIntentMeetingTypeDto,
+} from '../../alcs/notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting.dto';
+import { NoticeOfIntentMeeting } from '../../alcs/notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting.entity';
 import { NoticeOfIntentSubtype } from '../../alcs/notice-of-intent/notice-of-intent-subtype.entity';
 import {
   NoticeOfIntentDto,
@@ -54,6 +61,32 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
           (a) => a.paused,
           mapFrom((_) => false),
         ),
+      );
+      createMap(
+        mapper,
+        NoticeOfIntentMeeting,
+        NoticeOfIntentMeetingDto,
+        forMember(
+          (md) => md.meetingType,
+          mapFrom((m) => m.type),
+        ),
+        forMember(
+          (md) => md.meetingTypeCode,
+          mapFrom((m) => m.type.code),
+        ),
+        forMember(
+          (md) => md.meetingStartDate,
+          mapFrom((m) => m.startDate.getTime()),
+        ),
+        forMember(
+          (md) => md.meetingEndDate,
+          mapFrom((m) => m.endDate?.getTime()),
+        ),
+      );
+      createMap(
+        mapper,
+        NoticeOfIntentMeetingType,
+        NoticeOfIntentMeetingTypeDto,
       );
     };
   }
