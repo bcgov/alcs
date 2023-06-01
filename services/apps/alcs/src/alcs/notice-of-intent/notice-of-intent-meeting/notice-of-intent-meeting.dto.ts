@@ -4,7 +4,6 @@ import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
 export class NoticeOfIntentMeetingTypeDto extends BaseCodeDto {}
 
-// TODO rename startDate and EndDate to make flat mapping
 export class CreateNoticeOfIntentMeetingDto {
   @IsNumber()
   meetingStartDate: number;
