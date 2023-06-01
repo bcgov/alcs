@@ -2,27 +2,27 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 
-import { DecisionOutcomeCode } from '../../alcs/decision/application-decision-outcome.entity';
-import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
-import { CeoCriterionCode } from '../../alcs/decision/ceo-criterion/ceo-criterion.entity';
-import { ApplicationDecisionConditionType } from '../../alcs/decision/decision-condition/decision-condition-code.entity';
+import { ApplicationDecisionOutcomeCode } from '../../alcs/application-decision/application-decision-outcome.entity';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
+import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
+import { ApplicationDecisionConditionType } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
-} from '../../alcs/decision/decision-condition/decision-condition.dto';
-import { ApplicationDecisionCondition } from '../../alcs/decision/decision-condition/decision-condition.entity';
-import { DecisionDocument } from '../../alcs/decision/decision-document/decision-document.entity';
-import { DecisionMakerCode } from '../../alcs/decision/decision-maker/decision-maker.entity';
-import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/decision/decision-outcome-type/application-decision-outcome-type.entity';
+} from '../../alcs/application-decision/application-decision-condition/application-decision-condition.dto';
+import { ApplicationDecisionCondition } from '../../alcs/application-decision/application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionDocument } from '../../alcs/application-decision/application-decision-document/application-decision-document.entity';
+import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/application-decision/application-decision-outcome-type/application-decision-outcome-type.entity';
 import {
   ApplicationDecisionDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
   DecisionOutcomeCodeDto,
   LinkedResolutionOutcomeTypeDto,
-} from '../../alcs/decision/decision-v2/application-decision/application-decision.dto';
-import { CeoCriterionCodeDto } from '../../alcs/decision/decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
-import { ApplicationDecisionComponentType } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component-type.entity';
+} from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
+import { CeoCriterionCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
+import { ApplicationDecisionComponentType } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component-type.entity';
 import {
   ApplicationDecisionComponentDto,
   ApplicationDecisionComponentTypeDto,
@@ -49,7 +49,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((a) =>
             this.mapper.mapArray(
               a.documents || [],
-              DecisionDocument,
+              ApplicationDecisionDocument,
               DecisionDocumentDto,
             ),
           ),
@@ -144,7 +144,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(mapper, DecisionOutcomeCode, DecisionOutcomeCodeDto);
+      createMap(mapper, ApplicationDecisionOutcomeCode, DecisionOutcomeCodeDto);
       createMap(
         mapper,
         ApplicationDecisionComponent,
@@ -154,8 +154,8 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((a) => a.nfuEndDate?.getTime()),
         ),
       );
-      createMap(mapper, DecisionMakerCode, DecisionMakerCodeDto);
-      createMap(mapper, CeoCriterionCode, CeoCriterionCodeDto);
+      createMap(mapper, ApplicationDecisionMakerCode, DecisionMakerCodeDto);
+      createMap(mapper, ApplicationCeoCriterionCode, CeoCriterionCodeDto);
       createMap(
         mapper,
         ApplicationDecisionComponentType,
@@ -169,7 +169,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        DecisionDocument,
+        ApplicationDecisionDocument,
         DecisionDocumentDto,
         forMember(
           (a) => a.mimeType,

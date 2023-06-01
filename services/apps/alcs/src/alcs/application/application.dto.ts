@@ -14,7 +14,7 @@ import { ProposedLot } from '../../portal/application-submission/application-sub
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';

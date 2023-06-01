@@ -8,8 +8,8 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { CommissionerProfile } from '../../common/automapper/commissioner.automapper.profile';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { CommissionerController } from './commissioner.controller';
 
 describe('CommissionerController', () => {

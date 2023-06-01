@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
 import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
-import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
