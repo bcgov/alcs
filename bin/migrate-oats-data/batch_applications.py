@@ -62,8 +62,8 @@ def insert_appl_code_lut():
             ('SCH','PFRS'),
             ('EXT','ROSO'),
             ('FILL','POFO'),
-            ('SRW','TODOSRW'),
-            ('CSC','TODOCSC'),
+            ('SRW','NARU'),
+            ('CSC','NARU'),
             ('NAR','NARU')
 
     """
@@ -81,7 +81,6 @@ def compile_application_insert_query(number_of_rows_to_insert):
         VALUES{applications_to_insert}
         ON CONFLICT (file_number) DO UPDATE SET
             file_number = EXCLUDED.file_number,
-            
             type_code = EXCLUDED.type_code,
             applicant = EXCLUDED.applicant,
             region_code = EXCLUDED.region_code,

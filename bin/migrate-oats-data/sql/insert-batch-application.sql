@@ -59,7 +59,7 @@ SELECT
     oa.alr_application_id :: text AS file_number,
     -- TODO: type code lookup
     -- 'NARU',
-    atl.alcs_code AS type_code,
+    COALESCE(atl.alcs_code, 'NARU') AS type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
