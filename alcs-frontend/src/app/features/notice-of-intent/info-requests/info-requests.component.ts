@@ -4,8 +4,8 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   NoticeOfIntentMeetingDto,
   NoticeOfIntentMeetingTypeDto,
-} from '../../../services/notice-of-intent/application-meeting/notice-of-intent-meeting.dto';
-import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/application-meeting/notice-of-intent-meeting.service';
+} from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
+import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';

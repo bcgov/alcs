@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NoticeOfIntentMeetingTypeDto } from '../../../../services/notice-of-intent/application-meeting/notice-of-intent-meeting.dto';
-import { NoticeOfIntentMeetingService } from '../../../../services/notice-of-intent/application-meeting/notice-of-intent-meeting.service';
+import { NoticeOfIntentMeetingTypeDto } from '../../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
+import { NoticeOfIntentMeetingService } from '../../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 
 export type NoticeOfIntentMeetingForm = {
   fileNumber: string;
