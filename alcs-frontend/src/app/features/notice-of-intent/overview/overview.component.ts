@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { NoticeOfIntentMeetingDto } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
+import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
+
+const editLink = new Map<string, string>([['IR', './info-request']]);
 
 const SORTING_ORDER = {
   //high comes first, 1 shows at bottom
@@ -32,7 +36,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
   events: TimelineEvent[] = [];
   summary = '';
 
-  constructor(private noticeOfIntentDetailService: NoticeOfIntentDetailService) {}
+  constructor(
+    private noticeOfIntentDetailService: NoticeOfIntentDetailService,
+    private noticeOfIntentMeetingService: NoticeOfIntentMeetingService
+  ) {}
 
   ngOnInit(): void {
     this.noticeOfIntentDetailService.$noticeOfIntent
@@ -40,15 +47,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .pipe(
         tap((noi) => {
           if (noi) {
-            //Load other stuff here
+            this.noticeOfIntentMeetingService.fetch(noi.uuid);
           }
         })
       )
-      .subscribe((noticeOfIntent) => {
+      .pipe(combineLatestWith(this.noticeOfIntentMeetingService.$meetings))
+      .subscribe(([noticeOfIntent, meetings]) => {
         if (noticeOfIntent) {
           this.summary = noticeOfIntent.summary || '';
           this.noticeOfIntent = noticeOfIntent;
-          this.populateEvents(noticeOfIntent);
+          this.populateEvents(noticeOfIntent, meetings);
         }
       });
   }
@@ -66,7 +74,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private populateEvents(noticeOfIntent: NoticeOfIntentDto) {
+  private populateEvents(noticeOfIntent: NoticeOfIntentDto, meetings: NoticeOfIntentMeetingDto[]) {
     const mappedEvents: TimelineEvent[] = [];
     if (noticeOfIntent.dateSubmittedToAlc) {
       mappedEvents.push({
@@ -99,6 +107,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
         isFulfilled: true,
       });
     }
+
+    meetings.sort((a, b) => a.meetingStartDate - b.meetingStartDate);
+    const typeCount = new Map<string, number>();
+    meetings.forEach((meeting) => {
+      const count = typeCount.get(meeting.meetingType.code) || 0;
+      mappedEvents.push({
+        name: `${meeting.meetingType.label} #${count + 1}`,
+        startDate: new Date(meeting.meetingStartDate + SORTING_ORDER.VISIT_REQUESTS),
+        fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
+        isFulfilled: !!meeting.meetingEndDate,
+        link: editLink.get(meeting.meetingType.code),
+      });
+
+      typeCount.set(meeting.meetingType.code, count + 1);
+    });
 
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
