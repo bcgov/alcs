@@ -1,3 +1,5 @@
+import { ROLES } from '../authentication/authentication.service';
+
 export interface UpdateUserDto {
   settings: UserSettingsDto;
 }
@@ -23,6 +25,6 @@ export interface AssigneeDto {
   name: string;
   email: string;
   mentionLabel: string;
-  clientRoles: string[];
+  clientRoles: ROLES[];
   prettyName: string;
 }

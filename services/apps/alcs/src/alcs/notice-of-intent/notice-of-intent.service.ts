@@ -15,6 +15,7 @@ import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { CardService } from '../card/card.service';
+import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentDto,
   NoticeOfIntentDto,
@@ -33,12 +34,15 @@ export class NoticeOfIntentService {
     },
     localGovernment: true,
     region: true,
+    subtype: true,
   };
 
   constructor(
     private cardService: CardService,
     @InjectRepository(NoticeOfIntent)
     private repository: Repository<NoticeOfIntent>,
+    @InjectRepository(NoticeOfIntentSubtype)
+    private subtypeRepository: Repository<NoticeOfIntentSubtype>,
     @InjectMapper() private mapper: Mapper,
     private fileNumberService: FileNumberService,
   ) {}
@@ -168,6 +172,14 @@ export class NoticeOfIntentService {
       noticeOfIntent.summary,
     );
 
+    if (updateDto.subtype) {
+      const subtypes = await this.listSubtypes();
+      const selectedSubtypes = updateDto.subtype.map(
+        (code) => subtypes.find((subtype) => subtype.code === code)!,
+      );
+      noticeOfIntent.subtype = selectedSubtypes;
+    }
+
     noticeOfIntent.dateAcknowledgedComplete = filterUndefined(
       formatIncomingDate(updateDto.dateAcknowledgedComplete),
       noticeOfIntent.dateAcknowledgedComplete,
@@ -193,8 +205,17 @@ export class NoticeOfIntentService {
       noticeOfIntent.dateSubmittedToAlc,
     );
 
+    noticeOfIntent.retroactive =
+      updateDto.retroactive !== undefined
+        ? updateDto.retroactive
+        : noticeOfIntent.retroactive;
+
     await this.repository.save(noticeOfIntent);
 
     return this.getByFileNumber(noticeOfIntent.fileNumber);
+  }
+
+  async listSubtypes() {
+    return this.subtypeRepository.find();
   }
 }

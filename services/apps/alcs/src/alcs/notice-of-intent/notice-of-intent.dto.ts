@@ -1,8 +1,18 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-code/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+
+export class NoticeOfIntentSubtypeDto extends BaseCodeDto {}
 
 export class CreateNoticeOfIntentDto {
   @IsNumber()
@@ -57,8 +67,14 @@ export class NoticeOfIntentDto {
   pausedDays: number;
   paused: boolean;
 
+  @AutoMap(() => Boolean)
+  retroactive: boolean | null;
+
   @AutoMap(() => String)
   summary?: string;
+
+  @AutoMap(() => [NoticeOfIntentSubtypeDto])
+  subtype: NoticeOfIntentSubtypeDto[];
 }
 
 export class UpdateNoticeOfIntentDto {
@@ -85,4 +101,12 @@ export class UpdateNoticeOfIntentDto {
   @IsString()
   @IsOptional()
   summary?: string;
+
+  @IsArray()
+  @IsOptional()
+  subtype?: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  retroactive?: boolean;
 }

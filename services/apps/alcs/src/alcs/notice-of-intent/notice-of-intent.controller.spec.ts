@@ -1,3 +1,5 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -18,6 +20,11 @@ describe('NoticeOfIntentController', () => {
     mockBoardService = createMock<BoardService>();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [NoticeOfIntentController],
       providers: [
         {
@@ -70,5 +77,13 @@ describe('NoticeOfIntentController', () => {
 
     expect(mockService.getByCardUuid).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for get sub types', async () => {
+    mockService.listSubtypes.mockResolvedValue([]);
+
+    await controller.getSubtypes();
+
+    expect(mockService.listSubtypes).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,51 +1,18 @@
 <div class="assignee">
-  <h4>Cards Assigned to Me: {{ sortedFiles.length }}</h4>
-  <table mat-table [dataSource]="sortedFiles" class="mat-elevation-z3 table">
-    <ng-container matColumnDef="highPriority">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
-        <span class="high-priority" *ngIf="element.highPriority">!</span>
-      </td>
-    </ng-container>
+  <h4>Cards Assigned to Me: {{ totalFiles }}</h4>
 
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef>Cards</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.title }}
-      </td>
-    </ng-container>
+  <section *ngIf="noticeOfIntents.length">
+    <div class="subheading2">Notice of Intent</div>
+    <app-assigned-table [assignedFiles]="noticeOfIntents"></app-assigned-table>
+  </section>
 
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell class="labels" *matCellDef="let element">
-        <app-application-type-pill *ngFor="let type of element.labels" [type]="type" [useShortLabel]="true">
-        </app-application-type-pill>
-      </td>
-    </ng-container>
+  <section *ngIf="applications.length">
+    <div class="subheading2">Applications</div>
+    <app-assigned-table [assignedFiles]="applications"></app-assigned-table>
+  </section>
 
-    <ng-container matColumnDef="activeDays">
-      <th mat-header-cell *matHeaderCellDef>Active Days</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.activeDays ?? '-' }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="stage">
-      <th mat-header-cell *matHeaderCellDef>Workflow Stage</th>
-      <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      [ngClass]="{
-        paused: row.paused
-      }"
-      (click)="onSelectCard(row.card)"
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-    ></tr>
-    <tr class="mat-row no-data" *matNoDataRow>
-      <td class="text-center" colspan="5">No Cards Assigned</td>
-    </tr>
-  </table>
+  <section *ngIf="nonApplications.length">
+    <div class="subheading2">Non- Applications</div>
+    <app-assigned-table [assignedFiles]="nonApplications"></app-assigned-table>
+  </section>
 </div>

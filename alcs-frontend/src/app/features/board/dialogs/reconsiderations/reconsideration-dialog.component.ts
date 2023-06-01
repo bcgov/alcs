@@ -49,7 +49,7 @@ export class ReconsiderationDialogComponent extends CardDialogComponent implemen
 
   populateData(recon: ApplicationReconsiderationDto) {
     this.recon = recon;
-    this.populateCardDate(recon.card);
+    this.populateCardData(recon.card);
     this.selectedRegion = recon.application.region.code;
     this.cardTitle = `${recon.application.fileNumber} (${recon.application.applicant})`;
   }

@@ -10,6 +10,7 @@ import { NoticeOfIntentMeetingDialogComponent } from './info-requests/notice-of-
 import { IntakeComponent } from './intake/intake.component';
 import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.component';
 import { OverviewComponent } from './overview/overview.component';
+import { PreparationComponent } from './preparation/preparation.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     IntakeComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
+    PreparationComponent,
     NoticeOfIntentMeetingDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],

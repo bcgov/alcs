@@ -47,7 +47,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
 
   populateData(noticeOfIntent: NoticeOfIntentDto) {
     this.noticeOfIntent = noticeOfIntent;
-    super.populateCardDate(noticeOfIntent.card);
+    super.populateCardData(noticeOfIntent.card);
     this.selectedRegion = noticeOfIntent.region.code;
     this.userService.fetchAssignableUsers();
     this.cardTitle = `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`;

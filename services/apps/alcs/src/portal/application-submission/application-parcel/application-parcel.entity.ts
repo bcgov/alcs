@@ -6,8 +6,6 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
 } from 'typeorm';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
