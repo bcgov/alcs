@@ -4,9 +4,9 @@ def application_etl_temp_table():
     function creates a temporary table to be used by .sql files called later in script
     """
     return f"""
-        DROP TABLE IF EXISTS application_etl;
+        DROP TABLE IF EXISTS oats.application_etl;
 
-        CREATE TEMPORARY TABLE application_etl (
+        CREATE TABLE oats.application_etl (
             id SERIAL PRIMARY KEY,
             application_id int,
             card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -21,7 +21,7 @@ def application_etl_insert():
     """
     return f"""
         INSERT INTO
-            application_etl (application_id, duplicated)
+            oats.application_etl (application_id, duplicated)
         SELECT
             DISTINCT oa.alr_application_id AS application_id,
             CASE
@@ -33,6 +33,40 @@ def application_etl_insert():
             LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number
     """
 
+def appl_code_lut():
+    """
+    Create temporary table to match codes from OATS to ALCS
+    """
+    return f"""
+        DROP TABLE IF EXISTS oats.appl_code_lut;
+
+        CREATE TABLE oats.appl_code_lut (
+            oats_code VARCHAR,
+            alcs_code VARCHAR
+        )
+    """
+def insert_appl_code_lut():
+    """
+    Insert LUT values
+    """
+    return f"""
+
+        INSERT INTO 
+            oats.appl_code_lut (oats_code, alcs_code)
+
+        VALUES ('TUR','TURP'),
+            ('INC','INCL'),
+            ('EXC','EXCL'),
+            ('SDV','SUBD'),
+            ('NFU','NFUP'),
+            ('SCH','PFRS'),
+            ('EXT','ROSO'),
+            ('FILL','POFO'),
+            ('SRW','TODOSRW'),
+            ('CSC','TODOCSC'),
+            ('NAR','NARU')
+
+    """
 
 def compile_application_insert_query(number_of_rows_to_insert):
     """
@@ -60,50 +94,16 @@ def drop_etl_temp_table():
     remove the table
     """
     return f"""
-    DROP TABLE application_etl;
+    DROP TABLE oats.application_etl;
     """
 
-def appl_code_lut():
-    """
-    Create temporary table to match codes from OATS to ALCS
-    """
-    return f"""
-        DROP TABLE IF EXISTS appl_code_lut;
-
-        CREATE TEMPORARY TABLE appl_code_lut (
-            oats_code VARCHAR,
-            alcs_code VARCHAR
-        )
-    """
-def insert_appl_code_lut():
-    """
-    Insert LUT values
-    """
-    return f"""
-
-        INSERT INTO 
-            appl_code_lut (oats_code, alcs_code)
-
-        VALUES ('TUR','TURP'),
-            ('INC','INCL'),
-            ('EXC','EXCL'),
-            ('SDV','SUBD'),
-            ('NFU','NFUP'),
-            ('SCH','PFRS'),
-            ('EXT','ROSO'),
-            ('FILL','POFO'),
-            ('SRW','TODOSRW'),
-            ('CSC','TODOCSC'),
-            ('NAR','NARU')
-
-    """
 
 def drop_appl_code_temp_table():
     """
     remove the table
     """
     return f"""
-    DROP TABLE appl_code_lut;
+    DROP TABLE oats.appl_code_lut;
     """
 
 @inject_conn_pool
@@ -114,6 +114,10 @@ def process_applications(conn=None, batch_size=10000):
     with conn.cursor() as cursor:
         cursor.execute(application_etl_temp_table())
         cursor.execute(application_etl_insert())
+        cursor.execute(appl_code_lut())
+        print("inserting LUT")
+        cursor.execute(insert_appl_code_lut())
+        conn.commit()
         with open(
             "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
         ) as sql_file:
@@ -126,10 +130,6 @@ def process_applications(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_application_id = 0
         
-        cursor.execute(appl_code_lut())
-        print("inserting LUT")
-        cursor.execute(insert_appl_code_lut())
-        print("inserted")
 
         with open("sql/insert-batch-application.sql", "r", encoding="utf-8") as sql_file:
             application_sql = sql_file.read()

@@ -126,10 +126,10 @@ if __name__ == "__main__":
                     process_applications(batch_size=import_batch_size)
 
                     console.log("Processing documents:")
-                    process_documents(batch_size=import_batch_size)
+                    # process_documents(batch_size=import_batch_size)
 
                     console.log("Processing application documents:")
-                    process_application_documents(batch_size=import_batch_size)
+                    # process_application_documents(batch_size=import_batch_size)
 
                     console.log("Done")
             case "clean":
