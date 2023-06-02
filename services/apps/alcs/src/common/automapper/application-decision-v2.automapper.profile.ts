@@ -29,8 +29,8 @@ import {
 } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../../alcs/decision/decision-v2/application-decision/component/application-decision-component.entity';
 import { DecisionMakerCodeDto } from '../../alcs/decision/decision-v2/application-decision/decision-maker/decision-maker.dto';
-import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
 import { LinkedResolutionOutcomeType } from '../../alcs/decision/decision-v2/application-decision/linked-resolution-outcome-type.entity';
+import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -234,7 +234,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
       );
-      
+
       createMap(
         mapper,
         LinkedResolutionOutcomeType,

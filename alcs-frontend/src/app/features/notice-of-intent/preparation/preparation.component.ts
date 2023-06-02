@@ -62,7 +62,6 @@ export class PreparationComponent implements OnInit {
   }
 
   async saveSubtypes($event: string | string[] | null) {
-    debugger;
     if (this.noticeOfIntent && $event instanceof Array) {
       const selectedCodes = $event.map((label) => this.subtypes.find((subtype) => subtype.label === label)!.code);
       await this.noticeOfIntentDetailService.update(this.noticeOfIntent?.fileNumber, {
