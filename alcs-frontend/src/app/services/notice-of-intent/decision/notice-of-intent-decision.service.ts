@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
+import { verifyFileSize } from '../../../shared/utils/file-size-checker';
 import { ToastService } from '../../toast/toast.service';
 import {
   NoticeOfIntentDecisionDto,
@@ -88,9 +89,8 @@ export class NoticeOfIntentDecisionService {
   }
 
   async uploadFile(decisionUuid: string, file: File) {
-    if (file.size > environment.maxFileSize) {
-      const niceSize = environment.maxFileSize / 1048576;
-      this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+    const isValidSize = verifyFileSize(file, this.toastService);
+    if (!isValidSize) {
       return;
     }
 
