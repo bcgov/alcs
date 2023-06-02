@@ -288,7 +288,7 @@ export class HomeController {
             completedAt: subtask.completedAt?.getTime(),
             paused: false,
             title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
-            parentType: 'covenant',
+            parentType: 'notice-of-intent',
           });
         }
       }

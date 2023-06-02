@@ -20,8 +20,8 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   componentToCondition = new FormControl<string | null>(null, [Validators.required]);
   approvalDependant = new FormControl<string | null>(null, [Validators.required]);
 
-  securityAmount = new FormControl<string | null>(null, [Validators.required]);
-  administrativeFee = new FormControl<string | null>(null, [Validators.required]);
+  securityAmount = new FormControl<string | null>(null);
+  administrativeFee = new FormControl<string | null>(null);
   description = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
