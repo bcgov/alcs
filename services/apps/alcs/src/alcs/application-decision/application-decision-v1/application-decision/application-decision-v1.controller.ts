@@ -32,7 +32,7 @@ import {
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
-import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+import { ApplicationDecisionMakerCodeDto } from '../../application-decision-maker/decision-maker.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -74,7 +74,7 @@ export class ApplicationDecisionV1Controller {
       decisionMakers: await this.mapper.mapArrayAsync(
         codes.decisionMakers,
         ApplicationDecisionMakerCode,
-        DecisionMakerCodeDto,
+        ApplicationDecisionMakerCodeDto,
       ),
       ceoCriterion: await this.mapper.mapArrayAsync(
         codes.ceoCriterion,

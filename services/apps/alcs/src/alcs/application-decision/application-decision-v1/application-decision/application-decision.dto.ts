@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { BaseCodeDto } from '../../../../common/dtos/base.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
-import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
+import { ApplicationDecisionMakerCodeDto } from '../../application-decision-maker/decision-maker.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -138,7 +138,7 @@ export class ApplicationDecisionDto {
   documents: DecisionDocumentDto[];
 
   @AutoMap()
-  decisionMaker?: DecisionMakerCodeDto | null;
+  decisionMaker?: ApplicationDecisionMakerCodeDto | null;
 
   @AutoMap()
   ceoCriterion?: CeoCriterionCodeDto | null;

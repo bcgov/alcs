@@ -12,12 +12,12 @@ import {
   ApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../application-decision-condition/application-decision-condition.dto';
+import { ApplicationDecisionMakerCodeDto } from '../../application-decision-maker/decision-maker.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import {
   ApplicationDecisionComponentDto,
   CreateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
-import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 
 export class UpdateApplicationDecisionDto {
   @IsNumber()
@@ -139,7 +139,7 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   modifiesUuid?: string;
 }
 
-export class DecisionOutcomeCodeDto extends BaseCodeDto {
+export class ApplicationDecisionOutcomeCodeDto extends BaseCodeDto {
   @AutoMap()
   isFirstDecision: boolean;
 }
@@ -158,8 +158,8 @@ export class ApplicationDecisionDto {
   @AutoMap()
   date: number;
 
-  @AutoMap(() => DecisionOutcomeCodeDto)
-  outcome: DecisionOutcomeCodeDto;
+  @AutoMap(() => ApplicationDecisionOutcomeCodeDto)
+  outcome: ApplicationDecisionOutcomeCodeDto;
 
   @AutoMap()
   resolutionNumber: string;
@@ -188,8 +188,8 @@ export class ApplicationDecisionDto {
   @AutoMap(() => [DecisionDocumentDto])
   documents: DecisionDocumentDto[];
 
-  @AutoMap(() => DecisionMakerCodeDto)
-  decisionMaker?: DecisionMakerCodeDto | null;
+  @AutoMap(() => ApplicationDecisionMakerCodeDto)
+  decisionMaker?: ApplicationDecisionMakerCodeDto | null;
 
   @AutoMap(() => CeoCriterionCodeDto)
   ceoCriterion?: CeoCriterionCodeDto | null;

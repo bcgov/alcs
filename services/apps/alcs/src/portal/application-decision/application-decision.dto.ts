@@ -3,7 +3,7 @@ import {
   DecisionDocumentDto,
   LinkedResolutionDto,
 } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
-import { DecisionOutcomeCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
+import { ApplicationDecisionOutcomeCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 
 export class PortalDecisionDto {
   @AutoMap()
@@ -12,8 +12,8 @@ export class PortalDecisionDto {
   @AutoMap()
   date: number;
 
-  @AutoMap(() => DecisionOutcomeCodeDto)
-  outcome: DecisionOutcomeCodeDto;
+  @AutoMap(() => ApplicationDecisionOutcomeCodeDto)
+  outcome: ApplicationDecisionOutcomeCodeDto;
 
   @AutoMap(() => String)
   resolutionNumber: number;

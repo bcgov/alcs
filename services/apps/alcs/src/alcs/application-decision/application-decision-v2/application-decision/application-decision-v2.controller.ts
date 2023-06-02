@@ -18,26 +18,26 @@ import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { ApplicationService } from '../../../application/application.service';
-import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
-import { ApplicationDecision } from '../../application-decision.entity';
-import { ApplicationModificationService } from '../../application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionTypeDto } from '../../application-decision-condition/application-decision-condition.dto';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionMakerCodeDto } from '../../application-decision-maker/decision-maker.dto';
+import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
+import { ApplicationModificationService } from '../../application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionOutcomeCodeDto,
   CreateApplicationDecisionDto,
-  DecisionOutcomeCodeDto,
   LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
-import { DecisionMakerCodeDto } from './decision-maker/decision-maker.dto';
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -76,12 +76,12 @@ export class ApplicationDecisionV2Controller {
       outcomes: await this.mapper.mapArrayAsync(
         codes.outcomes,
         ApplicationDecisionOutcomeCode,
-        DecisionOutcomeCodeDto,
+        ApplicationDecisionOutcomeCodeDto,
       ),
       decisionMakers: await this.mapper.mapArrayAsync(
         codes.decisionMakers,
         ApplicationDecisionMakerCode,
-        DecisionMakerCodeDto,
+        ApplicationDecisionMakerCodeDto,
       ),
       ceoCriterion: await this.mapper.mapArrayAsync(
         codes.ceoCriterion,
