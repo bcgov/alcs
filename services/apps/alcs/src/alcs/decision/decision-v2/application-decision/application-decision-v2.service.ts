@@ -200,6 +200,7 @@ export class ApplicationDecisionV2Service {
         conditions: {
           type: true,
         },
+        chairReviewOutcome: true,
       },
     });
 

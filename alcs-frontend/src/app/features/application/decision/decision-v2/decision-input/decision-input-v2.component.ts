@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,8 +27,7 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
-import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
-import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper';
+import { parseBooleanToString, parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
@@ -61,7 +60,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   uuid: string = '';
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
-  ceoCriterion: CeoCriterionDto[] = [];
+  ceoCriterionItems: CeoCriterionDto[] = [];
   linkedResolutionOutcomes: LinkedResolutionOutcomeTypeDto[] = [];
 
   resolutionYears: number[] = [];
@@ -160,7 +159,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.codes = await this.decisionService.fetchCodes();
     this.outcomes = this.codes.outcomes;
     this.decisionMakers = this.codes.decisionMakers;
-    this.ceoCriterion = this.codes.ceoCriterion;
+    this.ceoCriterionItems = this.codes.ceoCriterion;
     this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
 
     await this.prepareDataForEdit();
@@ -457,10 +456,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
     if (postDecision.type === PostDecisionType.Modification) {
+      this.ceoCriterionItems =
+        this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION) ?? [];
       this.form.controls.ceoCriterion.disable();
       this.form.controls.linkedResolutionOutcome.disable();
       this.form.controls.decisionMaker.disable();
-      this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION);
+
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
         ceoCriterion: CeoCriterion.MODIFICATION,
@@ -470,7 +471,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.form.controls.decisionMaker.enable();
       this.form.controls.linkedResolutionOutcome.enable();
       this.form.controls.ceoCriterion.enable();
-      this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION);
+      this.ceoCriterionItems =
+        this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION) ?? [];
     }
   }
 
