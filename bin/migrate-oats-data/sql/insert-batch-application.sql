@@ -58,8 +58,8 @@ application_type_lookup AS (
 SELECT
     oa.alr_application_id :: text AS file_number,
     -- TODO: type code lookup
-    -- 'NARU',
-    COALESCE(atl.alcs_code, 'NARU') AS type_code,
+    'NARU' as type_code,
+    -- COALESCE(atl.alcs_code, 'NARU') AS type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
@@ -76,6 +76,6 @@ FROM
     JOIN oats.application_etl AS ae ON oa.alr_application_id = ae.application_id AND ae.duplicated IS false
     LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
-    LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
+    -- LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     

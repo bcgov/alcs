@@ -146,8 +146,8 @@ def process_applications(conn=None, batch_size=10000):
                     insert_query = compile_application_insert_query(
                         applications_to_be_inserted_count
                     )
-                    print(insert_query)
-                    print(rows) 
+                    # print(insert_query)
+                    # print(rows) 
                     cursor.execute(insert_query, rows)
                     conn.commit()
  

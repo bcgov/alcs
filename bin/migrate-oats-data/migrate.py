@@ -10,10 +10,7 @@ from rich.console import Console
 from db import connection_pool
 from batch_applications import process_applications, clean_applications
 
-# application_import_batch_size = 10000
-# document_import_batch_size = 10000
-# application_document_import_batch_size = 10000
-import_batch_size = 10
+import_batch_size = 10000
 
 def application_import_command_parser(import_batch_size, subparsers):
     application_import_command = subparsers.add_parser(
@@ -126,10 +123,10 @@ if __name__ == "__main__":
                     process_applications(batch_size=import_batch_size)
 
                     console.log("Processing documents:")
-                    # process_documents(batch_size=import_batch_size)
+                    process_documents(batch_size=import_batch_size)
 
                     console.log("Processing application documents:")
-                    # process_application_documents(batch_size=import_batch_size)
+                    process_application_documents(batch_size=import_batch_size)
 
                     console.log("Done")
             case "clean":
