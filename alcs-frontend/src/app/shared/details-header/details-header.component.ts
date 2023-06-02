@@ -26,6 +26,7 @@ export class DetailsHeaderComponent {
 
   @Input() heading = 'Title Here';
   @Input() types: ApplicationTypeDto[] = [];
+  @Input() days = 'Calendar Days';
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {

@@ -43,7 +43,7 @@
       <div class="body-text">{{ _application.localGovernment.name }}</div>
     </div>
     <div *ngIf="!_application.hasOwnProperty('decisionDate')">
-      <div class="subheading2">Business Days:</div>
+      <div class="subheading2">{{ days }}:</div>
       <app-time-tracker [application]="_application"></app-time-tracker>
     </div>
   </div>
