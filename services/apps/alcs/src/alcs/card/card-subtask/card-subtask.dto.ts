@@ -55,7 +55,8 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
     | 'reconsideration'
     | 'covenant'
     | 'modification'
-    | 'planning-review';
+    | 'planning-review'
+    | 'notice-of-intent';
   activeDays?: number;
   paused: boolean;
 }

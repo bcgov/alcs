@@ -50,7 +50,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       .pipe(takeUntil(this.$destroy))
       .pipe(combineLatestWith(this.decisionService.$decisions))
       .subscribe(([selectedDecision, decisions]) => {
-        const result = [];
+        const otherDecisionComponents = [];
         for (const decision of decisions) {
           const mappedComponents = this.mapComponents(
             decision.uuid,
@@ -59,11 +59,11 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
             decision.resolutionYear
           );
           const otherDecisionsComponents = mappedComponents.filter(
-            (component) => component.decisionUuid !== decision.uuid
+            (component) => component.decisionUuid !== selectedDecision?.uuid
           );
-          result.push(...otherDecisionsComponents);
+          otherDecisionComponents.push(...otherDecisionsComponents);
         }
-        this.allComponents = result;
+        this.allComponents = otherDecisionComponents;
         this.selectableComponents = [...this.allComponents];
 
         if (selectedDecision) {
