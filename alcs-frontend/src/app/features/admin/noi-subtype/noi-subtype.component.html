@@ -45,7 +45,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let row">
-        <button *ngIf="row.code !== 'MODI'" class="edit-btn" mat-flat-button (click)="onEdit(row)">
+        <button class="edit-btn" mat-flat-button (click)="onEdit(row)">
           <mat-icon>edit</mat-icon>
         </button>
       </td>

@@ -48,7 +48,7 @@ export class NoiSubtypeService {
     try {
       return await firstValueFrom(this.http.delete<CeoCriterionDto>(`${this.url}/${code}`));
     } catch (e) {
-      this.toastService.showErrorToast('Failed to delete ceo criterion');
+      this.toastService.showErrorToast('Failed to delete NOI subtype');
       console.log(e);
     }
     return;
