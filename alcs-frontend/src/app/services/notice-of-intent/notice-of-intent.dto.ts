@@ -3,7 +3,9 @@ import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
 
-export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {}
+export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {
+  isActive: boolean;
+}
 
 export interface CreateNoticeOfIntentDto {
   fileNumber: string;

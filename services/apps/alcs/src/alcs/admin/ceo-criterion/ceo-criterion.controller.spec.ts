@@ -7,7 +7,7 @@ import { CeoCriterionCode } from '../../decision/ceo-criterion/ceo-criterion.ent
 import { CeoCriterionController } from './ceo-criterion.controller';
 import { CeoCriterionService } from './ceo-criterion.service';
 
-describe('HolidayController', () => {
+describe('CeoCriterionController', () => {
   let controller: CeoCriterionController;
   let mockCeoCriterionService: DeepMocked<CeoCriterionService>;
 

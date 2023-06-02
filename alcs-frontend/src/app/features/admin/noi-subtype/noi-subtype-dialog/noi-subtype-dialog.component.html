@@ -1,0 +1,56 @@
+<div mat-dialog-title>
+  <h4>{{ isEdit ? 'Edit' : 'Create' }} NOI Subtype</h4>
+</div>
+<div mat-dialog-content class="dialog">
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <mat-form-field class="code" appearance="outline">
+      <mat-label>Code</mat-label>
+      <input
+        [disabled]="isEdit"
+        required
+        maxlength="4"
+        minlength="4"
+        matInput
+        id="code"
+        [(ngModel)]="code"
+        name="code"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="label" appearance="outline">
+      <mat-label>Label</mat-label>
+      <input required matInput id="label" [(ngModel)]="label" name="label" />
+    </mat-form-field>
+
+    <div class="full-width">
+      <mat-form-field class="description" appearance="outline">
+        <mat-label>Description</mat-label>
+        <input required matInput id="description" [(ngModel)]="description" name="description" />
+      </mat-form-field>
+    </div>
+
+    <div class="full-width">
+      <mat-label>Status</mat-label>
+      <mat-button-toggle-group required id="isActive" [(ngModel)]="isActive" name="isActive">
+        <mat-button-toggle value="true">Active</mat-button-toggle>
+        <mat-button-toggle value="false">Inactive</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </form>
+
+  <mat-dialog-actions align="end">
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button
+        [loading]="isLoading"
+        (click)="onSubmit()"
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!form.form.valid"
+      >
+        Save
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>
