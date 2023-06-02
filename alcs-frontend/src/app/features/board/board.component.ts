@@ -225,6 +225,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.cards = [
         ...mappedApps,
         ...mappedRecons,
+        ...mappedModifications,
         ...mappedReviewMeetings,
         ...mappedCovenants,
         ...mappedNoticeOfIntents,

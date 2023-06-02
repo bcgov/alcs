@@ -129,11 +129,12 @@ export class PlanningReviewService {
     });
   }
 
-  async getCards() {
+  async getByBoardCode(boardCode: string) {
     const res = await this.repository.find({
       relations: this.DEFAULT_RELATIONS,
       where: {
         card: {
+          board: { code: boardCode },
           auditDeletedDateAt: IsNull(),
         },
       },
