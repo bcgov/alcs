@@ -18,6 +18,7 @@ import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
 import { CovenantDto } from '../../services/covenant/covenant.dto';
 import { CovenantService } from '../../services/covenant/covenant.service';
+import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -39,6 +40,7 @@ describe('BoardComponent', () => {
   let modificationService: DeepMocked<ApplicationModificationService>;
   let covenantService: DeepMocked<CovenantService>;
   let titleService: DeepMocked<Title>;
+  let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -75,6 +77,7 @@ describe('BoardComponent', () => {
       modifications: [],
       planningReviews: [],
       reconsiderations: [],
+      noticeOfIntents: [],
     });
 
     dialog = createMock();
@@ -87,6 +90,7 @@ describe('BoardComponent', () => {
     modificationService = createMock();
     covenantService = createMock();
     titleService = createMock();
+    noticeOfIntentService = createMock();
 
     const params = {
       boardCode: 'boardCode',
@@ -144,6 +148,10 @@ describe('BoardComponent', () => {
           useValue: covenantService,
         },
         {
+          provide: NoticeOfIntentService,
+          useValue: noticeOfIntentService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -173,6 +181,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -191,6 +200,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -204,6 +214,7 @@ describe('BoardComponent', () => {
       modifications: [],
       planningReviews: [],
       reconsiderations: [],
+      noticeOfIntents: [],
     });
 
     boardEmitter.next([
@@ -213,6 +224,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -229,6 +241,7 @@ describe('BoardComponent', () => {
       modifications: [],
       planningReviews: [],
       reconsiderations: [mockRecon],
+      noticeOfIntents: [],
     });
 
     boardEmitter.next([
@@ -238,6 +251,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 
@@ -276,6 +290,7 @@ describe('BoardComponent', () => {
       modifications: [],
       planningReviews: [],
       reconsiderations: [],
+      noticeOfIntents: [],
     });
 
     boardEmitter.next([
@@ -285,6 +300,7 @@ describe('BoardComponent', () => {
         isFavourite: false,
         decisionMaker: '',
         statuses: [],
+        allowedCardTypes: [],
       },
     ]);
 

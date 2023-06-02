@@ -14,12 +14,26 @@ $date-ht: 48px;
   display: flex;
   flex-direction: column;
 
+  .subtext {
+    color: colors.$primary-color-dark;
+  }
+
   &:hover {
     border-color: colors.$primary-color;
     transition: all 100ms ease-in-out;
 
     > .decision-date-info {
       border-color: colors.$primary-color;
+    }
+  }
+
+  &.notice-of-intent {
+    border-bottom: 2px solid colors.$primary-color-light;
+
+    &:hover {
+      border: 2px solid transparent;
+      border-bottom-color: colors.$primary-color-dark;
+      transition: all 100ms ease-in-out;
     }
   }
 }

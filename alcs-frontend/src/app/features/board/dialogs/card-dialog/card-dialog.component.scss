@@ -1,0 +1,106 @@
+@use '../../../../../styles/colors';
+
+.close {
+  color: colors.$grey;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -32px 0 12px;
+}
+
+.card-type-label {
+  color: colors.$primary-color-dark;
+}
+
+.header-row {
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.application-type {
+  display: inline-block;
+  margin-left: 4px;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 11px;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.card-title {
+  align-items: center;
+  margin-right: 2rem !important;
+}
+
+.card-assignee {
+  .assignee-card-name {
+    font-size: 1.2em !important;
+    font-weight: 600 !important;
+  }
+  .assignee-card-email {
+    font-size: 0.9em !important;
+  }
+}
+
+:host::ng-deep .move-board-menu {
+  max-height: 250px;
+}
+
+.board-menu-item {
+  display: grid;
+  grid-template-columns: 22px 1fr 22px;
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-menu-item .mdc-list-item__primary-text {
+  width: 100%;
+}
+
+.favourite-board-icon {
+  height: 20px;
+  margin-top: 2px;
+  font-size: 18px;
+  color: colors.$secondary-color-dark;
+}
+
+.selected-board-icon {
+  height: 20px;
+  margin-top: 2px;
+  font-size: 18px;
+  color: colors.$primary-color;
+}
+
+.priority {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20px;
+}
+
+.filled-priority {
+  background-image: url('/assets/icons/priority_high_red.svg');
+}
+
+.empty-priority {
+  background-image: url('/assets/icons/priority_empty.svg');
+}
+
+.select-container {
+  padding-top: 2px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  align-items: end;
+}
+
+.subtasks-wrapper {
+  margin-top: 24px;
+}
+
+.card-comments-wrapper {
+  margin-top: 36px;
+}

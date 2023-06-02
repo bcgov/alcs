@@ -8,6 +8,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,17 +22,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { MtxButtonModule } from '@ng-matero/extensions/button';
-import { DatetimeAdapter } from '@ng-matero/extensions/core';
+import { DatetimeAdapter, MtxNativeDatetimeModule } from '@ng-matero/extensions/core';
+import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
-import { ApplicationHeaderComponent } from './application-header/application-header.component';
-import { ApplicationTimeTrackerComponent } from './application-time-tracker/application-time-tracker.component';
+import { DetailsHeaderComponent } from './details-header/details-header.component';
+import { InlineDatepickerComponent } from './inline-datepicker/inline-datepicker.component';
+import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
+import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
+import { StaffJournalComponent } from './staff-journal/staff-journal.component';
+import { TimeTrackerComponent } from './time-tracker/time-tracker.component';
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
@@ -45,6 +53,7 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
+import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 
@@ -60,12 +69,17 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     InlineNumberComponent,
     InlineTextComponent,
     InlineDropdownComponent,
-    ApplicationHeaderComponent,
+    DetailsHeaderComponent,
     ApplicationDocumentComponent,
-    ApplicationTimeTrackerComponent,
+    TimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
     FileSizePipe,
+    TimelineComponent,
+    InlineDatepickerComponent,
+    StaffJournalComponent,
+    StaffJournalNoteComponent,
+    StaffJournalNoteInputComponent,
   ],
   imports: [
     CommonModule,
@@ -86,6 +100,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     NgxMaskPipe,
     CdkDropList,
     CdkDrag,
+    RouterModule,
+    MatDatepickerModule,
   ],
   exports: [
     CommonModule,
@@ -121,18 +137,27 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     InlineDropdownComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
-    ApplicationHeaderComponent,
+    DetailsHeaderComponent,
     ApplicationDocumentComponent,
     MeetingOverviewComponent,
     FavoriteButtonComponent,
     AvatarCircleComponent,
     MatSelectModule,
-    ApplicationTimeTrackerComponent,
+    TimeTrackerComponent,
     ApplicationTypePillComponent,
     SafePipe,
     FileSizePipe,
     NgxMaskDirective,
     NgxMaskPipe,
+    MtxDatetimepickerModule,
+    MtxNativeDatetimeModule,
+    MatCheckboxModule,
+    MatSortModule,
+    TimelineComponent,
+    InlineDatepickerComponent,
+    StaffJournalComponent,
+    StaffJournalNoteComponent,
+    StaffJournalNoteInputComponent,
   ],
 })
 export class SharedModule {

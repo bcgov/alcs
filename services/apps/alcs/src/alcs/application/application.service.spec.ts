@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
@@ -29,6 +30,7 @@ describe('ApplicationService', () => {
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
   let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockFileNumberService: DeepMocked<FileNumberService>;
 
   beforeEach(async () => {
     mockApplicationTimeService = createMock();
@@ -36,6 +38,7 @@ describe('ApplicationService', () => {
     applicationRepositoryMock = createMock();
     applicationTypeRepositoryMock = createMock();
     mockApplicationLocalGovernmentService = createMock();
+    mockFileNumberService = createMock();
 
     applicationMockEntity = initApplicationMockEntity();
 
@@ -58,6 +61,10 @@ describe('ApplicationService', () => {
         {
           provide: ApplicationLocalGovernmentService,
           useValue: mockApplicationLocalGovernmentService,
+        },
+        {
+          provide: FileNumberService,
+          useValue: mockFileNumberService,
         },
         {
           provide: getRepositoryToken(Application),
@@ -85,7 +92,7 @@ describe('ApplicationService', () => {
     expect(applicationService).toBeDefined();
   });
 
-  it('should getall applications', async () => {
+  it('should get all applications', async () => {
     expect(await applicationService.getMany({})).toStrictEqual([
       applicationMockEntity,
     ]);
@@ -100,10 +107,9 @@ describe('ApplicationService', () => {
 
   it('should call save when an Application is created', async () => {
     const applicationMockEntity = initApplicationMockEntity();
-    applicationRepositoryMock.findOne
-      .mockResolvedValueOnce(null)
-      .mockResolvedValueOnce(applicationMockEntity);
+    applicationRepositoryMock.findOne.mockResolvedValue(applicationMockEntity);
     mockCodeService.fetchRegion.mockResolvedValue({} as ApplicationRegion);
+    mockFileNumberService.checkValidFileNumber.mockResolvedValue(true);
 
     const payload: CreateApplicationServiceDto = {
       fileNumber: applicationMockEntity.fileNumber,
@@ -117,30 +123,9 @@ describe('ApplicationService', () => {
     expect(await applicationService.create(payload)).toStrictEqual(
       applicationMockEntity,
     );
+    expect(mockFileNumberService.checkValidFileNumber).toHaveBeenCalledTimes(1);
     expect(mockCodeService.fetchRegion).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(1);
-  });
-
-  it('should call faile to create if file number already exists', async () => {
-    const applicationMockEntity = initApplicationMockEntity();
-
-    const createDto: CreateApplicationServiceDto = {
-      fileNumber: applicationMockEntity.fileNumber,
-      applicant: applicationMockEntity.applicant,
-      localGovernmentUuid: 'government-uuid',
-      typeCode: 'type',
-      regionCode: 'region',
-      dateSubmittedToAlc: new Date(),
-    };
-
-    const promise = applicationService.create(createDto);
-
-    await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        'Application with file number already exists',
-      ),
-    );
-    expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
   it('should call update when an Application is updated', async () => {

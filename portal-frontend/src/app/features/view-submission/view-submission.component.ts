@@ -6,8 +6,8 @@ import { ApplicationDocumentService } from '../../services/application-document/
 import { ApplicationSubmissionReviewDto } from '../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import {
-  APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
+  APPLICATION_STATUS,
 } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
@@ -79,7 +79,7 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
 
   onCancel(fileId: string) {
     const dialog = this.confirmationDialogService.openDialog({
-      body: 'Are you sure you want to cancel your application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
+      body: 'Are you sure you want to cancel the application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
       confirmAction: 'Confirm',
       cancelAction: 'Return',
     });
@@ -87,8 +87,13 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     dialog.subscribe(async (isConfirmed) => {
       if (isConfirmed) {
         await this.applicationService.cancel(fileId);
+        await this.loadApplication(this.application!.fileNumber);
       }
     });
+  }
+
+  onCancelWrapper(event: any) {
+    this.onCancel(event);
   }
 
   async onReview(fileId: string) {

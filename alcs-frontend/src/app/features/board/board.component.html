@@ -7,20 +7,21 @@
       </h2>
     </div>
     <div>
-      <ng-container *ngIf="boardHasPlanningReviews || boardHasModifications || boardHasCovenant">
+      <ng-container *ngIf="boardHasPlanningReviews || boardHasModifications || boardHasCovenant || boardHasNOI">
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
         <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-          <button mat-menu-item (click)="onReconsiderationCreate()">Reconsideration</button>
+          <button *ngIf="boardHasReconsiderations" mat-menu-item (click)="onReconsiderationCreate()">
+            Reconsideration
+          </button>
           <button *ngIf="boardHasPlanningReviews" mat-menu-item (click)="onCreatePlanningReview()">
             Planning Review
           </button>
           <button *ngIf="boardHasModifications" mat-menu-item (click)="onCreateModification()">Modification</button>
           <button *ngIf="boardHasCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
+          <button *ngIf="boardHasNOI" mat-menu-item (click)="onCreateNoticeOfIntent()">Notice of Intent</button>
+          <button *ngIf="boardHasApplication" mat-menu-item (click)="onApplicationCreate()">Application</button>
         </mat-menu>
       </ng-container>
-      <button *ngIf="currentBoardCode === 'vett'" mat-flat-button color="primary" (click)="onCreate()">
-        {{ createCardTitle }}
-      </button>
     </div>
   </div>
   <div class="board-content">

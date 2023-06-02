@@ -200,6 +200,7 @@ export class ApplicationDecisionV2Service {
         conditions: {
           type: true,
         },
+        chairReviewOutcome: true,
       },
     });
 
@@ -288,6 +289,8 @@ export class ApplicationDecisionV2Service {
     }
 
     await this.updateComponents(updateDto, existingDecision);
+
+    //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(
@@ -341,7 +344,10 @@ export class ApplicationDecisionV2Service {
           updateDto.decisionComponents,
           false,
         );
-    } else if (existingDecision.components) {
+    } else if (
+      updateDto.decisionComponents === null &&
+      existingDecision.components
+    ) {
       await this.decisionComponentService.softRemove(
         existingDecision.components,
       );
@@ -364,7 +370,7 @@ export class ApplicationDecisionV2Service {
         await this.decisionConditionService.remove(conditionsToRemove);
       }
 
-      const allComponents =
+      const existingComponents =
         await this.decisionComponentService.getAllByApplicationUuid(
           existingDecision.applicationUuid!,
         );
@@ -372,7 +378,8 @@ export class ApplicationDecisionV2Service {
       existingDecision.conditions =
         await this.decisionConditionService.createOrUpdate(
           updateDto.conditions,
-          allComponents,
+          existingComponents,
+          existingDecision.components ?? [],
           false,
         );
     } else if (existingDecision.conditions) {

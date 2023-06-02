@@ -1,0 +1,17 @@
+.intake {
+  & > div {
+    margin: 40px 0;
+  }
+}
+
+h5 {
+  margin-bottom: 4px !important;
+}
+
+.payment-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-top: 16px;
+  row-gap: 32px;
+  column-gap: 24px;
+}

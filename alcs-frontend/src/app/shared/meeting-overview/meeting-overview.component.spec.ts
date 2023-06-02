@@ -89,6 +89,7 @@ describe('MeetingOverviewComponent', () => {
         isFavourite: true,
         title: '',
         code: 'boardCode',
+        allowedCardTypes: [],
       },
     ]);
 

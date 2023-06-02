@@ -2,7 +2,6 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { AutoMap } from '@automapper/classes';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
@@ -16,6 +15,7 @@ import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
+import { filterUndefined } from '../../utils/undefined';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
@@ -35,9 +35,6 @@ const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.REFUSED_TO_FORWARD,
   APPLICATION_STATUS.SUBMITTED_TO_ALC,
 ];
-
-const filterUndefined = (val: any, fallback: any) =>
-  val !== undefined ? val : fallback;
 
 @Injectable()
 export class ApplicationSubmissionService {

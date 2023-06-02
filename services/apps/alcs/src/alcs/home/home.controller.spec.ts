@@ -26,6 +26,9 @@ import {
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
+import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { HomeController } from './home.controller';
@@ -39,18 +42,17 @@ describe('HomeController', () => {
   let mockPlanningReviewService: DeepMocked<PlanningReviewService>;
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
+  let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
-    mockApplicationService = createMock<ApplicationService>();
-    mockApplicationSubtaskService = createMock<CardSubtaskService>();
-    mockApplicationReconsiderationService =
-      createMock<ApplicationReconsiderationService>();
-    mockPlanningReviewService = createMock<PlanningReviewService>();
-    mockApplicationTimeTrackingService =
-      createMock<ApplicationTimeTrackingService>();
-    mockApplicationModificationService =
-      createMock<ApplicationModificationService>();
-    mockCovenantService = createMock<CovenantService>();
+    mockApplicationService = createMock();
+    mockApplicationSubtaskService = createMock();
+    mockApplicationReconsiderationService = createMock();
+    mockPlanningReviewService = createMock();
+    mockApplicationTimeTrackingService = createMock();
+    mockApplicationModificationService = createMock();
+    mockCovenantService = createMock();
+    mockNoticeOfIntentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -96,6 +98,10 @@ describe('HomeController', () => {
           provide: CovenantService,
           useValue: mockCovenantService,
         },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNoticeOfIntentService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
         CovenantProfile,
@@ -117,6 +123,8 @@ describe('HomeController', () => {
     mockPlanningReviewService.mapToDtos.mockResolvedValue([]);
     mockCovenantService.getBy.mockResolvedValue([]);
     mockCovenantService.mapToDtos.mockResolvedValue([]);
+    mockNoticeOfIntentService.getBy.mockResolvedValue([]);
+    mockNoticeOfIntentService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -135,8 +143,10 @@ describe('HomeController', () => {
       [],
     );
     mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
-
     mockCovenantService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
+    mockNoticeOfIntentService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
   });
 
   it('should be defined', () => {
@@ -307,6 +317,29 @@ describe('HomeController', () => {
 
       expect(res[0].title).toContain(mockCovenant.fileNumber);
       expect(res[0].title).toContain(mockCovenant.applicant);
+    });
+
+    it('should call NOI Service and map it', async () => {
+      const mockNoi = new NoticeOfIntent({
+        applicant: 'fake-applicant',
+        fileNumber: 'fileNumber',
+        card: initCardMockEntity('222'),
+      });
+      mockNoticeOfIntentService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [mockNoi],
+      );
+
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.PEER_REVIEW,
+      );
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockNoticeOfIntentService.getWithIncompleteSubtaskByType,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(res[0].title).toContain(mockNoi.fileNumber);
+      expect(res[0].title).toContain(mockNoi.applicant);
     });
   });
 });

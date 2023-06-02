@@ -1,12 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';

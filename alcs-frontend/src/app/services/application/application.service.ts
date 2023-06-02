@@ -41,7 +41,9 @@ export class ApplicationService {
       return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}`, application));
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 400) {
-        this.toastService.showErrorToast(`Application with File ID ${application.fileNumber} already exists`);
+        this.toastService.showErrorToast(
+          `Covenant/Application/NOI with File ID ${application.fileNumber} already exists`
+        );
       } else {
         this.toastService.showErrorToast('Failed to create Application');
       }

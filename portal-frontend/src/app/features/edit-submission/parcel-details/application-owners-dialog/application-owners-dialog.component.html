@@ -3,7 +3,13 @@
 </div>
 <div mat-dialog-content>
   <div>
-    <app-parcel-owners (onOwnersUpdated)='onUpdated()' [submissionUuid]='submissionUuid' [owners]="owners" [fileId]="fileId"></app-parcel-owners>
+    <app-parcel-owners
+      (onOwnersUpdated)="onUpdated()"
+      [submissionUuid]="submissionUuid"
+      [owners]="owners"
+      [fileId]="fileId"
+      [isShowAllOwners]="true"
+    ></app-parcel-owners>
   </div>
 </div>
 <div mat-dialog-actions>

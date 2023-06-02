@@ -100,20 +100,20 @@
       </div>
     </ng-container>
     <div class="subheading2 grid-1">
-      Civic Address
-      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ parcel.civicAddress }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
       Farm Classification
       <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.isFarm')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Civic Address
+      <app-updated-banner *ngIf="updatedFields.includes(parcelInd + '.civicAddress')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
     </div>
     <ng-container *ngIf="parcel.validation?.isCrownSelectionMandatory">
       <div class="subheading2 grid-1">Crown Selection</div>
@@ -140,13 +140,21 @@
     </div>
     <div class="full-width owner-information">
       <div class="subheading2">Type</div>
-      <div class="subheading2">Full Name/ Organization</div>
+      <div class="subheading2">Full Name</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        Ministry/ Department
+      </div>
       <div class="subheading2">Phone</div>
       <div class="subheading2">Email</div>
       <div class="subheading2">Corporate Summary</div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.type.label }}</div>
         <div>{{ owner.displayName }}</div>
+        <div>
+          <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
+          <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+        </div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>

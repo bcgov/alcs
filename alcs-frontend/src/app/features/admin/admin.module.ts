@@ -10,6 +10,8 @@ import { HolidayDialogComponent } from './holiday/holiday-dialog/holiday-dialog.
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentDialogComponent } from './local-government/dialog/local-government-dialog.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
+import { NoiSubtypeDialogComponent } from './noi-subtype/noi-subtype-dialog/noi-subtype-dialog.component';
+import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
 import { UnarchiveComponent } from './unarchive/unarchive.component';
 
 const routes: Routes = [
@@ -28,6 +30,8 @@ const routes: Routes = [
     LocalGovernmentDialogComponent,
     CeoCriterionComponent,
     CeoCriterionDialogComponent,
+    NoiSubtypeComponent,
+    NoiSubtypeDialogComponent,
     UnarchiveComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -10,8 +10,8 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import {
-  APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
+  APPLICATION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 
@@ -25,6 +25,8 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
   @Input() $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   @Input() $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
+
+  @Output() onCancel = new EventEmitter<string>();
 
   application: ApplicationSubmissionDetailedDto | undefined;
   applicationReview: ApplicationSubmissionReviewDto | undefined;
@@ -96,6 +98,10 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
       }
     }
     await this.router.navigateByUrl(`application/${fileId}/review`);
+  }
+
+  onCancelClicked(fileNumber: string) {
+    this.onCancel.emit(fileNumber);
   }
 
   ngOnDestroy(): void {

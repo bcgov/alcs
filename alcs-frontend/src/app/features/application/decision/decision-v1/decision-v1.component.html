@@ -20,7 +20,7 @@
       'has-post-decisions': decision.modifiedBy?.length || decision.reconsideredBy?.length
     }"
   >
-    <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body1-text">
+    <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
       <div>
         <strong>Modified&nbsp;By:&nbsp;</strong>
         {{ decision.modifiedByResolutions.join(', ') }}
@@ -45,7 +45,7 @@
       </button>
     </div>
     <div class="decision-padding">
-      <div class="body-large">
+      <div class="subheading1">
         Decision #{{ decisions.length - i }} -
         <ng-container *ngIf="i === decisions.length - 1 && application">
           <span class="days" matTooltip="Active Days">
@@ -113,7 +113,7 @@
           </span>
         </div>
       </div>
-      <div class="body-large">Documents</div>
+      <div class="subheading1">Documents</div>
       <div class="decision-documents">
         <div class="subheading2">File Name</div>
         <div class="subheading2">File Upload Date</div>

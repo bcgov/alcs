@@ -27,6 +27,14 @@
       </div>
       <div *ngIf="type.getRawValue() === OWNER_TYPE.ORGANIZATION" class="full-row">
         <label for="fileUpload">Corporate Summary</label>
+        <div>
+          <mat-hint class="subtext">
+            A corporate/company summary provides the names of the directors, which is required to determine the signing
+            authority for the application. Visit BC Registry Services online or call their Help Desk at 1-877-526-1526
+            to submit a search request.</mat-hint
+          >
+        </div>
+        <h6></h6>
         <app-file-drag-drop
           [uploadedFiles]="files"
           (uploadFiles)="attachFile($event)"

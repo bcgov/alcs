@@ -1,0 +1,24 @@
+<div class="body-text left time-tracking">
+  <div *ngIf="!paused"><span class="dot"></span>Active</div>
+  <div *ngIf="paused"><span class="dot paused"></span>Paused</div>
+  <div
+    matTooltip="Active Days"
+    class="card-active-days"
+    [ngClass]="{
+      'inactive-timer': paused
+    }"
+  >
+    <mat-icon class="icon">calendar_month</mat-icon>
+    {{ activeDays }}
+  </div>
+  <div
+    matTooltip="Paused Days"
+    class="card-paused-days"
+    [ngClass]="{
+      'inactive-timer': !paused
+    }"
+  >
+    <mat-icon class="icon">pause</mat-icon>
+    {{ pausedDays }}
+  </div>
+</div>
