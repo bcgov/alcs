@@ -9,6 +9,7 @@ import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
@@ -16,12 +17,14 @@ describe('NoticeOfIntentService', () => {
   let service: NoticeOfIntentService;
   let mockCardService: DeepMocked<CardService>;
   let mockRepository: DeepMocked<Repository<NoticeOfIntent>>;
+  let mockSubtypeRepository: DeepMocked<Repository<NoticeOfIntentSubtype>>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
     mockRepository = createMock();
     mockFileNumberService = createMock();
+    mockSubtypeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -34,6 +37,10 @@ describe('NoticeOfIntentService', () => {
         {
           provide: getRepositoryToken(NoticeOfIntent),
           useValue: mockRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentSubtype),
+          useValue: mockSubtypeRepository,
         },
         {
           provide: CardService,
@@ -149,5 +156,13 @@ describe('NoticeOfIntentService', () => {
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(mockRepository.find.mock.calls[0][0]!.withDeleted).toEqual(true);
+  });
+
+  it('should call the subtype repo for list', async () => {
+    mockSubtypeRepository.find.mockResolvedValue([]);
+
+    await service.listSubtypes();
+
+    expect(mockSubtypeRepository.find).toHaveBeenCalledTimes(1);
   });
 });

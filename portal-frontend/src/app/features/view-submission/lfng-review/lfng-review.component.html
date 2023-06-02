@@ -3,6 +3,14 @@
     <h3>Local/First Nation Gov Review</h3>
     <div class="btns-wrapper">
       <button
+        *ngIf="application.canEdit || application.canReview"
+        mat-stroked-button
+        color="warn"
+        (click)="onCancelClicked(application.uuid)"
+      >
+        Cancel Application
+      </button>
+      <button
         [routerLink]="'/application/' + application.fileNumber + '/edit'"
         *ngIf="application.canEdit"
         mat-flat-button

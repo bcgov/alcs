@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
 import { Board } from './board.entity';
@@ -14,6 +13,7 @@ export class BoardService {
     statuses: {
       status: true,
     },
+    allowedCardTypes: true,
   };
 
   constructor(

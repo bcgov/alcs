@@ -30,6 +30,7 @@ export class CardDialogComponent implements OnInit, OnDestroy {
   selectedBoard?: string;
   boardStatuses: BoardStatusDto[] = [];
   boards: BoardWithFavourite[] = [];
+  allowedBoards: BoardWithFavourite[] = [];
 
   constructor(
     private authService: AuthenticationService,
@@ -45,6 +46,7 @@ export class CardDialogComponent implements OnInit, OnDestroy {
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
       const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
       this.boards = boards;
+      this.allowedBoards = this.boards.filter((board) => this.card && board.allowedCardTypes.includes(this.card.type));
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }
@@ -62,12 +64,13 @@ export class CardDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  populateCardDate(card: CardDto) {
+  populateCardData(card: CardDto) {
     this.card = card;
     this.selectedAssignee = card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = card.status.code;
     this.selectedBoard = card.board.code;
+    this.allowedBoards = this.boards.filter((board) => this.card && board.allowedCardTypes.includes(this.card.type));
 
     this.$users = this.userService.$assignableUsers;
     this.userService.fetchAssignableUsers();

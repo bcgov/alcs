@@ -21,7 +21,13 @@
         >
           View Detail
         </button>
-        <button [mat-dialog-close]="isDirty" mat-menu-item>Add Info Request</button>
+        <button
+          [mat-dialog-close]="isDirty"
+          [routerLink]="['notice-of-intent', noticeOfIntent.fileNumber, 'info-request']"
+          mat-menu-item
+        >
+          Add Info Request
+        </button>
         <button [mat-dialog-close]="isDirty" mat-menu-item>Add Site Visit / Meeting</button>
       </mat-menu>
     </div>
@@ -38,7 +44,7 @@
         <mat-icon>move_down</mat-icon>
       </button>
       <mat-menu class="move-board-menu" xPosition="before" #moveMenu="matMenu">
-        <button (click)="onBoardSelected(board)" *ngFor="let board of boards" mat-menu-item>
+        <button (click)="onBoardSelected(board)" *ngFor="let board of allowedBoards" mat-menu-item>
           <div class="board-menu-item">
             <span class="favourite-board-icon-container"
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>

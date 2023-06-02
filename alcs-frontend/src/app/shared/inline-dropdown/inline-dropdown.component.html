@@ -1,29 +1,33 @@
-<div class='inline-number-wrapper'>
-  <span class='left' *ngIf='!isEditing'>
-    <a (click)='startEdit()' class='add' *ngIf='!value'> Select an option </a>
-    <span *ngIf='value'>
+<div class="inline-number-wrapper">
+  <span class="left" *ngIf="!isEditing">
+    <a (click)="startEdit()" class="add" *ngIf="!value"> Select an option </a>
+    <a (click)="startEdit()" class="add" *ngIf="multiple && coerceArray(value)?.length === 0"> Select option(s) </a>
+    <span *ngIf="!multiple">
       {{ value }}
     </span>
-    <button *ngIf='value' class='edit-button' mat-icon-button (click)='startEdit()'>
-      <mat-icon class='edit-icon'>edit</mat-icon>
+    <span *ngIf="multiple">
+      {{ coerceArray(value)?.join(', ') }}
+    </span>
+    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
     </button>
   </span>
   <div
-    class='editing'
-    [ngClass]='{
+    class="editing"
+    [ngClass]="{
       hidden: !isEditing
-    }'
+    }"
   >
-    <mat-form-field appearance='outline'>
-      <mat-select placeholder='Select a value' [(ngModel)]='pendingValue'>
-        <mat-option *ngFor='let option of options' [value]='option.value'>
+    <mat-form-field appearance="outline">
+      <mat-select multiple="multiple" placeholder="Select a value" [(ngModel)]="pendingValue">
+        <mat-option *ngFor="let option of options" [value]="option.value">
           {{ option.label }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <div class='button-container'>
-      <button mat-button (click)='cancelEdit()'>CANCEL</button>
-      <button mat-button class='save' (click)='confirmEdit()'>SAVE</button>
+    <div class="button-container">
+      <button mat-button (click)="cancelEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="confirmEdit()">SAVE</button>
     </div>
   </div>
 </div>

@@ -12,6 +12,7 @@ describe('DragDropBoardComponent', () => {
   let fixture: ComponentFixture<DragDropBoardComponent>;
   const mockCard: CardData = {
     id: '1',
+    typeLabel: 'typeLabel',
     status: 'status',
     assignee: {
       name: 'Name',

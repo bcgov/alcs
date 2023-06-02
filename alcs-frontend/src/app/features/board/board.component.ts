@@ -23,7 +23,7 @@ import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  NOTICE_OF_INTENT_TYPE_LABEL,
+  RETROACTIVE_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
@@ -259,6 +259,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapApplicationDtoToCard(application: ApplicationDto): CardData {
     return {
       status: application.card!.status.code,
+      typeLabel: 'Application',
       title: `${application.fileNumber} (${application.applicant})`,
       titleTooltip: application.applicant,
       assignee: application.card!.assignee,
@@ -277,6 +278,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapReconsiderationDtoToCard(recon: ApplicationReconsiderationDto): CardData {
     return {
       status: recon.card.status.code,
+      typeLabel: 'Application',
       title: `${recon.application.fileNumber} (${recon.application.applicant})`,
       titleTooltip: recon.application.applicant,
       assignee: recon.card.assignee,
@@ -294,6 +296,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapModificationToCard(modification: ApplicationModificationDto): CardData {
     return {
       status: modification.card.status.code,
+      typeLabel: 'Application',
       title: `${modification.application.fileNumber} (${modification.application.applicant})`,
       titleTooltip: modification.application.applicant,
       assignee: modification.card.assignee,
@@ -311,6 +314,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapPlanningReviewToCard(meeting: PlanningReviewDto): CardData {
     return {
       status: meeting.card.status.code,
+      typeLabel: 'Non-Application',
       title: `${meeting.fileNumber} (${meeting.type})`,
       titleTooltip: meeting.type,
       assignee: meeting.card.assignee,
@@ -327,6 +331,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapCovenantToCard(covenant: CovenantDto): CardData {
     return {
       status: covenant.card.status.code,
+      typeLabel: 'Non-Application',
       title: `${covenant.fileNumber} (${covenant.applicant})`,
       titleTooltip: covenant.applicant,
       assignee: covenant.card.assignee,
@@ -343,11 +348,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   private mapNoticeOfIntentToCard(noticeOfIntent: NoticeOfIntentDto): CardData {
     return {
       status: noticeOfIntent.card.status.code,
+      typeLabel: 'Notice of Intent',
       title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
       titleTooltip: noticeOfIntent.applicant,
       assignee: noticeOfIntent.card.assignee,
       id: noticeOfIntent.card.uuid,
-      labels: [NOTICE_OF_INTENT_TYPE_LABEL],
+      labels: noticeOfIntent.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
       cardType: CardType.NOI,
       paused: false,
       highPriority: noticeOfIntent.card.highPriority,
@@ -360,7 +366,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
-      maxWidth: '900px',
+      maxWidth: '1100px',
       maxHeight: '80vh',
       width: '90%',
       data,

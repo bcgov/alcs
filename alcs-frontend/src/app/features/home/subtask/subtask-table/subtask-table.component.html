@@ -1,0 +1,103 @@
+<table mat-table [dataSource]="subtasks" class="mat-elevation-z2 assigned-table">
+  <ng-container matColumnDef="highPriority">
+    <th class='high-priority-cell' mat-header-cell *matHeaderCellDef></th>
+    <td class='high-priority-cell' mat-cell *matCellDef="let element">
+      <span class="high-priority" *ngIf="element.card.highPriority">!</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Cards</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.title }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th class='type-cell' mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell class="type-cell" *matCellDef="let element">
+      <app-application-type-pill [useShortLabel]="true" *ngIf="element.appType" [type]="element.appType">
+      </app-application-type-pill>
+      <app-application-type-pill
+        [useShortLabel]="true"
+        *ngIf="element.parentType === 'modification'"
+        [type]="MODIFICATION_TYPE_LABEL"
+      >
+      </app-application-type-pill>
+      <app-application-type-pill
+        [useShortLabel]="true"
+        *ngIf="element.parentType === 'reconsideration'"
+        [type]="RECON_TYPE_LABEL"
+      >
+      </app-application-type-pill>
+      <app-application-type-pill
+        [useShortLabel]="true"
+        *ngIf="element.parentType === 'covenant'"
+        [type]="COVENANT_TYPE_LABEL"
+      >
+      </app-application-type-pill>
+      <app-application-type-pill
+        [useShortLabel]="true"
+        *ngIf="element.parentType === 'planning-review'"
+        [type]="PLANNING_TYPE_LABEL"
+      >
+      </app-application-type-pill>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="activeDays">
+    <th mat-header-cell *matHeaderCellDef>Active Days</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.activeDays ?? '-' }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="stage">
+    <th mat-header-cell *matHeaderCellDef>Workflow Stage</th>
+    <td mat-cell *matCellDef="let element" [innerHTML]="element.card.status.label"></td>
+  </ng-container>
+
+  <ng-container matColumnDef="assignee">
+    <th mat-header-cell *matHeaderCellDef>Assignee</th>
+    <td class="assignee-column" mat-cell *matCellDef="let element">
+      <ng-select
+        class="subtask-assignee"
+        [items]="users"
+        bindLabel="prettyName"
+        bindValue="prettyName"
+        [ngModel]="element.assignee?.prettyName"
+        [searchFn]="filterAssigneeList"
+        (change)="onAssigneeSelected($event, element.uuid)"
+        appendTo="body"
+      >
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div class="assignee-card-body">
+            <p [ngOptionHighlight]="search" class="assignee-card-name">{{ item.prettyName }}</p>
+            <p class="assignee-card-email" [ngOptionHighlight]="search">
+              {{ item.email }}
+            </p>
+          </div>
+        </ng-template>
+      </ng-select>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td class="action-column" mat-cell *matCellDef="let element">
+      <button (click)="openCard(element)" mat-flat-button color="accent">View</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    [ngClass]="{
+      paused: row.paused
+    }"
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+  ></tr>
+  <tr class="mat-row no-data" *matNoDataRow>
+    <td class="text-center" colspan="7">No Incomplete Subtasks</td>
+  </tr>
+</table>

@@ -14,7 +14,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 @Component({
   selector: 'app-notice-of-intent-dialog',
   templateUrl: './notice-of-intent-dialog.component.html',
-  styleUrls: ['./notice-of-intent-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class NoticeOfIntentDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;
@@ -47,7 +47,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
 
   populateData(noticeOfIntent: NoticeOfIntentDto) {
     this.noticeOfIntent = noticeOfIntent;
-    super.populateCardDate(noticeOfIntent.card);
+    super.populateCardData(noticeOfIntent.card);
     this.selectedRegion = noticeOfIntent.region.code;
     this.userService.fetchAssignableUsers();
     this.cardTitle = `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`;

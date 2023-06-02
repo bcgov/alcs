@@ -36,7 +36,7 @@
           'has-post-decisions': decision.modifiedBy?.length || decision.reconsideredBy?.length
         }"
       >
-        <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body1-text">
+        <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
           <div>
             <strong>Modified&nbsp;By:&nbsp;</strong>
             {{ decision.modifiedByResolutions.join(', ') }}
@@ -51,7 +51,7 @@
 
         <div class="decision-padding">
           <div class="header">
-            <div class="body-large title">
+            <div class="subheading1 title">
               Decision #{{ decisions.length - i }}
               <div *ngIf="i === decisions.length - 1 && application">
                 <span class="days" matTooltip="Active Days">
@@ -159,7 +159,7 @@
             </div>
 
             <div *ngFor="let component of decision.components">
-              <div class="body-large decision-content">
+              <div class="subheading1 decision-content">
                 {{ component.applicationDecisionComponentType?.label }} Component
               </div>
               <div class="decision-content grid-3">
@@ -193,7 +193,7 @@
           </div>
 
           <div class="decision-content">
-            <h1 class="body-large">Conditions</h1>
+            <h1 class="subheading1">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
                 >View Conditions<mat-icon class="conditions-link-icon">link</mat-icon></a
@@ -202,7 +202,7 @@
           </div>
 
           <div class="decision-content">
-            <div class="body-large">Audit and Chair Review Info</div>
+            <div class="subheading1">Audit and Chair Review Info</div>
             <div class="decision-content grid-3">
               <div>
                 <div class="subheading2">Audit Date</div>

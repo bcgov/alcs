@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { Base } from '../../common/entities/base.entity';
 import { BoardStatus } from './board-status.entity';
@@ -26,4 +27,8 @@ export class Board extends Base {
 
   @OneToMany(() => Card, (app) => app.board)
   cards: Card[];
+
+  @ManyToMany(() => CardType)
+  @JoinTable()
+  allowedCardTypes: CardType[];
 }

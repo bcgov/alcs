@@ -44,7 +44,7 @@ h6 {
 }
 
 .subheading1 {
-  @include typography-style(18px, 700);
+  @include typography-style(20px, 400);
 }
 
 .subheading2 {
@@ -53,48 +53,26 @@ h6 {
 
 a,
 p,
-.body1-text {
+.body-text {
   @include typography-style(16px, 400);
   line-height: 24px;
 }
 
-.body2-text {
+.nav-text {
   @include typography-style(14px, 400);
-  line-height: 24px;
 }
 
-.body-large {
-  @include typography-style(19px, 400);
-  line-height: 24px;
-  color: colors.$grey-dark;
-}
-
-.body-small {
-  @include typography-style(11px, 400);
-  line-height: 16px;
-}
-
-.body-xsmall {
-  @include typography-style(9px, 400);
+.subtext {
+  @include typography-style(12px, 400);
 }
 
 .button-text {
-  @include typography-style(14px, 400);
+  @include typography-style(14px, 700);
   letter-spacing: 1px;
 }
 
-.label-text {
-  @include typography-style(14px, 700);
-  line-height: 24px;
-}
-
-.subtitle {
-  @include typography-style(18px, 700);
-  line-height: 32px;
-}
-
 .badge {
-  @include typography-style(11px, 700);
+  @include typography-style(12px, 700);
   line-height: 24px;
 }
 
