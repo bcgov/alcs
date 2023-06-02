@@ -5,8 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
-
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
+import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PreparationComponent } from './preparation/preparation.component';
@@ -35,7 +35,12 @@ export const childRoutes = [
     menuTitle: 'Info Request',
     icon: 'contact_mail',
     component: InfoRequestsComponent,
-    requiresAuthorization: true,
+  },
+  {
+    path: 'decision',
+    menuTitle: 'Decision',
+    icon: 'gavel',
+    component: DecisionComponent,
   },
 ];
 

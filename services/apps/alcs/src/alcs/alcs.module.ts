@@ -11,6 +11,7 @@ import { CovenantModule } from './covenant/covenant.module';
 import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
+import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
@@ -33,6 +34,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     HomeModule,
     NoticeOfIntentModule,
     StaffJournalModule,
+    NoticeOfIntentDecisionModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -47,6 +49,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: CardModule },
       { path: 'alcs', module: HomeModule },
       { path: 'alcs', module: NoticeOfIntentModule },
+      { path: 'alcs', module: NoticeOfIntentDecisionModule },
       { path: 'alcs', module: StaffJournalModule },
     ]),
   ],

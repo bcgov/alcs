@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
 import { SharedModule } from '../../shared/shared.module';
-import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { InfoRequestDialogComponent } from './info-requests/info-request-dialog/info-request-dialog.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { NoticeOfIntentMeetingDialogComponent } from './info-requests/notice-of-intent-meeting-dialog/notice-of-intent-meeting-dialog.component';
+import { DecisionDialogComponent } from './decision/decision-dialog/decision-dialog.component';
+import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -21,13 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  providers: [
-    NoticeOfIntentDetailService,
-    {
-      provide: MTX_DATETIME_FORMATS,
-      useValue: DATE_FORMATS,
-    },
-  ],
+  providers: [NoticeOfIntentDetailService],
   declarations: [
     NoticeOfIntentComponent,
     OverviewComponent,
@@ -36,6 +30,8 @@ const routes: Routes = [
     InfoRequestDialogComponent,
     PreparationComponent,
     NoticeOfIntentMeetingDialogComponent,
+    DecisionComponent,
+    DecisionDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],
 })

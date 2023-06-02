@@ -32,6 +32,7 @@ export interface NoticeOfIntentDto {
   summary?: string;
   subtype: NoticeOfIntentSubtypeDto[];
   retroactive: boolean | null;
+  decisionDate?: number;
 
   activeDays: number;
   pausedDays: number;
