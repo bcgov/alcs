@@ -14,7 +14,9 @@
         Review Application
       </button>
       <button
-        [disabled]="!application.canReview && !applicationReview"
+        [disabled]="
+          !applicationReview || (!application.canReview && application.status.code === APPLICATION_STATUS.IN_REVIEW)
+        "
         (click)="onDownloadReviewPdf(application.fileNumber)"
         mat-flat-button
         color="accent"
@@ -31,9 +33,8 @@
   </div>
   <div
     *ngIf="
-      !applicationReview &&
-      (application.status.code === APPLICATION_STATUS.IN_REVIEW ||
-        application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG)
+      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG ||
+      (application.status.code === APPLICATION_STATUS.IN_REVIEW && (!applicationReview || !application.canReview))
     "
     class="warning"
   >
@@ -50,7 +51,7 @@
     {{ application.returnedComment }}
     <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
   </div>
-  <div *ngIf="applicationReview">
+  <div *ngIf="applicationReview && (application.canReview || application.status.code !== APPLICATION_STATUS.IN_REVIEW)">
     <section>
       <h4>Contact Information</h4>
       <div class="review-table">
