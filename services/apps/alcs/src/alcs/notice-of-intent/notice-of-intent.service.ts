@@ -225,4 +225,8 @@ export class NoticeOfIntentService {
       },
     });
   }
+
+  async updateByUuid(uuid: string, updates: Partial<NoticeOfIntent>) {
+    await this.repository.update(uuid, updates);
+  }
 }
