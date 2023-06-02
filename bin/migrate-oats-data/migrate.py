@@ -13,7 +13,7 @@ from batch_applications import process_applications, clean_applications
 # application_import_batch_size = 10000
 # document_import_batch_size = 10000
 # application_document_import_batch_size = 10000
-import_batch_size = 10000
+import_batch_size = 10
 
 def application_import_command_parser(import_batch_size, subparsers):
     application_import_command = subparsers.add_parser(

@@ -146,9 +146,11 @@ def process_applications(conn=None, batch_size=10000):
                     insert_query = compile_application_insert_query(
                         applications_to_be_inserted_count
                     )
+                    print(insert_query)
+                    print(rows) 
                     cursor.execute(insert_query, rows)
                     conn.commit()
-
+ 
                     last_application_id = rows[-1][0]
                     successful_inserts_count = (
                         successful_inserts_count + applications_to_be_inserted_count
@@ -163,6 +165,7 @@ def process_applications(conn=None, batch_size=10000):
                     print("Error", e)
                     failed_inserts  = count_total - successful_inserts_count
                     last_application_id = last_application_id +1
+                    break
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
