@@ -122,8 +122,8 @@
               <ng-container *ngIf="decision.isOther">Other</ng-container>
             </div>
 
-            <div>
-              <div *ngIf="!!decision.modifies || !!decision.reconsiders" class="subheading2">
+            <div *ngIf="!!decision.modifies || !!decision.reconsiders">
+              <div class="subheading2">
                 <span *ngIf="!!decision.modifies">Modification Outcome</span>
                 <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
               </div>
