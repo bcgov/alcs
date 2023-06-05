@@ -122,8 +122,8 @@
               <ng-container *ngIf="decision.isOther">Other</ng-container>
             </div>
 
-            <div>
-              <div *ngIf="!!decision.modifies || !!decision.reconsiders" class="subheading2">
+            <div *ngIf="!!decision.modifies || !!decision.reconsiders">
+              <div class="subheading2">
                 <span *ngIf="!!decision.modifies">Modification Outcome</span>
                 <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
               </div>
@@ -133,7 +133,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="decision-content">
             <div class="subheading2">Decision Description</div>
             {{ decision.decisionDescription ? decision.decisionDescription : 'No Data' }}
           </div>
@@ -147,13 +147,24 @@
               <div class="subheading2">Stats Required</div>
               {{ decision.isStatsRequired ? 'Yes' : 'No' }}
             </div>
+            <div>
+              <div class="subheading2">Rescinded Date</div>
+              <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+              <ng-container *ngIf="!decision.rescindedDate">No Data</ng-container>
+            </div>
           </div>
+
+          <div class="decision-content">
+            <div class="subheading2">Rescinded Comment</div>
+            {{ decision.rescindedComment ? decision.rescindedComment : 'No Data' }}
+          </div>
+
           <div class="decision-documents decision-content">
             <app-decision-documents [editable]="false" [decision]="decision"></app-decision-documents>
           </div>
 
           <!-- Components -->
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
             <div class="row">
               <h5>Decision Components and Conditions</h5>
             </div>
@@ -192,11 +203,11 @@
             </div>
           </div>
 
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
             <h1 class="subheading1">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
-                >View Conditions<mat-icon class="conditions-link-icon">link</mat-icon></a
+                >View Conditions<mat-icon class="conditions-link-icon">open_in_new</mat-icon></a
               >
             </div>
           </div>

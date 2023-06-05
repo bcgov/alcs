@@ -185,6 +185,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
       chairReviewRequired: true,
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);
   }
@@ -192,6 +193,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   async onSaveAuditDate(decisionUuid: string, auditReviewDate: number) {
     await this.decisionService.update(decisionUuid, {
       auditDate: formatDateForApi(auditReviewDate),
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);
   }

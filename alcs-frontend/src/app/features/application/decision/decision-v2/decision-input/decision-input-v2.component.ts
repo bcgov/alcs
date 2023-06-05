@@ -558,6 +558,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         this.form.patchValue({
           isSubjectToConditions: null,
         });
+        this.showConditions = false;
       }
     } else if (this.form.controls.isSubjectToConditions.enabled) {
       this.showComponents = false;
