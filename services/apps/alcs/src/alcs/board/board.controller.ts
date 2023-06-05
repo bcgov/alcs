@@ -13,6 +13,7 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ApplicationService } from '../application/application.service';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardCreateDto } from '../card/card.dto';
 import { CardService } from '../card/card.service';
 import {
@@ -25,7 +26,6 @@ import { CovenantService } from '../covenant/covenant.service';
 import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
-import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -59,25 +59,30 @@ export class BoardController {
   @Get('/:boardCode')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async getCards(@Param('boardCode') boardCode: string) {
-    const applications = await this.boardService.getApplicationsByCode(
-      boardCode,
-    );
+    const board = await this.boardService.getOneOrFail({
+      code: boardCode,
+    });
 
-    const recons = await this.reconsiderationService.getByBoardCode(boardCode);
-    const covenants = await this.covenantService.getByBoardCode(boardCode);
-    const noticeOfIntents = await this.noticeOfIntentService.getByBoardCode(
-      boardCode,
-    );
+    const allowedCodes = board.allowedCardTypes.map((type) => type.code);
 
-    let planningReviews: PlanningReview[] = [];
-    if (boardCode === 'exec') {
-      planningReviews = await this.planningReviewService.getCards();
-    }
-
-    let modifications: ApplicationModification[] = [];
-    if (boardCode === BOARD_CODES.CEO) {
-      modifications = await this.modificationService.getByBoardCode(boardCode);
-    }
+    const applications = allowedCodes.includes(CARD_TYPE.APP)
+      ? await this.boardService.getApplicationsByCode(boardCode)
+      : [];
+    const recons = allowedCodes.includes(CARD_TYPE.RECON)
+      ? await this.reconsiderationService.getByBoardCode(boardCode)
+      : [];
+    const modifications = allowedCodes.includes(CARD_TYPE.MODI)
+      ? await this.modificationService.getByBoardCode(boardCode)
+      : [];
+    const covenants = allowedCodes.includes(CARD_TYPE.COV)
+      ? await this.covenantService.getByBoardCode(boardCode)
+      : [];
+    const noticeOfIntents = allowedCodes.includes(CARD_TYPE.NOI)
+      ? await this.noticeOfIntentService.getByBoardCode(boardCode)
+      : [];
+    const planningReviews = allowedCodes.includes(CARD_TYPE.PLAN)
+      ? await this.planningReviewService.getByBoardCode(boardCode)
+      : [];
 
     return {
       applications: await this.applicationService.mapToDtos(applications),
