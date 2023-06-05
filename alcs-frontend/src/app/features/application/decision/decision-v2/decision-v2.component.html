@@ -163,7 +163,11 @@
           </div>
 
           <div class="decision-documents decision-content">
-            <app-decision-documents [editable]="false" [decision]="decision"></app-decision-documents>
+            <app-decision-documents
+              [editable]="decision.isDraft"
+              [loadData]="false"
+              [decision]="decision"
+            ></app-decision-documents>
           </div>
 
           <!-- Components -->
