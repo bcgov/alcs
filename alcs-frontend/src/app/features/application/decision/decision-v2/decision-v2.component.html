@@ -145,7 +145,10 @@
             </div>
             <div>
               <div class="subheading2">Stats Required</div>
-              {{ decision.isStatsRequired ? 'Yes' : 'No' }}
+              <app-inline-boolean
+                [selectedValue]="decision.isStatsRequired ?? null"
+                (save)="onStatsRequiredUpdate(decision.uuid, $event)"
+              ></app-inline-boolean>
             </div>
             <div>
               <div class="subheading2">Rescinded Date</div>
@@ -176,7 +179,10 @@
               <div class="decision-content grid-3">
                 <div>
                   <div class="subheading2">ALR Area Impacted (ha)</div>
-                  {{ component.alrArea }}
+                  <app-inline-number
+                    [value]="component?.alrArea?.toString()"
+                    (save)="onSaveAlrArea(decision.uuid, component.uuid!, $event)"
+                  ></app-inline-number>
                 </div>
                 <div>
                   <div class="subheading2">Agri Cap</div>
@@ -203,7 +209,10 @@
             </div>
           </div>
 
-          <div class="decision-content" *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
+          <div
+            class="decision-content"
+            *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions"
+          >
             <h1 class="subheading1">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
