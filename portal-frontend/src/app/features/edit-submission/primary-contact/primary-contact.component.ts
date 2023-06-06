@@ -31,6 +31,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
   needsAuthorizationLetter = false;
   selectedThirdPartyAgent = false;
   selectedOwnerUuid: string | undefined = undefined;
+  isCrownOwner = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -158,6 +159,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
       this.organizationName.enable();
       this.email.enable();
       this.phoneNumber.enable();
+      this.isCrownOwner = false;
     } else {
       this.firstName.disable();
       this.lastName.disable();
@@ -173,6 +175,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
+        this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
       }
     }
 
