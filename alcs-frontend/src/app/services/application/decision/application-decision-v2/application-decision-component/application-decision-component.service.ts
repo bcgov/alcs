@@ -1,16 +1,16 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { environment } from '../../../../../environments/environment';
-import { ToastService } from '../../../toast/toast.service';
-import { DecisionComponentDto } from './application-decision-v2.dto';
+import { environment } from '../../../../../../environments/environment';
+import { ToastService } from '../../../../toast/toast.service';
+import { DecisionComponentDto } from '../application-decision-v2.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicationDecisionComponentService {
   private url = `${environment.apiUrl}/v2/application-decision-component`;
-  
+
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async update(uuid: string, data: DecisionComponentDto) {

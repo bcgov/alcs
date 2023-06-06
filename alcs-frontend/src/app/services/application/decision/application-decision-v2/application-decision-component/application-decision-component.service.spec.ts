@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
-import { ToastService } from '../../../toast/toast.service';
+import { ToastService } from '../../../../toast/toast.service';
+
 import { ApplicationDecisionComponentService } from './application-decision-component.service';
 
 describe('ApplicationDecisionComponentService', () => {

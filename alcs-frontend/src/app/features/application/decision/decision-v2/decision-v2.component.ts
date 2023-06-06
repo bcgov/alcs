@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
-import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component.service';
+import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   ApplicationDecisionDto,
   CeoCriterionDto,
