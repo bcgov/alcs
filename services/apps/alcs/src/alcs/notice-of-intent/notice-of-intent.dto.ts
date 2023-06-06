@@ -70,6 +70,7 @@ export class NoticeOfIntentDto {
   activeDays: number;
   pausedDays: number;
   paused: boolean;
+  decisionDate: number;
 
   @AutoMap(() => Boolean)
   retroactive: boolean | null;

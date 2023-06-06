@@ -1,7 +1,10 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ROLES_ALLOWED_BOARDS } from '../../common/authorization/roles';
+import {
+  ROLES_ALLOWED_APPLICATIONS,
+  ROLES_ALLOWED_BOARDS,
+} from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { BoardService } from '../board/board.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
@@ -77,5 +80,14 @@ export class NoticeOfIntentController {
     );
     const mapped = await this.noticeOfIntentService.mapToDtos([updatedNotice]);
     return mapped[0];
+  }
+
+  @Get('/search/:fileNumber')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async searchApplications(@Param('fileNumber') fileNumber: string) {
+    const noticeOfIntents = await this.noticeOfIntentService.searchByFileNumber(
+      fileNumber,
+    );
+    return this.noticeOfIntentService.mapToDtos(noticeOfIntents);
   }
 }

@@ -1,7 +1,7 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
@@ -12,9 +12,9 @@ import {
 } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
+import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
-import { ApplicationDecisionV2Service } from '../application-decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationDto,
@@ -97,7 +97,11 @@ export class ApplicationModificationService {
       isTimeExtension: createDto.isTimeExtension,
     });
 
-    modification.card = await this.cardService.create('MODI', board, false);
+    modification.card = await this.cardService.create(
+      CARD_TYPE.APP_MODI,
+      board,
+      false,
+    );
     modification.application = await this.getOrCreateApplication(createDto);
     modification.modifiesDecisions =
       await this.applicationDecisionV1Service.getMany(

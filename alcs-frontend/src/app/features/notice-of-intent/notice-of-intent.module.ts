@@ -10,6 +10,8 @@ import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.component';
 import { OverviewComponent } from './overview/overview.component';
+import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
+import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
 
 const routes: Routes = [
@@ -32,6 +34,8 @@ const routes: Routes = [
     NoticeOfIntentMeetingDialogComponent,
     DecisionComponent,
     DecisionDialogComponent,
+    PostDecisionComponent,
+    EditModificationDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],
 })

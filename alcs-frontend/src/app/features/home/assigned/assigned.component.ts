@@ -5,6 +5,7 @@ import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationService } from '../../../services/application/application.service';
 import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
+import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import {
@@ -35,17 +36,32 @@ export class AssignedComponent implements OnInit {
   }
 
   async loadApplications() {
-    const { applications, reconsiderations, planningReviews, modifications, covenants, noticeOfIntents } =
-      await this.homeService.fetchAssignedToMe();
+    const {
+      applications,
+      reconsiderations,
+      planningReviews,
+      modifications,
+      covenants,
+      noticeOfIntents,
+      noticeOfIntentModifications,
+    } = await this.homeService.fetchAssignedToMe();
 
     this.noticeOfIntents = [
       ...noticeOfIntents
         .filter((a) => a.card!.highPriority)
         .map((a) => this.mapNoticeOfIntent(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noticeOfIntentModifications
+        .filter((a) => a.card!.highPriority)
+        .map((a) => this.mapNoticeOfIntentModification(a))
+        .sort((a, b) => b.activeDays! - a.activeDays!),
       ...noticeOfIntents
         .filter((a) => !a.card!.highPriority)
         .map((a) => this.mapNoticeOfIntent(a))
+        .sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noticeOfIntentModifications
+        .filter((a) => !a.card!.highPriority)
+        .map((a) => this.mapNoticeOfIntentModification(a))
         .sort((a, b) => b.activeDays! - a.activeDays!),
     ];
     this.applications = [
@@ -162,6 +178,19 @@ export class AssignedComponent implements OnInit {
       card: a.card,
       highPriority: a.card!.highPriority,
       labels: a.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
+    };
+  }
+
+  private mapNoticeOfIntentModification(a: NoticeOfIntentModificationDto): AssignedToMeFile {
+    return {
+      title: `${a.noticeOfIntent.fileNumber} (${a.noticeOfIntent.applicant})`,
+      type: a.card!.type,
+      card: a.card,
+      date: a.submittedDate,
+      highPriority: a.card!.highPriority,
+      labels: a.noticeOfIntent.retroactive
+        ? [MODIFICATION_TYPE_LABEL, RETROACTIVE_TYPE_LABEL]
+        : [MODIFICATION_TYPE_LABEL],
     };
   }
 }

@@ -5,6 +5,7 @@ import { ApplicationModule } from '../application/application.module';
 import { CardModule } from '../card/card.module';
 import { CovenantModule } from '../covenant/covenant.module';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
+import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { BoardStatus } from './board-status.entity';
@@ -21,6 +22,7 @@ import { BoardService } from './board.service';
     PlanningReviewModule,
     forwardRef(() => CovenantModule),
     forwardRef(() => NoticeOfIntentModule),
+    NoticeOfIntentDecisionModule,
   ],
   controllers: [BoardController],
   providers: [BoardService, BoardAutomapperProfile],

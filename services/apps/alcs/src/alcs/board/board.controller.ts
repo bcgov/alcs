@@ -1,35 +1,26 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationService } from '../application/application.service';
-import { CARD_TYPE } from '../card/card-type/card-type.entity';
-import { CardCreateDto } from '../card/card.dto';
-import { CardService } from '../card/card.service';
 import {
   ANY_AUTH_ROLE,
   ROLES_ALLOWED_BOARDS,
 } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { CovenantService } from '../covenant/covenant.service';
-import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationService } from '../application/application.service';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
+import { CardCreateDto } from '../card/card.dto';
+import { CardService } from '../card/card.service';
+import { CovenantService } from '../covenant/covenant.service';
+import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
-import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { BOARD_CODES, BoardDto } from './board.dto';
+import { BoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -43,7 +34,8 @@ export class BoardController {
     private cardService: CardService,
     private reconsiderationService: ApplicationReconsiderationService,
     private planningReviewService: PlanningReviewService,
-    private modificationService: ApplicationModificationService,
+    private appModificationService: ApplicationModificationService,
+    private noiModificationService: NoticeOfIntentModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     @InjectMapper() private autoMapper: Mapper,
@@ -71,8 +63,8 @@ export class BoardController {
     const recons = allowedCodes.includes(CARD_TYPE.RECON)
       ? await this.reconsiderationService.getByBoardCode(boardCode)
       : [];
-    const modifications = allowedCodes.includes(CARD_TYPE.MODI)
-      ? await this.modificationService.getByBoardCode(boardCode)
+    const modifications = allowedCodes.includes(CARD_TYPE.APP_MODI)
+      ? await this.appModificationService.getByBoardCode(boardCode)
       : [];
     const covenants = allowedCodes.includes(CARD_TYPE.COV)
       ? await this.covenantService.getByBoardCode(boardCode)
@@ -83,6 +75,9 @@ export class BoardController {
     const planningReviews = allowedCodes.includes(CARD_TYPE.PLAN)
       ? await this.planningReviewService.getByBoardCode(boardCode)
       : [];
+    const noiModifications = allowedCodes.includes(CARD_TYPE.NOI_MODI)
+      ? await this.noiModificationService.getByBoardCode(boardCode)
+      : [];
 
     return {
       applications: await this.applicationService.mapToDtos(applications),
@@ -90,10 +85,13 @@ export class BoardController {
       planningReviews: await this.planningReviewService.mapToDtos(
         planningReviews,
       ),
-      modifications: await this.modificationService.mapToDtos(modifications),
+      modifications: await this.appModificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
       noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
         noticeOfIntents,
+      ),
+      noiModifications: await this.noiModificationService.mapToDtos(
+        noiModifications,
       ),
     };
   }

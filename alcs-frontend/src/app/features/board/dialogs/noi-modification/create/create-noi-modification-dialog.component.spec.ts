@@ -9,15 +9,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CreateModificationDialogComponent } from './create-modification-dialog.component';
+import { CreateNoiModificationDialogComponent } from './create-noi-modification-dialog.component';
 
-describe('CreateReconsiderationDialogComponent', () => {
-  let component: CreateModificationDialogComponent;
-  let fixture: ComponentFixture<CreateModificationDialogComponent>;
+describe('CreateNoiModificationDialogComponent', () => {
+  let component: CreateNoiModificationDialogComponent;
+  let fixture: ComponentFixture<CreateNoiModificationDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CreateModificationDialogComponent],
+      declarations: [CreateNoiModificationDialogComponent],
       imports: [
         MatDialogModule,
         HttpClientTestingModule,
@@ -36,7 +36,7 @@ describe('CreateReconsiderationDialogComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateModificationDialogComponent);
+    fixture = TestBed.createComponent(CreateNoiModificationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -51,6 +51,5 @@ describe('CreateReconsiderationDialogComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('#applicant')).toBeTruthy();
     expect(compiled.querySelector('#fileNumber')).toBeTruthy();
-    expect(compiled.querySelector('.card-type')).toBeTruthy();
   });
 });

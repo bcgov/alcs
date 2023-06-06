@@ -14,6 +14,7 @@ import {
   Repository,
 } from 'typeorm';
 import { Board } from '../board/board.entity';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
 import {
   CreatePlanningReviewDto,
@@ -60,7 +61,11 @@ export class PlanningReviewService {
       regionCode: data.regionCode,
     });
 
-    planingMeeting.card = await this.cardService.create('PLAN', board, false);
+    planingMeeting.card = await this.cardService.create(
+      CARD_TYPE.PLAN,
+      board,
+      false,
+    );
     const savedMeeting = await this.repository.save(planingMeeting);
 
     return this.getOrFail(savedMeeting.uuid);

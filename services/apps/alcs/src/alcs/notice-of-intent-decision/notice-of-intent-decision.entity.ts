@@ -4,13 +4,17 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from './notice-of-intent-decision-outcome.entity';
+import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
@@ -82,4 +86,19 @@ export class NoticeOfIntentDecision extends Base {
   @AutoMap()
   @Column()
   noticeOfIntentUuid: string;
+
+  @ManyToMany(
+    () => NoticeOfIntentModification,
+    (modification) => modification.modifiesDecisions,
+  )
+  modifiedBy: NoticeOfIntentModification[];
+
+  @AutoMap(() => NoticeOfIntentModification)
+  @OneToOne(
+    () => NoticeOfIntentModification,
+    (modification) => modification.resultingDecision,
+    { nullable: true },
+  )
+  @JoinColumn()
+  modifies?: NoticeOfIntentModification | null;
 }

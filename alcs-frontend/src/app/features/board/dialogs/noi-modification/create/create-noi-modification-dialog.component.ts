@@ -1,24 +1,25 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOptionSelectionChange } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../../../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationModificationCreateDto } from '../../../../../services/application/application-modification/application-modification.dto';
-import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
+import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
+import { NoticeOfIntentModificationCreateDto } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
+import { NoticeOfIntentDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentService } from '../../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
-  selector: 'app-create',
-  templateUrl: './create-modification-dialog.html',
-  styleUrls: ['./create-modification-dialog.component.scss'],
+  selector: 'app-create-noi-modi-dialog',
+  templateUrl: './create-noi-modification-dialog.html',
+  styleUrls: ['./create-noi-modification-dialog.component.scss'],
 })
-export class CreateModificationDialogComponent implements OnInit, OnDestroy {
+export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   applicationTypes: ApplicationTypeDto[] = [];
   regions: ApplicationRegionDto[] = [];
@@ -28,43 +29,37 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
   currentBoardCode: string = '';
 
   decisions: { uuid: string; resolution: string }[] = [];
-  filteredApplications: Observable<ApplicationDto[]> | undefined;
+  filteredNOIs: Observable<NoticeOfIntentDto[]> | undefined;
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
-  applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
-  isTimeExtensionControl = new FormControl<string>('true', [Validators.required]);
   modifiesDecisions = new FormControl<string[]>([], [Validators.required]);
 
   createForm = new FormGroup({
-    applicationType: this.applicationTypeControl,
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
     region: this.regionControl,
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
-    isTimeExtension: this.isTimeExtensionControl,
     modifiesDecisions: this.modifiesDecisions,
   });
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<CreateModificationDialogComponent>,
+    private dialogRef: MatDialogRef<CreateNoiModificationDialogComponent>,
+    private noticeOfIntentService: NoticeOfIntentService,
     private applicationService: ApplicationService,
-    private modificationService: ApplicationModificationService,
+    private modificationService: NoticeOfIntentModificationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private decisionService: ApplicationDecisionService,
+    private decisionService: NoticeOfIntentDecisionService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.currentBoardCode = this.data.currentBoardCode;
-    this.applicationService.$applicationTypes.pipe(takeUntil(this.$destroy)).subscribe((types) => {
-      this.applicationTypes = types;
-    });
 
     this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
       this.regions = regions;
@@ -74,50 +69,47 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
       this.localGovernments = res;
     });
 
-    this.initApplicationFileNumberAutocomplete();
+    this.initFileNumberAutocomplete();
   }
 
-  initApplicationFileNumberAutocomplete() {
-    this.filteredApplications = this.fileNumberControl.valueChanges.pipe(
+  initFileNumberAutocomplete() {
+    this.filteredNOIs = this.fileNumberControl.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
       switchMap((val) => {
         if (val && val.length > 1) {
-          return this.applicationService.searchApplicationsByNumber(val);
+          return this.noticeOfIntentService.searchByFileNumber(val);
         }
         return [];
       })
     );
   }
 
-  autocompleteDisplay(application: ApplicationDto): string {
+  autocompleteDisplay(application: NoticeOfIntentDto): string {
     return application?.fileNumber ?? '';
   }
 
-  async onApplicationSelected($event: MatOptionSelectionChange) {
+  async onNOISelected($event: MatOptionSelectionChange) {
     if (!$event?.source?.value) {
       return;
     }
 
-    const application = $event.source.value as ApplicationDto;
-
+    const noticeOfIntent = $event.source.value as NoticeOfIntentDto;
     this.fileNumberControl.disable();
     this.applicantControl.disable();
     this.regionControl.disable();
-    this.applicationTypeControl.disable();
     this.localGovernmentControl.disable();
 
-    this.loadDecisions(application.fileNumber);
+    this.loadDecisions(noticeOfIntent.fileNumber);
 
     this.createForm.patchValue({
-      applicant: application.applicant,
-      region: application.region.code,
-      applicationType: application.type.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
+      applicant: noticeOfIntent.applicant,
+      region: noticeOfIntent.region.code,
+      localGovernment: this.localGovernments.find((g) => g.uuid === noticeOfIntent.localGovernment.uuid)?.uuid ?? null,
     });
 
-    if (!application.decisionDate) {
+    if (!noticeOfIntent.decisionDate) {
       this.isDecisionDateEmpty = true;
     }
   }
@@ -126,17 +118,13 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
     try {
       this.isLoading = true;
       const formValues = this.createForm.getRawValue();
-      const modificationCreateDto: ApplicationModificationCreateDto = {
-        // application details
-        applicationTypeCode: formValues.applicationType!,
-        applicationFileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
+      const modificationCreateDto: NoticeOfIntentModificationCreateDto = {
+        fileNumber: formValues.fileNumber!.fileNumber?.trim() ?? formValues.fileNumber!.trim(),
         applicant: formValues.applicant!,
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
-        // modification details
         submittedDate: formValues.submittedDate!.valueOf(),
         boardCode: this.currentBoardCode,
-        isTimeExtension: formValues.isTimeExtension === 'true',
         modifiesDecisionUuids: formValues.modifiesDecisions!,
       };
 
@@ -157,14 +145,12 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
     this.fileNumberControl.reset();
     this.applicantControl.reset();
     this.regionControl.reset();
-    this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
     this.modifiesDecisions.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
     this.regionControl.enable();
-    this.applicationTypeControl.enable();
     this.localGovernmentControl.enable();
     this.modifiesDecisions.disable();
 
@@ -179,7 +165,7 @@ export class CreateModificationDialogComponent implements OnInit, OnDestroy {
   }
 
   async loadDecisions(fileNumber: string) {
-    const decisions = await this.decisionService.fetchByApplication(fileNumber);
+    const decisions = await this.decisionService.fetchByFileNumber(fileNumber);
     if (decisions.length > 0) {
       this.decisions = decisions.map((decision) => ({
         uuid: decision.uuid,

@@ -14,10 +14,10 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
 @Component({
   selector: 'app-modification-detail-dialog',
-  templateUrl: './modification-dialog.component.html',
+  templateUrl: './app-modification-dialog.component.html',
   styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
-export class ModificationDialogComponent extends CardDialogComponent implements OnInit {
+export class AppModificationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;
   title?: string;
   modificationType = MODIFICATION_TYPE_LABEL;
@@ -27,7 +27,7 @@ export class ModificationDialogComponent extends CardDialogComponent implements 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationModificationDto,
-    private dialogRef: MatDialogRef<ModificationDialogComponent>,
+    private dialogRef: MatDialogRef<AppModificationDialogComponent>,
     private modificationService: ApplicationModificationService,
     private router: Router,
     userService: UserService,
