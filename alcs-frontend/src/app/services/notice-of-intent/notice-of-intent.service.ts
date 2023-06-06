@@ -73,4 +73,14 @@ export class NoticeOfIntentService {
       return undefined;
     }
   }
+
+  async searchByFileNumber(searchText: string) {
+    try {
+      return await firstValueFrom(this.http.get<NoticeOfIntentDto[]>(`${this.url}/search/${searchText}`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to search Notice of Intents');
+    }
+    return [];
+  }
 }

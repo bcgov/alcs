@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { SharedModule } from '../../../../shared/shared.module';
+import { SharedModule } from '../shared.module';
 
 import { InlineReviewOutcomeComponent } from './inline-review-outcome.component';
 

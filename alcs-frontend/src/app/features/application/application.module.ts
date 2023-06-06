@@ -20,7 +20,6 @@ import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
-import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
@@ -58,7 +57,6 @@ const routes: Routes = [
     InfoRequestsComponent,
     InfoRequestDialogComponent,
     PostDecisionComponent,
-    InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
     EditModificationDialogComponent,
     ApplicantInfoComponent,

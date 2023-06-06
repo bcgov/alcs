@@ -4,29 +4,29 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { In, Not } from 'typeorm';
-import { CARD_STATUS } from '../card/card-status/card-status.entity';
-import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
-import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
-import { ApplicationService } from '../application/application.service';
-import { CARD_SUBTASK_TYPE } from '../card/card-subtask/card-subtask.dto';
-import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
-import { CodeService } from '../code/code.service';
+import {
+  initApplicationMockEntity,
+  initApplicationModificationMockEntity,
+  initApplicationReconsiderationMockEntity,
+  initCardMockEntity,
+} from '../../../test/mocks/mockEntities';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { CardProfile } from '../../common/automapper/card.automapper.profile';
 import { CovenantProfile } from '../../common/automapper/covenant.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
-import {
-  initApplicationModificationMockEntity,
-  initApplicationMockEntity,
-  initApplicationReconsiderationMockEntity,
-  initCardMockEntity,
-} from '../../../test/mocks/mockEntities';
-import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
+import { ApplicationService } from '../application/application.service';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
+import { CARD_SUBTASK_TYPE } from '../card/card-subtask/card-subtask.dto';
+import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
+import { CodeService } from '../code/code.service';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
-import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -43,6 +43,7 @@ describe('HomeController', () => {
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
+  let mockNoticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -53,6 +54,7 @@ describe('HomeController', () => {
     mockApplicationModificationService = createMock();
     mockCovenantService = createMock();
     mockNoticeOfIntentService = createMock();
+    mockNoticeOfIntentModificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -102,6 +104,10 @@ describe('HomeController', () => {
           provide: NoticeOfIntentService,
           useValue: mockNoticeOfIntentService,
         },
+        {
+          provide: NoticeOfIntentModificationService,
+          useValue: mockNoticeOfIntentModificationService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
         CovenantProfile,
@@ -125,6 +131,8 @@ describe('HomeController', () => {
     mockCovenantService.mapToDtos.mockResolvedValue([]);
     mockNoticeOfIntentService.getBy.mockResolvedValue([]);
     mockNoticeOfIntentService.mapToDtos.mockResolvedValue([]);
+    mockNoticeOfIntentModificationService.getBy.mockResolvedValue([]);
+    mockNoticeOfIntentModificationService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -145,6 +153,9 @@ describe('HomeController', () => {
     mockApplicationService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
     mockCovenantService.getWithIncompleteSubtaskByType.mockResolvedValue([]);
     mockNoticeOfIntentService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
+    mockNoticeOfIntentModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
   });

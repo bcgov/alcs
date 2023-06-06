@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
+import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
 import {
@@ -110,7 +111,11 @@ export class ApplicationReconsiderationService {
       type,
     });
 
-    reconsideration.card = await this.cardService.create('RECON', board, false);
+    reconsideration.card = await this.cardService.create(
+      CARD_TYPE.RECON,
+      board,
+      false,
+    );
 
     reconsideration.application = await this.getOrCreateApplication(createDto);
 

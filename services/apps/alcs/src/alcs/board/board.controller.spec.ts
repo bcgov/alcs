@@ -12,6 +12,7 @@ import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
+import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
@@ -30,6 +31,7 @@ describe('BoardController', () => {
   let planningReviewService: DeepMocked<PlanningReviewService>;
   let covenantService: DeepMocked<CovenantService>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
+  let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -41,6 +43,7 @@ describe('BoardController', () => {
     cardService = createMock();
     covenantService = createMock();
     noticeOfIntentService = createMock();
+    noiModificationService = createMock();
     mockBoard = new Board({
       allowedCardTypes: [],
     });
@@ -58,6 +61,8 @@ describe('BoardController', () => {
     covenantService.mapToDtos.mockResolvedValue([]);
     noticeOfIntentService.getByBoardCode.mockResolvedValue([]);
     noticeOfIntentService.mapToDtos.mockResolvedValue([]);
+    noiModificationService.getByBoardCode.mockResolvedValue([]);
+    noiModificationService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -85,6 +90,10 @@ describe('BoardController', () => {
         {
           provide: NoticeOfIntentService,
           useValue: noticeOfIntentService,
+        },
+        {
+          provide: NoticeOfIntentModificationService,
+          useValue: noiModificationService,
         },
         {
           provide: ClsService,
@@ -151,7 +160,7 @@ describe('BoardController', () => {
     const boardCode = BOARD_CODES.CEO;
     mockBoard.allowedCardTypes = [
       new CardType({
-        code: CARD_TYPE.MODI,
+        code: CARD_TYPE.APP_MODI,
       }),
     ];
 
@@ -178,8 +187,8 @@ describe('BoardController', () => {
     cardService.create.mockResolvedValue({} as Card);
 
     const boardCode = 'fake-board';
-    const typeCode = 'fake-type';
-    await controller.createCard({ typeCode, boardCode });
+    const typeCode = CARD_TYPE.APP;
+    await controller.createCard({ typeCode: typeCode, boardCode });
 
     expect(cardService.create).toHaveBeenCalledTimes(1);
     expect(cardService.create.mock.calls[0][0]).toEqual(typeCode);

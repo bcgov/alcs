@@ -12,7 +12,6 @@
           [matDatepicker]="datePicker"
           formControlName="date"
           name="date"
-          required
           [min]="minDate | startOfDay"
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
@@ -31,7 +30,6 @@
           [items]="resolutionYears"
           formControlName="resolutionYear"
           appendTo="body"
-          required
           placeholder="Resolution Year *"
           [clearable]="false"
         ></ng-select>
@@ -58,7 +56,6 @@
         appendTo="body"
         bindLabel="label"
         bindValue="code"
-        required
         placeholder="Decision Outcome *"
         [clearable]="false"
       ></ng-select>
@@ -78,7 +75,6 @@
           type='text'
           formControlName="decisionMakerName"
           name="decisionMakerName"
-          required
         />
       </mat-form-field>
 

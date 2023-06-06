@@ -15,6 +15,8 @@ import { BoardService, BoardWithFavourite } from '../../services/board/board.ser
 import { CardService } from '../../services/card/card.service';
 import { CovenantDto } from '../../services/covenant/covenant.dto';
 import { CovenantService } from '../../services/covenant/covenant.service';
+import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
@@ -33,8 +35,10 @@ import { ApplicationDialogComponent } from './dialogs/application/application-di
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
-import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
-import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
+import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
+import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
+import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
+import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
@@ -46,6 +50,7 @@ export const BOARD_TYPE_CODES = {
   VETT: 'vett',
   EXEC: 'exec',
   CEO: 'ceo',
+  NOI: 'noi',
 };
 
 @Component({
@@ -59,12 +64,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   columns: DragDropColumn[] = [];
   boardTitle = '';
   boardIsFavourite = false;
-  boardHasApplication = false;
-  boardHasPlanningReviews = false;
-  boardHasReconsiderations = false;
-  boardHasModifications = false;
-  boardHasCovenant = false;
-  boardHasNOI = false;
+  boardHasCreateApplication = false;
+  boardHasCreatePlanningReview = false;
+  boardHasCreateReconsideration = false;
+  boardHasCreateAppModification = false;
+  boardHasCreateCovenant = false;
+  boardHasCreateNOI = false;
+  boardHasCreateNOIModification = false;
   currentBoardCode = '';
 
   selectedBoardCode?: string;
@@ -83,6 +89,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private noiModificationService: NoticeOfIntentModificationService,
     private titleService: Title
   ) {}
 
@@ -144,8 +151,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     });
   }
 
-  onCreateModification() {
-    this.openDialog(CreateModificationDialogComponent, {
+  onCreateAppModification() {
+    this.openDialog(CreateAppModificationDialogComponent, {
       currentBoardCode: this.selectedBoardCode,
     });
   }
@@ -158,6 +165,12 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   onCreateNoticeOfIntent() {
     this.openDialog(CreateNoticeOfIntentDialogComponent, {
+      currentBoardCode: this.selectedBoardCode,
+    });
+  }
+
+  onCreateNoiModifications() {
+    this.openDialog(CreateNoiModificationDialogComponent, {
       currentBoardCode: this.selectedBoardCode,
     });
   }
@@ -198,12 +211,14 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
-    this.boardHasApplication = board.code === BOARD_TYPE_CODES.VETT;
-    this.boardHasPlanningReviews = board.code === BOARD_TYPE_CODES.EXEC;
-    this.boardHasReconsiderations = board.code !== BOARD_TYPE_CODES.VETT;
-    this.boardHasModifications = board.code === BOARD_TYPE_CODES.CEO;
-    this.boardHasCovenant = board.code !== BOARD_TYPE_CODES.VETT;
-    this.boardHasNOI = board.code === BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateApplication = board.code === BOARD_TYPE_CODES.VETT;
+    this.boardHasCreatePlanningReview = board.code === BOARD_TYPE_CODES.EXEC;
+    this.boardHasCreateReconsideration = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateAppModification = board.code === BOARD_TYPE_CODES.CEO;
+    this.boardHasCreateCovenant = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateNOI = board.code === BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateNOIModification = board.code === BOARD_TYPE_CODES.NOI;
+
     const allStatuses = board.statuses.map((status) => status.statusCode);
 
     this.columns = board.statuses.map((status) => ({
@@ -221,6 +236,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedModifications = thingsWithCards.modifications.map(this.mapModificationToCard.bind(this));
     const mappedCovenants = thingsWithCards.covenants.map(this.mapCovenantToCard.bind(this));
     const mappedNoticeOfIntents = thingsWithCards.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
+    const mappedNoticeOfIntentModifications = thingsWithCards.noiModifications.map(
+      this.mapNoticeOfIntentModificationToCard.bind(this)
+    );
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       this.cards = [
         ...mappedApps,
@@ -229,6 +247,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedReviewMeetings,
         ...mappedCovenants,
         ...mappedNoticeOfIntents,
+        ...mappedNoticeOfIntentModifications,
       ].sort((a, b) => {
         if (a.highPriority === b.highPriority) {
           return b.dateReceived - a.dateReceived;
@@ -240,6 +259,9 @@ export class BoardComponent implements OnInit, OnDestroy {
       sorted.push(
         // high priority
         ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntentModifications
+          .filter((a) => a.highPriority)
+          .sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
@@ -247,6 +269,9 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntentModifications
+          .filter((a) => !a.highPriority)
+          .sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
@@ -364,6 +389,26 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapNoticeOfIntentModificationToCard(noticeOfIntentModification: NoticeOfIntentModificationDto): CardData {
+    return {
+      status: noticeOfIntentModification.card.status.code,
+      typeLabel: 'Notice of Intent',
+      title: `${noticeOfIntentModification.noticeOfIntent.fileNumber} (${noticeOfIntentModification.noticeOfIntent.applicant})`,
+      titleTooltip: noticeOfIntentModification.noticeOfIntent.applicant,
+      assignee: noticeOfIntentModification.card.assignee,
+      id: noticeOfIntentModification.card.uuid,
+      labels: noticeOfIntentModification.noticeOfIntent.retroactive
+        ? [MODIFICATION_TYPE_LABEL, RETROACTIVE_TYPE_LABEL]
+        : [MODIFICATION_TYPE_LABEL],
+      cardType: CardType.NOI_MODI,
+      paused: false,
+      highPriority: noticeOfIntentModification.card.highPriority,
+      cardUuid: noticeOfIntentModification.card.uuid,
+      dateReceived: noticeOfIntentModification.card.createdAt,
+      cssClasses: ['notice-of-intent'],
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -406,7 +451,7 @@ export class BoardComponent implements OnInit, OnDestroy {
           break;
         case CardType.MODI:
           const modification = await this.modificationService.fetchByCardUuid(card.uuid);
-          this.openDialog(ModificationDialogComponent, modification);
+          this.openDialog(AppModificationDialogComponent, modification);
           break;
         case CardType.COV:
           const covenant = await this.covenantService.fetchByCardUuid(card.uuid);
@@ -415,6 +460,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.NOI:
           const notceOfIntent = await this.noticeOfIntentService.fetchByCardUuid(card.uuid);
           this.openDialog(NoticeOfIntentDialogComponent, notceOfIntent);
+          break;
+        case CardType.NOI_MODI:
+          const noiModification = await this.noiModificationService.fetchByCardUuid(card.uuid);
+          this.openDialog(NoiModificationDialogComponent, noiModification);
           break;
         default:
           console.error('Card type is not configured for a dialog');

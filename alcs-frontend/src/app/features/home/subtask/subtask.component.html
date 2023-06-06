@@ -1,16 +1,16 @@
-<div class='assignee'>
+<div class="assignee">
   <h4>{{ subtaskLabel }} Subtasks: {{ totalSubtaskCount }}</h4>
 
-  <section *ngIf='noticeOfIntentSubtasks.length'>
-    <div class='subheading2'>Notice of Intent</div>
-    <app-subtask-table [subtasks]='noticeOfIntentSubtasks' [users]='users'></app-subtask-table>
+  <section *ngIf="noticeOfIntentSubtasks.length">
+    <div class="subheading2">Notice of Intent</div>
+    <app-subtask-table [subtasks]="noticeOfIntentSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf='applicationSubtasks.length'>
-    <div class='subheading2'>Applications</div>
-    <app-subtask-table [subtasks]='applicationSubtasks' [users]='users'></app-subtask-table>
+  <section *ngIf="applicationSubtasks.length">
+    <div class="subheading2">Applications</div>
+    <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf='nonApplicationSubtasks.length'>
-    <div class='subheading2'>Non- Applications</div>
-    <app-subtask-table [subtasks]='nonApplicationSubtasks' [users]='users'></app-subtask-table>
+  <section *ngIf="nonApplicationSubtasks.length">
+    <div class="subheading2">Non-Applications</div>
+    <app-subtask-table [subtasks]="nonApplicationSubtasks" [users]="users"></app-subtask-table>
   </section>
 </div>

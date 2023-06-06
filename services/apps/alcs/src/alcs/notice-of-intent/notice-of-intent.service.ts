@@ -7,6 +7,7 @@ import {
   FindOptionsRelations,
   FindOptionsWhere,
   IsNull,
+  Like,
   Not,
   Repository,
 } from 'typeorm';
@@ -14,6 +15,7 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
@@ -58,7 +60,11 @@ export class NoticeOfIntentService {
       dateSubmittedToAlc: formatIncomingDate(createDto.dateSubmittedToAlc),
     });
 
-    noticeOfIntent.card = await this.cardService.create('NOI', board, false);
+    noticeOfIntent.card = await this.cardService.create(
+      CARD_TYPE.NOI,
+      board,
+      false,
+    );
     const savedNoticeOfIntent = await this.repository.save(noticeOfIntent);
 
     return this.getOrFail(savedNoticeOfIntent.uuid);
@@ -228,5 +234,20 @@ export class NoticeOfIntentService {
 
   async updateByUuid(uuid: string, updates: Partial<NoticeOfIntent>) {
     await this.repository.update(uuid, updates);
+  }
+
+  async searchByFileNumber(fileNumber: string) {
+    return this.repository.find({
+      where: {
+        fileNumber: Like(`${fileNumber}%`),
+      },
+      order: {
+        fileNumber: 'ASC',
+      },
+      relations: {
+        region: true,
+        localGovernment: true,
+      },
+    });
   }
 }

@@ -27,6 +27,8 @@ import { ApplicationModificationService } from '../application-decision/applicat
 import { ApplicationReconsiderationDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
@@ -54,12 +56,14 @@ export class HomeController {
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService,
   ) {}
 
   @Get('/assigned')
   @UserRoles(...ANY_AUTH_ROLE)
   async getAssignedToMe(@Req() req): Promise<{
     noticeOfIntents: NoticeOfIntentDto[];
+    noticeOfIntentModifications: NoticeOfIntentModificationDto[];
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
@@ -98,10 +102,17 @@ export class HomeController {
         assignedFindOptions,
       );
 
+      const noticeOfIntentModifications =
+        await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
+
       return {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
           noticeOfIntents,
         ),
+        noticeOfIntentModifications:
+          await this.noticeOfIntentModificationService.mapToDtos(
+            noticeOfIntentModifications,
+          ),
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
           reconsiderations,
@@ -115,6 +126,7 @@ export class HomeController {
     } else {
       return {
         noticeOfIntents: [],
+        noticeOfIntentModifications: [],
         applications: [],
         reconsiderations: [],
         planningReviews: [],

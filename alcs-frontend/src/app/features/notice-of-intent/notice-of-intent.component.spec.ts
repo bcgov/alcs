@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationService } from '../../services/application/application.service';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 
 import { NoticeOfIntentComponent } from './notice-of-intent.component';
@@ -13,17 +13,15 @@ describe('NoticeOfIntentComponent', () => {
   let component: NoticeOfIntentComponent;
   let fixture: ComponentFixture<NoticeOfIntentComponent>;
   let mockNOIDetailService: DeepMocked<NoticeOfIntentDetailService>;
+  let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
 
   beforeEach(async () => {
     mockNOIDetailService = createMock();
     mockNOIDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
+    mockNOIModificationService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
-        {
-          provide: ApplicationService,
-          useValue: {},
-        },
         {
           provide: NoticeOfIntentDetailService,
           useValue: mockNOIDetailService,
@@ -33,6 +31,10 @@ describe('NoticeOfIntentComponent', () => {
           useValue: {
             params: new EventEmitter(),
           },
+        },
+        {
+          provide: NoticeOfIntentModificationService,
+          useValue: mockNOIModificationService,
         },
         {
           provide: Router,
