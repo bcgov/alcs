@@ -150,14 +150,14 @@
                 (save)="onStatsRequiredUpdate(decision.uuid, $event)"
               ></app-inline-boolean>
             </div>
-            <div>
+            <div *ngIf="decision.outcome?.code === 'RESC'">
               <div class="subheading2">Rescinded Date</div>
               <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
               <ng-container *ngIf="!decision.rescindedDate">No Data</ng-container>
             </div>
           </div>
 
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="decision.outcome?.code === 'RESC'">
             <div class="subheading2">Rescinded Comment</div>
             {{ decision.rescindedComment ? decision.rescindedComment : 'No Data' }}
           </div>
