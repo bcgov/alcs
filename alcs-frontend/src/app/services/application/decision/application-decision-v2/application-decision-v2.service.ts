@@ -6,14 +6,9 @@ import { downloadFileFromUrl, openFileInline } from '../../../../shared/utils/fi
 import { verifyFileSize } from '../../../../shared/utils/file-size-checker';
 import { ToastService } from '../../../toast/toast.service';
 import {
-  ApplicationDecisionConditionTypeDto,
   ApplicationDecisionDto,
-  CeoCriterionDto,
   CreateApplicationDecisionDto,
   DecisionCodesDto,
-  DecisionComponentTypeDto,
-  DecisionMakerDto,
-  DecisionOutcomeCodeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision-v2.dto';
 

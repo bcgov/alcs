@@ -283,7 +283,7 @@
       class="release-decision-btn"
       type="button"
       [disabled]="
-        !form.valid ||
+        (form.touched && !form.valid) ||
         !conditionsValid ||
         !componentsValid ||
         (components.length === 0 && showComponents) ||

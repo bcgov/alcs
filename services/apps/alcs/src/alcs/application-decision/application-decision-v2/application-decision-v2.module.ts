@@ -30,6 +30,7 @@ import { ApplicationDecisionComponentType } from './application-decision/compone
 import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
 import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
+import { ApplicationDecisionComponentController } from './application-decision/component/application-decision-component.controller';
 
 @Module({
   imports: [
@@ -70,7 +71,10 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
     ApplicationDecisionComponentService,
     ApplicationDecisionConditionService,
   ],
-  controllers: [ApplicationDecisionV2Controller],
+  controllers: [
+    ApplicationDecisionV2Controller,
+    ApplicationDecisionComponentController,
+  ],
   exports: [ApplicationDecisionV2Service],
 })
 export class ApplicationDecisionV2Module {}
