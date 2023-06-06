@@ -58,8 +58,8 @@ export class NoticeOfIntentModificationController {
   @Delete('/:uuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async delete(@Param('uuid') uuid: string) {
-    await this.modificationService.delete(uuid);
-    return {};
+    const deleted = await this.modificationService.delete(uuid);
+    return { uuid: deleted[0].uuid };
   }
 
   @Get('/card/:uuid')
