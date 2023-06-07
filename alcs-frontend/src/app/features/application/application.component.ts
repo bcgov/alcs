@@ -138,7 +138,6 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
         this.titleService.setTitle(`${environment.siteName} | ${application.fileNumber} (${application.applicant})`);
-        console.log('here');
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
