@@ -7,6 +7,8 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_decision":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_decision":"elipses":w -> "application_modification":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision":"elipses":w -> "application_reconsideration":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
+  "application_decision_document":"elipses":w -> "application_decision":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "application_decision_document":"elipses":w -> "document":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "application_decision_meeting":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_document":"application_uuid":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_document":"document_uuid":w -> "document":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
@@ -28,15 +30,14 @@ digraph "twoDegreesRelationshipsDiagram" {
   "application_paused":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsideration":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_reconsideration":"elipses":w -> "card":"elipses":e [arrowhead=none dir=back arrowtail=teeodot];
-  "application_staff_journal":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
-  "application_staff_journal":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=crowodot];
   "application_submission_review":"elipses":w -> "application":"file_number":e [arrowhead=none dir=back arrowtail=teeodot];
   "card":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "decision_document":"elipses":w -> "application_decision":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
-  "decision_document":"elipses":w -> "document":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
   "document":"uploaded_by_uuid":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
+  "notice_of_intent_decision_document":"elipses":w -> "document":"uuid":e [arrowhead=none dir=back arrowtail=teeodot];
+  "staff_journal":"elipses":w -> "application":"uuid":e [arrowhead=none dir=back arrowtail=crowodot];
+  "staff_journal":"elipses":w -> "user":"elipses":e [arrowhead=none dir=back arrowtail=crowodot];
   "application" [
    label=<
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
@@ -64,6 +65,17 @@ digraph "twoDegreesRelationshipsDiagram" {
     URL="application_decision.html"
     target="_top"
     tooltip="application_decision"
+  ];
+  "application_decision_document" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="187" HEIGHT="16"><B>application_decision_document</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="application_decision_document.html"
+    target="_top"
+    tooltip="application_decision_document"
   ];
   "application_decision_meeting" [
    label=<
@@ -115,7 +127,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="178" HEIGHT="16"><B>application_local_government</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">148 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">148 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR>
     </TABLE>>
     URL="application_local_government.html"
     target="_top"
@@ -233,22 +245,11 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="110" HEIGHT="16"><B>application_region</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">4 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">5 &gt;</TD></TR>
     </TABLE>>
     URL="application_region.html"
     target="_top"
     tooltip="application_region"
-  ];
-  "application_staff_journal" [
-   label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="148" HEIGHT="16"><B>application_staff_journal</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
-    </TABLE>>
-    URL="application_staff_journal.html"
-    target="_top"
-    tooltip="application_staff_journal"
   ];
   "application_submission" [
    label=<
@@ -288,22 +289,11 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="26" HEIGHT="16"><B>card</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">8 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">10 &gt;</TD></TR>
     </TABLE>>
     URL="card.html"
     target="_top"
     tooltip="card"
-  ];
-  "decision_document" [
-   label=<
-    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
-      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="115" HEIGHT="16"><B>decision_document</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
-      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
-    </TABLE>>
-    URL="decision_document.html"
-    target="_top"
-    tooltip="decision_document"
   ];
   "document" [
    label=<
@@ -313,11 +303,33 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="uploaded_by_uuid" COLSPAN="3" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"><IMG SRC="../../images/foreignKeys.png"/></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">uploaded_by_uuid</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="oats_document_id" COLSPAN="3" BGCOLOR="#ffffff" ALIGN="LEFT"><TABLE BORDER="0" CELLSPACING="0" ALIGN="LEFT"><TR ALIGN="LEFT"><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="15" HEIGHT="16"></TD><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="131" HEIGHT="16">oats_document_id</TD></TR></TABLE></TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">3 &gt;</TD></TR>
     </TABLE>>
     URL="document.html"
     target="_top"
     tooltip="document"
+  ];
+  "notice_of_intent_decision_document" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="216" HEIGHT="16"><B>notice_of_intent_decision_document</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="notice_of_intent_decision_document.html"
+    target="_top"
+    tooltip="notice_of_intent_decision_document"
+  ];
+  "staff_journal" [
+   label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3"  BGCOLOR="#f5f5f5"><TABLE BORDER="0" CELLSPACING="0"><TR><TD ALIGN="LEFT" FIXEDSIZE="TRUE" WIDTH="75" HEIGHT="16"><B>staff_journal</B></TD><TD ALIGN="RIGHT">[table]</TD></TR></TABLE></TD></TR>
+      <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#ffffff">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD><TD ALIGN="RIGHT" BGCOLOR="#ffffff">  </TD></TR>
+    </TABLE>>
+    URL="staff_journal.html"
+    target="_top"
+    tooltip="staff_journal"
   ];
   "user" [
    label=<

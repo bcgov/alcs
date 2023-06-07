@@ -220,6 +220,11 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
+                                                <td title="board_allowed_card_types_card_type.card_type_code references card_type.code via FK_1a30d6083ecef1f156ff6814485"><a href='board_allowed_card_types_card_type.html'>board_allowed_card_types_card_type</a><span class='relatedKey'>.card_type_code</span></td>
+                                                <td class="constraint detail">FK_1a30d6083ecef1f156ff6814485</td>
+                                                <td class="constraint detail"><span title='Cascade on delete:&#10;Deletion of parent deletes child'>C</span></td>
+                                            </tr>
+                                            <tr>
                                                 <td title="card.type_code references card_type.code via FK_30b9e07ab7c729f90911604179f"><a href='card.html'>card</a><span class='relatedKey'>.type_code</span></td>
                                                 <td class="constraint detail">FK_30b9e07ab7c729f90911604179f</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
@@ -331,26 +336,30 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="card.html" target="_top" title="card" alt="" coords="443,67,667,301">
+<area shape="rect" id="node1" href="board_allowed_card_types_card_type.html" target="_top" title="board_allowed_card_types_card_type" alt="" coords="443,40,815,163">
 <area shape="rect" id="node2" href="card_type.html" target="_top" title="card_type" alt="" coords="5,5,399,339">
+<area shape="rect" id="node3" href="card.html" target="_top" title="card" alt="" coords="517,180,741,415">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/card_type.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="731,69,900,157">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="443,261,667,496">
-<area shape="rect" id="node5" href="user.html" target="_top" title="user" alt="" coords="145,580,259,668">
-<area shape="rect" id="node6" href="board.html" target="_top" title="board" alt="" coords="139,124,265,212">
-<area shape="rect" id="node7" href="card_status.html" target="_top" title="card_status" alt="" coords="117,19,287,107">
-<area shape="rect" id="node8" href="card_type.html" target="_top" title="card_type" alt="" coords="5,229,399,563">
-<area shape="rect" id="node3" href="application_modification.html" target="_top" title="application_modification" alt="" coords="977,5,1254,93">
-<area shape="rect" id="node4" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="964,120,1267,208">
-<area shape="rect" id="node9" href="card_history.html" target="_top" title="card_history" alt="" coords="727,211,904,299">
-<area shape="rect" id="node10" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="723,632,907,720">
-<area shape="rect" id="node11" href="comment.html" target="_top" title="comment" alt="" coords="737,527,893,615">
-<area shape="rect" id="node12" href="covenant.html" target="_top" title="covenant" alt="" coords="739,316,892,404">
-<area shape="rect" id="node13" href="planning_review.html" target="_top" title="planning_review" alt="" coords="711,421,920,509">
+<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="879,393,1048,481">
+<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="517,356,741,591">
+<area shape="rect" id="node6" href="board.html" target="_top" title="board" alt="" coords="139,132,265,220">
+<area shape="rect" id="node7" href="card_type.html" target="_top" title="card_type" alt="" coords="5,343,399,676">
+<area shape="rect" id="node8" href="user.html" target="_top" title="user" alt="" coords="145,693,259,781">
+<area shape="rect" id="node9" href="card_status.html" target="_top" title="card_status" alt="" coords="117,237,287,325">
+<area shape="rect" id="node3" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1131,452,1409,540">
+<area shape="rect" id="node4" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1119,329,1421,417">
+<area shape="rect" id="node5" href="board_allowed_card_types_card_type.html" target="_top" title="board_allowed_card_types_card_type" alt="" coords="443,199,815,321">
+<area shape="rect" id="node10" href="card_history.html" target="_top" title="card_history" alt="" coords="875,535,1052,623">
+<area shape="rect" id="node11" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="871,640,1055,728">
+<area shape="rect" id="node12" href="comment.html" target="_top" title="comment" alt="" coords="885,745,1041,833">
+<area shape="rect" id="node13" href="covenant.html" target="_top" title="covenant" alt="" coords="887,5,1040,93">
+<area shape="rect" id="node14" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="859,147,1067,235">
+<area shape="rect" id="node15" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1112,111,1428,199">
+<area shape="rect" id="node16" href="planning_review.html" target="_top" title="planning_review" alt="" coords="859,252,1068,340">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/card_type.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

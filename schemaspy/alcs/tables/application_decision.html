@@ -213,18 +213,18 @@
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="decision_document.decision_uuid references application_decision.uuid via FK_a86632c9a6ab56e984cf1cc9e6b"><a href='decision_document.html'>decision_document</a><span class='relatedKey'>.decision_uuid</span></td>
-                                                <td class="constraint detail">FK_a86632c9a6ab56e984cf1cc9e6b</td>
+                                                <td title="application_decision_document.decision_uuid references application_decision.uuid via FK_7c22f4d93ffca5731e1b65d65c5"><a href='application_decision_document.html'>application_decision_document</a><span class='relatedKey'>.decision_uuid</span></td>
+                                                <td class="constraint detail">FK_7c22f4d93ffca5731e1b65d65c5</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="modified_decisions.application_decision_uuid references application_decision.uuid via FK_0e1b988c373de06ec277bca3692"><a href='modified_decisions.html'>modified_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
-                                                <td class="constraint detail">FK_0e1b988c373de06ec277bca3692</td>
+                                                <td title="application_modified_decisions.application_decision_uuid references application_decision.uuid via FK_00d76c4e26de94d450acd588fd6"><a href='application_modified_decisions.html'>application_modified_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
+                                                <td class="constraint detail">FK_00d76c4e26de94d450acd588fd6</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                             <tr>
-                                                <td title="reconsidered_decisions.application_decision_uuid references application_decision.uuid via FK_09a58410db3f332490181279771"><a href='reconsidered_decisions.html'>reconsidered_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
-                                                <td class="constraint detail">FK_09a58410db3f332490181279771</td>
+                                                <td title="application_reconsidered_decisions.application_decision_uuid references application_decision.uuid via FK_3738bed64a93f86c991a817324b"><a href='application_reconsidered_decisions.html'>application_reconsidered_decisions</a><span class='relatedKey'>.application_decision_uuid</span></td>
+                                                <td class="constraint detail">FK_3738bed64a93f86c991a817324b</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
@@ -317,7 +317,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_decision.outcome_code references decision_outcome_code.code via FK_d00682751a3d4cdd7c9a16ab041"><a href='decision_outcome_code.html'>decision_outcome_code</a><span class='relatedKey'>.code</span></td>
+                                                <td title="application_decision.outcome_code references application_decision_outcome_code.code via FK_d00682751a3d4cdd7c9a16ab041"><a href='application_decision_outcome_code.html'>application_decision_outcome_code</a><span class='relatedKey'>.code</span></td>
                                                 <td class="constraint detail">FK_d00682751a3d4cdd7c9a16ab041</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -373,7 +373,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_decision.decision_maker_code references decision_maker_code.code via FK_9bfe649b67952a226317fc3c1ae"><a href='decision_maker_code.html'>decision_maker_code</a><span class='relatedKey'>.code</span></td>
+                                                <td title="application_decision.decision_maker_code references application_decision_maker_code.code via FK_9bfe649b67952a226317fc3c1ae"><a href='application_decision_maker_code.html'>application_decision_maker_code</a><span class='relatedKey'>.code</span></td>
                                                 <td class="constraint detail">FK_9bfe649b67952a226317fc3c1ae</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -395,7 +395,7 @@
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="application_decision.ceo_criterion_code references ceo_criterion_code.code via FK_421d167684e2e83d826f939bea7"><a href='ceo_criterion_code.html'>ceo_criterion_code</a><span class='relatedKey'>.code</span></td>
+                                                <td title="application_decision.ceo_criterion_code references application_ceo_criterion_code.code via FK_421d167684e2e83d826f939bea7"><a href='application_ceo_criterion_code.html'>application_ceo_criterion_code</a><span class='relatedKey'>.code</span></td>
                                                 <td class="constraint detail">FK_421d167684e2e83d826f939bea7</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
@@ -737,7 +737,7 @@
                                     <td>uuid</td>
                                 </tr>
                                 <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> IDX_9fd353dcf19ea98d0de8ff8be9</td>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> IDX_158b067f2525c02879ff25b3d0</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
                                     <td>resolution_number + resolution_year</td>
@@ -753,12 +753,6 @@
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
                                     <td>reconsiders_uuid</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> resolution</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
-                                    <td>resolution_number + resolution_year</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -785,18 +779,18 @@
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
 <area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="865,11,1329,989">
 <area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,804,308,1068">
-<area shape="rect" id="node3" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="473,352,700,528">
+<area shape="rect" id="node3" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="425,352,749,528">
 <area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="352,545,821,692">
-<area shape="rect" id="node5" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="463,188,711,335">
+<area shape="rect" id="node5" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="415,188,759,335">
 <area shape="rect" id="node6" href="linked_resolution_outcome_type.html" target="_top" title="linked_resolution_outcome_type" alt="" coords="418,1220,755,1367">
 <area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="448,745,725,951">
-<area shape="rect" id="node8" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="453,24,720,171">
+<area shape="rect" id="node8" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="405,24,768,171">
 <area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="435,968,738,1203">
 <area shape="rect" id="node10" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="1373,101,1769,277">
 <area shape="rect" id="node11" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1813,5,2137,211">
-<area shape="rect" id="node12" href="decision_document.html" target="_top" title="decision_document" alt="" coords="1455,295,1688,471">
-<area shape="rect" id="node13" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="1427,583,1716,705">
-<area shape="rect" id="node14" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="1414,909,1729,1032">
+<area shape="rect" id="node12" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1407,295,1736,471">
+<area shape="rect" id="node13" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="1407,583,1735,705">
+<area shape="rect" id="node14" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1391,909,1752,1032">
 </map>
                                         <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/application_decision.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
@@ -808,31 +802,31 @@
 <area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,1289,232,1377">
 <area shape="rect" id="node5" href="application_type.html" target="_top" title="application_type" alt="" coords="329,1396,541,1484">
 <area shape="rect" id="node6" href="application_decision.html" target="_top" title="application_decision" alt="" coords="1617,200,2081,1179">
-<area shape="rect" id="node7" href="ceo_criterion_code.html" target="_top" title="ceo_criterion_code" alt="" coords="1225,449,1452,625">
+<area shape="rect" id="node7" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="1177,449,1501,625">
 <area shape="rect" id="node8" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="1104,748,1573,895">
-<area shape="rect" id="node9" href="decision_maker_code.html" target="_top" title="decision_maker_code" alt="" coords="1215,285,1463,432">
+<area shape="rect" id="node9" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="1167,285,1511,432">
 <area shape="rect" id="node10" href="linked_resolution_outcome_type.html" target="_top" title="linked_resolution_outcome_type" alt="" coords="1170,1053,1507,1200">
 <area shape="rect" id="node11" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1200,948,1477,1036">
-<area shape="rect" id="node12" href="decision_outcome_code.html" target="_top" title="decision_outcome_code" alt="" coords="1205,121,1472,268">
+<area shape="rect" id="node12" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="1157,121,1520,268">
 <area shape="rect" id="node13" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1187,643,1490,731">
-<area shape="rect" id="node23" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="650,907,1047,995">
-<area shape="rect" id="node24" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="637,685,1060,773">
-<area shape="rect" id="node25" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="676,791,1021,879">
+<area shape="rect" id="node24" href="application_modification_outcome_type.html" target="_top" title="application_modification_outcome_type" alt="" coords="650,907,1047,995">
+<area shape="rect" id="node26" href="application_reconsideration_outcome_type.html" target="_top" title="application_reconsideration_outcome_type" alt="" coords="637,685,1060,773">
+<area shape="rect" id="node27" href="application_reconsideration_type.html" target="_top" title="application_reconsideration_type" alt="" coords="676,791,1021,879">
 <area shape="rect" id="node14" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="2139,284,2479,372">
 <area shape="rect" id="node15" href="application_decision_component_type.html" target="_top" title="application_decision_component_type" alt="" coords="1659,95,2040,183">
 <area shape="rect" id="node16" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="2536,355,2860,443">
 <area shape="rect" id="node17" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="2125,425,2492,513">
-<area shape="rect" id="node18" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1181,1217,1496,1305">
-<area shape="rect" id="node19" href="application_document.html" target="_top" title="application_document" alt="" coords="2180,1455,2437,1543">
-<area shape="rect" id="node20" href="document.html" target="_top" title="document" alt="" coords="1769,1273,1930,1361">
-<area shape="rect" id="node21" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1729,1569,1970,1657">
-<area shape="rect" id="node22" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1222,1569,1455,1657">
-<area shape="rect" id="node26" href="application_staff_journal.html" target="_top" title="application_staff_journal" alt="" coords="1200,1323,1477,1411">
-<area shape="rect" id="node27" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1205,1428,1472,1516">
-<area shape="rect" id="node28" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1175,1711,1502,1799">
-<area shape="rect" id="node29" href="decision_document.html" target="_top" title="decision_document" alt="" coords="2192,1180,2425,1356">
-<area shape="rect" id="node30" href="modified_decisions.html" target="_top" title="modified_decisions" alt="" coords="2193,803,2424,891">
-<area shape="rect" id="node31" href="reconsidered_decisions.html" target="_top" title="reconsidered_decisions" alt="" coords="2177,101,2441,189">
+<area shape="rect" id="node18" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="2144,1180,2473,1356">
+<area shape="rect" id="node19" href="document.html" target="_top" title="document" alt="" coords="1769,1273,1930,1361">
+<area shape="rect" id="node20" href="application_decision_meeting.html" target="_top" title="application_decision_meeting" alt="" coords="1181,1217,1496,1305">
+<area shape="rect" id="node21" href="application_document.html" target="_top" title="application_document" alt="" coords="2180,1455,2437,1543">
+<area shape="rect" id="node22" href="application_meeting.html" target="_top" title="application_meeting" alt="" coords="1729,1569,1970,1657">
+<area shape="rect" id="node23" href="application_paused.html" target="_top" title="application_paused" alt="" coords="1222,1569,1455,1657">
+<area shape="rect" id="node25" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="2145,803,2473,891">
+<area shape="rect" id="node28" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="2128,101,2489,189">
+<area shape="rect" id="node29" href="application_submission.html" target="_top" title="application_submission" alt="" coords="1205,1323,1472,1411">
+<area shape="rect" id="node30" href="application_submission_review.html" target="_top" title="application_submission_review" alt="" coords="1175,1428,1502,1516">
+<area shape="rect" id="node31" href="staff_journal.html" target="_top" title="staff_journal" alt="" coords="1249,1711,1429,1799">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
