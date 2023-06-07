@@ -16,11 +16,13 @@ import {
 } from './notice-of-intent-decision.dto';
 import { NoticeOfIntentDecision } from './notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionService } from './notice-of-intent-decision.service';
+import { NoticeOfIntentModificationService } from './notice-of-intent-modification/notice-of-intent-modification.service';
 
 describe('NoticeOfIntentDecisionController', () => {
   let controller: NoticeOfIntentDecisionController;
   let mockDecisionService: DeepMocked<NoticeOfIntentDecisionService>;
   let mockNOIService: DeepMocked<NoticeOfIntentService>;
+  let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
 
   let mockNoi;
   let mockDecision;
@@ -28,12 +30,15 @@ describe('NoticeOfIntentDecisionController', () => {
   beforeEach(async () => {
     mockDecisionService = createMock();
     mockNOIService = createMock();
+    mockNOIModificationService = createMock();
 
     mockNoi = new NoticeOfIntent();
     mockDecision = new NoticeOfIntentDecision({
       date: new Date(),
       noticeOfIntent: mockNoi,
     });
+
+    mockNOIModificationService.getByFileNumber.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -52,6 +57,10 @@ describe('NoticeOfIntentDecisionController', () => {
         {
           provide: NoticeOfIntentService,
           useValue: mockNOIService,
+        },
+        {
+          provide: NoticeOfIntentModificationService,
+          useValue: mockNOIModificationService,
         },
         {
           provide: ClsService,
@@ -125,6 +134,7 @@ describe('NoticeOfIntentDecisionController', () => {
         date: decisionToCreate.date,
       },
       mockNoi,
+      null,
     );
   });
 

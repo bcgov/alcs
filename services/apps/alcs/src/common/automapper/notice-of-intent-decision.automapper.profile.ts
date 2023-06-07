@@ -52,6 +52,35 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           (ad) => ad.auditDate,
           mapFrom((a) => a.auditDate?.getTime()),
         ),
+        forMember(
+          (a) => a.modifies,
+          mapFrom((dec) =>
+            dec.modifies
+              ? {
+                  uuid: dec.modifies.uuid,
+                  linkedResolutions: dec.modifies.modifiesDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
+        ),
+        forMember(
+          (a) => a.modifiedBy,
+          mapFrom((dec) =>
+            (dec.modifiedBy || [])
+              .filter((modification) => modification.resultingDecision)
+              .map((modification) => ({
+                uuid: modification.uuid,
+                linkedResolutions: [
+                  `#${modification.resultingDecision!.resolutionNumber}/${
+                    modification.resultingDecision!.resolutionYear
+                  }`,
+                ],
+              })),
+          ),
+        ),
       );
 
       createMap(

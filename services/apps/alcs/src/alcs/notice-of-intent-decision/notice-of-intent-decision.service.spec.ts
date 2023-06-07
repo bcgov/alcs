@@ -147,7 +147,7 @@ describe('NoticeOfIntentDecisionService', () => {
         outcomeCode: 'Outcome',
       } as CreateNoticeOfIntentDecisionDto;
 
-      await service.create(decisionToCreate, mockNOI);
+      await service.create(decisionToCreate, mockNOI, null);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockNOIService.updateByUuid).toHaveBeenCalledTimes(1);
@@ -171,7 +171,7 @@ describe('NoticeOfIntentDecisionService', () => {
       } as CreateNoticeOfIntentDecisionDto;
 
       await expect(
-        service.create(decisionToCreate, mockNOI),
+        service.create(decisionToCreate, mockNOI, null),
       ).rejects.toMatchObject(
         new ServiceValidationException(
           `Resolution number #${decisionToCreate.resolutionNumber}/${decisionToCreate.resolutionYear} is already in use`,
@@ -192,7 +192,7 @@ describe('NoticeOfIntentDecisionService', () => {
         outcomeCode: 'Outcome',
       } as CreateNoticeOfIntentDecisionDto;
 
-      await service.create(decisionToCreate, mockNOI);
+      await service.create(decisionToCreate, mockNOI, null);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockNOIService.update).not.toHaveBeenCalled();

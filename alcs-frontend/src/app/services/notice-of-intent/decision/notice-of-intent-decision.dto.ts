@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
+import { NoticeOfIntentModificationDto } from '../notice-of-intent-modification/notice-of-intent-modification.dto';
 
 export interface UpdateNoticeOfIntentDecisionDto {
   date?: number;
@@ -17,6 +18,12 @@ export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDec
   decisionMaker: string;
   decisionMakerName?: string;
   auditDate?: number | null;
+  modifiesUuid?: string;
+}
+
+export interface LinkedResolutionDto {
+  uuid: string;
+  linkedResolutions: string[];
 }
 
 export interface NoticeOfIntentDecisionDto {
@@ -30,6 +37,8 @@ export interface NoticeOfIntentDecisionDto {
   decisionMakerName?: string;
   noticeOfIntentFileNumber: string;
   documents: NoticeOfIntentDecisionDocumentDto[];
+  modifies?: LinkedResolutionDto;
+  modifiedBy?: LinkedResolutionDto[];
 }
 
 export interface NoticeOfIntentDecisionDocumentDto {
@@ -40,6 +49,4 @@ export interface NoticeOfIntentDecisionDocumentDto {
   uploadedAt: number;
 }
 
-export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {
-  isFirstDecision: boolean;
-}
+export interface NoticeOfIntentDecisionOutcomeCodeDto extends BaseCodeDto {}

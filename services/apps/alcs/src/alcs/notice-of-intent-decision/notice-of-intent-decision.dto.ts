@@ -1,11 +1,8 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 
-export class NoticeOfIntentDecisionOutcomeDto extends BaseCodeDto {
-  @AutoMap()
-  isFirstDecision: boolean;
-}
+export class NoticeOfIntentDecisionOutcomeDto extends BaseCodeDto {}
 
 export class UpdateNoticeOfIntentDecisionDto {
   @IsNumber()
@@ -52,6 +49,15 @@ export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisio
 
   @IsNumber()
   resolutionYear: number;
+
+  @IsUUID()
+  @IsOptional()
+  modifiesUuid?: string;
+}
+
+export class LinkedResolutionDto {
+  uuid: string;
+  linkedResolutions: string[];
 }
 
 export class NoticeOfIntentDecisionDto {
@@ -84,6 +90,9 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => NoticeOfIntentDecisionOutcomeDto)
   outcome?: NoticeOfIntentDecisionOutcomeDto | null;
+
+  modifies?: LinkedResolutionDto;
+  modifiedBy?: LinkedResolutionDto[];
 }
 
 export class NoticeOfIntentDecisionDocumentDto {
