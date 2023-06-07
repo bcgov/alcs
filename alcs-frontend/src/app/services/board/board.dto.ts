@@ -2,6 +2,8 @@ import { ApplicationModificationDto } from '../application/application-modificat
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
 import { CovenantDto } from '../covenant/covenant.dto';
+import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
 export interface BoardDto {
@@ -9,6 +11,7 @@ export interface BoardDto {
   title: string;
   decisionMaker: string;
   statuses: BoardStatusDto[];
+  allowedCardTypes: string[];
 }
 
 export interface BoardStatusDto {
@@ -23,4 +26,6 @@ export interface CardsDto {
   planningReviews: PlanningReviewDto[];
   modifications: ApplicationModificationDto[];
   covenants: CovenantDto[];
+  noticeOfIntents: NoticeOfIntentDto[];
+  noiModifications: NoticeOfIntentModificationDto[];
 }

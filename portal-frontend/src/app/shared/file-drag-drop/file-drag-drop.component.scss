@@ -16,9 +16,13 @@
   }
 }
 
-.desktop-file-drag-drop[ng-reflect-disabled='true'] {
+.desktop-file-drag-drop.disabled {
   background-color: rgba(colors.$grey, 0.2) !important;
   cursor: not-allowed;
+
+  .content {
+    cursor: not-allowed;
+  }
 }
 
 .mobile-file-drag-drop {

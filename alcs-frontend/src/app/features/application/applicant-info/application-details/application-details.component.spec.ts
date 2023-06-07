@@ -31,7 +31,11 @@ describe('ApplicationDetailsComponent', () => {
       parcels: [],
       otherParcels: [],
       documents: [],
-      primaryContact: {} as SubmittedApplicationOwnerDto,
+      primaryContact: {
+        type: {
+          code: '',
+        },
+      } as SubmittedApplicationOwnerDto,
       parcelsAgricultureDescription: '',
       parcelsAgricultureImprovementDescription: '',
       parcelsNonAgricultureUseDescription: '',
@@ -44,7 +48,7 @@ describe('ApplicationDetailsComponent', () => {
       westLandUseType: '',
       westLandUseTypeDescription: '',
       subdProposedLots: [],
-      typeCode:''
+      typeCode: '',
     };
     component.applicationType = 'NFUP';
     component.fileNumber = 'fake';

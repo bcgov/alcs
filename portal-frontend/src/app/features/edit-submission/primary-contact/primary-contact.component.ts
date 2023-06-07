@@ -31,6 +31,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
   needsAuthorizationLetter = false;
   selectedThirdPartyAgent = false;
   selectedOwnerUuid: string | undefined = undefined;
+  isCrownOwner = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -150,19 +151,32 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
     }));
     const hasSelectedAgent = (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) || uuid == 'agent';
     this.selectedThirdPartyAgent = hasSelectedAgent;
+    this.form.reset();
+
     if (hasSelectedAgent) {
       this.firstName.enable();
       this.lastName.enable();
       this.organizationName.enable();
       this.email.enable();
       this.phoneNumber.enable();
+      this.isCrownOwner = false;
     } else {
-      this.form.reset();
       this.firstName.disable();
       this.lastName.disable();
       this.organizationName.disable();
       this.email.disable();
       this.phoneNumber.disable();
+
+      if (selectedOwner) {
+        this.form.patchValue({
+          firstName: selectedOwner.firstName,
+          lastName: selectedOwner.lastName,
+          organizationName: selectedOwner.organizationName,
+          phoneNumber: selectedOwner.phoneNumber,
+          email: selectedOwner.email,
+        });
+        this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
+      }
     }
 
     this.needsAuthorizationLetter = !(
@@ -186,6 +200,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
       this.owners = owners;
+
       if (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) {
         this.selectedOwnerUuid = selectedOwner.uuid;
         this.selectedThirdPartyAgent = true;

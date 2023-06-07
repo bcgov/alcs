@@ -13,12 +13,16 @@ import { MentionTextareaComponent } from '../../shared/mention-textarea/mention-
 import { SharedModule } from '../../shared/shared.module';
 import { BoardComponent } from './board.component';
 import { CardDialogComponent } from './dialogs/card-dialog/card-dialog.component';
-import { ModificationDialogComponent } from './dialogs/modification/modification-dialog.component';
-import { CreateModificationDialogComponent } from './dialogs/modification/create/create-modification-dialog.component';
+import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
+import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
+import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
+import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
+import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
+import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -49,10 +53,14 @@ const routes: Routes = [
     ReconsiderationDialogComponent,
     CreatePlanningReviewDialogComponent,
     PlanningReviewDialogComponent,
-    CreateModificationDialogComponent,
-    ModificationDialogComponent,
+    CreateAppModificationDialogComponent,
+    AppModificationDialogComponent,
     CovenantDialogComponent,
     CreateCovenantDialogComponent,
+    NoticeOfIntentDialogComponent,
+    CreateNoticeOfIntentDialogComponent,
+    CreateNoiModificationDialogComponent,
+    NoiModificationDialogComponent,
   ],
   imports: [
     CommonModule,

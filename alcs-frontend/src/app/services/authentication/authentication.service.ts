@@ -21,6 +21,7 @@ export enum ROLES {
   GIS = 'GIS',
   LUP = 'LUP',
   AGROLOGIST = 'Agrologist',
+  SOIL_OFFICER = 'Soil Officer',
 }
 
 export const ALL_ROLES = Object.values(ROLES);

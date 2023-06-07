@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSortModule } from '@angular/material/sort';
 import { RouterModule, Routes } from '@angular/router';
-import { MtxNativeDatetimeModule, MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
-import { MtxDatetimepickerModule } from '@ng-matero/extensions/datetimepicker';
+import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
 import { SharedModule } from '../../shared/shared.module';
-import { TimelineComponent } from '../../shared/timeline/timeline.component';
 import { DATE_FORMATS } from '../../shared/utils/date-format';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationDetailsModule } from './applicant-info/application-details/application-details.module';
@@ -24,7 +20,6 @@ import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
-import { InlineReviewOutcomeComponent } from './post-decision/inline-review-outcome/inline-review-outcome.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
@@ -32,9 +27,6 @@ import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
-import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
-import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
-import { StaffJournalComponent } from './staff-journal/staff-journal.component';
 
 const routes: Routes = [
   {
@@ -64,31 +56,17 @@ const routes: Routes = [
     CreateApplicationMeetingDialogComponent,
     InfoRequestsComponent,
     InfoRequestDialogComponent,
-    TimelineComponent,
     PostDecisionComponent,
-    InlineReviewOutcomeComponent,
     EditReconsiderationDialogComponent,
     EditModificationDialogComponent,
     ApplicantInfoComponent,
     LfngInfoComponent,
     DocumentsComponent,
     DocumentUploadDialogComponent,
-    StaffJournalComponent,
-    StaffJournalNoteComponent,
-    StaffJournalNoteInputComponent,
     ProposalComponent,
     NfuProposalComponent,
     SubdProposalComponent,
   ],
-  imports: [
-    SharedModule.forRoot(),
-    RouterModule.forChild(routes),
-    MtxDatetimepickerModule,
-    MtxNativeDatetimeModule,
-    MatCheckboxModule,
-    ApplicationDetailsModule,
-    MatSortModule,
-    DecisionModule,
-  ],
+  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
 export class ApplicationModule {}

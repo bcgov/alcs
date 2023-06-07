@@ -21,16 +21,17 @@ const editLink = new Map<string, string>([
 
 const SORTING_ORDER = {
   //high comes first, 1 shows at bottom
-  MODIFICATION_REVIEW: 12,
-  MODIFICATION_REQUEST: 11,
-  RECON_REVIEW: 10,
-  RECON_REQUEST: 9,
-  CHAIR_REVIEW_DECISION: 8,
-  AUDITED_DECISION: 7,
-  DECISION_MADE: 6,
-  VISIT_REPORTS: 5,
-  VISIT_REQUESTS: 4,
-  ACKNOWLEDGE_COMPLETE: 3,
+  MODIFICATION_REVIEW: 13,
+  MODIFICATION_REQUEST: 12,
+  RECON_REVIEW: 11,
+  RECON_REQUEST: 10,
+  CHAIR_REVIEW_DECISION: 9,
+  AUDITED_DECISION: 8,
+  DECISION_MADE: 7,
+  VISIT_REPORTS: 6,
+  VISIT_REQUESTS: 5,
+  ACKNOWLEDGE_COMPLETE: 4,
+  FEE_RECEIVED: 3,
   ACKNOWLEDGED_INCOMPLETE: 2,
   SUBMITTED: 1,
 };
@@ -135,6 +136,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
       mappedEvents.push({
         name: 'Acknowledged Complete',
         startDate: new Date(application.dateAcknowledgedComplete + SORTING_ORDER.ACKNOWLEDGE_COMPLETE),
+        isFulfilled: true,
+      });
+    }
+
+    if (application.feePaidDate) {
+      mappedEvents.push({
+        name: 'Fee Received Date',
+        startDate: new Date(application.feePaidDate + SORTING_ORDER.FEE_RECEIVED),
         isFulfilled: true,
       });
     }

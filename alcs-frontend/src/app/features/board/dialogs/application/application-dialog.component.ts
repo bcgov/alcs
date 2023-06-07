@@ -15,7 +15,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 @Component({
   selector: 'app-detail-dialog',
   templateUrl: './application-dialog.component.html',
-  styleUrls: ['./application-dialog.component.scss'],
+  styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
 export class ApplicationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;
@@ -45,7 +45,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
   populateData(application: ApplicationDto) {
     this.application = application;
-    this.populateCardDate(application.card!);
+    this.populateCardData(application.card!);
     this.selectedRegion = application.region.code;
     this.cardTitle = `${application.fileNumber} (${application.applicant})`;
   }

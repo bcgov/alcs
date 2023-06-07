@@ -19,6 +19,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() editable = true;
+  @Input() loadData = true;
   @Input() decision: ApplicationDecisionDto | undefined;
   @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
@@ -37,16 +38,15 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.decision && !this.editable) {
+    if (this.decision && !this.loadData) {
       this.dataSource = new MatTableDataSource(this.decision.documents);
-    } else {
-      this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
-        if (decision) {
-          this.dataSource = new MatTableDataSource(decision.documents);
-          this.decision = decision;
-        }
-      });
     }
+    this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
+      if (decision) {
+        this.dataSource = new MatTableDataSource(decision.documents);
+        this.decision = decision;
+      }
+    });
   }
 
   async openFile(fileUuid: string, fileName: string) {

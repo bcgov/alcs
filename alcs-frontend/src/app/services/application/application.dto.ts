@@ -1,3 +1,4 @@
+import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
@@ -66,7 +67,7 @@ export interface SubmittedApplicationOwnerDto {
   organizationName?: string;
   phoneNumber: string;
   email: string;
-  type: string;
+  type: BaseCodeDto;
   corporateSummaryDocumentUuid?: string;
 }
 

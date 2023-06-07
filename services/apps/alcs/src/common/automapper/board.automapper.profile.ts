@@ -33,6 +33,10 @@ export class BoardAutomapperProfile extends AutomapperProfile {
             this.mapper.mapArray(a.statuses, BoardStatus, BoardStatusDto),
           ),
         ),
+        forMember(
+          (ad) => ad.allowedCardTypes,
+          mapFrom((a) => a.allowedCardTypes.map((cardType) => cardType.code)),
+        ),
       );
 
       createMap(

@@ -1,5 +1,5 @@
 <mat-card
-  class="card body1-text"
+  class="card body-text {{ cardData.cssClasses?.join(' ') }}"
   [ngClass]="{ paused: cardData.paused, 'decision-date': cardData.latestDecisionDate }"
   cdkDrag
   [cdkDragData]="cardData"
@@ -10,12 +10,18 @@
   </div>
   <div class="card-content">
     <div class="upper-card">
-      <span class="ellipsis"
-      [id]="cardData.id"
-      [matTooltip]="cardData.titleTooltip"
-      (mouseover) = "onMouseHover(cardData.id)"
-      (focus) = "onMouseHover(cardData.id)"
-      [matTooltipDisabled]="!cardData.verticalOutBound" >{{ cardData.title }}</span>
+      <div class="subtext">
+        {{ cardData.typeLabel }}
+      </div>
+      <span
+        class="ellipsis"
+        [id]="cardData.id"
+        [matTooltip]="cardData.titleTooltip"
+        (mouseover)="onMouseHover(cardData.id)"
+        (focus)="onMouseHover(cardData.id)"
+        [matTooltipDisabled]="!cardData.verticalOutBound"
+        >{{ cardData.title }}</span
+      >
       <span class="high-priority" *ngIf="cardData.highPriority">!</span>
       <div class="labels">
         <app-application-type-pill

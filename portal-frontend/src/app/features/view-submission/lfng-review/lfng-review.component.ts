@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import {
@@ -10,8 +10,8 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import {
-  APPLICATION_STATUS,
   ApplicationSubmissionDetailedDto,
+  APPLICATION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 
@@ -26,12 +26,15 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   @Input() $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   @Input() $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
+  @Output() onCancel = new EventEmitter<string>();
+
   application: ApplicationSubmissionDetailedDto | undefined;
   applicationReview: ApplicationSubmissionReviewDto | undefined;
   APPLICATION_STATUS = APPLICATION_STATUS;
   staffReport: ApplicationDocumentDto[] = [];
   resolutionDocument: ApplicationDocumentDto[] = [];
   governmentOtherAttachments: ApplicationDocumentDto[] = [];
+  hasCompletedStepsBeforeDocuments = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -42,7 +45,17 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
-      this.applicationReview = appReview;
+      if (appReview) {
+        this.applicationReview = appReview;
+
+        this.hasCompletedStepsBeforeDocuments =
+          (appReview.isAuthorized !== null &&
+            appReview.isOCPDesignation !== null &&
+            appReview.isSubjectToZoning !== null) ||
+          (appReview.isAuthorized === null &&
+            appReview.isOCPDesignation === false &&
+            appReview.isSubjectToZoning === false);
+      }
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -70,9 +83,11 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   async loadReview() {
     if (
       this.application &&
-      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
-        this.application.status.code
-      ) &&
+      [
+        APPLICATION_STATUS.IN_REVIEW,
+        APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        APPLICATION_STATUS.REFUSED_TO_FORWARD,
+      ].includes(this.application.status.code) &&
       this.application.typeCode !== 'TURP'
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
@@ -96,6 +111,10 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
       }
     }
     await this.router.navigateByUrl(`application/${fileId}/review`);
+  }
+
+  onCancelClicked(fileNumber: string) {
+    this.onCancel.emit(fileNumber);
   }
 
   ngOnDestroy(): void {

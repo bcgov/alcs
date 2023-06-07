@@ -3,6 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BoardSmallDto } from '../board/board.dto';
 import { AssigneeDto } from '../../user/user.dto';
 import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
+import { CARD_TYPE } from './card-type/card-type.entity';
 
 export class CardUpdateDto {
   @AutoMap()
@@ -57,7 +58,7 @@ export class CardCreateDto {
 
   @IsNotEmpty()
   @IsString()
-  typeCode: string;
+  typeCode: CARD_TYPE;
 }
 
 export class CardDto {

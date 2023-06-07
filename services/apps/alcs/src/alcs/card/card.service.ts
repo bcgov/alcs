@@ -10,7 +10,7 @@ import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
 import { NotificationService } from '../notification/notification.service';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
-import { CardType } from './card-type/card-type.entity';
+import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 
@@ -117,7 +117,7 @@ export class CardService {
     return savedCard;
   }
 
-  async create(typeCode: string, board: Board, persist = true) {
+  async create(typeCode: CARD_TYPE, board: Board, persist = true) {
     const type = await this.cardTypeRepository.findOne({
       where: {
         code: typeCode,

@@ -72,7 +72,7 @@ export class ProposalComponent {
     await this.updateApplicationValue('alrArea', parsedValue);
   }
 
-  async updateApplicationValue(field: keyof UpdateApplicationDto, value: string | number | null) {
+  async updateApplicationValue(field: keyof UpdateApplicationDto, value: string[] | string | number | null) {
     const application = this.application;
     if (application) {
       const update = await this.applicationDetailService.updateApplication(application.fileNumber, {

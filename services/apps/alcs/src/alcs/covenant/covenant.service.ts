@@ -1,7 +1,4 @@
-import {
-  ServiceNotFoundException,
-  ServiceValidationException,
-} from '@app/common/exceptions/base.exception';
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
@@ -13,8 +10,9 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { ApplicationService } from '../application/application.service';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { Board } from '../board/board.entity';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
 import { CovenantDto, CreateCovenantDto } from './covenant.dto';
 import { Covenant } from './covenant.entity';
@@ -37,30 +35,11 @@ export class CovenantService {
     @InjectRepository(Covenant)
     private repository: Repository<Covenant>,
     @InjectMapper() private mapper: Mapper,
-    private applicationService: ApplicationService,
+    private fileNumberService: FileNumberService,
   ) {}
 
   async create(data: CreateCovenantDto, board: Board) {
-    const existingCovenant = await this.repository.findOne({
-      where: {
-        fileNumber: data.fileNumber,
-      },
-    });
-    if (existingCovenant) {
-      throw new ServiceValidationException(
-        `Covenant already exists with File ID ${data.fileNumber}`,
-      );
-    }
-
-    const existingApplication = await this.applicationService.get(
-      data.fileNumber,
-    );
-
-    if (existingApplication) {
-      throw new ServiceValidationException(
-        `Application already exists with File ID ${data.fileNumber}`,
-      );
-    }
+    await this.fileNumberService.checkValidFileNumber(data.fileNumber);
 
     const covenant = new Covenant({
       localGovernmentUuid: data.localGovernmentUuid,
@@ -69,7 +48,7 @@ export class CovenantService {
       applicant: data.applicant,
     });
 
-    covenant.card = await this.cardService.create('COV', board, false);
+    covenant.card = await this.cardService.create(CARD_TYPE.COV, board, false);
     const savedCovenant = await this.repository.save(covenant);
 
     return this.getOrFail(savedCovenant.uuid);

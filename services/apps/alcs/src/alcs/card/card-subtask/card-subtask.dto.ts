@@ -55,7 +55,8 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
     | 'reconsideration'
     | 'covenant'
     | 'modification'
-    | 'planning-review';
+    | 'planning-review'
+    | 'notice-of-intent';
   activeDays?: number;
   paused: boolean;
 }
@@ -64,4 +65,5 @@ export enum CARD_SUBTASK_TYPE {
   GIS = 'GIS',
   AUDIT = 'AUDT',
   AGROLOGIST = 'AGRO',
+  PEER_REVIEW = 'PEER',
 }

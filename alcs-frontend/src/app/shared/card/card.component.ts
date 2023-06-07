@@ -5,8 +5,10 @@ import { ApplicationPill } from '../application-type-pill/application-type-pill.
 
 export interface CardData {
   id: string;
+  typeLabel: string;
   title: string;
   titleTooltip: string;
+  cssClasses?: string[];
   labels: ApplicationPill[];
   status: string;
   assignee?: AssigneeDto;
@@ -32,6 +34,8 @@ export enum CardType {
   PLAN = 'PLAN',
   MODI = 'MODI',
   COV = 'COV',
+  NOI = 'NOI',
+  NOI_MODI = 'NOIM',
 }
 
 const lineHeight = 24;

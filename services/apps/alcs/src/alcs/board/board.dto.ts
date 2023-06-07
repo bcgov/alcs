@@ -18,6 +18,8 @@ export class BoardDto {
 
   @AutoMap()
   statuses: BoardStatusDto[];
+
+  allowedCardTypes: string[];
 }
 
 export class BoardSmallDto {

@@ -1,0 +1,14 @@
+@use '../../../styles/colors';
+
+.editing.hidden {
+  display: none;
+}
+
+.button-container {
+  button:not(:last-child) {
+    margin-right: 2px !important;
+  }
+  .save {
+    color: colors.$primary-color;
+  }
+}

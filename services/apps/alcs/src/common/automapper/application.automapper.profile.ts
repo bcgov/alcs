@@ -16,8 +16,8 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
-import { ApplicationStaffJournalDto } from '../../alcs/application/application-staff-journal/application-staff-journal.dto';
-import { ApplicationStaffJournal } from '../../alcs/application/application-staff-journal/application-staff-journal.entity';
+import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
+import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
 import {
   ApplicationDto,
   SubmittedApplicationDto,
@@ -31,8 +31,8 @@ import { ApplicationRegionDto } from '../../alcs/code/application-code/applicati
 import { ApplicationRegion } from '../../alcs/code/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../alcs/code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
@@ -219,8 +219,8 @@ export class ApplicationProfile extends AutomapperProfile {
       );
       createMap(
         mapper,
-        ApplicationStaffJournal,
-        ApplicationStaffJournalDto,
+        StaffJournal,
+        StaffJournalDto,
         forMember(
           (ud) => ud.author,
           mapFrom((u) => u.author.name),

@@ -27,8 +27,7 @@ import {
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
-import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
-import { parseBooleanToString } from '../../../../../shared/utils/boolean-helper';
+import { parseBooleanToString, parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 
 export enum PostDecisionType {
@@ -54,12 +53,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   isFirstDecision = false;
   showComponents = false;
   showConditions = false;
+  conditionsValid = true;
+  componentsValid = true;
 
   fileNumber: string = '';
   uuid: string = '';
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
-  ceoCriterion: CeoCriterionDto[] = [];
+  ceoCriterionItems: CeoCriterionDto[] = [];
   linkedResolutionOutcomes: LinkedResolutionOutcomeTypeDto[] = [];
 
   resolutionYears: number[] = [];
@@ -91,7 +92,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     isSubjectToConditions: new FormControl<string | undefined>(undefined, [Validators.required]),
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
-    daysHideFromPublic: new FormControl<number>(2, [Validators.required]),
+    daysHideFromPublic: new FormControl<string>('2', [Validators.required]),
     rescindedDate: new FormControl<Date | null>({ disabled: true, value: null }),
     rescindedComment: new FormControl<string | null>({ disabled: true, value: null }),
   });
@@ -158,7 +159,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.codes = await this.decisionService.fetchCodes();
     this.outcomes = this.codes.outcomes;
     this.decisionMakers = this.codes.decisionMakers;
-    this.ceoCriterion = this.codes.ceoCriterion;
+    this.ceoCriterionItems = this.codes.ceoCriterion;
     this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
 
     await this.prepareDataForEdit();
@@ -276,7 +277,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
       decisionDescription: existingDecision.decisionDescription,
       isStatsRequired: parseBooleanToString(existingDecision.isStatsRequired),
-      daysHideFromPublic: existingDecision.daysHideFromPublic,
+      daysHideFromPublic: existingDecision.daysHideFromPublic?.toString() ?? '2',
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
       linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
@@ -323,6 +324,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
       this.showComponents = true;
+    } else {
+      this.form.controls.isSubjectToConditions.disable();
     }
 
     if (existingDecision.outcome.code === 'RESC') {
@@ -433,7 +436,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
       decisionDescription: decisionDescription,
       isStatsRequired: parseStringToBoolean(isStatsRequired),
-      daysHideFromPublic: daysHideFromPublic,
+      daysHideFromPublic: daysHideFromPublic ? parseInt(daysHideFromPublic) : 2,
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
@@ -453,10 +456,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   onSelectPostDecision(postDecision: { type: PostDecisionType }) {
     if (postDecision.type === PostDecisionType.Modification) {
+      this.ceoCriterionItems =
+        this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION) ?? [];
       this.form.controls.ceoCriterion.disable();
       this.form.controls.linkedResolutionOutcome.disable();
       this.form.controls.decisionMaker.disable();
-      this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION);
+
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
         ceoCriterion: CeoCriterion.MODIFICATION,
@@ -466,7 +471,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.form.controls.decisionMaker.enable();
       this.form.controls.linkedResolutionOutcome.enable();
       this.form.controls.ceoCriterion.enable();
-      this.ceoCriterion = this.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION);
+      this.ceoCriterionItems =
+        this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION) ?? [];
     }
   }
 
@@ -534,12 +540,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       });
   }
 
-  onComponentChange(components: DecisionComponentDto[]) {
-    this.components = Array.from(components);
+  onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {
+    this.components = Array.from($event.components);
+    this.componentsValid = $event.isValid;
   }
 
-  onConditionsChange($event: UpdateApplicationDecisionConditionDto[]) {
-    this.conditionUpdates = $event;
+  onConditionsChange($event: { conditions: UpdateApplicationDecisionConditionDto[]; isValid: boolean }) {
+    this.conditionUpdates = $event.conditions;
+    this.conditionsValid = $event.isValid;
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
@@ -550,6 +558,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         this.form.patchValue({
           isSubjectToConditions: null,
         });
+        this.showConditions = false;
       }
     } else if (this.form.controls.isSubjectToConditions.enabled) {
       this.showComponents = false;
@@ -580,7 +589,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  onChangeSubjectToConditons($event: MatButtonToggleChange) {
+  onChangeSubjectToConditions($event: MatButtonToggleChange) {
     if ($event.value === 'true') {
       this.showConditions = true;
     } else {

@@ -5,7 +5,7 @@ import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { CeoCriterionService } from './ceo-criterion.service';
 
-describe('HolidayService', () => {
+describe('CeoCriterionService', () => {
   let service: CeoCriterionService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;

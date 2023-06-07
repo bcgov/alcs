@@ -36,6 +36,16 @@ export const COVENANT_TYPE_LABEL = {
   textColor: '#000',
 };
 
+export const RETROACTIVE_TYPE_LABEL = {
+  label: 'Retroactive',
+  code: 'RETRO',
+  shortLabel: 'RETRO',
+  backgroundColor: '#94C6AC',
+  borderColor: '#94C6AC',
+  description: 'Notice of Intent is Retroactive',
+  textColor: '#002F17',
+};
+
 export const DRAFT_DECISION_TYPE_LABEL = {
   label: 'Draft',
   code: 'Draft',

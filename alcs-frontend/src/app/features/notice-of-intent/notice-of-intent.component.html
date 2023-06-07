@@ -1,0 +1,29 @@
+<div class="layout">
+  <div class="application">
+    <app-details-header
+      heading="Notice of Intent"
+      [application]="noticeOfIntent"
+      [reconsiderations]="[]"
+      [modifications]="[]"
+      days="Calendar Days"
+    ></app-details-header>
+    <div class="content">
+      <div class="nav">
+        <div *ngFor="let route of childRoutes" class="nav-link">
+          <div
+            [routerLink]="route.path ? route.path : './'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div class="child-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
