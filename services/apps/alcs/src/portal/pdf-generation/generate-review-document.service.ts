@@ -128,6 +128,13 @@ export class GenerateReviewDocumentService {
       attachments.push(staffReport);
     }
 
+    const isAuthorized =
+      dto.isAuthorized === true
+        ? 'Authorize'
+        : dto.isAuthorized === false
+        ? 'Refuse to Authorize'
+        : 'No Data';
+
     return {
       ...dto,
       generatedDateTime: dayjs
@@ -137,7 +144,7 @@ export class GenerateReviewDocumentService {
       OCPConsistent: formatBooleanToYesNoString(dto.OCPConsistent),
       isSubjectToZoning: formatBooleanToYesNoString(dto.isSubjectToZoning),
       isZoningConsistent: formatBooleanToYesNoString(dto.isZoningConsistent),
-      isAuthorized: formatBooleanToYesNoString(dto.isAuthorized),
+      isAuthorized: isAuthorized,
       fileNumber: submission.fileNumber,
       status: submission.status,
       applicationTypePortalLabel: application.type.portalLabel,
