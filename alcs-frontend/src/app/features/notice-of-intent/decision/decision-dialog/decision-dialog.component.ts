@@ -8,6 +8,8 @@ import {
   NoticeOfIntentDecisionOutcomeCodeDto,
 } from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionService } from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
+import { NoticeOfIntentModificationDto } from '../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 
 export enum PostDecisionType {
@@ -57,19 +59,24 @@ export class DecisionDialogComponent implements OnInit {
       existingDecision?: NoticeOfIntentDecisionDto;
     },
     private dialogRef: MatDialogRef<DecisionDialogComponent>,
-    private decisionService: NoticeOfIntentDecisionService
+    private decisionService: NoticeOfIntentDecisionService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService
   ) {
     if (data.minDate) {
       this.minDate = data.minDate;
     }
 
     if (!data.isFirstDecision) {
-      this.form.controls.decisionMaker.disable();
-      this.form.controls.outcome.disable();
+      this.form.controls.postDecision.enable();
+      this.form.controls.postDecision.setValidators([Validators.required]);
+      this.loadModifications();
+
+      this.noticeOfIntentModificationService.$modifications.subscribe((modifications) => {
+        this.mapModifications(modifications, data.existingDecision);
+      });
     }
 
-    this.outcomes = data.outcomes.filter((outcome) => outcome.isFirstDecision === data.isFirstDecision);
-
+    this.outcomes = data.outcomes;
     if (data.existingDecision) {
       this.patchFormWithExistingData(data.existingDecision);
     }
@@ -92,8 +99,16 @@ export class DecisionDialogComponent implements OnInit {
 
   async onSubmit() {
     this.isLoading = true;
-    const { date, outcome, decisionMaker, decisionMakerName, resolutionNumber, resolutionYear, auditDate } =
-      this.form.getRawValue();
+    const {
+      date,
+      outcome,
+      decisionMaker,
+      decisionMakerName,
+      resolutionNumber,
+      resolutionYear,
+      auditDate,
+      postDecision,
+    } = this.form.getRawValue();
 
     const data: CreateNoticeOfIntentDecisionDto = {
       date: formatDateForApi(date!),
@@ -104,6 +119,7 @@ export class DecisionDialogComponent implements OnInit {
       decisionMaker: decisionMaker!,
       decisionMakerName: decisionMakerName!,
       applicationFileNumber: this.data.fileNumber,
+      modifiesUuid: postDecision ?? undefined,
     };
 
     try {
@@ -131,6 +147,30 @@ export class DecisionDialogComponent implements OnInit {
       resolutionYear: existingDecision.resolutionYear,
       resolutionNumber: existingDecision.resolutionNumber.toString(10),
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
+      postDecision: existingDecision.modifies?.uuid,
     });
+  }
+
+  async loadModifications() {
+    await this.noticeOfIntentModificationService.fetchByFileNumber(this.data.fileNumber);
+  }
+
+  private mapModifications(
+    modifications: NoticeOfIntentModificationDto[],
+    existingDecision?: NoticeOfIntentDecisionDto
+  ) {
+    this.postDecisions = modifications
+      .filter(
+        (modification) =>
+          (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
+          (modification.reviewOutcome.code === 'PRC' && modification.resultingDecision === null)
+      )
+      .map((modification, index) => ({
+        label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
+          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+          .join(', ')}`,
+        uuid: modification.uuid,
+        type: PostDecisionType.Modification,
+      }));
   }
 }

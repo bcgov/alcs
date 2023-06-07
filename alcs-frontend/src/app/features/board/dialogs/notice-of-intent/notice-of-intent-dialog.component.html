@@ -9,7 +9,10 @@
     <div class="left">
       <h3 class="card-title">
         <span class="margin-right">{{ cardTitle }}</span>
-        <app-application-type-pill *ngIf='noticeOfIntent.retroactive' [type]="RETROACTIVE_TYPE"></app-application-type-pill>
+        <app-application-type-pill
+          *ngIf="noticeOfIntent.retroactive"
+          [type]="RETROACTIVE_TYPE"
+        ></app-application-type-pill>
       </h3>
     </div>
     <div class="center">
@@ -29,7 +32,6 @@
         >
           Add Info Request
         </button>
-        <button [mat-dialog-close]="isDirty" mat-menu-item>Add Site Visit / Meeting</button>
       </mat-menu>
     </div>
   </div>

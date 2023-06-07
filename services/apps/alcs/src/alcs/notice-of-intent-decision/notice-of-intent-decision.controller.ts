@@ -27,6 +27,7 @@ import {
   UpdateNoticeOfIntentDecisionDto,
 } from './notice-of-intent-decision.dto';
 import { NoticeOfIntentDecisionService } from './notice-of-intent-decision.service';
+import { NoticeOfIntentModificationService } from './notice-of-intent-modification/notice-of-intent-modification.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent-decision')
@@ -35,6 +36,7 @@ export class NoticeOfIntentDecisionController {
   constructor(
     private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -73,9 +75,16 @@ export class NoticeOfIntentDecisionController {
       createDto.applicationFileNumber,
     );
 
+    const modifiedNotice = createDto.modifiesUuid
+      ? await this.noticeOfIntentModificationService.getByUuid(
+          createDto.modifiesUuid,
+        )
+      : null;
+
     const newDecision = await this.noticeOfIntentDecisionService.create(
       createDto,
       noticeOfIntent,
+      modifiedNotice,
     );
 
     return this.mapper.mapAsync(

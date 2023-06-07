@@ -32,9 +32,6 @@
       </div>
       <div
         class="decision"
-        [ngClass]="{
-          'has-post-decisions': decision.modifiedBy?.length || decision.reconsideredBy?.length
-        }"
       >
         <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
           <div>
