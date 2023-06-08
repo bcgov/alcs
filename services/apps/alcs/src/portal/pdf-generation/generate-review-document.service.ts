@@ -107,11 +107,14 @@ export class GenerateReviewDocumentService {
       submission.fileNumber,
     );
 
-    const localGovernment = application.localGovernmentUuid
+    const localGovernment = submission?.localGovernmentUuid
       ? await this.localGovernmentService.getByUuid(
-          application.localGovernmentUuid,
+          submission.localGovernmentUuid,
         )
       : undefined;
+    dto.isFirstNationGovernment = localGovernment
+      ? localGovernment.isFirstNation
+      : false;
 
     const attachments = documents
       .filter((document) => document.document.source === DOCUMENT_SOURCE.LFNG)
@@ -154,25 +157,30 @@ export class GenerateReviewDocumentService {
     };
   }
 
+  private mapAuthorizationValueToStr(isAuthorized: boolean | null) {
+    switch (isAuthorized) {
+      case true:
+        return 'Authorize';
+      case false:
+        return 'Refuse to Authorize';
+      default:
+        return NO_DATA;
+    }
+  }
+
   private setAuthorization(dto: ApplicationSubmissionReviewDto) {
     let authorizedStr = NO_DATA;
 
-    if (dto.isSubjectToZoning === false && dto.isOCPDesignation === false) {
-      authorizedStr = NOT_SUBJECT_TO_AUTHORIZATION;
-    } else if (dto.isSubjectToZoning || dto.isOCPDesignation) {
-      if (dto.isAuthorized) {
-        authorizedStr = 'Authorize';
+    if (dto.isFirstNationGovernment) {
+      return this.mapAuthorizationValueToStr(dto.isAuthorized);
+    } else {
+      if (dto.isSubjectToZoning === false && dto.isOCPDesignation === false) {
+        authorizedStr = NOT_SUBJECT_TO_AUTHORIZATION;
+      } else if (dto.isSubjectToZoning || dto.isOCPDesignation) {
+        return this.mapAuthorizationValueToStr(dto.isAuthorized);
       }
 
-      if (dto.isAuthorized === false) {
-        authorizedStr = 'Refuse to Authorize';
-      }
-
-      if (dto.isAuthorized === null) {
-        authorizedStr = NO_DATA;
-      }
+      return authorizedStr;
     }
-
-    return authorizedStr;
   }
 }
