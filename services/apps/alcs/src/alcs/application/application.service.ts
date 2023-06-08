@@ -304,6 +304,7 @@ export class ApplicationService {
 
     applicationsProcessingTimes.forEach((val, key) => {
       if (
+        val.activeDays &&
         val.activeDays >= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START &&
         val.activeDays <= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_END
       ) {

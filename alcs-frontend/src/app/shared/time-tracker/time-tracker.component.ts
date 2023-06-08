@@ -10,8 +10,8 @@ import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-int
 })
 export class TimeTrackerComponent {
   paused = false;
-  activeDays = 0;
-  pausedDays = 0;
+  activeDays: number | null = null;
+  pausedDays: number | null = null;
 
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
     if (application) {
