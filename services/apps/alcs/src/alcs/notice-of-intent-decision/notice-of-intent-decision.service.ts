@@ -11,6 +11,7 @@ import { DocumentService } from '../../document/document.service';
 import { User } from '../../user/user.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
+import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionDocument } from './notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
@@ -20,6 +21,7 @@ import {
   CreateNoticeOfIntentDecisionDto,
   UpdateNoticeOfIntentDecisionDto,
 } from './notice-of-intent-decision.dto';
+import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 
 @Injectable()
 export class NoticeOfIntentDecisionService {
@@ -47,9 +49,31 @@ export class NoticeOfIntentDecisionService {
         date: 'DESC',
       },
       relations: {
+        modifies: {
+          modifiesDecisions: true,
+        },
         outcome: true,
       },
     });
+
+    // do not place modifiedBy into query above, it will kill performance
+    const decisionsWithModifiedBy = await this.appDecisionRepository.find({
+      where: {
+        noticeOfIntentUuid: noticeOfIntent.uuid,
+      },
+      relations: {
+        modifiedBy: {
+          resultingDecision: true,
+          reviewOutcome: true,
+        },
+      },
+    });
+
+    for (const decision of decisions) {
+      decision.modifiedBy =
+        decisionsWithModifiedBy.find((r) => r.uuid === decision.uuid)
+          ?.modifiedBy || [];
+    }
 
     //Query Documents separately as when added to the above joins caused performance issues
     for (const decision of decisions) {
@@ -182,6 +206,7 @@ export class NoticeOfIntentDecisionService {
   async create(
     createDto: CreateNoticeOfIntentDecisionDto,
     noticeOfIntent: NoticeOfIntent,
+    modifies: NoticeOfIntentModification | undefined | null,
   ) {
     const decision = new NoticeOfIntentDecision({
       outcome: await this.getOutcomeByCode(createDto.outcomeCode),
@@ -193,6 +218,7 @@ export class NoticeOfIntentDecisionService {
         createDto.decisionMakerName,
         undefined,
       ),
+      modifies,
       noticeOfIntent,
     });
 

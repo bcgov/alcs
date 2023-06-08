@@ -1,8 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
+import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
+import { ApplicationDecisionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { NoticeOfIntentDecisionDto } from '../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionService } from '../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
 import { NoticeOfIntentMeetingDto } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
 import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
@@ -10,10 +16,8 @@ const editLink = new Map<string, string>([['IR', './info-request']]);
 
 const SORTING_ORDER = {
   //high comes first, 1 shows at bottom
-  MODIFICATION_REVIEW: 13,
-  MODIFICATION_REQUEST: 12,
-  RECON_REVIEW: 11,
-  RECON_REQUEST: 10,
+  MODIFICATION_REVIEW: 11,
+  MODIFICATION_REQUEST: 10,
   CHAIR_REVIEW_DECISION: 9,
   AUDITED_DECISION: 8,
   DECISION_MADE: 7,
@@ -36,9 +40,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
   events: TimelineEvent[] = [];
   summary = '';
 
+  private $decisions = new BehaviorSubject<NoticeOfIntentDecisionDto[]>([]);
+
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
-    private noticeOfIntentMeetingService: NoticeOfIntentMeetingService
+    private noticeOfIntentMeetingService: NoticeOfIntentMeetingService,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService
   ) {}
 
   ngOnInit(): void {
@@ -48,15 +56,24 @@ export class OverviewComponent implements OnInit, OnDestroy {
         tap((noi) => {
           if (noi) {
             this.noticeOfIntentMeetingService.fetch(noi.uuid);
+            this.noticeOfIntentDecisionService.fetchByFileNumber(noi.fileNumber).then((res) => {
+              this.$decisions.next(res);
+            });
           }
         })
       )
-      .pipe(combineLatestWith(this.noticeOfIntentMeetingService.$meetings))
-      .subscribe(([noticeOfIntent, meetings]) => {
+      .pipe(
+        combineLatestWith(
+          this.noticeOfIntentMeetingService.$meetings,
+          this.noticeOfIntentModificationService.$modifications,
+          this.$decisions
+        )
+      )
+      .subscribe(([noticeOfIntent, meetings, modifications, decisions]) => {
         if (noticeOfIntent) {
           this.summary = noticeOfIntent.summary || '';
           this.noticeOfIntent = noticeOfIntent;
-          this.populateEvents(noticeOfIntent, meetings);
+          this.populateEvents(noticeOfIntent, meetings, modifications, decisions);
         }
       });
   }
@@ -74,7 +91,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private populateEvents(noticeOfIntent: NoticeOfIntentDto, meetings: NoticeOfIntentMeetingDto[]) {
+  private populateEvents(
+    noticeOfIntent: NoticeOfIntentDto,
+    meetings: NoticeOfIntentMeetingDto[],
+    modifications: NoticeOfIntentModificationDto[],
+    decisions: NoticeOfIntentDecisionDto[]
+  ) {
     const mappedEvents: TimelineEvent[] = [];
     if (noticeOfIntent.dateSubmittedToAlc) {
       mappedEvents.push({
@@ -108,6 +130,24 @@ export class OverviewComponent implements OnInit, OnDestroy {
       });
     }
 
+    for (const [index, decision] of decisions.entries()) {
+      if (decision.auditDate) {
+        mappedEvents.push({
+          name: `Audited Decision #${decisions.length - index}`,
+          startDate: new Date(decision.auditDate + SORTING_ORDER.AUDITED_DECISION),
+          isFulfilled: true,
+        });
+      }
+
+      mappedEvents.push({
+        name: `Decision #${decisions.length - index} Made${
+          decisions.length - 1 === index ? ` - Active Days: ${noticeOfIntent.activeDays}` : ''
+        }`,
+        startDate: new Date(decision.date + SORTING_ORDER.DECISION_MADE),
+        isFulfilled: true,
+      });
+    }
+
     meetings.sort((a, b) => a.meetingStartDate - b.meetingStartDate);
     const typeCount = new Map<string, number>();
     meetings.forEach((meeting) => {
@@ -123,8 +163,23 @@ export class OverviewComponent implements OnInit, OnDestroy {
       typeCount.set(meeting.meetingType.code, count + 1);
     });
 
+    const mappedModifications = this.mapModificationsToEvents(modifications);
+    mappedEvents.push(...mappedModifications);
+
     mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
 
     this.events = mappedEvents;
+  }
+
+  private mapModificationsToEvents(modifications: NoticeOfIntentModificationDto[]) {
+    const events: TimelineEvent[] = [];
+    for (const [index, modification] of modifications.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
+      events.push({
+        name: `Modification Requested #${modifications.length - index}`,
+        startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
+        isFulfilled: true,
+      });
+    }
+    return events;
   }
 }

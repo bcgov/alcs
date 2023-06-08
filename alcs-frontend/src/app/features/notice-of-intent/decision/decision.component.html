@@ -15,6 +15,13 @@
     <mat-spinner></mat-spinner>
   </div>
   <div class="decision">
+    <div *ngIf="decision.modifiedBy?.length" class="post-decisions body-text">
+      <div>
+        <strong>Modified&nbsp;By:&nbsp;</strong>
+        {{ decision.modifiedByResolutions.join(', ') }}
+        <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+      </div>
+    </div>
     <input hidden type="file" #file (change)="attachFile(decision.uuid, $event)" placeholder="Upload file" />
     <div class="decision-menu">
       <button (click)="file.click()" matTooltip="Attach Document" mat-icon-button>
@@ -40,6 +47,10 @@
             {{ noticeOfIntent.pausedDays }}
           </span>
           -
+        </ng-container>
+        <ng-container *ngIf="!!decision.modifies">
+          <app-application-type-pill style="margin-left: -12px" [type]="modificationLabel"></app-application-type-pill>
+          &nbsp;-
         </ng-container>
         <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
       </div>

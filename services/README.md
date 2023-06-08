@@ -8,7 +8,7 @@ Main API built with NestJS + TypeOrm
 $ npm install
 ```
 
-## Running the app
+## Running the app 
 
 ```bash
 # development

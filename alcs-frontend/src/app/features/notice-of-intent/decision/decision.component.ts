@@ -9,11 +9,13 @@ import { NoticeOfIntentDecisionService } from '../../../services/notice-of-inten
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../services/toast/toast.service';
+import { MODIFICATION_TYPE_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../shared/utils/api-date-formatter';
 import { DecisionDialogComponent } from './decision-dialog/decision-dialog.component';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
+  modifiedByResolutions: string[];
   loading: boolean;
 };
 
@@ -31,6 +33,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
   isPaused = true;
 
   noticeOfIntent: NoticeOfIntentDto | undefined;
+  modificationLabel = MODIFICATION_TYPE_LABEL;
 
   constructor(
     public dialog: MatDialog,
@@ -61,6 +64,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
     this.decisions = loadedDecision.map((decision) => ({
       ...decision,
       loading: false,
+      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
     }));
   }
 
