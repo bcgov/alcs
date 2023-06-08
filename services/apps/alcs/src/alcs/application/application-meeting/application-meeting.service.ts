@@ -22,6 +22,8 @@ export class ApplicationMeetingService {
   constructor(
     @InjectRepository(ApplicationMeeting)
     private appMeetingRepository: Repository<ApplicationMeeting>,
+    @InjectRepository(ApplicationPaused)
+    private applicationPausedRepository: Repository<ApplicationPaused>,
     private applicationService: ApplicationService,
   ) {}
 
@@ -106,7 +108,13 @@ export class ApplicationMeetingService {
       updateDto.reportStartDate === null &&
       updateDto.reportEndDate === null
     ) {
+      if (existingMeeting.reportPause) {
+        await this.applicationPausedRepository.delete(
+          existingMeeting.reportPause.uuid,
+        );
+      }
       existingMeeting.reportPause = null;
+      existingMeeting.reportPauseUuid = null;
     }
 
     await this.appMeetingRepository.save(existingMeeting);
