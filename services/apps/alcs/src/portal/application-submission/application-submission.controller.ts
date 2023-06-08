@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -151,12 +152,12 @@ export class ApplicationSubmissionController {
   }
 
   @Post('/:uuid/cancel')
-  async cancel(@Param('uuid') uuid: string, @Req() req) {
-    const application =
-      await this.applicationSubmissionService.getIfCreatorByUuid(
-        uuid,
-        req.user.entity,
-      );
+  async cancel(@Param('uuid') uuid: string) {
+    const application = await this.applicationSubmissionService.getByUuid(uuid);
+
+    if (!application) {
+      throw new NotFoundException(`Unable to find application with ID ${uuid}`);
+    }
 
     if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
       throw new BadRequestException('Can only cancel in progress Applications');
