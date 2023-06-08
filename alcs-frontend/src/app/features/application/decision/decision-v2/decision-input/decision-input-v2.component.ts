@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
+import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
@@ -105,6 +106,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private applicationService: ApplicationDetailService,
     public dialog: MatDialog
   ) {}
 
@@ -536,6 +538,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         if (submissionType) {
           await this.onSubmit(false, false);
           await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
+          await this.applicationService.loadApplication(this.fileNumber);
         }
       });
   }

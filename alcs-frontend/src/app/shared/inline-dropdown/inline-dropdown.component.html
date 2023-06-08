@@ -19,7 +19,7 @@
     }"
   >
     <mat-form-field appearance="outline">
-      <mat-select multiple="multiple" placeholder="Select a value" [(ngModel)]="pendingValue">
+      <mat-select [multiple]="multiple" placeholder="Select a value" [(ngModel)]="pendingValue">
         <mat-option *ngFor="let option of options" [value]="option.value">
           {{ option.label }}
         </mat-option>
