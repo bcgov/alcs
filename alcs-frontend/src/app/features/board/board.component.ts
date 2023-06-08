@@ -381,7 +381,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       id: noticeOfIntent.card.uuid,
       labels: noticeOfIntent.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
       cardType: CardType.NOI,
-      paused: false,
+      paused: noticeOfIntent.paused,
       highPriority: noticeOfIntent.card.highPriority,
       cardUuid: noticeOfIntent.card.uuid,
       dateReceived: noticeOfIntent.card.createdAt,

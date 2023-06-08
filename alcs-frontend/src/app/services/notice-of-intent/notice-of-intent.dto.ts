@@ -34,8 +34,8 @@ export interface NoticeOfIntentDto {
   retroactive: boolean | null;
   decisionDate?: number;
 
-  activeDays: number;
-  pausedDays: number;
+  activeDays: number | null;
+  pausedDays: number | null;
   paused: boolean;
 }
 
