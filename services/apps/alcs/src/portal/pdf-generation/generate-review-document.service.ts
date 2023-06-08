@@ -25,6 +25,8 @@ import { ApplicationSubmissionService } from '../application-submission/applicat
 
 const LG_TEMPLATE_FILENAME = 'submission-lg-review-template.docx';
 const FNG_TEMPLATE_FILENAME = 'submission-fng-review-template.docx';
+const NOT_SUBJECT_TO_AUTHORIZATION = 'Not Subject to Authorization';
+const NO_DATA = 'No Data';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -128,12 +130,7 @@ export class GenerateReviewDocumentService {
       attachments.push(staffReport);
     }
 
-    const isAuthorized =
-      dto.isAuthorized === true
-        ? 'Authorize'
-        : dto.isAuthorized === false
-        ? 'Refuse to Authorize'
-        : 'No Data';
+    const isAuthorized = this.setAuthorization(dto);
 
     return {
       ...dto,
@@ -149,11 +146,33 @@ export class GenerateReviewDocumentService {
       status: submission.status,
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
-      localGovernment: localGovernment ? localGovernment.name : 'No Data',
+      localGovernment: localGovernment ? localGovernment.name : NO_DATA,
       isFirstNationGovernment: localGovernment?.isFirstNation ?? false,
       attachments,
-      noData: 'No Data',
-      notSubjectToAuthorization: 'Not Subject to Authorization',
+      noData: NO_DATA,
+      notSubjectToAuthorization: NOT_SUBJECT_TO_AUTHORIZATION,
     };
+  }
+
+  private setAuthorization(dto: ApplicationSubmissionReviewDto) {
+    let authorizedStr = NO_DATA;
+
+    if (dto.isSubjectToZoning === false && dto.isOCPDesignation === false) {
+      authorizedStr = NOT_SUBJECT_TO_AUTHORIZATION;
+    } else if (dto.isSubjectToZoning || dto.isOCPDesignation) {
+      if (dto.isAuthorized) {
+        authorizedStr = 'Authorize';
+      }
+
+      if (dto.isAuthorized === false) {
+        authorizedStr = 'Refuse to Authorize';
+      }
+
+      if (dto.isAuthorized === null) {
+        authorizedStr = NO_DATA;
+      }
+    }
+
+    return authorizedStr;
   }
 }
