@@ -1,7 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../services/application/application.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
@@ -18,7 +17,7 @@ import { CardDialogComponent } from '../card-dialog/card-dialog.component';
   templateUrl: './application-dialog.component.html',
   styleUrls: ['../card-dialog/card-dialog.component.scss'],
 })
-export class ApplicationDialogComponent extends CardDialogComponent implements OnInit, OnDestroy {
+export class ApplicationDialogComponent extends CardDialogComponent implements OnInit {
   selectedRegion?: string;
   cardTitle = '';
 
@@ -28,15 +27,13 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
     private dialogRef: MatDialogRef<ApplicationDialogComponent>,
     private applicationService: ApplicationService,
-    private applicationDetailService: ApplicationDetailService,
     private router: Router,
     userService: UserService,
     confirmationDialogService: ConfirmationDialogService,
     boardService: BoardService,
     toastService: ToastService,
     cardService: CardService,
-    authService: AuthenticationService,
-    
+    authService: AuthenticationService
   ) {
     super(authService, dialogRef, cardService, confirmationDialogService, toastService, userService, boardService);
   }
@@ -89,10 +86,5 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
           this.toastService.showSuccessToast('Card updated');
         });
     }
-  }
-
-  override async ngOnDestroy(): Promise<void> {
-    await this.applicationDetailService.clearApplication();
-    super.ngOnDestroy();
   }
 }
