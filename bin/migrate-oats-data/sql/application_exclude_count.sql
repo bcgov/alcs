@@ -16,5 +16,4 @@ select count(*) as row_count, SUM(1) as sum_rows
 )
        
 select count(*) as "count"
---SUM(row_count) as total_apps
 from application_rows
