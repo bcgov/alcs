@@ -4,7 +4,7 @@ import { ToastService } from '../toast/toast.service';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ApplicationDetailService {
   $application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
