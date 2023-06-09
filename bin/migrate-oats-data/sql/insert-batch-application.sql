@@ -25,6 +25,28 @@ WITH applicant_lookup AS (
     GROUP BY
         oaap.alr_application_id
 ),
+-- Step x: get local Gov application name
+oats_gov as(
+  SELECT
+    oaap.alr_application_id AS application_id,
+    oo.organization_name AS oats_gov_name
+
+    FROM oats.oats_alr_application_parties oaap
+        JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
+        JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
+   WHERE
+        oo.organization_type_cd = 'MUNI'
+),
+
+alcs_gov as(
+    SELECT
+    oats_gov.application_id AS application_id,
+    alg.uuid AS gov_uuid
+
+    FROM oats_gov
+        JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
+
+),    
 -- Step 2: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
     SELECT
@@ -58,8 +80,8 @@ application_type_lookup AS (
 SELECT
     oa.alr_application_id :: text AS file_number,
     -- TODO: type code lookup
-    'NARU' as type_code,
-    -- COALESCE(atl.alcs_code, 'NARU') AS type_code,
+    -- 'NARU' as type_code,
+    COALESCE(atl.alcs_code, 'NARU') AS type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
@@ -69,13 +91,18 @@ SELECT
     -- 'INTR',
 	ar.code as region_code,
     --Peace river TODO: local government lookup
-    '001cfdad-bc6e-4d25-9294-1550603da980',
+    --'001cfdad-bc6e-4d25-9294-1550603da980',
+    alcs_gov.gov_uuid AS local_government_uuid,
     'oats_etl'
 FROM
     oats.oats_alr_applications AS oa
     JOIN oats.application_etl AS ae ON oa.alr_application_id = ae.application_id AND ae.duplicated IS false
     LEFT JOIN applicant_lookup ON oa.alr_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON oa.alr_application_id = panel_lookup.application_id
-    -- LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
+    LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
-    
+    LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
+    --LEFT JOIN alcs.application_local_government AS alg ON oats_gov.oats_gov_name = alg."name" 
+    LEFT JOIN oats.oats2alcs_etl_exclude aee ON oa.alr_application_id = aee.application_id
+     
+where aee.application_id is null

@@ -14,6 +14,18 @@ def application_etl_temp_table():
         )
     """
 
+def application_exclude():
+    """
+    function creates table to contain duplicate type code app ids
+    """
+    return f"""
+        DROP TABLE IF EXISTS oats.oats2alcs_etl_exclude;
+
+        CREATE TABLE oats.oats2alcs_etl_exclude (
+            application_id int
+        )
+    """
+
 def application_etl_insert():
     """
     function inserts data into prevoisly created table and decipers duplication of uuids
@@ -32,6 +44,31 @@ def application_etl_insert():
             oats.oats_alr_applications AS oa
             LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number
     """
+
+def application_exclude_insert():
+    """
+    Inserts values from application-exclude into table
+    """
+    return f"""
+        INSERT INTO 
+            oats.oats2alcs_etl_exclude (application_id)
+        WITH application_type_lookup AS (
+            SELECT
+                oaac.alr_application_id AS application_id,
+                oaac.alr_change_code AS code
+        
+
+            FROM
+                oats.oats_alr_appl_components AS oaac
+                )
+       
+        SELECT 
+            atl.application_id
+        FROM application_type_lookup atl
+        GROUP BY atl.application_id 
+        HAVING count(application_id) > 1
+
+            """
 
 def appl_code_lut():
     """
@@ -116,6 +153,8 @@ def process_applications(conn=None, batch_size=10000):
         cursor.execute(appl_code_lut())
         print("inserting LUT")
         cursor.execute(insert_appl_code_lut())
+        cursor.execute(application_exclude())
+        cursor.execute(application_exclude_insert())
         conn.commit()
         with open(
             "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
@@ -124,6 +163,15 @@ def process_applications(conn=None, batch_size=10000):
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
         print("- Applications to insert: ", count_total)
+        with open(
+            "sql/application_exclude_count.sql", "r", encoding="utf-8"
+        ) as sql_file:
+            count_exclude = sql_file.read()
+            cursor.execute(count_exclude)
+            count_total_exclude = cursor.fetchone()[0]
+        print("- Applications to exclude: ", count_total_exclude)
+
+        print("-Inserting ", count_total - count_total_exclude, " applications" )
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -134,7 +182,7 @@ def process_applications(conn=None, batch_size=10000):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id"
+                    f"{application_sql} AND ae.application_id > {last_application_id} ORDER by ae.application_id;"
                 )
                 
                 rows = cursor.fetchmany(batch_size)
