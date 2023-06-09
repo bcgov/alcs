@@ -29,6 +29,9 @@
     "SCOPES": ["openid"],
     "REALM": "standard"
   },
+  "SITEMINDER": {
+    "LOGOUT_URL": "https://logontest7.gov.bc.ca/clp-cgi/logoff.cgi?retnow=1&returl="
+  },
   "CHES": {
     "MODE": "production",
     "URL": "",
@@ -42,7 +45,7 @@
     "TOKEN_URL": "https://dev.loginproxy.gov.bc.ca",
     "SERVICE_CLIENT": "",
     "SERVICE_CLIENT_SECRET": "",
-    "TEMPLATE_FOLDER":""
+    "TEMPLATE_FOLDER": ""
   },
   "STORAGE": {
     "URL": "http://localhost",
