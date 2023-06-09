@@ -24,6 +24,8 @@ export class ApplicationReconsiderationService {
 
   async fetchByApplication(applicationFileNumber: string) {
     try {
+      this.clearReconsiderations();
+
       const reconsiderations = await firstValueFrom(
         this.http.get<ApplicationReconsiderationDto[]>(`${this.url}/application/${applicationFileNumber}`)
       );
@@ -88,5 +90,10 @@ export class ApplicationReconsiderationService {
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch reconsideration codes');
     }
+  }
+
+  clearReconsiderations() {
+    console.log('clear rec');
+    this.$reconsiderations.next([]);
   }
 }

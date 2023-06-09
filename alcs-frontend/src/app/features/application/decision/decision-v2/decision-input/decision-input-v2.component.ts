@@ -145,8 +145,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.decisionService.cleanDecision();
-    this.decisionService.cleanDecisions();
+    this.decisionService.clearDecision();
+    this.decisionService.clearDecisions();
     this.$destroy.next();
     this.$destroy.complete();
   }

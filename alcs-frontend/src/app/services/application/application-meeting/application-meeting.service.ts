@@ -21,6 +21,7 @@ export class ApplicationMeetingService {
 
   async fetch(fileNumber: string) {
     let meetings: ApplicationMeetingDto[] = [];
+    this.clearMeetings();
 
     try {
       meetings = await firstValueFrom(this.http.get<ApplicationMeetingDto[]>(`${this.url}/${fileNumber}`));
@@ -78,5 +79,10 @@ export class ApplicationMeetingService {
     } catch (err) {
       this.toastService.showErrorToast(`Failed to delete ${typeLabel}`);
     }
+  }
+
+  clearMeetings() {
+    console.log('clear mee');
+    this.$meetings.next([]);
   }
 }
