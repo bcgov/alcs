@@ -25,7 +25,21 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="full-grid-line toggle-group">
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>Outcome Notification Date</mat-label>
+        <input
+          matInput
+          (click)="reviewDatePicker.open()"
+          [matDatepicker]="reviewDatePicker"
+          formControlName="reviewDate"
+          name="reviewDate"
+          required
+        />
+        <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #reviewDatePicker type="date"></mat-datepicker>
+      </mat-form-field>
+
+      <div>
         <mat-label class="toggle-label">Condition to be Modified</mat-label>
         <mat-button-toggle-group id="isTimeExtension" formControlName="isTimeExtension" name="isTimeExtension">
           <mat-button-toggle value="true">Time extension</mat-button-toggle>
