@@ -75,7 +75,7 @@ export class GenerateReviewDocumentService {
     if (reviewRes.status === HttpStatus.OK) {
       await this.applicationDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
-        fileName: `${fileNumber}_Submission`,
+        fileName: `${fileNumber}_LFNG_Review.pdf`,
         user: user,
         file: reviewRes.data,
         mimeType: 'application/pdf',
