@@ -1,9 +1,8 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { ApiOAuth2 } from '@nestjs/swagger';
-import * as config from 'config';
+import { Public } from 'nest-keycloak-connect';
 
-@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
+@Public()
 @Controller('logout')
 export class LogoutController {
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
@@ -20,6 +19,10 @@ export class LogoutController {
     const logoutUrl = `${authServerUrl}/realms/${realm}/protocol/openid-connect/logout?client_id=${clientId}&redirect_uri=${encodeURIComponent(
       frontend,
     )}`;
-    return { url: logoutUrl };
+
+    const siteMinderUrl = this.config.get<string>('SITEMINDER.LOGOUT_URL');
+    const finalUrl = `${siteMinderUrl}${encodeURIComponent(logoutUrl)}`;
+
+    return { url: finalUrl };
   }
 }
