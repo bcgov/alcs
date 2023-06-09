@@ -25,7 +25,7 @@ WITH applicant_lookup AS (
     GROUP BY
         oaap.alr_application_id
 ),
--- Step x: get local Gov application name
+-- Step 2: get local gov application name & match to uuid
 oats_gov as(
   SELECT
     oaap.alr_application_id AS application_id,
@@ -47,7 +47,7 @@ alcs_gov as(
         JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
 
 ),    
--- Step 2: Perform a lookup to retrieve the region code for each application ID
+-- Step 3: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
     SELECT
         DISTINCT oaap.alr_application_id AS application_id,
@@ -60,24 +60,22 @@ panel_lookup AS (
     WHERE
         oo2.organization_type_cd = 'PANEL'
 ),
--- Step X: Perform lookup to retrieve type code
+-- Step 4: Perform lookup to retrieve type code
 application_type_lookup AS (
     SELECT
         oaac.alr_application_id AS application_id,
         oacc."description" AS "description",
         oaac.alr_change_code AS code
-        -- acl.alcs_code AS alcs_code
 
     FROM
         oats.oats_alr_appl_components AS oaac
         JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code   
 )
 
--- Step 3: Insert new records into the alcs_applications table
+-- Step 5: Insert new records into the alcs_applications table
 SELECT
     oa.alr_application_id :: text AS file_number,
-    -- TODO: type code lookup
-    -- 'NARU' as type_code,
+
     CASE
         WHEN atl.code = 'TUR' THEN 'TURP'
         WHEN atl.code = 'INC' THEN 'INCL'
@@ -97,11 +95,12 @@ SELECT
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
         ELSE 'Unknown'
     END AS applicant,
-    -- TODO: panel region lookup
-    -- 'INTR',
 	ar.code as region_code,
-    --Peace river TODO: local government lookup
-    --'001cfdad-bc6e-4d25-9294-1550603da980',
+    --TODO: local government lookup
+    -- CASE
+    --     WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
+    --     ELSE 'not found' '001cfdad-bc6e-4d25-9294-1550603da980'
+    -- END AS local_government_uuid,
     alcs_gov.gov_uuid AS local_government_uuid,
     'oats_etl'
 FROM
