@@ -40,3 +40,11 @@
   <app-proposal-nfu *ngIf="application && application.type.code === 'NFUP'"></app-proposal-nfu>
   <app-proposal-subd *ngIf="application && application.type.code === 'SUBD'"></app-proposal-subd>
 </section>
+<section>
+  <h5>Staff Comments and Observations</h5>
+  <app-inline-edit
+    [value]="staffObservations"
+    placeholder="Add Staff Comments and Observations"
+    (save)="onSaveStaffObservations($event)"
+  ></app-inline-edit>
+</section>

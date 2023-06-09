@@ -209,6 +209,14 @@ export class Application extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
+    comment: 'ALC Staff Observations and Comments',
+    nullable: true,
+  })
+  staffObservations?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
     comment: 'Non-farm use type',
     nullable: true,
   })
