@@ -11,19 +11,11 @@
       <div class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
-            *ngIf="route.requiresAuthorization ? isAuthorized : true"
+            *ngIf="route.portalOnly ? isApplicantSubmission : true"
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"
             class="nav-item nav-text"
-          >
-            <mat-icon>{{ route.icon }}</mat-icon>
-            {{ route.menuTitle }}
-          </div>
-          <div
-            *ngIf="route.requiresAuthorization ? !isAuthorized : false"
-            class="nav-item nav-text disabled"
-            matTooltip="Application not subject to ALC Review"
           >
             <mat-icon>{{ route.icon }}</mat-icon>
             {{ route.menuTitle }}
