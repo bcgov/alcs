@@ -81,7 +81,6 @@ export class ApplicationModificationService {
   }
 
   async clearModifications() {
-    console.log('clear mod');
     this.$modifications.next([]);
   }
 }

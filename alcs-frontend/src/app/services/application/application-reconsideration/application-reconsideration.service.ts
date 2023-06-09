@@ -93,7 +93,6 @@ export class ApplicationReconsiderationService {
   }
 
   clearReconsiderations() {
-    console.log('clear rec');
     this.$reconsiderations.next([]);
   }
 }

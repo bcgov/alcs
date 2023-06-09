@@ -82,7 +82,6 @@ export class ApplicationMeetingService {
   }
 
   clearMeetings() {
-    console.log('clear mee');
     this.$meetings.next([]);
   }
 }
