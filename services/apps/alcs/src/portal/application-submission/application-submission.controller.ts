@@ -4,13 +4,13 @@ import {
   Controller,
   Get,
   Logger,
-  NotFoundException,
   Param,
   Post,
   Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
@@ -152,14 +152,26 @@ export class ApplicationSubmissionController {
   }
 
   @Post('/:uuid/cancel')
-  async cancel(@Param('uuid') uuid: string) {
-    const application = await this.applicationSubmissionService.getByUuid(uuid);
+  async cancel(@Param('uuid') uuid: string, @Req() req) {
+    const user = req.user.entity;
 
-    if (!application) {
-      throw new NotFoundException(`Unable to find application with ID ${uuid}`);
+    const application =
+      await this.applicationSubmissionService.verifyAccessByUuid(
+        uuid,
+        req.user.entity,
+      );
+    let localGovernment: ApplicationLocalGovernment | null = null;
+
+    if (user.bceidBusinessGuid) {
+      localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
     }
 
-    if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
+    if (
+      localGovernment === null &&
+      application.status.code !== APPLICATION_STATUS.IN_PROGRESS
+    ) {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
 
