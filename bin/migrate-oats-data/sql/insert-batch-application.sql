@@ -70,10 +70,7 @@ application_type_lookup AS (
 
     FROM
         oats.oats_alr_appl_components AS oaac
-        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
-        -- JOIN oats.appl_code_lut AS acl ON oaac.alr_change_code = acl.oats_code
-
-        
+        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code   
 )
 
 -- Step 3: Insert new records into the alcs_applications table
@@ -95,7 +92,6 @@ SELECT
         WHEN atl.code = 'NAR' THEN 'NARU'
         ELSE 'NARU'
     END AS type_code,
-    --COALESCE(atl.alcs_code, 'NARU') AS type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
@@ -116,7 +112,6 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
-    --LEFT JOIN alcs.application_local_government AS alg ON oats_gov.oats_gov_name = alg."name" 
     LEFT JOIN oats.oats2alcs_etl_exclude aee ON oa.alr_application_id = aee.application_id
      
 where aee.application_id is null
