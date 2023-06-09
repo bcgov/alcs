@@ -83,12 +83,11 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   async loadReview() {
     if (
       this.application &&
-      [
-        APPLICATION_STATUS.IN_REVIEW,
-        APPLICATION_STATUS.SUBMITTED_TO_ALC,
-        APPLICATION_STATUS.REFUSED_TO_FORWARD,
-      ].includes(this.application.status.code) &&
-      this.application.typeCode !== 'TURP'
+      this.application.typeCode !== 'TURP' &&
+      ([APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+        this.application.status.code
+      ) ||
+        (this.application.status.code === APPLICATION_STATUS.IN_REVIEW && this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
     } else {
