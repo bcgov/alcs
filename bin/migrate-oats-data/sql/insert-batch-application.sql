@@ -65,13 +65,13 @@ application_type_lookup AS (
     SELECT
         oaac.alr_application_id AS application_id,
         oacc."description" AS "description",
-        oaac.alr_change_code AS code,
-        acl.alcs_code AS alcs_code
+        oaac.alr_change_code AS code
+        -- acl.alcs_code AS alcs_code
 
     FROM
         oats.oats_alr_appl_components AS oaac
         JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
-        JOIN oats.appl_code_lut AS acl ON oaac.alr_change_code = acl.oats_code
+        -- JOIN oats.appl_code_lut AS acl ON oaac.alr_change_code = acl.oats_code
 
         
 )
@@ -81,7 +81,21 @@ SELECT
     oa.alr_application_id :: text AS file_number,
     -- TODO: type code lookup
     -- 'NARU' as type_code,
-    COALESCE(atl.alcs_code, 'NARU') AS type_code,
+    CASE
+        WHEN atl.code = 'TUR' THEN 'TURP'
+        WHEN atl.code = 'INC' THEN 'INCL'
+        WHEN atl.code = 'EXC' THEN 'EXCL'
+        WHEN atl.code = 'SDV' THEN 'SUBD'
+        WHEN atl.code = 'NFU' THEN 'NFUP'
+        WHEN atl.code = 'SCH' THEN 'PFRS'
+        WHEN atl.code = 'EXT' THEN 'ROSO'
+        WHEN atl.code = 'FILL' THEN 'POFO'
+        -- WHEN atl.code = 'SRW' THEN 'NARU'
+        -- WHEN atl.code = 'CSC' THEN 'NARU'
+        WHEN atl.code = 'NAR' THEN 'NARU'
+        ELSE 'NARU'
+    END AS type_code,
+    --COALESCE(atl.alcs_code, 'NARU') AS type_code,
     CASE
         WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons

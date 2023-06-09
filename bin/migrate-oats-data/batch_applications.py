@@ -130,7 +130,7 @@ def drop_etl_temp_table():
     remove the table
     """
     return f"""
-    DROP TABLE oats.application_etl;
+    DROP TABLE IF EXISTS oats.application_etl;
     """
 
 
@@ -139,7 +139,7 @@ def drop_appl_code_temp_table():
     remove the table
     """
     return f"""
-    DROP TABLE oats.appl_code_lut;
+    DROP TABLE IF EXISTS oats.appl_code_lut;
     """
 
 @inject_conn_pool

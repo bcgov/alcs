@@ -15,5 +15,6 @@ select count(*) as row_count, SUM(1) as sum_rows
 	having count(application_id) > 1
 )
        
-select SUM(row_count) as total_apps
+select count(*) as "count"
+--SUM(row_count) as total_apps
 from application_rows
