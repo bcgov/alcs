@@ -20,6 +20,7 @@ export class NoticeOfIntentMeetingService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async fetch(uuid: string) {
+    this.clearMeetings();
     let meetings: NoticeOfIntentMeetingDto[] = [];
 
     try {
@@ -74,5 +75,9 @@ export class NoticeOfIntentMeetingService {
     } catch (err) {
       this.toastService.showErrorToast(`Failed to delete ${typeLabel}`);
     }
+  }
+
+  clearMeetings() {
+    this.$meetings.next([]);
   }
 }

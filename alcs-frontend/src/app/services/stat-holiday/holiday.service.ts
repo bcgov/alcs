@@ -22,6 +22,8 @@ export class HolidayService {
 
   async fetch(pageIndex: number, itemsPerPage: number, search?: number) {
     const searchQuery = search ? `?search=${search}` : '';
+    this.clearStatHolidays();
+    
     try {
       const result = await firstValueFrom(
         this.http.get<PaginatedHolidayResponse>(`${this.url}/${pageIndex}/${itemsPerPage}${searchQuery}`)
@@ -72,5 +74,9 @@ export class HolidayService {
       console.log(e);
     }
     return;
+  }
+
+  clearStatHolidays() {
+    this.$statHolidays.next({ data: [], total: 0 });
   }
 }
