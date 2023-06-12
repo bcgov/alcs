@@ -232,7 +232,7 @@ export class Application extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'The date at which the non-farm use ends',
+    comment: 'The date at which the proposal use ends',
     nullable: true,
   })
   proposalEndDate?: Date | null;
