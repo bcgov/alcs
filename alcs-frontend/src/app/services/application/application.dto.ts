@@ -209,7 +209,7 @@ export interface ApplicationDto {
   staffObservations?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -238,5 +238,5 @@ export interface UpdateApplicationDto {
   staffObservations?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }

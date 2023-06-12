@@ -235,7 +235,7 @@ export class Application extends Base {
     comment: 'The date at which the non-farm use ends',
     nullable: true,
   })
-  nfuEndDate?: Date | null;
+  proposalEndDate?: Date | null;
 
   @AutoMap(() => [StatusHistory])
   @Column({
