@@ -101,6 +101,7 @@ export class ApplicationController {
         nfuEndDate: formatIncomingDate(updates.nfuEndDate),
         nfuUseSubType: updates.nfuUseSubType,
         nfuUseType: updates.nfuUseType,
+        staffObservations: updates.staffObservations,
       },
     );
 
