@@ -1,72 +1,5 @@
 from db import inject_conn_pool
-def application_etl_temp_table():
-    """
-    function creates a temporary table to be used by .sql files called later in script
-    """
-    return f"""
-        DROP TABLE IF EXISTS oats.application_etl;
 
-        CREATE TABLE oats.application_etl (
-            id SERIAL PRIMARY KEY,
-            application_id int,
-            card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
-            duplicated bool DEFAULT false
-        )
-    """
-
-def application_etl_insert():
-    """
-    function inserts data into prevoisly created table and decipers duplication of uuids
-    application_id is copied from oats.oats_alr_applications.alr_application_id
-    """
-    return f"""
-        INSERT INTO
-            oats.application_etl (application_id, duplicated)
-        SELECT
-            DISTINCT oa.alr_application_id AS application_id,
-            CASE
-                WHEN a.uuid IS NOT NULL THEN TRUE
-                ELSE false
-            END AS duplicated
-        FROM
-            oats.oats_alr_applications AS oa
-            LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number
-    """
-
-def appl_code_lut():
-    """
-    Create temporary table to match codes from OATS to ALCS
-    """
-    return f"""
-        DROP TABLE IF EXISTS oats.appl_code_lut;
-
-        CREATE TABLE oats.appl_code_lut (
-            oats_code VARCHAR,
-            alcs_code VARCHAR
-        )
-    """
-def insert_appl_code_lut():
-    """
-    Insert LUT values
-    """
-    return f"""
-
-        INSERT INTO 
-            oats.appl_code_lut (oats_code, alcs_code)
-
-        VALUES ('TUR','TURP'),
-            ('INC','INCL'),
-            ('EXC','EXCL'),
-            ('SDV','SUBD'),
-            ('NFU','NFUP'),
-            ('SCH','PFRS'),
-            ('EXT','ROSO'),
-            ('FILL','POFO'),
-            ('SRW','NARU'),
-            ('CSC','NARU'),
-            ('NAR','NARU')
-
-    """
 
 def compile_application_insert_query(number_of_rows_to_insert):
     """
@@ -93,17 +26,11 @@ def drop_etl_temp_table():
     remove the table
     """
     return f"""
-    DROP TABLE oats.application_etl;
+
+    DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate;
     """
 
 
-def drop_appl_code_temp_table():
-    """
-    remove the table
-    """
-    return f"""
-    DROP TABLE oats.appl_code_lut;
-    """
 
 @inject_conn_pool
 def process_applications(conn=None, batch_size=10000):
@@ -111,12 +38,15 @@ def process_applications(conn=None, batch_size=10000):
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of non duplicate applications and prints it to the console. Then, it fetches the applications to insert in batches using application IDs / file_number, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
-        cursor.execute(application_etl_temp_table())
-        cursor.execute(application_etl_insert())
-        cursor.execute(appl_code_lut())
-        print("inserting LUT")
-        cursor.execute(insert_appl_code_lut())
+
+        with open(
+            "sql/application-etl-table-create.sql", "r", encoding="utf-8"
+        ) as sql_file:
+            create_tables = sql_file.read()
+            cursor.execute(create_tables)
         conn.commit()
+
+
         with open(
             "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
         ) as sql_file:
@@ -124,6 +54,17 @@ def process_applications(conn=None, batch_size=10000):
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
         print("- Applications to insert: ", count_total)
+
+        with open(
+            "sql/application_exclude_count.sql", "r", encoding="utf-8"
+        ) as sql_file:
+            count_exclude = sql_file.read()
+            cursor.execute(count_exclude)
+            count_total_exclude = cursor.fetchone()[0]
+        print("- Applications to exclude: ", count_total_exclude)
+
+        print("-Inserting ", count_total - count_total_exclude, " applications" )
+
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -134,7 +75,9 @@ def process_applications(conn=None, batch_size=10000):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id"
+
+                    f"{application_sql} AND ae.application_id > {last_application_id} ORDER by ae.application_id;"
+
                 )
                 
                 rows = cursor.fetchmany(batch_size)
@@ -163,16 +106,17 @@ def process_applications(conn=None, batch_size=10000):
                     print("Error", e)
                     failed_inserts  = count_total - successful_inserts_count
                     last_application_id = last_application_id +1
-                    break
+
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
+    print("Number of multiple type-code applications not inserted", count_total_exclude)
+
     if failed_inserts == 0:
         with conn.cursor() as cursor:
             cursor.execute(drop_etl_temp_table())
             print("etl temp table removed")
-            cursor.execute(drop_appl_code_temp_table())
-            print("code lut removed")
+
 
     else:
         print("Table not deleted, inserts failed")
@@ -187,6 +131,15 @@ def clean_applications(conn=None):
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )
         print(f"Deleted items count = {cursor.rowcount}")
+
+        cursor.execute(
+            "DROP TABLE IF EXISTS oats.alcs_etl_application_exclude"
+        )
+        cursor.execute(
+            "DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate"
+        )
+        print(f"Tempory tables dropped")
+
 
 
         
