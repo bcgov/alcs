@@ -86,8 +86,8 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.notificationSentDate?.getTime()),
         ),
         forMember(
-          (a) => a.nfuEndDate,
-          mapFrom((ad) => ad.nfuEndDate?.getTime()),
+          (a) => a.proposalEndDate,
+          mapFrom((ad) => ad.proposalEndDate?.getTime()),
         ),
         forMember(
           (ad) => ad.card,
