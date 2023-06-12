@@ -6,17 +6,17 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
-import { ApplicationDecision } from '../../alcs/decision/application-decision.entity';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import {
   ApplicationForModificationDto,
   ApplicationModificationDto,
   ApplicationModificationOutcomeCodeDto,
-} from '../../alcs/decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../../alcs/decision/application-modification/application-modification.entity';
-import { ApplicationModificationOutcomeType } from '../../alcs/decision/application-modification/modification-outcome-type/application-modification-outcome-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../alcs/decision/decision-v1/application-decision/application-decision.dto';
+} from '../../alcs/application-decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../../alcs/application-decision/application-modification/application-modification.entity';
+import { ApplicationModificationOutcomeType } from '../../alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
 
 @Injectable()
 export class ModificationProfile extends AutomapperProfile {

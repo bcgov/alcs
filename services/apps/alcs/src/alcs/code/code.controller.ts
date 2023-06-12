@@ -10,8 +10,8 @@ import { ApplicationStatusDto } from '../../portal/application-submission/applic
 import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardStatus } from '../card/card-status/card-status.entity';
-import { ReconsiderationTypeDto } from '../decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsiderationType } from '../decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { ReconsiderationTypeDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { MasterCodesDto } from './application-code/application-code.dto';
 import { ApplicationRegionDto } from './application-code/application-region/application-region.dto';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';

@@ -12,6 +12,9 @@
   "KEYCLOAK": {
     "SCOPES": ["openid"]
   },
+  "SITEMINDER": {
+    "LOGOUT_URL": "SITEMINDER_LOGOUT"
+  },
   "CHES": {
     "MODE": "production",
     "FROM": "fake.email@wdawdajhlwdj",

@@ -36,6 +36,7 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
 import { InlineDatepickerComponent } from './inline-datepicker/inline-datepicker.component';
+import { InlineReviewOutcomeComponent } from './inline-review-outcome/inline-review-outcome.component';
 import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
 import { StaffJournalComponent } from './staff-journal/staff-journal.component';
@@ -80,6 +81,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalComponent,
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
+    InlineReviewOutcomeComponent,
   ],
   imports: [
     CommonModule,
@@ -102,6 +104,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     CdkDrag,
     RouterModule,
     MatDatepickerModule,
+    MatDialogModule,
   ],
   exports: [
     CommonModule,
@@ -158,6 +161,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalComponent,
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
+    InlineReviewOutcomeComponent,
   ],
 })
 export class SharedModule {

@@ -34,6 +34,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   staffReport: ApplicationDocumentDto[] = [];
   resolutionDocument: ApplicationDocumentDto[] = [];
   governmentOtherAttachments: ApplicationDocumentDto[] = [];
+  hasCompletedStepsBeforeDocuments = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -44,7 +45,17 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
-      this.applicationReview = appReview;
+      if (appReview) {
+        this.applicationReview = appReview;
+
+        this.hasCompletedStepsBeforeDocuments =
+          (appReview.isAuthorized !== null &&
+            appReview.isOCPDesignation !== null &&
+            appReview.isSubjectToZoning !== null) ||
+          (appReview.isAuthorized === null &&
+            appReview.isOCPDesignation === false &&
+            appReview.isSubjectToZoning === false);
+      }
     });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
@@ -72,10 +83,11 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   async loadReview() {
     if (
       this.application &&
-      [APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+      this.application.typeCode !== 'TURP' &&
+      ([APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
         this.application.status.code
-      ) &&
-      this.application.typeCode !== 'TURP'
+      ) ||
+        (this.application.status.code === APPLICATION_STATUS.IN_REVIEW && this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
     } else {

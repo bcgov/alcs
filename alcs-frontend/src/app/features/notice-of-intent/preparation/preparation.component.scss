@@ -9,3 +9,15 @@
 h5 {
   margin-bottom: 4px !important;
 }
+
+:host::ng-deep {
+  .dropdown {
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+
+    .editing {
+      width: 100%;
+    }
+  }
+}

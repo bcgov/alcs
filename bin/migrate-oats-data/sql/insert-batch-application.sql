@@ -25,6 +25,7 @@ WITH applicant_lookup AS (
     GROUP BY
         oaap.alr_application_id
 ),
+
 -- Step 2: get local gov application name & match to uuid
 oats_gov as(
   SELECT
@@ -48,6 +49,7 @@ alcs_gov as(
 
 ),    
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
+
 panel_lookup AS (
     SELECT
         DISTINCT oaap.alr_application_id AS application_id,
@@ -60,7 +62,9 @@ panel_lookup AS (
     WHERE
         oo2.organization_type_cd = 'PANEL'
 ),
+
 -- Step 4: Perform lookup to retrieve type code
+
 application_type_lookup AS (
     SELECT
         oaac.alr_application_id AS application_id,

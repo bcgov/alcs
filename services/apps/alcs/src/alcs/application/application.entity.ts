@@ -15,9 +15,8 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeeting } from '../decision/decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
-import { StaffJournal } from '../staff-journal/staff-journal.entity';
+import { ApplicationDecisionMeeting } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
@@ -206,6 +205,14 @@ export class Application extends Base {
     nullable: true,
   })
   agCapConsultant?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'ALC Staff Observations and Comments',
+    nullable: true,
+  })
+  staffObservations?: string | null;
 
   @AutoMap(() => String)
   @Column({

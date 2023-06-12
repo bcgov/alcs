@@ -98,4 +98,11 @@ export class NoticeOfIntent extends Base {
     nullable: true,
   })
   dateAcknowledgedComplete: Date | null;
+
+  @AutoMap()
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  decisionDate: Date | null;
 }

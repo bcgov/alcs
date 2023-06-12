@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   ApplicationDecisionDto,
   CeoCriterionDto,
@@ -60,6 +61,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionV2Service,
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
+    private applicationDecisionComponentService: ApplicationDecisionComponentService,
     private router: Router
   ) {}
 
@@ -98,12 +100,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async onCreate() {
-    // TODO check if date bellow populated correctly
-    // let minDate = new Date(0);
-    // if (this.decisions.length > 0) {
-    //   minDate = new Date(this.decisions[this.decisions.length - 1].date);
-    // }
-
     const newDecision = await this.decisionService.create({
       resolutionYear: new Date().getFullYear(),
       chairReviewRequired: false,
@@ -118,13 +114,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   async onEdit(decision: LoadingDecision) {
-    // const decisionIndex = this.decisions.indexOf(decision);
-    // // TODO set minDate for the decision in input
-    // let minDate = new Date(0);
-    // if (decisionIndex !== this.decisions.length - 1) {
-    //   minDate = new Date(this.decisions[this.decisions.length - 1].date);
-    // }
-
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 
@@ -137,6 +126,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           await this.decisionService.update(uuid, {
             isDraft: true,
           });
+          await this.applicationDetailService.loadApplication(this.fileNumber);
 
           await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit`]);
         }
@@ -185,6 +175,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
       chairReviewRequired: true,
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);
   }
@@ -192,6 +183,31 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   async onSaveAuditDate(decisionUuid: string, auditReviewDate: number) {
     await this.decisionService.update(decisionUuid, {
       auditDate: formatDateForApi(auditReviewDate),
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
+    });
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onSaveAlrArea(decisionUuid: string, componentUuid: string, value?: any) {
+    const decision = this.decisions.find((e) => e.uuid === decisionUuid);
+    const component = decision?.components.find((e) => e.uuid === componentUuid);
+    if (componentUuid && component) {
+      await this.applicationDecisionComponentService.update(componentUuid, {
+        uuid: componentUuid,
+        applicationDecisionComponentTypeCode: component.applicationDecisionComponentTypeCode,
+        alrArea: value ? value : null,
+      });
+    } else {
+      this.toastService.showErrorToast('Unable to update the Alr Area. Please reload the page and try again.');
+    }
+
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onStatsRequiredUpdate(decisionUuid: string, value: boolean) {
+    await this.decisionService.update(decisionUuid, {
+      isStatsRequired: value,
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);
   }

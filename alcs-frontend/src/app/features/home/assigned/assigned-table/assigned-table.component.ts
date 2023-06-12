@@ -5,7 +5,7 @@ import { ApplicationPill } from '../../../../shared/application-type-pill/applic
 
 export interface AssignedToMeFile {
   title: string;
-  activeDays?: number;
+  activeDays?: number | null;
   type: string;
   date?: number;
   paused?: boolean;

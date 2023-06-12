@@ -8,7 +8,6 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationReviewService } from '../../services/application/application-review/application-review.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -28,63 +27,63 @@ export const appChildRoutes = [
     menuTitle: 'Overview',
     icon: 'summarize',
     component: OverviewComponent,
-    requiresAuthorization: false,
+    portalOnly: false,
   },
   {
     path: 'applicant-info',
     menuTitle: 'Applicant Info',
     icon: 'persons',
     component: ApplicantInfoComponent,
-    requiresAuthorization: false,
+    portalOnly: true,
   },
   {
     path: 'lfng-info',
     menuTitle: 'L/FNG Info',
     icon: 'account_balance',
     component: LfngInfoComponent,
-    requiresAuthorization: false,
+    portalOnly: true,
   },
   {
     path: 'intake',
     menuTitle: 'ALC Intake',
     icon: 'content_paste',
     component: IntakeComponent,
-    requiresAuthorization: true,
+    portalOnly: false,
   },
   {
     path: 'prep',
     menuTitle: 'App Prep',
     icon: 'task',
     component: ProposalComponent,
-    requiresAuthorization: true,
+    portalOnly: true,
   },
   {
     path: 'info-request',
     menuTitle: 'Info Request',
     icon: 'contact_mail',
     component: InfoRequestsComponent,
-    requiresAuthorization: true,
+    portalOnly: false,
   },
   {
     path: 'site-visit-meeting',
     menuTitle: 'Site Visit /\nApplicant Meeting',
     icon: 'diversity_3',
     component: ApplicationMeetingComponent,
-    requiresAuthorization: true,
+    portalOnly: false,
   },
   {
     path: 'review',
     menuTitle: 'Review',
     icon: 'rate_review',
     component: ReviewComponent,
-    requiresAuthorization: true,
+    portalOnly: false,
   },
   {
     path: 'decision',
     menuTitle: 'Decision',
     icon: 'gavel',
     module: DecisionModule,
-    requiresAuthorization: true,
+    portalOnly: false,
     children: decisionChildRoutes,
   },
   {
@@ -92,14 +91,14 @@ export const appChildRoutes = [
     menuTitle: 'Post-Decision',
     icon: 'edit_note',
     component: PostDecisionComponent,
-    requiresAuthorization: true,
+    portalOnly: false,
   },
   {
     path: 'documents',
     menuTitle: 'Documents',
     icon: 'description',
     component: DocumentsComponent,
-    requiresAuthorization: false,
+    portalOnly: false,
   },
 ];
 
@@ -117,13 +116,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   reconsiderations: ApplicationReconsiderationDto[] = [];
   modifications: ApplicationModificationDto[] = [];
 
-  isAuthorized = true;
+  isApplicantSubmission = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private applicationReviewService: ApplicationReviewService,
     private route: ActivatedRoute,
     private titleService: Title
   ) {}
@@ -138,11 +136,10 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
       if (application) {
         this.titleService.setTitle(`${environment.siteName} | ${application.fileNumber} (${application.applicant})`);
-
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.loadReview(application.fileNumber);
+        this.isApplicantSubmission = application.source === 'APPLICANT';
       }
     });
 
@@ -163,10 +160,5 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
   async loadApplication() {
     await this.applicationDetailService.loadApplication(this.fileNumber!);
-  }
-
-  async loadReview(fileNumber: string) {
-    const applicationReview = await this.applicationReviewService.fetchReview(fileNumber);
-    this.isAuthorized = applicationReview?.isAuthorized ?? true;
   }
 }

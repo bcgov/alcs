@@ -18,16 +18,18 @@
       >
         Edit Application
       </button>
+      <button *ngIf="application.canReview" (click)="onReview(application.fileNumber)" mat-flat-button color="primary">
+        Review Application
+      </button>
       <button
-        *ngIf="applicationReview"
+        [disabled]="
+          !applicationReview || (!application.canReview && application.status.code === APPLICATION_STATUS.IN_REVIEW)
+        "
         (click)="onDownloadReviewPdf(application.fileNumber)"
         mat-flat-button
         color="accent"
       >
         Download PDF
-      </button>
-      <button *ngIf="application.canReview" (click)="onReview(application.fileNumber)" mat-flat-button color="primary">
-        Review Application
       </button>
     </div>
   </div>
@@ -39,8 +41,8 @@
   </div>
   <div
     *ngIf="
-      application.status.code === APPLICATION_STATUS.IN_REVIEW ||
-      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG
+      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG ||
+      (application.status.code === APPLICATION_STATUS.IN_REVIEW && (!applicationReview || !application.canReview))
     "
     class="warning"
   >
@@ -57,7 +59,7 @@
     {{ application.returnedComment }}
     <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
   </div>
-  <div *ngIf="applicationReview">
+  <div *ngIf="applicationReview && (application.canReview || application.status.code !== APPLICATION_STATUS.IN_REVIEW)">
     <section>
       <h4>Contact Information</h4>
       <div class="review-table">
@@ -65,42 +67,49 @@
           <div class="subheading2">Local Government File Number</div>
           <div>
             {{ applicationReview.localGovernmentFileNumber }}
+            <app-no-data *ngIf="!applicationReview.localGovernmentFileNumber"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">First Name</div>
           <div>
             {{ applicationReview.firstName }}
+            <app-no-data *ngIf="!applicationReview.firstName"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Last Name</div>
           <div>
             {{ applicationReview.lastName }}
+            <app-no-data *ngIf="!applicationReview.lastName"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Position</div>
           <div>
             {{ applicationReview.position }}
+            <app-no-data *ngIf="!applicationReview.position"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Department</div>
           <div>
             {{ applicationReview.department }}
+            <app-no-data *ngIf="!applicationReview.department"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Phone Number</div>
           <div>
             {{ applicationReview.phoneNumber }}
+            <app-no-data *ngIf="!applicationReview.phoneNumber"></app-no-data>
           </div>
         </div>
         <div>
           <div class="subheading2">Email</div>
           <div>
             {{ applicationReview.email }}
+            <app-no-data *ngIf="!applicationReview.email"></app-no-data>
           </div>
         </div>
       </div>
@@ -114,18 +123,21 @@
             <span *ngIf="applicationReview.isOCPDesignation !== null">{{
               applicationReview.isOCPDesignation ? 'Yes' : 'No'
             }}</span>
+            <app-no-data *ngIf="applicationReview.isOCPDesignation === null"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isOCPDesignation">
           <div class="subheading2">OCP Bylaw Name</div>
           <div>
             {{ applicationReview.OCPBylawName }}
+            <app-no-data *ngIf="!applicationReview.OCPBylawName"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isOCPDesignation">
           <div class="subheading2">OCP Designation</div>
           <div>
             {{ applicationReview.OCPDesignation }}
+            <app-no-data *ngIf="!applicationReview.OCPDesignation"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isOCPDesignation">
@@ -134,6 +146,7 @@
             <span *ngIf="applicationReview.OCPConsistent !== null">{{
               applicationReview.OCPConsistent ? 'Yes' : 'No'
             }}</span>
+            <app-no-data *ngIf="applicationReview.OCPConsistent === null"></app-no-data>
           </div>
         </div>
       </div>
@@ -147,24 +160,28 @@
             <span *ngIf="applicationReview.isSubjectToZoning !== null">{{
               applicationReview.isSubjectToZoning ? 'Yes' : 'No'
             }}</span>
+            <app-no-data *ngIf="applicationReview.isSubjectToZoning === null"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isSubjectToZoning">
           <div class="subheading2">Zoning Bylaw Name</div>
           <div>
             {{ applicationReview.zoningBylawName }}
+            <app-no-data *ngIf="!applicationReview.zoningBylawName"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isSubjectToZoning">
           <div class="subheading2">Zoning Designation</div>
           <div>
             {{ applicationReview.zoningDesignation }}
+            <app-no-data *ngIf="!applicationReview.zoningDesignation"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isSubjectToZoning">
           <div class="subheading2">Minimum Lot Size (hectares)</div>
           <div>
             {{ applicationReview.zoningMinimumLotSize }}
+            <app-no-data *ngIf="!applicationReview.zoningMinimumLotSize"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isSubjectToZoning">
@@ -173,6 +190,7 @@
             <span *ngIf="applicationReview.isZoningConsistent !== null">{{
               applicationReview.isZoningConsistent ? 'Yes' : 'No'
             }}</span>
+            <app-no-data *ngIf="applicationReview.isZoningConsistent === null"></app-no-data>
           </div>
         </div>
       </div>
@@ -180,6 +198,12 @@
     <section>
       <h4>Resolution</h4>
       <div class="review-table">
+        <div
+          class="full-width"
+          *ngIf="applicationReview.isOCPDesignation === null || applicationReview.isSubjectToZoning === null"
+        >
+          Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
+        </div>
         <div
           class="full-width"
           *ngIf="
@@ -204,6 +228,7 @@
             <span *ngIf="applicationReview.isAuthorized !== null">{{
               applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
             }}</span>
+            <app-no-data *ngIf="applicationReview.isAuthorized === null"></app-no-data>
           </div>
         </div>
         <div *ngIf="applicationReview.isFirstNationGovernment" class="full-width">
@@ -212,13 +237,20 @@
             <span *ngIf="applicationReview.isAuthorized !== null">{{
               applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
             }}</span>
+            <app-no-data *ngIf="!applicationReview.isAuthorized"></app-no-data>
           </div>
         </div>
       </div>
     </section>
     <section>
       <h4>Attachments</h4>
-      <div class="review-table">
+      <div *ngIf="!hasCompletedStepsBeforeDocuments" class="review-table">
+        <div class="full-width">
+          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
+          with this step.
+        </div>
+      </div>
+      <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
         <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>
@@ -243,7 +275,7 @@
             <div class="document" *ngFor="let document of governmentOtherAttachments">
               <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
             </div>
-            <div *ngIf="governmentOtherAttachments.length === 0"><em>None provided</em></div>
+            <app-no-data *ngIf="governmentOtherAttachments.length === 0"></app-no-data>
           </div>
         </div>
       </div>
