@@ -61,6 +61,7 @@ export class ApplicationService {
     type: true,
     card: {
       ...this.DEFAULT_CARD_RELATIONS,
+      board: true,
     },
     region: true,
     decisionMeetings: true,
