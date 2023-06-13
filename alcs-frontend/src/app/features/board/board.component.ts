@@ -25,18 +25,18 @@ import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  RETROACTIVE_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
+  RETROACTIVE_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
+import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
+import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
-import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
-import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
@@ -191,6 +191,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.MODI:
       case CardType.COV:
       case CardType.NOI:
+      case CardType.NOI_MODI:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -213,9 +214,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.boardIsFavourite = board.isFavourite;
     this.boardHasCreateApplication = board.code === BOARD_TYPE_CODES.VETT;
     this.boardHasCreatePlanningReview = board.code === BOARD_TYPE_CODES.EXEC;
-    this.boardHasCreateReconsideration = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateReconsideration = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
     this.boardHasCreateAppModification = board.code === BOARD_TYPE_CODES.CEO;
-    this.boardHasCreateCovenant = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateCovenant = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
     this.boardHasCreateNOI = board.code === BOARD_TYPE_CODES.VETT;
     this.boardHasCreateNOIModification = board.code === BOARD_TYPE_CODES.NOI;
 
