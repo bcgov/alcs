@@ -16,8 +16,8 @@ import { Board } from '../../board/board.entity';
 import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { CodeService } from '../../code/code.service';
-import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
+import { ApplicationDecision } from '../application-decision.entity';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,
@@ -41,6 +41,23 @@ describe('ReconsiderationService', () => {
 
   let mockReconsideration;
   let mockReconsiderationCreateDto;
+
+  const DEFAULT_BOARD_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
+    {
+      application: {
+        type: true,
+        region: true,
+        localGovernment: true,
+        decisionMeetings: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+        assignee: true,
+      },
+      type: true,
+    };
 
   const DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
     {
@@ -157,7 +174,7 @@ describe('ReconsiderationService', () => {
     const fakeBoardCode = 'fake';
     const findOptions = {
       where: { card: { board: { code: fakeBoardCode } } },
-      relations: DEFAULT_RECONSIDERATION_RELATIONS,
+      relations: DEFAULT_BOARD_RELATIONS,
     };
 
     await service.getByBoardCode(fakeBoardCode);

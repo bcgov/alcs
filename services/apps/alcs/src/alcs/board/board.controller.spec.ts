@@ -8,7 +8,7 @@ import { BoardAutomapperProfile } from '../../common/automapper/board.automapper
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
-import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
+import { CardType, CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
@@ -49,7 +49,7 @@ describe('BoardController', () => {
     });
 
     boardService.getOneOrFail.mockResolvedValue(mockBoard);
-    boardService.getApplicationsByCode.mockResolvedValue([]);
+    appService.getByBoardCode.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
     appReconsiderationService.getByBoardCode.mockResolvedValue([]);
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
@@ -130,10 +130,8 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(boardService.getApplicationsByCode).toHaveBeenCalledTimes(1);
-    expect(boardService.getApplicationsByCode.mock.calls[0][0]).toEqual(
-      boardCode,
-    );
+    expect(appService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(appService.getByBoardCode).toBeCalledWith(boardCode);
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(0);

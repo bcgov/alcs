@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatestWith, firstValueFrom } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthenticationService, ICurrentUser } from '../authentication/authentication.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 import { ToastService } from '../toast/toast.service';
 import { AssigneeDto, UpdateUserDto, UserDto } from './user.dto';
 
@@ -36,6 +36,7 @@ export class UserService {
   }
 
   public async fetchAssignableUsers() {
+    this.clearAssignableUsers();
     this.assignableUsers = await firstValueFrom(this.http.get<AssigneeDto[]>(`${this.baseUrl}/assignable`));
     this.$assignableUsers.next(this.assignableUsers);
   }
@@ -47,5 +48,9 @@ export class UserService {
     } catch (e) {
       this.toastService.showErrorToast('Failed to update User');
     }
+  }
+
+  clearAssignableUsers() {
+    this.$assignableUsers.next([]);
   }
 }

@@ -131,20 +131,22 @@ export class ApplicationDecisionV2Service {
   }
 
   async loadDecision(uuid: string) {
+    this.clearDecision()
     this.decision = await this.getByUuid(uuid);
     this.$decision.next(this.decision);
   }
 
   async loadDecisions(fileNumber: string) {
+    this.clearDecisions()
     this.decisions = await this.fetchByApplication(fileNumber);
     this.$decisions.next(this.decisions);
   }
 
-  async cleanDecision() {
+  clearDecision() {
     this.$decision.next(undefined);
   }
 
-  async cleanDecisions() {
+  clearDecisions() {
     this.$decisions.next([]);
   }
 

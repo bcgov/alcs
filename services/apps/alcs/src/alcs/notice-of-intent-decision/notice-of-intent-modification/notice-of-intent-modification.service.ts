@@ -33,6 +33,20 @@ export class NoticeOfIntentModificationService {
     private cardService: CardService,
   ) {}
 
+  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
+    {
+      noticeOfIntent: {
+        region: true,
+        localGovernment: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+        assignee: true,
+      },
+    };
+
   private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> =
     {
       noticeOfIntent: {
@@ -51,7 +65,10 @@ export class NoticeOfIntentModificationService {
     };
 
   getByBoardCode(boardCode: string) {
-    return this.getBy({ card: { board: { code: boardCode } } });
+    return this.modificationRepository.find({
+      where: { card: { board: { code: boardCode } } },
+      relations: this.BOARD_RECONSIDERATION_RELATIONS,
+    });
   }
 
   getByFileNumber(fileNumber: string) {

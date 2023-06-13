@@ -162,21 +162,25 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (a) => a.modifiesDecisions,
           mapFrom((rd) =>
-            this.mapper.mapArray(
-              rd.modifiesDecisions,
-              NoticeOfIntentDecision,
-              NoticeOfIntentDecisionDto,
-            ),
+            rd.modifiesDecisions
+              ? this.mapper.mapArray(
+                  rd.modifiesDecisions,
+                  NoticeOfIntentDecision,
+                  NoticeOfIntentDecisionDto,
+                )
+              : [],
           ),
         ),
         forMember(
           (a) => a.resultingDecision,
           mapFrom((rd) =>
-            this.mapper.map(
-              rd.resultingDecision,
-              NoticeOfIntentDecision,
-              NoticeOfIntentDecisionDto,
-            ),
+            rd.resultingDecision
+              ? this.mapper.map(
+                  rd.resultingDecision,
+                  NoticeOfIntentDecision,
+                  NoticeOfIntentDecisionDto,
+                )
+              : null,
           ),
         ),
         forMember(

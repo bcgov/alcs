@@ -48,6 +48,16 @@ export class ApplicationService {
     assignee: true,
     type: true,
   };
+  private BOARD_RELATIONS: FindOptionsRelations<Application> = {
+    type: true,
+    card: {
+      ...this.DEFAULT_CARD_RELATIONS,
+    },
+    region: true,
+    decisionMeetings: true,
+    localGovernment: true,
+  };
+
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
     card: {
@@ -219,6 +229,16 @@ export class ApplicationService {
     });
   }
 
+  async getByBoardCode(code: string): Promise<Application[]> {
+    return await this.applicationRepository.find({
+      where: {
+        card: {
+          board: { code },
+        },
+      },
+      relations: this.BOARD_RELATIONS,
+    });
+  }
   async get(fileNumber: string) {
     return this.applicationRepository.findOne({
       where: {

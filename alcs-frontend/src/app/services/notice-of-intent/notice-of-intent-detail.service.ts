@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ToastService } from '../toast/toast.service';
 import { NoticeOfIntentDto, UpdateNoticeOfIntentDto } from './notice-of-intent.dto';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
@@ -8,12 +7,10 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 export class NoticeOfIntentDetailService {
   $noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
 
-  private selectedFileNumber: string | undefined;
-
   constructor(private noticeOfIntentService: NoticeOfIntentService) {}
 
   async load(fileNumber: string) {
-    this.selectedFileNumber = fileNumber;
+    this.clear();
     const noticeOfIntent = await this.noticeOfIntentService.fetchByFileNumber(fileNumber);
     this.$noticeOfIntent.next(noticeOfIntent);
   }

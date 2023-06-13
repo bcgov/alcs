@@ -33,6 +33,22 @@ export class ApplicationModificationService {
     private cardService: CardService,
   ) {}
 
+  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationModification> =
+    {
+      application: {
+        type: true,
+        region: true,
+        localGovernment: true,
+        decisionMeetings: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+        assignee: true,
+      },
+    };
+
   private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationModification> = {
     application: {
       type: true,
@@ -52,7 +68,10 @@ export class ApplicationModificationService {
   };
 
   getByBoardCode(boardCode: string) {
-    return this.getBy({ card: { board: { code: boardCode } } });
+    return this.modificationRepository.find({
+      where: { card: { board: { code: boardCode } } },
+      relations: this.BOARD_RECONSIDERATION_RELATIONS,
+    });
   }
 
   getByApplication(applicationFileNumber: string) {

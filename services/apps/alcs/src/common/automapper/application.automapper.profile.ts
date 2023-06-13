@@ -2,6 +2,8 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 
+import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
@@ -16,8 +18,6 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
-import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
-import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
 import {
   ApplicationDto,
   SubmittedApplicationDto,
@@ -31,8 +31,8 @@ import { ApplicationRegionDto } from '../../alcs/code/application-code/applicati
 import { ApplicationRegion } from '../../alcs/code/application-code/application-region/application-region.entity';
 import { ApplicationTypeDto } from '../../alcs/code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
+import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()

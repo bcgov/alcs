@@ -31,6 +31,19 @@ describe('NoticeOfIntentModificationService', () => {
   let mockModification;
   let mockModificationCreateDto: NoticeOfIntentModificationCreateDto;
 
+  const BOARD_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+    noticeOfIntent: {
+      region: true,
+      localGovernment: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+  };
+
   const DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
     modifiesDecisions: true,
     noticeOfIntent: {
@@ -116,7 +129,7 @@ describe('NoticeOfIntentModificationService', () => {
     const fakeBoardCode = 'fake';
     const findOptions = {
       where: { card: { board: { code: fakeBoardCode } } },
-      relations: DEFAULT_RELATIONS,
+      relations: BOARD_RELATIONS,
     };
 
     await service.getByBoardCode(fakeBoardCode);
