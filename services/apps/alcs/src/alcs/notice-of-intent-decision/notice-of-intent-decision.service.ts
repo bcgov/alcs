@@ -220,6 +220,7 @@ export class NoticeOfIntentDecisionService {
       ),
       modifies,
       noticeOfIntent,
+      auditDate: formatIncomingDate(createDto.auditDate),
     });
 
     await this.validateResolutionNumber(

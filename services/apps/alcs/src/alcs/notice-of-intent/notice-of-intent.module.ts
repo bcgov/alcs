@@ -34,6 +34,6 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     NoticeOfIntentMeetingService,
   ],
   controllers: [NoticeOfIntentController, NoticeOfIntentMeetingController],
-  exports: [NoticeOfIntentService],
+  exports: [NoticeOfIntentService, NoticeOfIntentMeetingService],
 })
 export class NoticeOfIntentModule {}
