@@ -63,7 +63,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.$destroy))
       .pipe(
         tap((app) => {
-          if (app && app.fileNumber !== this.application?.fileNumber) {
+          if (app) {
             this.clearComponentData();
 
             this.meetingService.fetch(app.fileNumber);
