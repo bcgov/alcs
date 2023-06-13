@@ -49,7 +49,7 @@ describe('BoardController', () => {
     });
 
     boardService.getOneOrFail.mockResolvedValue(mockBoard);
-    boardService.getApplicationsByCode.mockResolvedValue([]);
+    appService.getByBoardCode.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
     appReconsiderationService.getByBoardCode.mockResolvedValue([]);
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
@@ -130,10 +130,8 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(boardService.getApplicationsByCode).toHaveBeenCalledTimes(1);
-    expect(boardService.getApplicationsByCode.mock.calls[0][0]).toEqual(
-      boardCode,
-    );
+    expect(appService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(appService.getByBoardCode.mock.calls[0][0]).toEqual(boardCode);
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(0);
