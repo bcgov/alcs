@@ -34,7 +34,7 @@
     <div class="lower-card">
       <div>
         <div
-          *ngIf="cardData.cardType === 'APP'"
+          *ngIf="cardData.activeDays !== undefined"
           class="active-days center"
           matTooltip="Active days: {{ cardData.activeDays }} "
         >
