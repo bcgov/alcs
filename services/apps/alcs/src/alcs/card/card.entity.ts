@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
 } from 'typeorm';
@@ -45,6 +46,7 @@ export class Card extends Base {
   @ManyToOne(() => Board)
   board: Board;
 
+  @Index()
   @Column({
     type: 'uuid',
     default: 'bb70eb85-6250-49b9-9a5c-e3c2e0b9f3a2',
