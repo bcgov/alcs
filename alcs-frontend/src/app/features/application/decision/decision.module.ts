@@ -22,19 +22,19 @@ export const decisionChildRoutes = [
     path: '',
     menuTitle: 'Decision',
     component: DecisionComponent,
-    requiresAuthorization: true,
+    portalOnly: true,
   },
   {
     path: 'create',
     menuTitle: 'Decision',
     component: DecisionInputV2Component,
-    requiresAuthorization: true,
+    portalOnly: true,
   },
   {
     path: 'draft/:uuid/edit',
     menuTitle: 'Decision',
     component: DecisionInputV2Component,
-    requiresAuthorization: true,
+    portalOnly: true,
   },
 ];
 

@@ -23,6 +23,7 @@ import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsi
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
@@ -66,6 +67,7 @@ const routes: Routes = [
     ProposalComponent,
     NfuProposalComponent,
     SubdProposalComponent,
+    SoilProposalComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })

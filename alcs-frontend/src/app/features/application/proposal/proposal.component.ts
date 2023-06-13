@@ -51,10 +51,9 @@ export class ProposalComponent {
   application?: ApplicationDto;
 
   agCapOptions = AG_CAP_OPTIONS;
-
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
-
   alrArea: string | undefined;
+  staffObservations: string = '';
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 
@@ -63,6 +62,7 @@ export class ProposalComponent {
       if (application) {
         this.application = application;
         this.alrArea = application.alrArea?.toString();
+        this.staffObservations = application.staffObservations ?? '';
       }
     });
   }
@@ -82,5 +82,9 @@ export class ProposalComponent {
         this.toastService.showSuccessToast('Application updated');
       }
     }
+  }
+
+  async onSaveStaffObservations($event: string) {
+    await this.updateApplicationValue('staffObservations', $event);
   }
 }

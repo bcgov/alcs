@@ -30,4 +30,8 @@ export class ProvisionComponent implements OnInit, OnDestroy {
     this.destroy.next();
     this.destroy.complete();
   }
+
+  onLogout() {
+    this.authService.logout();
+  }
 }

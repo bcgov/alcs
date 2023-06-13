@@ -1,12 +1,12 @@
-<button mat-icon-button [matMenuTriggerFor]="notificationMenu">
-  <mat-icon
-    class="icon"
-    [ngClass]="{
-      'unread-notifications': hasUnread
-    }"
-    >notifications_outlined</mat-icon
-  >
+<button *ngIf="!hasUnread" mat-icon-button [matMenuTriggerFor]="notificationMenu">
+  <mat-icon class="icon">notifications_outlined</mat-icon>
 </button>
+
+<button *ngIf="hasUnread" [matMenuTriggerFor]="notificationMenu" class="unread">
+  <mat-icon class="icon">notifications</mat-icon>
+  <span>{{ unreadCount }}</span>
+</button>
+
 <mat-menu #notificationMenu="matMenu" xPosition="before">
   <div class="notifications-header">
     <div class="subheading2">Notifications</div>

@@ -109,7 +109,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   private patchNfuFields(component: DecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
-    component.nfuEndDate = this.application.nfuEndDate;
+    component.nfuEndDate = this.application.proposalEndDate;
   }
 
   private updateComponentsMenuItems() {
