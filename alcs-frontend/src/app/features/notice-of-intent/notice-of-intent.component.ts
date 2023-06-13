@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
@@ -63,6 +64,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
 
   fileNumber?: string;
   noticeOfIntent: NoticeOfIntentDto | undefined;
+  modifications: NoticeOfIntentModificationDto[] = [];
 
   isAuthorized = true;
 
@@ -89,6 +91,10 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
         this.noticeOfIntentModificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
         this.noticeOfIntent = noticeOfIntent;
       }
+    });
+
+    this.noticeOfIntentModificationService.$modifications.pipe(takeUntil(this.destroy)).subscribe((value) => {
+      this.modifications = value;
     });
   }
 
