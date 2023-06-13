@@ -100,6 +100,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.noticeOfIntentDetailService.clear();
+    this.noticeOfIntentModificationService.clearModifications();
     this.destroy.next();
     this.destroy.complete();
   }
