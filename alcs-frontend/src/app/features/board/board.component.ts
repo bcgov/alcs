@@ -258,20 +258,22 @@ export class BoardComponent implements OnInit, OnDestroy {
       const sorted = [];
       sorted.push(
         // high priority
-        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays ?? 0 - (a.activeDays ?? 0)),
         ...mappedNoticeOfIntentModifications
           .filter((a) => a.highPriority)
-          .sort((a, b) => b.activeDays! - a.activeDays!),
+          .sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
-        ...mappedNoticeOfIntents.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntents
+          .filter((a) => !a.highPriority)
+          .sort((a, b) => (b.activeDays ?? 0) - (a.activeDays ?? 0)),
         ...mappedNoticeOfIntentModifications
           .filter((a) => !a.highPriority)
-          .sort((a, b) => b.activeDays! - a.activeDays!),
+          .sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
@@ -386,6 +388,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardUuid: noticeOfIntent.card.uuid,
       dateReceived: noticeOfIntent.card.createdAt,
       cssClasses: ['notice-of-intent'],
+      activeDays: noticeOfIntent.activeDays ?? undefined,
     };
   }
 
