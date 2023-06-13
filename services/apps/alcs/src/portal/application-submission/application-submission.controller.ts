@@ -10,6 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
@@ -152,13 +153,25 @@ export class ApplicationSubmissionController {
 
   @Post('/:uuid/cancel')
   async cancel(@Param('uuid') uuid: string, @Req() req) {
+    const user = req.user.entity;
+
     const application =
-      await this.applicationSubmissionService.getIfCreatorByUuid(
+      await this.applicationSubmissionService.verifyAccessByUuid(
         uuid,
         req.user.entity,
       );
+    let localGovernment: ApplicationLocalGovernment | null = null;
 
-    if (application.status.code !== APPLICATION_STATUS.IN_PROGRESS) {
+    if (user.bceidBusinessGuid) {
+      localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+    }
+
+    if (
+      localGovernment === null &&
+      application.status.code !== APPLICATION_STATUS.IN_PROGRESS
+    ) {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
 

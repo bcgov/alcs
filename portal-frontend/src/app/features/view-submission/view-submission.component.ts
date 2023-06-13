@@ -87,7 +87,7 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
     dialog.subscribe(async (isConfirmed) => {
       if (isConfirmed) {
         await this.applicationService.cancel(fileId);
-        await this.loadApplication(this.application!.fileNumber);
+        await this.router.navigateByUrl(`/home`);
       }
     });
   }
