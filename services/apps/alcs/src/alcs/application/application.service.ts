@@ -44,7 +44,6 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 export class ApplicationService {
   private DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
     status: true,
-    board: true,
     assignee: true,
     type: true,
   };
@@ -229,16 +228,17 @@ export class ApplicationService {
     });
   }
 
-  async getByBoardCode(code: string): Promise<Application[]> {
+  async getByBoard(boardUuid: string): Promise<any[]> {
     return await this.applicationRepository.find({
       where: {
         card: {
-          board: { code },
+          boardUuid,
         },
       },
       relations: this.BOARD_RELATIONS,
     });
   }
+
   async get(fileNumber: string) {
     return this.applicationRepository.findOne({
       where: {

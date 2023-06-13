@@ -67,9 +67,9 @@ export class ApplicationModificationService {
     reviewOutcome: true,
   };
 
-  getByBoardCode(boardCode: string) {
+  getByBoard(boardUuid: string) {
     return this.modificationRepository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: { card: { boardUuid } },
       relations: this.BOARD_RECONSIDERATION_RELATIONS,
     });
   }
