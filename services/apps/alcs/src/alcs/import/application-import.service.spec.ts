@@ -16,7 +16,7 @@ import { ApplicationService } from '../application/application.service';
 import { BoardService } from '../board/board.service';
 import { Card } from '../card/card.entity';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
-import { ImportService } from './import.service';
+import { ApplicationImportService } from './application-import.service';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,7 +29,7 @@ jest.mock('fs', () => {
 });
 
 describe('ImportService', () => {
-  let service: ImportService;
+  let service: ApplicationImportService;
   let mockApplicationservice: DeepMocked<ApplicationService>;
   let mockApplicationMeetingService: DeepMocked<ApplicationMeetingService>;
   let mockPausedService: DeepMocked<ApplicationPausedService>;
@@ -51,7 +51,7 @@ describe('ImportService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ImportService,
+        ApplicationImportService,
         {
           provide: ApplicationService,
           useValue: mockApplicationservice,
@@ -75,7 +75,7 @@ describe('ImportService', () => {
       ],
     }).compile();
 
-    service = module.get<ImportService>(ImportService);
+    service = module.get<ApplicationImportService>(ApplicationImportService);
 
     mockDataRow = {
       'App ID': '1',
