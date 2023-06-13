@@ -74,7 +74,7 @@ export class GenerateSubmissionDocumentService {
     if (generatedRes.status === HttpStatus.OK) {
       await this.applicationDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
-        fileName: `${fileNumber}_Submission`,
+        fileName: `${fileNumber}_APP_Submission.pdf`,
         user: user,
         file: generatedRes.data,
         mimeType: 'application/pdf',

@@ -349,11 +349,15 @@ export class UpdateApplicationDto {
 
   @IsOptional()
   @IsString()
+  staffObservations?: string;
+
+  @IsOptional()
+  @IsString()
   nfuUseSubType?: string;
 
   @IsOptional()
   @IsNumber()
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export class ApplicationDto {
@@ -437,6 +441,9 @@ export class ApplicationDto {
   agCapMap?: string;
 
   @AutoMap(() => String)
+  staffObservations?: string;
+
+  @AutoMap(() => String)
   agCapConsultant?: string;
 
   @AutoMap(() => String)
@@ -444,7 +451,7 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -469,7 +476,8 @@ export class ApplicationUpdateServiceDto {
   agCapConsultant?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: Date | null;
+  proposalEndDate?: Date | null;
+  staffObservations?: string | null;
 }
 
 export class CreateApplicationServiceDto {
