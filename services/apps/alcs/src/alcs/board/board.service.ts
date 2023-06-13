@@ -44,14 +44,6 @@ export class BoardService {
     });
   }
 
-  getApplicationsByCode(code: string) {
-    return this.applicationService.getMany({
-      card: {
-        board: { code },
-      },
-    });
-  }
-
   async changeBoard(cardUuid: string, code: string) {
     const card = await this.cardService.get(cardUuid);
     if (!card) {

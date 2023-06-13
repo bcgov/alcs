@@ -58,7 +58,7 @@ export class BoardController {
     const allowedCodes = board.allowedCardTypes.map((type) => type.code);
 
     const applications = allowedCodes.includes(CARD_TYPE.APP)
-      ? await this.boardService.getApplicationsByCode(boardCode)
+      ? await this.applicationService.getByBoardCode(boardCode)
       : [];
     const recons = allowedCodes.includes(CARD_TYPE.RECON)
       ? await this.reconsiderationService.getByBoardCode(boardCode)
