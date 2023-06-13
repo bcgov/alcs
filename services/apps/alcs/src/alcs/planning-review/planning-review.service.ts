@@ -134,12 +134,12 @@ export class PlanningReviewService {
     });
   }
 
-  async getByBoardCode(boardCode: string) {
+  async getByBoard(boardUuid: string) {
     const res = await this.repository.find({
       relations: this.DEFAULT_RELATIONS,
       where: {
         card: {
-          board: { code: boardCode },
+          boardUuid,
           auditDeletedDateAt: IsNull(),
         },
       },

@@ -171,13 +171,13 @@ describe('ReconsiderationService', () => {
   });
 
   it('should have correct filter condition in getByCode', async () => {
-    const fakeBoardCode = 'fake';
+    const fakeBoardUuid = 'fake';
     const findOptions = {
-      where: { card: { board: { code: fakeBoardCode } } },
+      where: { card: { boardUuid: fakeBoardUuid } },
       relations: DEFAULT_BOARD_RELATIONS,
     };
 
-    await service.getByBoardCode(fakeBoardCode);
+    await service.getByBoard(fakeBoardUuid);
 
     expect(reconsiderationRepositoryMock.find).toBeCalledWith(findOptions);
   });

@@ -15,8 +15,6 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
-import { ApplicationDto } from '../application/application.dto';
-import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
@@ -140,9 +138,9 @@ export class NoticeOfIntentService {
     });
   }
 
-  async getByBoardCode(boardCode: string) {
+  async getByBoard(boardUuid: string) {
     return this.repository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: { card: { boardUuid } },
       relations: this.DEFAULT_RELATIONS,
     });
   }

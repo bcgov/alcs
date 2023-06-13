@@ -6,12 +6,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
-import { NoticeOfIntentDto } from './notice-of-intent.dto';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
@@ -113,7 +111,7 @@ describe('NoticeOfIntentService', () => {
 
   it('should call through to the repo for get cards', async () => {
     mockRepository.find.mockResolvedValue([]);
-    await service.getByBoardCode('fake');
+    await service.getByBoard('fake');
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });

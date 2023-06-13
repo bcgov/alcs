@@ -35,7 +35,6 @@ describe('ApplicationService', () => {
 
   const DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
     status: true,
-    board: true,
     assignee: true,
     type: true,
   };
@@ -293,13 +292,13 @@ describe('ApplicationService', () => {
   it('should get apps by board code', async () => {
     applicationRepositoryMock.find.mockResolvedValue([]);
 
-    const boardCode = 'board-code';
-    await applicationService.getByBoardCode(boardCode);
+    const fakeBoardUuid = 'fake';
+    await applicationService.getByBoard(fakeBoardUuid);
     expect(applicationRepositoryMock.find).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.find).toHaveBeenCalledWith({
       where: {
         card: {
-          board: { code: boardCode },
+          boardUuid: fakeBoardUuid,
         },
       },
       relations: BOARD_RELATIONS,
