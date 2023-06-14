@@ -241,20 +241,17 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.mapNoticeOfIntentModificationToCard.bind(this)
     );
     if (boardCode === BOARD_TYPE_CODES.VETT) {
-      this.cards = [
-        ...mappedApps,
-        ...mappedRecons,
-        ...mappedModifications,
-        ...mappedReviewMeetings,
-        ...mappedCovenants,
-        ...mappedNoticeOfIntents,
-        ...mappedNoticeOfIntentModifications,
-      ].sort((a, b) => {
+      const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
           return b.dateReceived - a.dateReceived;
         }
         return b.highPriority ? 1 : -1;
-      });
+      };
+      this.cards = [
+        ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
+        ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
+        ...[...mappedReviewMeetings, ...mappedCovenants].sort(vettingSort),
+      ];
     } else {
       const sorted = [];
       sorted.push(
