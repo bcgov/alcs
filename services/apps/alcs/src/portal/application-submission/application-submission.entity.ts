@@ -580,6 +580,11 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
 
+  //NARU
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruSubtype: string | null;
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({

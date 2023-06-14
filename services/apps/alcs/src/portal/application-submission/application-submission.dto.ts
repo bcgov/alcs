@@ -239,6 +239,10 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  //NARU Fields
+  @AutoMap(() => String)
+  naruSubtype?: string | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -543,4 +547,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilHasSubmittedNotice?: boolean;
+
+  //NARU Fields
+  @IsString()
+  @IsOptional()
+  naruSubtype?: string | null;
 }
