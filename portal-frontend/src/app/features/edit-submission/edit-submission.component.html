@@ -141,6 +141,7 @@
       <app-naru-proposal
         *ngIf="applicationSubmission.typeCode === 'NARU'"
         [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"

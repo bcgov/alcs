@@ -243,6 +243,51 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   //NARU Fields
   @AutoMap(() => String)
   naruSubtype?: string | null;
+
+  @AutoMap(() => String)
+  naruPurpose: string | null;
+
+  @AutoMap(() => Number)
+  naruFloorArea: number | null;
+
+  @AutoMap(() => String)
+  naruResidenceNecessity: string | null;
+
+  @AutoMap(() => String)
+  naruLocationRationale: string | null;
+
+  @AutoMap(() => String)
+  naruInfrastructure: string | null;
+
+  @AutoMap(() => String)
+  naruExistingStructures: string | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  naruFillType: string | null;
+
+  @AutoMap(() => String)
+  naruFillOrigin: string | null;
+
+  @AutoMap(() => Number)
+  naruProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  naruProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceAverageDepth: number | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -552,4 +597,64 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruSubtype?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruPurpose?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruFloorArea?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruResidenceNecessity?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruLocationRationale?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruInfrastructure?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruExistingStructures?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillImportFill?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  naruFillType?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruFillOrigin?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruProjectDurationAmount?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruProjectDurationUnit?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceAverageDepth?: number | null;
 }
