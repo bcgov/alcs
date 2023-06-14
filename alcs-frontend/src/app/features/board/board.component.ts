@@ -125,6 +125,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cards = [];
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -207,6 +208,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private setupBoard(board: BoardWithFavourite) {
+    // clear cards to remove flickering
+    this.cards = [];
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
 
     this.loadCards(board.code);
