@@ -208,6 +208,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private setupBoard(board: BoardWithFavourite) {
+    // clear cards to remove flickering
+    this.cards = [];
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
 
     this.loadCards(board.code);
