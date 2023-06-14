@@ -122,7 +122,7 @@ describe('PlanningReviewService', () => {
 
   it('should call through to the repo for get cards', async () => {
     mockRepository.find.mockResolvedValue([]);
-    await service.getByBoardCode('');
+    await service.getByBoard('');
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });

@@ -15,8 +15,8 @@ import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
-import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
+import { ApplicationDecision } from '../application-decision.entity';
 import {
   ApplicationModificationCreateDto,
   ApplicationModificationUpdateDto,
@@ -33,6 +33,21 @@ describe('ApplicationModificationService', () => {
 
   let mockModification;
   let mockModificationCreateDto;
+
+  const BOARD_RELATIONS: FindOptionsRelations<ApplicationModification> = {
+    application: {
+      type: true,
+      region: true,
+      localGovernment: true,
+      decisionMeetings: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+  };
 
   const DEFAULT_RELATIONS: FindOptionsRelations<ApplicationModification> = {
     modifiesDecisions: true,
@@ -127,13 +142,13 @@ describe('ApplicationModificationService', () => {
   });
 
   it('should have correct filter condition in getByCode', async () => {
-    const fakeBoardCode = 'fake';
+    const fakeBoardUuid = 'fake';
     const findOptions = {
-      where: { card: { board: { code: fakeBoardCode } } },
-      relations: DEFAULT_RELATIONS,
+      where: { card: { boardUuid: fakeBoardUuid } },
+      relations: BOARD_RELATIONS,
     };
 
-    await service.getByBoardCode(fakeBoardCode);
+    await service.getByBoard(fakeBoardUuid);
 
     expect(modificationRepoMock.find).toBeCalledWith(findOptions);
   });

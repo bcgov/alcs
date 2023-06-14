@@ -1,9 +1,9 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Application } from '../../alcs/application/application.entity';
-import { CardDto } from '../../alcs/card/card.dto';
-import { Card } from '../../alcs/card/card.entity';
+import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import {
   ApplicationForReconsiderationDto,
@@ -16,9 +16,9 @@ import {
 import { ApplicationReconsideration } from '../../alcs/application-decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationOutcomeType } from '../../alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
-import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
+import { Application } from '../../alcs/application/application.entity';
+import { CardDto } from '../../alcs/card/card.dto';
+import { Card } from '../../alcs/card/card.entity';
 
 @Injectable()
 export class ReconsiderationProfile extends AutomapperProfile {
@@ -92,7 +92,7 @@ export class ReconsiderationProfile extends AutomapperProfile {
           (a) => a.reconsideredDecisions,
           mapFrom((rd) =>
             this.mapper.mapArray(
-              rd.reconsidersDecisions,
+              rd.reconsidersDecisions ?? [],
               ApplicationDecision,
               ApplicationDecisionDto,
             ),
@@ -101,21 +101,25 @@ export class ReconsiderationProfile extends AutomapperProfile {
         forMember(
           (a) => a.resultingDecision,
           mapFrom((rd) =>
-            this.mapper.map(
-              rd.resultingDecision,
-              ApplicationDecision,
-              ApplicationDecisionDto,
-            ),
+            rd.resultingDecision
+              ? this.mapper.map(
+                  rd.resultingDecision,
+                  ApplicationDecision,
+                  ApplicationDecisionDto,
+                )
+              : undefined,
           ),
         ),
         forMember(
           (a) => a.reviewOutcome,
           mapFrom((rd) =>
-            this.mapper.map(
-              rd.reviewOutcome,
-              ApplicationReconsiderationOutcomeType,
-              ApplicationReconsiderationOutcomeCodeDto,
-            ),
+            rd.reviewOutcome
+              ? this.mapper.map(
+                  rd.reviewOutcome,
+                  ApplicationReconsiderationOutcomeType,
+                  ApplicationReconsiderationOutcomeCodeDto,
+                )
+              : null,
           ),
         ),
       );

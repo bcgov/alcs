@@ -16,14 +16,15 @@ const editLink = new Map<string, string>([['IR', './info-request']]);
 
 const SORTING_ORDER = {
   //high comes first, 1 shows at bottom
-  MODIFICATION_REVIEW: 11,
-  MODIFICATION_REQUEST: 10,
-  CHAIR_REVIEW_DECISION: 9,
-  AUDITED_DECISION: 8,
-  DECISION_MADE: 7,
-  VISIT_REPORTS: 6,
-  VISIT_REQUESTS: 5,
-  ACKNOWLEDGE_COMPLETE: 4,
+  MODIFICATION_REVIEW: 12,
+  MODIFICATION_REQUEST: 11,
+  CHAIR_REVIEW_DECISION: 10,
+  AUDITED_DECISION: 9,
+  DECISION_MADE: 8,
+  VISIT_REPORTS: 7,
+  VISIT_REQUESTS: 6,
+  ACKNOWLEDGE_COMPLETE: 5,
+  RECEIVED_ALL_ITEMS: 4,
   FEE_RECEIVED: 3,
   ACKNOWLEDGED_INCOMPLETE: 2,
   SUBMITTED: 1,
@@ -130,6 +131,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
       });
     }
 
+    if (noticeOfIntent.dateReceivedAllItems) {
+      mappedEvents.push({
+        name: 'Received All Items',
+        startDate: new Date(noticeOfIntent.dateReceivedAllItems + SORTING_ORDER.FEE_RECEIVED),
+        isFulfilled: true,
+      });
+    }
+
     for (const [index, decision] of decisions.entries()) {
       if (decision.auditDate) {
         mappedEvents.push({
@@ -179,6 +188,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
         startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
         isFulfilled: true,
       });
+
+      if (modification.outcomeNotificationDate) {
+        events.push({
+          name: `Modification Request Reviewed #${modifications.length - index} - ${modification.reviewOutcome.label}`,
+          startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
+          isFulfilled: true,
+        });
+      }
     }
     return events;
   }

@@ -4,9 +4,10 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
@@ -31,6 +32,21 @@ describe('ApplicationService', () => {
   let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+
+  const DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
+    status: true,
+    assignee: true,
+    type: true,
+  };
+  const BOARD_RELATIONS: FindOptionsRelations<Application> = {
+    type: true,
+    card: {
+      ...DEFAULT_CARD_RELATIONS,
+    },
+    region: true,
+    decisionMeetings: true,
+    localGovernment: true,
+  };
 
   beforeEach(async () => {
     mockApplicationTimeService = createMock();
@@ -271,5 +287,21 @@ describe('ApplicationService', () => {
       },
     });
     expect(result).toBeDefined();
+  });
+
+  it('should get apps by board code', async () => {
+    applicationRepositoryMock.find.mockResolvedValue([]);
+
+    const fakeBoardUuid = 'fake';
+    await applicationService.getByBoard(fakeBoardUuid);
+    expect(applicationRepositoryMock.find).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.find).toHaveBeenCalledWith({
+      where: {
+        card: {
+          boardUuid: fakeBoardUuid,
+        },
+      },
+      relations: BOARD_RELATIONS,
+    });
   });
 });

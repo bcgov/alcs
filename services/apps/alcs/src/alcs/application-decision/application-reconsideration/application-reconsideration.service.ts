@@ -43,6 +43,23 @@ export class ApplicationReconsiderationService {
     private applicationDecisionService: ApplicationDecisionV1Service,
   ) {}
 
+  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
+    {
+      application: {
+        type: true,
+        region: true,
+        localGovernment: true,
+        decisionMeetings: true,
+      },
+      card: {
+        board: true,
+        type: true,
+        status: true,
+        assignee: true,
+      },
+      type: true,
+    };
+
   private DEFAULT_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
     {
       application: {
@@ -63,8 +80,11 @@ export class ApplicationReconsiderationService {
       reviewOutcome: true,
     };
 
-  getByBoardCode(boardCode: string) {
-    return this.getBy({ card: { board: { code: boardCode } } });
+  getByBoard(boardUuid: string) {
+    return this.reconsiderationRepository.find({
+      where: { card: { boardUuid } },
+      relations: this.BOARD_RECONSIDERATION_RELATIONS,
+    });
   }
 
   getByApplication(applicationFileNumber: string) {

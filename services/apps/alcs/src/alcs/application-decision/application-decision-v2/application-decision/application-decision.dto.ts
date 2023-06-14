@@ -137,6 +137,9 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   @IsUUID()
   @IsOptional()
   modifiesUuid?: string;
+
+  @IsOptional()
+  override isDraft = true;
 }
 
 export class ApplicationDecisionOutcomeCodeDto extends BaseCodeDto {

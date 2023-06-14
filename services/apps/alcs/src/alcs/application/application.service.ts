@@ -44,14 +44,24 @@ export const APPLICATION_EXPIRATION_DAY_RANGES = {
 export class ApplicationService {
   private DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
     status: true,
-    board: true,
     assignee: true,
     type: true,
   };
+  private BOARD_RELATIONS: FindOptionsRelations<Application> = {
+    type: true,
+    card: {
+      ...this.DEFAULT_CARD_RELATIONS,
+    },
+    region: true,
+    decisionMeetings: true,
+    localGovernment: true,
+  };
+
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
     card: {
       ...this.DEFAULT_CARD_RELATIONS,
+      board: true,
     },
     region: true,
     decisionMeetings: true,
@@ -219,6 +229,17 @@ export class ApplicationService {
     });
   }
 
+  async getByBoard(boardUuid: string): Promise<any[]> {
+    return await this.applicationRepository.find({
+      where: {
+        card: {
+          boardUuid,
+        },
+      },
+      relations: this.BOARD_RELATIONS,
+    });
+  }
+
   async get(fileNumber: string) {
     return this.applicationRepository.findOne({
       where: {
@@ -304,6 +325,7 @@ export class ApplicationService {
 
     applicationsProcessingTimes.forEach((val, key) => {
       if (
+        val.activeDays &&
         val.activeDays >= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_START &&
         val.activeDays <= APPLICATION_EXPIRATION_DAY_RANGES.ACTIVE_DAYS_END
       ) {

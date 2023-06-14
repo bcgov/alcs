@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
@@ -18,6 +19,7 @@ describe('DecisionInputComponent', () => {
   let mockApplicationDecisionV2Service: DeepMocked<ApplicationDecisionV2Service>;
   let mockApplicationReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockApplicationModificationService: DeepMocked<ApplicationModificationService>;
+  let mockApplicationDetailService: DeepMocked<ApplicationDetailService>;
   let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
   let mockMatDialog: DeepMocked<MatDialog>;
@@ -30,6 +32,7 @@ describe('DecisionInputComponent', () => {
     mockRouter = createMock();
     mockRouter.navigateByUrl.mockResolvedValue(true);
     mockMatDialog = createMock();
+    mockApplicationDetailService = createMock();
 
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -47,6 +50,7 @@ describe('DecisionInputComponent', () => {
           provide: ApplicationModificationService,
           useValue: mockApplicationModificationService,
         },
+        { provide: ApplicationDetailService, useValue: mockApplicationDetailService },
         {
           provide: ToastService,
           useValue: mockToastService,

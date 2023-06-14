@@ -21,6 +21,7 @@ export class NoticeOfIntentModificationService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async fetchByFileNumber(fileNumber: string) {
+    this.clearModifications();
     try {
       const modifications = await firstValueFrom(
         this.http.get<NoticeOfIntentModificationDto[]>(`${this.url}/notice-of-intent/${fileNumber}`)
@@ -76,5 +77,9 @@ export class NoticeOfIntentModificationService {
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete modification');
     }
+  }
+
+  clearModifications() {
+    this.$modifications.next([]);
   }
 }

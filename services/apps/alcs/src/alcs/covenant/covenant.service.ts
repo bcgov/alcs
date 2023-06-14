@@ -113,9 +113,9 @@ export class CovenantService {
     });
   }
 
-  async getByBoardCode(boardCode: string) {
+  async getByBoard(boardUuid: string) {
     return this.repository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: { card: { boardUuid } },
       relations: this.DEFAULT_RELATIONS,
     });
   }

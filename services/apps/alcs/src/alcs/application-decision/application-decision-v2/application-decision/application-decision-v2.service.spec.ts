@@ -14,13 +14,13 @@ import {
 } from '../../../../../test/mocks/mockEntities';
 import { DocumentService } from '../../../../document/document.service';
 import { ApplicationService } from '../../../application/application.service';
-import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
-import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionService } from '../../application-decision-condition/application-decision-condition.service';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationDecisionV2Service } from './application-decision-v2.service';
 import {
   CreateApplicationDecisionDto,
@@ -208,7 +208,7 @@ describe('ApplicationDecisionV2Service', () => {
       );
     });
 
-    it('should create a decision and update the application if this was the first decision', async () => {
+    it('should create a decision', async () => {
       mockDecisionRepository.find.mockResolvedValue([]);
       mockDecisionRepository.findOne.mockResolvedValue({
         documents: [] as ApplicationDecisionDocument[],
@@ -220,7 +220,7 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
-        isDraft: true,
+        isDraft: false,
       } as CreateApplicationDecisionDto;
 
       await service.create(
@@ -231,16 +231,10 @@ describe('ApplicationDecisionV2Service', () => {
       );
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalledWith(
-        mockApplication,
-        {
-          decisionDate,
-        },
-      );
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
     });
 
-    it('should fail create a decision and update application if the resolution number is already in use', async () => {
+    it('should fail create a decision if the resolution number is already in use', async () => {
       mockDecisionRepository.findOne.mockResolvedValue(
         {} as ApplicationDecision,
       );
@@ -324,7 +318,7 @@ describe('ApplicationDecisionV2Service', () => {
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
         outcomeCode: 'New Outcome',
-        isDraft: true,
+        isDraft: false,
       };
 
       await service.update(
@@ -341,6 +335,32 @@ describe('ApplicationDecisionV2Service', () => {
         mockApplication.uuid,
         {
           decisionDate,
+        },
+      );
+    });
+
+    it('should update decision and update the application date to null if it is draft decision', async () => {
+      const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
+      const decisionUpdate: UpdateApplicationDecisionDto = {
+        date: decisionDate.getTime(),
+        outcomeCode: 'New Outcome',
+        isDraft: true,
+      };
+
+      await service.update(
+        mockDecision.uuid,
+        decisionUpdate,
+        undefined,
+        undefined,
+      );
+
+      expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
+      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
+      expect(mockApplicationService.updateByUuid).toBeCalledWith(
+        '1111-1111-1111-1111',
+        {
+          decisionDate: null,
         },
       );
     });

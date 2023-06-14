@@ -424,6 +424,7 @@ export class ApplicationSubmissionService {
       },
       relations: {
         createdBy: true,
+        status: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -509,6 +510,7 @@ export class ApplicationSubmissionService {
             },
             parcels: true,
           },
+          status: true,
         },
       });
     }

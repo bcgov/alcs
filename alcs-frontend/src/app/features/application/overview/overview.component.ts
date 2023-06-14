@@ -64,6 +64,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .pipe(
         tap((app) => {
           if (app) {
+            this.clearComponentData();
+
             this.meetingService.fetch(app.fileNumber);
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
@@ -87,6 +89,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         if (application) {
           this.summary = application.summary || '';
           this.application = application;
+
           this.events = this.mapApplicationToEvents(
             application,
             meetings,
@@ -99,9 +102,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy() {
+    await this.clearComponentData();
+
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  private async clearComponentData() {
+    this.$decisions.next([]);
+    this.$review.next(undefined);
   }
 
   private mapApplicationToEvents(

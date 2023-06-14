@@ -15,15 +15,15 @@ import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';
 import { ApplicationService } from '../../../application/application.service';
-import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
-import { ApplicationDecision } from '../../application-decision.entity';
-import { ApplicationModification } from '../../application-modification/application-modification.entity';
-import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionService } from '../../application-decision-condition/application-decision-condition.service';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
+import { ApplicationModification } from '../../application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
@@ -283,7 +283,11 @@ export class ApplicationDecisionV2Service {
     }
 
     let dateHasChanged = false;
-    if (updateDto.date && existingDecision.date !== new Date(updateDto.date)) {
+    if (
+      updateDto.date &&
+      existingDecision.date !== new Date(updateDto.date) &&
+      !existingDecision.isDraft
+    ) {
       dateHasChanged = true;
       existingDecision.date = new Date(updateDto.date);
     }
@@ -299,16 +303,19 @@ export class ApplicationDecisionV2Service {
     );
 
     //If we are updating the date, we need to check if it's the first decision and if so update the application decisionDate
+    const existingDecisions = await this.getByAppFileNumber(
+      existingDecision.application!.fileNumber,
+    );
     if (dateHasChanged) {
-      const existingDecisions = await this.getByAppFileNumber(
-        existingDecision.application!.fileNumber,
-      );
-
       const decisionIndex = existingDecisions.findIndex(
         (dec) => dec.uuid === existingDecision.uuid,
       );
 
-      if (decisionIndex === existingDecisions.length - 1) {
+      if (
+        decisionIndex === existingDecisions.length - 1 &&
+        existingDecisions.filter((e) => !e.isDraft).length > 0 &&
+        updatedDecision
+      ) {
         await this.applicationService.updateByUuid(
           existingDecision.applicationUuid!,
           {
@@ -316,6 +323,16 @@ export class ApplicationDecisionV2Service {
           },
         );
       }
+    } else if (
+      updatedDecision.isDraft &&
+      existingDecisions.filter((e) => !e.isDraft).length < 1
+    ) {
+      await this.applicationService.updateByUuid(
+        existingDecision.applicationUuid!,
+        {
+          decisionDate: null,
+        },
+      );
     }
 
     return this.get(existingDecision.uuid);
@@ -497,15 +514,6 @@ export class ApplicationDecisionV2Service {
       createDto.resolutionNumber,
       createDto.resolutionYear,
     );
-
-    const existingDecisions = await this.getByAppFileNumber(
-      application.fileNumber,
-    );
-    if (existingDecisions.length === 0) {
-      await this.applicationService.update(application, {
-        decisionDate: decision.date,
-      });
-    }
 
     const savedDecision = await this.appDecisionRepository.save(decision, {
       transaction: true,

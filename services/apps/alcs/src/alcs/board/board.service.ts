@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
-import { ApplicationService } from '../application/application.service';
 import { CardService } from '../card/card.service';
 import { Board } from './board.entity';
 
@@ -19,7 +18,6 @@ export class BoardService {
   constructor(
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
-    private applicationService: ApplicationService,
     private cardService: CardService,
   ) {}
 
@@ -41,14 +39,6 @@ export class BoardService {
         return statusA.order - statusB.order;
       });
       return board;
-    });
-  }
-
-  getApplicationsByCode(code: string) {
-    return this.applicationService.getMany({
-      card: {
-        board: { code },
-      },
     });
   }
 

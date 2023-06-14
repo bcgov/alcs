@@ -116,43 +116,43 @@ export interface ApplicationSubmissionDto {
   typeCode: string;
 
   //NFU Data
-  nfuHectares?: string;
-  nfuPurpose?: string;
-  nfuOutsideLands?: string;
-  nfuAgricultureSupport?: string;
-  nfuWillImportFill?: boolean;
-  nfuTotalFillPlacement?: string;
-  nfuMaxFillDepth?: string;
-  nfuFillVolume?: string;
-  nfuProjectDurationAmount?: string;
-  nfuProjectDurationUnit?: string;
-  nfuFillTypeDescription?: string;
-  nfuFillOriginDescription?: string;
+  nfuHectares: string | null;
+  nfuPurpose: string | null;
+  nfuOutsideLands: string | null;
+  nfuAgricultureSupport: string | null;
+  nfuWillImportFill: boolean | null;
+  nfuTotalFillPlacement: string | null;
+  nfuMaxFillDepth: string | null;
+  nfuFillVolume: string | null;
+  nfuProjectDurationAmount: string | null;
+  nfuProjectDurationUnit: string | null;
+  nfuFillTypeDescription: string | null;
+  nfuFillOriginDescription: string | null;
 
   //TUR Data
-  turPurpose?: string;
-  turOutsideLands?: string;
-  turAgriculturalActivities?: string;
-  turReduceNegativeImpacts?: string;
-  turTotalCorridorArea?: string;
+  turPurpose: string | null;
+  turOutsideLands: string | null;
+  turAgriculturalActivities: string | null;
+  turReduceNegativeImpacts: string | null;
+  turTotalCorridorArea: string | null;
 
   //Subdivision Fields
-  subdPurpose?: string;
-  subdSuitability?: string;
-  subdAgricultureSupport?: string;
-  subdIsHomeSiteSeverance?: boolean;
+  subdPurpose: string | null;
+  subdSuitability: string | null;
+  subdAgricultureSupport: string | null;
+  subdIsHomeSiteSeverance: boolean | null;
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
-  soilIsNOIFollowUp?: boolean | null;
-  soilNOIIDs?: string | null;
-  soilHasPreviousALCAuthorization?: boolean | null;
-  soilApplicationIDs?: string | null;
-  soilPurpose?: string | null;
-  soilTypeRemoved?: string | null;
-  soilReduceNegativeImpacts?: string | null;
-  soilToRemoveVolume?: number | null;
-  soilToRemoveArea?: number | null;
+  soilIsNOIFollowUp: boolean | null;
+  soilNOIIDs: string | null;
+  soilHasPreviousALCAuthorization: boolean | null;
+  soilApplicationIDs: string | null;
+  soilPurpose: string | null;
+  soilTypeRemoved: string | null;
+  soilReduceNegativeImpacts: string | null;
+  soilToRemoveVolume: number | null;
+  soilToRemoveArea: number | null;
   soilToRemoveMaximumDepth?: number | null;
   soilToRemoveAverageDepth?: number | null;
   soilAlreadyRemovedVolume?: number | null;
@@ -161,18 +161,18 @@ export interface ApplicationSubmissionDto {
   soilAlreadyRemovedAverageDepth?: number | null;
   soilToPlaceVolume?: number | null;
   soilToPlaceArea?: number | null;
-  soilToPlaceMaximumDepth?: number | null;
-  soilToPlaceAverageDepth?: number | null;
-  soilAlreadyPlacedVolume?: number | null;
-  soilAlreadyPlacedArea?: number | null;
-  soilAlreadyPlacedMaximumDepth?: number | null;
-  soilAlreadyPlacedAverageDepth?: number | null;
-  soilProjectDurationAmount?: number | null;
-  soilProjectDurationUnit?: string;
-  soilFillTypeToPlace?: string;
-  soilAlternativeMeasures?: string;
-  soilIsExtractionOrMining?: boolean;
-  soilHasSubmittedNotice?: boolean;
+  soilToPlaceMaximumDepth: number | null;
+  soilToPlaceAverageDepth: number | null;
+  soilAlreadyPlacedVolume: number | null;
+  soilAlreadyPlacedArea: number | null;
+  soilAlreadyPlacedMaximumDepth: number | null;
+  soilAlreadyPlacedAverageDepth: number | null;
+  soilProjectDurationAmount: number | null;
+  soilProjectDurationUnit: string | null;
+  soilFillTypeToPlace: string | null;
+  soilAlternativeMeasures: string | null;
+  soilIsExtractionOrMining: boolean | null;
+  soilHasSubmittedNotice: boolean | null;
 }
 
 export interface ApplicationDto {
@@ -206,9 +206,10 @@ export interface ApplicationDto {
   agCapSource?: string;
   agCapMap?: string;
   agCapConsultant?: string;
+  staffObservations?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -234,7 +235,8 @@ export interface UpdateApplicationDto {
   agCapSource?: string;
   agCapMap?: string;
   agCapConsultant?: string;
+  staffObservations?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }

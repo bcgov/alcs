@@ -14,6 +14,7 @@ import {
 import { FileNumberService } from '../../file-number/file-number.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
+import { ApplicationTimeData } from '../application/application-time-tracking.service';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
@@ -81,12 +82,16 @@ export class NoticeOfIntentService {
     return noticeOfIntent;
   }
 
-  mapToDtos(noticeOfIntents: NoticeOfIntent[]) {
-    return this.mapper.mapArrayAsync(
-      noticeOfIntents,
-      NoticeOfIntent,
-      NoticeOfIntentDto,
-    );
+  async mapToDtos(noticeOfIntents: NoticeOfIntent[]) {
+    const uuids = noticeOfIntents.map((noi) => noi.uuid);
+    const timeMap = await this.getTimes(uuids);
+
+    return noticeOfIntents.map((noi) => ({
+      ...this.mapper.map(noi, NoticeOfIntent, NoticeOfIntentDto),
+      activeDays: timeMap.get(noi.uuid)?.activeDays ?? null,
+      pausedDays: timeMap.get(noi.uuid)?.pausedDays ?? null,
+      paused: timeMap.get(noi.uuid)?.pausedDays !== null,
+    }));
   }
 
   async getByCardUuid(cardUuid: string) {
@@ -133,9 +138,9 @@ export class NoticeOfIntentService {
     });
   }
 
-  async getByBoardCode(boardCode: string) {
+  async getByBoard(boardUuid: string) {
     return this.repository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: { card: { boardUuid } },
       relations: this.DEFAULT_RELATIONS,
     });
   }
@@ -249,5 +254,32 @@ export class NoticeOfIntentService {
         localGovernment: true,
       },
     });
+  }
+
+  async getTimes(uuids: string[]) {
+    const activeCounts = (await this.repository.query(
+      `
+        SELECT * from alcs.calculate_noi_active_days($1)`,
+      [`{${uuids.join(', ')}}`],
+    )) as {
+      noi_uuid: string;
+      paused_days: number;
+      active_days: number;
+    }[];
+
+    const results = new Map<string, ApplicationTimeData>();
+    uuids.forEach((appUuid) => {
+      results.set(appUuid, {
+        pausedDays: null,
+        activeDays: null,
+      });
+    });
+    activeCounts.forEach((time) => {
+      results.set(time.noi_uuid, {
+        activeDays: time.active_days,
+        pausedDays: time.paused_days,
+      });
+    });
+    return results;
   }
 }

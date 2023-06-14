@@ -12,12 +12,11 @@ import {
 import { Base } from '../../common/entities/base.entity';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
+import { ApplicationDecisionMeeting } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ApplicationDecisionMeeting } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
-import { StaffJournal } from '../staff-journal/staff-journal.entity';
 import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
@@ -210,6 +209,14 @@ export class Application extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
+    comment: 'ALC Staff Observations and Comments',
+    nullable: true,
+  })
+  staffObservations?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
     comment: 'Non-farm use type',
     nullable: true,
   })
@@ -225,10 +232,10 @@ export class Application extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'The date at which the non-farm use ends',
+    comment: 'The date at which the proposal use ends',
     nullable: true,
   })
-  nfuEndDate?: Date | null;
+  proposalEndDate?: Date | null;
 
   @AutoMap(() => [StatusHistory])
   @Column({

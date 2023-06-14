@@ -25,18 +25,18 @@ import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  RETROACTIVE_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
+  RETROACTIVE_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
 import { CardData, CardSelectedEvent, CardType } from '../../shared/card/card.component';
 import { DragDropColumn } from '../../shared/drag-drop-board/drag-drop-column.interface';
+import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
+import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
 import { ApplicationDialogComponent } from './dialogs/application/application-dialog.component';
 import { CreateApplicationDialogComponent } from './dialogs/application/create/create-application-dialog.component';
 import { CovenantDialogComponent } from './dialogs/covenant/covenant-dialog.component';
 import { CreateCovenantDialogComponent } from './dialogs/covenant/create/create-covenant-dialog.component';
-import { CreateAppModificationDialogComponent } from './dialogs/app-modification/create/create-app-modification-dialog.component';
-import { AppModificationDialogComponent } from './dialogs/app-modification/app-modification-dialog.component';
 import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification/create/create-noi-modification-dialog.component';
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
@@ -125,6 +125,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cards = [];
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -191,6 +192,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.MODI:
       case CardType.COV:
       case CardType.NOI:
+      case CardType.NOI_MODI:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -206,6 +208,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private setupBoard(board: BoardWithFavourite) {
+    // clear cards to remove flickering
+    this.cards = [];
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
 
     this.loadCards(board.code);
@@ -213,9 +217,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.boardIsFavourite = board.isFavourite;
     this.boardHasCreateApplication = board.code === BOARD_TYPE_CODES.VETT;
     this.boardHasCreatePlanningReview = board.code === BOARD_TYPE_CODES.EXEC;
-    this.boardHasCreateReconsideration = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateReconsideration = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
     this.boardHasCreateAppModification = board.code === BOARD_TYPE_CODES.CEO;
-    this.boardHasCreateCovenant = board.code !== BOARD_TYPE_CODES.VETT;
+    this.boardHasCreateCovenant = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
     this.boardHasCreateNOI = board.code === BOARD_TYPE_CODES.VETT;
     this.boardHasCreateNOIModification = board.code === BOARD_TYPE_CODES.NOI;
 
@@ -240,38 +244,37 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.mapNoticeOfIntentModificationToCard.bind(this)
     );
     if (boardCode === BOARD_TYPE_CODES.VETT) {
-      this.cards = [
-        ...mappedApps,
-        ...mappedRecons,
-        ...mappedModifications,
-        ...mappedReviewMeetings,
-        ...mappedCovenants,
-        ...mappedNoticeOfIntents,
-        ...mappedNoticeOfIntentModifications,
-      ].sort((a, b) => {
+      const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
           return b.dateReceived - a.dateReceived;
         }
         return b.highPriority ? 1 : -1;
-      });
+      };
+      this.cards = [
+        ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
+        ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
+        ...[...mappedReviewMeetings, ...mappedCovenants].sort(vettingSort),
+      ];
     } else {
       const sorted = [];
       sorted.push(
         // high priority
-        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntents.filter((a) => a.highPriority).sort((a, b) => b.activeDays ?? 0 - (a.activeDays ?? 0)),
         ...mappedNoticeOfIntentModifications
           .filter((a) => a.highPriority)
-          .sort((a, b) => b.activeDays! - a.activeDays!),
+          .sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedApps.filter((a) => a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
-        ...mappedNoticeOfIntents.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+        ...mappedNoticeOfIntents
+          .filter((a) => !a.highPriority)
+          .sort((a, b) => (b.activeDays ?? 0) - (a.activeDays ?? 0)),
         ...mappedNoticeOfIntentModifications
           .filter((a) => !a.highPriority)
-          .sort((a, b) => b.activeDays! - a.activeDays!),
+          .sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedApps.filter((a) => !a.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
@@ -381,11 +384,12 @@ export class BoardComponent implements OnInit, OnDestroy {
       id: noticeOfIntent.card.uuid,
       labels: noticeOfIntent.retroactive ? [RETROACTIVE_TYPE_LABEL] : [],
       cardType: CardType.NOI,
-      paused: false,
+      paused: noticeOfIntent.paused,
       highPriority: noticeOfIntent.card.highPriority,
       cardUuid: noticeOfIntent.card.uuid,
       dateReceived: noticeOfIntent.card.createdAt,
       cssClasses: ['notice-of-intent'],
+      activeDays: noticeOfIntent.activeDays ?? undefined,
     };
   }
 

@@ -38,6 +38,6 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     NoticeOfIntentDecisionController,
     NoticeOfIntentModificationController,
   ],
-  exports: [NoticeOfIntentModificationService],
+  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionService],
 })
 export class NoticeOfIntentDecisionModule {}

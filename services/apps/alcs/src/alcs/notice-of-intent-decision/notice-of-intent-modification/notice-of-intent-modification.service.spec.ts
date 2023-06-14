@@ -31,6 +31,19 @@ describe('NoticeOfIntentModificationService', () => {
   let mockModification;
   let mockModificationCreateDto: NoticeOfIntentModificationCreateDto;
 
+  const BOARD_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
+    noticeOfIntent: {
+      region: true,
+      localGovernment: true,
+    },
+    card: {
+      board: true,
+      type: true,
+      status: true,
+      assignee: true,
+    },
+  };
+
   const DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentModification> = {
     modifiesDecisions: true,
     noticeOfIntent: {
@@ -113,13 +126,13 @@ describe('NoticeOfIntentModificationService', () => {
   });
 
   it('should have correct filter condition in getByCode', async () => {
-    const fakeBoardCode = 'fake';
+    const fakeBoardUuid = 'fake';
     const findOptions = {
-      where: { card: { board: { code: fakeBoardCode } } },
-      relations: DEFAULT_RELATIONS,
+      where: { card: { boardUuid: fakeBoardUuid } },
+      relations: BOARD_RELATIONS,
     };
 
-    await service.getByBoardCode(fakeBoardCode);
+    await service.getByBoard(fakeBoardUuid);
 
     expect(modificationRepoMock.find).toBeCalledWith(findOptions);
   });

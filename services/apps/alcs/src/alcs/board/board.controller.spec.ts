@@ -8,7 +8,7 @@ import { BoardAutomapperProfile } from '../../common/automapper/board.automapper
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationService } from '../application/application.service';
-import { CARD_TYPE, CardType } from '../card/card-type/card-type.entity';
+import { CardType, CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
@@ -46,22 +46,23 @@ describe('BoardController', () => {
     noiModificationService = createMock();
     mockBoard = new Board({
       allowedCardTypes: [],
+      uuid: 'fake-board',
     });
 
     boardService.getOneOrFail.mockResolvedValue(mockBoard);
-    boardService.getApplicationsByCode.mockResolvedValue([]);
+    appService.getByBoard.mockResolvedValue([]);
     appService.mapToDtos.mockResolvedValue([]);
-    appReconsiderationService.getByBoardCode.mockResolvedValue([]);
+    appReconsiderationService.getByBoard.mockResolvedValue([]);
     appReconsiderationService.mapToDtos.mockResolvedValue([]);
-    planningReviewService.getByBoardCode.mockResolvedValue([]);
+    planningReviewService.getByBoard.mockResolvedValue([]);
     planningReviewService.mapToDtos.mockResolvedValue([]);
-    modificationService.getByBoardCode.mockResolvedValue([]);
+    modificationService.getByBoard.mockResolvedValue([]);
     modificationService.mapToDtos.mockResolvedValue([]);
-    covenantService.getByBoardCode.mockResolvedValue([]);
+    covenantService.getByBoard.mockResolvedValue([]);
     covenantService.mapToDtos.mockResolvedValue([]);
-    noticeOfIntentService.getByBoardCode.mockResolvedValue([]);
+    noticeOfIntentService.getByBoard.mockResolvedValue([]);
     noticeOfIntentService.mapToDtos.mockResolvedValue([]);
-    noiModificationService.getByBoardCode.mockResolvedValue([]);
+    noiModificationService.getByBoard.mockResolvedValue([]);
     noiModificationService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
@@ -121,24 +122,21 @@ describe('BoardController', () => {
   });
 
   it('should call through to service for get apps', async () => {
-    const boardCode = 'fake-board';
     mockBoard.allowedCardTypes = [
       new CardType({
         code: CARD_TYPE.APP,
       }),
     ];
 
-    await controller.getCards(boardCode);
+    await controller.getCards(mockBoard.uuid);
 
-    expect(boardService.getApplicationsByCode).toHaveBeenCalledTimes(1);
-    expect(boardService.getApplicationsByCode.mock.calls[0][0]).toEqual(
-      boardCode,
-    );
+    expect(appService.getByBoard).toHaveBeenCalledTimes(1);
+    expect(appService.getByBoard).toBeCalledWith(mockBoard.uuid);
     expect(appService.mapToDtos).toHaveBeenCalledTimes(1);
     expect(appReconsiderationService.mapToDtos).toHaveBeenCalledTimes(1);
-    expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(0);
+    expect(modificationService.getByBoard).toHaveBeenCalledTimes(0);
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
-    expect(planningReviewService.getByBoardCode).toHaveBeenCalledTimes(0);
+    expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(0);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
@@ -152,7 +150,7 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(planningReviewService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(1);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
@@ -166,7 +164,7 @@ describe('BoardController', () => {
 
     await controller.getCards(boardCode);
 
-    expect(modificationService.getByBoardCode).toHaveBeenCalledTimes(1);
+    expect(modificationService.getByBoard).toHaveBeenCalledTimes(1);
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 

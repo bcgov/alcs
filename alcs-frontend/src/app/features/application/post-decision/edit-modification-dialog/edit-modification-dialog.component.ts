@@ -28,6 +28,7 @@ export class EditModificationDialogComponent implements OnInit {
     reviewOutcomeCode: this.reviewOutcomeCodeControl,
     isTimeExtension: this.isTimeExtensionControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
+    outcomeNotificationDate: new FormControl<Date | null | undefined>(null),
     modifiesDecisions: new FormControl<string[]>([], [Validators.required]),
   });
 

@@ -141,16 +141,16 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should call out to service when cancelling an application', async () => {
+    const mockApplication = new ApplicationSubmission({
+      status: new ApplicationStatus({
+        code: APPLICATION_STATUS.IN_PROGRESS,
+      }),
+    });
+
     mockAppService.mapToDTOs.mockResolvedValue([
       {} as ApplicationSubmissionDto,
     ]);
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new ApplicationStatus({
-          code: APPLICATION_STATUS.IN_PROGRESS,
-        }),
-      }),
-    );
+    mockAppService.verifyAccessByUuid.mockResolvedValue(mockApplication);
     mockAppService.cancel.mockResolvedValue();
 
     const application = await controller.cancel('file-id', {
@@ -161,11 +161,15 @@ describe('ApplicationSubmissionController', () => {
 
     expect(application).toBeDefined();
     expect(mockAppService.cancel).toHaveBeenCalledTimes(1);
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledWith(
+      'file-id',
+      new User(),
+    );
   });
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
+    mockAppService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission({
         status: new ApplicationStatus({
           code: APPLICATION_STATUS.CANCELLED,
@@ -183,7 +187,11 @@ describe('ApplicationSubmissionController', () => {
       new BadRequestException('Can only cancel in progress Applications'),
     );
     expect(mockAppService.cancel).toHaveBeenCalledTimes(0);
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledWith(
+      'file-id',
+      new User(),
+    );
   });
 
   it('should call out to service when fetching an application', async () => {

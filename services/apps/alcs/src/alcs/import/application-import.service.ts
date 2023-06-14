@@ -86,8 +86,8 @@ const TYPE_MAPPING = {
 };
 
 @Injectable()
-export class ImportService {
-  private logger: Logger = new Logger(ImportService.name);
+export class ApplicationImportService {
+  private logger: Logger = new Logger(ApplicationImportService.name);
 
   constructor(
     private applicationService: ApplicationService,

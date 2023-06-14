@@ -58,25 +58,31 @@ export class BoardController {
     const allowedCodes = board.allowedCardTypes.map((type) => type.code);
 
     const applications = allowedCodes.includes(CARD_TYPE.APP)
-      ? await this.boardService.getApplicationsByCode(boardCode)
+      ? await this.applicationService.getByBoard(board.uuid)
       : [];
+
     const recons = allowedCodes.includes(CARD_TYPE.RECON)
-      ? await this.reconsiderationService.getByBoardCode(boardCode)
+      ? await this.reconsiderationService.getByBoard(board.uuid)
       : [];
+
     const modifications = allowedCodes.includes(CARD_TYPE.APP_MODI)
-      ? await this.appModificationService.getByBoardCode(boardCode)
+      ? await this.appModificationService.getByBoard(board.uuid)
       : [];
+
     const covenants = allowedCodes.includes(CARD_TYPE.COV)
-      ? await this.covenantService.getByBoardCode(boardCode)
+      ? await this.covenantService.getByBoard(board.uuid)
       : [];
+
     const noticeOfIntents = allowedCodes.includes(CARD_TYPE.NOI)
-      ? await this.noticeOfIntentService.getByBoardCode(boardCode)
+      ? await this.noticeOfIntentService.getByBoard(board.uuid)
       : [];
+
     const planningReviews = allowedCodes.includes(CARD_TYPE.PLAN)
-      ? await this.planningReviewService.getByBoardCode(boardCode)
+      ? await this.planningReviewService.getByBoard(board.uuid)
       : [];
+
     const noiModifications = allowedCodes.includes(CARD_TYPE.NOI_MODI)
-      ? await this.noiModificationService.getByBoardCode(boardCode)
+      ? await this.noiModificationService.getByBoard(board.uuid)
       : [];
 
     return {

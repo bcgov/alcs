@@ -36,21 +36,15 @@
     </div>
     <div class="decision-padding">
       <div class="subheading1">
-        Decision #{{ decisions.length - i }} -
+        Decision #{{ decisions.length - i }}
         <ng-container *ngIf="i === decisions.length - 1 && noticeOfIntent">
           <span class="days" matTooltip="Active Days">
             <mat-icon class="icon">calendar_month</mat-icon>
             {{ noticeOfIntent.activeDays }}
           </span>
-          <span class="days" matTooltip="Paused Days">
-            <mat-icon class="icon">pause</mat-icon>
-            {{ noticeOfIntent.pausedDays }}
-          </span>
-          -
         </ng-container>
         <ng-container *ngIf="!!decision.modifies">
-          <app-application-type-pill style="margin-left: -12px" [type]="modificationLabel"></app-application-type-pill>
-          &nbsp;-
+          <app-application-type-pill style="margin-left: 12px" [type]="modificationLabel"></app-application-type-pill>
         </ng-container>
         <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
       </div>

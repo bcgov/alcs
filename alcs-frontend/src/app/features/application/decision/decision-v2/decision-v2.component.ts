@@ -126,6 +126,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           await this.decisionService.update(uuid, {
             isDraft: true,
           });
+          await this.applicationDetailService.loadApplication(this.fileNumber);
 
           await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit`]);
         }
@@ -217,7 +218,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.decisionService.cleanDecisions();
+    this.decisionService.clearDecisions();
     this.$destroy.next();
     this.$destroy.complete();
   }

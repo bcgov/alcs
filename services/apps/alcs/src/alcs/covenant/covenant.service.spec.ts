@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { Application } from '../application/application.entity';
 import { ApplicationService } from '../application/application.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
@@ -107,7 +106,7 @@ describe('CovenantService', () => {
 
   it('should call through to the repo for get cards', async () => {
     mockRepository.find.mockResolvedValue([]);
-    await service.getByBoardCode('fake');
+    await service.getByBoard('fake');
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
