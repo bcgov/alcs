@@ -1,0 +1,56 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  Please consult the '
+  <a
+    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+    target="_blank"
+  >
+    What the Commission Considers
+  </a>
+  ' page of the ALC website for more information.
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="subtype"><h5>Select a Sub-Type for your Non-Adhering Residential Use application</h5></label>
+      <mat-radio-group
+        class="radio-group"
+        id="subtype"
+        formControlName="subtype"
+        (change)="onChangeSubtype($event)"
+        aria-label="Select an option"
+      >
+        <mat-radio-button value="ARFU">Additional Residence for Farm Use</mat-radio-button>
+        <mat-radio-button value="PRIN">Principal Residence More Than 500m2</mat-radio-button>
+        <mat-radio-button value="TOUR">Non-Adhering Tourism Accommodation</mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="subtype.invalid && (subtype.dirty || subtype.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="subtype.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row" *ngIf="!subtype.value">
+      <hr />
+      Please select a sub-type above to view proposal questions
+    </div>
+  </div>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

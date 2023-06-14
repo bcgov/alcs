@@ -135,7 +135,8 @@ export class ApplicationSubmissionService {
     this.setNFUFields(applicationSubmission, updateDto);
     this.setTURFields(applicationSubmission, updateDto);
     await this.setSUBDFields(applicationSubmission, updateDto);
-    this.setSoilFields(applicationSubmission, updateDto);
+    await this.setSoilFields(applicationSubmission, updateDto);
+    this.setNARUFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -846,5 +847,15 @@ export class ApplicationSubmissionService {
         applicationUuid,
       );
     }
+  }
+
+  private setNARUFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.naruSubtype = filterUndefined(
+      updateDto.naruSubtype,
+      applicationSubmission.naruSubtype,
+    );
   }
 }

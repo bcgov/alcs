@@ -138,6 +138,13 @@
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
       ></app-pfrs-proposal>
+      <app-naru-proposal
+        *ngIf="applicationSubmission.typeCode === 'NARU'"
+        [$applicationSubmission]="$applicationSubmission"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-naru-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
