@@ -59,7 +59,8 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="30" name="ag_cap_consultant" nullable="true" remarks="Consultant who determined the agricultural capability" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="31" name="nfu_use_type" nullable="true" remarks="Non-farm use type" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="32" name="nfu_use_sub_type" nullable="true" remarks="Non-farm use sub type" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="33" name="nfu_end_date" nullable="true" remarks="The date at which the non-farm use ends" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="33" name="proposal_end_date" nullable="true" remarks="The date at which the proposal use ends" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="34" name="staff_observations" nullable="true" remarks="ALC Staff Observations and Comments" size="2147483647" type="text" typeCode="12"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
@@ -1082,6 +1083,9 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_dc3046f87b3ecabadae16bc4a8b" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_38a14bc9166d9fac12861d07cd" unique="false">
+            <column ascending="true" name="board_uuid"/>
          </index>
       </table>
       <table name="card_history" remarks="" schema="alcs" type="TABLE">
