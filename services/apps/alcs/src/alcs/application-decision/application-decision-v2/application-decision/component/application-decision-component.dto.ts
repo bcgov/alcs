@@ -90,4 +90,5 @@ export class ApplicationDecisionComponentDto {
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
+  TURP = 'TURP',
 }

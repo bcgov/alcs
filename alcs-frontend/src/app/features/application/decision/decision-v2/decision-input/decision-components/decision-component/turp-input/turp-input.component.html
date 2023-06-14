@@ -1,0 +1,16 @@
+<form [formGroup]="form" class="turp-component-form">
+  <div class="grid-3">
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="nfuEndDatePicker.open()"
+        [matDatepicker]="nfuEndDatePicker"
+        formControlName="nfuEndDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="nfuEndDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #nfuEndDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

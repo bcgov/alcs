@@ -16,6 +16,9 @@ import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
+import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
+import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.component';
+import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
 
 export const decisionChildRoutes = [
   {
@@ -54,6 +57,9 @@ export const decisionChildRoutes = [
     NfuInputComponent,
     DecisionConditionComponent,
     DecisionConditionsComponent,
+    TurpInputComponent,
+    NfupComponent,
+    TurpComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })

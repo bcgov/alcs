@@ -7,6 +7,7 @@ import { ApplicationDto } from '../../../../services/application/application.dto
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
   ApplicationDecisionDto,
+  APPLICATION_DECISION_COMPONENT_TYPE,
   CeoCriterionDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -54,6 +55,8 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   application: ApplicationDto | undefined;
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
+
+  COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
 
   constructor(
     public dialog: MatDialog,

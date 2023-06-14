@@ -135,6 +135,7 @@ export interface DecisionCodesDto {
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
+  TURP = 'TURP'
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

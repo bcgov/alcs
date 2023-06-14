@@ -59,6 +59,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     }));
 
     const mappedProposalType = decisionComponentTypes.find((e) => e.code === this.application.type.code);
+    console.log('this.application.type.code', this.application.type.code);
 
     if (mappedProposalType) {
       const proposalDecisionType: DecisionComponentTypeMenuItem = {
@@ -91,9 +92,14 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           this.patchNfuFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+          this.patchTurpFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
         } as DecisionComponentDto);
@@ -109,6 +115,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   private patchNfuFields(component: DecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
+    component.nfuEndDate = this.application.proposalEndDate;
+  }
+
+  private patchTurpFields(component: DecisionComponentDto) {
+    console.log('this.patchTURPFields(component);');
     component.nfuEndDate = this.application.proposalEndDate;
   }
 

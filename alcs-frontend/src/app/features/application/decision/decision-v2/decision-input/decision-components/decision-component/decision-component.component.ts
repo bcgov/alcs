@@ -48,6 +48,7 @@ export class DecisionComponentComponent implements OnInit {
       this.agCapConsultant.setValue(this.data.agCapConsultant ? this.data.agCapConsultant : null);
 
       this.patchNfuFields();
+      this.patchTurpFields();
     }
 
     this.onFormValueChanges();
@@ -70,6 +71,10 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getNfuDataChange() };
       }
 
+      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+      }
+
       this.dataChange.emit(dataChange);
     });
   }
@@ -86,10 +91,24 @@ export class DecisionComponentComponent implements OnInit {
     }
   }
 
+  private patchTurpFields() {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+      this.form.addControl('nfuEndDate', this.nfuEndDate);
+
+      this.nfuEndDate.setValue(this.data.nfuEndDate ? new Date(this.data.nfuEndDate) : null);
+    }
+  }
+
   private getNfuDataChange() {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
       nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
+      nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
+    };
+  }
+
+  private getTurpDataChange() {
+    return {
       nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
     };
   }

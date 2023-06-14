@@ -51,6 +51,13 @@ export class ApplicationDecisionComponentService {
         this.patchNfuFields(component, updateDto);
       }
 
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.TURP
+      ) {
+        this.patchTurpFields(component, updateDto);
+      }
+
       updatedComponents.push(component);
     }
 
@@ -70,6 +77,15 @@ export class ApplicationDecisionComponentService {
       : null;
     component.nfuSubType = updateDto.nfuSubType;
     component.nfuType = updateDto.nfuType;
+  }
+
+  private patchTurpFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.nfuEndDate = updateDto.nfuEndDate
+      ? new Date(updateDto.nfuEndDate)
+      : null;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {
