@@ -125,6 +125,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.cards = [];
     this.$destroy.next();
     this.$destroy.complete();
   }
