@@ -109,7 +109,7 @@ export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
-  nfuEndDate?: number | null;
+  endDate?: number | null;
 }
 
 export interface DecisionComponentDto extends NfuDecisionComponentDto {
@@ -135,7 +135,7 @@ export interface DecisionCodesDto {
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
-  TURP = 'TURP'
+  TURP = 'TURP',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

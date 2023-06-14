@@ -72,9 +72,7 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.nfuEndDate = updateDto.nfuEndDate
-      ? new Date(updateDto.nfuEndDate)
-      : null;
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
     component.nfuSubType = updateDto.nfuSubType;
     component.nfuType = updateDto.nfuType;
   }
@@ -83,9 +81,7 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.nfuEndDate = updateDto.nfuEndDate
-      ? new Date(updateDto.nfuEndDate)
-      : null;
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {

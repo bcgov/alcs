@@ -41,7 +41,7 @@ export class UpdateApplicationDecisionComponentDto {
 
   @IsOptional()
   @IsNumber()
-  nfuEndDate?: number;
+  endDate?: number;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -76,7 +76,7 @@ export class ApplicationDecisionComponentDto {
   nfuSubType?: string;
 
   @AutoMap()
-  nfuEndDate?: number;
+  endDate?: number;
 
   @AutoMap()
   applicationDecisionUuid: string;
