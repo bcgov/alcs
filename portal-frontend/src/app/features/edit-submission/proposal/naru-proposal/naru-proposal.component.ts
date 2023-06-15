@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioChange } from '@angular/material/radio';
 import { Router } from '@angular/router';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   DOCUMENT_TYPE,
@@ -11,11 +11,9 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../../edit-submission.component';
-import { StepComponent } from '../../step.partial';
+import { FilesStepComponent } from '../../files-step.partial';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 
 @Component({
@@ -23,12 +21,8 @@ import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confi
   templateUrl: './naru-proposal.component.html',
   styleUrls: ['./naru-proposal.component.scss'],
 })
-export class NaruProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class NaruProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-
-  DOCUMENT_TYPE = DOCUMENT_TYPE;
 
   previousSubtype: string | null = null;
   subtype = new FormControl<string | null>(null, [Validators.required]);
@@ -69,16 +63,15 @@ export class NaruProposalComponent extends StepComponent implements OnInit, OnDe
     toPlaceAverageDepth: this.toPlaceAverageDepth,
   });
 
-  private fileId = '';
   private submissionUuid = '';
 
   constructor(
     private router: Router,
     private applicationSubmissionService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
-    private dialog: MatDialog
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog
   ) {
-    super();
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
@@ -182,7 +175,7 @@ export class NaruProposalComponent extends StepComponent implements OnInit, OnDe
     }
   }
 
-  private async save() {
+  protected async save() {
     if (this.fileId) {
       const {
         existingStructures,
@@ -224,50 +217,6 @@ export class NaruProposalComponent extends StepComponent implements OnInit, OnDe
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
-    }
-  }
-
-  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE) {
-    if (this.fileId) {
-      await this.save();
-      const mappedFiles = file.file;
-      await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async onDeleteFile($event: ApplicationDocumentDto) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.deleteFile($event);
-          }
-        });
-    } else {
-      await this.deleteFile($event);
-    }
-  }
-
-  private async deleteFile($event: ApplicationDocumentDto) {
-    await this.applicationDocumentService.deleteExternalFile($event.uuid);
-    if (this.fileId) {
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
     }
   }
 }

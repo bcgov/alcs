@@ -102,6 +102,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     RosoProposalComponent,
     PofoProposalComponent,
     PfrsProposalComponent,
+    NaruProposalComponent,
     SoilTableComponent,
   ],
 })
