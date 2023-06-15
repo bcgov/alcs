@@ -18,6 +18,8 @@ export interface ApplicationStatusDto extends BaseCodeDto {
   code: APPLICATION_STATUS;
 }
 
+export interface NaruSubtypeDto extends BaseCodeDto {}
+
 export interface ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
   size: number | null;
@@ -118,7 +120,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilHasSubmittedNotice: boolean;
 
   //NARU Fields
-  naruSubtype: string | null;
+  naruSubtype: NaruSubtypeDto | null;
   naruPurpose: string | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
@@ -217,7 +219,7 @@ export interface ApplicationSubmissionUpdateDto {
   soilHasSubmittedNotice?: boolean | null;
 
   //NARU Fields
-  naruSubtype?: string | null;
+  naruSubtypeCode?: string | null;
   naruPurpose?: string | null;
   naruFloorArea?: number | null;
   naruResidenceNecessity?: string | null;

@@ -9,11 +9,14 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
+
+export class NaruSubtypeDto extends BaseCodeDto {}
 
 export class ApplicationSubmissionDto {
   @AutoMap()
@@ -241,8 +244,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   soilHasSubmittedNotice?: boolean;
 
   //NARU Fields
-  @AutoMap(() => String)
-  naruSubtype?: string | null;
+  @AutoMap(() => [NaruSubtypeDto])
+  naruSubtype: NaruSubtypeDto | null;
 
   @AutoMap(() => String)
   naruPurpose: string | null;
@@ -596,7 +599,7 @@ export class ApplicationSubmissionUpdateDto {
   //NARU Fields
   @IsString()
   @IsOptional()
-  naruSubtype?: string | null;
+  naruSubtypeCode?: string | null;
 
   @IsString()
   @IsOptional()
