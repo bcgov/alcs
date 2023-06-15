@@ -22,7 +22,7 @@ export class DecisionComponentComponent implements OnInit {
   // nfu
   nfuType = new FormControl<string | null>(null, [Validators.required]);
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
-  nfuEndDate = new FormControl<Date | null>(null);
+  endDate = new FormControl<Date | null>(null);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -48,6 +48,7 @@ export class DecisionComponentComponent implements OnInit {
       this.agCapConsultant.setValue(this.data.agCapConsultant ? this.data.agCapConsultant : null);
 
       this.patchNfuFields();
+      this.patchTurpFields();
     }
 
     this.onFormValueChanges();
@@ -70,6 +71,10 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getNfuDataChange() };
       }
 
+      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+      }
+
       this.dataChange.emit(dataChange);
     });
   }
@@ -78,11 +83,19 @@ export class DecisionComponentComponent implements OnInit {
     if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
       this.form.addControl('nfuType', this.nfuType);
       this.form.addControl('nfuSubType', this.nfuSubType);
-      this.form.addControl('nfuEndDate', this.nfuEndDate);
+      this.form.addControl('endDate', this.endDate);
 
       this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
       this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
-      this.nfuEndDate.setValue(this.data.nfuEndDate ? new Date(this.data.nfuEndDate) : null);
+      this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    }
+  }
+
+  private patchTurpFields() {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+      this.form.addControl('endDate', this.endDate);
+
+      this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
     }
   }
 
@@ -90,7 +103,13 @@ export class DecisionComponentComponent implements OnInit {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
       nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
-      nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+    };
+  }
+
+  private getTurpDataChange() {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
     };
   }
 }

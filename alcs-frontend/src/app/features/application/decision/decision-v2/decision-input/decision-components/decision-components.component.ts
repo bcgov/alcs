@@ -91,9 +91,14 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           this.patchNfuFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+          this.patchTurpFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
         } as DecisionComponentDto);
@@ -109,7 +114,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   private patchNfuFields(component: DecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
-    component.nfuEndDate = this.application.proposalEndDate;
+    component.endDate = this.application.proposalEndDate;
+  }
+
+  private patchTurpFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
   }
 
   private updateComponentsMenuItems() {

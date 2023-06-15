@@ -59,4 +59,8 @@
   <div class="row-no-flex">
     <app-nfu-input *ngIf="data.applicationDecisionComponentTypeCode === 'NFUP'" [form]="form"></app-nfu-input>
   </div>
+
+  <div class="row-no-flex">
+    <app-turp-input *ngIf="data.applicationDecisionComponentTypeCode === 'TURP'" [form]="form"></app-turp-input>
+  </div>
 </form>

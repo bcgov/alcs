@@ -210,7 +210,7 @@ describe('ApplicationDecisionComponentService', () => {
     mockDto.agCapConsultant = '5';
     mockDto.applicationDecisionComponentTypeCode =
       APPLICATION_DECISION_COMPONENT_TYPE.NFUP;
-    mockDto.nfuEndDate = 6;
+    mockDto.endDate = 6;
     mockDto.nfuSubType = '7';
     mockDto.nfuType = '8';
 
@@ -235,7 +235,7 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].applicationDecisionComponentTypeCode).toEqual(
       APPLICATION_DECISION_COMPONENT_TYPE.NFUP,
     );
-    expect(result[0].nfuEndDate).toEqual(new Date(mockDto.nfuEndDate));
+    expect(result[0].endDate).toEqual(new Date(mockDto.endDate));
     expect(result[0].nfuSubType).toEqual(mockDto.nfuSubType);
     expect(result[0].nfuType).toEqual(mockDto.nfuType);
   });

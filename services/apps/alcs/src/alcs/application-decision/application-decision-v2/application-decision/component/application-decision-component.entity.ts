@@ -79,10 +79,10 @@ export class ApplicationDecisionComponent extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'The date at which the non-farm use ends',
+    comment: 'Components` end date',
     nullable: true,
   })
-  nfuEndDate?: Date | null;
+  endDate?: Date | null;
 
   @AutoMap()
   @Column({ nullable: false })
