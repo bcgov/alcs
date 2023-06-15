@@ -27,6 +27,9 @@ export class DecisionComponentComponent implements OnInit {
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
   endDate = new FormControl<Date | null>(null);
 
+  // turp
+  expiryDate = new FormControl<Date | null>(null);
+
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
@@ -119,9 +122,9 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchTurpFields() {
     if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
-      this.form.addControl('endDate', this.endDate);
+      this.form.addControl('expiryDate', this.expiryDate);
 
-      this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+      this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
     }
   }
 
@@ -143,7 +146,7 @@ export class DecisionComponentComponent implements OnInit {
 
   private getTurpDataChange() {
     return {
-      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 

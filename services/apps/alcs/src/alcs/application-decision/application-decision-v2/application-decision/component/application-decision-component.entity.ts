@@ -84,6 +84,13 @@ export class ApplicationDecisionComponent extends Base {
   })
   endDate?: Date | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'Components` expiry date',
+    nullable: true,
+  })
+  expiryDate?: Date | null;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;

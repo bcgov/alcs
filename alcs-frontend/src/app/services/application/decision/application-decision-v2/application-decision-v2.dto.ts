@@ -112,7 +112,11 @@ export interface NfuDecisionComponentDto {
   endDate?: number | null;
 }
 
-export interface DecisionComponentDto extends NfuDecisionComponentDto {
+export interface TurpDecisionComponentDto {
+  expiryDate?: number | null;
+}
+
+export interface DecisionComponentDto extends NfuDecisionComponentDto, TurpDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -136,7 +140,7 @@ export interface DecisionCodesDto {
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
   TURP = 'TURP',
-  POFO = 'POFO'
+  POFO = 'POFO',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

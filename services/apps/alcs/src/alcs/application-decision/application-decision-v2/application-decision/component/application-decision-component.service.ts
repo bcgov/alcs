@@ -81,7 +81,10 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    console.log('patchTurpFields', updateDto.expiryDate);
+    component.expiryDate = updateDto.expiryDate
+      ? new Date(updateDto.expiryDate)
+      : null;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {

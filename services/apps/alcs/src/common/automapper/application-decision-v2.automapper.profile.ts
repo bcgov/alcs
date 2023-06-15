@@ -157,6 +157,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.endDate,
           mapFrom((a) => a.endDate?.getTime()),
         ),
+        forMember(
+          (ad) => ad.expiryDate,
+          mapFrom((a) => a.expiryDate?.getTime()),
+        ),
       );
       createMap(
         mapper,

@@ -4,13 +4,13 @@
       <mat-label>Expiry Date</mat-label>
       <input
         matInput
-        (click)="endDatePicker.open()"
-        [matDatepicker]="endDatePicker"
-        formControlName="endDate"
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
         name="date"
       />
-      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
     </mat-form-field>
   </div>
 </form>

@@ -42,6 +42,10 @@ export class UpdateApplicationDecisionComponentDto {
   @IsOptional()
   @IsNumber()
   endDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  expiryDate?: number;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -77,6 +81,9 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap()
   endDate?: number;
+
+  @AutoMap()
+  expiryDate?: number;
 
   @AutoMap()
   applicationDecisionUuid: string;
