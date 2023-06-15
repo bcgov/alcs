@@ -27,13 +27,11 @@
 
 .nav {
   background-color: colors.$bg-color;
-  min-width: 240px;
-  width: 240px;
   height: 100%;
+  min-width: fit-content;
 }
 
 .nav-link {
-
   div {
     padding: 12px 24px;
     border: 2px solid transparent;
