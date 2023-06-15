@@ -304,7 +304,7 @@ export class NoticeOfIntentImportService {
         .on('data', (data) => {
           i++;
           const appId = data[Object.keys(data)[0]];
-          const resolutionNumber = data['RESOLUTION_NUMBER'];
+          const resolutionNumber = data[Object.keys(data)[1]];
           mapping.set(appId, resolutionNumber);
         })
         .on('end', () => {
@@ -355,12 +355,8 @@ export class NoticeOfIntentImportService {
     resolutionData: string | undefined,
   ) {
     if (mappedRow.decisionReleased && resolutionData) {
-      const resolutionYear = parseInt(
-        resolutionData?.substring(resolutionData?.length - 4),
-      );
-      const resolutionNumber = parseInt(
-        resolutionData.substring(0, resolutionData?.length - 4),
-      );
+      const resolutionYear = parseInt(resolutionData?.split('/')[1]);
+      const resolutionNumber = parseInt(resolutionData?.split('/')[0]);
 
       await this.noticeOfIntentDecisionService.create(
         {

@@ -857,5 +857,65 @@ export class ApplicationSubmissionService {
       updateDto.naruSubtype,
       applicationSubmission.naruSubtype,
     );
+    applicationSubmission.naruPurpose = filterUndefined(
+      updateDto.naruPurpose,
+      applicationSubmission.naruPurpose,
+    );
+    applicationSubmission.naruFloorArea = filterUndefined(
+      updateDto.naruFloorArea,
+      applicationSubmission.naruFloorArea,
+    );
+    applicationSubmission.naruResidenceNecessity = filterUndefined(
+      updateDto.naruResidenceNecessity,
+      applicationSubmission.naruResidenceNecessity,
+    );
+    applicationSubmission.naruLocationRationale = filterUndefined(
+      updateDto.naruLocationRationale,
+      applicationSubmission.naruLocationRationale,
+    );
+    applicationSubmission.naruInfrastructure = filterUndefined(
+      updateDto.naruInfrastructure,
+      applicationSubmission.naruInfrastructure,
+    );
+    applicationSubmission.naruExistingStructures = filterUndefined(
+      updateDto.naruExistingStructures,
+      applicationSubmission.naruExistingStructures,
+    );
+    applicationSubmission.naruWillImportFill = filterUndefined(
+      updateDto.naruWillImportFill,
+      applicationSubmission.naruWillImportFill,
+    );
+    applicationSubmission.naruFillType = filterUndefined(
+      updateDto.naruFillType,
+      applicationSubmission.naruFillType,
+    );
+    applicationSubmission.naruFillOrigin = filterUndefined(
+      updateDto.naruFillOrigin,
+      applicationSubmission.naruFillOrigin,
+    );
+    applicationSubmission.naruProjectDurationAmount = filterUndefined(
+      updateDto.naruProjectDurationAmount,
+      applicationSubmission.naruProjectDurationAmount,
+    );
+    applicationSubmission.naruProjectDurationUnit = filterUndefined(
+      updateDto.naruProjectDurationUnit,
+      applicationSubmission.naruProjectDurationUnit,
+    );
+    applicationSubmission.naruToPlaceVolume = filterUndefined(
+      updateDto.naruToPlaceVolume,
+      applicationSubmission.naruToPlaceVolume,
+    );
+    applicationSubmission.naruToPlaceArea = filterUndefined(
+      updateDto.naruToPlaceArea,
+      applicationSubmission.naruToPlaceArea,
+    );
+    applicationSubmission.naruToPlaceMaximumDepth = filterUndefined(
+      updateDto.naruToPlaceMaximumDepth,
+      applicationSubmission.naruToPlaceMaximumDepth,
+    );
+    applicationSubmission.naruToPlaceAverageDepth = filterUndefined(
+      updateDto.naruToPlaceAverageDepth,
+      applicationSubmission.naruToPlaceAverageDepth,
+    );
   }
 }

@@ -126,8 +126,9 @@
     <app-file-drag-drop
       [allowMultiple]="true"
       [uploadedFiles]="files"
-      (uploadFiles)="onAttachFile($event)"
-      (deleteFile)="onRemoveFile($event)"
+      (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
+      (deleteFile)="onDeleteFile($event)"
+      (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter || selectedThirdPartyAgent"
     ></app-file-drag-drop>

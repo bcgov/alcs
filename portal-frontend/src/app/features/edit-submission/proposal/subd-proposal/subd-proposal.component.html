@@ -182,7 +182,7 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
@@ -228,7 +228,7 @@
       <app-file-drag-drop
         id="ownership"
         [uploadedFiles]="homesiteSeverance"
-        (uploadFiles)="attachFile($event, DOCUMENT.HOMESITE_SEVERANCE)"
+        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.HOMESITE_SEVERANCE)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"

@@ -585,6 +585,102 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   naruSubtype: string | null;
 
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruPurpose: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruFloorArea: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruResidenceNecessity: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruLocationRationale: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruInfrastructure: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruExistingStructures: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruFillType: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruFillOrigin: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceAverageDepth: number | null;
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({
