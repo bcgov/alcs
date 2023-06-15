@@ -19,6 +19,8 @@ import { DecisionComponent } from './decision.component';
 import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
 import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.component';
 import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
+import { PofoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pofo-input/pofo-input.component';
+import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
 
 export const decisionChildRoutes = [
   {
@@ -60,6 +62,8 @@ export const decisionChildRoutes = [
     TurpInputComponent,
     NfupComponent,
     TurpComponent,
+    PofoInputComponent,
+    PofoComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })

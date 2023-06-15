@@ -99,6 +99,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
         } as DecisionComponentDto);

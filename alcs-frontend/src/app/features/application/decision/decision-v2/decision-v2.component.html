@@ -205,6 +205,12 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
                   [component]="component"
                 ></app-turp>
+
+                <app-pofo
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
+                  [component]="component"
+                ></app-pofo>
               </div>
             </div>
           </div>

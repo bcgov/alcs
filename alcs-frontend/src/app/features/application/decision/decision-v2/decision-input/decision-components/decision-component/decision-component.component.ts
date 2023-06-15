@@ -4,6 +4,7 @@ import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
 
@@ -15,6 +16,8 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/p
 export class DecisionComponentComponent implements OnInit {
   @Input() data!: DecisionComponentDto;
   @Output() dataChange = new EventEmitter<DecisionComponentDto>();
+
+  COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
 
   agCapOptions = AG_CAP_OPTIONS;
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
@@ -39,6 +42,8 @@ export class DecisionComponentComponent implements OnInit {
     agCapConsultant: this.agCapConsultant,
   });
 
+  constructor(private toastService: ToastService) {}
+
   ngOnInit(): void {
     if (this.data) {
       this.alrArea.setValue(this.data.alrArea ? this.data.alrArea : null);
@@ -49,6 +54,7 @@ export class DecisionComponentComponent implements OnInit {
 
       this.patchNfuFields();
       this.patchTurpFields();
+      this.patchPofoFields();
     }
 
     this.onFormValueChanges();
@@ -67,16 +73,36 @@ export class DecisionComponentComponent implements OnInit {
         uuid: this.data.uuid,
       };
 
-      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
-        dataChange = { ...dataChange, ...this.getNfuDataChange() };
-      }
-
-      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
-        dataChange = { ...dataChange, ...this.getTurpDataChange() };
-      }
+      dataChange = this.getComponentData(dataChange);
 
       this.dataChange.emit(dataChange);
     });
+  }
+
+  private getComponentData(dataChange: {
+    alrArea: number | null;
+    agCap: string | null;
+    agCapSource: string | null;
+    agCapMap: string | null;
+    agCapConsultant: string | null;
+    applicationDecisionComponentTypeCode: string;
+    applicationDecisionUuid: string | undefined;
+    uuid: string | undefined;
+  }) {
+    switch (dataChange.applicationDecisionComponentTypeCode) {
+      case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+        dataChange = { ...dataChange, ...this.getNfuDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
+        dataChange = { ...dataChange, ...this.getPofoDataChange() };
+        break;
+      default:
+        this.toastService.showErrorToast('Wrong decision component type');
+    }
+    return dataChange;
   }
 
   private patchNfuFields() {
@@ -99,6 +125,14 @@ export class DecisionComponentComponent implements OnInit {
     }
   }
 
+  private patchPofoFields() {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+      this.form.addControl('endDate', this.endDate);
+
+      this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    }
+  }
+
   private getNfuDataChange() {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -108,6 +142,12 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private getTurpDataChange() {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+    };
+  }
+
+  private getPofoDataChange() {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
     };
