@@ -1,8 +1,8 @@
 @use '../../../styles/colors';
 @use '../../../styles' as *;
 
-$card-ht: 160px;
-$date-ht: 48px;
+$card-ht: 176px;
+$date-ht: 32px;
 
 .card {
   height: $card-ht;
@@ -103,7 +103,7 @@ $date-ht: 48px;
   font-size: 16px;
   height: $date-ht;
   justify-content: center;
-  margin: -16px -18px 16px !important;
+  margin: -18px -18px 6px !important;
   transition: all 100ms ease-in-out;
 }
 
