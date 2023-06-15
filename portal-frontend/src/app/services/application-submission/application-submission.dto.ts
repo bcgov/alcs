@@ -116,6 +116,9 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean;
   soilHasSubmittedNotice: boolean;
+
+  //NARU Fields
+  naruSubtype: string | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -197,4 +200,7 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+
+  //NARU Fields
+  naruSubtype?: string | null;
 }
