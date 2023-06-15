@@ -14,6 +14,7 @@ import { ApplicationSubmissionService } from '../../../../services/application-s
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
+import { SoilTableData } from '../soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 
 @Component({
@@ -37,12 +38,9 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   fillOrigin = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
-  toPlaceVolume = new FormControl<string | null>(null, [Validators.required]);
-  toPlaceArea = new FormControl<string | null>(null, [Validators.required]);
-  toPlaceMaximumDepth = new FormControl<string | null>(null, [Validators.required]);
-  toPlaceAverageDepth = new FormControl<string | null>(null, [Validators.required]);
 
   proposalMap: ApplicationDocumentDto[] = [];
+  fillTableData: SoilTableData = {};
 
   form = new FormGroup({
     subtype: this.subtype,
@@ -57,10 +55,6 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     fillOrigin: this.fillOrigin,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
-    toPlaceVolume: this.toPlaceVolume,
-    toPlaceArea: this.toPlaceArea,
-    toPlaceMaximumDepth: this.toPlaceMaximumDepth,
-    toPlaceAverageDepth: this.toPlaceAverageDepth,
   });
 
   private submissionUuid = '';
@@ -86,17 +80,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           willImportFill: formatBooleanToYesNoString(applicationSubmission.naruWillImportFill),
           fillType: applicationSubmission.naruFillType,
           fillOrigin: applicationSubmission.naruFillOrigin,
-          toPlaceAverageDepth: applicationSubmission.naruToPlaceAverageDepth
-            ? applicationSubmission.naruToPlaceAverageDepth.toString()
-            : null,
-          toPlaceMaximumDepth: applicationSubmission.naruToPlaceMaximumDepth
-            ? applicationSubmission.naruToPlaceMaximumDepth.toString()
-            : null,
-          toPlaceArea: applicationSubmission.naruToPlaceArea ? applicationSubmission.naruToPlaceArea.toString() : null,
           floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
-          toPlaceVolume: applicationSubmission.naruToPlaceVolume
-            ? applicationSubmission.naruToPlaceVolume.toString()
-            : null,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
           projectDurationAmount: applicationSubmission.naruProjectDurationAmount
@@ -108,9 +92,20 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         });
         this.previousSubtype = applicationSubmission.naruSubtype;
 
-        if (applicationSubmission.naruWillImportFill) {
-          this.onChangeFill('true');
+        if (applicationSubmission.naruWillImportFill !== null) {
+          const willImportFill = applicationSubmission.naruWillImportFill ? 'true' : 'false';
+          this.onChangeFill(willImportFill);
+          this.form.patchValue({
+            willImportFill,
+          });
         }
+
+        this.fillTableData = {
+          volume: applicationSubmission.naruToPlaceVolume ?? undefined,
+          area: applicationSubmission.naruToPlaceArea ?? undefined,
+          maximumDepth: applicationSubmission.naruToPlaceMaximumDepth ?? undefined,
+          averageDepth: applicationSubmission.naruToPlaceAverageDepth ?? undefined,
+        };
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -146,28 +141,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeFill(value: string) {
     if (value === 'true') {
-      this.toPlaceArea.enable();
-      this.toPlaceAverageDepth.enable();
-      this.toPlaceMaximumDepth.enable();
-      this.toPlaceVolume.enable();
       this.projectDurationAmount.enable();
       this.projectDurationUnit.enable();
       this.fillOrigin.enable();
       this.fillType.enable();
     } else {
-      this.toPlaceArea.disable();
-      this.toPlaceAverageDepth.disable();
-      this.toPlaceMaximumDepth.disable();
-      this.toPlaceVolume.disable();
       this.projectDurationAmount.disable();
       this.projectDurationUnit.disable();
       this.fillOrigin.disable();
       this.fillType.disable();
 
-      this.toPlaceArea.setValue(null);
-      this.toPlaceAverageDepth.setValue(null);
-      this.toPlaceMaximumDepth.setValue(null);
-      this.toPlaceVolume.setValue(null);
       this.projectDurationAmount.setValue(null);
       this.projectDurationUnit.setValue(null);
       this.fillOrigin.setValue(null);
@@ -182,11 +165,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         willImportFill,
         fillType,
         fillOrigin,
-        toPlaceAverageDepth,
-        toPlaceMaximumDepth,
-        toPlaceArea,
         floorArea,
-        toPlaceVolume,
         infrastructure,
         locationRationale,
         projectDurationAmount,
@@ -201,11 +180,11 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruWillImportFill: willImportFill !== null ? willImportFill === 'yes' : null,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
-        naruToPlaceAverageDepth: toPlaceAverageDepth ? parseFloat(toPlaceAverageDepth) : null,
-        naruToPlaceMaximumDepth: toPlaceMaximumDepth ? parseFloat(toPlaceMaximumDepth) : null,
-        naruToPlaceArea: toPlaceArea ? parseFloat(toPlaceArea) : null,
+        naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
+        naruToPlaceMaximumDepth: this.fillTableData.maximumDepth ?? null,
+        naruToPlaceArea: this.fillTableData.area ?? null,
+        naruToPlaceVolume: this.fillTableData.volume ?? null,
         naruFloorArea: floorArea ? parseFloat(floorArea) : null,
-        naruToPlaceVolume: toPlaceVolume ? parseFloat(toPlaceVolume) : null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
         naruProjectDurationAmount: projectDurationAmount ? parseFloat(projectDurationAmount) : null,

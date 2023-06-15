@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export type SoilTableData = {
@@ -13,11 +13,12 @@ export type SoilTableData = {
   templateUrl: './soil-table.component.html',
   styleUrls: ['./soil-table.component.scss'],
 })
-export class SoilTableComponent implements OnInit {
+export class SoilTableComponent implements OnInit, OnChanges {
   @Input() tableHeader = 'Soil to be Removed';
   @Input() data?: SoilTableData;
   @Input() tableHeader2?: string | undefined;
   @Input() data2?: SoilTableData;
+  @Input() disabled = false;
 
   @Output() dataChange = new EventEmitter<SoilTableData>();
   @Output() data2Change = new EventEmitter<SoilTableData>();
@@ -59,6 +60,7 @@ export class SoilTableComponent implements OnInit {
     }
 
     this.form.valueChanges.subscribe((changes) => {
+      debugger;
       this.dataChange.emit({
         volume: this.volume.value !== null ? parseFloat(this.volume.value) : undefined,
         area: this.area.value !== null ? parseFloat(this.area.value) : undefined,
@@ -73,5 +75,16 @@ export class SoilTableComponent implements OnInit {
         averageDepth: this.averageDepth2.value !== null ? parseFloat(this.averageDepth2.value) : undefined,
       });
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['disabled']) {
+      if (this.disabled) {
+        this.form.disable();
+        this.form.reset();
+      } else {
+        this.form.enable();
+      }
+    }
   }
 }

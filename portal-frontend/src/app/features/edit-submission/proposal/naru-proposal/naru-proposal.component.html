@@ -269,6 +269,58 @@
         </div>
       </div>
     </div>
+
+    <app-soil-table
+      [disabled]="willImportFill.value === 'false'"
+      tableHeader="Fill to be Placed"
+      [(data)]="fillTableData"
+    ></app-soil-table>
+  </section>
+
+  <section>
+    <h4>Project Duration</h4>
+    <div class="subtext">Estimated duration of the project</div>
+    <div class="form-row">
+      <div>
+        <label for="projectDurationUnit">Duration</label>
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
+            <mat-option value="days">Days</mat-option>
+            <mat-option value="months">Months</mat-option>
+            <mat-option value="years">Years</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div
+          *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+      <div>
+        <label for="projectDurationAmount">Length</label>
+        <mat-form-field appearance="outline">
+          <input
+            id="projectDurationAmount"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            min="0.01"
+            matInput
+            formControlName="projectDurationAmount"
+            placeholder="Type length as a decimal number"
+          />
+        </mat-form-field>
+        <div
+          *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+    </div>
   </section>
 </form>
 <div class="button-container">
