@@ -116,7 +116,19 @@ export interface TurpDecisionComponentDto {
   expiryDate?: number | null;
 }
 
-export interface DecisionComponentDto extends NfuDecisionComponentDto, TurpDecisionComponentDto {
+export interface PofoDecisionComponentDto {
+  endDate?: number | null;
+  soilFillTypeToPlace?: string | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+}
+
+export interface DecisionComponentDto
+  extends NfuDecisionComponentDto,
+    TurpDecisionComponentDto,
+    PofoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;

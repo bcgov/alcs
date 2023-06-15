@@ -3,6 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionComponentDto,
+  NfuDecisionComponentDto,
+  PofoDecisionComponentDto,
+  TurpDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
@@ -29,6 +32,13 @@ export class DecisionComponentComponent implements OnInit {
 
   // turp
   expiryDate = new FormControl<Date | null>(null);
+
+  // pofo
+  fillTypeToPlace = new FormControl<string | null>(null);
+  volume = new FormControl<number | null>(null);
+  area = new FormControl<number | null>(null);
+  maximumDepth = new FormControl<number | null>(null);
+  averageDepth = new FormControl<number | null>(null);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -129,14 +139,24 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private patchPofoFields() {
-    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
       this.form.addControl('endDate', this.endDate);
+      this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
+      this.form.addControl('area', this.area);
+      this.form.addControl('volume', this.volume);
+      this.form.addControl('maximumDepth', this.maximumDepth);
+      this.form.addControl('averageDepth', this.averageDepth);
 
       this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+      this.fillTypeToPlace.setValue(this.data.soilFillTypeToPlace ?? null);
+      this.area.setValue(this.data.soilToPlaceArea ?? null);
+      this.volume.setValue(this.data.soilToPlaceVolume ?? null);
+      this.maximumDepth.setValue(this.data.soilToPlaceMaximumDepth ?? null);
+      this.averageDepth.setValue(this.data.soilToPlaceAverageDepth ?? null);
     }
   }
 
-  private getNfuDataChange() {
+  private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
       nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
@@ -144,15 +164,20 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getTurpDataChange() {
+  private getTurpDataChange(): TurpDecisionComponentDto {
     return {
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 
-  private getPofoDataChange() {
+  private getPofoDataChange(): PofoDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
+      soilToPlaceArea: this.area.value ?? null,
+      soilToPlaceVolume: this.volume.value ?? null,
+      soilToPlaceMaximumDepth: this.maximumDepth.value ?? null,
+      soilToPlaceAverageDepth: this.averageDepth.value ?? null,
     };
   }
 }

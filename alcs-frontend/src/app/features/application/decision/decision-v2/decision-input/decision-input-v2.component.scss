@@ -4,7 +4,7 @@
   .grid,
   .grid-3 {
     display: grid;
-    grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+    grid-template-columns: calc(50% - 10px) calc(50%);
     grid-column-gap: 24px;
     grid-row-gap: 32px;
 
@@ -17,6 +17,10 @@
     grid-template-columns: calc(33% - 8px) calc(33% - 8px) calc(33% - 8px);
     grid-column-gap: 24px;
     grid-row-gap: 32px;
+
+    .full-width {
+      grid-column: 1/4;
+    }
   }
 
   .resolution-number-wrapper {
@@ -46,6 +50,48 @@
 
     .release-decision-btn {
       width: 50%;
+    }
+  }
+
+  .container {
+    border: 1px solid colors.$grey-dark;
+    max-width: 438px;
+
+    &.double-table {
+      grid-template-columns: 20% 38% 38%;
+      max-width: 686px;
+    }
+
+    .soil-table {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 39% 59%;
+      grid-row-gap: 28px;
+      padding: 10px;
+
+      &.double-table {
+        grid-template-columns: 22% 37% 37%;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+    }
+
+    .label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 0;
+
+      .subtext {
+        margin-bottom: -8px !important;
+      }
+    }
+
+    input {
+      text-align: right;
+      padding-right: 8px;
     }
   }
 

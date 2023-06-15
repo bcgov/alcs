@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
-import {
-  APPLICATION_DECISION_COMPONENT_TYPE,
-  CreateApplicationDecisionComponentDto,
-} from './application-decision-component.dto';
+import { CreateApplicationDecisionComponentDto } from './application-decision-component.dto';
 import { ApplicationDecisionComponent } from './application-decision-component.entity';
 
 @Injectable()
@@ -44,19 +41,9 @@ export class ApplicationDecisionComponentService {
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
 
-      if (
-        component.applicationDecisionComponentTypeCode ===
-        APPLICATION_DECISION_COMPONENT_TYPE.NFUP
-      ) {
-        this.patchNfuFields(component, updateDto);
-      }
-
-      if (
-        component.applicationDecisionComponentTypeCode ===
-        APPLICATION_DECISION_COMPONENT_TYPE.TURP
-      ) {
-        this.patchTurpFields(component, updateDto);
-      }
+      this.patchNfuFields(component, updateDto);
+      this.patchTurpFields(component, updateDto);
+      this.patchPofoFields(component, updateDto);
 
       updatedComponents.push(component);
     }
@@ -81,10 +68,23 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    console.log('patchTurpFields', updateDto.expiryDate);
     component.expiryDate = updateDto.expiryDate
       ? new Date(updateDto.expiryDate)
       : null;
+  }
+
+  private patchPofoFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.soilFillTypeToPlace = updateDto.soilFillTypeToPlace ?? null;
+    component.soilToPlaceArea = updateDto.soilToPlaceArea ?? null;
+    component.soilToPlaceVolume = updateDto.soilToPlaceVolume ?? null;
+    component.soilToPlaceMaximumDepth =
+      updateDto.soilToPlaceMaximumDepth ?? null;
+    component.soilToPlaceAverageDepth =
+      updateDto.soilToPlaceAverageDepth ?? null;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {

@@ -46,6 +46,26 @@ export class UpdateApplicationDecisionComponentDto {
   @IsOptional()
   @IsNumber()
   expiryDate?: number;
+
+  @IsOptional()
+  @IsString()
+  soilFillTypeToPlace?: string;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceAverageDepth?: number | null;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -87,6 +107,21 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap()
   applicationDecisionUuid: string;
+
+  @AutoMap()
+  soilFillTypeToPlace?: string;
+
+  @AutoMap()
+  soilToPlaceVolume?: number;
+
+  @AutoMap()
+  soilToPlaceArea?: number;
+
+  @AutoMap()
+  soilToPlaceMaximumDepth?: number;
+
+  @AutoMap()
+  soilToPlaceAverageDepth?: number;
 
   @AutoMap()
   applicationDecisionComponentTypeCode: string;
