@@ -44,7 +44,17 @@ alcs_gov as(
     alg.uuid AS gov_uuid
 
     FROM oats_gov
-        JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
+        --JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
+        join alcs.application_local_government alg on
+   (case
+   	when split_part(oats_gov.oats_gov_name, ' ', 1) = 'Islands' then split_part(oats_gov.oats_gov_name, ' ', 1)
+   	else oats_gov.oats_gov_name
+   end) 
+   =
+   (case
+   	when split_part(alg."name", ' ', 1) = 'Islands' then split_part(alg."name", ' ', 1)
+   	else alg."name"
+   end) 
 
 ),    
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
