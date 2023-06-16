@@ -82,4 +82,10 @@
       [form]="form"
     ></app-roso-input>
   </div>
+  <div class="row-no-flex">
+    <app-pfrs-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
+      [form]="form"
+    ></app-pfrs-input>
+  </div>
 </form>

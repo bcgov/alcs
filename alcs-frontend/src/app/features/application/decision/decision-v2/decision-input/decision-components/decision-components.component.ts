@@ -95,12 +95,25 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           this.patchTurpFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
+          this.patchPofoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.ROSO) {
+          this.patchRosoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
+          this.patchPfrsFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
       case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+      case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
         } as DecisionComponentDto);
@@ -121,6 +134,29 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
 
   private patchTurpFields(component: DecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
+  }
+
+  private patchPofoFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    component.soilFillTypeToPlace = this.application.submittedApplication?.soilFillTypeToPlace;
+    component.soilToPlaceVolume = this.application.submittedApplication?.soilToPlaceVolume;
+    component.soilToPlaceArea = this.application.submittedApplication?.soilToPlaceArea;
+    component.soilToPlaceMaximumDepth = this.application.submittedApplication?.soilToPlaceMaximumDepth;
+    component.soilToPlaceAverageDepth = this.application.submittedApplication?.soilToPlaceAverageDepth;
+  }
+
+  private patchRosoFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    component.soilTypeRemoved = this.application.submittedApplication?.soilTypeRemoved;
+    component.soilToRemoveVolume = this.application.submittedApplication?.soilToRemoveVolume;
+    component.soilToRemoveArea = this.application.submittedApplication?.soilToRemoveArea;
+    component.soilToRemoveMaximumDepth = this.application.submittedApplication?.soilToRemoveMaximumDepth;
+    component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
+  }
+
+  private patchPfrsFields(component: DecisionComponentDto) {
+    this.patchPofoFields(component);
+    this.patchRosoFields(component);
   }
 
   private updateComponentsMenuItems() {

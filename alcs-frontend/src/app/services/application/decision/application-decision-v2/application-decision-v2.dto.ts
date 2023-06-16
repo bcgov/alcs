@@ -164,6 +164,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   TURP = 'TURP',
   POFO = 'POFO',
   ROSO = 'ROSO',
+  PFRS = 'PFRS',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

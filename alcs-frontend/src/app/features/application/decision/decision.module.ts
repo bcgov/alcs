@@ -23,6 +23,8 @@ import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
+import { PfrsInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pfrs-input/pfrs-input.component';
+import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
 
 export const decisionChildRoutes = [
   {
@@ -68,6 +70,8 @@ export const decisionChildRoutes = [
     PofoComponent,
     RosoComponent,
     RosoInputComponent,
+    PfrsInputComponent,
+    PfrsComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })

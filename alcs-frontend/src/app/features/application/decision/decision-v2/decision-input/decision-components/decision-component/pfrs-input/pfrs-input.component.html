@@ -16,6 +16,17 @@
     <mat-form-field appearance="outline" class="full-width">
       <textarea
         class="soil-text-area"
+        formControlName="soilTypeRemoved"
+        #fillTypeToPlaceText
+        maxlength="4000"
+        matInput
+        placeholder="Type of soil approved to be removed*"
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <textarea
+        class="soil-text-area"
         formControlName="fillTypeToPlace"
         #fillTypeToPlaceText
         maxlength="4000"
@@ -25,14 +36,30 @@
     </mat-form-field>
   </div>
 
-  <div class="container">
-    <div class="soil-table">
+  <div class="container-wide">
+    <div class="soil-table double-table">
       <div></div>
+      <div>
+        <label for="volume">Soil to be Removed*</label>
+      </div>
       <div>
         <label for="volume">Fill to be placed*</label>
       </div>
       <div class="label">
-        <label for="volumeToPlace">Volume</label>
+        <label for="volumeToRemove">Volume</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="volumeToRemove"
+          />
+          <span matTextSuffix>m<sup>3</sup></span>
+        </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline" class="full-width">
@@ -48,8 +75,21 @@
         </mat-form-field>
       </div>
       <div class="label">
-        <label for="areaToPlace">Area</label>
+        <label for="areaToRemove">Area</label>
         <div class="subtext">Note: 0.01 ha is 100m2</div>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="areaToRemove"
+          />
+          <span matTextSuffix>ha</span>
+        </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline" class="full-width">
@@ -65,7 +105,20 @@
         </mat-form-field>
       </div>
       <div class="label">
-        <label for="maximumDepthToPlace">Maximum Depth</label>
+        <label for="maximumDepthToRemove">Maximum Depth</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="maximumDepthToRemove"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline" class="full-width">
@@ -81,7 +134,20 @@
         </mat-form-field>
       </div>
       <div class="label">
-        <label for="averageDepthToPlace">Average Depth</label>
+        <label for="averageDepthToRemove">Average Depth</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="averageDepthToRemove"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="outline" class="full-width">

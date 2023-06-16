@@ -53,14 +53,10 @@
     }
   }
 
-  .container {
+  .container,
+  .container-wide {
     border: 1px solid colors.$grey-dark;
     max-width: 438px;
-
-    &.double-table {
-      grid-template-columns: 20% 38% 38%;
-      max-width: 686px;
-    }
 
     .soil-table {
       padding: 16px;
@@ -71,6 +67,7 @@
 
       &.double-table {
         grid-template-columns: 22% 37% 37%;
+        column-gap: 10px;
       }
 
       .full-width {
@@ -95,6 +92,9 @@
     }
   }
 
+  .container-wide {
+    max-width: 700px;
+  }
   .btn-row {
     justify-content: space-between;
   }
@@ -132,6 +132,6 @@
   }
 
   .soil-text-area {
-    height: 150px !important;
+    height: 100px !important;
   }
 }
