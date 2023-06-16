@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChildren } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
+import { ApplicationSubmissionService } from '../../../../../../services/application/application-submission/application-submission.service';
 import { ApplicationDto } from '../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
@@ -34,12 +35,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   application!: ApplicationDto;
   decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
 
-  constructor(private toastService: ToastService, private applicationDetailService: ApplicationDetailService) {}
+  constructor(
+    private toastService: ToastService,
+    private applicationDetailService: ApplicationDetailService,
+    private submissionService: ApplicationSubmissionService
+  ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe(async (application) => {
       if (application) {
         this.application = application;
+        this.application.submittedApplication = await this.submissionService.fetchSubmission(application.fileNumber);
       }
     });
 
