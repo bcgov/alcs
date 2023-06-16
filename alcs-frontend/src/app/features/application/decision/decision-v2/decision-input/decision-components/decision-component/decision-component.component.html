@@ -5,7 +5,6 @@
       <input
         matInput
         min="0.01"
-        id="alrArea"
         mask="separator.2"
         thousandSeparator=","
         separatorLimit="9999999999"
@@ -47,24 +46,40 @@
   <div class="grid">
     <mat-form-field appearance="outline">
       <mat-label>Ag Cap Map</mat-label>
-      <input matInput id="agCapMap" matInput formControlName="agCapMap" />
+      <input matInput matInput formControlName="agCapMap" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Ag Cap Consultant</mat-label>
-      <input matInput id="agCapConsultant" matInput formControlName="agCapConsultant" />
+      <input matInput matInput formControlName="agCapConsultant" />
     </mat-form-field>
   </div>
 
   <div class="row-no-flex">
-    <app-nfu-input *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP" [form]="form"></app-nfu-input>
+    <app-nfu-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
+      [form]="form"
+    ></app-nfu-input>
   </div>
 
   <div class="row-no-flex">
-    <app-turp-input *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP" [form]="form"></app-turp-input>
+    <app-turp-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
+      [form]="form"
+    ></app-turp-input>
   </div>
 
   <div class="row-no-flex">
-    <app-pofo-input *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO" [form]="form"></app-pofo-input>
+    <app-pofo-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
+      [form]="form"
+    ></app-pofo-input>
+  </div>
+
+  <div class="row-no-flex">
+    <app-roso-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
+      [form]="form"
+    ></app-roso-input>
   </div>
 </form>

@@ -135,6 +135,50 @@ export class ApplicationDecisionComponent extends Base {
   })
   soilToPlaceAverageDepth: number | null;
 
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveAverageDepth: number | null;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;

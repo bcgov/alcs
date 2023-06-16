@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="pofo-component-form">
+<form [formGroup]="form" class="roso-component-form">
   <div class="grid-3">
     <mat-form-field appearance="outline" class="date-picker">
       <mat-label>Use End Date</mat-label>
@@ -16,11 +16,11 @@
     <mat-form-field appearance="outline" class="full-width">
       <textarea
         class="soil-text-area"
-        formControlName="fillTypeToPlace"
+        formControlName="soilTypeRemoved"
         #fillTypeToPlaceText
         maxlength="4000"
         matInput
-        placeholder="Type, origin and quality of fill approved to be placed"
+        placeholder="Type of soil approved to be removed."
       ></textarea>
     </mat-form-field>
   </div>
@@ -29,7 +29,7 @@
     <div class="soil-table">
       <div></div>
       <div>
-        <label for="volume">Fill to be placed</label>
+        <label for="volume">Soil to be Removed</label>
       </div>
       <div class="label">
         <label for="volume">Volume</label>

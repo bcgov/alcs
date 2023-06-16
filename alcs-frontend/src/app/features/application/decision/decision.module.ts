@@ -4,23 +4,25 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
-import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
-import { DecisionConditionsComponent } from './decision-v2/decision-input/decision-conditions/decision-conditions.component';
+import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.component';
+import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
+import { RosoComponent } from './decision-v2/decision-component/roso/roso.component';
+import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
 import { NfuInputComponent } from './decision-v2/decision-input/decision-components/decision-component/nfu-input/nfu-input.component';
+import { PofoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pofo-input/pofo-input.component';
+import { RosoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/roso-input/roso-input.component';
+import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
 import { DecisionComponentsComponent } from './decision-v2/decision-input/decision-components/decision-components.component';
+import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
+import { DecisionConditionsComponent } from './decision-v2/decision-input/decision-conditions/decision-conditions.component';
 import { DecisionDocumentUploadDialogComponent } from './decision-v2/decision-input/decision-file-upload-dialog/decision-document-upload-dialog.component';
 import { DecisionInputV2Component } from './decision-v2/decision-input/decision-input-v2.component';
 import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
-import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
-import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.component';
-import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
-import { PofoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pofo-input/pofo-input.component';
-import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
 
 export const decisionChildRoutes = [
   {
@@ -64,6 +66,8 @@ export const decisionChildRoutes = [
     TurpComponent,
     PofoInputComponent,
     PofoComponent,
+    RosoComponent,
+    RosoInputComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })

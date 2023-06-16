@@ -66,6 +66,26 @@ export class UpdateApplicationDecisionComponentDto {
   @IsNumber()
   @IsOptional()
   soilToPlaceAverageDepth?: number | null;
+
+  @IsOptional()
+  @IsString()
+  soilTypeRemoved?: string;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveAverageDepth?: number | null;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -122,6 +142,21 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap()
   soilToPlaceAverageDepth?: number;
+
+  @AutoMap()
+  soilTypeRemoved?: string;
+
+  @AutoMap()
+  soilToRemoveVolume?: number;
+
+  @AutoMap()
+  soilToRemoveArea?: number;
+
+  @AutoMap()
+  soilToRemoveMaximumDepth?: number;
+
+  @AutoMap()
+  soilToRemoveAverageDepth?: number;
 
   @AutoMap()
   applicationDecisionComponentTypeCode: string;

@@ -5,6 +5,7 @@ import {
   DecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
+  RosoDecisionComponentDto,
   TurpDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
@@ -33,12 +34,17 @@ export class DecisionComponentComponent implements OnInit {
   // turp
   expiryDate = new FormControl<Date | null>(null);
 
-  // pofo
-  fillTypeToPlace = new FormControl<string | null>(null);
+  //soil
   volume = new FormControl<number | null>(null);
   area = new FormControl<number | null>(null);
   maximumDepth = new FormControl<number | null>(null);
   averageDepth = new FormControl<number | null>(null);
+
+  // pofo
+  fillTypeToPlace = new FormControl<string | null>(null);
+
+  // roso
+  soilTypeRemoved = new FormControl<string | null>(null);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -68,6 +74,7 @@ export class DecisionComponentComponent implements OnInit {
       this.patchNfuFields();
       this.patchTurpFields();
       this.patchPofoFields();
+      this.patchRosoFields();
     }
 
     this.onFormValueChanges();
@@ -111,6 +118,9 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
         dataChange = { ...dataChange, ...this.getPofoDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+        dataChange = { ...dataChange, ...this.getRosoDataChange() };
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
@@ -156,6 +166,24 @@ export class DecisionComponentComponent implements OnInit {
     }
   }
 
+  private patchRosoFields() {
+    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.ROSO) {
+      this.form.addControl('endDate', this.endDate);
+      this.form.addControl('soilTypeRemoved', this.soilTypeRemoved);
+      this.form.addControl('area', this.area);
+      this.form.addControl('volume', this.volume);
+      this.form.addControl('maximumDepth', this.maximumDepth);
+      this.form.addControl('averageDepth', this.averageDepth);
+
+      this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+      this.soilTypeRemoved.setValue(this.data.soilTypeRemoved ?? null);
+      this.area.setValue(this.data.soilToRemoveArea ?? null);
+      this.volume.setValue(this.data.soilToRemoveVolume ?? null);
+      this.maximumDepth.setValue(this.data.soilToRemoveMaximumDepth ?? null);
+      this.averageDepth.setValue(this.data.soilToRemoveAverageDepth ?? null);
+    }
+  }
+
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -178,6 +206,17 @@ export class DecisionComponentComponent implements OnInit {
       soilToPlaceVolume: this.volume.value ?? null,
       soilToPlaceMaximumDepth: this.maximumDepth.value ?? null,
       soilToPlaceAverageDepth: this.averageDepth.value ?? null,
+    };
+  }
+
+  private getRosoDataChange(): RosoDecisionComponentDto {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      soilTypeRemoved: this.soilTypeRemoved.value ?? null,
+      soilToRemoveVolume: this.area.value ?? null,
+      soilToRemoveArea: this.volume.value ?? null,
+      soilToRemoveMaximumDepth: this.maximumDepth.value ?? null,
+      soilToRemoveAverageDepth: this.averageDepth.value ?? null,
     };
   }
 }

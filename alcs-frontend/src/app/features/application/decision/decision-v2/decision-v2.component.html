@@ -211,6 +211,12 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
                   [component]="component"
                 ></app-pofo>
+
+                <app-roso
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
+                  [component]="component"
+                ></app-roso>
               </div>
             </div>
           </div>

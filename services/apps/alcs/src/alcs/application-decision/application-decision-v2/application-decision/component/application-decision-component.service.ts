@@ -44,6 +44,7 @@ export class ApplicationDecisionComponentService {
       this.patchNfuFields(component, updateDto);
       this.patchTurpFields(component, updateDto);
       this.patchPofoFields(component, updateDto);
+      this.patchRosoFields(component, updateDto);
 
       updatedComponents.push(component);
     }
@@ -85,6 +86,20 @@ export class ApplicationDecisionComponentService {
       updateDto.soilToPlaceMaximumDepth ?? null;
     component.soilToPlaceAverageDepth =
       updateDto.soilToPlaceAverageDepth ?? null;
+  }
+
+  private patchRosoFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.soilTypeRemoved = updateDto.soilTypeRemoved ?? null;
+    component.soilToRemoveVolume = updateDto.soilToRemoveVolume ?? null;
+    component.soilToRemoveArea = updateDto.soilToRemoveArea ?? null;
+    component.soilToRemoveMaximumDepth =
+      updateDto.soilToRemoveMaximumDepth ?? null;
+    component.soilToRemoveAverageDepth =
+      updateDto.soilToRemoveAverageDepth ?? null;
   }
 
   validate(componentsDto: CreateApplicationDecisionComponentDto[]) {

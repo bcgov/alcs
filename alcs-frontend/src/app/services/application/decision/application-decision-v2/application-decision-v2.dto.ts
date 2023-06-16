@@ -125,10 +125,20 @@ export interface PofoDecisionComponentDto {
   soilToPlaceAverageDepth?: number | null;
 }
 
+export interface RosoDecisionComponentDto {
+  endDate?: number | null;
+  soilTypeRemoved?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+}
+
 export interface DecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
-    PofoDecisionComponentDto {
+    PofoDecisionComponentDto,
+    RosoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -153,6 +163,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
   TURP = 'TURP',
   POFO = 'POFO',
+  ROSO = 'ROSO',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
