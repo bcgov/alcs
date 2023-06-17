@@ -110,7 +110,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
-          this.patchPfrsFields(component);
+          this.patchPofoFields(component);
+          this.patchRosoFields(component);
         }
 
         this.components.push(component);
@@ -158,11 +159,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     component.soilToRemoveArea = this.application.submittedApplication?.soilToRemoveArea;
     component.soilToRemoveMaximumDepth = this.application.submittedApplication?.soilToRemoveMaximumDepth;
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
-  }
-
-  private patchPfrsFields(component: DecisionComponentDto) {
-    this.patchPofoFields(component);
-    this.patchRosoFields(component);
   }
 
   private updateComponentsMenuItems() {

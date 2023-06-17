@@ -342,6 +342,14 @@ export class ApplicationDecisionV2Service {
     updateDto: UpdateApplicationDecisionDto,
     existingDecision: Partial<ApplicationDecision>,
   ) {
+    if (updateDto.isDraft) {
+      return;
+    }
+
+    if (!updateDto.decisionComponents) {
+      throw new ServiceValidationException('Decision components are required');
+    }
+
     if (updateDto.decisionComponents) {
       this.decisionComponentService.validate(updateDto.decisionComponents);
 

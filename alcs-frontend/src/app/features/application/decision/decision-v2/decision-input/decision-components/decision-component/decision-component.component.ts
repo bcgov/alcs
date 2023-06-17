@@ -146,6 +146,7 @@ export class DecisionComponentComponent implements OnInit {
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
+        break;
     }
     return dataChange;
   }
