@@ -45,11 +45,16 @@ alcs_gov as(
     alg.uuid AS gov_uuid
 
     FROM oats_gov
-        JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
+        join alcs.application_local_government alg on
+   (case
+   	when oats_gov.oats_gov_name LIKE 'Islands Trust%' then 'Islands Trust'
+   	else oats_gov.oats_gov_name
+   end) 
+   =
+   alg."name"
 
 ),    
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
-
 panel_lookup AS (
     SELECT
         DISTINCT oaap.alr_application_id AS application_id,
@@ -64,7 +69,6 @@ panel_lookup AS (
 ),
 
 -- Step 4: Perform lookup to retrieve type code
-
 application_type_lookup AS (
     SELECT
         oaac.alr_application_id AS application_id,
@@ -117,3 +121,4 @@ FROM
     LEFT JOIN oats.alcs_etl_application_exclude aee ON oa.alr_application_id = aee.application_id
      
 where aee.application_id is null
+
