@@ -342,16 +342,11 @@ export class ApplicationDecisionV2Service {
     updateDto: UpdateApplicationDecisionDto,
     existingDecision: Partial<ApplicationDecision>,
   ) {
-    if (updateDto.isDraft) {
-      return;
-    }
-
-    if (!updateDto.decisionComponents) {
-      throw new ServiceValidationException('Decision components are required');
-    }
-
     if (updateDto.decisionComponents) {
-      this.decisionComponentService.validate(updateDto.decisionComponents);
+      this.decisionComponentService.validate(
+        updateDto.decisionComponents,
+        updateDto.isDraft,
+      );
 
       if (existingDecision?.components) {
         const componentsToRemove = existingDecision.components.filter(
@@ -476,7 +471,10 @@ export class ApplicationDecisionV2Service {
 
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
-      this.decisionComponentService.validate(createDto.decisionComponents);
+      this.decisionComponentService.validate(
+        createDto.decisionComponents,
+        createDto.isDraft,
+      );
       decisionComponents = await this.decisionComponentService.createOrUpdate(
         createDto.decisionComponents,
         false,

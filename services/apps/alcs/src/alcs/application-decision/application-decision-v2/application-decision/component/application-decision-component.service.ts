@@ -105,14 +105,25 @@ export class ApplicationDecisionComponentService {
       updateDto.soilToRemoveAverageDepth ?? null;
   }
 
-  validate(componentsDto: CreateApplicationDecisionComponentDto[]) {
+  validate(
+    componentsDto: CreateApplicationDecisionComponentDto[],
+    isDraftDecision = false,
+  ) {
     if (!this.checkDuplicates(componentsDto)) {
       throw new ServiceValidationException(
         'Only on component of each type is allowed',
       );
     }
 
-    this.validateDecisionComponentFields(componentsDto);
+    if (!isDraftDecision) {
+      if (componentsDto.length < 1) {
+        throw new ServiceValidationException(
+          'Decision components are required',
+        );
+      }
+
+      this.validateDecisionComponentFields(componentsDto);
+    }
   }
 
   private checkDuplicates(components: CreateApplicationDecisionComponentDto[]) {
@@ -145,7 +156,7 @@ export class ApplicationDecisionComponentService {
     });
   }
 
-  private validateDecisionComponentFields(
+  validateDecisionComponentFields(
     componentsDto: CreateApplicationDecisionComponentDto[],
   ) {
     const errors: string[] = [];

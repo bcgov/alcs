@@ -276,7 +276,7 @@ describe('ApplicationDecisionComponentService', () => {
     ] as CreateApplicationDecisionComponentDto[];
 
     const mockValidationWrapper = () => {
-      service.validate(mockComponents);
+      service.validate(mockComponents, false);
     };
 
     expect(mockValidationWrapper).toThrow(ServiceValidationException);
