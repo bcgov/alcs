@@ -270,6 +270,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-pfrs-details>
+  <app-naru-details
+    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'NARU'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-naru-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

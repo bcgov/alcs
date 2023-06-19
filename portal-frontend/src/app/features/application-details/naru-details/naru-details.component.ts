@@ -5,11 +5,11 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 
 @Component({
-  selector: 'app-pofo-details[applicationSubmission]',
-  templateUrl: './pofo-details.component.html',
-  styleUrls: ['./pofo-details.component.scss'],
+  selector: 'app-naru-details[applicationSubmission]',
+  templateUrl: './naru-details.component.html',
+  styleUrls: ['./naru-details.component.scss'],
 })
-export class PofoDetailsComponent {
+export class NaruDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -24,14 +24,10 @@ export class PofoDetailsComponent {
   }
 
   @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {
-    this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
     this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
-    this.reclamationPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
   }
 
-  crossSections: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
-  reclamationPlans: ApplicationDocumentDto[] = [];
 
   constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
 

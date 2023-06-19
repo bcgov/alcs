@@ -10,6 +10,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
 import { CardService } from '../../alcs/card/card.service';
+import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { CodeController } from './code.controller';
 
 describe('CodeController', () => {
@@ -18,12 +19,14 @@ describe('CodeController', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockCardService: DeepMocked<CardService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
     mockAppService = createMock();
     mockCardService = createMock();
     mockAppDocService = createMock();
+    mockAppSubmissionService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -49,6 +52,10 @@ describe('CodeController', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocService,
+        },
+        {
+          provide: ApplicationSubmissionService,
+          useValue: mockAppSubmissionService,
         },
         {
           provide: ClsService,
@@ -78,6 +85,7 @@ describe('CodeController', () => {
     ]);
 
     mockAppDocService.fetchTypes.mockResolvedValue([]);
+    mockAppSubmissionService.listNaruSubtypes.mockResolvedValue([]);
   });
 
   it('should call out to local government service for fetching codes', async () => {

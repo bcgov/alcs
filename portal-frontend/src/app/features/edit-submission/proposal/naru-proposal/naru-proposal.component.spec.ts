@@ -8,6 +8,7 @@ import { ApplicationDocumentDto } from '../../../../services/application-documen
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { CodeService } from '../../../../services/code/code.service';
 
 import { NaruProposalComponent } from './naru-proposal.component';
 
@@ -37,6 +38,10 @@ describe('NaruProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: CodeService,
           useValue: {},
         },
       ],

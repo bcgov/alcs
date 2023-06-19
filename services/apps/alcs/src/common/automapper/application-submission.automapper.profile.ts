@@ -11,8 +11,10 @@ import { ApplicationStatus } from '../../portal/application-submission/applicati
 import {
   ApplicationSubmissionDetailedDto,
   ApplicationSubmissionDto,
+  NaruSubtypeDto,
 } from '../../portal/application-submission/application-submission.dto';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
@@ -52,6 +54,7 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
       );
 
       createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+      createMap(mapper, NaruSubtype, NaruSubtypeDto);
 
       createMap(
         mapper,

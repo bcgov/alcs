@@ -28,6 +28,7 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_LG,
@@ -45,6 +46,8 @@ export class ApplicationSubmissionService {
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(NaruSubtype)
+    private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
@@ -72,6 +75,9 @@ export class ApplicationSubmissionService {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
+      },
+      relations: {
+        naruSubtype: true,
       },
     });
     if (!application) {
@@ -407,6 +413,7 @@ export class ApplicationSubmissionService {
         isDraft: false,
       },
       relations: {
+        naruSubtype: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -424,6 +431,7 @@ export class ApplicationSubmissionService {
         uuid,
       },
       relations: {
+        naruSubtype: true,
         createdBy: true,
         status: true,
         owners: {
@@ -471,6 +479,7 @@ export class ApplicationSubmissionService {
           isDraft: false,
         },
         relations: {
+          naruSubtype: true,
           owners: {
             type: true,
             corporateSummary: {
@@ -504,6 +513,7 @@ export class ApplicationSubmissionService {
           uuid: submissionUuid,
         },
         relations: {
+          naruSubtype: true,
           owners: {
             type: true,
             corporateSummary: {
@@ -853,9 +863,9 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.naruSubtype = filterUndefined(
-      updateDto.naruSubtype,
-      applicationSubmission.naruSubtype,
+    applicationSubmission.naruSubtypeCode = filterUndefined(
+      updateDto.naruSubtypeCode,
+      applicationSubmission.naruSubtypeCode,
     );
     applicationSubmission.naruPurpose = filterUndefined(
       updateDto.naruPurpose,
@@ -917,5 +927,14 @@ export class ApplicationSubmissionService {
       updateDto.naruToPlaceAverageDepth,
       applicationSubmission.naruToPlaceAverageDepth,
     );
+  }
+
+  async listNaruSubtypes() {
+    return this.naruSubtypeRepository.find({
+      select: {
+        label: true,
+        code: true,
+      },
+    });
   }
 }

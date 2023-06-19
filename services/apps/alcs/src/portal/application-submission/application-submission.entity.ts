@@ -14,6 +14,7 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 export class StatusHistory {
   type: 'status_change';
@@ -581,9 +582,13 @@ export class ApplicationSubmission extends Base {
   soilHasSubmittedNotice: boolean | null;
 
   //NARU
+  @AutoMap(() => NaruSubtype)
+  @ManyToOne(() => NaruSubtype)
+  naruSubtype: NaruSubtype | null;
+
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  naruSubtype: string | null;
+  naruSubtypeCode: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
