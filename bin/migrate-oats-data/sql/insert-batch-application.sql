@@ -51,10 +51,7 @@ alcs_gov as(
    	else oats_gov.oats_gov_name
    end) 
    =
-   (case
-   	when alg."name" LIKE 'Islands Trust%' then 'Islands Trust'
-   	else alg."name"
-   end) 
+   alg."name"
 
 ),    
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
