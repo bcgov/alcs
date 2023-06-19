@@ -16,6 +16,7 @@ import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: NoticeOfIntentDecisionModule },
       { path: 'alcs', module: StaffJournalModule },
     ]),
+    SearchModule,
   ],
   controllers: [],
   providers: [],
