@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
+import { SearchResultDto } from './search.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +15,11 @@ export class SearchService {
 
   async fetch(searchTerm: string) {
     try {
-      return await firstValueFrom(this.http.get<any>(`${this.baseUrl}/${searchTerm}`));
+      return await firstValueFrom(this.http.get<SearchResultDto[]>(`${this.baseUrl}/${searchTerm}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast(`Search filed for ${searchTerm}`);
+      return undefined;
     }
   }
 }

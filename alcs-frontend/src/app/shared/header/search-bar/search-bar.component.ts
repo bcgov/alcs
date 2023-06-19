@@ -23,11 +23,33 @@ export class SearchBarComponent {
 
   async onSearch() {
     try {
-      const searchResult = this.searchService.fetch(this.searchText);
-      console.log('searchResult', searchResult);
-      
+      const searchResult = await this.searchService.fetch(this.searchText);
+      if (!searchResult || searchResult.length < 1) {
+        this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
+        return;
+      }
+
+      if (searchResult?.length === 1) {
+        const result = searchResult[0];
+        if (result.type === 'APP') {
+          await this.router.navigate(['application', result.referenceId]);
+        }
+
+        if (result.type === 'NOI') {
+          await this.router.navigate(['notice-of-intent', result.referenceId]);
+        }
+
+        if (['COV', 'PLAN'].includes(result.type)) {
+          this.toastService.showErrorToast('Not implemented');
+        }
+      }
+
+      if (searchResult?.length > 1) {
+        await this.router.navigateByUrl(`/search?searchText=${this.searchText}`);
+      }
+
       // const app = await this.applicationService.fetchApplication(this.searchText);
-      // await this.router.navigate(['application', app.fileNumber]);
+
       this.searchText = '';
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {

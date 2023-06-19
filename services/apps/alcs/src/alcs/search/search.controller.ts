@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -6,6 +8,8 @@ import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
+import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -16,13 +20,19 @@ export class SearchResultDto {
   referenceId: string;
   applicant?: string;
   localGovernmentName: string;
+  fileNumber: string;
+  boardCode?: string;
+  label?: ApplicationTypeDto;
 }
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 @Controller('search')
 export class SearchController {
-  constructor(private searchService: SearchService) {}
+  constructor(
+    private searchService: SearchService,
+    @InjectMapper() private mapper: Mapper,
+  ) {}
 
   @Get('/:searchTerm')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -109,6 +119,12 @@ export class SearchController {
       referenceId: application.fileNumber,
       localGovernmentName: application.localGovernment?.name,
       applicant: application.applicant,
+      fileNumber: application.fileNumber,
+      label: this.mapper.map(
+        application.type,
+        ApplicationType,
+        ApplicationTypeDto,
+      ),
     } as SearchResultDto;
 
     return result;
@@ -120,6 +136,7 @@ export class SearchController {
       referenceId: noi.fileNumber,
       localGovernmentName: noi.localGovernment?.name,
       applicant: noi.applicant,
+      fileNumber: noi.fileNumber,
     } as SearchResultDto;
 
     return result;
@@ -130,6 +147,8 @@ export class SearchController {
       type: CARD_TYPE.PLAN,
       referenceId: planning.cardUuid,
       localGovernmentName: planning.localGovernment?.name,
+      fileNumber: planning.fileNumber,
+      boardCode: planning.card.board.code,
     } as SearchResultDto;
 
     return result;
@@ -141,6 +160,8 @@ export class SearchController {
       referenceId: covenant.cardUuid,
       localGovernmentName: covenant.localGovernment?.name,
       applicant: covenant.applicant,
+      fileNumber: covenant.fileNumber,
+      boardCode: covenant.card.board.code,
     } as SearchResultDto;
 
     return result;

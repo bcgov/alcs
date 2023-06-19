@@ -34,6 +34,7 @@ export class SearchService {
       relations: {
         card: true,
         localGovernment: true,
+        type: true,
       },
     });
 
@@ -77,7 +78,9 @@ export class SearchService {
         fileNumber,
       },
       relations: {
-        card: true,
+        card: {
+          board: true,
+        },
         localGovernment: true,
       },
     });
@@ -92,7 +95,9 @@ export class SearchService {
         fileNumber,
       },
       relations: {
-        card: true,
+        card: {
+          board: true,
+        },
         localGovernment: true,
       },
     });

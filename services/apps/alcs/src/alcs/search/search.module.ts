@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Application } from '../application/application.entity';
 import { Card } from '../card/card.entity';
@@ -20,7 +21,7 @@ import { SearchService } from './search.service';
       ApplicationLocalGovernment,
     ]),
   ],
-  providers: [SearchService],
+  providers: [SearchService, ApplicationProfile],
   controllers: [SearchController],
 })
 export class SearchModule {}

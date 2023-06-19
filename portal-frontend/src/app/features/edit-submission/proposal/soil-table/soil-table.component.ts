@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export type SoilTableData = {
@@ -60,7 +60,6 @@ export class SoilTableComponent implements OnInit, OnChanges {
     }
 
     this.form.valueChanges.subscribe((changes) => {
-      debugger;
       this.dataChange.emit({
         volume: this.volume.value !== null ? parseFloat(this.volume.value) : undefined,
         area: this.area.value !== null ? parseFloat(this.area.value) : undefined,
