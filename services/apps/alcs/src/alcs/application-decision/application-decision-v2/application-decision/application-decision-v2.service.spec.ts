@@ -566,34 +566,4 @@ describe('ApplicationDecisionV2Service', () => {
       );
     });
   });
-
-  // it('should throw an exception on release decision if no components', async () => {
-  //   const secondDecision = initApplicationDecisionMock(mockApplication);
-  //   secondDecision.uuid = 'second-uuid';
-  //   mockDecisionRepository.find.mockResolvedValue([
-  //     secondDecision,
-  //     mockDecision,
-  //   ]);
-  //   mockDecisionRepository.findOne.mockResolvedValue(secondDecision);
-
-  //   const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
-  //   const decisionUpdate: UpdateApplicationDecisionDto = {
-  //     date: decisionDate.getTime(),
-  //     outcomeCode: 'New Outcome',
-  //     isDraft: false,
-  //   };
-
-  //   await expect(
-  //     await service.update(
-  //       mockDecision.uuid,
-  //       decisionUpdate,
-  //       undefined,
-  //       undefined,
-  //     ),
-  //   ).rejects.toMatchObject(
-  //     new ServiceValidationException('Decision components are required'),
-  //   );
-
-  //   expect(mockDecisionRepository.save).toBeCalledTimes(0);
-  // });
 });
