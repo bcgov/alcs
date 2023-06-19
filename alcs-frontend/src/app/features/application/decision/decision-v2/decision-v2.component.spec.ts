@@ -2,11 +2,11 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
+import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import { ApplicationDecisionDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -19,7 +19,7 @@ describe('DecisionV2Component', () => {
   let fixture: ComponentFixture<DecisionV2Component>;
   let mockApplicationDecisionService: DeepMocked<ApplicationDecisionV2Service>;
   let mockAppDetailService: DeepMocked<ApplicationDetailService>;
-  let mockRouter: DeepMocked<Router>;
+  let mockApplicationDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
 
   beforeEach(async () => {
     mockApplicationDecisionService = createMock();
@@ -29,7 +29,7 @@ describe('DecisionV2Component', () => {
     mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
 
-    mockRouter = createMock()
+    mockApplicationDecisionComponentService = createMock();
 
     await TestBed.configureTestingModule({
       imports: [MatSnackBarModule],
@@ -58,6 +58,10 @@ describe('DecisionV2Component', () => {
         {
           provide: MatDialog,
           useValue: {},
+        },
+        {
+          provide: ApplicationDecisionComponentService,
+          useValue: mockApplicationDecisionComponentService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

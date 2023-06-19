@@ -76,7 +76,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell class="actions" *matCellDef="let element">
-            <button (click)="onRemoveFile(element.uuid)" mat-stroked-button color="accent">Remove</button>
+            <button (click)="onDeleteFile(element)" mat-stroked-button color="accent">Remove</button>
           </td>
         </ng-container>
 
@@ -84,13 +84,13 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
         <tr class="mat-row" *matNoDataRow>
-          <td class="no-data-text" colspan="6">No attachemnts</td>
+          <td class="no-data-text" colspan="6">No attachments</td>
         </tr>
       </table>
     </div>
   </form>
   <div class="uploader">
-    <app-file-drag-drop (uploadFiles)="attachFile($event)"></app-file-drag-drop>
+    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
   </div>
 </section>
 <div class="button-container">

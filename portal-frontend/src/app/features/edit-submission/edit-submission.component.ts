@@ -14,6 +14,7 @@ import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepp
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { ChangeApplicationTypeDialogComponent } from './change-application-type-dialog/change-application-type-dialog.component';
 import { LandUseComponent } from './land-use/land-use.component';
+import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
@@ -70,6 +71,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
   @ViewChild(PofoProposalComponent) pofoProposalComponent?: RosoProposalComponent;
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
+  @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -218,6 +220,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     }
     if (this.pfrsProposalComponent) {
       await this.pfrsProposalComponent.onSave();
+    }
+    if (this.naruProposalComponent) {
+      await this.naruProposalComponent.onSave();
     }
   }
 

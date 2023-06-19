@@ -1,0 +1,16 @@
+<form [formGroup]="form" class="turp-component-form">
+  <div class="grid-3">
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

@@ -12,7 +12,7 @@ import * as config from 'config';
 import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { generateModuleGraph } from './commands/graph';
-import { importApplications } from './commands/import';
+import { importNOIs } from './commands/import';
 import { applyDefaultDocumentTags } from './commands/tag';
 import { MainModule } from './main.module';
 
@@ -108,7 +108,7 @@ async function bootstrap() {
     await generateModuleGraph(app);
   }
   if (extraArg == 'import') {
-    await importApplications();
+    await importNOIs();
   }
   if (extraArg == 'tagDocuments') {
     await applyDefaultDocumentTags();

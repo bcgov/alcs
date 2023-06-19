@@ -25,6 +25,8 @@ import { ApplicationSubmissionService } from '../application-submission/applicat
 
 const LG_TEMPLATE_FILENAME = 'submission-lg-review-template.docx';
 const FNG_TEMPLATE_FILENAME = 'submission-fng-review-template.docx';
+const NOT_SUBJECT_TO_AUTHORIZATION = 'Not Subject to Authorization';
+const NO_DATA = 'No Data';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -73,7 +75,7 @@ export class GenerateReviewDocumentService {
     if (reviewRes.status === HttpStatus.OK) {
       await this.applicationDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
-        fileName: `${fileNumber}_Submission`,
+        fileName: `${fileNumber}_LFNG_Review.pdf`,
         user: user,
         file: reviewRes.data,
         mimeType: 'application/pdf',
@@ -105,11 +107,14 @@ export class GenerateReviewDocumentService {
       submission.fileNumber,
     );
 
-    const localGovernment = application.localGovernmentUuid
+    const localGovernment = submission?.localGovernmentUuid
       ? await this.localGovernmentService.getByUuid(
-          application.localGovernmentUuid,
+          submission.localGovernmentUuid,
         )
       : undefined;
+    dto.isFirstNationGovernment = localGovernment
+      ? localGovernment.isFirstNation
+      : false;
 
     const attachments = documents
       .filter((document) => document.document.source === DOCUMENT_SOURCE.LFNG)
@@ -128,6 +133,8 @@ export class GenerateReviewDocumentService {
       attachments.push(staffReport);
     }
 
+    const isAuthorized = this.setAuthorization(dto);
+
     return {
       ...dto,
       generatedDateTime: dayjs
@@ -137,16 +144,43 @@ export class GenerateReviewDocumentService {
       OCPConsistent: formatBooleanToYesNoString(dto.OCPConsistent),
       isSubjectToZoning: formatBooleanToYesNoString(dto.isSubjectToZoning),
       isZoningConsistent: formatBooleanToYesNoString(dto.isZoningConsistent),
-      isAuthorized: formatBooleanToYesNoString(dto.isAuthorized),
+      isAuthorized: isAuthorized,
       fileNumber: submission.fileNumber,
       status: submission.status,
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
-      localGovernment: localGovernment ? localGovernment.name : 'No Data',
+      localGovernment: localGovernment ? localGovernment.name : NO_DATA,
       isFirstNationGovernment: localGovernment?.isFirstNation ?? false,
       attachments,
-      noData: 'No Data',
-      notSubjectToAuthorization: 'Not Subject to Authorization',
+      noData: NO_DATA,
+      notSubjectToAuthorization: NOT_SUBJECT_TO_AUTHORIZATION,
     };
+  }
+
+  private mapAuthorizationValueToStr(isAuthorized: boolean | null) {
+    switch (isAuthorized) {
+      case true:
+        return 'Authorize';
+      case false:
+        return 'Refuse to Authorize';
+      default:
+        return NO_DATA;
+    }
+  }
+
+  private setAuthorization(dto: ApplicationSubmissionReviewDto) {
+    let authorizedStr = NO_DATA;
+
+    if (dto.isFirstNationGovernment) {
+      return this.mapAuthorizationValueToStr(dto.isAuthorized);
+    } else {
+      if (dto.isSubjectToZoning === false && dto.isOCPDesignation === false) {
+        authorizedStr = NOT_SUBJECT_TO_AUTHORIZATION;
+      } else if (dto.isSubjectToZoning || dto.isOCPDesignation) {
+        return this.mapAuthorizationValueToStr(dto.isAuthorized);
+      }
+
+      return authorizedStr;
+    }
   }
 }

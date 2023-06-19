@@ -36,8 +36,8 @@
       {{ submittedApplication.primaryContact.lastName }}
     </div>
     <div class="subheading2 grid-1">
-      <span *ngIf='submittedApplication.primaryContact.type !== "CRWN"'>Organization</span>
-      <span *ngIf='submittedApplication.primaryContact.type === "CRWN"'>Ministry/Department Responsible</span>
+      <span *ngIf='submittedApplication.primaryContact.type.code !== "CRWN"'>Organization</span>
+      <span *ngIf='submittedApplication.primaryContact.type.code === "CRWN"'>Ministry/Department Responsible</span>
     </div>
     <div class="grid-double">
       {{ submittedApplication.primaryContact.organizationName }}

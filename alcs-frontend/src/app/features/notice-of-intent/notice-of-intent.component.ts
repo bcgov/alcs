@@ -4,11 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
-
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
+import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
+import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
 
 export const childRoutes = [
@@ -35,7 +38,18 @@ export const childRoutes = [
     menuTitle: 'Info Request',
     icon: 'contact_mail',
     component: InfoRequestsComponent,
-    requiresAuthorization: true,
+  },
+  {
+    path: 'decision',
+    menuTitle: 'Decision',
+    icon: 'gavel',
+    component: DecisionComponent,
+  },
+  {
+    path: 'post-decision',
+    menuTitle: 'Post-Decision',
+    icon: 'edit_note',
+    component: PostDecisionComponent,
   },
 ];
 
@@ -50,11 +64,13 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
 
   fileNumber?: string;
   noticeOfIntent: NoticeOfIntentDto | undefined;
+  modifications: NoticeOfIntentModificationDto[] = [];
 
   isAuthorized = true;
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private route: ActivatedRoute,
     private titleService: Title
   ) {}
@@ -72,13 +88,19 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
           `${environment.siteName} | ${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`
         );
 
+        this.noticeOfIntentModificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
         this.noticeOfIntent = noticeOfIntent;
       }
+    });
+
+    this.noticeOfIntentModificationService.$modifications.pipe(takeUntil(this.destroy)).subscribe((value) => {
+      this.modifications = value;
     });
   }
 
   ngOnDestroy(): void {
     this.noticeOfIntentDetailService.clear();
+    this.noticeOfIntentModificationService.clearModifications();
     this.destroy.next();
     this.destroy.complete();
   }

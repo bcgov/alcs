@@ -12,7 +12,6 @@
           [items]="resolutionYears"
           formControlName="resolutionYear"
           appendTo="body"
-          required
           placeholder="Select Year for Resolution Number*"
           [clearable]="false"
         ></ng-select>
@@ -53,7 +52,6 @@
           [matDatepicker]="datePicker"
           formControlName="date"
           name="date"
-          required
           [min]="minDate | startOfDay"
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
@@ -83,7 +81,6 @@
         appendTo="body"
         bindLabel="label"
         bindValue="code"
-        required
         placeholder="Linked Resolution Outcome *"
       ></ng-select>
 
@@ -97,7 +94,6 @@
         placeholder="Decision Maker *"
         (change)="onSelectDecisionMaker($event)"
         [clearable]="false"
-        required
       ></ng-select>
 
       <ng-select
@@ -136,7 +132,6 @@
         appendTo="body"
         bindLabel="label"
         bindValue="code"
-        required
         placeholder="Decision Outcome *"
         [clearable]="false"
         (change)="onChangeDecisionOutcome($event)"
@@ -158,7 +153,7 @@
       <div class="full-width">
         <mat-form-field style="width: 100%" appearance="outline">
           <mat-label>Decision Description</mat-label>
-          <input matInput formControlName="decisionDescription" required />
+          <input matInput formControlName="decisionDescription" />
         </mat-form-field>
       </div>
 
@@ -172,7 +167,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Days to Hide from Public</mat-label>
-        <input matInput mask="0*" formControlName="daysHideFromPublic" required />
+        <input matInput mask="0*" formControlName="daysHideFromPublic" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="date-picker">

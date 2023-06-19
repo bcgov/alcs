@@ -4,8 +4,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApplicationService } from '../../application/application.service';
 import { CovenantService } from '../../covenant/covenant.service';
-import { ApplicationModificationService } from '../../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../../decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';
 import { UnarchiveCardService } from './unarchive-card.service';
 

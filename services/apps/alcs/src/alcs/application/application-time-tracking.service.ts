@@ -5,8 +5,8 @@ import { ApplicationPaused } from './application-paused.entity';
 import { Application } from './application.entity';
 
 export type ApplicationTimeData = {
-  activeDays: number;
-  pausedDays: number;
+  activeDays: number | null;
+  pausedDays: number | null;
 };
 
 @Injectable()

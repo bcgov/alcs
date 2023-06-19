@@ -14,6 +14,7 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationStatus } from './application-status/application-status.entity';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 export class StatusHistory {
   type: 'status_change';
@@ -579,6 +580,111 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
+
+  //NARU
+  @AutoMap(() => NaruSubtype)
+  @ManyToOne(() => NaruSubtype)
+  naruSubtype: NaruSubtype | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruSubtypeCode: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruPurpose: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruFloorArea: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruResidenceNecessity: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruLocationRationale: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruInfrastructure: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruExistingStructures: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruFillType: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruFillOrigin: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruToPlaceAverageDepth: number | null;
 
   @AutoMap(() => Application)
   @ManyToOne(() => Application)

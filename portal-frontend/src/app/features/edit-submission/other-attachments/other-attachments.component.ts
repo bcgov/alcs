@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
@@ -13,10 +13,8 @@ import {
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../services/code/code.service';
-import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
-import { RemoveFileConfirmationDialogComponent } from '../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../edit-submission.component';
-import { StepComponent } from '../step.partial';
+import { FilesStepComponent } from '../files-step.partial';
 
 const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
 
@@ -25,15 +23,12 @@ const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIO
   templateUrl: './other-attachments.component.html',
   styleUrls: ['./other-attachments.component.scss'],
 })
-export class OtherAttachmentsComponent extends StepComponent implements OnInit, OnDestroy {
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-
+export class OtherAttachmentsComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
   selectableTypes: ApplicationDocumentTypeDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
-  fileId: string | undefined;
 
   private isDirty = false;
 
@@ -43,11 +38,11 @@ export class OtherAttachmentsComponent extends StepComponent implements OnInit, 
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
     private codeService: CodeService,
-    private dialog: MatDialog
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog
   ) {
-    super();
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
@@ -78,49 +73,11 @@ export class OtherAttachmentsComponent extends StepComponent implements OnInit, 
     });
   }
 
-  async attachFile(file: FileHandle) {
-    if (this.fileId) {
-      await this.onSave();
-      await this.applicationDocumentService.attachExternalFile(this.fileId, file.file, null);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async onRemoveFile(uuid: string) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.removeFile(uuid);
-          }
-        });
-    } else {
-      await this.removeFile(uuid);
-    }
-  }
-
-  private async removeFile(uuid: string) {
-    if (this.fileId) {
-      await this.onSave();
-      await this.applicationDocumentService.deleteExternalFile(uuid);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
-  }
-
   async onSave() {
+    await this.save();
+  }
+
+  protected async save() {
     if (this.isDirty) {
       const updateDtos: ApplicationDocumentUpdateDto[] = this.otherFiles.map((file) => ({
         uuid: file.uuid,

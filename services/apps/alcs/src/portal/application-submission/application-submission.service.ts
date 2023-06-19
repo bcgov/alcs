@@ -28,6 +28,7 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_LG,
@@ -45,6 +46,8 @@ export class ApplicationSubmissionService {
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
     @InjectRepository(ApplicationStatus)
     private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(NaruSubtype)
+    private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
@@ -72,6 +75,9 @@ export class ApplicationSubmissionService {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
+      },
+      relations: {
+        naruSubtype: true,
       },
     });
     if (!application) {
@@ -135,7 +141,8 @@ export class ApplicationSubmissionService {
     this.setNFUFields(applicationSubmission, updateDto);
     this.setTURFields(applicationSubmission, updateDto);
     await this.setSUBDFields(applicationSubmission, updateDto);
-    this.setSoilFields(applicationSubmission, updateDto);
+    await this.setSoilFields(applicationSubmission, updateDto);
+    this.setNARUFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -406,6 +413,7 @@ export class ApplicationSubmissionService {
         isDraft: false,
       },
       relations: {
+        naruSubtype: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -423,7 +431,9 @@ export class ApplicationSubmissionService {
         uuid,
       },
       relations: {
+        naruSubtype: true,
         createdBy: true,
+        status: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -469,6 +479,7 @@ export class ApplicationSubmissionService {
           isDraft: false,
         },
         relations: {
+          naruSubtype: true,
           owners: {
             type: true,
             corporateSummary: {
@@ -502,6 +513,7 @@ export class ApplicationSubmissionService {
           uuid: submissionUuid,
         },
         relations: {
+          naruSubtype: true,
           owners: {
             type: true,
             corporateSummary: {
@@ -509,6 +521,7 @@ export class ApplicationSubmissionService {
             },
             parcels: true,
           },
+          status: true,
         },
       });
     }
@@ -844,5 +857,84 @@ export class ApplicationSubmissionService {
         applicationUuid,
       );
     }
+  }
+
+  private setNARUFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.naruSubtypeCode = filterUndefined(
+      updateDto.naruSubtypeCode,
+      applicationSubmission.naruSubtypeCode,
+    );
+    applicationSubmission.naruPurpose = filterUndefined(
+      updateDto.naruPurpose,
+      applicationSubmission.naruPurpose,
+    );
+    applicationSubmission.naruFloorArea = filterUndefined(
+      updateDto.naruFloorArea,
+      applicationSubmission.naruFloorArea,
+    );
+    applicationSubmission.naruResidenceNecessity = filterUndefined(
+      updateDto.naruResidenceNecessity,
+      applicationSubmission.naruResidenceNecessity,
+    );
+    applicationSubmission.naruLocationRationale = filterUndefined(
+      updateDto.naruLocationRationale,
+      applicationSubmission.naruLocationRationale,
+    );
+    applicationSubmission.naruInfrastructure = filterUndefined(
+      updateDto.naruInfrastructure,
+      applicationSubmission.naruInfrastructure,
+    );
+    applicationSubmission.naruExistingStructures = filterUndefined(
+      updateDto.naruExistingStructures,
+      applicationSubmission.naruExistingStructures,
+    );
+    applicationSubmission.naruWillImportFill = filterUndefined(
+      updateDto.naruWillImportFill,
+      applicationSubmission.naruWillImportFill,
+    );
+    applicationSubmission.naruFillType = filterUndefined(
+      updateDto.naruFillType,
+      applicationSubmission.naruFillType,
+    );
+    applicationSubmission.naruFillOrigin = filterUndefined(
+      updateDto.naruFillOrigin,
+      applicationSubmission.naruFillOrigin,
+    );
+    applicationSubmission.naruProjectDurationAmount = filterUndefined(
+      updateDto.naruProjectDurationAmount,
+      applicationSubmission.naruProjectDurationAmount,
+    );
+    applicationSubmission.naruProjectDurationUnit = filterUndefined(
+      updateDto.naruProjectDurationUnit,
+      applicationSubmission.naruProjectDurationUnit,
+    );
+    applicationSubmission.naruToPlaceVolume = filterUndefined(
+      updateDto.naruToPlaceVolume,
+      applicationSubmission.naruToPlaceVolume,
+    );
+    applicationSubmission.naruToPlaceArea = filterUndefined(
+      updateDto.naruToPlaceArea,
+      applicationSubmission.naruToPlaceArea,
+    );
+    applicationSubmission.naruToPlaceMaximumDepth = filterUndefined(
+      updateDto.naruToPlaceMaximumDepth,
+      applicationSubmission.naruToPlaceMaximumDepth,
+    );
+    applicationSubmission.naruToPlaceAverageDepth = filterUndefined(
+      updateDto.naruToPlaceAverageDepth,
+      applicationSubmission.naruToPlaceAverageDepth,
+    );
+  }
+
+  async listNaruSubtypes() {
+    return this.naruSubtypeRepository.find({
+      select: {
+        label: true,
+        code: true,
+      },
+    });
   }
 }

@@ -1,5 +1,6 @@
 from db import inject_conn_pool
 
+
 def compile_application_insert_query(number_of_rows_to_insert):
     """
     function takes the number of rows to insert and generates an SQL insert statement with upserts using the ON CONFLICT clause
@@ -25,8 +26,10 @@ def drop_etl_temp_table():
     remove the table
     """
     return f"""
+
     DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate;
     """
+
 
 
 @inject_conn_pool
@@ -35,12 +38,14 @@ def process_applications(conn=None, batch_size=10000):
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of non duplicate applications and prints it to the console. Then, it fetches the applications to insert in batches using application IDs / file_number, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
+
         with open(
             "sql/application-etl-table-create.sql", "r", encoding="utf-8"
         ) as sql_file:
             create_tables = sql_file.read()
             cursor.execute(create_tables)
         conn.commit()
+
 
         with open(
             "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
@@ -49,6 +54,7 @@ def process_applications(conn=None, batch_size=10000):
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
         print("- Applications to insert: ", count_total)
+
         with open(
             "sql/application_exclude_count.sql", "r", encoding="utf-8"
         ) as sql_file:
@@ -98,6 +104,7 @@ def process_applications(conn=None, batch_size=10000):
                     failed_inserts  = count_total - successful_inserts_count
                     last_application_id = last_application_id +1
 
+
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
     print("Number of multiple type-code applications not inserted", count_total_exclude)
@@ -105,6 +112,7 @@ def process_applications(conn=None, batch_size=10000):
         with conn.cursor() as cursor:
             cursor.execute(drop_etl_temp_table())
             print("etl temp table removed")
+
 
     else:
         print("Table not deleted, inserts failed")
@@ -119,6 +127,7 @@ def clean_applications(conn=None):
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )
         print(f"Deleted items count = {cursor.rowcount}")
+
         cursor.execute(
             "DROP TABLE IF EXISTS oats.alcs_etl_application_exclude"
         )
@@ -126,6 +135,7 @@ def clean_applications(conn=None):
             "DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate"
         )
         print(f"Tempory tables dropped")
+
 
 
         

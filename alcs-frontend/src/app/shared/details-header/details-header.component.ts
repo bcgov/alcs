@@ -7,6 +7,7 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
+import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import {
   MODIFICATION_TYPE_LABEL,
@@ -26,6 +27,7 @@ export class DetailsHeaderComponent {
 
   @Input() heading = 'Title Here';
   @Input() types: ApplicationTypeDto[] = [];
+  @Input() days = 'Calendar Days';
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
@@ -54,8 +56,8 @@ export class DetailsHeaderComponent {
     this.setupLinkedCards();
   }
 
-  _modifications: ApplicationModificationDto[] = [];
-  @Input() set modifications(modifications: ApplicationModificationDto[]) {
+  _modifications: (ApplicationModificationDto | NoticeOfIntentModificationDto)[] = [];
+  @Input() set modifications(modifications: (ApplicationModificationDto | NoticeOfIntentModificationDto)[]) {
     this.showModificationLabel = modifications.reduce((showLabel, modification) => {
       return modification.reviewOutcome === null || modification.reviewOutcome.code !== 'REF';
     }, false);
@@ -85,7 +87,7 @@ export class DetailsHeaderComponent {
     if (application && 'card' in application && application.card) {
       result.push({
         ...application.card,
-        displayName: 'Standard Application',
+        displayName: 'Standard Card',
       });
     }
     const mappedModificationCards = this._modifications

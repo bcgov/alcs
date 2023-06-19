@@ -109,10 +109,36 @@ export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
-  nfuEndDate?: number | null;
+  endDate?: number | null;
 }
 
-export interface DecisionComponentDto extends NfuDecisionComponentDto {
+export interface TurpDecisionComponentDto {
+  expiryDate?: number | null;
+}
+
+export interface PofoDecisionComponentDto {
+  endDate?: number | null;
+  soilFillTypeToPlace?: string | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+}
+
+export interface RosoDecisionComponentDto {
+  endDate?: number | null;
+  soilTypeRemoved?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+}
+
+export interface DecisionComponentDto
+  extends NfuDecisionComponentDto,
+    TurpDecisionComponentDto,
+    PofoDecisionComponentDto,
+    RosoDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -135,6 +161,10 @@ export interface DecisionCodesDto {
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
+  TURP = 'TURP',
+  POFO = 'POFO',
+  ROSO = 'ROSO',
+  PFRS = 'PFRS',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

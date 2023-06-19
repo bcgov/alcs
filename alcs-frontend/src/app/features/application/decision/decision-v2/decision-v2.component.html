@@ -30,12 +30,7 @@
       <div class="loading-overlay" *ngIf="decision.loading">
         <mat-spinner></mat-spinner>
       </div>
-      <div
-        class="decision"
-        [ngClass]="{
-          'has-post-decisions': decision.modifiedBy?.length || decision.reconsideredBy?.length
-        }"
-      >
+      <div class="decision">
         <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
           <div>
             <strong>Modified&nbsp;By:&nbsp;</strong>
@@ -122,8 +117,8 @@
               <ng-container *ngIf="decision.isOther">Other</ng-container>
             </div>
 
-            <div>
-              <div *ngIf="!!decision.modifies || !!decision.reconsiders" class="subheading2">
+            <div *ngIf="!!decision.modifies || !!decision.reconsiders">
+              <div class="subheading2">
                 <span *ngIf="!!decision.modifies">Modification Outcome</span>
                 <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
               </div>
@@ -133,7 +128,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="decision-content">
             <div class="subheading2">Decision Description</div>
             {{ decision.decisionDescription ? decision.decisionDescription : 'No Data' }}
           </div>
@@ -145,15 +140,33 @@
             </div>
             <div>
               <div class="subheading2">Stats Required</div>
-              {{ decision.isStatsRequired ? 'Yes' : 'No' }}
+              <app-inline-boolean
+                [selectedValue]="decision.isStatsRequired ?? null"
+                (save)="onStatsRequiredUpdate(decision.uuid, $event)"
+              ></app-inline-boolean>
+            </div>
+            <div *ngIf="decision.outcome?.code === 'RESC'">
+              <div class="subheading2">Rescinded Date</div>
+              <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+              <ng-container *ngIf="!decision.rescindedDate">No Data</ng-container>
             </div>
           </div>
+
+          <div class="decision-content" *ngIf="decision.outcome?.code === 'RESC'">
+            <div class="subheading2">Rescinded Comment</div>
+            {{ decision.rescindedComment ? decision.rescindedComment : 'No Data' }}
+          </div>
+
           <div class="decision-documents decision-content">
-            <app-decision-documents [editable]="false" [decision]="decision"></app-decision-documents>
+            <app-decision-documents
+              [editable]="decision.isDraft"
+              [loadData]="false"
+              [decision]="decision"
+            ></app-decision-documents>
           </div>
 
           <!-- Components -->
-          <div class="decision-content">
+          <div class="decision-content" *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
             <div class="row">
               <h5>Decision Components and Conditions</h5>
             </div>
@@ -162,41 +175,77 @@
               <div class="subheading1 decision-content">
                 {{ component.applicationDecisionComponentType?.label }} Component
               </div>
-              <div class="decision-content grid-3">
-                <div>
-                  <div class="subheading2">ALR Area Impacted (ha)</div>
-                  {{ component.alrArea }}
-                </div>
-                <div>
-                  <div class="subheading2">Agri Cap</div>
-                  {{ component.agCap }}
-                </div>
-                <div>
-                  <div class="subheading2">Agri Cap Source</div>
-                  {{ component.agCapSource }}
+              <div class="decision-content">
+                <div class="grid-3 decision-content">
+                  <div>
+                    <div class="subheading2">ALR Area Impacted (ha)</div>
+                    <app-inline-number
+                      [value]="component?.alrArea?.toString()"
+                      (save)="onSaveAlrArea(decision.uuid, component.uuid!, $event)"
+                    ></app-inline-number>
+                  </div>
+                  <div>
+                    <div class="subheading2">Agri Cap</div>
+                    {{ component.agCap }}
+                  </div>
+                  <div>
+                    <div class="subheading2">Agri Cap Source</div>
+                    {{ component.agCapSource }}
+                  </div>
                 </div>
 
-                <div>
-                  <div class="subheading2">Non-Farm Use Type</div>
-                  {{ component.nfuType }}
+                <div *ngIf="component.agCapMap || component.agCapConsultant" class="grid-3 decision-content">
+                  <div *ngIf="component.agCapMap">
+                    <div class="subheading2">Ag Cap Map</div>
+                    {{ component.agCapMap }}
+                  </div>
+                  <div *ngIf="component.agCapConsultant">
+                    <div class="subheading2">Ag Cap Consultant</div>
+                    {{ component.agCapConsultant }}
+                  </div>
                 </div>
-                <div>
-                  <div class="subheading2">Non-Farm Use Sub-Type</div>
-                  {{ component.nfuSubType }}
-                </div>
-                <div>
-                  <div class="subheading2">Use End Date</div>
-                  {{ component.nfuEndDate }}
-                </div>
+
+                <app-nfup
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
+                  [component]="component"
+                ></app-nfup>
+
+                <app-turp
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
+                  [component]="component"
+                ></app-turp>
+
+                <app-pofo
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
+                  [component]="component"
+                ></app-pofo>
+
+                <app-roso
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
+                  [component]="component"
+                ></app-roso>
+
+                <app-pfrs
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
+                  [component]="component"
+                ></app-pfrs>
               </div>
             </div>
           </div>
 
-          <div class="decision-content">
+          <div
+            class="decision-content"
+            *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions"
+          >
             <h1 class="subheading1">Conditions</h1>
             <div>
               <a href="#" (click)="onNavigateToConditions()"
-                >View Conditions<mat-icon class="conditions-link-icon">link</mat-icon></a
+                >View Conditions<mat-icon class="conditions-link-icon">open_in_new</mat-icon></a
               >
             </div>
           </div>

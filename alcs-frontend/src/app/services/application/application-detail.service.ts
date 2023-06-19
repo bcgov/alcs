@@ -13,6 +13,8 @@ export class ApplicationDetailService {
   constructor(private applicationService: ApplicationService, private toastService: ToastService) {}
 
   async loadApplication(fileNumber: string) {
+    this.clearApplication();
+
     this.selectedFileNumber = fileNumber;
     const application = await this.applicationService.fetchApplication(fileNumber);
     this.$application.next(application);

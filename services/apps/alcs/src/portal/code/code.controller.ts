@@ -9,6 +9,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardService } from '../../alcs/card/card.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 export interface LocalGovernmentDto {
   uuid: string;
@@ -25,6 +26,7 @@ export class CodeController {
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private cardService: CardService,
+    private applicationSubmissionService: ApplicationSubmissionService,
   ) {}
 
   @Get()
@@ -34,7 +36,9 @@ export class CodeController {
       await this.applicationService.fetchApplicationTypes();
     const applicationDocumentTypes =
       await this.applicationDocumentService.fetchTypes();
-    const submissionTypes = await this.cardService.getCardTypes(); //Card Types?
+    const submissionTypes = await this.cardService.getCardTypes();
+    const naruSubtypes =
+      await this.applicationSubmissionService.listNaruSubtypes();
 
     const mappedDocTypes = applicationDocumentTypes.map((docType) => {
       if (docType.portalLabel) {
@@ -51,6 +55,7 @@ export class CodeController {
       applicationTypes,
       submissionTypes,
       applicationDocumentTypes: mappedDocTypes,
+      naruSubtypes,
     };
   }
 

@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Board } from '../board/board.entity';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
 import { CovenantDto, CreateCovenantDto } from './covenant.dto';
 import { Covenant } from './covenant.entity';
@@ -47,7 +48,7 @@ export class CovenantService {
       applicant: data.applicant,
     });
 
-    covenant.card = await this.cardService.create('COV', board, false);
+    covenant.card = await this.cardService.create(CARD_TYPE.COV, board, false);
     const savedCovenant = await this.repository.save(covenant);
 
     return this.getOrFail(savedCovenant.uuid);
@@ -112,9 +113,9 @@ export class CovenantService {
     });
   }
 
-  async getByBoardCode(boardCode: string) {
+  async getByBoard(boardUuid: string) {
     return this.repository.find({
-      where: { card: { board: { code: boardCode } } },
+      where: { card: { boardUuid } },
       relations: this.DEFAULT_RELATIONS,
     });
   }

@@ -12,6 +12,7 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../edit-submission.component';
+import { FilesStepComponent } from '../files-step.partial';
 import { StepComponent } from '../step.partial';
 
 @Component({
@@ -19,9 +20,7 @@ import { StepComponent } from '../step.partial';
   templateUrl: './primary-contact.component.html',
   styleUrls: ['./primary-contact.component.scss'],
 })
-export class PrimaryContactComponent extends StepComponent implements OnInit, OnDestroy {
-  @Input() $application!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+export class PrimaryContactComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.PrimaryContact;
 
   nonAgentOwners: ApplicationOwnerDto[] = [];
@@ -31,6 +30,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
   needsAuthorizationLetter = false;
   selectedThirdPartyAgent = false;
   selectedOwnerUuid: string | undefined = undefined;
+  isCrownOwner = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -46,21 +46,20 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
     email: this.email,
   });
 
-  private fileId = '';
   private submissionUuid = '';
 
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
+    applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService,
-    private dialog: MatDialog
+    dialog: MatDialog
   ) {
-    super();
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
-    this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
         this.submissionUuid = application.uuid;
@@ -73,52 +72,11 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
     });
   }
 
-  async onAttachFile(file: FileHandle) {
-    if (this.fileId) {
-      await this.onSave();
-      await this.applicationDocumentService.attachExternalFile(
-        this.fileId,
-        file.file,
-        DOCUMENT_TYPE.AUTHORIZATION_LETTER
-      );
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async onRemoveFile(document: ApplicationDocumentDto) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.removeFile(document);
-          }
-        });
-    } else {
-      await this.removeFile(document);
-    }
-  }
-
-  async removeFile(document: ApplicationDocumentDto) {
-    if (this.fileId) {
-      await this.onSave();
-      await this.applicationDocumentService.deleteExternalFile(document.uuid);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
   async onSave() {
     await this.save();
   }
 
-  private async save() {
+  protected async save() {
     let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
       (owner) => owner.uuid === this.selectedOwnerUuid
     );
@@ -158,6 +116,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
       this.organizationName.enable();
       this.email.enable();
       this.phoneNumber.enable();
+      this.isCrownOwner = false;
     } else {
       this.firstName.disable();
       this.lastName.disable();
@@ -173,6 +132,7 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
+        this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
       }
     }
 

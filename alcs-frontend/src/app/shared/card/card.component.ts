@@ -35,6 +35,7 @@ export enum CardType {
   MODI = 'MODI',
   COV = 'COV',
   NOI = 'NOI',
+  NOI_MODI = 'NOIM',
 }
 
 const lineHeight = 24;

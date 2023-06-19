@@ -66,7 +66,8 @@
           </div>
         </div>
         <div class="full-row">
-          <label for="orgName">Organization Name (optional)</label>
+          <label *ngIf="!isCrownOwner" for="orgName">Organization Name (optional)</label>
+          <label *ngIf="isCrownOwner" for="orgName">Ministry or Department</label>
           <mat-form-field appearance="outline">
             <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
           </mat-form-field>
@@ -125,8 +126,9 @@
     <app-file-drag-drop
       [allowMultiple]="true"
       [uploadedFiles]="files"
-      (uploadFiles)="onAttachFile($event)"
-      (deleteFile)="onRemoveFile($event)"
+      (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
+      (deleteFile)="onDeleteFile($event)"
+      (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter || selectedThirdPartyAgent"
     ></app-file-drag-drop>

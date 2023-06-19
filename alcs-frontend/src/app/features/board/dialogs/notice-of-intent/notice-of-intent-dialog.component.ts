@@ -8,6 +8,7 @@ import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { UserService } from '../../../../services/user/user.service';
+import { RETROACTIVE_TYPE_LABEL } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { CardDialogComponent } from '../card-dialog/card-dialog.component';
 
@@ -22,6 +23,7 @@ export class NoticeOfIntentDialogComponent extends CardDialogComponent implement
   cardTitle = '';
 
   noticeOfIntent: NoticeOfIntentDto = this.data;
+  RETROACTIVE_TYPE = RETROACTIVE_TYPE_LABEL;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NoticeOfIntentDto,

@@ -3,7 +3,6 @@ import { ServiceValidationException } from '@app/common/exceptions/base.exceptio
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { getConfigToken } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
@@ -16,7 +15,7 @@ import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
 import { NotificationService } from '../notification/notification.service';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
-import { CardType } from './card-type/card-type.entity';
+import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
 import { Card } from './card.entity';
 import { CardService } from './card.service';
@@ -126,16 +125,16 @@ describe('CardService', () => {
     } as Board;
 
     cardTypeRepositoryMock.findOne.mockResolvedValue({
-      code: 'fake-type',
+      code: CARD_TYPE.APP,
     } as CardType);
 
-    await service.create('fake-type', board);
+    await service.create(CARD_TYPE.APP, board);
 
     expect(cardRepositoryMock.save).toBeCalledTimes(1);
   });
 
   it('should fail on create if type does not exist', async () => {
-    const fakeType = 'fake-type';
+    const fakeType = CARD_TYPE.APP;
     const board = {
       ...initBoardMockEntity(),
       code: 'fake-board',

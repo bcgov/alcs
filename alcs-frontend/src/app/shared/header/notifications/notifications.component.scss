@@ -1,25 +1,24 @@
 @use '../../../../styles/colors';
 
 .icon {
-  font-size: 32px;
-  width: 32px;
-  height: 32px;
   color: #fff;
-  top: -2px;
-  left: -4px;
-  position: inherit;
 }
 
-.unread-notifications::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  background: colors.$error-color;
-  width: 8px;
-  height: 8px;
-  border: 1px solid colors.$primary-color;
-  border-radius: 100%;
-  right: calc(50% - 12px);
+.unread {
+  display: flex;
+  align-items: center;
+  background-color: colors.$white;
+  border-radius: 20px;
+  padding: 2px 8px;
+  color: colors.$primary-color;
+  cursor: pointer;
+  border: none;
+  outline: inherit;
+
+  .icon {
+    font-family: Material Icons !important;
+    color: colors.$primary-color;
+  }
 }
 
 .notifications-header {
@@ -56,6 +55,7 @@
   border-radius: 0;
   white-space: initial;
   align-items: flex-start;
+  color: colors.$black;
 
   div {
     text-align: left;

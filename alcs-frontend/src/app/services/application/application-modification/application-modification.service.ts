@@ -22,6 +22,8 @@ export class ApplicationModificationService {
 
   async fetchByApplication(applicationFileNumber: string) {
     try {
+      this.clearModifications();
+
       const modifications = await firstValueFrom(
         this.http.get<ApplicationModificationDto[]>(`${this.url}/application/${applicationFileNumber}`)
       );
@@ -76,5 +78,9 @@ export class ApplicationModificationService {
     } catch (err) {
       this.toastService.showErrorToast('Failed to delete modification');
     }
+  }
+
+  async clearModifications() {
+    this.$modifications.next([]);
   }
 }

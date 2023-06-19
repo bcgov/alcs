@@ -25,6 +25,7 @@ WITH applicant_lookup AS (
     GROUP BY
         oaap.alr_application_id
 ),
+
 -- Step 2: get local gov application name & match to uuid
 oats_gov as(
   SELECT
@@ -44,7 +45,6 @@ alcs_gov as(
     alg.uuid AS gov_uuid
 
     FROM oats_gov
-        --JOIN alcs.application_local_government alg ON oats_gov.oats_gov_name = alg."name"
         join alcs.application_local_government alg on
    (case
    	when oats_gov.oats_gov_name LIKE 'Islands Trust%' then 'Islands Trust'
@@ -70,6 +70,7 @@ panel_lookup AS (
     WHERE
         oo2.organization_type_cd = 'PANEL'
 ),
+
 -- Step 4: Perform lookup to retrieve type code
 application_type_lookup AS (
     SELECT
@@ -123,3 +124,4 @@ FROM
     LEFT JOIN oats.alcs_etl_application_exclude aee ON oa.alr_application_id = aee.application_id
      
 where aee.application_id is null
+

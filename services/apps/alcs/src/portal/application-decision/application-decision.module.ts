@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DecisionV2Module } from '../../alcs/decision/decision-v2/decision-v2.module';
+import { ApplicationDecisionV2Module } from '../../alcs/application-decision/application-decision-v2/application-decision-v2.module';
 import { ApplicationSubmissionModule } from '../application-submission/application-submission.module';
 import { ApplicationDecisionController } from './application-decision.controller';
 
 @Module({
-  imports: [DecisionV2Module, ApplicationSubmissionModule],
+  imports: [ApplicationDecisionV2Module, ApplicationSubmissionModule],
   controllers: [ApplicationDecisionController],
   providers: [],
   exports: [],

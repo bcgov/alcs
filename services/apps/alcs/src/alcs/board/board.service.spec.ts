@@ -3,7 +3,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../../user/user.entity';
 import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -51,21 +50,6 @@ describe('BoardsService', () => {
 
     await service.list();
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
-  });
-
-  it('should call app service to get apps with board code', async () => {
-    applicationService.getMany.mockResolvedValue([]);
-
-    const boardCode = 'board-code';
-    await service.getApplicationsByCode(boardCode);
-    expect(applicationService.getMany).toHaveBeenCalledTimes(1);
-    expect(applicationService.getMany.mock.calls[0][0]).toEqual({
-      card: {
-        board: {
-          code: boardCode,
-        },
-      },
-    });
   });
 
   it('should set the applications status to the 0 rank when changing board', async () => {

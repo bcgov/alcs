@@ -99,6 +99,10 @@ div.board-item {
   button:hover {
     background-color: colors.$secondary-color-light;
   }
+
+  button.mat-mdc-menu-item {
+    padding-left: 16px !important;
+  }
 }
 
 .notification {

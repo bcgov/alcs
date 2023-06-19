@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   DOCUMENT_TYPE,
@@ -10,11 +10,9 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
-import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../../edit-submission.component';
-import { StepComponent } from '../../step.partial';
+import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../soil-table/soil-table.component';
 
 @Component({
@@ -22,9 +20,8 @@ import { SoilTableData } from '../soil-table/soil-table.component';
   templateUrl: './roso-proposal.component.html',
   styleUrls: ['./roso-proposal.component.scss'],
 })
-export class RosoProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class RosoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
 
   DOCUMENT = DOCUMENT_TYPE;
 
@@ -54,7 +51,6 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     projectDurationUnit: this.projectDurationUnit,
   });
 
-  private fileId = '';
   private submissionUuid = '';
   removalTableData: SoilTableData = {};
   alreadyRemovedTableData: SoilTableData = {};
@@ -62,10 +58,10 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
-    private dialog: MatDialog
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog
   ) {
-    super();
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
@@ -132,51 +128,7 @@ export class RosoProposalComponent extends StepComponent implements OnInit, OnDe
     await this.save();
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE) {
-    if (this.fileId) {
-      await this.save();
-      const mappedFiles = file.file;
-      await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async onDeleteFile($event: ApplicationDocumentDto) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.deleteFile($event);
-          }
-        });
-    } else {
-      await this.deleteFile($event);
-    }
-  }
-
-  private async deleteFile($event: ApplicationDocumentDto) {
-    await this.applicationDocumentService.deleteExternalFile($event.uuid);
-    if (this.fileId) {
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
-    }
-  }
-
-  private async save() {
+  protected async save() {
     if (this.fileId) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();

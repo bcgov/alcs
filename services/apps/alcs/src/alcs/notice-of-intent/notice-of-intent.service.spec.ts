@@ -4,8 +4,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { Application } from '../application/application.entity';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -34,6 +34,7 @@ describe('NoticeOfIntentService', () => {
       ],
       providers: [
         NoticeOfIntentService,
+        NoticeOfIntentProfile,
         {
           provide: getRepositoryToken(NoticeOfIntent),
           useValue: mockRepository,
@@ -110,7 +111,7 @@ describe('NoticeOfIntentService', () => {
 
   it('should call through to the repo for get cards', async () => {
     mockRepository.find.mockResolvedValue([]);
-    await service.getByBoardCode('fake');
+    await service.getByBoard('fake');
 
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
   });
@@ -164,5 +165,32 @@ describe('NoticeOfIntentService', () => {
     await service.listSubtypes();
 
     expect(mockSubtypeRepository.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call map active and paused times for mapToDtos', async () => {
+    const noi = new NoticeOfIntent({
+      uuid: '5',
+    });
+    const mockQueryResult: {
+      noi_uuid: string;
+      paused_days: number;
+      active_days: number;
+    }[] = [
+      {
+        active_days: 1,
+        paused_days: 5,
+        noi_uuid: '5',
+      },
+    ];
+    mockRepository.query.mockResolvedValue(mockQueryResult);
+
+    const res = await service.mapToDtos([noi]);
+
+    expect(mockRepository.query).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].uuid).toEqual('5');
+    expect(res[0].activeDays).toEqual(1);
+    expect(res[0].pausedDays).toEqual(5);
+    expect(res[0].paused).toEqual(true);
   });
 });

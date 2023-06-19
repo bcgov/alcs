@@ -9,11 +9,14 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
+
+export class NaruSubtypeDto extends BaseCodeDto {}
 
 export class ApplicationSubmissionDto {
   @AutoMap()
@@ -239,6 +242,55 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  //NARU Fields
+  @AutoMap(() => [NaruSubtypeDto])
+  naruSubtype: NaruSubtypeDto | null;
+
+  @AutoMap(() => String)
+  naruPurpose: string | null;
+
+  @AutoMap(() => Number)
+  naruFloorArea: number | null;
+
+  @AutoMap(() => String)
+  naruResidenceNecessity: string | null;
+
+  @AutoMap(() => String)
+  naruLocationRationale: string | null;
+
+  @AutoMap(() => String)
+  naruInfrastructure: string | null;
+
+  @AutoMap(() => String)
+  naruExistingStructures: string | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  naruFillType: string | null;
+
+  @AutoMap(() => String)
+  naruFillOrigin: string | null;
+
+  @AutoMap(() => Number)
+  naruProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  naruProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceAverageDepth: number | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -543,4 +595,69 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilHasSubmittedNotice?: boolean;
+
+  //NARU Fields
+  @IsString()
+  @IsOptional()
+  naruSubtypeCode?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruPurpose?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruFloorArea?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruResidenceNecessity?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruLocationRationale?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruInfrastructure?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruExistingStructures?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  naruWillImportFill?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  naruFillType?: string | null;
+
+  @IsString()
+  @IsOptional()
+  naruFillOrigin?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruProjectDurationAmount?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruProjectDurationUnit?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruToPlaceAverageDepth?: number | null;
 }

@@ -1,4 +1,5 @@
 @use '../../../styles/colors';
+@use '../../../styles/typography';
 
 .avatar-circle {
   border-radius: 50%;
@@ -12,7 +13,7 @@
 }
 
 .avatar-circle.large {
-  font-size: 18px;
-  width: 45px;
-  height: 45px;
+  @extend .body-text;
+  width: 40px;
+  height: 40px;
 }

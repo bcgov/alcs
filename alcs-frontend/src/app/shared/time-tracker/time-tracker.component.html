@@ -9,7 +9,7 @@
     }"
   >
     <mat-icon class="icon">calendar_month</mat-icon>
-    {{ activeDays }}
+    {{ activeDays ?? '-' }}
   </div>
   <div
     matTooltip="Paused Days"
@@ -19,6 +19,6 @@
     }"
   >
     <mat-icon class="icon">pause</mat-icon>
-    {{ pausedDays }}
+    {{ pausedDays ?? '-' }}
   </div>
 </div>

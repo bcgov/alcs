@@ -67,9 +67,10 @@ export class NoticeOfIntentDto {
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
   dateSubmittedToAlc?: number;
-  activeDays: number;
-  pausedDays: number;
+  activeDays: number | null;
+  pausedDays: number | null;
   paused: boolean;
+  decisionDate: number;
 
   @AutoMap(() => Boolean)
   retroactive: boolean | null;

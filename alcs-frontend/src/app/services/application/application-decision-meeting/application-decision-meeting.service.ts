@@ -16,6 +16,7 @@ export class ApplicationDecisionMeetingService {
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
   async fetch(fileNumber: string) {
+    this.clearDecisionMeeting();
     let meetings: ApplicationDecisionMeetingDto[] = [];
 
     try {
@@ -66,5 +67,9 @@ export class ApplicationDecisionMeetingService {
     } catch (err) {
       this.toastService.showErrorToast('Failed to scheduled discussion');
     }
+  }
+
+  clearDecisionMeeting() {
+    this.$decisionMeetings.next([]);
   }
 }

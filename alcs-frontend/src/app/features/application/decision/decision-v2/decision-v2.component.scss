@@ -1,122 +1,118 @@
 @use '../../../../../styles/colors';
+:host ::ng-deep {
+  section {
+    margin-bottom: 64px;
+  }
 
-section {
-  margin-bottom: 64px;
-}
+  .decision-container {
+    position: relative;
+  }
 
-.decision-container {
-  position: relative;
-}
+  .decision {
+    margin: 24px 0;
+    box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+  }
 
-.decision {
-  margin: 24px 0;
-  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
-}
+  .loading-overlay {
+    position: absolute;
+    z-index: 2;
+    background-color: colors.$grey;
+    opacity: 0.4;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.loading-overlay {
-  position: absolute;
-  z-index: 2;
-  background-color: colors.$grey;
-  opacity: 0.4;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .post-decisions {
+    padding: 6px 32px;
+    background-color: colors.$grey-light;
+    grid-template-columns: 50% 50%;
+    display: grid;
+    min-height: 36px;
+    text-transform: uppercase;
+    border-radius: 4px 4px 0 0;
+  }
 
-.post-decisions {
-  padding: 6px 32px;
-  background-color: colors.$grey-light;
-  grid-template-columns: 50% 50%;;
-  display: grid;
-  min-height: 36px;
-  text-transform: uppercase;
-  border-radius: 4px 4px 0 0;
-}
+  .decision-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 36px;
+    background: colors.$accent-color;
+    box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0 4px 0 10px;
+  }
 
-.decision-menu {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 36px;
-  background: colors.$accent-color;
-  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 0 4px 0 10px;
-}
+  .decision-padding {
+    padding: 18px 32px 32px 32px;
+  }
 
-.decision-padding {
-  padding: 18px 32px 32px 32px;
-}
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-row-gap: 24px;
+  }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-row-gap: 24px;
-}
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-row-gap: 24px;
+  }
 
-.grid-3 {
-  display: grid;
-  grid-template-columns: 33% 33% 33%;
-  grid-row-gap: 24px;
-}
-
-.decision-content,
-.grid-2 {
-  margin-top: 16px;
-  margin-bottom: 16px;
+  .decision-content,
+  .grid-2 {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
 
   .subheading2 {
     margin-bottom: 6px !important;
   }
 
-  & > div {
-    font-size: 16px;
-  }
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-
-  .title {
+  .header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    gap: 16px;
 
-    .days {
-      display: inline-block;
-      margin-right: 6px;
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
 
-      .mat-icon {
-        font-size: 19px !important;
-        line-height: 21px !important;
-        width: 19px;
-        vertical-align: middle;
+      .days {
+        display: inline-block;
+        margin-right: 6px;
+
+        .mat-icon {
+          font-size: 19px !important;
+          line-height: 21px !important;
+          width: 19px;
+          vertical-align: middle;
+        }
       }
     }
   }
-}
 
-.row {
-  margin: 16px 0;
-}
+  .row {
+    margin: 16px 0;
+  }
 
-.conditions-link-icon {
-  position: absolute;
-}
+  .conditions-link-icon {
+    position: absolute;
+  }
 
-.no-decisions {
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: colors.$grey-light;
-  height: 72px;
-}
+  .no-decisions {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: colors.$grey-light;
+    height: 72px;
+  }
 
-:host ::ng-deep {
   .decision-documents .subheading1 {
     font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif !important;
     font-size: 19px !important;
@@ -138,5 +134,22 @@ section {
     .mdc-tab {
       margin-left: 8px;
     }
+  }
+
+  .full-width {
+    grid-column: 1/4;
+  }
+
+  table {
+    border-spacing: 12px;
+    margin-left: -12px;
+  }
+
+  .soil-table-label {
+    font-weight: 700;
+  }
+
+  .pre-wrapped-text {
+    white-space: pre-wrap;
   }
 }

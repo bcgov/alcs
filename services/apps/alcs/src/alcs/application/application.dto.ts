@@ -14,7 +14,7 @@ import { ProposedLot } from '../../portal/application-submission/application-sub
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../decision/decision-v1/application-decision-meeting/application-decision-meeting.dto';
+import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
@@ -349,11 +349,15 @@ export class UpdateApplicationDto {
 
   @IsOptional()
   @IsString()
+  staffObservations?: string;
+
+  @IsOptional()
+  @IsString()
   nfuUseSubType?: string;
 
   @IsOptional()
   @IsNumber()
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export class ApplicationDto {
@@ -437,6 +441,9 @@ export class ApplicationDto {
   agCapMap?: string;
 
   @AutoMap(() => String)
+  staffObservations?: string;
+
+  @AutoMap(() => String)
   agCapConsultant?: string;
 
   @AutoMap(() => String)
@@ -444,7 +451,7 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   nfuUseSubType?: string;
-  nfuEndDate?: number;
+  proposalEndDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -469,7 +476,8 @@ export class ApplicationUpdateServiceDto {
   agCapConsultant?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
-  nfuEndDate?: Date | null;
+  proposalEndDate?: Date | null;
+  staffObservations?: string | null;
 }
 
 export class CreateApplicationServiceDto {

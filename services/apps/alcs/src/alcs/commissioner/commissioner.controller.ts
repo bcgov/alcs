@@ -8,8 +8,8 @@ import { ApplicationService } from '../application/application.service';
 import { AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { CommissionerApplicationDto } from './commissioner.dto';
 
 @Controller('commissioner')

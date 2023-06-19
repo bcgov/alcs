@@ -21,12 +21,14 @@ import { UserRoles } from '../../common/authorization/roles.decorator';
 import { CovenantDto } from '../covenant/covenant.dto';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
-import { ApplicationModificationDto } from '../decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../decision/application-modification/application-modification.entity';
-import { ApplicationModificationService } from '../decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationDto } from '../decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsideration } from '../decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationService } from '../decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationModificationDto } from '../application-decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
+import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
@@ -54,12 +56,14 @@ export class HomeController {
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService,
   ) {}
 
   @Get('/assigned')
   @UserRoles(...ANY_AUTH_ROLE)
   async getAssignedToMe(@Req() req): Promise<{
     noticeOfIntents: NoticeOfIntentDto[];
+    noticeOfIntentModifications: NoticeOfIntentModificationDto[];
     applications: ApplicationDto[];
     reconsiderations: ApplicationReconsiderationDto[];
     planningReviews: PlanningReviewDto[];
@@ -98,10 +102,17 @@ export class HomeController {
         assignedFindOptions,
       );
 
+      const noticeOfIntentModifications =
+        await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
+
       return {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
           noticeOfIntents,
         ),
+        noticeOfIntentModifications:
+          await this.noticeOfIntentModificationService.mapToDtos(
+            noticeOfIntentModifications,
+          ),
         applications: await this.applicationService.mapToDtos(applications),
         reconsiderations: await this.reconsiderationService.mapToDtos(
           reconsiderations,
@@ -115,6 +126,7 @@ export class HomeController {
     } else {
       return {
         noticeOfIntents: [],
+        noticeOfIntentModifications: [],
         applications: [],
         reconsiderations: [],
         planningReviews: [],
@@ -288,7 +300,7 @@ export class HomeController {
             completedAt: subtask.completedAt?.getTime(),
             paused: false,
             title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
-            parentType: 'covenant',
+            parentType: 'notice-of-intent',
           });
         }
       }
