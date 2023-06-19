@@ -74,8 +74,21 @@ describe('ApplicationDecisionComponentService', () => {
   });
 
   it('throws validation error if there are duplicate components', () => {
-    const firstComponent = new CreateApplicationDecisionComponentDto();
-    const secondComponent = new CreateApplicationDecisionComponentDto();
+    const firstComponent = {
+      uuid: 'fake',
+      applicationDecisionComponentTypeCode: 'TURP',
+      agCap: '1',
+      agCapSource: '1',
+      alrArea: 1,
+    } as CreateApplicationDecisionComponentDto;
+
+    const secondComponent = {
+      uuid: 'fake-2',
+      applicationDecisionComponentTypeCode: 'TURP',
+      agCap: '2',
+      agCapSource: '2',
+      alrArea: 2,
+    } as CreateApplicationDecisionComponentDto;
 
     firstComponent.applicationDecisionComponentTypeCode = 'fake';
     secondComponent.applicationDecisionComponentTypeCode = 'fake';
@@ -88,11 +101,21 @@ describe('ApplicationDecisionComponentService', () => {
   });
 
   it('does not throw if there are no duplicate components', () => {
-    const firstComponent = new CreateApplicationDecisionComponentDto();
-    const secondComponent = new CreateApplicationDecisionComponentDto();
+    const firstComponent = {
+      uuid: 'fake',
+      applicationDecisionComponentTypeCode: 'TURP',
+      agCap: '1',
+      agCapSource: '1',
+      alrArea: 1,
+    } as CreateApplicationDecisionComponentDto;
 
-    firstComponent.applicationDecisionComponentTypeCode = 'fake_1';
-    secondComponent.applicationDecisionComponentTypeCode = 'fake_2';
+    const secondComponent = {
+      uuid: 'fake-2',
+      applicationDecisionComponentTypeCode: 'fake',
+      agCap: '2',
+      agCapSource: '2',
+      alrArea: 2,
+    } as CreateApplicationDecisionComponentDto;
 
     const mockComponentsDto = [firstComponent, secondComponent];
 
@@ -238,5 +261,24 @@ describe('ApplicationDecisionComponentService', () => {
     expect(result[0].endDate).toEqual(new Date(mockDto.endDate));
     expect(result[0].nfuSubType).toEqual(mockDto.nfuSubType);
     expect(result[0].nfuType).toEqual(mockDto.nfuType);
+  });
+
+  it('should validation decision component fields and throw error if any', async () => {
+    const mockComponents = [
+      {
+        applicationDecisionComponentTypeCode: 'NFUP',
+      },
+      {
+        applicationDecisionComponentTypeCode: 'POFO',
+      },
+      { applicationDecisionComponentTypeCode: 'ROSO' },
+      { applicationDecisionComponentTypeCode: 'PFRS' },
+    ] as CreateApplicationDecisionComponentDto[];
+
+    const mockValidationWrapper = () => {
+      service.validate(mockComponents, false);
+    };
+
+    expect(mockValidationWrapper).toThrow(ServiceValidationException);
   });
 });

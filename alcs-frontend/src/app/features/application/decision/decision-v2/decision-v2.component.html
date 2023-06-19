@@ -194,6 +194,17 @@
                   </div>
                 </div>
 
+                <div *ngIf="component.agCapMap || component.agCapConsultant" class="grid-3 decision-content">
+                  <div *ngIf="component.agCapMap">
+                    <div class="subheading2">Ag Cap Map</div>
+                    {{ component.agCapMap }}
+                  </div>
+                  <div *ngIf="component.agCapConsultant">
+                    <div class="subheading2">Ag Cap Consultant</div>
+                    {{ component.agCapConsultant }}
+                  </div>
+                </div>
+
                 <app-nfup
                   class="grid-3"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
@@ -205,6 +216,24 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
                   [component]="component"
                 ></app-turp>
+
+                <app-pofo
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
+                  [component]="component"
+                ></app-pofo>
+
+                <app-roso
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
+                  [component]="component"
+                ></app-roso>
+
+                <app-pfrs
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
+                  [component]="component"
+                ></app-pfrs>
               </div>
             </div>
           </div>

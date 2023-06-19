@@ -42,6 +42,50 @@ export class UpdateApplicationDecisionComponentDto {
   @IsOptional()
   @IsNumber()
   endDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  expiryDate?: number;
+
+  @IsOptional()
+  @IsString()
+  soilFillTypeToPlace?: string;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToPlaceAverageDepth?: number | null;
+
+  @IsOptional()
+  @IsString()
+  soilTypeRemoved?: string;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveVolume?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveArea?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveMaximumDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  soilToRemoveAverageDepth?: number | null;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -79,7 +123,40 @@ export class ApplicationDecisionComponentDto {
   endDate?: number;
 
   @AutoMap()
+  expiryDate?: number;
+
+  @AutoMap()
   applicationDecisionUuid: string;
+
+  @AutoMap()
+  soilFillTypeToPlace?: string;
+
+  @AutoMap()
+  soilToPlaceVolume?: number;
+
+  @AutoMap()
+  soilToPlaceArea?: number;
+
+  @AutoMap()
+  soilToPlaceMaximumDepth?: number;
+
+  @AutoMap()
+  soilToPlaceAverageDepth?: number;
+
+  @AutoMap()
+  soilTypeRemoved?: string;
+
+  @AutoMap()
+  soilToRemoveVolume?: number;
+
+  @AutoMap()
+  soilToRemoveArea?: number;
+
+  @AutoMap()
+  soilToRemoveMaximumDepth?: number;
+
+  @AutoMap()
+  soilToRemoveAverageDepth?: number;
 
   @AutoMap()
   applicationDecisionComponentTypeCode: string;
@@ -91,4 +168,7 @@ export class ApplicationDecisionComponentDto {
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
   NFUP = 'NFUP',
   TURP = 'TURP',
+  POFO = 'POFO',
+  ROSO = 'ROSO',
+  PFRS = 'PFRS',
 }

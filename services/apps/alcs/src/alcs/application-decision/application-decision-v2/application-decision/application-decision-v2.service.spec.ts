@@ -27,6 +27,7 @@ import {
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
+import { ApplicationDecisionComponentDto } from './component/application-decision-component.dto';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
@@ -161,6 +162,8 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
+
+    mockDecisionComponentService.createOrUpdate.mockResolvedValue([]);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -220,7 +223,7 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
-        isDraft: false,
+        isDraft: true,
       } as CreateApplicationDecisionDto;
 
       await service.create(
@@ -247,6 +250,7 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate.getTime(),
         applicationFileNumber: 'file-number',
         outcomeCode: 'Outcome',
+        isDraft: true,
       } as CreateApplicationDecisionDto;
 
       await expect(
@@ -319,6 +323,15 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate.getTime(),
         outcomeCode: 'New Outcome',
         isDraft: false,
+        decisionComponents: [
+          {
+            uuid: 'fake',
+            alrArea: 1,
+            agCap: '1',
+            agCapSource: '1',
+            applicationDecisionComponentTypeCode: 'fake',
+          },
+        ] as ApplicationDecisionComponentDto[],
       };
 
       await service.update(
