@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Application } from '../application/application.entity';
 import { Card } from '../card/card.entity';
 import { Covenant } from '../covenant/covenant.entity';
@@ -20,6 +21,8 @@ export class SearchService {
     private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Covenant)
     private covenantRepository: Repository<Covenant>,
+    @InjectRepository(ApplicationLocalGovernment)
+    private localGovernmentRepository: Repository<ApplicationLocalGovernment>,
   ) {}
 
   // TODO add missing relations once UI is clear
@@ -27,6 +30,10 @@ export class SearchService {
     const application = await this.applicationRepository.findOne({
       where: {
         fileNumber,
+      },
+      relations: {
+        card: true,
+        localGovernment: true,
       },
     });
 
@@ -37,6 +44,10 @@ export class SearchService {
     const noi = await this.noiRepository.findOne({
       where: {
         fileNumber,
+      },
+      relations: {
+        card: true,
+        localGovernment: true,
       },
     });
 
@@ -51,10 +62,23 @@ export class SearchService {
     return cards;
   }
 
+  async getLocalGovernments(localGovernmentUuids: string[]) {
+    const cards = await this.localGovernmentRepository.find({
+      where: { uuid: In(localGovernmentUuids) },
+    });
+
+    return cards;
+  }
+
   async getPlanningReview(fileNumber: string) {
+    // TODO Do not return if the card is deleted or Archived
     const planningReview = await this.planningReviewRepository.findOne({
       where: {
         fileNumber,
+      },
+      relations: {
+        card: true,
+        localGovernment: true,
       },
     });
 
@@ -62,9 +86,14 @@ export class SearchService {
   }
 
   async getCovenant(fileNumber: string) {
+    // TODO Do not return if the card is deleted or Archived
     const covenant = await this.covenantRepository.findOne({
       where: {
         fileNumber,
+      },
+      relations: {
+        card: true,
+        localGovernment: true,
       },
     });
 

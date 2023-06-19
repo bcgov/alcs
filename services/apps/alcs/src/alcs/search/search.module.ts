@@ -1,12 +1,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Application } from '../application/application.entity';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
+import { Card } from '../card/card.entity';
+import { Covenant } from '../covenant/covenant.entity';
+import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { PlanningReview } from '../planning-review/planning-review.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Application, ApplicationType])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Application,
+      NoticeOfIntent,
+      Card, // TODO double check this and remove if not needed
+      PlanningReview,
+      Covenant,
+      ApplicationLocalGovernment,
+    ]),
+  ],
   providers: [SearchService],
   controllers: [SearchController],
 })

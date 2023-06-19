@@ -36,6 +36,7 @@ import { SearchModule } from './search/search.module';
     NoticeOfIntentModule,
     StaffJournalModule,
     NoticeOfIntentDecisionModule,
+    SearchModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -52,6 +53,7 @@ import { SearchModule } from './search/search.module';
       { path: 'alcs', module: NoticeOfIntentModule },
       { path: 'alcs', module: NoticeOfIntentDecisionModule },
       { path: 'alcs', module: StaffJournalModule },
+      { path: 'alcs', module: SearchModule },
     ]),
     SearchModule,
   ],
