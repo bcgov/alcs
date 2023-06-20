@@ -35,11 +35,32 @@
       <div>
         <div
           *ngIf="cardData.activeDays !== undefined"
-          class="active-days center"
+          class="day-count active-days center"
           matTooltip="Active days: {{ cardData.activeDays }} "
         >
           <mat-icon title="Active Days">calendar_month</mat-icon>
-          <span class="center">{{ cardData.activeDays }}</span>
+          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays <= cardData.maxActiveDays" class="center">
+            {{  cardData.activeDays }}
+          </span>
+          <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center">
+            {{  cardData.maxActiveDays }}+
+          </span>
+        </div>
+        <div
+          *ngIf="cardData.pausedDays !== undefined"
+          class="day-count center"
+          matTooltip="Paused days: {{ cardData.pausedDays }} "
+        >
+          <mat-icon title="Active Days">pause</mat-icon>
+          <span class="center">{{ cardData.pausedDays }}</span>
+        </div>
+        <div *ngIf="cardData.activeDays && cardData.dueDate !== undefined" class="due-date center">
+          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center"
+            >Due: {{ cardData.dueDate | momentFormat }}</span
+          >
+          <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center red-text"
+            >Overdue</span
+          >
         </div>
       </div>
       <app-avatar-circle

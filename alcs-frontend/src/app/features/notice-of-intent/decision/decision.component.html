@@ -1,9 +1,6 @@
 <div class="split">
   <h3>Decision</h3>
-  <div
-    matTooltip="This application is currently paused. Only active applications can have decisions."
-    [matTooltipDisabled]="!isPaused"
-  >
+  <div matTooltip="This NOI is currently paused. Only active NOIs can have decisions." [matTooltipDisabled]="!isPaused">
     <button [disabled]="isPaused" mat-flat-button color="primary" (click)="onCreate()">+ New Decision</button>
   </div>
 </div>
@@ -38,9 +35,9 @@
       <div class="subheading1">
         Decision #{{ decisions.length - i }}
         <ng-container *ngIf="i === decisions.length - 1 && noticeOfIntent">
-          <span class="days" matTooltip="Active Days">
+          <span *ngIf="noticeOfIntent.activeDays" class="days" matTooltip="Active Days">
             <mat-icon class="icon">calendar_month</mat-icon>
-            {{ noticeOfIntent.activeDays }}
+            {{ noticeOfIntent.activeDays >= MAX_ACTIVE_DAYS ? '61+' : noticeOfIntent.activeDays }}
           </span>
         </ng-container>
         <ng-container *ngIf="!!decision.modifies">

@@ -1,25 +1,46 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import moment from 'moment';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 
+export interface TimeTrackable {
+  paused: boolean;
+  activeDays: number | null;
+  pausedDays: number | null;
+  maxActiveDays?: number;
+}
+
 @Component({
-  selector: 'app-time-tracker[application]',
+  selector: 'app-time-tracker[data]',
   templateUrl: './time-tracker.component.html',
   styleUrls: ['./time-tracker.component.scss'],
 })
-export class TimeTrackerComponent {
+export class TimeTrackerComponent implements OnChanges {
   paused = false;
   activeDays: number | null = null;
   pausedDays: number | null = null;
+  dueDate: Date | null = null;
+  isOverdue = false;
 
-  @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
-    if (application) {
-      this.paused = application.paused;
-      this.activeDays = application.activeDays;
-      this.pausedDays = application.pausedDays;
-    }
-  }
+  @Input() data: TimeTrackable | undefined;
+  @Input() maxActiveDays: number | undefined;
 
   constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.data) {
+      this.paused = this.data.paused;
+      this.activeDays = this.data.activeDays;
+      this.pausedDays = this.data.pausedDays;
+    }
+
+    if (this.maxActiveDays) {
+      this.dueDate = moment().subtract(this.activeDays, 'days').add(this.maxActiveDays, 'days').toDate();
+
+      if (this.dueDate && this.dueDate.getTime() < Date.now()) {
+        this.isOverdue = true;
+      }
+    }
+  }
 }

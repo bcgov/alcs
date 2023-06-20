@@ -4,6 +4,11 @@
   margin-bottom: 6px !important;
 }
 
+.red-text {
+  color: colors.$error-color;
+  font-weight: 700;
+}
+
 .dot {
   height: 12px;
   width: 12px;
