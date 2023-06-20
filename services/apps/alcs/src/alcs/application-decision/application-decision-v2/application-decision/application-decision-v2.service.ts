@@ -343,7 +343,10 @@ export class ApplicationDecisionV2Service {
     existingDecision: Partial<ApplicationDecision>,
   ) {
     if (updateDto.decisionComponents) {
-      this.decisionComponentService.validate(updateDto.decisionComponents);
+      this.decisionComponentService.validate(
+        updateDto.decisionComponents,
+        updateDto.isDraft,
+      );
 
       if (existingDecision?.components) {
         const componentsToRemove = existingDecision.components.filter(
@@ -468,7 +471,10 @@ export class ApplicationDecisionV2Service {
 
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
-      this.decisionComponentService.validate(createDto.decisionComponents);
+      this.decisionComponentService.validate(
+        createDto.decisionComponents,
+        createDto.isDraft,
+      );
       decisionComponents = await this.decisionComponentService.createOrUpdate(
         createDto.decisionComponents,
         false,

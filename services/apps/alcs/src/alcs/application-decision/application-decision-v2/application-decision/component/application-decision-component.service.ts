@@ -44,19 +44,10 @@ export class ApplicationDecisionComponentService {
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
 
-      if (
-        component.applicationDecisionComponentTypeCode ===
-        APPLICATION_DECISION_COMPONENT_TYPE.NFUP
-      ) {
-        this.patchNfuFields(component, updateDto);
-      }
-
-      if (
-        component.applicationDecisionComponentTypeCode ===
-        APPLICATION_DECISION_COMPONENT_TYPE.TURP
-      ) {
-        this.patchTurpFields(component, updateDto);
-      }
+      this.patchNfuFields(component, updateDto);
+      this.patchTurpFields(component, updateDto);
+      this.patchPofoFields(component, updateDto);
+      this.patchRosoFields(component, updateDto);
 
       updatedComponents.push(component);
     }
@@ -81,14 +72,57 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.expiryDate = updateDto.expiryDate
+      ? new Date(updateDto.expiryDate)
+      : null;
   }
 
-  validate(componentsDto: CreateApplicationDecisionComponentDto[]) {
+  private patchPofoFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.soilFillTypeToPlace = updateDto.soilFillTypeToPlace ?? null;
+    component.soilToPlaceArea = updateDto.soilToPlaceArea ?? null;
+    component.soilToPlaceVolume = updateDto.soilToPlaceVolume ?? null;
+    component.soilToPlaceMaximumDepth =
+      updateDto.soilToPlaceMaximumDepth ?? null;
+    component.soilToPlaceAverageDepth =
+      updateDto.soilToPlaceAverageDepth ?? null;
+  }
+
+  private patchRosoFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.soilTypeRemoved = updateDto.soilTypeRemoved ?? null;
+    component.soilToRemoveVolume = updateDto.soilToRemoveVolume ?? null;
+    component.soilToRemoveArea = updateDto.soilToRemoveArea ?? null;
+    component.soilToRemoveMaximumDepth =
+      updateDto.soilToRemoveMaximumDepth ?? null;
+    component.soilToRemoveAverageDepth =
+      updateDto.soilToRemoveAverageDepth ?? null;
+  }
+
+  validate(
+    componentsDto: CreateApplicationDecisionComponentDto[],
+    isDraftDecision = false,
+  ) {
     if (!this.checkDuplicates(componentsDto)) {
       throw new ServiceValidationException(
         'Only on component of each type is allowed',
       );
+    }
+
+    if (!isDraftDecision) {
+      if (componentsDto.length < 1) {
+        throw new ServiceValidationException(
+          'Decision components are required',
+        );
+      }
+
+      this.validateDecisionComponentFields(componentsDto);
     }
   }
 
@@ -120,5 +154,112 @@ export class ApplicationDecisionComponentService {
         applicationDecisionComponentType: true,
       },
     });
+  }
+
+  validateDecisionComponentFields(
+    componentsDto: CreateApplicationDecisionComponentDto[],
+  ) {
+    const errors: string[] = [];
+
+    for (const component of componentsDto) {
+      if (!component.alrArea) {
+        errors.push('Alr Area is required');
+      }
+      if (!component.agCap) {
+        errors.push('Agri Cap is required');
+      }
+      if (!component.alrArea) {
+        errors.push('Agri Source is required');
+      }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.NFUP
+      ) {
+        this.validateNfupDecisionComponentFields(component, errors);
+      }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.POFO
+      ) {
+        this.validatePofoDecisionComponentFields(component, errors);
+      }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.ROSO
+      ) {
+        this.validateRosoDecisionComponentFields(component, errors);
+      }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.PFRS
+      ) {
+        this.validatePofoDecisionComponentFields(component, errors);
+        this.validateRosoDecisionComponentFields(component, errors);
+      }
+    }
+
+    if (errors.length > 0) {
+      throw new ServiceValidationException(errors.join(', '));
+    }
+  }
+
+  private validateNfupDecisionComponentFields(
+    component: CreateApplicationDecisionComponentDto,
+    errors: string[],
+  ) {
+    if (!component.nfuSubType) {
+      errors.push('Non-Farm Use Sub Type is required');
+    }
+    if (!component.nfuType) {
+      errors.push('Non-Farm Use Type is required');
+    }
+  }
+
+  private validatePofoDecisionComponentFields(
+    component: CreateApplicationDecisionComponentDto,
+    errors: string[],
+  ) {
+    if (!component.soilFillTypeToPlace) {
+      errors.push(
+        'Type, origin and quality of fill approved to be placed is required',
+      );
+    }
+    if (!component.soilToPlaceVolume) {
+      errors.push('Volume To Place is required');
+    }
+    if (!component.soilToPlaceArea) {
+      errors.push('Area To Place is required');
+    }
+    if (!component.soilToPlaceMaximumDepth) {
+      errors.push('Maximum Depth To Place is required');
+    }
+    if (!component.soilToPlaceAverageDepth) {
+      errors.push('Average Depth To Place is required');
+    }
+  }
+
+  private validateRosoDecisionComponentFields(
+    component: CreateApplicationDecisionComponentDto,
+    errors: string[],
+  ) {
+    if (!component.soilTypeRemoved) {
+      errors.push('Type of soil approved to be removed is required');
+    }
+    if (!component.soilToRemoveVolume) {
+      errors.push('Volume To Remove is required');
+    }
+    if (!component.soilToRemoveArea) {
+      errors.push('Area To Remove is required');
+    }
+    if (!component.soilToRemoveMaximumDepth) {
+      errors.push('Maximum Depth To Remove is required');
+    }
+    if (!component.soilToRemoveAverageDepth) {
+      errors.push('Average Depth To Remove is required');
+    }
   }
 }

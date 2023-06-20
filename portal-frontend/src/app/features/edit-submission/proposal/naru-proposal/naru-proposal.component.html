@@ -27,9 +27,9 @@
         (change)="onChangeSubtype($event)"
         aria-label="Select an option"
       >
-        <mat-radio-button value="ARFU">Additional Residence for Farm Use</mat-radio-button>
-        <mat-radio-button value="PRIN">Principal Residence More Than 500m<sup>2</sup></mat-radio-button>
-        <mat-radio-button value="TOUR">Non-Adhering Tourism Accommodation</mat-radio-button>
+        <mat-radio-button *ngFor="let subtype of naruSubtypes" [value]="subtype.code">{{
+          subtype.label
+        }}</mat-radio-button>
       </mat-radio-group>
       <div *ngIf="subtype.invalid && (subtype.dirty || subtype.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -134,10 +134,10 @@
       </div>
 
       <div class="full-row">
-        <label for="infrastructure"
-          >Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the
-          additional residence.</label
-        >
+        <label for="infrastructure">
+          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
+          residence.
+        </label>
         <div class="subtext">
           Describe any infrastructure required to accommodate the additional residence and the approximate area required
           for that infrastructure

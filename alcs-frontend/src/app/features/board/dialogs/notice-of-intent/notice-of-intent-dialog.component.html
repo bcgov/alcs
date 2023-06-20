@@ -40,7 +40,7 @@
   </div>
   <div class="header-row">
     <div class="left">
-      <app-time-tracker [application]="noticeOfIntent"></app-time-tracker>
+      <app-time-tracker [data]="noticeOfIntent" [maxActiveDays]="61"></app-time-tracker>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>

@@ -44,7 +44,7 @@
     </div>
     <div *ngIf="!_application.hasOwnProperty('decisionDate')">
       <div class="subheading2">{{ days }}:</div>
-      <app-time-tracker [application]="_application"></app-time-tracker>
+      <app-time-tracker [data]="_application" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
     </div>
   </div>
 </div>

@@ -1,0 +1,43 @@
+<div class="full-width">
+  <div class="subheading2">Use End Date</div>
+  {{ component.endDate | date }}
+</div>
+<div class="full-width">
+  <div class="subheading2">Type of soil approved to be removed.</div>
+  <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
+</div>
+<div class="full-width">
+  <div class="subheading2">Type, origin and quality of fill proposed to be placed.</div>
+  <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
+</div>
+<div class="full-width">
+  <table>
+    <thead>
+      <th></th>
+      <th>Soil to be Removed</th>
+      <th>Fill to be Placed</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="soil-table-label">Volume</td>
+        <td>{{ component.soilToRemoveVolume }} m<sup>3</sup></td>
+        <td>{{ component.soilToPlaceVolume }} m<sup>3</sup></td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Area</td>
+        <td>{{ component.soilToRemoveArea }} ha</td>
+        <td>{{ component.soilToPlaceArea }} ha</td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Maximum Depth</td>
+        <td>{{ component.soilToRemoveMaximumDepth }} m</td>
+        <td>{{ component.soilToPlaceMaximumDepth }} m</td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Average Depth</td>
+        <td>{{ component.soilToRemoveAverageDepth }} m</td>
+        <td>{{ component.soilToPlaceAverageDepth }} m</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

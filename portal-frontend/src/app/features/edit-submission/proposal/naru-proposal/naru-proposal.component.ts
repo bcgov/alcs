@@ -9,8 +9,12 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
+import {
+  ApplicationSubmissionUpdateDto,
+  NaruSubtypeDto,
+} from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { CodeService } from '../../../../services/code/code.service';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -58,10 +62,12 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   });
 
   private submissionUuid = '';
+  naruSubtypes: NaruSubtypeDto[] = [];
 
   constructor(
     private router: Router,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private codeService: CodeService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog
   ) {
@@ -69,13 +75,14 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   ngOnInit(): void {
+    this.loadNaruSubtypes();
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
       if (applicationSubmission) {
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          subtype: applicationSubmission.naruSubtype,
+          subtype: applicationSubmission.naruSubtype?.code,
           existingStructures: applicationSubmission.naruExistingStructures,
           willImportFill: formatBooleanToYesNoString(applicationSubmission.naruWillImportFill),
           fillType: applicationSubmission.naruFillType,
@@ -90,7 +97,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           purpose: applicationSubmission.naruPurpose,
           residenceNecessity: applicationSubmission.naruResidenceNecessity,
         });
-        this.previousSubtype = applicationSubmission.naruSubtype;
+        this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
         if (applicationSubmission.naruWillImportFill !== null) {
           const willImportFill = applicationSubmission.naruWillImportFill ? 'true' : 'false';
@@ -191,11 +198,16 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruProjectDurationUnit: projectDurationUnit,
         naruPurpose: purpose,
         naruResidenceNecessity: residenceNecessity,
-        naruSubtype: subtype,
+        naruSubtypeCode: subtype,
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
+  }
+
+  private async loadNaruSubtypes() {
+    const subtypes = await this.codeService.loadCodes();
+    this.naruSubtypes = subtypes.naruSubtypes;
   }
 }

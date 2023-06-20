@@ -21,11 +21,13 @@ import { ApplicationStatus } from './application-status/application-status.entit
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
   let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
+  let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
@@ -40,6 +42,7 @@ describe('ApplicationSubmissionService', () => {
     mockAppDocService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
     mockGenerateReviewDocumentService = createMock();
+    mockNaruSubtypeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -77,6 +80,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: GenerateReviewDocumentService,
           useValue: mockGenerateReviewDocumentService,
+        },
+        {
+          provide: getRepositoryToken(NaruSubtype),
+          useValue: mockNaruSubtypeRepository,
         },
       ],
     }).compile();
@@ -436,5 +443,13 @@ describe('ApplicationSubmissionService', () => {
     expect(mockAppDocService.deleteByType.mock.calls[0][1]).toEqual(mockUuid);
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOne).toBeCalledTimes(2);
+  });
+
+  it('should call through to repo for list subtypes', async () => {
+    mockNaruSubtypeRepository.find.mockResolvedValue([]);
+
+    await service.listNaruSubtypes();
+
+    expect(mockNaruSubtypeRepository.find).toHaveBeenCalledTimes(1);
   });
 });

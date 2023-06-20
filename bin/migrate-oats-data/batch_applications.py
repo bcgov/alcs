@@ -65,7 +65,6 @@ def process_applications(conn=None, batch_size=10000):
 
         print("-Inserting ", count_total - count_total_exclude, " applications" )
 
-
         failed_inserts = 0
         successful_inserts_count = 0
         last_application_id = 0
@@ -75,9 +74,7 @@ def process_applications(conn=None, batch_size=10000):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-
                     f"{application_sql} AND ae.application_id > {last_application_id} ORDER by ae.application_id;"
-
                 )
                 
                 rows = cursor.fetchmany(batch_size)
@@ -111,7 +108,6 @@ def process_applications(conn=None, batch_size=10000):
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
     print("Number of multiple type-code applications not inserted", count_total_exclude)
-
     if failed_inserts == 0:
         with conn.cursor() as cursor:
             cursor.execute(drop_etl_temp_table())

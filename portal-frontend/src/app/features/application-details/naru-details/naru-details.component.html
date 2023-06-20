@@ -1,0 +1,150 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    Selected Subtype:
+    <app-updated-banner *ngIf="updatedFields.includes('naruSubtype')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    <span *ngIf="_applicationSubmission.naruSubtype !== null">
+      {{ _applicationSubmission.naruSubtype.label }}
+    </span>
+    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruSubtype === null"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    What is the purpose of the proposal?
+    <app-updated-banner *ngIf="updatedFields.includes('naruPurpose')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruPurpose" class="grid-double">
+    {{ _applicationSubmission.naruPurpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruPurpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
+    <app-updated-banner *ngIf="updatedFields.includes('naruFloorArea')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruFloorArea" class="grid-double">
+    {{ _applicationSubmission.naruFloorArea }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe the necessity for an additional residence for farm use and how it will support agriculture in the short or
+    long term.
+    <app-updated-banner *ngIf="updatedFields.includes('naruResidenceNecessity')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruResidenceNecessity" class="grid-double">
+    {{ _applicationSubmission.naruResidenceNecessity }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe the rationale for the proposed location of the additional residence.
+    <app-updated-banner *ngIf="updatedFields.includes('naruLocationRationale')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruLocationRationale" class="grid-double">
+    {{ _applicationSubmission.naruLocationRationale }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruLocationRationale"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
+    residence.
+    <app-updated-banner *ngIf="updatedFields.includes('naruInfrastructure')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruInfrastructure" class="grid-double">
+    {{ _applicationSubmission.naruInfrastructure }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruInfrastructure"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
+    located on the property.
+    <app-updated-banner *ngIf="updatedFields.includes('naruExistingStructures')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruExistingStructures" class="grid-double">
+    {{ _applicationSubmission.naruExistingStructures }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruExistingStructures"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought onto
+    the property, including gravel for construction.
+    <app-updated-banner *ngIf="updatedFields.includes('naruWillImportFill')"></app-updated-banner>
+  </div>
+  <div *ngIf="_applicationSubmission.naruWillImportFill !== null" class="grid-double">
+    {{ _applicationSubmission.naruWillImportFill ? 'Yes' : 'No' }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruWillImportFill === null"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
+    <div class="subheading1 full-width">
+      Fill to be Placed <app-updated-banner *ngIf="updatedFields.includes('naruToPlaceVolume')"></app-updated-banner>
+    </div>
+    <div class="full-width soil-table">
+      <div class="grid-1"><strong>Volume</strong></div>
+      <div class="grid-2">
+        {{ _applicationSubmission.naruToPlaceVolume }}
+        <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="_applicationSubmission.naruToPlaceVolume === null"
+        ></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Area</strong></div>
+      <div class="grid-2">
+        {{ _applicationSubmission.naruToPlaceArea }}
+        <span *ngIf="_applicationSubmission.naruToPlaceArea !== null">ha</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceArea === null"></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Maximum Depth</strong></div>
+      <div class="grid-2">
+        {{ _applicationSubmission.naruToPlaceMaximumDepth }}
+        <span *ngIf="_applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="_applicationSubmission.naruToPlaceMaximumDepth === null"
+        ></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Average Depth</strong></div>
+      <div class="grid-2">
+        {{ _applicationSubmission.naruToPlaceAverageDepth }}
+        <span *ngIf="_applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="_applicationSubmission.naruToPlaceAverageDepth === null"
+        ></app-no-data>
+      </div>
+    </div>
+
+    <div class="full-width">
+      <span class="subheading1">Project Duration</span>
+    </div>
+    <div class="subheading2 grid-1">
+      Duration <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationUnit')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.soilProjectDurationUnit }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilProjectDurationUnit"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Length <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationAmount')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.soilProjectDurationAmount }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilProjectDurationAmount"></app-no-data>
+    </div>
+  </ng-container>
+
+  <div *ngIf="showEdit" class="edit-button">
+    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+  </div>
+</div>

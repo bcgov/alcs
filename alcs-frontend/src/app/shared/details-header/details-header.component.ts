@@ -23,16 +23,20 @@ import {
 export class DetailsHeaderComponent {
   destroy = new Subject<void>();
 
-  linkedCards: (CardDto & { displayName: string })[] = [];
-
   @Input() heading = 'Title Here';
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
+
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
     if (application) {
       this._application = application;
+
+      if ('retroactive' in application) {
+        this.isNOI = true;
+      }
+
       if ('type' in application) {
         this.types = [application.type];
       }
@@ -71,6 +75,8 @@ export class DetailsHeaderComponent {
   showModificationLabel = false;
   showReconLabel = false;
   showRetroLabel = false;
+  linkedCards: (CardDto & { displayName: string })[] = [];
+  isNOI = false;
 
   constructor(private router: Router) {}
 

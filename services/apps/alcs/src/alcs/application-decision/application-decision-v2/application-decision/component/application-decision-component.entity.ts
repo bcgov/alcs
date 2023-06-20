@@ -84,6 +84,101 @@ export class ApplicationDecisionComponent extends Base {
   })
   endDate?: Date | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'Components` expiry date',
+    nullable: true,
+  })
+  expiryDate?: Date | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilFillTypeToPlace: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveAverageDepth: number | null;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;

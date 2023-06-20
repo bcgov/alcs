@@ -1,0 +1,7 @@
+.soil-table {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  overflow-x: auto;
+  grid-column-gap: 36px;
+  grid-row-gap: 12px;
+}
