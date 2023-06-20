@@ -82,8 +82,6 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
-    // TODO remove this
-    // SearchComponent,
   ],
   imports: [
     CommonModule,
