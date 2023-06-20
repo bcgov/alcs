@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -40,6 +41,7 @@ export class Application extends Base {
     }
   }
 
+  @Index()
   @AutoMap()
   @Column({
     unique: true,
@@ -149,6 +151,7 @@ export class Application extends Base {
   @ManyToOne(() => ApplicationLocalGovernment, { nullable: true })
   localGovernment?: ApplicationLocalGovernment;
 
+  @Index()
   @Column({
     type: 'uuid',
     nullable: true,

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationTypeDto } from '../../../services/application/application-code.dto';
@@ -24,8 +24,7 @@ interface SearchResult {
 })
 export class SearchComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-
-  @Input() searchText!: string;
+  searchText?: string;
 
   searchResults: SearchResult[] = [];
   displayedColumns = ['fileId', 'class', 'type', 'government'];
@@ -40,11 +39,12 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.$destroy)).subscribe((queryParamMap) => {
       const searchText = queryParamMap.get('searchText');
+
       if (searchText) {
         this.searchText = searchText;
 
         this.searchService
-          .fetch(this.searchText)
+          .fetch(searchText)
           .then((result) => (this.searchResults = this.mapSearchResults(result ?? [])));
       }
     });

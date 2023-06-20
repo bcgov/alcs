@@ -13,17 +13,8 @@ import { ApplicationType } from '../code/application-code/application-type/appli
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
+import { SearchResultDto } from './search.dto';
 import { SearchService } from './search.service';
-
-export class SearchResultDto {
-  type: string;
-  referenceId: string;
-  applicant?: string;
-  localGovernmentName: string;
-  fileNumber: string;
-  boardCode?: string;
-  label?: ApplicationTypeDto;
-}
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -71,14 +62,6 @@ export class SearchController {
     const end = performance.now();
     console.log(`Execution time total: ${end - start} ms`);
 
-    console.log('application', application);
-    console.log('noi', noi);
-    console.log('planningReview', planningReview);
-    console.log('covenant', covenant);
-    // console.log('cards', cards);
-    console.log('result', result);
-
-    // TODO Use generalized dto for as a response
     return result;
   }
 

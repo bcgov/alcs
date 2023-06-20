@@ -15,7 +15,6 @@ export class SearchBarComponent {
   @ViewChild('searchInput') input!: ElementRef;
 
   constructor(
-    private applicationService: ApplicationService,
     private toastService: ToastService,
     private router: Router,
     private searchService: SearchService
@@ -24,6 +23,7 @@ export class SearchBarComponent {
   async onSearch() {
     try {
       const searchResult = await this.searchService.fetch(this.searchText);
+    
       if (!searchResult || searchResult.length < 1) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         return;
@@ -47,8 +47,6 @@ export class SearchBarComponent {
       if (searchResult?.length > 1) {
         await this.router.navigateByUrl(`/search?searchText=${this.searchText}`);
       }
-
-      // const app = await this.applicationService.fetchApplication(this.searchText);
 
       this.searchText = '';
     } catch (e) {
