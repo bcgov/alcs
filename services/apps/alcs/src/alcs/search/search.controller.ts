@@ -28,39 +28,19 @@ export class SearchController {
   @Get('/:searchTerm')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async search(@Param('searchTerm') searchTerm) {
-    const start = performance.now();
-
-    const start1 = performance.now();
     const application = await this.searchService.getApplication(searchTerm);
-    const end1 = performance.now();
-    console.log(`Execution time app: ${end1 - start1} ms`);
 
-    const start2 = performance.now();
     const noi = await this.searchService.getNoi(searchTerm);
-    const end2 = performance.now();
-    console.log(`Execution time noi: ${end2 - start2} ms`);
 
-    const start3 = performance.now();
     const planningReview = await this.searchService.getPlanningReview(
       searchTerm,
     );
-    const end3 = performance.now();
-    console.log(`Execution time planningReview: ${end3 - start3} ms`);
 
-    const start4 = performance.now();
     const covenant = await this.searchService.getCovenant(searchTerm);
-    const end4 = performance.now();
-    console.log(`Execution time covenant: ${end4 - start4} ms`);
-    const start5 = performance.now();
+
     const result: SearchResultDto[] = [];
 
     this.mapSearchResults(result, application, noi, planningReview, covenant);
-
-    const end5 = performance.now();
-    console.log(`Execution time mapping: ${end5 - start5} ms`);
-
-    const end = performance.now();
-    console.log(`Execution time total: ${end - start} ms`);
 
     return result;
   }

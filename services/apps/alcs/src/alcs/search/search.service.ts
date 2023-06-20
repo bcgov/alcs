@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
+import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -18,8 +17,6 @@ export class SearchService {
     private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Covenant)
     private covenantRepository: Repository<Covenant>,
-    @InjectRepository(ApplicationLocalGovernment)
-    private localGovernmentRepository: Repository<ApplicationLocalGovernment>,
   ) {}
 
   async getApplication(fileNumber: string) {
@@ -49,14 +46,6 @@ export class SearchService {
     });
 
     return noi;
-  }
-
-  async getLocalGovernments(localGovernmentUuids: string[]) {
-    const cards = await this.localGovernmentRepository.find({
-      where: { uuid: In(localGovernmentUuids) },
-    });
-
-    return cards;
   }
 
   async getPlanningReview(fileNumber: string) {
