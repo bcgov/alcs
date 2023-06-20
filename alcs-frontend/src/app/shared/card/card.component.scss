@@ -62,6 +62,7 @@ $date-ht: 32px;
   display: flex;
   justify-content: space-between;
   align-content: center;
+  font-size: 12px;
 }
 
 .lower-card > div {
@@ -76,13 +77,21 @@ $date-ht: 32px;
   float: right;
 }
 
-.active-days {
-  padding: 6px 0;
+.day-count {
+  margin-left: -4px;
 
   mat-icon {
     text-align: center;
     transform: scale(0.75);
   }
+}
+
+.due-date {
+  margin-left: 12px;
+}
+
+.red-text {
+  color: colors.$error-color;
 }
 
 .labels {
