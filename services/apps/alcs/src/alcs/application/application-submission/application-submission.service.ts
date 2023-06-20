@@ -24,6 +24,7 @@ export class ApplicationSubmissionService {
     return await this.applicationSubmissionRepository.findOneOrFail({
       where: { fileNumber, isDraft: false },
       relations: {
+        naruSubtype: true,
         application: {
           documents: {
             document: true,
