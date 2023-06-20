@@ -6,7 +6,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { FindOptionsRelations, In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
@@ -40,6 +40,17 @@ const LG_VISIBLE_STATUSES = [
 @Injectable()
 export class ApplicationSubmissionService {
   private logger: Logger = new Logger(ApplicationSubmissionService.name);
+
+  private DEFAULT_RELATIONS: FindOptionsRelations<ApplicationSubmission> = {
+    naruSubtype: true,
+    owners: {
+      type: true,
+      corporateSummary: {
+        document: true,
+      },
+      parcels: true,
+    },
+  };
 
   constructor(
     @InjectRepository(ApplicationSubmission)
@@ -326,15 +337,7 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: {
-          owners: {
-            type: true,
-            corporateSummary: {
-              document: true,
-            },
-            parcels: true,
-          },
-        },
+        relations: this.DEFAULT_RELATIONS,
       });
 
     if (!existingApplication) {
@@ -383,15 +386,7 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: {
-          owners: {
-            type: true,
-            corporateSummary: {
-              document: true,
-            },
-            parcels: true,
-          },
-        },
+        relations: this.DEFAULT_RELATIONS,
       });
 
     if (!existingApplication) {
@@ -412,16 +407,7 @@ export class ApplicationSubmissionService {
         },
         isDraft: false,
       },
-      relations: {
-        naruSubtype: true,
-        owners: {
-          type: true,
-          corporateSummary: {
-            document: true,
-          },
-          parcels: true,
-        },
-      },
+      relations: this.DEFAULT_RELATIONS,
     });
   }
 
@@ -431,16 +417,9 @@ export class ApplicationSubmissionService {
         uuid,
       },
       relations: {
-        naruSubtype: true,
+        ...this.DEFAULT_RELATIONS,
         createdBy: true,
         status: true,
-        owners: {
-          type: true,
-          corporateSummary: {
-            document: true,
-          },
-          parcels: true,
-        },
       },
     });
   }
@@ -478,16 +457,7 @@ export class ApplicationSubmissionService {
           fileNumber: fileId,
           isDraft: false,
         },
-        relations: {
-          naruSubtype: true,
-          owners: {
-            type: true,
-            corporateSummary: {
-              document: true,
-            },
-            parcels: true,
-          },
-        },
+        relations: this.DEFAULT_RELATIONS,
       });
     }
 
@@ -513,14 +483,7 @@ export class ApplicationSubmissionService {
           uuid: submissionUuid,
         },
         relations: {
-          naruSubtype: true,
-          owners: {
-            type: true,
-            corporateSummary: {
-              document: true,
-            },
-            parcels: true,
-          },
+          ...this.DEFAULT_RELATIONS,
           status: true,
         },
       });

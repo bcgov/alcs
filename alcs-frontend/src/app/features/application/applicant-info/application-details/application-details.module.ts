@@ -2,6 +2,7 @@ import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDetailsComponent } from './application-details.component';
+import { NaruDetailsComponent } from './naru-details/naru-details.component';
 import { NfuDetailsComponent } from './nfu-details/nfu-details.component';
 import { ParcelComponent } from './parcel/parcel.component';
 import { PfrsDetailsComponent } from './pfrs-details/pfrs-details.component';
@@ -20,6 +21,7 @@ import { TurDetailsComponent } from './tur-details/tur-details.component';
     RosoDetailsComponent,
     PofoDetailsComponent,
     PfrsDetailsComponent,
+    NaruDetailsComponent,
   ],
   imports: [CommonModule, SharedModule, NgForOf, NgIf, SharedModule],
   exports: [ApplicationDetailsComponent],

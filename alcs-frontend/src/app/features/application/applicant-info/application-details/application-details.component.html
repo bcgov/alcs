@@ -36,8 +36,8 @@
       {{ submittedApplication.primaryContact.lastName }}
     </div>
     <div class="subheading2 grid-1">
-      <span *ngIf='submittedApplication.primaryContact.type.code !== "CRWN"'>Organization</span>
-      <span *ngIf='submittedApplication.primaryContact.type.code === "CRWN"'>Ministry/Department Responsible</span>
+      <span *ngIf="submittedApplication.primaryContact.type.code !== 'CRWN'">Organization</span>
+      <span *ngIf="submittedApplication.primaryContact.type.code === 'CRWN'">Ministry/Department Responsible</span>
     </div>
     <div class="grid-double">
       {{ submittedApplication.primaryContact.organizationName }}
@@ -159,6 +159,11 @@
     [applicationSubmission]="submittedApplication"
     [files]="files"
   ></app-pfrs-details>
+  <app-naru-details
+    *ngIf="submittedApplication && applicationType === 'NARU'"
+    [applicationSubmission]="submittedApplication"
+    [files]="files"
+  ></app-naru-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>
