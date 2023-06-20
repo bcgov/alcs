@@ -41,23 +41,23 @@
       Please select a sub-type above to view proposal questions
     </div>
 
-    <ng-container *ngIf="subtype.value === 'ARFU'">
-      <div class="full-row">
-        <label for="purpose">What is the purpose of the proposal?</label>
-        <div class="subtext">
-          Include why you are applying for removal of soil, what the proposal will achieve, and any benefits to
-          agriculture that the proposal provides.
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea formControlName="purpose" #purposeText maxlength="4000" id="purpose" matInput></textarea>
-        </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
-        <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="purpose.errors?.['required']">This field is required</div>
-        </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Include why you are applying for removal of soil, what the proposal will achieve, and any benefits to
+        agriculture that the proposal provides.
       </div>
+      <mat-form-field appearance="outline">
+        <textarea formControlName="purpose" #purposeText maxlength="4000" id="purpose" matInput></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+    </div>
 
+    <ng-container *ngIf="subtype.value === 'ARFU'">
       <div>
         <label for="floorArea"
           >What is the total floor area (m<sup>2</sup>) of the proposed additional residence?</label
@@ -199,35 +199,170 @@
           [isRequired]="true"
         ></app-file-drag-drop>
       </div>
-
-      <div class="full-row">
-        <label for="will-import-fill">
-          Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
-          onto the property, including gravel for construction.
+    </ng-container>
+    <ng-container *ngIf="subtype.value === 'PRIN'">
+      <div>
+        <label for="floorArea">
+          What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
         </label>
-        <mat-button-toggle-group
-          (change)="onChangeFill($event.value)"
-          class="input"
-          id="will-import-fill"
-          formControlName="willImportFill"
-        >
-          <mat-button-toggle
-            value="true"
-            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-            >Yes</mat-button-toggle
-          >
-          <mat-button-toggle
-            value="false"
-            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-            >No</mat-button-toggle
-          >
-        </mat-button-toggle-group>
-        <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-form-field appearance="outline">
+          <input
+            id="floorArea"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            min="0.01"
+            matInput
+            formControlName="floorArea"
+          />
+          <span *ngIf="floorArea.value" matTextSuffix>m<sup>2</sup></span>
+        </mat-form-field>
+        <div *ngIf="floorArea.invalid && (floorArea.dirty || floorArea.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
-          <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+          <div *ngIf="floorArea.errors?.['required']">This field is required</div>
         </div>
       </div>
+
+      <div class="full-row">
+        <label for="residenceNecessity">
+          Describe how the proposal for a principal residence more than 500 m2 will support agriculture in the short or
+          long term.
+        </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="residenceNecessity"
+            #residenceNecessityText
+            maxlength="4000"
+            id="residenceNecessity"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</span>
+        <div
+          *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="locationRationale"
+          >Describe the rationale for the proposed location of the principal residence.</label
+        >
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="locationRationale"
+            #locationRationaleText
+            maxlength="4000"
+            id="locationRationale"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</span>
+        <div
+          *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="infrastructure">
+          Provide the total area (m2) and a description of infrastructure necessary to support the additional residence.
+        </label>
+        <div class="subtext">
+          Describe any infrastructure required to accommodate the additional residence and the approximate area required
+          for that infrastructure
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="infrastructure"
+            #infrastructureText
+            maxlength="4000"
+            id="infrastructure"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</span>
+        <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="existingStructures">
+          Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
+          currently located on the property.
+        </label>
+        <div class="subtext">
+          Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
+          agri-tourism accommodation, or tourist accommodation.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="existingStructures"
+            #existingStructuresText
+            maxlength="4000"
+            id="existingStructures"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
+        <div
+          *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+        <div class="subtext">A visual representation of your proposal.</div>
+        <app-file-drag-drop
+          id="proposal-map"
+          [uploadedFiles]="proposalMap"
+          (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+        ></app-file-drag-drop>
+      </div>
     </ng-container>
+    <div class="full-row">
+      <label for="will-import-fill">
+        Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
+        onto the property, including gravel for construction.
+      </label>
+      <mat-button-toggle-group
+        (change)="onChangeFill($event.value)"
+        class="input"
+        id="will-import-fill"
+        formControlName="willImportFill"
+      >
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+      </div>
+    </div>
   </div>
 
   <section>

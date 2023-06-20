@@ -184,7 +184,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         naruExistingStructures: existingStructures,
-        naruWillImportFill: willImportFill !== null ? willImportFill === 'yes' : null,
+        naruWillImportFill: willImportFill !== null ? willImportFill === 'true' : null,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,
