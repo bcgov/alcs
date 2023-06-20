@@ -6,6 +6,13 @@ import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 
+const CARD_RELATIONSHIP = {
+  card: {
+    board: true,
+  },
+  localGovernment: true,
+};
+
 @Injectable()
 export class SearchService {
   constructor(
@@ -54,12 +61,7 @@ export class SearchService {
         fileNumber,
         card: { archived: false },
       },
-      relations: {
-        card: {
-          board: true,
-        },
-        localGovernment: true,
-      },
+      relations: CARD_RELATIONSHIP,
     });
 
     return planningReview;
@@ -71,12 +73,7 @@ export class SearchService {
         fileNumber,
         card: { archived: false },
       },
-      relations: {
-        card: {
-          board: true,
-        },
-        localGovernment: true,
-      },
+      relations: CARD_RELATIONSHIP,
     });
 
     return covenant;
