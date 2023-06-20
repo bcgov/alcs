@@ -25,7 +25,7 @@ export class DetailsHeaderComponent {
 
   linkedCards: (CardDto & { displayName: string })[] = [];
 
-  @Input() heading = 'Application';
+  @Input() heading = 'Title Here';
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
 
