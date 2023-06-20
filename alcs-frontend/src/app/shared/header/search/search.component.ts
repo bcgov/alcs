@@ -56,19 +56,20 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async onSelectCard(record: SearchResult) {
-    if (record.type && ['PLAN', 'COV'].includes(record.type)) {
-      await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
+    switch (record.type) {
+      case 'APP':
+        await this.router.navigateByUrl(`/application/${record.referenceId}`);
+        break;
+      case 'NOI':
+        await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
+        break;
+      case 'COV':
+      case 'PLAN':
+        await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
+        break;
+      default:
+        this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
     }
-
-    if (record.type === 'APP') {
-      await this.router.navigateByUrl(`/application/${record.referenceId}`);
-    }
-
-    if (record.type === 'NOI') {
-      await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
-    }
-
-    this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
   }
 
   private mapSearchResults(data: SearchResultDto[]) {

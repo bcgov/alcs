@@ -26,16 +26,21 @@ export class SearchBarComponent {
 
       if (searchResult?.length === 1) {
         const result = searchResult[0];
-        if (result.type === 'APP') {
-          await this.router.navigate(['application', result.referenceId]);
-        }
-
-        if (result.type === 'NOI') {
-          await this.router.navigate(['notice-of-intent', result.referenceId]);
-        }
-
-        if (['COV', 'PLAN'].includes(result.type)) {
-          await this.router.navigateByUrl(`/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`);
+        switch (result.type) {
+          case 'APP':
+            await this.router.navigate(['application', result.referenceId]);
+            break;
+          case 'NOI':
+            await this.router.navigate(['notice-of-intent', result.referenceId]);
+            break;
+          case 'COV':
+          case 'PLAN':
+            await this.router.navigateByUrl(
+              `/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`
+            );
+            break;
+          default:
+            this.toastService.showErrorToast(`Unable to navigate to ${result.referenceId}`);
         }
       }
 
