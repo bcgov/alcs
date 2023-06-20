@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Application } from '../application/application.entity';
-import { Card } from '../card/card.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -15,7 +14,6 @@ import { SearchService } from './search.service';
     TypeOrmModule.forFeature([
       Application,
       NoticeOfIntent,
-      Card, // TODO double check this and remove if not needed
       PlanningReview,
       Covenant,
       ApplicationLocalGovernment,

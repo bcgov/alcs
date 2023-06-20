@@ -37,11 +37,6 @@ export class SearchController {
   @Get('/:searchTerm')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async search(@Param('searchTerm') searchTerm) {
-    // try fetch application
-    //     this includes Modification, Reconsideration
-    // try fetch noi
-    // try fetch covenant
-    // try fetch planning
     const start = performance.now();
 
     const start1 = performance.now();
@@ -65,39 +60,13 @@ export class SearchController {
     const covenant = await this.searchService.getCovenant(searchTerm);
     const end4 = performance.now();
     console.log(`Execution time covenant: ${end4 - start4} ms`);
-
-    // const cardUuids: string[] = [];
-
     const start5 = performance.now();
     const result: SearchResultDto[] = [];
 
-    if (application) {
-      // cardUuids.push(application.cardUuid);
-      result.push(this.mapApplicationToSearchResult(application));
-    }
+    this.mapSearchResults(result, application, noi, planningReview, covenant);
 
-    if (noi) {
-      // cardUuids.push(noi.cardUuid);
-      result.push(this.mapNoticeOfIntentToSearchResult(noi));
-    }
-
-    if (planningReview) {
-      // cardUuids.push(planningReview.cardUuid);
-      result.push(this.mapPlanningReviewToSearchResult(planningReview));
-    }
-
-    if (covenant) {
-      // cardUuids.push(covenant.cardUuid);
-      result.push(this.mapCovenantToSearchResult(covenant));
-    }
     const end5 = performance.now();
     console.log(`Execution time mapping: ${end5 - start5} ms`);
-
-    // TODO join cards in relations instead of retrieving them separately
-    // let cards: Card[] = [];
-    // if (cardUuids.length > 0) {
-    //   cards = await this.searchService.getCards(cardUuids);
-    // }
 
     const end = performance.now();
     console.log(`Execution time total: ${end - start} ms`);
@@ -113,7 +82,31 @@ export class SearchController {
     return result;
   }
 
-  mapApplicationToSearchResult(application: Application) {
+  private mapSearchResults(
+    result: SearchResultDto[],
+    application: Application | null,
+    noi: NoticeOfIntent | null,
+    planningReview: PlanningReview | null,
+    covenant: Covenant | null,
+  ) {
+    if (application) {
+      result.push(this.mapApplicationToSearchResult(application));
+    }
+
+    if (noi) {
+      result.push(this.mapNoticeOfIntentToSearchResult(noi));
+    }
+
+    if (planningReview) {
+      result.push(this.mapPlanningReviewToSearchResult(planningReview));
+    }
+
+    if (covenant) {
+      result.push(this.mapCovenantToSearchResult(covenant));
+    }
+  }
+
+  private mapApplicationToSearchResult(application: Application) {
     const result = {
       type: CARD_TYPE.APP,
       referenceId: application.fileNumber,
@@ -130,7 +123,7 @@ export class SearchController {
     return result;
   }
 
-  mapNoticeOfIntentToSearchResult(noi: NoticeOfIntent) {
+  private mapNoticeOfIntentToSearchResult(noi: NoticeOfIntent) {
     const result = {
       type: CARD_TYPE.NOI,
       referenceId: noi.fileNumber,
@@ -142,7 +135,7 @@ export class SearchController {
     return result;
   }
 
-  mapPlanningReviewToSearchResult(planning: PlanningReview) {
+  private mapPlanningReviewToSearchResult(planning: PlanningReview) {
     const result = {
       type: CARD_TYPE.PLAN,
       referenceId: planning.cardUuid,
@@ -154,7 +147,7 @@ export class SearchController {
     return result;
   }
 
-  mapCovenantToSearchResult(covenant: Covenant) {
+  private mapCovenantToSearchResult(covenant: Covenant) {
     const result = {
       type: CARD_TYPE.COV,
       referenceId: covenant.cardUuid,

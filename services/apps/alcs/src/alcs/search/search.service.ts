@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Application } from '../application/application.entity';
-import { Card } from '../card/card.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
@@ -15,8 +14,6 @@ export class SearchService {
     private applicationRepository: Repository<Application>,
     @InjectRepository(NoticeOfIntent)
     private noiRepository: Repository<NoticeOfIntent>,
-    @InjectRepository(Card)
-    private cardRepository: Repository<Card>,
     @InjectRepository(PlanningReview)
     private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Covenant)
@@ -25,7 +22,6 @@ export class SearchService {
     private localGovernmentRepository: Repository<ApplicationLocalGovernment>,
   ) {}
 
-  // TODO add missing relations once UI is clear
   async getApplication(fileNumber: string) {
     const application = await this.applicationRepository.findOne({
       where: {
@@ -55,14 +51,6 @@ export class SearchService {
     return noi;
   }
 
-  async getCards(cardUuids: string[]) {
-    const cards = await this.cardRepository.find({
-      where: { uuid: In(cardUuids) },
-    });
-
-    return cards;
-  }
-
   async getLocalGovernments(localGovernmentUuids: string[]) {
     const cards = await this.localGovernmentRepository.find({
       where: { uuid: In(localGovernmentUuids) },
@@ -72,10 +60,10 @@ export class SearchService {
   }
 
   async getPlanningReview(fileNumber: string) {
-    // TODO Do not return if the card is deleted or Archived
     const planningReview = await this.planningReviewRepository.findOne({
       where: {
         fileNumber,
+        card: { archived: false },
       },
       relations: {
         card: {
@@ -89,10 +77,10 @@ export class SearchService {
   }
 
   async getCovenant(fileNumber: string) {
-    // TODO Do not return if the card is deleted or Archived
     const covenant = await this.covenantRepository.findOne({
       where: {
         fileNumber,
+        card: { archived: false },
       },
       relations: {
         card: {
