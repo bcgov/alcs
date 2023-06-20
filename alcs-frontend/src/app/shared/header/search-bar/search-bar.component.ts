@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApplicationService } from '../../../services/application/application.service';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -14,16 +13,12 @@ export class SearchBarComponent {
   searchText = '';
   @ViewChild('searchInput') input!: ElementRef;
 
-  constructor(
-    private toastService: ToastService,
-    private router: Router,
-    private searchService: SearchService
-  ) {}
+  constructor(private toastService: ToastService, private router: Router, private searchService: SearchService) {}
 
   async onSearch() {
     try {
       const searchResult = await this.searchService.fetch(this.searchText);
-    
+
       if (!searchResult || searchResult.length < 1) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         return;
@@ -40,7 +35,7 @@ export class SearchBarComponent {
         }
 
         if (['COV', 'PLAN'].includes(result.type)) {
-          this.toastService.showErrorToast('Not implemented');
+          await this.router.navigateByUrl(`/board/${result.boardCode}?card=${result.referenceId}&type=${result.type}`);
         }
       }
 

@@ -51,7 +51,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchResults = [];
     this.$destroy.next();
     this.$destroy.complete();
   }
@@ -59,17 +58,14 @@ export class SearchComponent implements OnInit, OnDestroy {
   async onSelectCard(record: SearchResult) {
     if (record.type && ['PLAN', 'COV'].includes(record.type)) {
       await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
-      return;
     }
 
     if (record.type === 'APP') {
       await this.router.navigateByUrl(`/application/${record.referenceId}`);
-      return;
     }
 
     if (record.type === 'NOI') {
       await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
-      return;
     }
 
     this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
@@ -87,7 +83,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         government: e.localGovernmentName,
         referenceId: e.referenceId,
         board: e.boardCode,
-      } as SearchResult;
+      };
     });
   }
 

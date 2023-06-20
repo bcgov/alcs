@@ -18,7 +18,7 @@ export class SearchService {
       return await firstValueFrom(this.http.get<SearchResultDto[]>(`${this.baseUrl}/${searchTerm}`));
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast(`Search filed for ${searchTerm}`);
+      this.toastService.showErrorToast(`Search failed for ${searchTerm}`);
       return undefined;
     }
   }
