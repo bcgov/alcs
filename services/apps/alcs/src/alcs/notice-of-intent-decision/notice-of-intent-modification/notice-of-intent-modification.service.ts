@@ -40,7 +40,7 @@ export class NoticeOfIntentModificationService {
         localGovernment: true,
       },
       card: {
-        board: true,
+        board: false,
         type: true,
         status: true,
         assignee: true,

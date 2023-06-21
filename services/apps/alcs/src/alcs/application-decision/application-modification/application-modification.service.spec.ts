@@ -42,7 +42,7 @@ describe('ApplicationModificationService', () => {
       decisionMeetings: true,
     },
     card: {
-      board: true,
+      board: false,
       type: true,
       status: true,
       assignee: true,

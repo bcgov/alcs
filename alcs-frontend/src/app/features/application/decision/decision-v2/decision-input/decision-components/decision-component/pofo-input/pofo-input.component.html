@@ -1,5 +1,5 @@
 <form [formGroup]="form" class="pofo-component-form">
-  <div class="grid-3">
+  <div class="grid">
     <mat-form-field appearance="outline" class="date-picker">
       <mat-label>Use End Date</mat-label>
       <input
@@ -12,18 +12,18 @@
       <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #endDatePicker type="date"></mat-datepicker>
     </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <textarea
-        class="soil-text-area"
-        formControlName="fillTypeToPlace"
-        #fillTypeToPlaceText
-        maxlength="4000"
-        matInput
-        placeholder="Type, origin and quality of fill approved to be placed*"
-      ></textarea>
-    </mat-form-field>
   </div>
+
+  <mat-form-field appearance="outline" class="row">
+    <textarea
+      class="soil-text-area"
+      formControlName="fillTypeToPlace"
+      #fillTypeToPlaceText
+      maxlength="4000"
+      matInput
+      placeholder="Type, origin and quality of fill approved to be placed*"
+    ></textarea>
+  </mat-form-field>
 
   <div class="container">
     <div class="soil-table">
