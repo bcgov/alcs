@@ -64,7 +64,6 @@ def process_applications(conn=None, batch_size=10000):
         print("- Applications with excluded components: ", count_total_exclude)
         print("Component ids stored in oats.alcs_etl_application_exclude")
 
-        
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -75,7 +74,9 @@ def process_applications(conn=None, batch_size=10000):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
+
                     f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id;"
+
                 )
                 
                 rows = cursor.fetchmany(batch_size)
@@ -108,11 +109,13 @@ def process_applications(conn=None, batch_size=10000):
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
+
     with conn.cursor() as cursor:
         count_components = "SELECT COUNT(*) FROM oats.alcs_etl_application_exclude"
         cursor.execute(count_components)
         count_total_comp = cursor.fetchone()[0]
     print("Number of multiple type-code application components ignored", count_total_comp)
+
     if failed_inserts == 0:
         with conn.cursor() as cursor:
             cursor.execute(drop_etl_temp_table())

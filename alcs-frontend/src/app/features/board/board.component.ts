@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
@@ -255,6 +256,30 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
         ...[...mappedReviewMeetings, ...mappedCovenants].sort(vettingSort),
       ];
+    } else if (boardCode === BOARD_TYPE_CODES.NOI) {
+      const noiSort = (a: CardData, b: CardData) => {
+        if (a.paused !== b.paused) {
+          return b.paused ? -1 : 1;
+        }
+        if (a.highPriority !== b.highPriority) {
+          return b.highPriority ? 1 : -1;
+        }
+
+        if (b.pausedDays !== undefined && a.pausedDays === undefined) {
+          return (b.pausedDays ?? 0) - (a.pausedDays ?? 0);
+        }
+
+        return (b.activeDays ?? 0) - (a.activeDays ?? 0);
+      };
+      this.cards = [
+        ...mappedNoticeOfIntents,
+        ...mappedNoticeOfIntentModifications,
+        ...mappedApps,
+        ...mappedRecons,
+        ...mappedModifications,
+        ...mappedReviewMeetings,
+        ...mappedCovenants,
+      ].sort(noiSort);
     } else {
       const sorted = [];
       sorted.push(
@@ -390,6 +415,11 @@ export class BoardComponent implements OnInit, OnDestroy {
       dateReceived: noticeOfIntent.card.createdAt,
       cssClasses: ['notice-of-intent'],
       activeDays: noticeOfIntent.activeDays ?? undefined,
+      pausedDays: noticeOfIntent.pausedDays ?? undefined,
+      dueDate: noticeOfIntent.activeDays
+        ? moment().add(60, 'days').subtract(noticeOfIntent.activeDays, 'days').toDate()
+        : undefined,
+      maxActiveDays: 61,
     };
   }
 

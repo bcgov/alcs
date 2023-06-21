@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
 import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
@@ -223,6 +224,55 @@ export class SubmittedApplicationDto {
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  //NARU Fields
+  @AutoMap(() => [NaruSubtypeDto])
+  naruSubtype: NaruSubtypeDto | null;
+
+  @AutoMap(() => String)
+  naruPurpose: string | null;
+
+  @AutoMap(() => Number)
+  naruFloorArea: number | null;
+
+  @AutoMap(() => String)
+  naruResidenceNecessity: string | null;
+
+  @AutoMap(() => String)
+  naruLocationRationale: string | null;
+
+  @AutoMap(() => String)
+  naruInfrastructure: string | null;
+
+  @AutoMap(() => String)
+  naruExistingStructures: string | null;
+
+  @AutoMap(() => Boolean)
+  naruWillImportFill: boolean | null;
+
+  @AutoMap(() => String)
+  naruFillType: string | null;
+
+  @AutoMap(() => String)
+  naruFillOrigin: string | null;
+
+  @AutoMap(() => Number)
+  naruProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  naruProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  naruToPlaceAverageDepth: number | null;
 
   @AutoMap()
   typeCode: string;

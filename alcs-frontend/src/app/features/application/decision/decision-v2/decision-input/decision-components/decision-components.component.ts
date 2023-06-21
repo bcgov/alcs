@@ -91,6 +91,9 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           agCapSource: this.application.agCapSource,
           agCapMap: this.application.agCapMap,
           agCapConsultant: this.application.agCapConsultant,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+          ),
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
@@ -123,6 +126,9 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+          ),
         } as DecisionComponentDto);
         break;
       default:

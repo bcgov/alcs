@@ -13,6 +13,22 @@ describe('ApplicationSubmissionService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
 
   const mockSubmittedApplication: ApplicationSubmissionDto = {
+    naruExistingStructures: null,
+    naruFillOrigin: null,
+    naruFillType: null,
+    naruFloorArea: null,
+    naruInfrastructure: null,
+    naruLocationRationale: null,
+    naruProjectDurationAmount: null,
+    naruProjectDurationUnit: null,
+    naruPurpose: null,
+    naruResidenceNecessity: null,
+    naruSubtype: null,
+    naruToPlaceArea: null,
+    naruToPlaceAverageDepth: null,
+    naruToPlaceMaximumDepth: null,
+    naruToPlaceVolume: null,
+    naruWillImportFill: null,
     parcels: [],
     otherParcels: [],
     documents: [],

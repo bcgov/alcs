@@ -244,7 +244,7 @@
     [updatedFields]="updatedFields"
   ></app-subd-details>
   <app-roso-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'ROSO'"
+    *ngIf="applicationSubmission.typeCode === 'ROSO'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -253,7 +253,7 @@
     [updatedFields]="updatedFields"
   ></app-roso-details>
   <app-pofo-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'POFO'"
+    *ngIf="applicationSubmission.typeCode === 'POFO'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -262,7 +262,7 @@
     [updatedFields]="updatedFields"
   ></app-pofo-details>
   <app-pfrs-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'PFRS'"
+    *ngIf="applicationSubmission.typeCode === 'PFRS'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -271,7 +271,7 @@
     [updatedFields]="updatedFields"
   ></app-pfrs-details>
   <app-naru-details
-    *ngIf="applicationSubmission && applicationSubmission.typeCode === 'NARU'"
+    *ngIf="applicationSubmission.typeCode === 'NARU'"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"

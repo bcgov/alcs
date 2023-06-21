@@ -19,13 +19,14 @@ import { Covenant } from './covenant.entity';
 
 @Injectable()
 export class CovenantService {
+  private CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
   private DEFAULT_RELATIONS: FindOptionsRelations<Covenant> = {
-    card: {
-      board: true,
-      type: true,
-      status: true,
-      assignee: true,
-    },
+    card: this.CARD_RELATIONS,
     localGovernment: true,
     region: true,
   };
@@ -116,7 +117,13 @@ export class CovenantService {
   async getByBoard(boardUuid: string) {
     return this.repository.find({
       where: { card: { boardUuid } },
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        card: {
+          ...this.CARD_RELATIONS,
+          board: false,
+        },
+      },
     });
   }
 

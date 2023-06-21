@@ -166,7 +166,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const {
         existingStructures,
         willImportFill,
@@ -184,7 +184,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         naruExistingStructures: existingStructures,
-        naruWillImportFill: willImportFill !== null ? willImportFill === 'yes' : null,
+        naruWillImportFill: willImportFill !== undefined ? willImportFill === 'true' : null,
         naruFillType: fillType,
         naruFillOrigin: fillOrigin,
         naruToPlaceAverageDepth: this.fillTableData.averageDepth ?? null,

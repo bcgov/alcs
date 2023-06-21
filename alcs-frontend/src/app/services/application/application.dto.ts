@@ -173,6 +173,24 @@ export interface ApplicationSubmissionDto {
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean | null;
   soilHasSubmittedNotice: boolean | null;
+
+  //NARU Fields
+  naruSubtype: BaseCodeDto | null;
+  naruPurpose: string | null;
+  naruFloorArea: number | null;
+  naruResidenceNecessity: string | null;
+  naruLocationRationale: string | null;
+  naruInfrastructure: string | null;
+  naruExistingStructures: string | null;
+  naruWillImportFill: boolean | null;
+  naruFillType: string | null;
+  naruFillOrigin: string | null;
+  naruProjectDurationAmount: number | null;
+  naruProjectDurationUnit: string | null;
+  naruToPlaceVolume: number | null;
+  naruToPlaceArea: number | null;
+  naruToPlaceMaximumDepth: number | null;
+  naruToPlaceAverageDepth: number | null;
 }
 
 export interface ApplicationDto {

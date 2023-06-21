@@ -46,12 +46,11 @@ export class ApplicationService {
     status: true,
     assignee: true,
     type: true,
+    board: true,
   };
   private BOARD_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
-    card: {
-      ...this.DEFAULT_CARD_RELATIONS,
-    },
+    card: this.DEFAULT_CARD_RELATIONS,
     region: true,
     decisionMeetings: true,
     localGovernment: true,
@@ -59,10 +58,7 @@ export class ApplicationService {
 
   private DEFAULT_RELATIONS: FindOptionsRelations<Application> = {
     type: true,
-    card: {
-      ...this.DEFAULT_CARD_RELATIONS,
-      board: true,
-    },
+    card: this.DEFAULT_CARD_RELATIONS,
     region: true,
     decisionMeetings: true,
     localGovernment: true,
@@ -224,7 +220,13 @@ export class ApplicationService {
   ): Promise<Application[]> {
     return await this.applicationRepository.find({
       where: findOptions,
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        card: {
+          ...this.DEFAULT_CARD_RELATIONS,
+          board: true,
+        },
+      },
       order: sortOptions,
     });
   }
@@ -236,7 +238,10 @@ export class ApplicationService {
           boardUuid,
         },
       },
-      relations: this.BOARD_RELATIONS,
+      relations: {
+        ...this.BOARD_RELATIONS,
+        card: { ...this.DEFAULT_CARD_RELATIONS, board: false },
+      },
     });
   }
 

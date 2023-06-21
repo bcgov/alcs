@@ -31,13 +31,15 @@ export class PlanningReviewService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
+  private CARD_RELATION = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
   private DEFAULT_RELATIONS: FindOptionsRelations<PlanningReview> = {
-    card: {
-      board: true,
-      type: true,
-      status: true,
-      assignee: true,
-    },
+    card: this.CARD_RELATION,
     localGovernment: true,
     region: true,
   };
@@ -136,7 +138,10 @@ export class PlanningReviewService {
 
   async getByBoard(boardUuid: string) {
     const res = await this.repository.find({
-      relations: this.DEFAULT_RELATIONS,
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+        card: { ...this.CARD_RELATION, board: false },
+      },
       where: {
         card: {
           boardUuid,
