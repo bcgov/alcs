@@ -36,22 +36,6 @@ INSERT INTO
     
     
 -- Insert values from application-exclude into table
--- INSERT INTO 
---     oats.alcs_etl_application_exclude (application_id)
---         WITH application_type_lookup AS (
---             SELECT
---                 oaac.alr_application_id AS application_id,
---                 oaac.alr_change_code AS code
-        
---             FROM
---                 oats.oats_alr_appl_components AS oaac
---                 )
-       
---     SELECT 
---             atl.application_id
---     FROM application_type_lookup atl
---         GROUP BY atl.application_id 
---         HAVING count(application_id) > 1;
 INSERT INTO oats.alcs_etl_application_exclude (component_id)
  WITH application_type_lookup AS (
             SELECT
