@@ -157,34 +157,6 @@
           <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
         </div>
       </div>
-
-      <div class="full-row">
-        <label for="existingStructures">
-          Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
-          currently located on the property.
-        </label>
-        <div class="subtext">
-          Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
-          agri-tourism accommodation, or tourist accommodation.
-        </div>
-        <mat-form-field appearance="outline">
-          <textarea
-            formControlName="existingStructures"
-            #existingStructuresText
-            maxlength="4000"
-            id="existingStructures"
-            matInput
-          ></textarea>
-        </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
-        <div
-          *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
-        </div>
-      </div>
     </ng-container>
 
     <ng-container *ngIf="subtype.value === 'PRIN'">
@@ -212,8 +184,8 @@
 
       <div class="full-row">
         <label for="residenceNecessity">
-          Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the short or
-          long term.
+          Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in
+          the short or long term.
         </label>
         <mat-form-field appearance="outline">
           <textarea
@@ -283,6 +255,149 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="subtype.value === 'TOUR'">
+      <div class="full-row">
+        <label for="floorArea"> What is the total floor area (m<sup>2</sup>) of the proposed accommodation? </label>
+        <mat-form-field appearance="outline">
+          <input
+            id="floorArea"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            min="0.01"
+            matInput
+            formControlName="floorArea"
+          />
+          <span *ngIf="floorArea.value" matTextSuffix>m<sup>2</sup></span>
+        </mat-form-field>
+        <div *ngIf="floorArea.invalid && (floorArea.dirty || floorArea.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="floorArea.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="sleepingUnits"> How many "sleeping units" in total are proposed? </label>
+        <div class="subtext">
+          A "sleeping unit" means:
+          <ol>
+            <li>A bedroom or other area used for sleeping located in a residence, cabin or other</li>
+            structure
+            <li>A vehicle, trailer, tent or other structure, located on a campsite, field or other area</li>
+          </ol>
+        </div>
+        <mat-form-field appearance="outline">
+          <input
+            id="sleepingUnits"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            min="0.01"
+            matInput
+            formControlName="sleepingUnits"
+          />
+          <span *ngIf="sleepingUnits.value" matTextSuffix>m<sup>2</sup></span>
+        </mat-form-field>
+        <div *ngIf="sleepingUnits.invalid && (sleepingUnits.dirty || sleepingUnits.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="sleepingUnits.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="residenceNecessity">
+          Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
+        </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="residenceNecessity"
+            #residenceNecessityText
+            maxlength="4000"
+            id="residenceNecessity"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</span>
+        <div
+          *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="locationRationale">
+          Describe the rationale for the proposed location of the tourism accommodation.
+        </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="locationRationale"
+            #locationRationaleText
+            maxlength="4000"
+            id="locationRationale"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</span>
+        <div
+          *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="infrastructure">
+          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
+          accommodation.
+        </label>
+        <div class="subtext">
+          Describe any infrastructure required to accommodate the tourism accommodation and the approximate area
+          required for that infrastructure.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="infrastructure"
+            #infrastructureText
+            maxlength="4000"
+            id="infrastructure"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</span>
+        <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+
+      <div class="full-row">
+        <label for="agriTourism"> Describe any agri-tourism that is currently taking place on the property. </label>
+        <div class="subtext">Agri-tourism activities are defined in the Agricultural Land Reserve Use Regulation.</div>
+        <app-info-banner>
+          Please refer to the Non-Adhering Residential Use page on the ALC website for more information
+        </app-info-banner>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="agriTourism"
+            #agriTourismText
+            maxlength="4000"
+            id="agriTourism"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <span class="subtext">Characters left: {{ 4000 - agriTourismText.textLength }}</span>
+        <div *ngIf="agriTourism.invalid && (agriTourism.dirty || agriTourism.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="agriTourism.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+    </ng-container>
+
     <div class="full-row">
       <label for="existingStructures">
         Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
@@ -293,13 +408,13 @@
         agri-tourism accommodation, or tourist accommodation.
       </div>
       <mat-form-field appearance="outline">
-          <textarea
-            formControlName="existingStructures"
-            #existingStructuresText
-            maxlength="4000"
-            id="existingStructures"
-            matInput
-          ></textarea>
+        <textarea
+          formControlName="existingStructures"
+          #existingStructuresText
+          maxlength="4000"
+          id="existingStructures"
+          matInput
+        ></textarea>
       </mat-form-field>
       <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
       <div
@@ -359,9 +474,7 @@
     <div class="form-row">
       <div class="full-row">
         <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
-        <div class="subtext">
-          The Commission must approve any proposed fill. List all proposed types of fill.
-        </div>
+        <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
         <mat-form-field appearance="outline">
           <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
         </mat-form-field>
