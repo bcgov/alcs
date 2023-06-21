@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { AdminModule } from './admin/admin.module';
+import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { ApplicationModule } from './application/application.module';
 import { BoardModule } from './board/board.module';
 import { CardModule } from './card/card.module';
@@ -8,13 +9,13 @@ import { CodeModule } from './code/code.module';
 import { CommentModule } from './comment/comment.module';
 import { CommissionerModule } from './commissioner/commissioner.module';
 import { CovenantModule } from './covenant/covenant.module';
-import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
 import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
+import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
 
 @Module({
@@ -35,6 +36,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     NoticeOfIntentModule,
     StaffJournalModule,
     NoticeOfIntentDecisionModule,
+    SearchModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -51,6 +53,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: NoticeOfIntentModule },
       { path: 'alcs', module: NoticeOfIntentDecisionModule },
       { path: 'alcs', module: StaffJournalModule },
+      { path: 'alcs', module: SearchModule },
     ]),
   ],
   controllers: [],

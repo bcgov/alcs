@@ -18,6 +18,7 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
+import { SearchComponent } from './shared/header/search/search.component';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -31,6 +32,7 @@ import { SharedModule } from './shared/shared.module';
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
+    SearchComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
   providers: [
