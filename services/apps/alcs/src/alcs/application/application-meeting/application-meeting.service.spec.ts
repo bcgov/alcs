@@ -10,6 +10,7 @@ import {
   initApplicationMeetingMock,
   initApplicationMockEntity,
 } from '../../../../test/mocks/mockEntities';
+import { ApplicationPaused } from '../application-paused.entity';
 import { ApplicationService } from '../application.service';
 import { UpdateApplicationMeetingDto } from './application-meeting.dto';
 import { ApplicationMeeting } from './application-meeting.entity';
@@ -19,14 +20,16 @@ describe('ApplicationMeetingService', () => {
   let service: ApplicationMeetingService;
 
   let mockAppMeetingRepository: DeepMocked<Repository<ApplicationMeeting>>;
+  let mockPauseRepository: DeepMocked<Repository<ApplicationPaused>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
 
   let mockApplication;
   let mockMeeting;
 
   beforeEach(async () => {
-    mockApplicationService = createMock<ApplicationService>();
-    mockAppMeetingRepository = createMock<Repository<ApplicationMeeting>>();
+    mockApplicationService = createMock();
+    mockAppMeetingRepository = createMock();
+    mockPauseRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -38,6 +41,10 @@ describe('ApplicationMeetingService', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: getRepositoryToken(ApplicationPaused),
+          useValue: mockPauseRepository,
         },
       ],
     }).compile();
@@ -160,5 +167,25 @@ describe('ApplicationMeetingService', () => {
         'Start Date must be smaller than End Date',
       ),
     );
+  });
+
+  it('should delete the meeting pause if one exists and there is no start and end date', async () => {
+    mockAppMeetingRepository.findOne.mockResolvedValue(
+      new ApplicationMeeting({
+        ...mockMeeting,
+        reportPause: new ApplicationPaused(),
+      }),
+    );
+    mockPauseRepository.delete.mockResolvedValue({} as any);
+
+    await service.update('fake-uuid', {
+      meetingStartDate: 1,
+      meetingEndDate: 2,
+      description: '',
+      reportEndDate: null,
+      reportStartDate: null,
+    });
+
+    expect(mockPauseRepository.delete).toHaveBeenCalledTimes(1);
   });
 });
