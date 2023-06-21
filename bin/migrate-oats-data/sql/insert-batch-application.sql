@@ -121,9 +121,6 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
-   -- LEFT JOIN oats.alcs_etl_application_exclude aee ON oa.alr_application_id = aee.component_id
-     
-
---where aee.application_id is null
+ 
 
 
