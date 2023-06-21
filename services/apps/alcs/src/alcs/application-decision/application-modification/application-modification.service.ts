@@ -13,6 +13,7 @@ import {
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
+import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { ApplicationDecisionV1Service } from '../application-decision-v1/application-decision/application-decision-v1.service';
 import {
@@ -33,7 +34,14 @@ export class ApplicationModificationService {
     private cardService: CardService,
   ) {}
 
-  private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationModification> =
+  private CARD_RELATIONS: FindOptionsRelations<Card> = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
+  private BOARD_MODIFICATION_RELATIONS: FindOptionsRelations<ApplicationModification> =
     {
       application: {
         type: true,
@@ -42,10 +50,8 @@ export class ApplicationModificationService {
         decisionMeetings: true,
       },
       card: {
-        board: true,
-        type: true,
-        status: true,
-        assignee: true,
+        ...this.CARD_RELATIONS,
+        board: false,
       },
     };
 
@@ -70,7 +76,7 @@ export class ApplicationModificationService {
   getByBoard(boardUuid: string) {
     return this.modificationRepository.find({
       where: { card: { boardUuid } },
-      relations: this.BOARD_RECONSIDERATION_RELATIONS,
+      relations: this.BOARD_MODIFICATION_RELATIONS,
     });
   }
 
