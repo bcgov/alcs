@@ -18,6 +18,8 @@ export interface ApplicationStatusDto extends BaseCodeDto {
   code: APPLICATION_STATUS;
 }
 
+export interface NaruSubtypeDto extends BaseCodeDto {}
+
 export interface ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
   size: number | null;
@@ -116,6 +118,24 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean;
   soilHasSubmittedNotice: boolean;
+
+  //NARU Fields
+  naruSubtype: NaruSubtypeDto | null;
+  naruPurpose: string | null;
+  naruFloorArea: number | null;
+  naruResidenceNecessity: string | null;
+  naruLocationRationale: string | null;
+  naruInfrastructure: string | null;
+  naruExistingStructures: string | null;
+  naruWillImportFill: boolean | null;
+  naruFillType: string | null;
+  naruFillOrigin: string | null;
+  naruProjectDurationAmount: number | null;
+  naruProjectDurationUnit: string | null;
+  naruToPlaceVolume: number | null;
+  naruToPlaceArea: number | null;
+  naruToPlaceMaximumDepth: number | null;
+  naruToPlaceAverageDepth: number | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -197,4 +217,22 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+
+  //NARU Fields
+  naruSubtypeCode?: string | null;
+  naruPurpose?: string | null;
+  naruFloorArea?: number | null;
+  naruResidenceNecessity?: string | null;
+  naruLocationRationale?: string | null;
+  naruInfrastructure?: string | null;
+  naruExistingStructures?: string | null;
+  naruWillImportFill?: boolean | null;
+  naruFillType?: string | null;
+  naruFillOrigin?: string | null;
+  naruProjectDurationAmount?: number | null;
+  naruProjectDurationUnit?: string | null;
+  naruToPlaceVolume?: number | null;
+  naruToPlaceArea?: number | null;
+  naruToPlaceMaximumDepth?: number | null;
+  naruToPlaceAverageDepth?: number | null;
 }

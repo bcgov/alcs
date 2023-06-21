@@ -1,8 +1,8 @@
 @use '../../../styles/colors';
 @use '../../../styles' as *;
 
-$card-ht: 160px;
-$date-ht: 48px;
+$card-ht: 176px;
+$date-ht: 32px;
 
 .card {
   height: $card-ht;
@@ -62,6 +62,7 @@ $date-ht: 48px;
   display: flex;
   justify-content: space-between;
   align-content: center;
+  font-size: 12px;
 }
 
 .lower-card > div {
@@ -76,13 +77,21 @@ $date-ht: 48px;
   float: right;
 }
 
-.active-days {
-  padding: 6px 0;
+.day-count {
+  margin-left: -4px;
 
   mat-icon {
     text-align: center;
     transform: scale(0.75);
   }
+}
+
+.due-date {
+  margin-left: 12px;
+}
+
+.red-text {
+  color: colors.$error-color;
 }
 
 .labels {
@@ -103,7 +112,7 @@ $date-ht: 48px;
   font-size: 16px;
   height: $date-ht;
   justify-content: center;
-  margin: -16px -18px 16px !important;
+  margin: -18px -18px 6px !important;
   transition: all 100ms ease-in-out;
 }
 

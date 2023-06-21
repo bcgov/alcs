@@ -21,6 +21,7 @@ import { ApplicationSubmissionValidatorService } from './application-submission-
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
+import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ApplicationSubmissionService } from './application-submission.service';
       ApplicationParcelOwnershipType,
       ApplicationOwner,
       ApplicationOwnerType,
+      NaruSubtype,
     ]),
     ApplicationModule,
     AuthorizationModule,

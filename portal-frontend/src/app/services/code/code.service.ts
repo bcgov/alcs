@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
+import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
 import { ApplicationTypeDto, LocalGovernmentDto, SubmissionTypeDto } from './code.dto';
 
 @Injectable({
@@ -20,6 +21,7 @@ export class CodeService {
         applicationTypes: ApplicationTypeDto[];
         applicationDocumentTypes: ApplicationDocumentTypeDto[];
         submissionTypes: SubmissionTypeDto[];
+        naruSubtypes: NaruSubtypeDto[];
       }>(`${this.baseUrl}`)
     );
   }

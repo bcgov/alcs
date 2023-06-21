@@ -24,6 +24,8 @@ import { ParcelEntryConfirmationDialogComponent } from './parcel-details/parcel-
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ChangeSubtypeConfirmationDialogComponent } from './proposal/naru-proposal/change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
+import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.component';
@@ -59,6 +61,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     RosoProposalComponent,
     PofoProposalComponent,
     PfrsProposalComponent,
+    NaruProposalComponent,
+    ChangeSubtypeConfirmationDialogComponent,
     SoilTableComponent,
   ],
   imports: [
@@ -98,6 +102,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     RosoProposalComponent,
     PofoProposalComponent,
     PfrsProposalComponent,
+    NaruProposalComponent,
     SoilTableComponent,
   ],
 })

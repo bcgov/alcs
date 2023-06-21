@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChildren } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
+import { ApplicationSubmissionService } from '../../../../../../services/application/application-submission/application-submission.service';
 import { ApplicationDto } from '../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
@@ -34,12 +35,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   application!: ApplicationDto;
   decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
 
-  constructor(private toastService: ToastService, private applicationDetailService: ApplicationDetailService) {}
+  constructor(
+    private toastService: ToastService,
+    private applicationDetailService: ApplicationDetailService,
+    private submissionService: ApplicationSubmissionService
+  ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe(async (application) => {
       if (application) {
         this.application = application;
+        this.application.submittedApplication = await this.submissionService.fetchSubmission(application.fileNumber);
       }
     });
 
@@ -85,17 +91,44 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           agCapSource: this.application.agCapSource,
           agCapMap: this.application.agCapMap,
           agCapConsultant: this.application.agCapConsultant,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+          ),
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
           this.patchNfuFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
+          this.patchTurpFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
+          this.patchPofoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.ROSO) {
+          this.patchRosoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
+          this.patchPofoFields(component);
+          this.patchRosoFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
+      case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+      case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+          ),
         } as DecisionComponentDto);
         break;
       default:
@@ -109,7 +142,29 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   private patchNfuFields(component: DecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
-    component.nfuEndDate = this.application.proposalEndDate;
+    component.endDate = this.application.proposalEndDate;
+  }
+
+  private patchTurpFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+  }
+
+  private patchPofoFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    component.soilFillTypeToPlace = this.application.submittedApplication?.soilFillTypeToPlace;
+    component.soilToPlaceVolume = this.application.submittedApplication?.soilToPlaceVolume;
+    component.soilToPlaceArea = this.application.submittedApplication?.soilToPlaceArea;
+    component.soilToPlaceMaximumDepth = this.application.submittedApplication?.soilToPlaceMaximumDepth;
+    component.soilToPlaceAverageDepth = this.application.submittedApplication?.soilToPlaceAverageDepth;
+  }
+
+  private patchRosoFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    component.soilTypeRemoved = this.application.submittedApplication?.soilTypeRemoved;
+    component.soilToRemoveVolume = this.application.submittedApplication?.soilToRemoveVolume;
+    component.soilToRemoveArea = this.application.submittedApplication?.soilToRemoveArea;
+    component.soilToRemoveMaximumDepth = this.application.submittedApplication?.soilToRemoveMaximumDepth;
+    component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
   }
 
   private updateComponentsMenuItems() {

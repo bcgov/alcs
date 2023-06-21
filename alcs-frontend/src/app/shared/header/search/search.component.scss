@@ -1,0 +1,49 @@
+@use '../../../../styles/colors.scss';
+
+.layout {
+  padding: 0 80px;
+}
+
+.search-title {
+  width: 100%;
+  margin-top: 42px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  h4 {
+    margin-right: 12px !important;
+  }
+}
+
+.table {
+  width: 100%;
+  margin-top: 12px;
+
+  td,
+  th {
+    font-size: 16px;
+    width: 25%;
+  }
+
+  .type-cell {
+    width: 90px;
+  }
+
+  tr.mdc-data-table__row:hover {
+    box-shadow: 0 0 0 2px rgba(colors.$primary-color, 0.9);
+    cursor: pointer;
+    transform: scale(1);
+  }
+
+  tr.no-data {
+    border: none;
+    background-color: colors.$grey-light;
+    align-items: center;
+    justify-content: center;
+    cursor: auto;
+    box-shadow: none !important;
+    height: 32px;
+  }
+}

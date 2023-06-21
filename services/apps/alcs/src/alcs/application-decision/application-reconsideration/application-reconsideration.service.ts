@@ -43,6 +43,13 @@ export class ApplicationReconsiderationService {
     private applicationDecisionService: ApplicationDecisionV1Service,
   ) {}
 
+  private DEFAULT_CARD_RELATIONS = {
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
+  };
+
   private BOARD_RECONSIDERATION_RELATIONS: FindOptionsRelations<ApplicationReconsideration> =
     {
       application: {
@@ -51,12 +58,7 @@ export class ApplicationReconsiderationService {
         localGovernment: true,
         decisionMeetings: true,
       },
-      card: {
-        board: true,
-        type: true,
-        status: true,
-        assignee: true,
-      },
+      card: { ...this.DEFAULT_CARD_RELATIONS, board: false },
       type: true,
     };
 

@@ -1,0 +1,101 @@
+<form [formGroup]="form" class="pofo-component-form">
+  <div class="grid">
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Use End Date</mat-label>
+      <input
+        matInput
+        (click)="endDatePicker.open()"
+        [matDatepicker]="endDatePicker"
+        formControlName="endDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="row">
+    <textarea
+      class="soil-text-area"
+      formControlName="fillTypeToPlace"
+      #fillTypeToPlaceText
+      maxlength="4000"
+      matInput
+      placeholder="Type, origin and quality of fill approved to be placed*"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="container">
+    <div class="soil-table">
+      <div></div>
+      <div>
+        <label for="volume">Fill to be placed</label>
+      </div>
+      <div class="label">
+        <label for="volumeToPlace">Volume*</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="volumeToPlace"
+          />
+          <span matTextSuffix>m<sup>3</sup></span>
+        </mat-form-field>
+      </div>
+      <div class="label">
+        <label for="areaToPlace">Area*</label>
+        <div class="subtext">Note: 0.01 ha is 100m2</div>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="areaToPlace"
+          />
+          <span matTextSuffix>ha</span>
+        </mat-form-field>
+      </div>
+      <div class="label">
+        <label for="maximumDepthToPlace">Maximum Depth*</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="maximumDepthToPlace"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
+      </div>
+      <div class="label">
+        <label for="averageDepthToPlace">Average Depth*</label>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            min="0.01"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            matInput
+            formControlName="averageDepthToPlace"
+          />
+          <span matTextSuffix>m</span>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>

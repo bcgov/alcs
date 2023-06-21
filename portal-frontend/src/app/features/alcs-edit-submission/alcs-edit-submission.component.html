@@ -42,7 +42,7 @@
     <div *ngIf="cdkStepper.selectedIndex === editAppSteps.PrimaryContact">
       <app-primary-contact
         [showErrors]="showValidationErrors"
-        [$application]="$applicationSubmission"
+        [$applicationSubmission]="$applicationSubmission"
         [$applicationDocuments]="$applicationDocuments"
         [draftMode]="true"
         (navigateToStep)="switchStep($event)"
@@ -129,6 +129,14 @@
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-pfrs-proposal>
+      <app-naru-proposal
+        *ngIf="applicationSubmission.typeCode === 'NARU'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-naru-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

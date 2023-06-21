@@ -42,6 +42,7 @@ describe('ApplicationService', () => {
     type: true,
     card: {
       ...DEFAULT_CARD_RELATIONS,
+      board: false,
     },
     region: true,
     decisionMeetings: true,

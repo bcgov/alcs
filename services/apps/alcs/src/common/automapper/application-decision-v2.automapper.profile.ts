@@ -12,13 +12,13 @@ import { ApplicationDecisionDocument } from '../../alcs/application-decision/app
 import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/application-decision/application-decision-outcome-type/application-decision-outcome-type.entity';
 
-import { ApplicationDecisionOutcomeCode } from '../../alcs/application-decision/application-decision-outcome.entity';
 import { ApplicationDecisionMakerCodeDto } from '../../alcs/application-decision/application-decision-maker/decision-maker.dto';
+import { ApplicationDecisionOutcomeCode } from '../../alcs/application-decision/application-decision-outcome.entity';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionOutcomeCodeDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
-  ApplicationDecisionOutcomeCodeDto,
   LinkedResolutionOutcomeTypeDto,
 } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
@@ -154,8 +154,12 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionComponent,
         ApplicationDecisionComponentDto,
         forMember(
-          (ad) => ad.nfuEndDate,
-          mapFrom((a) => a.nfuEndDate?.getTime()),
+          (ad) => ad.endDate,
+          mapFrom((a) => a.endDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.expiryDate,
+          mapFrom((a) => a.expiryDate?.getTime()),
         ),
       );
       createMap(

@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { BehaviorSubject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
   DOCUMENT_TYPE,
@@ -13,10 +13,8 @@ import { PARCEL_TYPE } from '../../../../services/application-parcel/application
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
-import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { EditApplicationSteps } from '../../edit-submission.component';
-import { StepComponent } from '../../step.partial';
+import { FilesStepComponent } from '../../files-step.partial';
 
 type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
 
@@ -25,11 +23,8 @@ type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null
   templateUrl: './subd-proposal.component.html',
   styleUrls: ['./subd-proposal.component.scss'],
 })
-export class SubdProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class SubdProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-
-  DOCUMENT = DOCUMENT_TYPE;
 
   homesiteSeverance: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
@@ -40,7 +35,6 @@ export class SubdProposalComponent extends StepComponent implements OnInit, OnDe
   agriculturalSupport = new FormControl<string | null>(null, [Validators.required]);
   isHomeSiteSeverance = new FormControl<string | null>(null, [Validators.required]);
 
-  fieldsAddsUp = false;
   totalTargetAcres = '0';
   totalAcres = '0';
   proposedLots: ProposedLot[] = [];
@@ -54,17 +48,16 @@ export class SubdProposalComponent extends StepComponent implements OnInit, OnDe
     agriculturalSupport: this.agriculturalSupport,
     isHomeSiteSeverance: this.isHomeSiteSeverance,
   });
-  private fileId = '';
   private submissionUuid = '';
 
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,
-    private dialog: MatDialog
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog
   ) {
-    super();
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
@@ -110,51 +103,7 @@ export class SubdProposalComponent extends StepComponent implements OnInit, OnDe
     await this.save();
   }
 
-  async attachFile(file: FileHandle, documentType: DOCUMENT_TYPE) {
-    if (this.fileId) {
-      await this.save();
-      const mappedFiles = file.file;
-      await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async onDeleteFile($event: ApplicationDocumentDto) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.deleteFile($event);
-          }
-        });
-    } else {
-      await this.deleteFile($event);
-    }
-  }
-
-  private async deleteFile($event: ApplicationDocumentDto) {
-    await this.applicationDocumentService.deleteExternalFile($event.uuid);
-    if (this.fileId) {
-      const documents = await this.applicationDocumentService.getByFileId(this.fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-    }
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
-    if (res) {
-      window.open(res.url, '_blank');
-    }
-  }
-
-  private async save() {
+  protected async save() {
     if (this.fileId) {
       const subdPurpose = this.purpose.getRawValue();
       const subdSuitability = this.suitability.getRawValue();

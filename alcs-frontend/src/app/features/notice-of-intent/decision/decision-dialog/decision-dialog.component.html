@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-  <h2 class="card-title">{{ isEdit ? 'Edit' : 'New' }} Decision</h2>
+  <h2 class="card-title">{{ isEdit ? 'Edit' : 'Create' }} Decision</h2>
 </div>
 <form (ngSubmit)="onSubmit()" [formGroup]="form">
   <mat-dialog-content style="height: 100%">
@@ -70,12 +70,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Decision Maker Name</mat-label>
-        <input
-          matInput
-          type='text'
-          formControlName="decisionMakerName"
-          name="decisionMakerName"
-        />
+        <input matInput type="text" formControlName="decisionMakerName" name="decisionMakerName" />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="date-picker">

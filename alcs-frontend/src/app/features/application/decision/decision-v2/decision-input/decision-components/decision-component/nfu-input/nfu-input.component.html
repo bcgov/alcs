@@ -18,7 +18,6 @@
       <ng-select
         appearance="outline"
         [items]="nfuSubTypeOptions"
-        id="nonFarmUseSubType"
         formControlName="nfuSubType"
         appendTo="body"
         bindLabel="label"
@@ -33,13 +32,13 @@
       <mat-label>Use End Date</mat-label>
       <input
         matInput
-        (click)="nfuEndDatePicker.open()"
-        [matDatepicker]="nfuEndDatePicker"
-        formControlName="nfuEndDate"
+        (click)="endDatePicker.open()"
+        [matDatepicker]="endDatePicker"
+        formControlName="endDate"
         name="date"
       />
-      <mat-datepicker-toggle matSuffix [for]="nfuEndDatePicker"></mat-datepicker-toggle>
-      <mat-datepicker #nfuEndDatePicker type="date"></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
     </mat-form-field>
   </div>
 </form>

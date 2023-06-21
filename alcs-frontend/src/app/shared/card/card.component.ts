@@ -13,6 +13,7 @@ export interface CardData {
   status: string;
   assignee?: AssigneeDto;
   activeDays?: number;
+  pausedDays?: number;
   paused: boolean;
   highPriority: boolean;
   decisionMeetings?: ApplicationDecisionMeetingDto[];
@@ -21,6 +22,8 @@ export interface CardData {
   cardType: CardType;
   dateReceived: number;
   verticalOutBound?: boolean;
+  dueDate?: Date;
+  maxActiveDays?: number;
 }
 
 export interface CardSelectedEvent {

@@ -31,6 +31,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
   decisions: LoadingDecision[] = [];
   outcomes: NoticeOfIntentDecisionOutcomeCodeDto[] = [];
   isPaused = true;
+  MAX_ACTIVE_DAYS = 61;
 
   noticeOfIntent: NoticeOfIntentDto | undefined;
   modificationLabel = MODIFICATION_TYPE_LABEL;

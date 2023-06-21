@@ -4,6 +4,17 @@ import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { In, Not } from 'typeorm';
+import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../common/authorization/roles.decorator';
+import { AssigneeDto } from '../../user/user.dto';
+import { User } from '../../user/user.entity';
+import { ApplicationModificationDto } from '../application-decision/application-modification/application-modification.dto';
+import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
+import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
+import { ApplicationReconsiderationDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
+import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { ApplicationTimeTrackingService } from '../application/application-time-tracking.service';
 import { ApplicationDto } from '../application/application.dto';
 import { Application } from '../application/application.entity';
@@ -15,18 +26,9 @@ import {
 } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
-import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
-import { RolesGuard } from '../../common/authorization/roles-guard.service';
-import { UserRoles } from '../../common/authorization/roles.decorator';
 import { CovenantDto } from '../covenant/covenant.dto';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
-import { ApplicationModificationDto } from '../application-decision/application-modification/application-modification.dto';
-import { ApplicationModification } from '../application-decision/application-modification/application-modification.entity';
-import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
-import { ApplicationReconsiderationDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
-import { ApplicationReconsideration } from '../application-decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
@@ -35,8 +37,6 @@ import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.serv
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { AssigneeDto } from '../../user/user.dto';
-import { User } from '../../user/user.entity';
 
 const HIDDEN_CARD_STATUSES = [
   CARD_STATUS.CANCELLED,
@@ -105,7 +105,7 @@ export class HomeController {
       const noticeOfIntentModifications =
         await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
 
-      return {
+      const result = {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
           noticeOfIntents,
         ),
@@ -123,6 +123,8 @@ export class HomeController {
         modifications: await this.modificationService.mapToDtos(modifications),
         covenants: await this.covenantService.mapToDtos(covenants),
       };
+
+      return result;
     } else {
       return {
         noticeOfIntents: [],

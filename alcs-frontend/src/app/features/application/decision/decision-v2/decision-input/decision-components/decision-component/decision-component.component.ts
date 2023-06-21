@@ -3,7 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionComponentDto,
+  NfuDecisionComponentDto,
+  PofoDecisionComponentDto,
+  RosoDecisionComponentDto,
+  TurpDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
 
@@ -16,13 +21,32 @@ export class DecisionComponentComponent implements OnInit {
   @Input() data!: DecisionComponentDto;
   @Output() dataChange = new EventEmitter<DecisionComponentDto>();
 
+  COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
+
   agCapOptions = AG_CAP_OPTIONS;
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
 
   // nfu
   nfuType = new FormControl<string | null>(null, [Validators.required]);
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
-  nfuEndDate = new FormControl<Date | null>(null);
+  endDate = new FormControl<Date | null>(null, [Validators.required]);
+
+  // turp
+  expiryDate = new FormControl<Date | null>(null);
+
+  // pofo, pfrs
+  fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
+  volumeToPlace = new FormControl<number | null>(null, [Validators.required]);
+  areaToPlace = new FormControl<number | null>(null, [Validators.required]);
+  maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
+  averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
+
+  // roso, pfrs
+  soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
+  volumeToRemove = new FormControl<number | null>(null, [Validators.required]);
+  areaToRemove = new FormControl<number | null>(null, [Validators.required]);
+  maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
+  averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -39,6 +63,8 @@ export class DecisionComponentComponent implements OnInit {
     agCapConsultant: this.agCapConsultant,
   });
 
+  constructor(private toastService: ToastService) {}
+
   ngOnInit(): void {
     if (this.data) {
       this.alrArea.setValue(this.data.alrArea ? this.data.alrArea : null);
@@ -47,7 +73,27 @@ export class DecisionComponentComponent implements OnInit {
       this.agCapMap.setValue(this.data.agCapMap ? this.data.agCapMap : null);
       this.agCapConsultant.setValue(this.data.agCapConsultant ? this.data.agCapConsultant : null);
 
-      this.patchNfuFields();
+      switch (this.data.applicationDecisionComponentTypeCode) {
+        case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+          this.patchNfuFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+          this.patchTurpFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
+          this.patchPofoFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+          this.patchRosoFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
+          this.patchPofoFields();
+          this.patchRosoFields();
+          break;
+        default:
+          this.toastService.showErrorToast('Wrong decision component type');
+          break;
+      }
     }
 
     this.onFormValueChanges();
@@ -66,31 +112,141 @@ export class DecisionComponentComponent implements OnInit {
         uuid: this.data.uuid,
       };
 
-      if (dataChange.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
-        dataChange = { ...dataChange, ...this.getNfuDataChange() };
-      }
+      dataChange = this.getComponentData(dataChange);
 
       this.dataChange.emit(dataChange);
     });
   }
 
-  private patchNfuFields() {
-    if (this.data.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
-      this.form.addControl('nfuType', this.nfuType);
-      this.form.addControl('nfuSubType', this.nfuSubType);
-      this.form.addControl('nfuEndDate', this.nfuEndDate);
-
-      this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
-      this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
-      this.nfuEndDate.setValue(this.data.nfuEndDate ? new Date(this.data.nfuEndDate) : null);
+  private getComponentData(dataChange: {
+    alrArea: number | null;
+    agCap: string | null;
+    agCapSource: string | null;
+    agCapMap: string | null;
+    agCapConsultant: string | null;
+    applicationDecisionComponentTypeCode: string;
+    applicationDecisionUuid: string | undefined;
+    uuid: string | undefined;
+  }) {
+    switch (dataChange.applicationDecisionComponentTypeCode) {
+      case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+        dataChange = { ...dataChange, ...this.getNfuDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
+        dataChange = { ...dataChange, ...this.getPofoDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+        dataChange = { ...dataChange, ...this.getRosoDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
+        dataChange = { ...dataChange, ...this.getPfrsDataChange() };
+        break;
+      default:
+        this.toastService.showErrorToast('Wrong decision component type');
+        break;
     }
+    return dataChange;
   }
 
-  private getNfuDataChange() {
+  private patchNfuFields() {
+    this.form.addControl('nfuType', this.nfuType);
+    this.form.addControl('nfuSubType', this.nfuSubType);
+    this.form.addControl('endDate', this.endDate);
+
+    this.nfuType.setValue(this.data.nfuType ? this.data.nfuType : null);
+    this.nfuSubType.setValue(this.data.nfuSubType ? this.data.nfuSubType : null);
+    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+  }
+
+  private patchTurpFields() {
+    this.form.addControl('expiryDate', this.expiryDate);
+
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+  }
+
+  private patchPofoFields() {
+    this.form.addControl('endDate', this.endDate);
+    this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
+    this.form.addControl('areaToPlace', this.areaToPlace);
+    this.form.addControl('volumeToPlace', this.volumeToPlace);
+    this.form.addControl('maximumDepthToPlace', this.maximumDepthToPlace);
+    this.form.addControl('averageDepthToPlace', this.averageDepthToPlace);
+
+    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    this.fillTypeToPlace.setValue(this.data.soilFillTypeToPlace ?? null);
+    this.areaToPlace.setValue(this.data.soilToPlaceArea ?? null);
+    this.volumeToPlace.setValue(this.data.soilToPlaceVolume ?? null);
+    this.maximumDepthToPlace.setValue(this.data.soilToPlaceMaximumDepth ?? null);
+    this.averageDepthToPlace.setValue(this.data.soilToPlaceAverageDepth ?? null);
+  }
+
+  private patchRosoFields() {
+    this.form.addControl('endDate', this.endDate);
+    this.form.addControl('soilTypeRemoved', this.soilTypeRemoved);
+    this.form.addControl('areaToRemove', this.areaToRemove);
+    this.form.addControl('volumeToRemove', this.volumeToRemove);
+    this.form.addControl('maximumDepthToRemove', this.maximumDepthToRemove);
+    this.form.addControl('averageDepthToRemove', this.averageDepthToRemove);
+
+    this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    this.soilTypeRemoved.setValue(this.data.soilTypeRemoved ?? null);
+    this.areaToRemove.setValue(this.data.soilToRemoveArea ?? null);
+    this.volumeToRemove.setValue(this.data.soilToRemoveVolume ?? null);
+    this.maximumDepthToRemove.setValue(this.data.soilToRemoveMaximumDepth ?? null);
+    this.averageDepthToRemove.setValue(this.data.soilToRemoveAverageDepth ?? null);
+  }
+
+  private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
       nfuSubType: this.nfuSubType.value ? this.nfuSubType.value : null,
-      nfuEndDate: this.nfuEndDate.value ? formatDateForApi(this.nfuEndDate.value) : null,
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+    };
+  }
+
+  private getTurpDataChange(): TurpDecisionComponentDto {
+    return {
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
+    };
+  }
+
+  private getPofoDataChange(): PofoDecisionComponentDto {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
+      soilToPlaceArea: this.areaToPlace.value ?? null,
+      soilToPlaceVolume: this.volumeToPlace.value ?? null,
+      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
+      soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
+    };
+  }
+
+  private getRosoDataChange(): RosoDecisionComponentDto {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      soilTypeRemoved: this.soilTypeRemoved.value ?? null,
+      soilToRemoveArea: this.areaToRemove.value ?? null,
+      soilToRemoveVolume: this.volumeToRemove.value ?? null,
+      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ?? null,
+      soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
+    };
+  }
+  private getPfrsDataChange(): RosoDecisionComponentDto & PofoDecisionComponentDto {
+    return {
+      endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      soilTypeRemoved: this.soilTypeRemoved.value ?? null,
+      soilToRemoveArea: this.areaToRemove.value ?? null,
+      soilToRemoveVolume: this.volumeToRemove.value ?? null,
+      soilToRemoveMaximumDepth: this.maximumDepthToRemove.value ?? null,
+      soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
+      soilFillTypeToPlace: this.fillTypeToPlace.value ?? null,
+      soilToPlaceArea: this.areaToPlace.value ?? null,
+      soilToPlaceVolume: this.volumeToPlace.value ?? null,
+      soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
+      soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
     };
   }
 }

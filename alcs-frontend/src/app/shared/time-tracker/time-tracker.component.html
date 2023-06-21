@@ -2,6 +2,7 @@
   <div *ngIf="!paused"><span class="dot"></span>Active</div>
   <div *ngIf="paused"><span class="dot paused"></span>Paused</div>
   <div
+    *ngIf="activeDays !== null"
     matTooltip="Active Days"
     class="card-active-days"
     [ngClass]="{
@@ -9,9 +10,10 @@
     }"
   >
     <mat-icon class="icon">calendar_month</mat-icon>
-    {{ activeDays ?? '-' }}
+    {{ isOverdue ? maxActiveDays + '+' : activeDays }}
   </div>
   <div
+    *ngIf="pausedDays !== null"
     matTooltip="Paused Days"
     class="card-paused-days"
     [ngClass]="{
@@ -19,6 +21,10 @@
     }"
   >
     <mat-icon class="icon">pause</mat-icon>
-    {{ pausedDays ?? '-' }}
+    {{ pausedDays }}
+  </div>
+  <div *ngIf="dueDate && !paused">
+    <span *ngIf="!isOverdue">Due: {{ dueDate | momentFormat }}</span>
+    <span class="red-text" *ngIf="isOverdue">Overdue</span>
   </div>
 </div>
