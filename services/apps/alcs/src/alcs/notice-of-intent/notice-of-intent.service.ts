@@ -29,21 +29,14 @@ import { NoticeOfIntent } from './notice-of-intent.entity';
 @Injectable()
 export class NoticeOfIntentService {
   private CARD_RELATIONS = {
-    card: {
-      board: true,
-      type: true,
-      status: true,
-      assignee: true,
-    },
+    board: true,
+    type: true,
+    status: true,
+    assignee: true,
   };
 
   private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntent> = {
-    card: {
-      board: true,
-      type: true,
-      status: true,
-      assignee: true,
-    },
+    card: this.CARD_RELATIONS,
     localGovernment: true,
     region: true,
     subtype: true,
