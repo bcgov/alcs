@@ -74,7 +74,7 @@ def process_applications(conn=None, batch_size=10000):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND ae.application_id > {last_application_id} ORDER by ae.application_id;"
+                    f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id;"
                 )
                 
                 rows = cursor.fetchmany(batch_size)
