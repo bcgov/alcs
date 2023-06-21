@@ -23,7 +23,7 @@
     <mat-icon class="icon">pause</mat-icon>
     {{ pausedDays }}
   </div>
-  <div *ngIf="dueDate && !paused">
+  <div *ngIf="dueDate && activeDays !== null">
     <span *ngIf="!isOverdue">Due: {{ dueDate | momentFormat }}</span>
     <span class="red-text" *ngIf="isOverdue">Overdue</span>
   </div>
