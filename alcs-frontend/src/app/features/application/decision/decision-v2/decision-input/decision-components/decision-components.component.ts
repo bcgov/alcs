@@ -117,6 +117,10 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           this.patchRosoFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
+          this.patchNaruFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
@@ -124,6 +128,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
       case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
+      case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
@@ -165,6 +170,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     component.soilToRemoveArea = this.application.submittedApplication?.soilToRemoveArea;
     component.soilToRemoveMaximumDepth = this.application.submittedApplication?.soilToRemoveMaximumDepth;
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
+  }
+
+  private patchNaruFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    // TODO implement this once it is ready
+    //component.expiryDate =
+    component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
   }
 
   private updateComponentsMenuItems() {

@@ -116,6 +116,12 @@ export interface TurpDecisionComponentDto {
   expiryDate?: number | null;
 }
 
+export interface NaruDecisionComponentDto {
+  expiryDate?: number | null;
+  endDate?: number | null;
+  naruSubtypeCode?: string | null;
+}
+
 export interface PofoDecisionComponentDto {
   endDate?: number | null;
   soilFillTypeToPlace?: string | null;
@@ -138,7 +144,8 @@ export interface DecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
     PofoDecisionComponentDto,
-    RosoDecisionComponentDto {
+    RosoDecisionComponentDto,
+    NaruDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -165,6 +172,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+  NARU = 'NARU',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

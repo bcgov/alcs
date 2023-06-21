@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
+import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
@@ -178,6 +179,14 @@ export class ApplicationDecisionComponent extends Base {
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveAverageDepth: number | null;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  naruSubtypeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => NaruSubtype)
+  naruSubtype: NaruSubtype;
 
   @AutoMap()
   @Column({ nullable: false })
