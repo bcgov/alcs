@@ -44,6 +44,8 @@ describe('ApplicationDetailsComponent', () => {
       naruToPlaceMaximumDepth: null,
       naruToPlaceVolume: null,
       naruWillImportFill: null,
+      naruAgriTourism: null,
+      naruSleepingUnits: null,
       nfuAgricultureSupport: null,
       nfuFillOriginDescription: null,
       nfuFillTypeDescription: null,

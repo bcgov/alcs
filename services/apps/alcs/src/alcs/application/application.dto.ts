@@ -274,6 +274,12 @@ export class SubmittedApplicationDto {
   @AutoMap(() => Number)
   naruToPlaceAverageDepth: number | null;
 
+  @AutoMap(() => Number)
+  naruSleepingUnits: number | null;
+
+  @AutoMap(() => String)
+  naruAgriTourism: string | null;
+
   @AutoMap()
   typeCode: string;
 }
