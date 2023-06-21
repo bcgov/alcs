@@ -185,21 +185,8 @@
           <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
         </div>
       </div>
-
-      <div class="full-row">
-        <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
-        <div class="subtext">A visual representation of your proposal.</div>
-        <app-file-drag-drop
-          id="proposal-map"
-          [uploadedFiles]="proposalMap"
-          (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
-          (deleteFile)="onDeleteFile($event)"
-          (openFile)="openFile($event)"
-          [showErrors]="showErrors"
-          [isRequired]="true"
-        ></app-file-drag-drop>
-      </div>
     </ng-container>
+
     <ng-container *ngIf="subtype.value === 'PRIN'">
       <div>
         <label for="floorArea">
@@ -225,7 +212,7 @@
 
       <div class="full-row">
         <label for="residenceNecessity">
-          Describe how the proposal for a principal residence more than 500 m2 will support agriculture in the short or
+          Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the short or
           long term.
         </label>
         <mat-form-field appearance="outline">
@@ -248,9 +235,9 @@
       </div>
 
       <div class="full-row">
-        <label for="locationRationale"
-          >Describe the rationale for the proposed location of the principal residence.</label
-        >
+        <label for="locationRationale">
+          Describe the rationale for the proposed location of the principal residence.
+        </label>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="locationRationale"
@@ -272,7 +259,8 @@
 
       <div class="full-row">
         <label for="infrastructure">
-          Provide the total area (m2) and a description of infrastructure necessary to support the additional residence.
+          Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the principal
+          residence.
         </label>
         <div class="subtext">
           Describe any infrastructure required to accommodate the additional residence and the approximate area required
@@ -293,17 +281,18 @@
           <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
         </div>
       </div>
+    </ng-container>
 
-      <div class="full-row">
-        <label for="existingStructures">
-          Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
-          currently located on the property.
-        </label>
-        <div class="subtext">
-          Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
-          agri-tourism accommodation, or tourist accommodation.
-        </div>
-        <mat-form-field appearance="outline">
+    <div class="full-row">
+      <label for="existingStructures">
+        Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
+        currently located on the property.
+      </label>
+      <div class="subtext">
+        Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
+        agri-tourism accommodation, or tourist accommodation.
+      </div>
+      <mat-form-field appearance="outline">
           <textarea
             formControlName="existingStructures"
             #existingStructuresText
@@ -311,31 +300,31 @@
             id="existingStructures"
             matInput
           ></textarea>
-        </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
-        <div
-          *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
-        </div>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
+      <div
+        *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
       </div>
+    </div>
 
-      <div class="full-row">
-        <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
-        <div class="subtext">A visual representation of your proposal.</div>
-        <app-file-drag-drop
-          id="proposal-map"
-          [uploadedFiles]="proposalMap"
-          (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
-          (deleteFile)="onDeleteFile($event)"
-          (openFile)="openFile($event)"
-          [showErrors]="showErrors"
-          [isRequired]="true"
-        ></app-file-drag-drop>
-      </div>
-    </ng-container>
+    <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+
     <div class="full-row">
       <label for="will-import-fill">
         Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
@@ -369,9 +358,9 @@
     <h3>Soil & Fill Components</h3>
     <div class="form-row">
       <div class="full-row">
-        <label for="fillType">Describe the type, origin and quality of fill proposed to be placed.</label>
+        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
         <div class="subtext">
-          List all proposed types of fill. Prohibited fill cannot be placed within the Agricultural Land Reserve.
+          The Commission must approve any proposed fill. List all proposed types of fill.
         </div>
         <mat-form-field appearance="outline">
           <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
@@ -381,7 +370,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="fillType.errors?.['required']">This field is required</div>
         </div>
-        <div class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</div>
+        <div class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</div>
       </div>
     </div>
 
