@@ -301,7 +301,7 @@
                                     <td><p>Consultant who determined the agricultural capability</p></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="nfu_end_date">nfu_end_date</span></td>
+                                    <td><span id="end_date">end_date</span></td>
                                     <td>timestamptz</td>
                                     <td>35,6</td>
                                     <td title='nullable'>√</td>
@@ -315,7 +315,7 @@
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                         </table>
                                     </td>
-                                    <td><p>The date at which the non-farm use ends</p></td>
+                                    <td><p>Components` end date</p></td>
                                 </tr>
                                 <tr>
                                     <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="application_decision_component_type_code">application_decision_component_type_code</span></td>
@@ -395,6 +395,193 @@
                                     </td>
                                     <td><p>Non-farm use sub type</p></td>
                                 </tr>
+                                <tr>
+                                    <td><span id="expiry_date">expiry_date</span></td>
+                                    <td>timestamptz</td>
+                                    <td>35,6</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td><p>Components` expiry date</p></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_fill_type_to_place">soil_fill_type_to_place</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_place_volume">soil_to_place_volume</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_place_area">soil_to_place_area</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_place_maximum_depth">soil_to_place_maximum_depth</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_place_average_depth">soil_to_place_average_depth</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_type_removed">soil_type_removed</span></td>
+                                    <td>text</td>
+                                    <td>2147483647</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_remove_volume">soil_to_remove_volume</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_remove_area">soil_to_remove_area</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_remove_maximum_depth">soil_to_remove_maximum_depth</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span id="soil_to_remove_average_depth">soil_to_remove_average_depth</span></td>
+                                    <td>numeric</td>
+                                    <td>12,2</td>
+                                    <td title='nullable'>√</td>
+                                    <td title=''></td>
+                                    <td>null</td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td>
+                                        <table border='0' cellspacing='0' cellpadding='0'>
+                                        </table>
+                                    </td>
+                                    <td></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -460,7 +647,7 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="431,80,981,619">
+<area shape="rect" id="node1" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="431,80,981,941">
 <area shape="rect" id="node2" href="application_decision_component_type.html" target="_top" title="application_decision_component_type" alt="" coords="5,435,387,581">
 <area shape="rect" id="node3" href="application_decision.html" target="_top" title="application_decision" alt="" coords="41,5,351,416">
 <area shape="rect" id="node4" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1025,59,1349,264">
@@ -469,22 +656,22 @@
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="802,669,1043,757">
-<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,435,175,523">
-<area shape="rect" id="node3" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="291,613,615,701">
-<area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="219,719,688,807">
-<area shape="rect" id="node5" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="281,824,625,912">
-<area shape="rect" id="node6" href="linked_resolution_outcome_type.html" target="_top" title="linked_resolution_outcome_type" alt="" coords="285,929,622,1017">
-<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="315,1035,592,1123">
-<area shape="rect" id="node8" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="272,508,635,596">
-<area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="302,367,605,455">
-<area shape="rect" id="node10" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="1157,5,1708,544">
+<area shape="rect" id="node1" href="application_decision.html" target="_top" title="application_decision" alt="" coords="802,992,1043,1080">
+<area shape="rect" id="node2" href="application.html" target="_top" title="application" alt="" coords="5,757,175,845">
+<area shape="rect" id="node3" href="application_ceo_criterion_code.html" target="_top" title="application_ceo_criterion_code" alt="" coords="291,936,615,1024">
+<area shape="rect" id="node4" href="application_decision_chair_revi_8bf8c3c0.html" target="_top" title="application_decision_chair_review_outcome_type" alt="" coords="219,1041,688,1129">
+<area shape="rect" id="node5" href="application_decision_maker_code.html" target="_top" title="application_decision_maker_code" alt="" coords="281,1147,625,1235">
+<area shape="rect" id="node6" href="linked_resolution_outcome_type.html" target="_top" title="linked_resolution_outcome_type" alt="" coords="285,1252,622,1340">
+<area shape="rect" id="node7" href="application_modification.html" target="_top" title="application_modification" alt="" coords="315,1357,592,1445">
+<area shape="rect" id="node8" href="application_decision_outcome_code.html" target="_top" title="application_decision_outcome_code" alt="" coords="272,831,635,919">
+<area shape="rect" id="node9" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="302,689,605,777">
+<area shape="rect" id="node10" href="application_decision_component.html" target="_top" title="application_decision_component" alt="" coords="1157,5,1708,867">
 <area shape="rect" id="node11" href="application_decision_component_type.html" target="_top" title="application_decision_component_type" alt="" coords="732,360,1113,507">
-<area shape="rect" id="node12" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1752,737,2076,825">
-<area shape="rect" id="node13" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="1249,913,1616,1001">
-<area shape="rect" id="node14" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1268,667,1597,755">
-<area shape="rect" id="node15" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="1269,808,1597,896">
-<area shape="rect" id="node16" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1252,561,1613,649">
+<area shape="rect" id="node12" href="application_decision_condition.html" target="_top" title="application_decision_condition" alt="" coords="1752,1060,2076,1148">
+<area shape="rect" id="node13" href="application_decision_condition_type.html" target="_top" title="application_decision_condition_type" alt="" coords="1249,1236,1616,1324">
+<area shape="rect" id="node14" href="application_decision_document.html" target="_top" title="application_decision_document" alt="" coords="1268,989,1597,1077">
+<area shape="rect" id="node15" href="application_modified_decisions.html" target="_top" title="application_modified_decisions" alt="" coords="1269,1131,1597,1219">
+<area shape="rect" id="node16" href="application_reconsidered_decisions.html" target="_top" title="application_reconsidered_decisions" alt="" coords="1252,884,1613,972">
 </map>
                                         <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/application_decision_component.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>

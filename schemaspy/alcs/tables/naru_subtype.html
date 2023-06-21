@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>planning_review - postgres.alcs</title>
+        <title>naru_subtype - postgres.alcs</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <link rel="icon" type="image/png" sizes="16x16" href="../favicon.png">
@@ -73,7 +73,7 @@
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>planning_review</h1><p><span id="recordNumber">-1</span> rows</p><br />
+                    <h1>naru_subtype</h1><p><span id="recordNumber">-1</span> rows</p><br />
                 </section>
                 <!-- Main content -->
                 <section class="content">
@@ -194,24 +194,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="uuid">uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>gen_random_uuid()</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="file_number">file_number</span></td>
+                                    <td><span id="label">label</span></td>
                                     <td>varchar</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -228,68 +211,29 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><span id="type">type</span></td>
-                                    <td>varchar</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="code">code</span></td>
+                                    <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
                                     <td title=''></td>
                                     <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="card_uuid">card_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
                                             <tr>
-                                                <td title="planning_review.card_uuid references card.uuid via FK_735dcdd4fa909a60d0fa1828f24"><a href='card.html'>card</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_735dcdd4fa909a60d0fa1828f24</td>
+                                                <td title="application_submission.naru_subtype_code references naru_subtype.code via FK_7dda468067bcf0cf6be0ec43db5"><a href='application_submission.html'>application_submission</a><span class='relatedKey'>.naru_subtype_code</span></td>
+                                                <td class="constraint detail">FK_7dda468067bcf0cf6be0ec43db5</td>
                                                 <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
                                             </tr>
                                         </table>
                                     </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="local_government_uuid">local_government_uuid</span></td>
-                                    <td>uuid</td>
-                                    <td>2147483647</td>
-                                    <td title=''></td>
-                                    <td title=''></td>
-                                    <td>null</td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                        </table>
-                                    </td>
-                                    <td>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="planning_review.local_government_uuid references application_local_government.uuid via FK_5a57c8d407eb6132ed39cb8fe6f"><a href='application_local_government.html'>application_local_government</a><span class='relatedKey'>.uuid</span></td>
-                                                <td class="constraint detail">FK_5a57c8d407eb6132ed39cb8fe6f</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="region_code">region_code</span></td>
+                                    <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="description">description</span></td>
                                     <td>text</td>
                                     <td>2147483647</td>
                                     <td title=''></td>
@@ -301,11 +245,6 @@
                                     </td>
                                     <td>
                                         <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td title="planning_review.region_code references application_region.code via FK_409473aef1f92b6675e3f7c00ad"><a href='application_region.html'>application_region</a><span class='relatedKey'>.code</span></td>
-                                                <td class="constraint detail">FK_409473aef1f92b6675e3f7c00ad</td>
-                                                <td class="constraint detail"><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span></td>
-                                            </tr>
                                         </table>
                                     </td>
                                     <td></td>
@@ -341,34 +280,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_ca2ff05fa38d67415362b6a3912</td>
+                                    <td class='primaryKey' title='Primary Key'><i class='icon ion-key iconkey'></i> PK_0e11b61ce5ebd61e65627107d6b</td>
                                     <td>Primary key</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>uuid</td>
+                                    <td>code</td>
                                 </tr>
                                 <tr>
-                                    <td title='Indexed'>IDX_5a57c8d407eb6132ed39cb8fe6</td>
-                                    <td>Performance</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>local_government_uuid</td>
-                                </tr>
-                                <tr>
-                                    <td title='Indexed'>IDX_a62913da5fae4a128c8e8f264f</td>
-                                    <td>Performance</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>file_number</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> REL_735dcdd4fa909a60d0fa1828f2</td>
+                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_629710d76c4058afacd2e44b3f4</td>
                                     <td>Must be unique</td>
                                     <td><span title='Ascending'>Asc</span></td>
-                                    <td>card_uuid</td>
-                                </tr>
-                                <tr>
-                                    <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> UQ_a62913da5fae4a128c8e8f264fc</td>
-                                    <td>Must be unique</td>
-                                    <td><span title='Ascending'>Asc</span></td>
-                                    <td>file_number</td>
+                                    <td>description</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -393,34 +314,22 @@
                                 <div class="tab-content no-padding">
                                     <div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,272,593,448">
-<area shape="rect" id="node2" href="application_region.html" target="_top" title="application_region" alt="" coords="5,364,232,511">
-<area shape="rect" id="node3" href="planning_review.html" target="_top" title="planning_review" alt="" coords="637,5,1025,397">
-<area shape="rect" id="node4" href="card.html" target="_top" title="card" alt="" coords="323,20,547,255">
+<area shape="rect" id="node1" href="application_submission.html" target="_top" title="application_submission" alt="" coords="428,67,841,301">
+<area shape="rect" id="node2" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="5,5,384,309">
 </map>
-                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/planning_review.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="oneDegreeImg" src="../diagrams/tables/naru_subtype.1degree.png" usemap="#oneDegreeRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                     <div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">
                                         <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="application.html" target="_top" title="application" alt="" coords="747,535,916,623">
-<area shape="rect" id="node2" href="card.html" target="_top" title="card" alt="" coords="323,317,547,552">
-<area shape="rect" id="node3" href="application_local_government.html" target="_top" title="application_local_government" alt="" coords="276,707,593,795">
-<area shape="rect" id="node4" href="application_region.html" target="_top" title="application_region" alt="" coords="5,707,232,795">
-<area shape="rect" id="node7" href="user.html" target="_top" title="user" alt="" coords="61,111,176,199">
-<area shape="rect" id="node8" href="board.html" target="_top" title="board" alt="" coords="55,379,182,467">
-<area shape="rect" id="node9" href="card_status.html" target="_top" title="card_status" alt="" coords="33,273,204,361">
-<area shape="rect" id="node10" href="card_type.html" target="_top" title="card_type" alt="" coords="40,484,197,572">
-<area shape="rect" id="node5" href="application_modification.html" target="_top" title="application_modification" alt="" coords="1089,516,1366,604">
-<area shape="rect" id="node6" href="application_reconsideration.html" target="_top" title="application_reconsideration" alt="" coords="1076,375,1379,463">
-<area shape="rect" id="node11" href="card_history.html" target="_top" title="card_history" alt="" coords="743,252,920,340">
-<area shape="rect" id="node12" href="card_subtask.html" target="_top" title="card_subtask" alt="" coords="739,5,923,93">
-<area shape="rect" id="node13" href="comment.html" target="_top" title="comment" alt="" coords="753,111,909,199">
-<area shape="rect" id="node14" href="covenant.html" target="_top" title="covenant" alt="" coords="755,1049,908,1137">
-<area shape="rect" id="node15" href="notice_of_intent.html" target="_top" title="notice_of_intent" alt="" coords="727,429,935,517">
-<area shape="rect" id="node16" href="notice_of_intent_modification.html" target="_top" title="notice_of_intent_modification" alt="" coords="1069,197,1385,285">
-<area shape="rect" id="node17" href="planning_review.html" target="_top" title="planning_review" alt="" coords="637,640,1025,1032">
+<area shape="rect" id="node1" href="application_owner.html" target="_top" title="application_owner" alt="" coords="885,155,1112,243">
+<area shape="rect" id="node2" href="application_submission.html" target="_top" title="application_submission" alt="" coords="428,117,841,352">
+<area shape="rect" id="node4" href="user.html" target="_top" title="user" alt="" coords="137,216,252,304">
+<area shape="rect" id="node5" href="application.html" target="_top" title="application" alt="" coords="110,5,279,93">
+<area shape="rect" id="node6" href="naru_subtype.html" target="_top" title="naru_subtype" alt="" coords="5,321,384,625">
+<area shape="rect" id="node7" href="application_status.html" target="_top" title="application_status" alt="" coords="82,111,307,199">
+<area shape="rect" id="node3" href="application_parcel.html" target="_top" title="application_parcel" alt="" coords="886,260,1111,348">
 </map>
-                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/planning_review.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
+                                        <a name='diagram'><img id="twodegreesDegreeImg" src="../diagrams/tables/naru_subtype.2degrees.png" usemap="#twoDegreesRelationshipsDiagram" class="diagram" border="0" align="left"></a>
                                     </div>
                                 </div>
                             </div>

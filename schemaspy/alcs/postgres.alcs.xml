@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><database name="postgres" schema="alcs" type="PostgreSQL - 15.3 (Debian 15.3-1.pgdg110+1)">
+<?xml version="1.0" encoding="UTF-8"?><database name="postgres" schema="alcs" type="PostgreSQL - 15.3 (Debian 15.3-1.pgdg120+1)">
    <sequences>
       <sequence increment="1" name="alcs_file_number_seq" startValue="100000"/>
       <sequence increment="1" name="health_check_id_seq" startValue="1"/>
@@ -64,6 +64,12 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_71af2cd4dccba665296d4befbfe" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_39c4f5ceb0f5a7a4c819d46a0d" unique="false">
+            <column ascending="true" name="file_number"/>
+         </index>
+         <index name="IDX_58853fcb8957e8b2c131cc12da" unique="false">
+            <column ascending="true" name="local_government_uuid"/>
          </index>
          <index name="REL_21eddf92cb75ff3cc0c99b80d8" unique="true">
             <column ascending="true" name="card_uuid"/>
@@ -197,7 +203,7 @@
          <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="ag_cap_source" nullable="true" remarks="Agricultural capability classification system used" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="9" name="ag_cap_map" nullable="true" remarks="Agricultural capability map sheet reference" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="10" name="ag_cap_consultant" nullable="true" remarks="Consultant who determined the agricultural capability" size="2147483647" type="text" typeCode="12"/>
-         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="nfu_end_date" nullable="true" remarks="The date at which the non-farm use ends" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="11" name="end_date" nullable="true" remarks="Components` end date" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="12" name="application_decision_component_type_code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
             <parent column="code" foreignKey="FK_3b336a2df3a3ab65bbbd91008e7" implied="false" onDeleteCascade="false" schema="alcs" table="application_decision_component_type"/>
          </column>
@@ -206,6 +212,17 @@
          </column>
          <column autoUpdated="false" defaultValue="null" digits="0" id="14" name="nfu_type" nullable="true" remarks="Non-farm use type" size="2147483647" type="text" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="15" name="nfu_sub_type" nullable="true" remarks="Non-farm use sub type" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="16" name="expiry_date" nullable="true" remarks="Components` expiry date" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="17" name="soil_fill_type_to_place" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="18" name="soil_to_place_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="19" name="soil_to_place_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="20" name="soil_to_place_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="21" name="soil_to_place_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="22" name="soil_type_removed" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="23" name="soil_to_remove_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="24" name="soil_to_remove_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="25" name="soil_to_remove_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="26" name="soil_to_remove_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_f001f61f948fb923add00b6dab6" unique="true">
             <column ascending="true" name="uuid"/>
@@ -386,7 +403,7 @@
             <column ascending="true" name="document_uuid"/>
          </index>
       </table>
-      <table name="application_document_code" numRows="59" remarks="" schema="alcs" type="TABLE">
+      <table name="application_document_code" numRows="61" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -918,6 +935,24 @@
          <column autoUpdated="false" defaultValue="null" digits="2" id="77" name="soil_already_placed_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="78" name="soil_is_extraction_or_mining" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="79" name="soil_has_submitted_notice" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="80" name="naru_subtype_code" nullable="true" remarks="" size="2147483647" type="text" typeCode="12">
+            <parent column="code" foreignKey="FK_7dda468067bcf0cf6be0ec43db5" implied="false" onDeleteCascade="false" schema="alcs" table="naru_subtype"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="81" name="naru_purpose" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="82" name="naru_floor_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="83" name="naru_residence_necessity" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="84" name="naru_location_rationale" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="85" name="naru_infrastructure" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="86" name="naru_existing_structures" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="87" name="naru_will_import_fill" nullable="true" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="88" name="naru_fill_type" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="89" name="naru_fill_origin" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="90" name="naru_project_duration_amount" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="91" name="naru_project_duration_unit" nullable="true" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="92" name="naru_to_place_volume" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="93" name="naru_to_place_area" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="94" name="naru_to_place_maximum_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
+         <column autoUpdated="false" defaultValue="null" digits="2" id="95" name="naru_to_place_average_depth" nullable="true" remarks="" size="12" type="numeric" typeCode="2"/>
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_61e192975e82347bab189b34fcc" unique="true">
             <column ascending="true" name="uuid"/>
@@ -1024,7 +1059,7 @@
             <column ascending="true" name="card_type_code"/>
          </index>
       </table>
-      <table name="board_status" remarks="" schema="alcs" type="TABLE">
+      <table name="board_status" numRows="121" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
          <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
@@ -1259,6 +1294,12 @@
          <index name="PK_cefaa63a1ab0918cbda7dc123aa" unique="true">
             <column ascending="true" name="uuid"/>
          </index>
+         <index name="IDX_0fa742d800bc0e0b3f2451e0f0" unique="false">
+            <column ascending="true" name="local_government_uuid"/>
+         </index>
+         <index name="IDX_a5dfb1e8f2d584102ea62cc2ee" unique="false">
+            <column ascending="true" name="file_number"/>
+         </index>
          <index name="REL_4dbfa43fa598901ae71504afab" unique="true">
             <column ascending="true" name="card_uuid"/>
          </index>
@@ -1318,7 +1359,7 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="holiday_entity" remarks="" schema="alcs" type="TABLE">
+      <table name="holiday_entity" numRows="100" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="uuid" nullable="false" remarks="Unique identifier that is safe to share." size="2147483647" type="uuid" typeCode="1111"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="Unique name of the stat holiday." size="2147483647" type="varchar" typeCode="12"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="day" nullable="false" remarks="Unique date that is considered as a holiday and will be skipped in the business days calculation process." size="13" type="date" typeCode="91"/>
@@ -1349,13 +1390,32 @@
             <column ascending="true" name="description"/>
          </index>
       </table>
-      <table name="migrations" remarks="" schema="alcs" type="TABLE">
+      <table name="migrations" numRows="124" remarks="" schema="alcs" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('alcs.migrations_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="timestamp" nullable="false" remarks="" size="19" type="int8" typeCode="-5"/>
          <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="PK_8c82d7f526340ab734260ea46be" unique="true">
             <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="naru_subtype" remarks="" schema="alcs" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="audit_deleted_date_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="1" name="audit_created_at" nullable="false" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="audit_updated_at" nullable="true" remarks="" size="35" type="timestamptz" typeCode="93"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="audit_created_by" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="audit_updated_by" nullable="true" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="label" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="code" nullable="false" remarks="" size="2147483647" type="text" typeCode="12">
+            <child column="naru_subtype_code" foreignKey="FK_7dda468067bcf0cf6be0ec43db5" implied="false" onDeleteCascade="false" schema="alcs" table="application_submission"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="description" nullable="false" remarks="" size="2147483647" type="text" typeCode="12"/>
+         <primaryKey column="code" sequenceNumberInPK="1"/>
+         <index name="PK_0e11b61ce5ebd61e65627107d6b" unique="true">
+            <column ascending="true" name="code"/>
+         </index>
+         <index name="UQ_629710d76c4058afacd2e44b3f4" unique="true">
+            <column ascending="true" name="description"/>
          </index>
       </table>
       <table name="notice_of_intent" remarks="" schema="alcs" type="TABLE">
@@ -1393,6 +1453,12 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_fc320533e3f23a9fd957845334d" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_66754bb64e9b1625c98b9cc0f6" unique="false">
+            <column ascending="true" name="file_number"/>
+         </index>
+         <index name="IDX_7e78db4d1c5afb16374253b42d" unique="false">
+            <column ascending="true" name="local_government_uuid"/>
          </index>
          <index name="REL_2f863dc7ab4f76a87b160f3288" unique="true">
             <column ascending="true" name="card_uuid"/>
@@ -1695,6 +1761,12 @@
          <primaryKey column="uuid" sequenceNumberInPK="1"/>
          <index name="PK_ca2ff05fa38d67415362b6a3912" unique="true">
             <column ascending="true" name="uuid"/>
+         </index>
+         <index name="IDX_5a57c8d407eb6132ed39cb8fe6" unique="false">
+            <column ascending="true" name="local_government_uuid"/>
+         </index>
+         <index name="IDX_a62913da5fae4a128c8e8f264f" unique="false">
+            <column ascending="true" name="file_number"/>
          </index>
          <index name="REL_735dcdd4fa909a60d0fa1828f2" unique="true">
             <column ascending="true" name="card_uuid"/>

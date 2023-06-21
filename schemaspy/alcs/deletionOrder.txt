@@ -30,8 +30,8 @@ comment
 application_decision_component
 notice_of_intent_decision
 application_paused
-notice_of_intent_modification
 application_submission
+notice_of_intent_modification
 application_document
 application_decision
 application_reconsideration
@@ -45,6 +45,7 @@ notice_of_intent_subtype
 notice_of_intent_modification_outcome_type
 notice_of_intent_meeting_type
 notice_of_intent_decision_outcome
+naru_subtype
 linked_resolution_outcome_type
 card_subtask_type
 application_type
