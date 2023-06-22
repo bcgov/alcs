@@ -45,7 +45,7 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
             FROM
                 oats.oats_alr_appl_components AS oaac
                 ),
-   
+-- Find instances of multi-component applications 
    multi_app as (    
     SELECT 
             atl.application_id as app_id
@@ -54,13 +54,13 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
         HAVING count(application_id) > 1
         ),
   duplicate_ids as (      
-    select *
+    select alr_application_id, alr_appl_component_id, alr_change_code
     from oats.oats_alr_appl_components oaac
     right join multi_app on oaac.alr_application_id = multi_app.app_id
     ),
-  
+-- Order based on established hierarchy 
     ranked_rows AS (
-    SELECT *,
+    SELECT alr_appl_component_id,
            ROW_NUMBER() OVER (PARTITION BY dis.alr_application_id ORDER BY
                CASE dis.alr_change_code
                    WHEN 'EXC' THEN 1
@@ -72,7 +72,7 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
                END) AS rank
     FROM duplicate_ids dis
     )
-    
+-- select all components that will not be inserted
     select rr.alr_appl_component_id
     from ranked_rows rr
     where rank != 1;
