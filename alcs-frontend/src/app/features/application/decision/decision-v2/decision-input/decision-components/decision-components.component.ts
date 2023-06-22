@@ -187,7 +187,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   }
 
   onRemove(index: number) {
-    this.components.splice(index);
+    this.components.splice(index, 1);
     this.updateComponentsMenuItems();
     this.onChange();
   }
