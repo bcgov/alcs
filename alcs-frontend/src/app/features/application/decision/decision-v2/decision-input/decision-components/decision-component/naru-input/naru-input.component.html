@@ -1,27 +1,41 @@
 <form [formGroup]="form" class="nfu-component-form">
-  <mat-form-field appearance="outline" class="date-picker">
-    <mat-label>Use End Date</mat-label>
-    <input
-      matInput
-      (click)="endDatePicker.open()"
-      [matDatepicker]="endDatePicker"
-      formControlName="endDate"
-      name="date"
-    />
-    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #endDatePicker type="date"></mat-datepicker>
-  </mat-form-field>
+  <div class="grid-3">
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Use End Date</mat-label>
+      <input
+        matInput
+        (click)="endDatePicker.open()"
+        [matDatepicker]="endDatePicker"
+        formControlName="naruEndDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="date-picker">
-    <mat-label>Expiry Date</mat-label>
-    <input
-      matInput
-      (click)="expiryDatePicker.open()"
-      [matDatepicker]="expiryDatePicker"
-      formControlName="expiryDate"
-      name="date"
-    />
-    <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="codes.naruSubtypes"
+        formControlName="naruSubtypeCode"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="code"
+        placeholder="Residential Use Type*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+  </div>
 </form>

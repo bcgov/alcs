@@ -99,6 +99,7 @@ describe('ApplicationDecisionV2Controller', () => {
       decisionComponentTypes: [],
       decisionConditionTypes: [],
       linkedResolutionOutcomeType: [],
+      naruSubtypes: [],
     });
   });
 

@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
+  DecisionCodesDto,
   DecisionComponentDto,
+  NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
   RosoDecisionComponentDto,
@@ -19,6 +21,7 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/p
 })
 export class DecisionComponentComponent implements OnInit {
   @Input() data!: DecisionComponentDto;
+  @Input() codes!: DecisionCodesDto;
   @Output() dataChange = new EventEmitter<DecisionComponentDto>();
 
   COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
@@ -47,6 +50,10 @@ export class DecisionComponentComponent implements OnInit {
   areaToRemove = new FormControl<number | null>(null, [Validators.required]);
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
+
+  // naru
+  naruSubtypeCode = new FormControl<string | null>(null, [Validators.required]);
+  naruEndDate = new FormControl<Date | null>(null);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -89,6 +96,9 @@ export class DecisionComponentComponent implements OnInit {
         case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
           this.patchPofoFields();
           this.patchRosoFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+          this.patchNaruFields();
           break;
         default:
           this.toastService.showErrorToast('Wrong decision component type');
@@ -143,6 +153,9 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
         dataChange = { ...dataChange, ...this.getPfrsDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+        dataChange = { ...dataChange, ...this.getNaruDataChange() };
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
@@ -199,6 +212,16 @@ export class DecisionComponentComponent implements OnInit {
     this.averageDepthToRemove.setValue(this.data.soilToRemoveAverageDepth ?? null);
   }
 
+  private patchNaruFields() {
+    this.form.addControl('naruSubtypeCode', this.naruSubtypeCode);
+    this.form.addControl('naruEndDate', this.naruEndDate);
+    this.form.addControl('expiryDate', this.expiryDate);
+
+    this.naruEndDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+    this.naruSubtypeCode.setValue(this.data.naruSubtypeCode ?? null);
+  }
+
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -234,6 +257,7 @@ export class DecisionComponentComponent implements OnInit {
       soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
     };
   }
+
   private getPfrsDataChange(): RosoDecisionComponentDto & PofoDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
@@ -247,6 +271,14 @@ export class DecisionComponentComponent implements OnInit {
       soilToPlaceVolume: this.volumeToPlace.value ?? null,
       soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
       soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
+    };
+  }
+
+  private getNaruDataChange(): NaruDecisionComponentDto {
+    return {
+      endDate: this.naruEndDate.value ? formatDateForApi(this.naruEndDate.value) : null,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
+      naruSubtypeCode: this.naruSubtypeCode.value ?? null,
     };
   }
 }

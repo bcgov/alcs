@@ -180,7 +180,7 @@ export class ApplicationDecisionComponent extends Base {
   })
   soilToRemoveAverageDepth: number | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ nullable: true })
   naruSubtypeCode: string | null;
 

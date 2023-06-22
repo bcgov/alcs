@@ -164,6 +164,7 @@ export interface DecisionCodesDto {
   decisionComponentTypes: DecisionComponentTypeDto[];
   decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
   linkedResolutionOutcomeTypes: LinkedResolutionOutcomeTypeDto[];
+  naruSubtypes: NaruSubtypesDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -177,6 +178,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
 export interface LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
+export interface NaruSubtypesDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {
   uuid: string;
