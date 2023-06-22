@@ -3,6 +3,8 @@ import { ApplicationService } from '../../application/application.service';
 import { CovenantService } from '../../covenant/covenant.service';
 import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
+import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
+import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';
 
 @Injectable()
@@ -13,6 +15,8 @@ export class UnarchiveCardService {
     private planningReviewService: PlanningReviewService,
     private modificationService: ApplicationModificationService,
     private covenantService: CovenantService,
+    private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentModificationService: NoticeOfIntentModificationService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -36,6 +40,7 @@ export class UnarchiveCardService {
     await this.fetchAndMapPlanningReviews(fileId, result);
     await this.fetchAndMapModifications(fileId, result);
     await this.fetchAndMapCovenants(fileId, result);
+    await this.fetchAndMapNOIs(fileId, result);
 
     return result;
   }
@@ -122,6 +127,40 @@ export class UnarchiveCardService {
         createdAt: reconsideration.auditCreatedAt.getTime(),
         type: 'Reconsideration',
         status: reconsideration.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapNOIs(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const noticeOfIntents = await this.noticeOfIntentService.getDeletedCards(
+      fileId,
+    );
+    for (const noi of noticeOfIntents) {
+      result.push({
+        cardUuid: noi.cardUuid,
+        createdAt: noi.auditCreatedAt.getTime(),
+        type: 'NOI',
+        status: noi.card!.status.label,
+      });
+    }
+
+    const modificationNOIs =
+      await this.noticeOfIntentModificationService.getDeletedCards(fileId);
+
+    for (const noi of modificationNOIs) {
+      result.push({
+        cardUuid: noi.cardUuid,
+        createdAt: noi.auditCreatedAt.getTime(),
+        type: 'NOI MODI',
+        status: noi.card!.status.label,
       });
     }
   }
