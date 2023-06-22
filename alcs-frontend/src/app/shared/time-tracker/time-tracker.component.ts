@@ -36,7 +36,10 @@ export class TimeTrackerComponent implements OnChanges {
     }
 
     if (this.maxActiveDays) {
-      this.dueDate = moment().subtract(this.activeDays, 'days').add(this.maxActiveDays, 'days').toDate();
+      this.dueDate = moment()
+        .subtract(this.activeDays, 'days')
+        .add(this.maxActiveDays - 1, 'days')
+        .toDate();
 
       if (this.dueDate && this.dueDate.getTime() < Date.now()) {
         this.isOverdue = true;
