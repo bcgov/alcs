@@ -296,7 +296,6 @@
             matInput
             formControlName="sleepingUnits"
           />
-          <span *ngIf="sleepingUnits.value" matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
         <div *ngIf="sleepingUnits.invalid && (sleepingUnits.dirty || sleepingUnits.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
