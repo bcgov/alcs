@@ -36,7 +36,7 @@ oats_gov as(
         JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
         JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
    WHERE
-        oo.organization_type_cd = 'MUNI'
+        oo.organization_type_cd = 'MUNI' or oo.organization_type_cd = 'FN'
 ),
 
 alcs_gov as(
@@ -48,6 +48,7 @@ alcs_gov as(
         join alcs.application_local_government alg on
    (case
    	when oats_gov.oats_gov_name LIKE 'Islands Trust%' then 'Islands Trust'
+    when oats_gov.oats_gov_name LIKE 'Sliammon%' then "Tla'amin Nation"
    	else oats_gov.oats_gov_name
    end) 
    =
