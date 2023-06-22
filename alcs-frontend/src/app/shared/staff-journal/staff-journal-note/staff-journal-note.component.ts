@@ -24,7 +24,7 @@ export class StaffJournalNoteComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.noteDate = moment(this.note.createdAt).format(environment.shortTimeFormat);
+    this.noteDate = moment(this.note.createdAt).format(environment.longTimeFormat);
   }
 
   onDelete() {

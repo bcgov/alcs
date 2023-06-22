@@ -124,25 +124,24 @@
         <div class="subheading2">Resolutions to be Modified</div>
         <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
       </div>
+      <div *ngIf="modification.resultingDecision">
+        <div class="subheading2">Resulting Resolution</div>
+        #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
+      </div>
       <div>
-        <ng-container *ngIf="!!modification.resultingDecision">
-          <div class="subheading2">Resulting Resolution</div>
-          #{{ modification.resultingDecision.resolutionNumber }}/{{ modification.resultingDecision.resolutionYear }}
-        </ng-container>
+        <div class="subheading2 left">
+          Outcome Notification Date
+          <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
+            info
+          </mat-icon>
+        </div>
+        <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
+        <span *ngIf="!modification.reviewDate">
+          <app-inline-datepicker
+            (save)="onSaveModificationReviewDate(modification.uuid, $event)"
+          ></app-inline-datepicker>
+        </span>
       </div>
-    </div>
-    <div></div>
-    <div>
-      <div class="subheading2 left">
-        Outcome Notification Date
-        <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
-          info
-        </mat-icon>
-      </div>
-      <span *ngIf="modification.reviewDate">{{ modification.reviewDate | momentFormat }}</span>
-      <span *ngIf="!modification.reviewDate">
-        <app-inline-datepicker (save)="onSaveModificationReviewDate(modification.uuid, $event)"></app-inline-datepicker>
-      </span>
     </div>
   </div>
 </section>
