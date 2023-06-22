@@ -40,7 +40,7 @@ export class UnarchiveCardService {
     await this.fetchAndMapPlanningReviews(fileId, result);
     await this.fetchAndMapModifications(fileId, result);
     await this.fetchAndMapCovenants(fileId, result);
-    await this.fetcchAndMapNOIs(fileId, result);
+    await this.fetchAndMapNOIs(fileId, result);
 
     return result;
   }
@@ -131,7 +131,7 @@ export class UnarchiveCardService {
     }
   }
 
-  private async fetcchAndMapNOIs(
+  private async fetchAndMapNOIs(
     fileId: string,
     result: {
       cardUuid: string;
