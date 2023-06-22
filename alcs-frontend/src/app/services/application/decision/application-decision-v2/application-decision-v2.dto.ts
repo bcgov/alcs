@@ -120,6 +120,7 @@ export interface NaruDecisionComponentDto {
   expiryDate?: number | null;
   endDate?: number | null;
   naruSubtypeCode?: string | null;
+  naruSubtype?: NaruSubtypesDto | null;
 }
 
 export interface PofoDecisionComponentDto {

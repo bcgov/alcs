@@ -49,7 +49,6 @@ export class ApplicationDecisionComponentService {
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
       this.patchNaruFields(component, updateDto);
-      console.log('patchNaruFields', component);
 
       updatedComponents.push(component);
     }

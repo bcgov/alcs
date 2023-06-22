@@ -111,6 +111,7 @@ export class ApplicationDecisionV2Service {
         chairReviewOutcome: true,
         components: {
           applicationDecisionComponentType: true,
+          naruSubtype: true,
         },
       },
     });
@@ -472,7 +473,6 @@ export class ApplicationDecisionV2Service {
       );
     }
 
-    console.log('createDto.decisionComponents', createDto.decisionComponents);
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
       this.decisionComponentService.validate(
