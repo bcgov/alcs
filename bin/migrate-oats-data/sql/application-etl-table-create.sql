@@ -17,7 +17,7 @@ CREATE TABLE oats.alcs_etl_application_duplicate (
 DROP TABLE IF EXISTS oats.alcs_etl_application_exclude;
 
 CREATE TABLE oats.alcs_etl_application_exclude (
-    application_id int
+    component_id int
 );
     
 -- function inserts data into prevoisly created table and decipers duplication of uuids
@@ -36,19 +36,44 @@ INSERT INTO
     
     
 -- Insert values from application-exclude into table
-INSERT INTO 
-    oats.alcs_etl_application_exclude (application_id)
-        WITH application_type_lookup AS (
+INSERT INTO oats.alcs_etl_application_exclude (component_id)
+ WITH application_type_lookup AS (
             SELECT
                 oaac.alr_application_id AS application_id,
                 oaac.alr_change_code AS code
         
             FROM
                 oats.oats_alr_appl_components AS oaac
-                )
-       
+                ),
+-- Find instances of multi-component applications 
+   multi_app as (    
     SELECT 
-            atl.application_id
+            atl.application_id as app_id
     FROM application_type_lookup atl
         GROUP BY atl.application_id 
-        HAVING count(application_id) > 1;
+        HAVING count(application_id) > 1
+        ),
+  duplicate_ids as (      
+    select alr_application_id, alr_appl_component_id, alr_change_code
+    from oats.oats_alr_appl_components oaac
+    right join multi_app on oaac.alr_application_id = multi_app.app_id
+    ),
+-- Order based on established hierarchy 
+    ranked_rows AS (
+    SELECT alr_appl_component_id,
+           ROW_NUMBER() OVER (PARTITION BY dis.alr_application_id ORDER BY
+               CASE dis.alr_change_code
+                   WHEN 'EXC' THEN 1
+                   WHEN 'INC' THEN 2
+                   WHEN 'SDV' THEN 3
+                   WHEN 'SCH' THEN 4
+                   WHEN 'NFU' THEN 5
+                   ELSE 6
+               END) AS rank
+    FROM duplicate_ids dis
+    )
+-- select all components that will not be inserted
+    select rr.alr_appl_component_id
+    from ranked_rows rr
+    where rank != 1;
+   

@@ -76,7 +76,10 @@ application_type_lookup AS (
         oaac.alr_change_code AS code
     FROM
         oats.oats_alr_appl_components AS oaac
-        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code   
+        JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
+        LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
+    where aee.component_id is null
+
 )
 
 -- Step 5: Insert new records into the alcs_applications table
@@ -118,7 +121,6 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
-    LEFT JOIN oats.alcs_etl_application_exclude aee ON oa.alr_application_id = aee.application_id
-     
-where aee.application_id is null
+ 
+
 
