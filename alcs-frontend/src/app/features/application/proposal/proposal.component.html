@@ -36,13 +36,13 @@
         (save)="updateApplicationValue('agCapConsultant', $event)"
       ></app-inline-text>
     </div>
+    <app-proposal-tur *ngIf="application && application.type.code === 'TURP'"></app-proposal-tur>
   </div>
   <app-proposal-nfu *ngIf="application && application.type.code === 'NFUP'"></app-proposal-nfu>
   <app-proposal-subd *ngIf="application && application.type.code === 'SUBD'"></app-proposal-subd>
   <app-proposal-soil
     *ngIf="application && ['POFO', 'ROSO', 'PFRS'].includes(application.type.code)"
   ></app-proposal-soil>
-  <app-proposal-tur *ngIf="application && application.type.code === 'TURP'"></app-proposal-tur>
 </section>
 <section>
   <h5>Staff Comments and Observations</h5>
