@@ -12,6 +12,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 export class TurProposalComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   application: ApplicationDto | undefined;
+  
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 
   ngOnInit(): void {
