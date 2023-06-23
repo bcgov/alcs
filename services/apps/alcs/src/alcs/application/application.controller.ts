@@ -99,6 +99,7 @@ export class ApplicationController {
         agCapMap: updates.agCapMap,
         agCapSource: updates.agCapSource,
         proposalEndDate: formatIncomingDate(updates.proposalEndDate),
+        proposalExpiryDate: formatIncomingDate(updates.proposalExpiryDate),
         nfuUseSubType: updates.nfuUseSubType,
         nfuUseType: updates.nfuUseType,
         staffObservations: updates.staffObservations,

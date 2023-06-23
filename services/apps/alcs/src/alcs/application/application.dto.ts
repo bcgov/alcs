@@ -12,10 +12,10 @@ import { ApplicationOwnerDto } from '../../portal/application-submission/applica
 import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
 import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
 import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
@@ -414,6 +414,10 @@ export class UpdateApplicationDto {
   @IsOptional()
   @IsNumber()
   proposalEndDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  proposalExpiryDate?: number;
 }
 
 export class ApplicationDto {
@@ -507,7 +511,9 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   nfuUseSubType?: string;
+
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -533,6 +539,7 @@ export class ApplicationUpdateServiceDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: Date | null;
+  proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
 }
 
