@@ -240,6 +240,13 @@ export class Application extends Base {
   })
   proposalEndDate?: Date | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the proposal expires',
+    nullable: true,
+  })
+  proposalExpiryDate?: Date | null;
+
   @AutoMap(() => [StatusHistory])
   @Column({
     comment:

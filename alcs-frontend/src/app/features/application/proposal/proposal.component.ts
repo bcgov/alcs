@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -47,7 +47,7 @@ export const AG_CAP_SOURCE_OPTIONS = [
   templateUrl: './proposal.component.html',
   styleUrls: ['./proposal.component.scss'],
 })
-export class ProposalComponent {
+export class ProposalComponent implements OnInit {
   application?: ApplicationDto;
 
   agCapOptions = AG_CAP_OPTIONS;

@@ -171,7 +171,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private patchTurpFields(component: DecisionComponentDto) {
-    component.endDate = this.application.proposalEndDate;
+    component.expiryDate = this.application.proposalExpiryDate;
   }
 
   private patchPofoFields(component: DecisionComponentDto) {

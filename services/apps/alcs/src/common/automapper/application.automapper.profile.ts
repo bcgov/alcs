@@ -90,6 +90,10 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.proposalEndDate?.getTime()),
         ),
         forMember(
+          (a) => a.proposalExpiryDate,
+          mapFrom((ad) => ad.proposalExpiryDate?.getTime()),
+        ),
+        forMember(
           (ad) => ad.card,
           mapFrom((a) => {
             return this.mapper.map(a.card, Card, CardDto);

@@ -25,6 +25,7 @@ import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
+import { TurProposalComponent } from './proposal/tur/tur.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -68,6 +69,7 @@ const routes: Routes = [
     NfuProposalComponent,
     SubdProposalComponent,
     SoilProposalComponent,
+    TurProposalComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
