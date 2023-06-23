@@ -3,28 +3,28 @@
     <div>
       <ng-select
         appearance="outline"
-        [items]="nfuTypeOptions"
-        formControlName="nfuType"
+        [items]="codes.naruSubtypes"
+        formControlName="naruSubtypeCode"
         appendTo="body"
         bindLabel="label"
-        bindValue="value"
-        placeholder="Non-Farm Use Type*"
+        bindValue="code"
+        placeholder="Residential Use Type*"
         [clearable]="false"
       ></ng-select>
     </div>
 
-    <div>
-      <ng-select
-        appearance="outline"
-        [items]="nfuSubTypeOptions"
-        formControlName="nfuSubType"
-        appendTo="body"
-        bindLabel="label"
-        bindValue="value"
-        placeholder="Non-Farm Use Sub-Type*"
-        [clearable]="false"
-      ></ng-select>
-    </div>
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
 
     <mat-form-field appearance="outline" class="date-picker">
       <mat-label>Use End Date</mat-label>
@@ -32,7 +32,7 @@
         matInput
         (click)="endDatePicker.open()"
         [matDatepicker]="endDatePicker"
-        formControlName="endDate"
+        formControlName="naruEndDate"
         name="date"
       />
       <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>

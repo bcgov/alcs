@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../../../../../services/application/application-submission/application-submission.service';
@@ -19,7 +29,7 @@ export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisab
   templateUrl: './decision-components.component.html',
   styleUrls: ['./decision-components.component.scss'],
 })
-export class DecisionComponentsComponent implements OnInit, OnDestroy {
+export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
   @Input() codes!: DecisionCodesDto;
@@ -30,7 +40,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     components: DecisionComponentDto[];
     isValid: boolean;
   }>();
-  @ViewChildren(DecisionComponentComponent) childComponents: DecisionComponentComponent[] = [];
+  @ViewChildren(DecisionComponentComponent) childComponents!: QueryList<DecisionComponentComponent>;
 
   application!: ApplicationDto;
   decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
@@ -50,6 +60,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     });
 
     this.prepareDecisionComponentTypes(this.codes);
+
+    // validate components on load
+    setTimeout(() => this.onChange(), 0);
+  }
+
+  ngAfterViewInit(): void {
+    // subscribes to child components and triggers validation on add/delete. NOTE: this is NOT getting called on first page load
+    this.childComponents.changes.subscribe(() => {
+      // setTimeout is required to ensure that current code is executed after the current change detection cycle completes, avoiding the ExpressionChangedAfterItHasBeenCheckedError
+      setTimeout(() => this.onChange(), 0);
+    });
   }
 
   ngOnDestroy(): void {
@@ -117,6 +138,10 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
           this.patchRosoFields(component);
         }
 
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
+          this.patchNaruFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
@@ -124,6 +149,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
       case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
+      case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
@@ -136,7 +162,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     }
 
     this.updateComponentsMenuItems();
-    this.onChange();
   }
 
   private patchNfuFields(component: DecisionComponentDto) {
@@ -167,6 +192,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
   }
 
+  private patchNaruFields(component: DecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    // TODO implement this once it is ready
+    //component.expiryDate =
+    component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
+  }
+
   private updateComponentsMenuItems() {
     this.decisionComponentTypes = this.decisionComponentTypes.map((e) => ({
       ...e,
@@ -175,9 +207,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   }
 
   onRemove(index: number) {
-    this.components.splice(index);
+    this.components.splice(index, 1);
     this.updateComponentsMenuItems();
-    this.onChange();
   }
 
   trackByFn(index: any, item: DecisionComponentDto) {
@@ -185,9 +216,14 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   }
 
   onChange() {
+    const isValid =
+      this.components.length > 0 && (!this.childComponents || this.childComponents?.length < 1)
+        ? false
+        : this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true);
+
     this.componentsChange.emit({
       components: this.components,
-      isValid: this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true),
+      isValid,
     });
   }
 }

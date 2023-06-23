@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
+import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
 
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
@@ -86,6 +87,10 @@ export class UpdateApplicationDecisionComponentDto {
   @IsNumber()
   @IsOptional()
   soilToRemoveAverageDepth?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruSubtypeCode: string;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -163,6 +168,12 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap(() => ApplicationDecisionComponentTypeDto)
   applicationDecisionComponentType: ApplicationDecisionComponentTypeDto;
+
+  @AutoMap()
+  naruSubtypeCode: string;
+
+  @AutoMap(() => NaruSubtypeDto)
+  naruSubtype: NaruSubtypeDto;
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -171,4 +182,5 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+  NARU = 'NARU',
 }

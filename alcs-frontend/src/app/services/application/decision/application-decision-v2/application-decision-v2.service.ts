@@ -49,6 +49,7 @@ export class ApplicationDecisionV2Service {
       decisionComponentTypes: [],
       decisionConditionTypes: [],
       linkedResolutionOutcomeTypes: [],
+      naruSubtypes: [],
     };
   }
 
@@ -131,13 +132,13 @@ export class ApplicationDecisionV2Service {
   }
 
   async loadDecision(uuid: string) {
-    this.clearDecision()
+    this.clearDecision();
     this.decision = await this.getByUuid(uuid);
     this.$decision.next(this.decision);
   }
 
   async loadDecisions(fileNumber: string) {
-    this.clearDecisions()
+    this.clearDecisions();
     this.decisions = await this.fetchByApplication(fileNumber);
     this.$decisions.next(this.decisions);
   }

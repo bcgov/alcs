@@ -31,6 +31,7 @@ import { ApplicationDecisionComponent } from './application-decision/component/a
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
 import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecisionComponentController } from './application-decision/component/application-decision-component.controller';
+import { NaruSubtype } from '../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ApplicationDecisionComponentController } from './application-decision/c
       ApplicationDecisionCondition,
       ApplicationDecisionConditionType,
       LinkedResolutionOutcomeType,
+      NaruSubtype,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
