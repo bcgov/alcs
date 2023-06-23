@@ -42,6 +42,7 @@
   <app-proposal-soil
     *ngIf="application && ['POFO', 'ROSO', 'PFRS'].includes(application.type.code)"
   ></app-proposal-soil>
+  <app-proposal-tur *ngIf="application && application.type.code === 'TURP'"></app-proposal-tur>
 </section>
 <section>
   <h5>Staff Comments and Observations</h5>

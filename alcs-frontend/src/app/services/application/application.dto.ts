@@ -228,6 +228,7 @@ export interface ApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -257,4 +258,5 @@ export interface UpdateApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }

@@ -57,15 +57,15 @@ export class ProposalComponent {
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 
-  ngOnInit(): void {
-    this.applicationDetailService.$application.subscribe((application) => {
-      if (application) {
-        this.application = application;
-        this.alrArea = application.alrArea?.toString();
-        this.staffObservations = application.staffObservations ?? '';
-      }
-    });
-  }
+  // ngOnInit(): void {
+  //   this.applicationDetailService.$application.subscribe((application) => {
+  //     if (application) {
+  //       this.application = application;
+  //       this.alrArea = application.alrArea?.toString();
+  //       this.staffObservations = application.staffObservations ?? '';
+  //     }
+  //   });
+  // }
 
   async onSaveAlrArea(value: string | null) {
     const parsedValue = value ? parseFloat(value) : null;
