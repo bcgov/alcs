@@ -75,6 +75,9 @@ export class ApplicationSubmissionService {
         fileNumber,
         isDraft: false,
       },
+      relations: {
+        naruSubtype: true,
+      },
     });
     if (!application) {
       throw new Error('Failed to find document');
@@ -826,6 +829,7 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.naruSubtype = undefined;
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
       applicationSubmission.naruSubtypeCode,
@@ -889,6 +893,14 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruToPlaceAverageDepth = filterUndefined(
       updateDto.naruToPlaceAverageDepth,
       applicationSubmission.naruToPlaceAverageDepth,
+    );
+    applicationSubmission.naruSleepingUnits = filterUndefined(
+      updateDto.naruSleepingUnits,
+      applicationSubmission.naruSleepingUnits,
+    );
+    applicationSubmission.naruAgriTourism = filterUndefined(
+      updateDto.naruAgriTourism,
+      applicationSubmission.naruAgriTourism,
     );
   }
 

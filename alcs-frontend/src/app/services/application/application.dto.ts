@@ -191,6 +191,8 @@ export interface ApplicationSubmissionDto {
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;
   naruToPlaceAverageDepth: number | null;
+  naruSleepingUnits: number | null;
+  naruAgriTourism: string | null;
 }
 
 export interface ApplicationDto {

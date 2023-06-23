@@ -42,6 +42,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   fillOrigin = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
+  agriTourism = new FormControl<string | null>(null, [Validators.required]);
 
   proposalMap: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};
@@ -59,6 +61,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     fillOrigin: this.fillOrigin,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
+    sleepingUnits: this.sleepingUnits,
+    agriTourism: this.agriTourism,
   });
 
   private submissionUuid = '';
@@ -96,6 +100,10 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           projectDurationUnit: applicationSubmission.naruProjectDurationUnit,
           purpose: applicationSubmission.naruPurpose,
           residenceNecessity: applicationSubmission.naruResidenceNecessity,
+          agriTourism: applicationSubmission.naruAgriTourism,
+          sleepingUnits: applicationSubmission.naruSleepingUnits
+            ? applicationSubmission.naruSleepingUnits.toString()
+            : null,
         });
         this.previousSubtype = applicationSubmission.naruSubtype?.code ?? null;
 
@@ -180,6 +188,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         purpose,
         residenceNecessity,
         subtype,
+        sleepingUnits,
+        agriTourism,
       } = this.form.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
@@ -199,6 +209,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruPurpose: purpose,
         naruResidenceNecessity: residenceNecessity,
         naruSubtypeCode: subtype,
+        naruSleepingUnits: sleepingUnits ? parseFloat(sleepingUnits) : null,
+        naruAgriTourism: agriTourism,
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);

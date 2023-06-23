@@ -136,6 +136,8 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;
   naruToPlaceAverageDepth: number | null;
+  naruSleepingUnits: number | null;
+  naruAgriTourism: string | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -235,4 +237,6 @@ export interface ApplicationSubmissionUpdateDto {
   naruToPlaceArea?: number | null;
   naruToPlaceMaximumDepth?: number | null;
   naruToPlaceAverageDepth?: number | null;
+  naruSleepingUnits?: number | null;
+  naruAgriTourism?: string | null;
 }
