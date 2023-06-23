@@ -4,6 +4,7 @@ import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionCodesDto,
   DecisionComponentDto,
+  DecisionComponentTypeDto,
   NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
@@ -118,6 +119,9 @@ export class DecisionComponentComponent implements OnInit {
         agCapMap: this.agCapMap.value ? this.agCapMap.value : null,
         agCapConsultant: this.agCapConsultant.value ? this.agCapConsultant.value : null,
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
+        applicationDecisionComponentType: this.codes.decisionComponentTypes.find(
+          (e) => e.code === this.data.applicationDecisionComponentTypeCode
+        )!,
         applicationDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,
       };
@@ -135,6 +139,7 @@ export class DecisionComponentComponent implements OnInit {
     agCapMap: string | null;
     agCapConsultant: string | null;
     applicationDecisionComponentTypeCode: string;
+    applicationDecisionComponentType: DecisionComponentTypeDto;
     applicationDecisionUuid: string | undefined;
     uuid: string | undefined;
   }) {
