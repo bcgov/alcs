@@ -1,5 +1,5 @@
 <h3>Application Prep</h3>
-<section *ngIf="application?.source === 'APPLICANT'">
+<section *ngIf="application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT">
   <h5>Proposal Components - {{ application?.type?.label }}</h5>
   <div class="input-table">
     <div>

@@ -5,7 +5,7 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import { SubmittedApplicationDto } from '../application.dto';
+import { AlcsApplicationSubmissionDto } from '../application.dto';
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -53,7 +53,7 @@ describe('ApplicationSubmissionController', () => {
       fileNumber: fakeFileNumber,
     } as ApplicationSubmission);
     mockApplicationSubmissionService.mapToDto.mockResolvedValue(
-      createMock<SubmittedApplicationDto>(),
+      createMock<AlcsApplicationSubmissionDto>(),
     );
 
     const result = await controller.get(fakeFileNumber);

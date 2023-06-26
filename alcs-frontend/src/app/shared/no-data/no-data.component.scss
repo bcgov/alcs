@@ -1,0 +1,19 @@
+@use '../../../styles/colors';
+
+.text {
+  color: colors.$grey-dark;
+}
+
+.error {
+  margin-top: 4px;
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    margin-right: 4px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
