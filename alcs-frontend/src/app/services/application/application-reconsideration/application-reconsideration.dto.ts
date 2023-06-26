@@ -22,6 +22,7 @@ export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
   applicant: string;
+  source: string;
   region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -44,6 +45,11 @@ export interface ApplicationReconsiderationDto {
   reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
+  // for applications originated from portal
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }
 
 export interface ApplicationReconsiderationDetailedDto extends ApplicationReconsiderationDto {}
@@ -72,4 +78,10 @@ export interface UpdateApplicationReconsiderationDto {
   reviewDate?: number | null;
   reviewOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
+
+  // for applications originated from portal
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }

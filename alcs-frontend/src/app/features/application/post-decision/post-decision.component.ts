@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, combineLatestWith, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDetailedDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
+import { APPLICATION_SYSTEM_SOURCE_TYPES } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
@@ -15,6 +16,7 @@ import { EditReconsiderationDialogComponent } from './edit-reconsideration-dialo
 
 type LoadingReconsiderations = ApplicationReconsiderationDetailedDto & {
   reconsidersDecisionsNumbers: string[];
+  isOriginatedInPortal: boolean;
 };
 
 type LoadingModifications = ApplicationModificationDto & {
@@ -65,6 +67,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
               reconsidersDecisionsNumbers: r.reconsideredDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
               ),
+              isOriginatedInPortal: r.application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT,
             })) ?? [];
           this.reconCodes = reconCodes;
           this.modifications =
@@ -88,7 +91,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         autoFocus: false,
         data: {
           fileNumber: this.fileNumber,
-          existingDecision: reconsideration,
+          existingRecon: reconsideration,
           codes: this.reconCodes,
         },
       })

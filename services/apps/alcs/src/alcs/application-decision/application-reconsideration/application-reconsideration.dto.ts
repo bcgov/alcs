@@ -120,6 +120,7 @@ export class ApplicationForReconsiderationDto {
   type: ApplicationTypeDto;
   statusCode: string;
   applicant: string;
+  source: string;
   region: ApplicationRegionDto;
   localGovernment: string;
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -133,10 +134,14 @@ export class ApplicationReconsiderationWithoutApplicationDto {
   submittedDate: number;
   reviewDate: number;
   reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
-  description?: string;
-  isNewProposal?: boolean;
-  isIncorrectFalseInfo?: boolean;
-  isNewEvidence?: boolean;
+  @AutoMap(() => String)
+  description?: string | null;
+  @AutoMap(() => Boolean)
+  isNewProposal?: boolean | null;
+  @AutoMap(() => Boolean)
+  isIncorrectFalseInfo?: boolean | null;
+  @AutoMap(() => Boolean)
+  isNewEvidence?: boolean | null;
 }
 export class ApplicationReconsiderationDto extends ApplicationReconsiderationWithoutApplicationDto {
   uuid: string;

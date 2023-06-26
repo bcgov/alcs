@@ -34,7 +34,7 @@ export class ApplicationReconsideration extends Base {
   @Column({ type: 'timestamptz', nullable: true })
   reviewDate: Date | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({
     type: 'text',
     nullable: true,
@@ -42,18 +42,18 @@ export class ApplicationReconsideration extends Base {
   })
   description?: string;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({
     type: 'boolean',
     nullable: true,
   })
   isNewProposal?: boolean;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   isIncorrectFalseInfo?: boolean;
 
-  @AutoMap()
+  @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   isNewEvidence?: boolean;
 

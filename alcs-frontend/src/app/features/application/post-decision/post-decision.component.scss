@@ -92,8 +92,9 @@ section {
   margin-top: 16px;
   margin-bottom: 32px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: clamp(50%, 50%, 50%) clamp(50%, 50%, 50%);
   grid-row-gap: 24px;
+  column-gap: 12px;
 
   .subheading2 {
     margin-bottom: 6px !important;
