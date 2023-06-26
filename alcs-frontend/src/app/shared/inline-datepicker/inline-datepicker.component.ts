@@ -13,6 +13,7 @@ import { formatDateForApi } from '../utils/api-date-formatter';
 export class InlineDatepickerComponent implements OnInit, OnChanges {
   @Input() value: number | undefined;
   @Input() min: Date | number | undefined;
+  @Input() required = false;
 
   @Output() save = new EventEmitter<number>();
   @ViewChild('datePicker') private datePicker!: MatDatepicker<any>;
@@ -39,7 +40,10 @@ export class InlineDatepickerComponent implements OnInit, OnChanges {
     if (this.isEditing) {
       this.datePicker.open();
     } else {
-      this.date.setValue(null);
+      if (this.value) {
+        this.formattedDate = moment(this.value).format(environment.dateFormat);
+        this.date.setValue(moment(this.value));
+      }
     }
   }
 

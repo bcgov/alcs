@@ -1,12 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
-import { ApplicationDto } from '../../../../services/application/application.dto';
+import { APPLICATION_SYSTEM_SOURCE_TYPES, ApplicationDto } from '../../../../services/application/application.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { AssigneeDto } from '../../../../services/user/user.dto';
@@ -72,7 +72,7 @@ describe('ApplicationDialogComponent', () => {
         code: 'card-status',
       },
     } as CardDto,
-    source: 'ALCS',
+    source: APPLICATION_SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(async () => {

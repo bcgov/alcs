@@ -454,6 +454,9 @@ export class ApplicationDecisionV1Service {
         order: {
           label: 'ASC',
         },
+        where: {
+          isActive: true,
+        },
       }),
       this.ceoCriterionRepository.find({
         order: {

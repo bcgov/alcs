@@ -27,7 +27,7 @@ describe('ApplicationDetailsComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
-    component.submittedApplication = {
+    component.submission = {
       naruExistingStructures: null,
       naruFillOrigin: null,
       naruFillType: null,

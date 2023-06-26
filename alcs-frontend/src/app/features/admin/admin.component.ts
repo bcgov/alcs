@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
 import { NoiSubtypeComponent } from './noi-subtype/noi-subtype.component';
@@ -24,6 +25,12 @@ export const childRoutes = [
     menuTitle: 'CEO Criteria',
     icon: 'psychology',
     component: CeoCriterionComponent,
+  },
+  {
+    path: 'dm',
+    menuTitle: 'Decision Makers',
+    icon: 'coffee_maker',
+    component: DecisionMakerComponent,
   },
   {
     path: 'noi',

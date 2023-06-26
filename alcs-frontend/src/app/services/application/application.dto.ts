@@ -87,10 +87,10 @@ export interface SubmittedApplicationParcelDto {
   legalDescription: string;
   mapAreaHectares: string;
   purchasedDate?: number;
-  isFarm: boolean;
-  ownershipType: string;
-  crownLandOwnerType: string;
-  parcelType: string;
+  isFarm?: boolean;
+  ownershipType?: string;
+  crownLandOwnerType?: string;
+  parcelType?: string;
   documentUuids: string[];
   owners: SubmittedApplicationOwnerDto[];
   documents: ApplicationParcelDocumentDto[];
@@ -101,7 +101,7 @@ export interface ApplicationSubmissionDto {
   otherParcels: SubmittedApplicationParcelDto[];
   documents: ApplicationDocumentDto[];
   hasOtherParcelsInCommunity?: boolean | null;
-  primaryContact: SubmittedApplicationOwnerDto;
+  primaryContact?: SubmittedApplicationOwnerDto;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
   parcelsNonAgricultureUseDescription: string;
@@ -211,8 +211,8 @@ export interface ApplicationDto {
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
   notificationSentDate?: number;
-  region: ApplicationRegionDto;
-  localGovernment: ApplicationLocalGovernmentDto;
+  region?: ApplicationRegionDto;
+  localGovernment?: ApplicationLocalGovernmentDto;
   activeDays: number;
   pausedDays: number;
   paused: boolean;
@@ -220,7 +220,7 @@ export interface ApplicationDto {
   card?: CardDto;
   statusHistory: StatusHistory[];
   submittedApplication?: ApplicationSubmissionDto;
-  source: 'ALCS' | 'APPLICANT';
+  source: APPLICATION_SYSTEM_SOURCE_TYPES;
   alrArea?: number;
   agCap?: string;
   agCapSource?: string;

@@ -70,7 +70,9 @@ export interface DecisionDocumentDto {
   uploadedAt: number;
 }
 
-export interface DecisionMakerDto extends BaseCodeDto {}
+export interface DecisionMakerDto extends BaseCodeDto {
+  isActive: boolean;
+}
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
 export interface CeoCriterionDto extends BaseCodeDto {
