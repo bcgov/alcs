@@ -4,13 +4,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
+import { DecisionMakerService } from '../../../services/decision-maker/decision-maker.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { CeoCriterionComponent } from './ceo-criterion.component';
+import { DecisionMakerComponent } from './decision-maker.component';
 
-describe('CeoCriterionComponent', () => {
-  let component: CeoCriterionComponent;
-  let fixture: ComponentFixture<CeoCriterionComponent>;
+describe('DecisionMakerComponent', () => {
+  let component: DecisionMakerComponent;
+  let fixture: ComponentFixture<DecisionMakerComponent>;
   let mockCeoCriterionService: DeepMocked<CeoCriterionService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockConfirmationDialogService: DeepMocked<ConfirmationDialogService>;
@@ -21,10 +22,10 @@ describe('CeoCriterionComponent', () => {
     mockConfirmationDialogService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [CeoCriterionComponent],
+      declarations: [DecisionMakerComponent],
       providers: [
         {
-          provide: CeoCriterionService,
+          provide: DecisionMakerService,
           useValue: mockCeoCriterionService,
         },
         {
@@ -40,7 +41,7 @@ describe('CeoCriterionComponent', () => {
       imports: [HttpClientTestingModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CeoCriterionComponent);
+    fixture = TestBed.createComponent(DecisionMakerComponent);
     component = fixture.componentInstance;
 
     fixture.detectChanges();
