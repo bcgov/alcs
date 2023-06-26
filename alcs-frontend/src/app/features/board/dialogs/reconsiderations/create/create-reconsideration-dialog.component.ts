@@ -11,11 +11,12 @@ import {
   ReconsiderationTypeDto,
 } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../../../../services/application/application.dto';
+import { ApplicationDto, APPLICATION_SYSTEM_SOURCE_TYPES } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
+import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 
 @Component({
   selector: 'app-create',
@@ -31,6 +32,7 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   isLoading = false;
   isDecisionDateEmpty = false;
   currentBoardCode: string = '';
+  isOriginatedInPortal: boolean = false;
 
   decisions: { uuid: string; resolution: string }[] = [];
   filteredApplications: Observable<ApplicationDto[]> | undefined;
@@ -44,7 +46,13 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
   reconsidersDecisions = new FormControl<string[]>([], [Validators.required]);
 
-  createForm = new FormGroup({
+  // for application originated in portal
+  descriptionControl = new FormControl<string | null>('', [Validators.required]);
+  isNewProposalControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isIncorrectFalseInfoControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isNewEvidenceControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+
+  createForm: FormGroup = new FormGroup({
     applicationType: this.applicationTypeControl,
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
@@ -112,6 +120,14 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     }
 
     const application = $event.source.value as ApplicationDto;
+    this.isOriginatedInPortal = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+
+    if (this.isOriginatedInPortal) {
+      this.createForm.addControl('description', this.descriptionControl);
+      this.createForm.addControl('isNewProposal', this.isNewProposalControl);
+      this.createForm.addControl('isIncorrectFalseInfo', this.isIncorrectFalseInfoControl);
+      this.createForm.addControl('isNewEvidence', this.isNewEvidenceControl);
+    }
 
     this.fileNumberControl.disable();
     this.applicantControl.disable();
@@ -152,6 +168,13 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
         reconsideredDecisionUuids: formValues.reconsidersDecisions!,
       };
 
+      if (this.isOriginatedInPortal) {
+        recon.description = formValues.description;
+        recon.isNewProposal = parseStringToBoolean(formValues.isNewProposal);
+        recon.isIncorrectFalseInfo = parseStringToBoolean(formValues.isIncorrectFalseInfo);
+        recon.isNewEvidence = parseStringToBoolean(formValues.isNewEvidence);
+      }
+
       if (!recon.boardCode) {
         this.toastService.showErrorToast('Board is required, please reload the page and try again');
         return;
@@ -180,6 +203,13 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.applicationTypeControl.enable();
     this.localGovernmentControl.enable();
     this.reconsidersDecisions.disable();
+
+    if (this.isOriginatedInPortal) {
+      this.descriptionControl.reset();
+      this.isIncorrectFalseInfoControl.reset();
+      this.isNewEvidenceControl.reset();
+      this.isNewProposalControl.reset();
+    }
 
     // clear warnings
     this.isDecisionDateEmpty = false;

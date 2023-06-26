@@ -130,8 +130,24 @@
         >
         </ng-select>
       </div>
+      <div *ngIf="isOriginatedInPortal">
+        <mat-form-field class="date-picker" appearance="outline">
+          <mat-label>Request Submission Date</mat-label>
+          <input
+            matInput
+            (click)="datePicker.open()"
+            [matDatepicker]="datePicker"
+            formControlName="submittedDate"
+            required
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
       <mat-form-field appearance="outline">
-        <mat-label>Decisions to be Reconsidered</mat-label>
+        <mat-label
+          >{{isOriginatedInPortal ? "Resolutions to be Reconsidered":"Decisions to be Reconsidered"}}</mat-label
+        >
         <mat-select [formControl]="reconsidersDecisions" multiple>
           <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{decision.resolution}}</mat-option>
         </mat-select>
@@ -150,7 +166,7 @@
         >
         </ng-select>
       </div>
-      <div class="full-grid">
+      <div *ngIf="!isOriginatedInPortal" class="full-grid">
         <mat-form-field class="date-picker" appearance="outline">
           <mat-label>Reconsideration Request Submitted to ALC</mat-label>
           <input
@@ -164,7 +180,33 @@
           <mat-datepicker #datePicker type="date"></mat-datepicker>
         </mat-form-field>
       </div>
+      <div *ngIf="isOriginatedInPortal">
+        <mat-label>New Evidence*</mat-label>
+        <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div *ngIf="isOriginatedInPortal">
+        <mat-label>Incorrect or False Info*</mat-label>
+        <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div *ngIf="isOriginatedInPortal">
+        <mat-label>New Proposal*</mat-label>
+        <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-form-field appearance="outline" class="full-grid" *ngIf="isOriginatedInPortal">
+        <mat-label>Request Description</mat-label>
+        <input matInput id="description" formControlName="description" type="text" />
+      </mat-form-field>
     </div>
+
     <div class="warning-section">
       <div class="warning" *ngIf="isDecisionDateEmpty">
         <mat-icon>warning</mat-icon>

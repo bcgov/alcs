@@ -58,6 +58,12 @@ export interface CreateApplicationReconsiderationDto {
   reconTypeCode: string;
   boardCode: string;
   reconsideredDecisionUuids: string[];
+
+  // for applications originated from portal
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }
 
 export interface UpdateApplicationReconsiderationDto {

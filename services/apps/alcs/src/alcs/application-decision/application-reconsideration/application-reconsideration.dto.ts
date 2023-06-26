@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDefined,
   IsNotEmpty,
   IsNumber,
@@ -57,6 +58,22 @@ export class ApplicationReconsiderationCreateDto {
   @IsArray()
   @ArrayNotEmpty()
   reconsideredDecisionUuids: string[];
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isNewProposal?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isIncorrectFalseInfo?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isNewEvidence?: boolean;
 }
 
 export class ApplicationReconsiderationUpdateDto {
@@ -80,6 +97,22 @@ export class ApplicationReconsiderationUpdateDto {
   @IsArray()
   @ArrayNotEmpty()
   reconsideredDecisionUuids?: string[];
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isNewProposal?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isIncorrectFalseInfo?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isNewEvidence?: boolean;
 }
 
 export class ApplicationForReconsiderationDto {
@@ -92,7 +125,20 @@ export class ApplicationForReconsiderationDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
-export class ApplicationReconsiderationDto {
+export class ApplicationReconsiderationWithoutApplicationDto {
+  uuid: string;
+  applicationUuid: string;
+  card: CardDto;
+  type: ReconsiderationTypeDto;
+  submittedDate: number;
+  reviewDate: number;
+  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
+  description?: string;
+  isNewProposal?: boolean;
+  isIncorrectFalseInfo?: boolean;
+  isNewEvidence?: boolean;
+}
+export class ApplicationReconsiderationDto extends ApplicationReconsiderationWithoutApplicationDto {
   uuid: string;
   application: ApplicationForReconsiderationDto;
   card: CardDto;
@@ -102,14 +148,4 @@ export class ApplicationReconsiderationDto {
   reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
-}
-
-export class ApplicationReconsiderationWithoutApplicationDto {
-  uuid: string;
-  applicationUuid: string;
-  card: CardDto;
-  type: ReconsiderationTypeDto;
-  submittedDate: number;
-  reviewDate: number;
-  reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
 }
