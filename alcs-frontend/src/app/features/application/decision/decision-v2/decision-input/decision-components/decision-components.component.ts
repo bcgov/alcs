@@ -194,8 +194,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
   private patchNaruFields(component: DecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
-    // TODO implement this once it is ready
-    //component.expiryDate =
+    component.expiryDate = this.application.proposalExpiryDate;
     component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
   }
 
