@@ -48,7 +48,7 @@ alcs_gov as(
         join alcs.application_local_government alg on
    (case
    	when oats_gov.oats_gov_name LIKE 'Islands Trust%' then 'Islands Trust'
-    when oats_gov.oats_gov_name LIKE 'Sliammon%' then "Tla'amin Nation"
+    when oats_gov.oats_gov_name LIKE 'Sliammon%' then 'Tla''amin Nation'
    	else oats_gov.oats_gov_name
    end) 
    =
