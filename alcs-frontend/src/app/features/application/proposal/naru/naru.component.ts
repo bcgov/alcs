@@ -25,7 +25,6 @@ export class NaruProposalComponent implements OnDestroy, OnInit {
     private applicationDetailService: ApplicationDetailService,
     private toastService: ToastService,
     private applicationSubmissionService: ApplicationSubmissionService,
-    private decisionService: ApplicationDecisionV2Service
   ) {}
 
   ngOnInit(): void {
