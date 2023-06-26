@@ -45,6 +45,7 @@ export class seedInactiveLocalGov1687810457499 implements MigrationInterface {
     }
     
     public async down(queryRunner: QueryRunner): Promise<void> {
+        //N/A
     }
 
 }

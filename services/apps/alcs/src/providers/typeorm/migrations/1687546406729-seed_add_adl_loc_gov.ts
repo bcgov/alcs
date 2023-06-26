@@ -16,7 +16,6 @@ export class seedAddAdlLocGov1687546406729 implements MigrationInterface {
 	 ('6c0079df-2647-445f-9718-4433e9761eac',NULL,NOW(),NULL,'migration_seed',NULL,'Village of Canal Flats','KOOR',NULL,false,true,'{}'),
 	 ('79c3e16e-fdb9-4bb0-a427-f044a5d4bb95',NULL,NOW(),NULL,'migration_seed',NULL,'District of Hudson''s Hope','NORR',NULL,false,true,'{}'),
 	 ('d3f74ba5-0dc3-43ea-a7e2-004882d65c33',NULL,NOW(),NULL,'migration_seed',NULL,'District of Barriere','INTR',NULL,false,true,'{}');
-
         `);
     }
 
