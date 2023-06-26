@@ -238,7 +238,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code === 'PRC' && modification.resultingDecision === null)
+          (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision)
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -247,12 +247,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         uuid: modification.uuid,
         type: PostDecisionType.Modification,
       }));
-
+    
     const mappedRecons = reconsiderations
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.reviewOutcome?.code === 'PRC' && reconsideration.resultingDecision === null)
+          (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions

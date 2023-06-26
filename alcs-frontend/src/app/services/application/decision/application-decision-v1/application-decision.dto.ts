@@ -54,6 +54,7 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
+  isDraft: boolean;
 }
 
 export interface LinkedResolutionDto {

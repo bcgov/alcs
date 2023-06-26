@@ -126,10 +126,12 @@ export class EditReconsiderationDialogComponent implements OnInit {
   async loadDecisions(fileNumber: string) {
     const decisions = await this.decisionService.fetchByApplication(fileNumber);
     if (decisions.length > 0) {
-      this.decisions = decisions.map((decision) => ({
-        uuid: decision.uuid,
-        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
-      }));
+      this.decisions = decisions
+        .filter((e) => !e.isDraft)
+        .map((decision) => ({
+          uuid: decision.uuid,
+          resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+        }));
     }
   }
 
