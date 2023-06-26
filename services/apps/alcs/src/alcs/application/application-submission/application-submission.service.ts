@@ -8,7 +8,7 @@ import { ApplicationOwner } from '../../../portal/application-submission/applica
 import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
 import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import { SubmittedApplicationDto } from '../application.dto';
+import { AlcsApplicationSubmissionDto } from '../application.dto';
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -50,7 +50,7 @@ export class ApplicationSubmissionService {
     const mappedSubmission = await this.mapper.mapAsync(
       submission,
       ApplicationSubmission,
-      SubmittedApplicationDto,
+      AlcsApplicationSubmissionDto,
     );
 
     const primaryContact = submission.owners.find(

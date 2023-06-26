@@ -23,6 +23,7 @@
           [matDatepicker]="datePicker"
           [formControl]="date"
           [min]="minimum | startOfDay"
+          [required]="required"
         />
         <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
         <mat-datepicker #datePicker> </mat-datepicker>
@@ -30,7 +31,7 @@
     </form>
     <div class="button-container">
       <button mat-button (click)="toggleEdit()">CANCEL</button>
-      <button mat-button class="save" (click)="onSave()">SAVE</button>
+      <button mat-button class="save" [disabled]="required && !date.value" (click)="onSave()">SAVE</button>
     </div>
   </div>
 </div>

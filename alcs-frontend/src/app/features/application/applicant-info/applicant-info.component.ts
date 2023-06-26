@@ -17,6 +17,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: ApplicationDto | undefined;
   submission?: ApplicationSubmissionDto = undefined;
+  isSubmitted = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -30,6 +31,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = application.fileNumber;
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
+        this.isSubmitted = application.source === 'APPLICANT' ? !!application.dateSubmittedToAlc : true;
       }
     });
   }

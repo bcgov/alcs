@@ -21,6 +21,23 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
 
+export const unsubmittedRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'App Preview',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+];
+
 export const appChildRoutes = [
   {
     path: '',
@@ -110,6 +127,7 @@ export const appChildRoutes = [
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   childRoutes = appChildRoutes;
+  unsubmittedRoutes = unsubmittedRoutes;
 
   fileNumber?: string;
   application: ApplicationDto | undefined;
@@ -117,6 +135,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   modifications: ApplicationModificationDto[] = [];
 
   isApplicantSubmission = false;
+  isSubmitted = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -140,6 +159,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
         this.isApplicantSubmission = application.source === 'APPLICANT';
+        this.isSubmitted = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
       }
     });
 
