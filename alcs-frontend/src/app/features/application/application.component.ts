@@ -8,7 +8,7 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { APPLICATION_SYSTEM_SOURCE_TYPES, ApplicationDto } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
@@ -158,7 +158,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isApplicantSubmission = application.source === 'APPLICANT';
+        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
         this.isSubmitted = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
       }
     });

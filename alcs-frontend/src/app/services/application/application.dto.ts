@@ -220,7 +220,7 @@ export interface ApplicationDto {
   card?: CardDto;
   statusHistory: StatusHistory[];
   submittedApplication?: ApplicationSubmissionDto;
-  source: 'ALCS' | 'APPLICANT';
+  source: APPLICATION_SYSTEM_SOURCE_TYPES;
   alrArea?: number;
   agCap?: string;
   agCapSource?: string;
