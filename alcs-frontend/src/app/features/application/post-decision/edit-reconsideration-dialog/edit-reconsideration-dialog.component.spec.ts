@@ -27,7 +27,10 @@ describe('EditReconsiderationDialogComponent', () => {
           provide: ToastService,
           useValue: {},
         },
-        { provide: MAT_DIALOG_DATA, useValue: { existingDecision: { type: {}, reconsideredDecisions: [] } } },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: { existingRecon: { type: {}, reconsideredDecisions: [], application: { source: 'fake' } } },
+        },
         { provide: MatDialogRef, useValue: {} },
       ],
       schemas: [NO_ERRORS_SCHEMA],
