@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate;
 
 CREATE TABLE oats.alcs_etl_application_duplicate (
     id SERIAL PRIMARY KEY,
-    application_id int,
+    application_id INT,
     card_uuid UUID NOT NULL DEFAULT gen_random_uuid(),
     duplicated bool DEFAULT false
 );
@@ -17,7 +17,7 @@ CREATE TABLE oats.alcs_etl_application_duplicate (
 DROP TABLE IF EXISTS oats.alcs_etl_application_exclude;
 
 CREATE TABLE oats.alcs_etl_application_exclude (
-    component_id int
+    component_id INT
 );
     
 -- function inserts data into prevoisly created table and decipers duplication of uuids
@@ -32,7 +32,7 @@ INSERT INTO
             END AS duplicated
         FROM
             oats.oats_alr_applications AS oa
-            LEFT JOIN alcs.application AS a ON oa.alr_application_id :: text = a.file_number;
+            LEFT JOIN alcs.application AS a ON oa.alr_application_id :: TEXT = a.file_number;
     
     
 -- Insert values from application-exclude into table
@@ -46,18 +46,22 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
                 oats.oats_alr_appl_components AS oaac
                 ),
 -- Find instances of multi-component applications 
-   multi_app as (    
+   multi_app AS (    
     SELECT 
-            atl.application_id as app_id
+            atl.application_id AS app_id
     FROM application_type_lookup atl
         GROUP BY atl.application_id 
         HAVING count(application_id) > 1
         ),
-  duplicate_ids as (      
-    select alr_application_id, alr_appl_component_id, alr_change_code
-    from oats.oats_alr_appl_components oaac
-    right join multi_app on oaac.alr_application_id = multi_app.app_id
-    ),
+ duplicate_ids as (
+    SELECT
+        alr_application_id,
+        alr_appl_component_id,
+        alr_change_code
+    FROM
+        oats.oats_alr_appl_components oaac
+        RIGHT JOIN multi_app ON oaac.alr_application_id = multi_app.app_id
+),
 -- Order based on established hierarchy 
     ranked_rows AS (
     SELECT alr_appl_component_id,
@@ -73,7 +77,10 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
     FROM duplicate_ids dis
     )
 -- select all components that will not be inserted
-    select rr.alr_appl_component_id
-    from ranked_rows rr
-    where rank != 1;
+SELECT
+    rr.alr_appl_component_id
+FROM
+    ranked_rows rr
+WHERE
+    rank != 1;
    
