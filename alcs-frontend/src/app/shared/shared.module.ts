@@ -58,6 +58,7 @@ import { TimeTrackerComponent } from './time-tracker/time-tracker.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
+import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    BooleanToStringPipe,
     NoDataComponent,
   ],
   imports: [
@@ -164,6 +166,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    BooleanToStringPipe,
     NoDataComponent,
   ],
 })

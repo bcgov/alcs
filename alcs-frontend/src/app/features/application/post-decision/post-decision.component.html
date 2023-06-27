@@ -40,25 +40,27 @@
         <div class="subheading2">Reconsideration Type</div>
         {{ reconsideration.type.label }}
       </div>
-      <div *ngIf="reconsideration.type.code === '33'">
-        <div class="subheading2">Review Outcome</div>
-        <span *ngIf="!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN'">
-          <app-inline-review-outcome
-            (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
-          ></app-inline-review-outcome>
-        </span>
-        <span *ngIf="reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN'">{{
-          reconsideration.reviewOutcome.label
-        }}</span>
-      </div>
+
       <div>
         <div class="subheading2">Resolutions to be Reconsidered</div>
         <ng-container> {{ reconsideration.reconsidersDecisionsNumbers.join(', ') }} </ng-container>
       </div>
-      <div *ngIf="!!reconsideration.resultingDecision">
-        <div class="subheading2">Resulting Resolution</div>
-        #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
+
+      <div>
+        <div class="subheading2">New Evidence</div>
+        {{ reconsideration.isNewEvidence | booleanToString }}
       </div>
+
+      <div>
+        <div class="subheading2">Incorrect or False Info</div>
+        {{ reconsideration.isIncorrectFalseInfo | booleanToString }}
+      </div>
+
+      <div>
+        <div class="subheading2">New Proposal</div>
+        {{ reconsideration.isNewProposal | booleanToString }}
+      </div>
+
       <div *ngIf="reconsideration.type.code === '33'">
         <div class="subheading2 left">
           Outcome Notification Date
@@ -72,6 +74,28 @@
             (save)="onSaveReconsiderationReviewDate(reconsideration.uuid, $event)"
           ></app-inline-datepicker>
         </span>
+      </div>
+
+      <div *ngIf="reconsideration.type.code === '33'">
+        <div class="subheading2">Review Outcome</div>
+        <span *ngIf="!reconsideration.reviewOutcome || reconsideration.reviewOutcome?.code === 'PEN'">
+          <app-inline-review-outcome
+            (save)="onSaveReconsiderationReviewOutcome(reconsideration.uuid, $event)"
+          ></app-inline-review-outcome>
+        </span>
+        <span *ngIf="reconsideration.reviewOutcome && reconsideration.reviewOutcome?.code !== 'PEN'">{{
+          reconsideration.reviewOutcome.label
+        }}</span>
+      </div>
+
+      <div *ngIf="!!reconsideration.resultingDecision">
+        <div class="subheading2">Resulting Resolution</div>
+        #{{ reconsideration.resultingDecision.resolutionNumber }}/{{ reconsideration.resultingDecision.resolutionYear }}
+      </div>
+
+      <div class="full-grid-line">
+        <div class="subheading2">Request Description</div>
+        {{ reconsideration.description }}
       </div>
     </div>
   </div>

@@ -149,6 +149,9 @@ export class ApplicationDecisionDto {
   @AutoMap(() => Boolean)
   isOther?: boolean | null;
 
+  @AutoMap(() => Boolean)
+  isDraft: boolean;
+
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];

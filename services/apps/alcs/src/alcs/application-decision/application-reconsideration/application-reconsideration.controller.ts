@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { BoardService } from '../../board/board.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
+import { BoardService } from '../../board/board.service';
 import {
   ApplicationReconsiderationCreateDto,
   ApplicationReconsiderationUpdateDto,

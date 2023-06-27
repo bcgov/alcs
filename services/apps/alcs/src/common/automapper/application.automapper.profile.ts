@@ -18,7 +18,10 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
-import { ApplicationDto } from '../../alcs/application/application.dto';
+import {
+  AlcsApplicationSubmissionDto,
+  ApplicationDto,
+} from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
