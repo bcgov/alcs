@@ -232,7 +232,7 @@
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
-        [isRequired]="true"
+        [isRequired]="isHomeSiteSeverance.getRawValue() !== 'false'"
         [allowMultiple]="true"
         [disabled]="isHomeSiteSeverance.getRawValue() === 'false'"
       ></app-file-drag-drop>
