@@ -82,15 +82,7 @@
         </mat-button-toggle-group>
       </div>
 
-      <mat-form-field
-        *ngIf="
-          typeControl.value === '33' &&
-          reviewOutcomeCodeControl.value !== 'PEN' &&
-          reviewOutcomeCodeControl.value !== null
-        "
-        appearance="outline"
-        class="date-picker full-grid-line"
-      >
+      <mat-form-field *ngIf="typeControl.value === '33'" appearance="outline" class="date-picker full-grid-line">
         <mat-label>
           Outcome Notification Date
           <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
