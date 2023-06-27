@@ -49,12 +49,31 @@ alcs_gov AS (
         oats_gov
         JOIN alcs.application_local_government alg on (
             CASE
-                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust%' THEN 'Islands Trust'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Gabriola Island' THEN 'Islands Trust Gabriola Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Galiano Island' THEN 'Islands Trust Galiano Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Gambier Island' THEN 'Islands Trust Gambier Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Hornby Island' THEN 'Islands Trust Hornby Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Lasqueti Island' THEN 'Islands Trust Lasqueti Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Mayne Island' THEN 'Islands Trust Mayne Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Pender Island' THEN 'Islands Trust Pender Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Quadra Island' THEN 'Islands Trust Quadra Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Salt Spring Island' THEN 'Islands Trust Salt Spring Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Saturna Island' THEN 'Islands Trust Saturna Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Sidney Island' THEN 'Islands Trust Sidney Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust- Comox Strathcona' THEN 'Islands Trust Comox Strathcona (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust- Nanaimo' THEN 'Islands Trust Nanaimo (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust-Capital' THEN 'Islands Trust Capital (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust-Powell River' THEN 'Islands Trust Powell River (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust-Sunshine Coast' THEN 'Islands Trust Sunshine Coast (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Bowen Island' THEN 'Bowen Island (Island Municipality)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Denman Island' THEN 'Islands Trust Denman Island (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust - Cowichan Valley' THEN 'Islands Trust Cowichan Valley (Historical)'
+                WHEN oats_gov.oats_gov_name LIKE 'Northern Rockies' THEN 'Northern Rockies (Historical)'
                 WHEN oats_gov.oats_gov_name LIKE 'Sliammon%' THEN 'Tla''amin Nation'
                 ELSE oats_gov.oats_gov_name
             END
         ) = alg."name"
-),   
+),
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
     SELECT DISTINCT
