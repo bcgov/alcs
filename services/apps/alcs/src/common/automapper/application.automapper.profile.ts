@@ -33,7 +33,6 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
 import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -46,8 +45,6 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationType, ApplicationTypeDto);
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
-
-      createMap(mapper, ApplicationSubmission, AlcsApplicationSubmissionDto);
 
       createMap(
         mapper,
