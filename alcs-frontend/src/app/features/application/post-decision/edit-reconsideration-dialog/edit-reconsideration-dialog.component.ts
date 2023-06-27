@@ -7,7 +7,6 @@ import {
   UpdateApplicationReconsiderationDto,
 } from '../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { APPLICATION_SYSTEM_SOURCE_TYPES } from '../../../../services/application/application.dto';
 import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
@@ -22,16 +21,9 @@ import { parseBooleanToString, parseStringToBoolean } from '../../../../shared/u
 export class EditReconsiderationDialogComponent implements OnInit {
   isLoading = false;
   codes: BaseCodeDto[] = [];
-  isOriginatedInPortal: boolean = false;
 
   typeControl = new FormControl<string | undefined>(undefined, [Validators.required]);
   reviewOutcomeCodeControl = new FormControl<string | null>(null);
-
-  // for application originated in portal
-  descriptionControl = new FormControl<string | null>('', [Validators.required]);
-  isNewProposalControl = new FormControl<string | undefined>(undefined, [Validators.required]);
-  isIncorrectFalseInfoControl = new FormControl<string | undefined>(undefined, [Validators.required]);
-  isNewEvidenceControl = new FormControl<string | undefined>(undefined, [Validators.required]);
 
   form: FormGroup = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
@@ -39,6 +31,10 @@ export class EditReconsiderationDialogComponent implements OnInit {
     reviewOutcomeCode: this.reviewOutcomeCodeControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
     reconsidersDecisions: new FormControl<string[]>([], [Validators.required]),
+    description: new FormControl<string | null>('', [Validators.required]),
+    isNewProposal: new FormControl<string | undefined>(undefined, [Validators.required]),
+    isIncorrectFalseInfo: new FormControl<string | undefined>(undefined, [Validators.required]),
+    isNewEvidence: new FormControl<string | undefined>(undefined, [Validators.required]),
   });
   decisions: { uuid: string; resolution: string }[] = [];
 
@@ -55,7 +51,6 @@ export class EditReconsiderationDialogComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.codes = data.codes;
-    this.isOriginatedInPortal = data.existingRecon.application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
 
     this.form.patchValue({
       submittedDate: new Date(data.existingRecon.submittedDate),
@@ -66,19 +61,11 @@ export class EditReconsiderationDialogComponent implements OnInit {
           : null,
       reviewDate: data.existingRecon.reviewDate ? new Date(data.existingRecon.reviewDate) : null,
       reconsidersDecisions: data.existingRecon.reconsideredDecisions.map((dec) => dec.uuid),
+      description: data.existingRecon.description ?? null,
+      isNewProposal: parseBooleanToString(data.existingRecon.isNewProposal),
+      isIncorrectFalseInfo: parseBooleanToString(data.existingRecon.isIncorrectFalseInfo),
+      isNewEvidence: parseBooleanToString(data.existingRecon.isNewEvidence),
     });
-
-    if (this.isOriginatedInPortal) {
-      this.form.addControl('description', this.descriptionControl);
-      this.form.addControl('isNewProposal', this.isNewProposalControl);
-      this.form.addControl('isIncorrectFalseInfo', this.isIncorrectFalseInfoControl);
-      this.form.addControl('isNewEvidence', this.isNewEvidenceControl);
-
-      this.descriptionControl.patchValue(data.existingRecon.description ?? null);
-      this.isNewProposalControl.patchValue(parseBooleanToString(data.existingRecon.isNewProposal));
-      this.isIncorrectFalseInfoControl.patchValue(parseBooleanToString(data.existingRecon.isIncorrectFalseInfo));
-      this.isNewEvidenceControl.patchValue(parseBooleanToString(data.existingRecon.isNewEvidence));
-    }
   }
 
   ngOnInit(): void {
@@ -105,14 +92,11 @@ export class EditReconsiderationDialogComponent implements OnInit {
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       reconsideredDecisionUuids: reconsidersDecisions || [],
+      description: description,
+      isNewProposal: parseStringToBoolean(isNewProposal),
+      isIncorrectFalseInfo: parseStringToBoolean(isIncorrectFalseInfo),
+      isNewEvidence: parseStringToBoolean(isNewEvidence),
     };
-
-    if (this.isOriginatedInPortal) {
-      data.description = description;
-      data.isNewProposal = parseStringToBoolean(isNewProposal);
-      data.isIncorrectFalseInfo = parseStringToBoolean(isIncorrectFalseInfo);
-      data.isNewEvidence = parseStringToBoolean(isNewEvidence);
-    }
 
     try {
       await this.reconsiderationService.update(this.data.existingRecon.uuid, { ...data });

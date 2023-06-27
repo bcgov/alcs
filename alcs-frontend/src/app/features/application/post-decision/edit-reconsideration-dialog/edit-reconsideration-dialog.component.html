@@ -25,7 +25,7 @@
         </mat-select>
       </mat-form-field>
 
-      <div *ngIf="!isOriginatedInPortal" class="full-grid-line toggle-group">
+      <div class="toggle-group">
         <mat-label class="toggle-label">Reconsideration Type *</mat-label>
         <mat-button-toggle-group
           id="reviewOutcome"
@@ -37,19 +37,7 @@
         </mat-button-toggle-group>
       </div>
 
-      <div *ngIf="isOriginatedInPortal" class="toggle-group">
-        <mat-label class="toggle-label">Reconsideration Type *</mat-label>
-        <mat-button-toggle-group
-          id="reviewOutcome"
-          formControlName="type"
-          name="reviewOutcome"
-          (change)="onTypeReconsiderationChange($event.value)"
-        >
-          <mat-button-toggle *ngFor="let type of codes" value="{{ type.code }}">{{ type.label }}</mat-button-toggle>
-        </mat-button-toggle-group>
-      </div>
-
-      <div *ngIf="isOriginatedInPortal">
+      <div>
         <mat-label>New Evidence*</mat-label>
         <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -57,7 +45,7 @@
         </mat-button-toggle-group>
       </div>
 
-      <div *ngIf="isOriginatedInPortal">
+      <div>
         <mat-label>Incorrect or False Info*</mat-label>
         <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -65,7 +53,7 @@
         </mat-button-toggle-group>
       </div>
 
-      <div *ngIf="isOriginatedInPortal">
+      <div>
         <mat-label>New Proposal*</mat-label>
         <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
           <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -100,7 +88,7 @@
         <mat-datepicker #reviewDatePicker type="date"> </mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-grid-line" *ngIf="isOriginatedInPortal">
+      <mat-form-field appearance="outline" class="full-grid-line">
         <mat-label>Request Description</mat-label>
         <input matInput id="description" formControlName="description" type="text" />
       </mat-form-field>
