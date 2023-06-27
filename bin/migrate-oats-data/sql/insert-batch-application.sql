@@ -1,63 +1,64 @@
 
 -- Step 1: Perform a lookup to retrieve the applicant's name or organization for each application ID
-WITH applicant_lookup AS (
-    SELECT
-        DISTINCT oaap.alr_application_id AS application_id,
-        string_agg(DISTINCT oo.organization_name, ', ') FILTER (
-            WHERE
-                oo.organization_name IS NOT NULL
-        ) AS orgs,
-        string_agg(
-            DISTINCT concat(op.first_name || ' ' || op.last_name),
-            ', '
-        ) FILTER (
-            WHERE
-                op.last_name IS NOT NULL
-                OR op.first_name IS NOT NULL
-        ) AS persons
-    FROM
-        oats.oats_alr_application_parties oaap
-        LEFT JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
-        LEFT JOIN oats.oats_persons op ON op.person_id = opo.person_id
-        LEFT JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
-    WHERE
-        oaap.alr_appl_role_code = 'APPL'
-    GROUP BY
-        oaap.alr_application_id
-),
+WITH
+    applicant_lookup AS (
+        SELECT DISTINCT
+            oaap.alr_application_id AS application_id,
+            string_agg (DISTINCT oo.organization_name, ', ') FILTER (
+                WHERE
+                    oo.organization_name IS NOT NULL
+            ) AS orgs,
+            string_agg (
+                DISTINCT concat (op.first_name || ' ' || op.last_name),
+                ', '
+            ) FILTER (
+                WHERE
+                    op.last_name IS NOT NULL
+                    OR op.first_name IS NOT NULL
+            ) AS persons
+        FROM
+            oats.oats_alr_application_parties oaap
+            LEFT JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
+            LEFT JOIN oats.oats_persons op ON op.person_id = opo.person_id
+            LEFT JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
+        WHERE
+            oaap.alr_appl_role_code = 'APPL'
+        GROUP BY
+            oaap.alr_application_id
+    ),
 
 -- Step 2: get local gov application name & match to uuid
-oats_gov as(
-  SELECT
-    oaap.alr_application_id AS application_id,
-    oo.organization_name AS oats_gov_name
-
-    FROM oats.oats_alr_application_parties oaap
+oats_gov AS (
+    SELECT
+        oaap.alr_application_id AS application_id,
+        oo.organization_name AS oats_gov_name
+    FROM
+        oats.oats_alr_application_parties oaap
         JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
         JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
-   WHERE
+    WHERE
         oo.organization_type_cd = 'MUNI'
+        OR oo.organization_type_cd = 'FN'
 ),
 
-alcs_gov as(
+alcs_gov AS (
     SELECT
-    oats_gov.application_id AS application_id,
-    alg.uuid AS gov_uuid
-
-    FROM oats_gov
-        join alcs.application_local_government alg on
-   (case
-   	when oats_gov.oats_gov_name LIKE 'Islands Trust%' then 'Islands Trust'
-   	else oats_gov.oats_gov_name
-   end) 
-   =
-   alg."name"
-
-),    
+        oats_gov.application_id AS application_id,
+        alg.uuid AS gov_uuid
+    FROM
+        oats_gov
+        JOIN alcs.application_local_government alg on (
+            CASE
+                WHEN oats_gov.oats_gov_name LIKE 'Islands Trust%' THEN 'Islands Trust'
+                WHEN oats_gov.oats_gov_name LIKE 'Sliammon%' THEN 'Tla''amin Nation'
+                ELSE oats_gov.oats_gov_name
+            END
+        ) = alg."name"
+),   
 -- Step 3: Perform a lookup to retrieve the region code for each application ID
 panel_lookup AS (
-    SELECT
-        DISTINCT oaap.alr_application_id AS application_id,
+    SELECT DISTINCT
+        oaap.alr_application_id AS application_id,
         oo2.organization_name AS panel_region
     FROM
         oats.oats_alr_application_parties oaap
@@ -78,8 +79,8 @@ application_type_lookup AS (
         oats.oats_alr_appl_components AS oaac
         JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
         LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
-    where aee.component_id is null
-
+    WHERE
+        aee.component_id IS NULL
 )
 
 -- Step 5: Insert new records into the alcs_applications table
@@ -105,13 +106,8 @@ SELECT
         WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
         ELSE 'Unknown'
     END AS applicant,
-	ar.code as region_code,
-    --IN PROGRESS: local government lookup name mismatches
-    --Currently using peace river as default uuid
-    CASE
-        WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
-        ELSE '001cfdad-bc6e-4d25-9294-1550603da980'
-    END AS local_government_uuid,
+	ar.code AS region_code,
+    alcs_gov.gov_uuid AS local_government_uuid,
     'oats_etl'
 FROM
     oats.oats_alr_applications AS oa
