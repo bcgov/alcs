@@ -45,7 +45,6 @@ export interface ApplicationReconsiderationDto {
   reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
   reconsideredDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
-  // for applications originated from portal
   description?: string;
   isNewProposal?: boolean | null;
   isIncorrectFalseInfo?: boolean | null;
@@ -64,8 +63,6 @@ export interface CreateApplicationReconsiderationDto {
   reconTypeCode: string;
   boardCode: string;
   reconsideredDecisionUuids: string[];
-
-  // for applications originated from portal
   description?: string;
   isNewProposal?: boolean | null;
   isIncorrectFalseInfo?: boolean | null;
@@ -78,8 +75,6 @@ export interface UpdateApplicationReconsiderationDto {
   reviewDate?: number | null;
   reviewOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
-
-  // for applications originated from portal
   description?: string;
   isNewProposal?: boolean | null;
   isIncorrectFalseInfo?: boolean | null;
