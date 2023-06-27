@@ -8,7 +8,6 @@ import {
 } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
 
@@ -39,7 +38,6 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
-    private applicationService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
 

@@ -106,6 +106,10 @@ a {
   }
 }
 
+.mat-icon.mat-icon-inline {
+  line-height: 100% !important;
+}
+
 @media screen and (min-width: $tabletBreakpoint) {
   .desktop-file-drag-drop {
     display: block;
