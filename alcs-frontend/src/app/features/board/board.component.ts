@@ -265,8 +265,8 @@ export class BoardComponent implements OnInit, OnDestroy {
           return b.highPriority ? 1 : -1;
         }
 
-        if (b.pausedDays !== undefined && a.pausedDays === undefined) {
-          return (b.pausedDays ?? 0) - (a.pausedDays ?? 0);
+        if (b.pausedDays !== undefined && a.pausedDays !== undefined) {
+          return b.pausedDays - a.pausedDays;
         }
 
         return (b.activeDays ?? 0) - (a.activeDays ?? 0);

@@ -9,7 +9,7 @@ import { ALL_ROLES, ROLES } from './services/authentication/authentication.servi
 import { HasRolesGuard } from './services/authentication/hasRoles.guard';
 import { SearchComponent } from './shared/header/search/search.component';
 
-export const ROLES_ALLOWED_APPLICATIONS = [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS];
+export const ROLES_ALLOWED_APPLICATIONS = [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS, ROLES.SOIL_OFFICER];
 export const ROLES_ALLOWED_BOARDS = ROLES_ALLOWED_APPLICATIONS;
 
 const routes: Routes = [
