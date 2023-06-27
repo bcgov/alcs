@@ -1,6 +1,7 @@
 import sys, logging, argparse
 
 # this is a drastic change
+# this is another change
 from documents import (
     process_documents,
     process_application_documents,
