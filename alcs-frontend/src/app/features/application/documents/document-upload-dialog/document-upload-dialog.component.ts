@@ -103,21 +103,26 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const parcelId = await this.parcelId.value;
 
     const dto = {
-      file: this.pendingFile,
       fileName: this.name.getRawValue()!,
       source: this.source.getRawValue() as DOCUMENT_SOURCE,
       typeCode: this.type.getRawValue() as DOCUMENT_TYPE,
       visibilityFlags,
     };
+
+    const file = this.pendingFile;
     this.isSaving = true;
-    if (parcelId && dto.file && this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
-      // @ts-ignore File is checked above to not be undefined, typescript still thinks it might be undefined
-      await this.applicationDocumentService.attachCertificateOfTitle(this.data.fileId, parcelId, dto);
+    if (parcelId && file && this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.applicationDocumentService.attachCertificateOfTitle(this.data.fileId, parcelId, {
+        ...dto,
+        file,
+      });
     } else if (this.data.existingDocument) {
       await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
-    } else if (dto.file !== undefined) {
-      // @ts-ignore File is checked above to not be undefined, typescript still thinks it might be undefined
-      await this.applicationDocumentService.upload(this.data.fileId, dto);
+    } else if (file !== undefined) {
+      await this.applicationDocumentService.upload(this.data.fileId, {
+        ...dto,
+        file,
+      });
     }
     this.dialog.close(true);
     this.isSaving = false;
@@ -144,13 +149,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async prepareCertificateOfTitleUpload(uuid?: string) {
     const parcels = await this.parcelService.fetchParcels(this.data.fileId);
-    debugger;
     if (parcels.length > 0) {
       this.parcelId.setValidators([Validators.required]);
       this.parcelId.updateValueAndValidity();
 
       this.visibleToInternal.setValue(true);
-      this.visibleToPublic.setValue(true);
       this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
 
       const selectedParcel = parcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
