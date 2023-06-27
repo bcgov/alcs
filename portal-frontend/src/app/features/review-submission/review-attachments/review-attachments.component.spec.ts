@@ -7,8 +7,6 @@ import { ApplicationDocumentDto } from '../../../services/application-document/a
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 import { ReviewAttachmentsComponent } from './review-attachments.component';
 
@@ -16,14 +14,12 @@ describe('ReviewAttachmentsComponent', () => {
   let component: ReviewAttachmentsComponent;
   let fixture: ComponentFixture<ReviewAttachmentsComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
-  let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockAppService = createMock();
     mockRouter = createMock();
     mockAppDocumentService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
@@ -40,10 +36,6 @@ describe('ReviewAttachmentsComponent', () => {
         {
           provide: Router,
           useValue: mockRouter,
-        },
-        {
-          provide: ApplicationSubmissionService,
-          useValue: mockAppService,
         },
         {
           provide: ApplicationDocumentService,
