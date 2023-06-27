@@ -1,6 +1,7 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -60,6 +61,36 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         mapper,
         ApplicationSubmission,
         ApplicationSubmissionDetailedDto,
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            if (ad.statusHistory.length > 0) {
+              return ad.statusHistory[0].time;
+            }
+            //For older applications before status history was created
+            return Date.now();
+          }),
+        ),
+        forMember(
+          (a) => a.owners,
+          mapFrom((ad) => {
+            if (ad.owners) {
+              return this.mapper.mapArray(
+                ad.owners,
+                ApplicationOwner,
+                ApplicationOwnerDetailedDto,
+              );
+            } else {
+              return [];
+            }
+          }),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationSubmission,
+        AlcsApplicationSubmissionDto,
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {

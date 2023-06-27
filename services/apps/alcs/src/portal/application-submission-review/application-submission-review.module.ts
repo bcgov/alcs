@@ -11,7 +11,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
   imports: [
     TypeOrmModule.forFeature([ApplicationSubmissionReview]),
     forwardRef(() => ApplicationSubmissionModule),
-    ApplicationModule,
+    forwardRef(() => ApplicationModule),
   ],
   providers: [
     ApplicationSubmissionReviewService,

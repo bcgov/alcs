@@ -20,6 +20,7 @@ import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
 } from '../../../document/document.dto';
+import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import {
   ApplicationDocumentCode,
   DOCUMENT_TYPE,
@@ -40,6 +41,7 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
+    private parcelService: ApplicationParcelService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -65,23 +67,51 @@ export class ApplicationDocumentController {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
+    const savedDocument = await this.saveUploadedFile(req, fileNumber);
 
-    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
-    const file = req.body.file;
-    const fileName = req.body.fileName.value as string;
-    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
-    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+    return this.mapper.map(
+      savedDocument,
+      ApplicationDocument,
+      ApplicationDocumentDto,
+    );
+  }
 
-    const savedDocument = await this.applicationDocumentService.attachDocument({
-      fileNumber,
-      fileName,
-      file,
-      user: req.user.entity,
-      documentType: documentType as DOCUMENT_TYPE,
-      source: documentSource,
-      visibilityFlags,
-      system: DOCUMENT_SYSTEM.ALCS,
-    });
+  @Post('/application/:fileNumber/CERT')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async attachCertificateOfTitle(
+    @Param('fileNumber') fileNumber: string,
+    @Req() req,
+  ): Promise<ApplicationDocumentDto> {
+    if (!req.isMultipart()) {
+      throw new BadRequestException('Request is not multipart');
+    }
+
+    const parcelUuid = req.body.parcelUuid.value;
+    if (!parcelUuid) {
+      throw new BadRequestException('Request is missing parcel uuid');
+    }
+
+    const savedDocument = await this.saveUploadedFile(req, fileNumber);
+
+    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
+    if (parcel) {
+      if (parcel.certificateOfTitleUuid) {
+        const document = await this.applicationDocumentService.get(
+          parcel.certificateOfTitleUuid,
+        );
+        await this.applicationDocumentService.update({
+          uuid: document.uuid,
+          fileName: `${document.document.fileName}_superseded`,
+          source: document.document.source as DOCUMENT_SOURCE,
+          visibilityFlags: [],
+          documentType: document.type!.code as DOCUMENT_TYPE,
+          user: document.document.uploadedBy!,
+        });
+      }
+
+      await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
+    }
+
     return this.mapper.map(
       savedDocument,
       ApplicationDocument,
@@ -217,5 +247,24 @@ export class ApplicationDocumentController {
     @Body() data: { uuid: string; order: number }[],
   ): Promise<void> {
     await this.applicationDocumentService.setSorting(data);
+  }
+
+  private async saveUploadedFile(req, fileNumber: string) {
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    return await this.applicationDocumentService.attachDocument({
+      fileNumber,
+      fileName,
+      file,
+      user: req.user.entity,
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+      system: DOCUMENT_SYSTEM.ALCS,
+    });
   }
 }

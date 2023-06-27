@@ -147,32 +147,6 @@ export class DocumentService {
     });
   }
 
-  //One time function used to apply default tags to existing documents
-  async applyDefaultTags() {
-    const documents = await this.documentRepository.find();
-    console.warn(
-      `Applying default document tags to ${documents.length} Documents`,
-    );
-    for (const document of documents) {
-      document.tags = DEFAULT_DB_TAGS;
-      const command = new PutObjectTaggingCommand({
-        Bucket: this.config.get('STORAGE.BUCKET'),
-        Key: document.fileKey,
-        Tagging: {
-          TagSet: [
-            {
-              Key: 'ORCS-Classification',
-              Value: '85100-20',
-            },
-          ],
-        },
-      });
-      await this.dataStore.send(command);
-      await this.documentRepository.save(document);
-    }
-    console.warn(`${documents.length} Documents tagged successfully`);
-  }
-
   async createDocumentRecord(data: CreateDocumentDto) {
     return this.documentRepository.save(
       new Document({

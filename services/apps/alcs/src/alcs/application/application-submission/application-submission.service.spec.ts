@@ -1,9 +1,11 @@
-import { Mapper } from '@automapper/core';
-import { getMapperToken } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
+import { ApplicationSubmissionProfile } from '../../../common/automapper/application-submission.automapper.profile';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
 import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
@@ -18,16 +20,21 @@ describe('ApplicationSubmissionService', () => {
   let mockApplicationStatusRepository: DeepMocked<
     Repository<ApplicationStatus>
   >;
-  let mapper: DeepMocked<Mapper>;
 
   beforeEach(async () => {
     mockApplicationSubmissionRepository = createMock();
-    mapper = createMock();
     mockApplicationStatusRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       providers: [
         ApplicationSubmissionService,
+        ApplicationSubmissionProfile,
+        ApplicationOwnerProfile,
         {
           provide: getRepositoryToken(ApplicationSubmission),
           useValue: mockApplicationSubmissionRepository,
@@ -35,10 +42,6 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: getRepositoryToken(ApplicationStatus),
           useValue: mockApplicationStatusRepository,
-        },
-        {
-          provide: getMapperToken(),
-          useValue: mapper,
         },
       ],
     }).compile();
@@ -74,15 +77,6 @@ describe('ApplicationSubmissionService', () => {
             document: true,
           },
         },
-        parcels: {
-          owners: {
-            type: true,
-          },
-          certificateOfTitle: {
-            document: true,
-          },
-          ownershipType: true,
-        },
         owners: {
           type: true,
         },
@@ -91,15 +85,19 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should properly map to dto', async () => {
-    mapper.mapAsync.mockResolvedValue({} as any);
-
-    const fakeSubmission = createMock<ApplicationSubmission>();
-    fakeSubmission.owners = [new ApplicationOwner()];
+    const fakeSubmission = createMock<ApplicationSubmission>({
+      primaryContactOwnerUuid: 'uuid',
+    });
+    fakeSubmission.owners = [
+      new ApplicationOwner({
+        uuid: 'uuid',
+      }),
+    ];
 
     const result = await service.mapToDto(fakeSubmission);
 
-    expect(mapper.mapAsync).toBeCalledTimes(2);
     expect(result).toBeDefined();
+    expect(result.primaryContact).toBeDefined();
   });
 
   it('should successfully retrieve status from repo', async () => {

@@ -7,6 +7,7 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import { CodeService } from '../../code/code.service';
 import { DOCUMENT_TYPE } from './application-document-code.entity';
 import { ApplicationDocumentController } from './application-document.controller';
@@ -16,6 +17,7 @@ import { ApplicationDocumentService } from './application-document.service';
 describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockParcelService: DeepMocked<ApplicationParcelService>;
 
   const mockDocument = {
     document: {
@@ -26,7 +28,8 @@ describe('ApplicationDocumentController', () => {
   } as ApplicationDocument;
 
   beforeEach(async () => {
-    appDocumentService = createMock<ApplicationDocumentService>();
+    appDocumentService = createMock();
+    mockParcelService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -44,6 +47,10 @@ describe('ApplicationDocumentController', () => {
         {
           provide: ApplicationDocumentService,
           useValue: appDocumentService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockParcelService,
         },
         {
           provide: ClsService,

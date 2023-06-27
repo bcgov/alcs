@@ -139,4 +139,8 @@ export class ApplicationParcel extends Base {
     onDelete: 'SET NULL',
   })
   certificateOfTitle?: ApplicationDocument;
+
+  @AutoMap(() => String)
+  @Column({ nullable: true })
+  certificateOfTitleUuid: string | null;
 }

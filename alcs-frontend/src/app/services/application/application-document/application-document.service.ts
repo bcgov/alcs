@@ -137,6 +137,25 @@ export class ApplicationDocumentService {
     return res;
   }
 
+  async attachCertificateOfTitle(fileNumber: string, parcelUuid: string, createDto: CreateDocumentDto) {
+    const file = createDto.file;
+    const isValidSize = verifyFileSize(file, this.toastService);
+    if (!isValidSize) {
+      return;
+    }
+
+    let formData: FormData = new FormData();
+    formData.append('documentType', createDto.typeCode);
+    formData.append('source', createDto.source);
+    formData.append('visibilityFlags', createDto.visibilityFlags.join(', '));
+    formData.append('fileName', createDto.fileName);
+    formData.append('file', file, file.name);
+    formData.append('parcelUuid', parcelUuid);
+    const res = await firstValueFrom(this.http.post(`${this.url}/application/${fileNumber}/CERT`, formData));
+    this.toastService.showSuccessToast('Review document uploaded');
+    return res;
+  }
+
   async updateSort(sortOrder: { uuid: string; order: number }[]) {
     try {
       await firstValueFrom(this.http.post<ApplicationDocumentTypeDto[]>(`${this.url}/sort`, sortOrder));

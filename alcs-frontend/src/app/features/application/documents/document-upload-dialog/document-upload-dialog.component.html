@@ -1,5 +1,6 @@
 <div mat-dialog-title>
   <h4>{{ title }} Document</h4>
+  <span class='superseded-warning' *ngIf='showCertificateOfTitleWarning'>Superseded - Not associated with Applicant Submission in Portal</span>
 </div>
 <div mat-dialog-content>
   <form class="form" [formGroup]="form">
@@ -31,7 +32,9 @@
           <a (click)="openExistingFile()">{{ existingFile.name }}</a>
           &nbsp;({{ existingFile.size | filesize }})
         </div>
-        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button><mat-icon>close</mat-icon>Remove</button>
+        <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
+          <mat-icon>close</mat-icon>Remove
+        </button>
       </div>
     </div>
 
@@ -54,6 +57,7 @@
         [(ngModel)]="documentTypeAhead"
         [searchFn]="filterDocumentTypes"
         (change)="onDocTypeSelected($event)"
+        appendTo="body"
       >
       </ng-select>
     </div>
@@ -62,6 +66,18 @@
         <mat-label>Source</mat-label>
         <mat-select [formControl]="source">
           <mat-option *ngFor="let source of documentSources" [value]="source">{{ source }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Associated Parcel</mat-label>
+        <mat-select [formControl]="parcelId">
+          <mat-option *ngFor="let parcel of selectableParcels" [value]="parcel.uuid">
+            #{{ parcel.index + 1 }} PID:
+            <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+            <span *ngIf="!parcel.pid">No Data</span></mat-option
+          >
         </mat-select>
       </mat-form-field>
     </div>

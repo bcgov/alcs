@@ -12,6 +12,7 @@ import {
   DOCUMENT_SYSTEM,
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
+import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -20,23 +21,26 @@ import {
 })
 export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
+  DOCUMENT_TYPE = DOCUMENT_TYPE;
 
   title = 'Create';
   isDirty = false;
   isSaving = false;
   allowsFileEdit = true;
-  sources = DOCUMENT_TYPE;
   documentTypeAhead: string | undefined = undefined;
 
   name = new FormControl<string>('', [Validators.required]);
   type = new FormControl<string | undefined>(undefined, [Validators.required]);
   source = new FormControl<string>('', [Validators.required]);
 
+  parcelId = new FormControl<string | null>(null);
+
   visibleToInternal = new FormControl<boolean>(false, [Validators.required]);
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
 
   documentTypes: ApplicationDocumentTypeDto[] = [];
   documentSources = Object.values(DOCUMENT_SOURCE);
+  selectableParcels: { uuid: string; index: number; pid?: string }[] = [];
 
   form = new FormGroup({
     name: this.name,
@@ -44,15 +48,18 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     source: this.source,
     visibleToInternal: this.visibleToInternal,
     visibleToPublic: this.visibleToPublic,
+    parcelId: this.parcelId,
   });
 
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
+  showCertificateOfTitleWarning = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { fileId: string; existingDocument?: ApplicationDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private parcelService: ApplicationParcelService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +69,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       const document = this.data.existingDocument;
       this.title = 'Edit';
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
+      if (document.type?.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+        this.prepareCertificateOfTitleUpload(document.uuid);
+      }
       this.form.patchValue({
         name: document.fileName,
         type: document.type?.code,
@@ -90,19 +100,29 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('P');
     }
 
+    const parcelId = await this.parcelId.value;
+
     const dto = {
-      file: this.pendingFile,
       fileName: this.name.getRawValue()!,
       source: this.source.getRawValue() as DOCUMENT_SOURCE,
       typeCode: this.type.getRawValue() as DOCUMENT_TYPE,
       visibilityFlags,
     };
+
+    const file = this.pendingFile;
     this.isSaving = true;
-    if (this.data.existingDocument) {
+    if (parcelId && file && this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.applicationDocumentService.attachCertificateOfTitle(this.data.fileId, parcelId, {
+        ...dto,
+        file,
+      });
+    } else if (this.data.existingDocument) {
       await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
-    } else if (dto.file !== undefined) {
-      // @ts-ignore File is checked above to not be undefined, typescript still thinks it might be undefined
-      await this.applicationDocumentService.upload(this.data.fileId, dto);
+    } else if (file !== undefined) {
+      await this.applicationDocumentService.upload(this.data.fileId, {
+        ...dto,
+        file,
+      });
     }
     this.dialog.close(true);
     this.isSaving = false;
@@ -127,11 +147,45 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     );
   }
 
-  onDocTypeSelected($event?: ApplicationDocumentTypeDto) {
+  async prepareCertificateOfTitleUpload(uuid?: string) {
+    const parcels = await this.parcelService.fetchParcels(this.data.fileId);
+    if (parcels.length > 0) {
+      this.parcelId.setValidators([Validators.required]);
+      this.parcelId.updateValueAndValidity();
+
+      this.visibleToInternal.setValue(true);
+      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+
+      const selectedParcel = parcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
+      if (selectedParcel) {
+        this.parcelId.setValue(selectedParcel.uuid);
+      } else if (uuid) {
+        this.showCertificateOfTitleWarning = true;
+      }
+
+      this.selectableParcels = parcels
+        .filter((parcel) => parcel.parcelType === 'application')
+        .map((parcel, index) => ({
+          uuid: parcel.uuid,
+          pid: parcel.pid,
+          index: index,
+        }));
+    }
+  }
+
+  async onDocTypeSelected($event?: ApplicationDocumentTypeDto) {
     if ($event) {
       this.type.setValue($event.code);
     } else {
       this.type.setValue(undefined);
+    }
+
+    if (this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.prepareCertificateOfTitleUpload();
+    } else {
+      this.parcelId.setValue(null);
+      this.parcelId.setValidators([]);
+      this.parcelId.updateValueAndValidity();
     }
   }
 

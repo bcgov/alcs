@@ -30,15 +30,6 @@ export class ApplicationSubmissionService {
             document: true,
           },
         },
-        parcels: {
-          owners: {
-            type: true,
-          },
-          certificateOfTitle: {
-            document: true,
-          },
-          ownershipType: true,
-        },
         owners: {
           type: true,
         },

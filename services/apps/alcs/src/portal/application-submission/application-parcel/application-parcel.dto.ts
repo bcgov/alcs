@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Column } from 'typeorm';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
@@ -19,6 +20,9 @@ export class ApplicationParcelDto {
 
   @AutoMap()
   applicationSubmissionUuid: string;
+
+  @AutoMap(() => String)
+  certificateOfTitleUuid: string | null;
 
   @AutoMap(() => String)
   pid?: string | null;
