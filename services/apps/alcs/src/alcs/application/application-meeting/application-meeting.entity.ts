@@ -51,7 +51,7 @@ export class ApplicationMeeting extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid', nullable: true })
-  reportPauseUuid: string;
+  reportPauseUuid: string | null;
 
   @AutoMap()
   @OneToOne(() => ApplicationPaused, {
