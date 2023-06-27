@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
 import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
@@ -18,12 +19,14 @@ describe('ApplicationSubmissionService', () => {
   let mockApplicationStatusRepository: DeepMocked<
     Repository<ApplicationStatus>
   >;
+  let mockAppParcelRepo: DeepMocked<Repository<ApplicationParcel>>;
   let mapper: DeepMocked<Mapper>;
 
   beforeEach(async () => {
     mockApplicationSubmissionRepository = createMock();
     mapper = createMock();
     mockApplicationStatusRepository = createMock();
+    mockAppParcelRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -35,6 +38,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: getRepositoryToken(ApplicationStatus),
           useValue: mockApplicationStatusRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationParcel),
+          useValue: mockAppParcelRepo,
         },
         {
           provide: getMapperToken(),
@@ -73,15 +80,6 @@ describe('ApplicationSubmissionService', () => {
           documents: {
             document: true,
           },
-        },
-        parcels: {
-          owners: {
-            type: true,
-          },
-          certificateOfTitle: {
-            document: true,
-          },
-          ownershipType: true,
         },
         owners: {
           type: true,

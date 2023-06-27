@@ -95,4 +95,36 @@ describe('DocumentService', () => {
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(res).toEqual(mockDoc);
   });
+
+  it('should call repository save on update Document', async () => {
+    const mockDoc = new Document({
+      mimeType: 'mimeType',
+      fileKey: 'fileKey',
+      fileName: 'fileName',
+      uploadedBy: null,
+      source: DOCUMENT_SOURCE.APPLICANT,
+    });
+    mockRepository.save.mockResolvedValue(mockDoc);
+    await service.update(mockDoc, {
+      source: DOCUMENT_SOURCE.APPLICANT,
+      fileName: 'file',
+    });
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to repo for get', async () => {
+    const mockDoc = new Document({
+      mimeType: 'mimeType',
+      fileKey: 'fileKey',
+      fileName: 'fileName',
+      uploadedBy: null,
+      source: DOCUMENT_SOURCE.APPLICANT,
+    });
+    mockRepository.findOneOrFail.mockResolvedValue(mockDoc);
+
+    const res = await service.getDocument('');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(res).toEqual(mockDoc);
+  });
 });

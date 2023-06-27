@@ -73,6 +73,6 @@ const routes: Routes = [
     TurProposalComponent,
     NaruProposalComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
+  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
 export class ApplicationModule {}

@@ -28,6 +28,26 @@ describe('ApplicationDetailsComponent', () => {
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
     component.submission = {
+      applicant: '',
+      canEdit: false,
+      canReview: false,
+      canView: false,
+      createdAt: '',
+      fileNumber: '',
+      lastStatusUpdate: 0,
+      localGovernmentUuid: '',
+      owners: [],
+      soilAlreadyRemovedArea: null,
+      soilAlreadyRemovedAverageDepth: null,
+      soilAlreadyRemovedMaximumDepth: null,
+      soilAlreadyRemovedVolume: null,
+      soilToPlaceArea: null,
+      soilToPlaceVolume: null,
+      soilToRemoveAverageDepth: null,
+      soilToRemoveMaximumDepth: null,
+      type: '',
+      updatedAt: '',
+      uuid: '',
       naruExistingStructures: null,
       naruFillOrigin: null,
       naruFillType: null,
@@ -88,9 +108,6 @@ describe('ApplicationDetailsComponent', () => {
       turPurpose: null,
       turReduceNegativeImpacts: null,
       turTotalCorridorArea: null,
-      parcels: [],
-      otherParcels: [],
-      documents: [],
       primaryContact: {
         type: {
           code: '',

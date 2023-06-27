@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
-import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
+import { ApplicationParcelService } from '../../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDto, PARCEL_OWNERSHIP_TYPE } from '../../../../../services/application/application.dto';
 
 @Component({
@@ -9,7 +9,7 @@ import { ApplicationSubmissionDto, PARCEL_OWNERSHIP_TYPE } from '../../../../../
   templateUrl: './parcel.component.html',
   styleUrls: ['./parcel.component.scss'],
 })
-export class ParcelComponent implements OnInit {
+export class ParcelComponent implements OnInit, OnChanges {
   @Input() application!: ApplicationSubmissionDto;
   @Input() files: ApplicationDocumentDto[] = [];
   @Input() parcelType!: string;
@@ -22,21 +22,12 @@ export class ParcelComponent implements OnInit {
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
-  constructor(private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(
+    private applicationDocumentService: ApplicationDocumentService,
+    private parcelService: ApplicationParcelService
+  ) {}
 
   ngOnInit(): void {
-    this.parcels = this.application.parcels
-      .filter((e) => e.parcelType === this.parcelType)
-      .map((parcel) => {
-        return {
-          ...parcel,
-          owners: parcel.owners.map((owner) => ({
-            ...owner,
-            corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
-          })),
-        };
-      });
-
     if (this.parcelType === 'other') {
       this.pageTitle = 'Other Parcels in the Community';
       this.showCertificateOfTitle = false;
@@ -48,5 +39,24 @@ export class ParcelComponent implements OnInit {
     if (file) {
       await this.applicationDocumentService.download(file.uuid, file.fileName);
     }
+  }
+
+  async loadParcels(fileNumber: string) {
+    const parcels = await this.parcelService.fetchParcels(fileNumber);
+    this.parcels = parcels
+      .filter((e) => e.parcelType === this.parcelType)
+      .map((parcel) => {
+        return {
+          ...parcel,
+          owners: parcel.owners.map((owner) => ({
+            ...owner,
+            corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
+          })),
+        };
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadParcels(this.application.fileNumber);
   }
 }

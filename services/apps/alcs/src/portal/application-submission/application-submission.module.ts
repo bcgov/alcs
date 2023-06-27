@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../../alcs/application/application.module';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
@@ -34,10 +34,10 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
       ApplicationOwnerType,
       NaruSubtype,
     ]),
-    ApplicationModule,
+    forwardRef(() => ApplicationModule),
     AuthorizationModule,
-    DocumentModule,
-    PdfGenerationModule,
+    forwardRef(() => DocumentModule),
+    forwardRef(() => PdfGenerationModule),
   ],
   providers: [
     ApplicationSubmissionService,

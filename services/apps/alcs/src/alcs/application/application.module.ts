@@ -1,14 +1,17 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
+import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -24,6 +27,7 @@ import { ApplicationDocumentService } from './application-document/application-d
 import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
+import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
 import { ApplicationSubmissionReviewController } from './application-submission-review/application-submission-review.controller';
@@ -45,6 +49,7 @@ import { ApplicationService } from './application.service';
       ApplicationDocument,
       ApplicationDocumentCode,
       ApplicationLocalGovernment,
+      ApplicationParcel,
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
@@ -55,6 +60,7 @@ import { ApplicationService } from './application.service';
     CardModule,
     CodeModule,
     FileNumberModule,
+    forwardRef(() => ApplicationSubmissionModule),
   ],
   providers: [
     ApplicationService,
@@ -69,6 +75,7 @@ import { ApplicationService } from './application.service';
     ApplicationLocalGovernmentService,
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
+    ApplicationSubmissionProfile,
   ],
   controllers: [
     ApplicationController,
@@ -77,6 +84,7 @@ import { ApplicationService } from './application.service';
     ApplicationLocalGovernmentController,
     ApplicationSubmissionController,
     ApplicationSubmissionReviewController,
+    ApplicationParcelController,
   ],
   exports: [
     ApplicationService,
