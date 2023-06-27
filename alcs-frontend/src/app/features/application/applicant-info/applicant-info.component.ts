@@ -3,7 +3,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
-import { ApplicationDto, ApplicationSubmissionDto } from '../../../services/application/application.dto';
+import {
+  APPLICATION_SYSTEM_SOURCE_TYPES,
+  ApplicationDto,
+  ApplicationSubmissionDto,
+} from '../../../services/application/application.dto';
 
 @Component({
   selector: 'app-applicant-info',
@@ -17,6 +21,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: ApplicationDto | undefined;
   submission?: ApplicationSubmissionDto = undefined;
+  isSubmitted = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -30,6 +35,8 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = application.fileNumber;
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
+        this.isSubmitted =
+          application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT ? !!application.dateSubmittedToAlc : true;
       }
     });
   }

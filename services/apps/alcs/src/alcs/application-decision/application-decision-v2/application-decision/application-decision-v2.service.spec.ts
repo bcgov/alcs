@@ -13,6 +13,7 @@ import {
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
 import { DocumentService } from '../../../../document/document.service';
+import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
@@ -56,6 +57,7 @@ describe('ApplicationDecisionV2Service', () => {
   >;
   let mockDecisionComponentService: DeepMocked<ApplicationDecisionComponentService>;
   let mockDecisionConditionService: DeepMocked<ApplicationDecisionConditionService>;
+  let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
 
   let mockApplication;
   let mockDecision;
@@ -76,6 +78,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
     mockLinkedResolutionOutcomeRepository = createMock();
+    mockNaruSubtypeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -108,6 +111,10 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: getRepositoryToken(LinkedResolutionOutcomeType),
           useValue: mockLinkedResolutionOutcomeRepository,
+        },
+        {
+          provide: getRepositoryToken(NaruSubtype),
+          useValue: mockNaruSubtypeRepository,
         },
         {
           provide: ApplicationService,
@@ -161,7 +168,7 @@ describe('ApplicationDecisionV2Service', () => {
     mockLinkedResolutionOutcomeRepository.find.mockResolvedValue([]);
 
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
-    mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
+    mockNaruSubtypeRepository.find.mockResolvedValue([]);
 
     mockDecisionComponentService.createOrUpdate.mockResolvedValue([]);
   });

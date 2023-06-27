@@ -48,12 +48,12 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
 -- Find instances of multi-component applications 
    multi_app AS (    
     SELECT 
-            atl.application_id AS app_id
+         atl.application_id AS app_id
     FROM application_type_lookup atl
         GROUP BY atl.application_id 
         HAVING count(application_id) > 1
-        ),
- duplicate_ids as (
+),
+ duplicate_ids AS (
     SELECT
         alr_application_id,
         alr_appl_component_id,

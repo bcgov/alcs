@@ -26,6 +26,8 @@ describe('ApplicationSubmissionService', () => {
     naruSubtype: null,
     naruToPlaceArea: null,
     naruToPlaceAverageDepth: null,
+    naruSleepingUnits: null,
+    naruAgriTourism: null,
     naruToPlaceMaximumDepth: null,
     naruToPlaceVolume: null,
     naruWillImportFill: null,

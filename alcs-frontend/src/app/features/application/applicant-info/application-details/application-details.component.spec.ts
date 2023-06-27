@@ -27,7 +27,7 @@ describe('ApplicationDetailsComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
-    component.submittedApplication = {
+    component.submission = {
       naruExistingStructures: null,
       naruFillOrigin: null,
       naruFillType: null,
@@ -44,6 +44,8 @@ describe('ApplicationDetailsComponent', () => {
       naruToPlaceMaximumDepth: null,
       naruToPlaceVolume: null,
       naruWillImportFill: null,
+      naruAgriTourism: null,
+      naruSleepingUnits: null,
       nfuAgricultureSupport: null,
       nfuFillOriginDescription: null,
       nfuFillTypeDescription: null,

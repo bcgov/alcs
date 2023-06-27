@@ -21,10 +21,12 @@ import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { NaruProposalComponent } from './proposal/naru/naru.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
+import { TurProposalComponent } from './proposal/tur/tur.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -68,6 +70,8 @@ const routes: Routes = [
     NfuProposalComponent,
     SubdProposalComponent,
     SoilProposalComponent,
+    TurProposalComponent,
+    NaruProposalComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })

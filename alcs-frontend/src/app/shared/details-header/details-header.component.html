@@ -40,7 +40,10 @@
   <div *ngIf="_application" class="sub-heading">
     <div>
       <div class="subheading2">Local Government:</div>
-      <div class="body-text">{{ _application.localGovernment.name }}</div>
+      <div class="body-text">
+        {{ _application.localGovernment?.name }}
+        <app-no-data *ngIf="!_application.localGovernment"></app-no-data>
+      </div>
     </div>
     <div *ngIf="!_application.hasOwnProperty('decisionDate')">
       <div class="subheading2">{{ days }}:</div>

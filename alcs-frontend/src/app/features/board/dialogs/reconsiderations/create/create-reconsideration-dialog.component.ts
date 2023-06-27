@@ -123,9 +123,9 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
 
     this.createForm.patchValue({
       applicant: application.applicant,
-      region: application.region.code,
+      region: application.region?.code,
       applicationType: application.type.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
+      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment?.uuid)?.uuid ?? null,
     });
 
     if (!application.decisionDate) {

@@ -25,6 +25,8 @@ import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dial
 import { DecisionComponent } from './decision.component';
 import { PfrsInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pfrs-input/pfrs-input.component';
 import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
+import { NaruComponent } from './decision-v2/decision-component/naru/naru.component';
+import { NaruInputComponent } from './decision-v2/decision-input/decision-components/decision-component/naru-input/naru-input.component';
 
 export const decisionChildRoutes = [
   {
@@ -72,6 +74,8 @@ export const decisionChildRoutes = [
     RosoInputComponent,
     PfrsInputComponent,
     PfrsComponent,
+    NaruComponent,
+    NaruInputComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })
