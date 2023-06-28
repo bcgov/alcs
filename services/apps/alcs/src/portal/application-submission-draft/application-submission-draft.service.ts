@@ -40,6 +40,7 @@ export class ApplicationSubmissionDraftService {
         isDraft: true,
       },
       relations: {
+        naruSubtype: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -61,6 +62,7 @@ export class ApplicationSubmissionDraftService {
           isDraft: false,
         },
         relations: {
+          naruSubtype: true,
           status: true,
           owners: {
             type: true,

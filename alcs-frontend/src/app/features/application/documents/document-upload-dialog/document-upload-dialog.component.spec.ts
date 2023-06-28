@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
 
 import { DocumentUploadDialogComponent } from './document-upload-dialog.component';
 
@@ -13,10 +14,12 @@ describe('DocumentUploadDialogComponent', () => {
 
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockParcelService: DeepMocked<ApplicationParcelService>;
+  let mockSubmissionService: DeepMocked<ApplicationSubmissionService>;
 
   beforeEach(async () => {
     mockAppDocService = createMock();
     mockParcelService = createMock();
+    mockSubmissionService = createMock();
 
     const mockDialogRef = {
       close: jest.fn(),
@@ -35,6 +38,10 @@ describe('DocumentUploadDialogComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockParcelService,
+        },
+        {
+          provide: ApplicationSubmissionService,
+          useValue: mockSubmissionService,
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: {} },

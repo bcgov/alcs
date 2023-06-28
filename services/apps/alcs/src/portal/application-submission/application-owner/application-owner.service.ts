@@ -28,22 +28,6 @@ export class ApplicationOwnerService {
     private applicationDocumentService: ApplicationDocumentService,
   ) {}
 
-  async fetchBySubmissionUuid(uuid: string) {
-    return this.repository.find({
-      where: {
-        applicationSubmission: {
-          uuid,
-        },
-      },
-      relations: {
-        type: true,
-        corporateSummary: {
-          document: true,
-        },
-      },
-    });
-  }
-
   async fetchByApplicationFileId(fileId: string) {
     return this.repository.find({
       where: {
@@ -102,6 +86,10 @@ export class ApplicationOwnerService {
     );
 
     await this.repository.save(existingOwner);
+  }
+
+  async save(owner: ApplicationOwner) {
+    await this.repository.save(owner);
   }
 
   async removeFromParcel(uuid: string, parcelUuid: string) {

@@ -60,6 +60,7 @@ export interface ApplicationReviewDto {
 }
 
 export interface SubmittedApplicationOwnerDto {
+  uuid: string;
   displayName: string;
   firstName: string;
   lastName: string;
@@ -67,17 +68,7 @@ export interface SubmittedApplicationOwnerDto {
   phoneNumber: string;
   email: string;
   type: BaseCodeDto;
-  corporateSummaryDocumentUuid?: string;
-}
-
-export interface ApplicationParcelDocumentDto {
-  type: string;
-  uuid: string;
-  fileName: string;
-  fileSize: number;
-  uploadedBy?: string;
-  uploadedAt: number;
-  documentUuid: string;
+  corporateSummaryUuid?: string;
 }
 
 export interface ApplicationParcelDto {

@@ -7,7 +7,12 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../../common/automapper/application.automapper.profile';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
+import { Document } from '../../../document/document.entity';
+import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
+import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
+import { User } from '../../../user/user.entity';
 import { CodeService } from '../../code/code.service';
 import { DOCUMENT_TYPE } from './application-document-code.entity';
 import { ApplicationDocumentController } from './application-document.controller';
@@ -18,18 +23,20 @@ describe('ApplicationDocumentController', () => {
   let controller: ApplicationDocumentController;
   let appDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockParcelService: DeepMocked<ApplicationParcelService>;
+  let mockOwnerService: DeepMocked<ApplicationOwnerService>;
 
-  const mockDocument = {
-    document: {
+  const mockDocument = new ApplicationDocument({
+    document: new Document({
       mimeType: 'mimeType',
-      uploadedBy: {},
+      uploadedBy: new User(),
       uploadedAt: new Date(),
-    },
-  } as ApplicationDocument;
+    }),
+  });
 
   beforeEach(async () => {
     appDocumentService = createMock();
     mockParcelService = createMock();
+    mockOwnerService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,6 +58,10 @@ describe('ApplicationDocumentController', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockParcelService,
+        },
+        {
+          provide: ApplicationOwnerService,
+          useValue: mockOwnerService,
         },
         {
           provide: ClsService,
@@ -195,5 +206,105 @@ describe('ApplicationDocumentController', () => {
     await controller.sortDocuments([]);
 
     expect(appDocumentService.setSorting).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the certificate of title on the supplied parcel', async () => {
+    const mockFile = {};
+    const mockUser = {};
+
+    appDocumentService.attachDocument.mockResolvedValue(
+      new ApplicationDocument({
+        ...mockDocument,
+        typeCode: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+      }),
+    );
+    mockParcelService.getOneOrFail.mockResolvedValue(new ApplicationParcel());
+    mockParcelService.setCertificateOfTitle.mockResolvedValue(
+      new ApplicationParcel(),
+    );
+
+    const res = await controller.attachDocument('fileNumber', {
+      isMultipart: () => true,
+      body: {
+        documentType: {
+          value: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        },
+        fileName: {
+          value: 'file',
+        },
+        source: {
+          value: DOCUMENT_SOURCE.APPLICANT,
+        },
+        visibilityFlags: {
+          value: '',
+        },
+        parcelUuid: {
+          value: 'parcel-uuid',
+        },
+        file: mockFile,
+      },
+      user: {
+        entity: mockUser,
+      },
+    });
+
+    expect(res.mimeType).toEqual(mockDocument.document.mimeType);
+
+    expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
+    const callData = appDocumentService.attachDocument.mock.calls[0][0];
+    expect(callData.fileName).toEqual('file');
+    expect(callData.file).toEqual(mockFile);
+    expect(callData.user).toEqual(mockUser);
+    expect(mockParcelService.getOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockParcelService.setCertificateOfTitle).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the corporate summary on the supplied owner', async () => {
+    const mockFile = {};
+    const mockUser = {};
+
+    appDocumentService.attachDocument.mockResolvedValue(
+      new ApplicationDocument({
+        ...mockDocument,
+        typeCode: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+      }),
+    );
+    mockOwnerService.getOwner.mockResolvedValue(new ApplicationOwner());
+    mockOwnerService.save.mockResolvedValue();
+
+    const res = await controller.attachDocument('fileNumber', {
+      isMultipart: () => true,
+      body: {
+        documentType: {
+          value: DOCUMENT_TYPE.CORPORATE_SUMMARY,
+        },
+        fileName: {
+          value: 'file',
+        },
+        source: {
+          value: DOCUMENT_SOURCE.APPLICANT,
+        },
+        visibilityFlags: {
+          value: '',
+        },
+        ownerUuid: {
+          value: 'parcel-uuid',
+        },
+        file: mockFile,
+      },
+      user: {
+        entity: mockUser,
+      },
+    });
+
+    expect(res.mimeType).toEqual(mockDocument.document.mimeType);
+
+    expect(appDocumentService.attachDocument).toHaveBeenCalledTimes(1);
+    const callData = appDocumentService.attachDocument.mock.calls[0][0];
+    expect(callData.fileName).toEqual('file');
+    expect(callData.file).toEqual(mockFile);
+    expect(callData.user).toEqual(mockUser);
+    expect(mockOwnerService.getOwner).toHaveBeenCalledTimes(1);
+    expect(mockOwnerService.save).toHaveBeenCalledTimes(1);
   });
 });

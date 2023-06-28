@@ -202,6 +202,14 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.find).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through for save', async () => {
+    mockRepo.save.mockResolvedValue(new ApplicationOwner());
+
+    await service.save(new ApplicationOwner());
+
+    expect(mockRepo.save).toHaveBeenCalledTimes(1);
+  });
+
   it('should call update for the application with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [

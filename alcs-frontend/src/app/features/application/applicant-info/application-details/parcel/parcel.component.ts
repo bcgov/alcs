@@ -43,17 +43,7 @@ export class ParcelComponent implements OnInit, OnChanges {
 
   async loadParcels(fileNumber: string) {
     const parcels = await this.parcelService.fetchParcels(fileNumber);
-    this.parcels = parcels
-      .filter((e) => e.parcelType === this.parcelType)
-      .map((parcel) => {
-        return {
-          ...parcel,
-          owners: parcel.owners.map((owner) => ({
-            ...owner,
-            corporateSummary: this.files.find((file) => file.documentUuid === owner.corporateSummaryDocumentUuid),
-          })),
-        };
-      });
+    this.parcels = parcels.filter((e) => e.parcelType === this.parcelType);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
