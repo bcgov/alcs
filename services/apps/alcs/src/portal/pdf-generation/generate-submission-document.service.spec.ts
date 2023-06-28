@@ -194,7 +194,9 @@ describe('GenerateSubmissionDocumentService', () => {
     const userEntity = new User({
       name: user.user.entity,
     });
-    mockApplicationDocumentService.update.mockResolvedValue();
+    mockApplicationDocumentService.update.mockResolvedValue(
+      new ApplicationDocument(),
+    );
     mockApplicationDocumentService.attachDocumentAsBuffer.mockResolvedValue(
       new ApplicationDocument(),
     );
