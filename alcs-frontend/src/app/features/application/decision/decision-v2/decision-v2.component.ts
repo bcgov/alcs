@@ -215,11 +215,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  onNavigateToConditions() {
-    // some other ticket
-    return false;
-  }
-
   ngOnDestroy(): void {
     this.decisionService.clearDecisions();
     this.$destroy.next();
