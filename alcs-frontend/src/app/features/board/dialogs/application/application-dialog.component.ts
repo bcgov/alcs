@@ -46,7 +46,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
   populateData(application: ApplicationDto) {
     this.application = application;
     this.populateCardData(application.card!);
-    this.selectedRegion = application.region.code;
+    this.selectedRegion = application.region?.code;
     this.cardTitle = `${application.fileNumber} (${application.applicant})`;
   }
 

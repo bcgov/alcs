@@ -99,6 +99,63 @@
     </div>
   </ng-container>
 
+  <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
+    <div class="subheading2 grid-1">
+      What is the total floor area (m<sup>2</sup>) of the proposed accommodation?
+      <app-updated-banner *ngIf="updatedFields.includes('naruFloorArea')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruFloorArea }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      How many "sleeping units" in total are proposed?
+      <app-updated-banner *ngIf="updatedFields.includes('naruSleepingUnits')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruSleepingUnits }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruSleepingUnits"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
+      <app-updated-banner *ngIf="updatedFields.includes('naruResidenceNecessity')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruResidenceNecessity }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe the rationale for the proposed location of the tourism accommodation.
+      <app-updated-banner *ngIf="updatedFields.includes('naruLocationRationale')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruLocationRationale }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruLocationRationale"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
+      accommodation.
+      <app-updated-banner *ngIf="updatedFields.includes('naruInfrastructure')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruInfrastructure }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruInfrastructure"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe any agri-tourism that is currently taking place on the property.
+      <app-updated-banner *ngIf="updatedFields.includes('naruAgriTourism')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruAgriTourism }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruAgriTourism"></app-no-data>
+    </div>
+  </ng-container>
+
   <div class="subheading2 grid-1">
     Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
     located on the property.

@@ -1,7 +1,7 @@
 import { EventEmitter, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -52,6 +52,7 @@ describe('ReconsiderationDialogComponent', () => {
       } as ApplicationRegionDto,
       localGovernment: {} as ApplicationLocalGovernmentDto,
       decisionMeetings: [],
+      source: 'fake',
     },
     card: {
       status: {

@@ -2,7 +2,6 @@ import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
-import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 
 export enum APPLICATION_SYSTEM_SOURCE_TYPES {
@@ -61,6 +60,7 @@ export interface ApplicationReviewDto {
 }
 
 export interface SubmittedApplicationOwnerDto {
+  uuid: string;
   displayName: string;
   firstName: string;
   lastName: string;
@@ -68,73 +68,78 @@ export interface SubmittedApplicationOwnerDto {
   phoneNumber: string;
   email: string;
   type: BaseCodeDto;
-  corporateSummaryDocumentUuid?: string;
+  corporateSummaryUuid?: string;
 }
 
-export interface ApplicationParcelDocumentDto {
-  type: string;
+export interface ApplicationParcelDto {
   uuid: string;
-  fileName: string;
-  fileSize: number;
-  uploadedBy?: string;
-  uploadedAt: number;
-  documentUuid: string;
-}
-
-export interface SubmittedApplicationParcelDto {
   pid?: string;
   pin?: string;
   legalDescription: string;
   mapAreaHectares: string;
   purchasedDate?: number;
-  isFarm: boolean;
-  ownershipType: string;
-  crownLandOwnerType: string;
-  parcelType: string;
-  documentUuids: string[];
+  isFarm?: boolean;
+  ownershipType?: string;
+  crownLandOwnerType?: string;
+  parcelType?: string;
+  certificateOfTitleUuid?: string;
   owners: SubmittedApplicationOwnerDto[];
-  documents: ApplicationParcelDocumentDto[];
 }
 
 export interface ApplicationSubmissionDto {
-  parcels: SubmittedApplicationParcelDto[];
-  otherParcels: SubmittedApplicationParcelDto[];
-  documents: ApplicationDocumentDto[];
-  hasOtherParcelsInCommunity?: boolean | null;
-  primaryContact: SubmittedApplicationOwnerDto;
-  parcelsAgricultureDescription: string;
-  parcelsAgricultureImprovementDescription: string;
-  parcelsNonAgricultureUseDescription: string;
-  northLandUseType: string;
-  northLandUseTypeDescription: string;
-  eastLandUseType: string;
-  eastLandUseTypeDescription: string;
-  southLandUseType: string;
-  southLandUseTypeDescription: string;
-  westLandUseType: string;
-  westLandUseTypeDescription: string;
-  typeCode: string;
+  uuid: string;
+  fileNumber: string;
+  createdAt: string;
+  updatedAt: string;
+  lastStatusUpdate: number;
+  applicant: string;
+  type: string;
 
-  //NFU Data
-  nfuHectares: string | null;
+  typeCode: string;
+  localGovernmentUuid: string;
+  canEdit: boolean;
+  canReview: boolean;
+  canView: boolean;
+  owners: SubmittedApplicationOwnerDto[];
+  hasOtherParcelsInCommunity?: boolean | null;
+  returnedComment?: string;
+
+  primaryContactOwnerUuid?: string;
+  primaryContact?: SubmittedApplicationOwnerDto;
+
+  parcelsAgricultureDescription?: string | null;
+  parcelsAgricultureImprovementDescription?: string | null;
+  parcelsNonAgricultureUseDescription?: string | null;
+  northLandUseType?: string | null;
+  northLandUseTypeDescription?: string | null;
+  eastLandUseType?: string | null;
+  eastLandUseTypeDescription?: string | null;
+  southLandUseType?: string | null;
+  southLandUseTypeDescription?: string | null;
+  westLandUseType?: string | null;
+  westLandUseTypeDescription?: string | null;
+
+  //NFU Specific Fields
+  nfuHectares: number | null;
   nfuPurpose: string | null;
   nfuOutsideLands: string | null;
   nfuAgricultureSupport: string | null;
   nfuWillImportFill: boolean | null;
-  nfuTotalFillPlacement: string | null;
-  nfuMaxFillDepth: string | null;
-  nfuFillVolume: string | null;
-  nfuProjectDurationAmount: string | null;
+  nfuTotalFillPlacement: number | null;
+  nfuMaxFillDepth: number | null;
+  nfuFillVolume: number | null;
+  nfuProjectDurationAmount: number | null;
   nfuProjectDurationUnit: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
 
-  //TUR Data
+  //TUR Fields
   turPurpose: string | null;
-  turOutsideLands: string | null;
   turAgriculturalActivities: string | null;
   turReduceNegativeImpacts: string | null;
-  turTotalCorridorArea: string | null;
+  turOutsideLands: string | null;
+  turTotalCorridorArea: number | null;
+  turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
   subdPurpose: string | null;
@@ -153,14 +158,14 @@ export interface ApplicationSubmissionDto {
   soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;
   soilToRemoveArea: number | null;
-  soilToRemoveMaximumDepth?: number | null;
-  soilToRemoveAverageDepth?: number | null;
-  soilAlreadyRemovedVolume?: number | null;
-  soilAlreadyRemovedArea?: number | null;
-  soilAlreadyRemovedMaximumDepth?: number | null;
-  soilAlreadyRemovedAverageDepth?: number | null;
-  soilToPlaceVolume?: number | null;
-  soilToPlaceArea?: number | null;
+  soilToRemoveMaximumDepth: number | null;
+  soilToRemoveAverageDepth: number | null;
+  soilAlreadyRemovedVolume: number | null;
+  soilAlreadyRemovedArea: number | null;
+  soilAlreadyRemovedMaximumDepth: number | null;
+  soilAlreadyRemovedAverageDepth: number | null;
+  soilToPlaceVolume: number | null;
+  soilToPlaceArea: number | null;
   soilToPlaceMaximumDepth: number | null;
   soilToPlaceAverageDepth: number | null;
   soilAlreadyPlacedVolume: number | null;
@@ -191,6 +196,8 @@ export interface ApplicationSubmissionDto {
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;
   naruToPlaceAverageDepth: number | null;
+  naruSleepingUnits: number | null;
+  naruAgriTourism: string | null;
 }
 
 export interface ApplicationDto {
@@ -209,8 +216,8 @@ export interface ApplicationDto {
   dateAcknowledgedComplete?: number;
   decisionDate?: number;
   notificationSentDate?: number;
-  region: ApplicationRegionDto;
-  localGovernment: ApplicationLocalGovernmentDto;
+  region?: ApplicationRegionDto;
+  localGovernment?: ApplicationLocalGovernmentDto;
   activeDays: number;
   pausedDays: number;
   paused: boolean;
@@ -218,7 +225,7 @@ export interface ApplicationDto {
   card?: CardDto;
   statusHistory: StatusHistory[];
   submittedApplication?: ApplicationSubmissionDto;
-  source: 'ALCS' | 'APPLICANT';
+  source: APPLICATION_SYSTEM_SOURCE_TYPES;
   alrArea?: number;
   agCap?: string;
   agCapSource?: string;
@@ -228,6 +235,7 @@ export interface ApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }
 
 export interface UpdateApplicationDto {
@@ -257,4 +265,5 @@ export interface UpdateApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }

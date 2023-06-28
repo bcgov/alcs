@@ -19,8 +19,8 @@ import {
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
 import {
+  AlcsApplicationSubmissionDto,
   ApplicationDto,
-  SubmittedApplicationDto,
 } from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
@@ -33,7 +33,6 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
 import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -88,6 +87,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.proposalEndDate,
           mapFrom((ad) => ad.proposalEndDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalExpiryDate,
+          mapFrom((ad) => ad.proposalExpiryDate?.getTime()),
         ),
         forMember(
           (ad) => ad.card,
@@ -198,25 +201,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationDto, Card);
 
-      createMap(
-        mapper,
-        ApplicationSubmission,
-        SubmittedApplicationDto,
-        forMember(
-          (a) => a.documents,
-          mapFrom((ad) => {
-            if (ad.application.documents) {
-              return this.mapper.mapArray(
-                ad.application.documents,
-                ApplicationDocument,
-                ApplicationDocumentDto,
-              );
-            } else {
-              return [];
-            }
-          }),
-        ),
-      );
       createMap(
         mapper,
         StaffJournal,

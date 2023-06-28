@@ -59,6 +59,39 @@
       {{ _applicationSubmission.naruInfrastructure }}
     </div>
   </ng-container>
+
+  <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
+    <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruFloorArea }}
+    </div>
+    <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruSleepingUnits }}
+    </div>
+    <div class="subheading2 grid-1">
+      Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruResidenceNecessity }}
+    </div>
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the tourism accommodation.</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruLocationRationale }}
+    </div>
+    <div class="subheading2 grid-1">
+      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
+      accommodation.
+    </div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruInfrastructure }}
+    </div>
+    <div class="subheading2 grid-1">Describe any agri-tourism that is currently taking place on the property.</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruAgriTourism }}
+    </div>
+  </ng-container>
+
   <div class="subheading2 grid-1">
     Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
     located on the property.
@@ -82,6 +115,16 @@
     {{ _applicationSubmission.naruWillImportFill ? 'Yes' : 'No' }}
   </div>
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
+    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruFillType }}
+    </div>
+
+    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruFillOrigin }}
+    </div>
+
     <div class="subheading1 full-width">Fill to be Placed</div>
     <div class="full-width soil-table">
       <div class="grid-1"><strong>Volume</strong></div>

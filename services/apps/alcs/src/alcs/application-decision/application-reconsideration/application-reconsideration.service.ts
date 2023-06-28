@@ -130,6 +130,10 @@ export class ApplicationReconsiderationService {
 
     const reconsideration = new ApplicationReconsideration({
       submittedDate: new Date(createDto.submittedDate),
+      description: createDto.description,
+      isIncorrectFalseInfo: createDto.isIncorrectFalseInfo,
+      isNewEvidence: createDto.isNewEvidence,
+      isNewProposal: createDto.isNewProposal,
       type,
     });
 
@@ -216,6 +220,11 @@ export class ApplicationReconsiderationService {
           updateDto.reconsideredDecisionUuids,
         );
     }
+
+    reconsideration.description = updateDto.description;
+    reconsideration.isIncorrectFalseInfo = updateDto.isIncorrectFalseInfo;
+    reconsideration.isNewEvidence = updateDto.isNewEvidence;
+    reconsideration.isNewProposal = updateDto.isNewProposal;
 
     const recon = await this.reconsiderationRepository.save(reconsideration);
 

@@ -39,7 +39,7 @@
           matTooltip="Active days: {{ cardData.activeDays }} "
         >
           <mat-icon title="Active Days">calendar_month</mat-icon>
-          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays <= cardData.maxActiveDays" class="center">
+          <span *ngIf="!cardData.maxActiveDays || cardData.activeDays < cardData.maxActiveDays" class="center">
             {{  cardData.activeDays }}
           </span>
           <span *ngIf="cardData.maxActiveDays && cardData.activeDays >= cardData.maxActiveDays" class="center">

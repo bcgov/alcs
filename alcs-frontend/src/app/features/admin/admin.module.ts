@@ -6,6 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { DecisionMakerDialogComponent } from './decision-maker/decision-maker-dialog/decision-maker-dialog.component';
+import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayDialogComponent } from './holiday/holiday-dialog/holiday-dialog.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentDialogComponent } from './local-government/dialog/local-government-dialog.component';
@@ -33,6 +35,8 @@ const routes: Routes = [
     NoiSubtypeComponent,
     NoiSubtypeDialogComponent,
     UnarchiveComponent,
+    DecisionMakerComponent,
+    DecisionMakerDialogComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })

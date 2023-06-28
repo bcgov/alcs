@@ -25,7 +25,7 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="full-grid-line toggle-group">
+      <div class="toggle-group">
         <mat-label class="toggle-label">Reconsideration Type *</mat-label>
         <mat-button-toggle-group
           id="reviewOutcome"
@@ -34,6 +34,30 @@
           (change)="onTypeReconsiderationChange($event.value)"
         >
           <mat-button-toggle *ngFor="let type of codes" value="{{ type.code }}">{{ type.label }}</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div>
+        <mat-label>New Evidence*</mat-label>
+        <mat-button-toggle-group required id="isNewEvidence" formControlName="isNewEvidence">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div>
+        <mat-label>Incorrect or False Info*</mat-label>
+        <mat-button-toggle-group required id="isIncorrectFalseInfo" formControlName="isIncorrectFalseInfo">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div>
+        <mat-label>New Proposal*</mat-label>
+        <mat-button-toggle-group required id="isNewProposal" formControlName="isNewProposal">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
 
@@ -46,15 +70,7 @@
         </mat-button-toggle-group>
       </div>
 
-      <mat-form-field
-        *ngIf="
-          typeControl.value === '33' &&
-          reviewOutcomeCodeControl.value !== 'PEN' &&
-          reviewOutcomeCodeControl.value !== null
-        "
-        appearance="outline"
-        class="date-picker full-grid-line"
-      >
+      <mat-form-field *ngIf="typeControl.value === '33'" appearance="outline" class="date-picker full-grid-line">
         <mat-label>
           Outcome Notification Date
           <mat-icon matTooltip="The date that the applicant/affected party is notified of the review outcome">
@@ -70,6 +86,11 @@
         />
         <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #reviewDatePicker type="date"> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-grid-line">
+        <mat-label>Request Description</mat-label>
+        <input matInput id="description" formControlName="description" type="text" />
       </mat-form-field>
     </div>
   </mat-dialog-content>

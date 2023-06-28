@@ -48,6 +48,7 @@ export class ApplicationDecisionComponentService {
       this.patchTurpFields(component, updateDto);
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
+      this.patchNaruFields(component, updateDto);
 
       updatedComponents.push(component);
     }
@@ -103,6 +104,17 @@ export class ApplicationDecisionComponentService {
       updateDto.soilToRemoveMaximumDepth ?? null;
     component.soilToRemoveAverageDepth =
       updateDto.soilToRemoveAverageDepth ?? null;
+  }
+
+  private patchNaruFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.expiryDate = updateDto.expiryDate
+      ? new Date(updateDto.expiryDate)
+      : null;
+    component.naruSubtypeCode = updateDto.naruSubtypeCode;
   }
 
   validate(
@@ -200,6 +212,13 @@ export class ApplicationDecisionComponentService {
         this.validatePofoDecisionComponentFields(component, errors);
         this.validateRosoDecisionComponentFields(component, errors);
       }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.NARU
+      ) {
+        this.validateNaruDecisionComponentFields(component, errors);
+      }
     }
 
     if (errors.length > 0) {
@@ -260,6 +279,15 @@ export class ApplicationDecisionComponentService {
     }
     if (!component.soilToRemoveAverageDepth) {
       errors.push('Average Depth To Remove is required');
+    }
+  }
+
+  private validateNaruDecisionComponentFields(
+    component: CreateApplicationDecisionComponentDto,
+    errors: string[],
+  ) {
+    if (!component.naruSubtypeCode) {
+      errors.push('Residential Use Type is required');
     }
   }
 }

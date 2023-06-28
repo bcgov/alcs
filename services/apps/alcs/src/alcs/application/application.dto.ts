@@ -9,273 +9,16 @@ import {
   IsUUID,
 } from 'class-validator';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
-import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
-import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
-import { ProposedLot } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionDetailedDto } from '../../portal/application-submission/application-submission.dto';
+import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationDecisionMeetingDto } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
-import { ApplicationDocumentDto } from './application-document/application-document.dto';
 import { StatusHistory } from './application.entity';
 
-export class SubmittedApplicationDto {
-  @AutoMap(() => [ApplicationParcelDto])
-  parcels: ApplicationParcelDto[];
-
-  @AutoMap(() => Boolean)
-  hasOtherParcelsInCommunity?: boolean | null;
-
-  @AutoMap(() => [ApplicationParcelDto])
-  otherParcels: ApplicationParcelDto[];
-
-  @AutoMap()
-  primaryContact: ApplicationOwnerDto;
-
-  @AutoMap()
-  parcelsAgricultureDescription: string;
-
-  @AutoMap()
-  parcelsAgricultureImprovementDescription: string;
-
-  @AutoMap()
-  parcelsNonAgricultureUseDescription: string;
-
-  @AutoMap()
-  northLandUseType: string;
-
-  @AutoMap()
-  northLandUseTypeDescription: string;
-
-  @AutoMap()
-  eastLandUseType: string;
-
-  @AutoMap()
-  eastLandUseTypeDescription: string;
-
-  @AutoMap()
-  southLandUseType: string;
-
-  @AutoMap()
-  southLandUseTypeDescription: string;
-
-  @AutoMap()
-  westLandUseType: string;
-
-  @AutoMap()
-  westLandUseTypeDescription: string;
-
-  //NFU Data
-  @AutoMap()
-  nfuHectares?: string;
-
-  @AutoMap()
-  nfuPurpose?: string;
-
-  @AutoMap()
-  nfuOutsideLands?: string;
-
-  @AutoMap()
-  nfuAgricultureSupport?: string;
-
-  @AutoMap()
-  nfuWillImportFill?: boolean;
-
-  @AutoMap()
-  nfuTotalFillPlacement?: string;
-
-  @AutoMap()
-  nfuMaxFillDepth?: string;
-
-  @AutoMap()
-  nfuFillVolume?: string;
-
-  @AutoMap()
-  nfuProjectDurationAmount?: string;
-
-  @AutoMap()
-  nfuProjectDurationUnit?: string;
-
-  @AutoMap()
-  nfuFillTypeDescription?: string;
-
-  @AutoMap()
-  nfuFillOriginDescription?: string;
-
-  //TUR Data
-  @AutoMap()
-  turPurpose?: string;
-
-  @AutoMap()
-  turOutsideLands?: string;
-
-  @AutoMap()
-  turAgriculturalActivities?: string;
-
-  @AutoMap()
-  turReduceNegativeImpacts?: string;
-
-  @AutoMap()
-  turTotalCorridorArea?: string;
-
-  @AutoMap(() => [ApplicationDocumentDto])
-  documents: ApplicationDocumentDto[];
-
-  //Subdivision Fields
-  @AutoMap(() => String)
-  subdPurpose?: string | null;
-
-  @AutoMap(() => String)
-  subdSuitability?: string | null;
-
-  @AutoMap(() => String)
-  subdAgricultureSupport?: string | null;
-
-  @AutoMap(() => Boolean)
-  subdIsHomeSiteSeverance?: boolean | null;
-
-  subdProposedLots?: ProposedLot[];
-
-  //Soil Fields
-  @AutoMap(() => Boolean)
-  soilIsNOIFollowUp: boolean | null;
-
-  @AutoMap(() => String)
-  soilNOIIDs: string | null;
-
-  @AutoMap(() => Boolean)
-  soilHasPreviousALCAuthorization: boolean | null;
-
-  @AutoMap(() => String)
-  soilApplicationIDs: string | null;
-
-  @AutoMap(() => String)
-  soilPurpose: string | null;
-
-  @AutoMap(() => String)
-  soilTypeRemoved: string | null;
-
-  @AutoMap(() => String)
-  soilReduceNegativeImpacts: string | null;
-
-  @AutoMap(() => Number)
-  soilToRemoveVolume: number | null;
-
-  @AutoMap(() => Number)
-  soilToRemoveArea: number | null;
-
-  @AutoMap(() => Number)
-  soilToRemoveMaximumDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilToRemoveAverageDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyRemovedVolume: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyRemovedArea: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyRemovedMaximumDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyRemovedAverageDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilToPlaceVolume: number | null;
-
-  @AutoMap(() => Number)
-  soilToPlaceArea: number | null;
-
-  @AutoMap(() => Number)
-  soilToPlaceMaximumDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilToPlaceAverageDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyPlacedVolume: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyPlacedArea: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyPlacedMaximumDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilAlreadyPlacedAverageDepth: number | null;
-
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
-
-  @AutoMap(() => String)
-  soilFillTypeToPlace?: string;
-
-  @AutoMap(() => String)
-  soilAlternativeMeasures?: string;
-
-  @AutoMap(() => Boolean)
-  soilIsExtractionOrMining?: boolean;
-
-  @AutoMap(() => Boolean)
-  soilHasSubmittedNotice?: boolean;
-
-  //NARU Fields
-  @AutoMap(() => [NaruSubtypeDto])
-  naruSubtype: NaruSubtypeDto | null;
-
-  @AutoMap(() => String)
-  naruPurpose: string | null;
-
-  @AutoMap(() => Number)
-  naruFloorArea: number | null;
-
-  @AutoMap(() => String)
-  naruResidenceNecessity: string | null;
-
-  @AutoMap(() => String)
-  naruLocationRationale: string | null;
-
-  @AutoMap(() => String)
-  naruInfrastructure: string | null;
-
-  @AutoMap(() => String)
-  naruExistingStructures: string | null;
-
-  @AutoMap(() => Boolean)
-  naruWillImportFill: boolean | null;
-
-  @AutoMap(() => String)
-  naruFillType: string | null;
-
-  @AutoMap(() => String)
-  naruFillOrigin: string | null;
-
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
-
-  @AutoMap(() => Number)
-  naruToPlaceVolume: number | null;
-
-  @AutoMap(() => Number)
-  naruToPlaceArea: number | null;
-
-  @AutoMap(() => Number)
-  naruToPlaceMaximumDepth: number | null;
-
-  @AutoMap(() => Number)
-  naruToPlaceAverageDepth: number | null;
-
-  @AutoMap()
-  typeCode: string;
+export class AlcsApplicationSubmissionDto extends ApplicationSubmissionDetailedDto {
+  primaryContact?: ApplicationOwnerDto;
 }
 
 export class CreateApplicationDto {
@@ -408,6 +151,10 @@ export class UpdateApplicationDto {
   @IsOptional()
   @IsNumber()
   proposalEndDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  proposalExpiryDate?: number;
 }
 
 export class ApplicationDto {
@@ -472,8 +219,8 @@ export class ApplicationDto {
   card?: CardDto;
 
   @AutoMap()
-  @Type(() => SubmittedApplicationDto)
-  submittedApplication?: SubmittedApplicationDto;
+  @Type(() => AlcsApplicationSubmissionDto)
+  submittedApplication?: AlcsApplicationSubmissionDto;
 
   @AutoMap()
   source: 'ALCS' | 'APPLICANT';
@@ -501,7 +248,9 @@ export class ApplicationDto {
 
   @AutoMap(() => String)
   nfuUseSubType?: string;
+
   proposalEndDate?: number;
+  proposalExpiryDate?: number;
 }
 
 export class ApplicationUpdateServiceDto {
@@ -527,6 +276,7 @@ export class ApplicationUpdateServiceDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   proposalEndDate?: Date | null;
+  proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
 }
 

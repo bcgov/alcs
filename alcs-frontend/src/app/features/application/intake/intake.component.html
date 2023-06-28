@@ -5,9 +5,10 @@
     <app-inline-datepicker
       [value]="application?.dateSubmittedToAlc"
       (save)="updateApplicationDate('dateSubmittedToAlc', $event)"
+      [required]="true"
     ></app-inline-datepicker>
   </div>
-  <div *ngIf='application?.source === "APPLICANT"'>
+  <div *ngIf="application?.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT">
     <h5>Payment</h5>
     <div class="payment-section">
       <div>
@@ -40,7 +41,7 @@
       </div>
     </div>
   </div>
-  <div *ngIf='application?.source !== "APPLICANT"'>
+  <div *ngIf="application?.source !== APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT">
     <h5>Payment Date</h5>
     <app-inline-datepicker
       [value]="application?.feePaidDate"

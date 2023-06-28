@@ -13,7 +13,6 @@ import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { generateModuleGraph } from './commands/graph';
 import { importNOIs } from './commands/import';
-import { applyDefaultDocumentTags } from './commands/tag';
 import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
@@ -109,9 +108,6 @@ async function bootstrap() {
   }
   if (extraArg == 'import') {
     await importNOIs();
-  }
-  if (extraArg == 'tagDocuments') {
-    await applyDefaultDocumentTags();
   }
 
   // config variables

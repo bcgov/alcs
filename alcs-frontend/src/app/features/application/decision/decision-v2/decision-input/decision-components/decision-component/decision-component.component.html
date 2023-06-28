@@ -89,4 +89,11 @@
       [form]="form"
     ></app-pfrs-input>
   </div>
+  <div class="row-no-flex">
+    <app-naru-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
+      [form]="form"
+      [codes]="codes"
+    ></app-naru-input>
+  </div>
 </form>

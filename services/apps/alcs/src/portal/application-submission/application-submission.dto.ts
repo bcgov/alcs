@@ -291,6 +291,12 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Number)
   naruToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  naruSleepingUnits: number | null;
+
+  @AutoMap(() => String)
+  naruAgriTourism: string | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -660,4 +666,12 @@ export class ApplicationSubmissionUpdateDto {
   @IsNumber()
   @IsOptional()
   naruToPlaceAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruSleepingUnits?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruAgriTourism?: string | null;
 }
