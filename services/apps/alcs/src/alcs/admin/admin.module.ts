@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationModule } from '../application/application.module';
 import { CovenantModule } from '../covenant/covenant.module';
@@ -11,6 +12,8 @@ import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.modul
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { ApplicationCeoCriterionController } from './application-ceo-criterion/application-ceo-criterion.controller';
 import { ApplicationCeoCriterionService } from './application-ceo-criterion/application-ceo-criterion.service';
+import { ApplicationDecisionConditionTypesController } from './application-decision-condition-types/application-decision-condition-types.controller';
+import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types/application-decision-condition-types.service';
 import { ApplicationDecisionMakerController } from './application-decision-maker/application-decision-maker.controller';
 import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
 import { HolidayController } from './holiday/holiday.controller';
@@ -29,6 +32,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       ApplicationCeoCriterionCode,
       ApplicationDecisionMakerCode,
       NoticeOfIntentSubtype,
+      ApplicationDecisionConditionType,
     ]),
     ApplicationModule,
     forwardRef(() => ApplicationDecisionModule),
@@ -44,6 +48,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     UnarchiveCardController,
     NoiSubtypeController,
     ApplicationDecisionMakerController,
+    ApplicationDecisionConditionTypesController,
   ],
   providers: [
     HolidayService,
@@ -51,6 +56,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     ApplicationDecisionMakerService,
     UnarchiveCardService,
     NoiSubtypeService,
+    ApplicationDecisionConditionTypesService,
   ],
 })
 export class AdminModule {}
