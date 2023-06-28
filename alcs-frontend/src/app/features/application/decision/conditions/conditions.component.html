@@ -1,3 +1,48 @@
 <section>
-  <h3>View Conditions</h3>
+  <div class="header">
+    <h3>View Conditions</h3>
+    <button type="button" mat-stroked-button color="primary" [routerLink]="['../']">back to decision view</button>
+  </div>
+  <section class="body">
+    <div class="decision-container" *ngFor="let decision of decisions; let i = index">
+      <div class="header">
+        <div class="subheading1 title">
+          <h5>Decision #{{ decisions.length - i }}</h5>
+          <!-- <div *ngIf="i === decisions.length - 1 && application">
+            <span class="days" matTooltip="Active Days">
+              <mat-icon class="icon">calendar_month</mat-icon>
+              {{ application.activeDays }}
+            </span>
+            <span class="days" matTooltip="Paused Days">
+              <mat-icon class="icon">pause</mat-icon>
+              {{ application.pausedDays }}
+            </span>
+          </div> -->
+
+          <!-- <ng-container *ngIf="!!decision.reconsiders">
+            <app-application-type-pill [type]="reconLabel"></app-application-type-pill>
+          </ng-container> -->
+          <!-- <ng-container *ngIf="!!decision.modifies">
+            <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
+          </ng-container> -->
+          <span class="body-text">Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
+          <ng-container *ngIf="decision.isDraft"
+            ><app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
+          </ng-container>
+          <ng-container *ngIf="!decision.isDraft"
+            ><app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngFor="let condition of decision.conditions; let j = index">
+        <app-condition
+          [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
+          [condition]="condition"
+        ></app-condition>
+      </div>
+    </div>
+  </section>
+  <div class="footer">
+    <button type="button" mat-stroked-button color="primary" [routerLink]="['../']">back to decision view</button>
+  </div>
 </section>

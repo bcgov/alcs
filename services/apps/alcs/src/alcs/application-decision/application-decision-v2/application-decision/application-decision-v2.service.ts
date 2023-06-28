@@ -113,6 +113,9 @@ export class ApplicationDecisionV2Service {
           applicationDecisionComponentType: true,
           naruSubtype: true,
         },
+        conditions: {
+          type: true,
+        },
       },
     });
 

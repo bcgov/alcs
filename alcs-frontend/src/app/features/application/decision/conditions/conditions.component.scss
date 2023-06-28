@@ -1,5 +1,81 @@
 @use '../../../../../styles/colors.scss';
 
-h3 {
-    color: colors.$black;
+h3,
+div,
+span,
+p {
+  color: colors.$black;
+}
+
+.header,
+.footer {
+  display: flex;
+  padding-left: 16px;
+}
+
+.header {
+  justify-content: space-between;
+  //   margin-bottom: 54px;
+}
+
+.footer {
+  justify-content: flex-end;
+}
+
+:host ::ng-deep {
+  .display-non {
+    display: none !important;
+  }
+
+  .read-more {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .decision-container {
+    padding: 28px 0;
+
+    .header {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+    }
+
+    .even-condition {
+      background-color: colors.$grey-light;
+    }
+
+    .condition-container {
+      display: block;
+      padding: 24px 16px;
+
+      .header {
+        display: flex;
+        padding: 0px;
+        gap: 16px;
+        padding-bottom: 16px;
+
+        color: colors.$black;
+        justify-content: flex-start;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+        grid-row-gap: 24px;
+
+        .full-width {
+          grid-column: 1/4;
+        }
+      }
+    }
+  }
 }
