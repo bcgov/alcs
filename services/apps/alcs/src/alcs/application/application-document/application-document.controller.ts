@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import * as path from 'path';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
@@ -251,21 +252,24 @@ export class ApplicationDocumentController {
         parcel.certificateOfTitleUuid &&
         parcel.certificateOfTitleUuid !== savedDocument.uuid
       ) {
-        const document = await this.applicationDocumentService.get(
-          parcel.certificateOfTitleUuid,
-        );
-        await this.applicationDocumentService.update({
-          uuid: document.uuid,
-          fileName: `${document.document.fileName}_superseded`,
-          source: document.document.source as DOCUMENT_SOURCE,
-          visibilityFlags: [],
-          documentType: document.type!.code as DOCUMENT_TYPE,
-          user: document.document.uploadedBy!,
-        });
+        await this.supersedeDocument(parcel.certificateOfTitleUuid);
       }
 
       await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
     }
+  }
+
+  private async supersedeDocument(documentUuid: string) {
+    const document = await this.applicationDocumentService.get(documentUuid);
+    const parsedFileName = path.parse(document.document.fileName);
+    await this.applicationDocumentService.update({
+      uuid: document.uuid,
+      fileName: `${parsedFileName.name}_superseded${parsedFileName.ext}`,
+      source: document.document.source as DOCUMENT_SOURCE,
+      visibilityFlags: [],
+      documentType: document.type!.code as DOCUMENT_TYPE,
+      user: document.document.uploadedBy!,
+    });
   }
 
   private async handleCorporateSummaryUpdates(
@@ -278,17 +282,7 @@ export class ApplicationDocumentController {
         owner.corporateSummaryUuid &&
         owner.corporateSummaryUuid !== savedDocument.uuid
       ) {
-        const document = await this.applicationDocumentService.get(
-          owner.corporateSummaryUuid,
-        );
-        await this.applicationDocumentService.update({
-          uuid: document.uuid,
-          fileName: `${document.document.fileName}_superseded`,
-          source: document.document.source as DOCUMENT_SOURCE,
-          visibilityFlags: [],
-          documentType: document.type!.code as DOCUMENT_TYPE,
-          user: document.document.uploadedBy!,
-        });
+        await this.supersedeDocument(owner.corporateSummaryUuid);
       }
 
       owner.corporateSummary = savedDocument;
