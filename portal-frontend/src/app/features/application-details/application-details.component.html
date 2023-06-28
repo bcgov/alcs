@@ -25,38 +25,38 @@
   </app-warning-banner>
 
   <div *ngIf="applicationSubmission" class="review-table">
-    <ng-container *ngIf="primaryContact">
-      <div class="subheading2 grid-1">First Name</div>
-      <div class="grid-double">
-        {{ primaryContact.firstName }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.firstName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1">Last Name</div>
-      <div class="grid-double">
-        {{ primaryContact.lastName }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.lastName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1">
-        <span *ngIf="primaryContact.type.code !== APPLICATION_OWNER.CROWN">Organization (optional)</span>
-        <span *ngIf="primaryContact.type.code === APPLICATION_OWNER.CROWN">Ministry/Department Responsible</span>
-      </div>
-      <div class="grid-double">
-        {{ primaryContact.organizationName }}
-        <app-no-data *ngIf="!primaryContact.organizationName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1">Phone</div>
-      <div class="grid-double">
-        {{ primaryContact.phoneNumber }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.phoneNumber"></app-no-data>
-        <app-validation-error *ngIf="!(primaryContact.phoneNumber | phoneValid)">Invalid Format</app-validation-error>
-      </div>
-      <div class="subheading2 grid-1">Email</div>
-      <div class="grid-double">
-        {{ primaryContact.email }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact.email"></app-no-data>
-        <app-validation-error *ngIf="!(primaryContact.email | emailValid)">Invalid Format</app-validation-error>
-      </div>
-    </ng-container>
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.firstName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.firstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.lastName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.lastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      <span *ngIf="primaryContact?.type?.code !== APPLICATION_OWNER.CROWN">Organization (optional)</span>
+      <span *ngIf="primaryContact?.type?.code === APPLICATION_OWNER.CROWN">Ministry/Department Responsible</span>
+    </div>
+    <div class="grid-double">
+      {{ primaryContact?.organizationName }}
+      <app-no-data *ngIf="!primaryContact?.organizationName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ primaryContact?.phoneNumber }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.phoneNumber"></app-no-data>
+      <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
+        >Invalid Format</app-validation-error
+      >
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ primaryContact?.email }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.email"></app-no-data>
+      <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
+    </div>
     <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
       <div class="subheading2 grid-1">Authorization Letter(s)</div>
       <div class="grid-double">
