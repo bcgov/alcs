@@ -24,6 +24,7 @@ export class seedInactiveLocalGov1687810457499 implements MigrationInterface {
 	 ('476febec-ca88-4615-810c-fcae936867ef',NULL,NOW(),NULL,'migration_seed',NULL,'Multiple Jurisdictions for Sunshine','SOUR',NULL,false,false,'{}'),
 	 ('f0bd3817-5825-4656-b685-d306ddd1fa70',NULL,NOW(),NULL,'migration_seed',NULL,'Multiple Jurisdictions for Thompson-Nicola','INTR',NULL,false,false,'{}'),
 	 ('927ece9d-b4e3-4862-aa85-67539d9abb0d',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Gabriola Island (Historical)','ISLR',NULL,false,false,'{}'),
+     ('e2540566-52a8-4a3c-b373-58e1744703af',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Galiano Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('9ff02b37-9046-48c8-aa96-01977fb3d1b9',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Gambier Island (Historical)','SOUR',NULL,false,false,'{}'),
 	 ('d325a7a4-fe68-49b0-9df2-599beb06766e',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Hornby Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('9f0bdb45-c212-4aee-8413-3cf3c79e988c',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Lasqueti Island (Historical)','ISLR',NULL,false,false,'{}'),
