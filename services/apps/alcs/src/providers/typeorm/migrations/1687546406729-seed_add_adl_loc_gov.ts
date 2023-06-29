@@ -8,6 +8,7 @@ export class seedAddAdlLocGov1687546406729 implements MigrationInterface {
 	 ('b8a622d7-66da-4598-9687-2e8727fb2561',NULL,NOW(),NULL,'migration_seed',NULL,'City of Port Alberni','ISLR',NULL,false,true,'{}'),
 	 ('18bd941a-7c0f-44fe-9d12-a084d2a5f372',NULL,NOW(),NULL,'migration_seed',NULL,'Village of Port Clements','NORR',NULL,false,true,'{}'),
 	 ('0235ecdb-95fc-47f9-b7f6-e05e1e388d5b',NULL,NOW(),NULL,'migration_seed',NULL,'Village of Slocan','KOOR',NULL,false,true,'{}'),
+	 ('0136a261-6237-4332-ae6a-1c7d7f49f0e8',NULL,NOW(),NULL,'migration_seed',NULL,'Village of Chase','INTR',NULL,false,true,'{}'),
 	 ('5b5b05d3-df2e-403c-9cf5-3c52c68ab559',NULL,NOW(),NULL,'migration_seed',NULL,'Village of Cumberland','ISLR',NULL,false,true,'{}'),
 	 ('e0684ddf-fa61-47c2-87b3-1c72bed5c365',NULL,NOW(),NULL,'migration_seed',NULL,'District of Fort St. James','NORR',NULL,false,true,'{}'),
 	 ('5dc1a21a-a740-402e-a56f-8f6c85991739',NULL,NOW(),NULL,'migration_seed',NULL,'District of Wells','INTR',NULL,false,true,'{}'),
