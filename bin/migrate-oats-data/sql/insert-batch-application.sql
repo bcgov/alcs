@@ -35,9 +35,7 @@ WITH
             JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
             JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
         WHERE
-            oo.organization_type_cd = 'MUNI'
-            OR oo.organization_type_cd = 'FN'
-            OR oo.organization_type_cd = 'RD'
+            oo.organization_type_cd IN ('MUNI','FN','RD')
     ),
     alcs_gov AS (
         SELECT
@@ -104,8 +102,8 @@ WITH
         SELECT DISTINCT
             oaap.alr_application_id AS application_id,
             CASE
-                WHEN oo2.parent_organization_id isnull then oo2.organization_name
-                WHEN oo3.parent_organization_id isnull then oo3.organization_name
+                WHEN oo2.parent_organization_id IS NULL THEN oo2.organization_name
+                WHEN oo3.parent_organization_id IS NULL THEN oo3.organization_name
                 ELSE 'NONE'
             END AS panel_region
         FROM
