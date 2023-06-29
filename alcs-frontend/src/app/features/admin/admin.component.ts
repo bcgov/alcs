@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { LocalGovernmentComponent } from './local-government/local-government.component';
@@ -31,6 +32,12 @@ export const childRoutes = [
     menuTitle: 'Decision Makers',
     icon: 'coffee_maker',
     component: DecisionMakerComponent,
+  },
+  {
+    path: 'dct',
+    menuTitle: 'Decision Condition Types',
+    icon: 'hvac',
+    component: DecisionConditionTypesComponent,
   },
   {
     path: 'noi',
