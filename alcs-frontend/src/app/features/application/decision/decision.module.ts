@@ -50,7 +50,7 @@ export const decisionChildRoutes = [
     portalOnly: false,
   },
   {
-    path: 'conditions',
+    path: 'conditions/:uuid',
     menuTitle: 'Conditions',
     component: ConditionsComponent,
     portalOnly: false,

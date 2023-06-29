@@ -35,6 +35,16 @@ p {
   .decision-container {
     padding: 28px 0;
 
+    .post-decisions {
+      padding: 8px 16px;
+      background-color: colors.$grey-light;
+      grid-template-columns: 50% 50%;
+      display: grid;
+      min-height: 36px;
+      text-transform: uppercase;
+      border-radius: 4px 4px 0 0;
+    }
+
     .header {
       margin: 0;
       display: flex;

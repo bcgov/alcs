@@ -1,14 +1,26 @@
 <section>
   <div class="header">
     <h3>View Conditions</h3>
-    <button type="button" mat-stroked-button color="primary" [routerLink]="['../']">back to decision view</button>
+    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../']">back to decision view</button>
   </div>
-  <section class="body">
-    <div class="decision-container" *ngFor="let decision of decisions; let i = index">
+  <section class="body" *ngIf="decision">
+    <div class="decision-container">
+      <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions">
+        <div>
+          <strong>Modified&nbsp;By:&nbsp;</strong>
+          {{ decision.modifiedByResolutions.join(', ') }}
+          <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+        </div>
+        <div>
+          <strong>Reconsidered&nbsp;By:&nbsp;</strong>
+          {{ decision.reconsideredByResolutions.join(', ') }}
+          <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
+        </div>
+      </div>
       <div class="header">
         <div class="subheading1 title">
-          <h5>Decision #{{ decisions.length - i }}</h5>
-          <!-- <div *ngIf="i === decisions.length - 1 && application">
+          <h5>Decision #{{ decision.index }}</h5>
+          <div *ngIf="decision.index === decisions.length - 1 && application">
             <span class="days" matTooltip="Active Days">
               <mat-icon class="icon">calendar_month</mat-icon>
               {{ application.activeDays }}
@@ -17,19 +29,18 @@
               <mat-icon class="icon">pause</mat-icon>
               {{ application.pausedDays }}
             </span>
-          </div> -->
-
-          <!-- <ng-container *ngIf="!!decision.reconsiders">
+          </div>
+          <ng-container *ngIf="!!decision.reconsiders">
             <app-application-type-pill [type]="reconLabel"></app-application-type-pill>
-          </ng-container> -->
-          <!-- <ng-container *ngIf="!!decision.modifies">
+          </ng-container>
+          <ng-container *ngIf="!!decision?.modifies">
             <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
-          </ng-container> -->
+          </ng-container>
           <span class="body-text">Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
-          <ng-container *ngIf="decision.isDraft"
+          <ng-container *ngIf="decision.isDraft === true"
             ><app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
           </ng-container>
-          <ng-container *ngIf="!decision.isDraft"
+          <ng-container *ngIf="decision?.isDraft === false"
             ><app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
           </ng-container>
         </div>
@@ -38,11 +49,12 @@
         <app-condition
           [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
           [condition]="condition"
+          [decision]="conditionDecision"
         ></app-condition>
       </div>
     </div>
   </section>
   <div class="footer">
-    <button type="button" mat-stroked-button color="primary" [routerLink]="['../']">back to decision view</button>
+    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../']">back to decision view</button>
   </div>
 </section>

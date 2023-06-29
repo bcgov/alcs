@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Input } from '@angular/core';
 import {
   ApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionDto,
+  ApplicationDecisionDto
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import {
@@ -17,6 +18,7 @@ import {
 })
 export class ConditionComponent implements AfterViewInit {
   @Input() condition!: ApplicationDecisionConditionDto;
+  @Input() decision!: ApplicationDecisionDto;
 
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
   completeLabel = DECISION_CONDITION_COMPLETE_LABEL;

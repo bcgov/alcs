@@ -1,6 +1,6 @@
 <div class="header">
   <h4>{{ condition.type?.label }}</h4>
-  <ng-container *ngIf="!condition.completionDate && !condition.supersededDate">
+  <ng-container *ngIf="decision.isDraft === false && !condition.completionDate && !condition.supersededDate">
     <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
   </ng-container>
   <ng-container *ngIf="condition.completionDate && !condition.supersededDate">
