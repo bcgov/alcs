@@ -57,9 +57,12 @@
 
     <app-no-data *ngIf="!condition.description"></app-no-data>
     <div class="read-more">
-      <a (click)="onToggleReadMore()" [ngClass]="{ 'display-non': !isReadMoreVisible && condition.description }">{{
-        isReadMoreClicked ? 'Read Less' : 'Read More'
-      }}</a>
+      <a
+        (click)="onToggleReadMore()"
+        (keypress)="onToggleReadMore()"
+        [ngClass]="{ 'display-non': !isReadMoreVisible && condition.description }"
+        >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
+      >
     </div>
   </div>
 </div>
