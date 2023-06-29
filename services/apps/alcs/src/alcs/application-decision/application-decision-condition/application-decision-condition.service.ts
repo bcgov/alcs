@@ -2,7 +2,6 @@ import { ServiceValidationException } from '@app/common/exceptions/base.exceptio
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
