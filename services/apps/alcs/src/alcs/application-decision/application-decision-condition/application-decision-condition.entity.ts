@@ -2,8 +2,8 @@ import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
-import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
+import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 
 @Entity()
@@ -40,6 +40,20 @@ export class ApplicationDecisionCondition extends Base {
 
   @Column({ type: 'text', nullable: true })
   description: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'Condition Completion date',
+    nullable: true,
+  })
+  completionDate?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'Condition Superseded date',
+    nullable: true,
+  })
+  supersededDate?: Date | null;
 
   @ManyToOne(() => ApplicationDecisionConditionType)
   type: ApplicationDecisionConditionType;

@@ -32,6 +32,7 @@ import { ApplicationDecisionComponentService } from './application-decision/comp
 import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecisionComponentController } from './application-decision/component/application-decision-component.controller';
 import { NaruSubtype } from '../../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationDecisionConditionController } from '../application-decision-condition/application-decision-condition.controller';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { NaruSubtype } from '../../../portal/application-submission/naru-subtype
   controllers: [
     ApplicationDecisionV2Controller,
     ApplicationDecisionComponentController,
+    ApplicationDecisionConditionController,
   ],
   exports: [ApplicationDecisionV2Service],
 })

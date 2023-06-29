@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
-import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
+import {
+  UpdateApplicationDecisionConditionDto,
+  UpdateApplicationDecisionConditionServiceDto,
+} from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 
 @Injectable()
@@ -16,6 +19,9 @@ export class ApplicationDecisionConditionService {
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },
+      relations: {
+        type: true,
+      },
     });
   }
 
@@ -87,5 +93,13 @@ export class ApplicationDecisionConditionService {
 
   async remove(components: ApplicationDecisionCondition[]) {
     await this.repository.remove(components);
+  }
+
+  async update(
+    existingCondition: ApplicationDecisionCondition,
+    updates: UpdateApplicationDecisionConditionServiceDto,
+  ) {
+    await this.repository.update(existingCondition.uuid, updates);
+    return await this.getOneOrFail(existingCondition.uuid);
   }
 }

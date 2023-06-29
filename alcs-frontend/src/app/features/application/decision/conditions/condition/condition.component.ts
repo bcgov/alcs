@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
+import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import {
   ApplicationDecisionConditionDto,
+  ApplicationDecisionDto,
   UpdateApplicationDecisionConditionDto,
-  ApplicationDecisionDto
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../services/toast/toast.service';
 import {
@@ -27,7 +28,7 @@ export class ConditionComponent implements AfterViewInit {
   isReadMoreClicked = false;
   isReadMoreVisible = false;
 
-  constructor(private toastService: ToastService) {}
+  constructor(private conditionService: ApplicationDecisionConditionService, private toastService: ToastService) {}
 
   ngAfterViewInit(): void {
     setTimeout(() => (this.isReadMoreVisible = this.checkIfReadMoreVisible()));
@@ -38,12 +39,13 @@ export class ConditionComponent implements AfterViewInit {
     value: string[] | string | number | null
   ) {
     const condition = this.condition;
+
     if (condition) {
-      let update = true;
-      console.log('onUpdateCondition', { [field]: value });
-      // const update = await this.applicationDetailService.updateApplication(application.fileNumber, {
-      //   [field]: value,
-      // });
+      const update = await this.conditionService.update(condition.uuid, {
+        [field]: value,
+      });
+      this.condition = update;
+
       if (update) {
         this.toastService.showSuccessToast('Condition updated');
       }

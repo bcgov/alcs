@@ -30,6 +30,12 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap(() => String)
   componentUuid: string | null;
+
+  @AutoMap()
+  completionDate?: number;
+
+  @AutoMap()
+  supersededDate?: number;
 }
 
 export class UpdateApplicationDecisionConditionDto {
@@ -64,4 +70,23 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: ApplicationDecisionConditionTypeDto;
+
+  @IsOptional()
+  @IsNumber()
+  completionDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  supersededDate?: number;
+}
+
+export class UpdateApplicationDecisionConditionServiceDto {
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
+  approvalDependant?: boolean;
+  securityAmount?: number;
+  administrativeFee?: number;
+  description?: string;
+  completionDate?: Date | null;
+  supersededDate?: Date | null;
 }
