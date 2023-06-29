@@ -160,6 +160,15 @@ export class ApplicationSubmissionService {
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
+    if (!applicationSubmission.isDraft && updateDto.localGovernmentUuid) {
+      await this.applicationService.updateByFileNumber(
+        applicationSubmission.fileNumber,
+        {
+          localGovernmentUuid: updateDto.localGovernmentUuid,
+        },
+      );
+    }
+
     return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
   }
 
