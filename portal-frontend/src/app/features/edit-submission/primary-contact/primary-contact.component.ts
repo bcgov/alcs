@@ -135,7 +135,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
       }
     }
-    this.needsAuthorizationLetter = !selectedOwner;
+    this.needsAuthorizationLetter = !(
+      this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL &&
+      (this.owners.length === 1 ||
+        (this.owners.length === 2 && this.owners[1].type.code === APPLICATION_OWNER.AGENT && !hasSelectedAgent))
+    );
     this.files = this.files.map((file) => ({
       ...file,
       errorMessage: this.needsAuthorizationLetter
