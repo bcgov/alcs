@@ -278,6 +278,7 @@ export class ApplicationUpdateServiceDto {
   proposalEndDate?: Date | null;
   proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
+  localGovernmentUuid?: string;
 }
 
 export class CreateApplicationServiceDto {
