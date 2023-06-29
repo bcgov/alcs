@@ -39,7 +39,7 @@ describe('ApplicationDecisionConditionTypesController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call out to service when fetching ceo criterion', async () => {
+  it('should call out to service when fetching decision condition type', async () => {
     mockDecTypesService.fetch.mockResolvedValue([]);
 
     const applicationDecisionConditionTypes = await controller.fetch();
@@ -48,7 +48,7 @@ describe('ApplicationDecisionConditionTypesController', () => {
     expect(mockDecTypesService.fetch).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when updating ceo criterion', async () => {
+  it('should call out to service when updating decision condition type', async () => {
     mockDecTypesService.update.mockResolvedValue(
       new ApplicationDecisionConditionType(),
     );
@@ -62,7 +62,7 @@ describe('ApplicationDecisionConditionTypesController', () => {
     expect(mockDecTypesService.update).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when creating ceo criterion', async () => {
+  it('should call out to service when creating decision condition type', async () => {
     mockDecTypesService.create.mockResolvedValue(
       new ApplicationDecisionConditionType(),
     );
