@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import {
   ApplicationDocumentDto,
   ApplicationDocumentTypeDto,
+  UpdateDocumentDto,
 } from '../../../../services/application/application-document/application-document.dto';
 import {
   ApplicationDocumentService,
@@ -13,6 +14,8 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
+import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -34,6 +37,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   source = new FormControl<string>('', [Validators.required]);
 
   parcelId = new FormControl<string | null>(null);
+  ownerId = new FormControl<string | null>(null);
 
   visibleToInternal = new FormControl<boolean>(false, [Validators.required]);
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
@@ -41,6 +45,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   documentTypes: ApplicationDocumentTypeDto[] = [];
   documentSources = Object.values(DOCUMENT_SOURCE);
   selectableParcels: { uuid: string; index: number; pid?: string }[] = [];
+  selectableOwners: { uuid: string; label: string }[] = [];
 
   form = new FormGroup({
     name: this.name,
@@ -49,17 +54,20 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     visibleToInternal: this.visibleToInternal,
     visibleToPublic: this.visibleToPublic,
     parcelId: this.parcelId,
+    ownerId: this.ownerId,
   });
 
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
-  showCertificateOfTitleWarning = false;
+  showSupersededWarning = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { fileId: string; existingDocument?: ApplicationDocumentDto },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { fileId: string; owners: SubmittedApplicationOwnerDto[]; existingDocument?: ApplicationDocumentDto },
     protected dialog: MatDialogRef<any>,
     private applicationDocumentService: ApplicationDocumentService,
-    private parcelService: ApplicationParcelService
+    private parcelService: ApplicationParcelService,
+    private submissionService: ApplicationSubmissionService
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +79,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
       if (document.type?.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
         this.prepareCertificateOfTitleUpload(document.uuid);
+        this.allowsFileEdit = false;
+      }
+      if (document.type?.code === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+        this.allowsFileEdit = false;
+        this.prepareCorporateSummaryUpload(document.uuid);
       }
       this.form.patchValue({
         name: document.fileName,
@@ -100,23 +113,18 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       visibilityFlags.push('P');
     }
 
-    const parcelId = await this.parcelId.value;
-
-    const dto = {
-      fileName: this.name.getRawValue()!,
-      source: this.source.getRawValue() as DOCUMENT_SOURCE,
-      typeCode: this.type.getRawValue() as DOCUMENT_TYPE,
+    const dto: UpdateDocumentDto = {
+      fileName: this.name.value!,
+      source: this.source.value as DOCUMENT_SOURCE,
+      typeCode: this.type.value as DOCUMENT_TYPE,
       visibilityFlags,
+      parcelUuid: this.parcelId.value ?? undefined,
+      ownerUuid: this.ownerId.value ?? undefined,
     };
 
     const file = this.pendingFile;
     this.isSaving = true;
-    if (parcelId && file && this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
-      await this.applicationDocumentService.attachCertificateOfTitle(this.data.fileId, parcelId, {
-        ...dto,
-        file,
-      });
-    } else if (this.data.existingDocument) {
+    if (this.data.existingDocument) {
       await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
       await this.applicationDocumentService.upload(this.data.fileId, {
@@ -126,12 +134,6 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
     this.dialog.close(true);
     this.isSaving = false;
-  }
-
-  private async loadDocumentTypes() {
-    const docTypes = await this.applicationDocumentService.fetchTypes();
-    docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
-    this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
   }
 
   ngOnDestroy(): void {
@@ -160,7 +162,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       if (selectedParcel) {
         this.parcelId.setValue(selectedParcel.uuid);
       } else if (uuid) {
-        this.showCertificateOfTitleWarning = true;
+        this.showSupersededWarning = true;
       }
 
       this.selectableParcels = parcels
@@ -169,6 +171,32 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
           uuid: parcel.uuid,
           pid: parcel.pid,
           index: index,
+        }));
+    }
+  }
+
+  async prepareCorporateSummaryUpload(uuid?: string) {
+    const submission = await this.submissionService.fetchSubmission(this.data.fileId);
+    if (submission.owners.length > 0) {
+      const owners = submission.owners;
+      this.ownerId.setValidators([Validators.required]);
+      this.ownerId.updateValueAndValidity();
+
+      this.visibleToInternal.setValue(true);
+      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+
+      const selectedOwner = owners.find((owner) => owner.corporateSummaryUuid === uuid);
+      if (selectedOwner) {
+        this.ownerId.setValue(selectedOwner.uuid);
+      } else if (uuid) {
+        this.showSupersededWarning = true;
+      }
+
+      this.selectableOwners = owners
+        .filter((owner) => owner.type.code === 'ORGZ')
+        .map((owner, index) => ({
+          label: owner.organizationName ?? owner.displayName,
+          uuid: owner.uuid,
         }));
     }
   }
@@ -186,6 +214,14 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       this.parcelId.setValue(null);
       this.parcelId.setValidators([]);
       this.parcelId.updateValueAndValidity();
+    }
+
+    if (this.type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      await this.prepareCorporateSummaryUpload();
+    } else {
+      this.ownerId.setValue(null);
+      this.ownerId.setValidators([]);
+      this.ownerId.updateValueAndValidity();
     }
   }
 
@@ -217,5 +253,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.data.existingDocument.fileName
       );
     }
+  }
+
+  private async loadDocumentTypes() {
+    const docTypes = await this.applicationDocumentService.fetchTypes();
+    docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
+    this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
   }
 }

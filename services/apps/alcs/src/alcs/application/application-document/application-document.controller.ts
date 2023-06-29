@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import * as path from 'path';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
@@ -20,6 +21,7 @@ import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
 } from '../../../document/document.dto';
+import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import {
   ApplicationDocumentCode,
@@ -42,6 +44,7 @@ export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,
+    private ownerService: ApplicationOwnerService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -67,49 +70,23 @@ export class ApplicationDocumentController {
     if (!req.isMultipart()) {
       throw new BadRequestException('Request is not multipart');
     }
-    const savedDocument = await this.saveUploadedFile(req, fileNumber);
-
-    return this.mapper.map(
-      savedDocument,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
-  }
-
-  @Post('/application/:fileNumber/CERT')
-  @UserRoles(...ANY_AUTH_ROLE)
-  async attachCertificateOfTitle(
-    @Param('fileNumber') fileNumber: string,
-    @Req() req,
-  ): Promise<ApplicationDocumentDto> {
-    if (!req.isMultipart()) {
-      throw new BadRequestException('Request is not multipart');
-    }
-
-    const parcelUuid = req.body.parcelUuid.value;
-    if (!parcelUuid) {
-      throw new BadRequestException('Request is missing parcel uuid');
-    }
 
     const savedDocument = await this.saveUploadedFile(req, fileNumber);
 
-    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
-    if (parcel) {
-      if (parcel.certificateOfTitleUuid) {
-        const document = await this.applicationDocumentService.get(
-          parcel.certificateOfTitleUuid,
-        );
-        await this.applicationDocumentService.update({
-          uuid: document.uuid,
-          fileName: `${document.document.fileName}_superseded`,
-          source: document.document.source as DOCUMENT_SOURCE,
-          visibilityFlags: [],
-          documentType: document.type!.code as DOCUMENT_TYPE,
-          user: document.document.uploadedBy!,
-        });
-      }
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
 
-      await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
     }
 
     return this.mapper.map(
@@ -144,6 +121,22 @@ export class ApplicationDocumentController {
       visibilityFlags,
       user: req.user.entity,
     });
+
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
+
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
+    }
 
     return this.mapper.map(
       savedDocument,
@@ -247,6 +240,54 @@ export class ApplicationDocumentController {
     @Body() data: { uuid: string; order: number }[],
   ): Promise<void> {
     await this.applicationDocumentService.setSorting(data);
+  }
+
+  private async handleCertificateOfTitleUpdates(
+    parcelUuid: string,
+    savedDocument: ApplicationDocument,
+  ) {
+    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
+    if (parcel) {
+      if (
+        parcel.certificateOfTitleUuid &&
+        parcel.certificateOfTitleUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(parcel.certificateOfTitleUuid);
+      }
+
+      await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
+    }
+  }
+
+  private async supersedeDocument(documentUuid: string) {
+    const document = await this.applicationDocumentService.get(documentUuid);
+    const parsedFileName = path.parse(document.document.fileName);
+    await this.applicationDocumentService.update({
+      uuid: document.uuid,
+      fileName: `${parsedFileName.name}_superseded${parsedFileName.ext}`,
+      source: document.document.source as DOCUMENT_SOURCE,
+      visibilityFlags: [],
+      documentType: document.type!.code as DOCUMENT_TYPE,
+      user: document.document.uploadedBy!,
+    });
+  }
+
+  private async handleCorporateSummaryUpdates(
+    ownerUuid: string,
+    savedDocument: ApplicationDocument,
+  ) {
+    const owner = await this.ownerService.getOwner(ownerUuid);
+    if (owner) {
+      if (
+        owner.corporateSummaryUuid &&
+        owner.corporateSummaryUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(owner.corporateSummaryUuid);
+      }
+
+      owner.corporateSummary = savedDocument;
+      await this.ownerService.save(owner);
+    }
   }
 
   private async saveUploadedFile(req, fileNumber: string) {
