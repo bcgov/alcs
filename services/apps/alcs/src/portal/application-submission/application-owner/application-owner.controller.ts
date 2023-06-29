@@ -161,6 +161,7 @@ export class ApplicationOwnerController {
 
     //Create Owner
     if (!data.ownerUuid) {
+      await this.ownerService.deleteAgents(applicationSubmission);
       const agentOwner = await this.ownerService.create(
         {
           email: data.agentEmail,
