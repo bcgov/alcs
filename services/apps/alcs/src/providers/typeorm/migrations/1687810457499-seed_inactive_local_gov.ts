@@ -24,7 +24,6 @@ export class seedInactiveLocalGov1687810457499 implements MigrationInterface {
 	 ('476febec-ca88-4615-810c-fcae936867ef',NULL,NOW(),NULL,'migration_seed',NULL,'Multiple Jurisdictions for Sunshine','SOUR',NULL,false,false,'{}'),
 	 ('f0bd3817-5825-4656-b685-d306ddd1fa70',NULL,NOW(),NULL,'migration_seed',NULL,'Multiple Jurisdictions for Thompson-Nicola','INTR',NULL,false,false,'{}'),
 	 ('927ece9d-b4e3-4862-aa85-67539d9abb0d',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Gabriola Island (Historical)','ISLR',NULL,false,false,'{}'),
-     ('e2540566-52a8-4a3c-b373-58e1744703af',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Galiano Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('9ff02b37-9046-48c8-aa96-01977fb3d1b9',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Gambier Island (Historical)','SOUR',NULL,false,false,'{}'),
 	 ('d325a7a4-fe68-49b0-9df2-599beb06766e',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Hornby Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('9f0bdb45-c212-4aee-8413-3cf3c79e988c',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Lasqueti Island (Historical)','ISLR',NULL,false,false,'{}'),
@@ -34,13 +33,13 @@ export class seedInactiveLocalGov1687810457499 implements MigrationInterface {
 	 ('dc0357b1-aacd-45ba-8fa9-0e62cbe88e9f',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Salt Spring Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('3890ccf8-94e3-4b9a-9a1c-4d33518e1b5d',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Saturna Island (Historical)','ISLR',NULL,false,false,'{}'),
 	 ('538b895f-f0e1-4388-93cb-9eeb7cfa987e',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Sidney Island (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('88532d18-3059-4720-986a-363d9bce6be0',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Comox Strathcona (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('4e721d39-09b3-4f9b-ad1f-601a69315808',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Nanaimo (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('9355bf78-280a-4695-adad-fafa06969c99',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Capital (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('8017df89-8e71-41c3-bee9-1a48f042e157',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Powell River (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('26f395a1-44ab-4812-9e0d-f2dbc815859d',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Sunshine Coast (Historical)','SOUR',NULL,false,false,'{}'),
-	 ('b9056ee1-5ba3-4d7c-9029-2cec57ba75d5',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Cowichan Valley (Historical)','ISLR',NULL,false,false,'{}'),
-	 ('55f665bc-c91b-4bbb-85c2-39691088b297',NULL,NOW(),NULL,'migration_seed',NULL,'Northern Rockies (Historical)','NORR',NULL,false,false,'{}'),
+	 ('88532d18-3059-4720-986a-363d9bce6be0',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust- Comox Strathcona (Historical)','ISLR',NULL,false,false,'{}'),
+	 ('4e721d39-09b3-4f9b-ad1f-601a69315808',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust- Nanaimo (Historical)','ISLR',NULL,false,false,'{}'),
+	 ('9355bf78-280a-4695-adad-fafa06969c99',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust-Capital (Historical)','ISLR',NULL,false,false,'{}'),
+	 ('8017df89-8e71-41c3-bee9-1a48f042e157',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust-Powell River (Historical)','ISLR',NULL,false,false,'{}'),
+	 ('26f395a1-44ab-4812-9e0d-f2dbc815859d',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust-Sunshine Coast (Historical)','SOUR',NULL,false,false,'{}'),
+	 ('b9056ee1-5ba3-4d7c-9029-2cec57ba75d5',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust - Cowichan Valley (Historical)','ISLR',NULL,false,false,'{}'),
+	 ('55f665bc-c91b-4bbb-85c2-39691088b297',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Bowen Island (Historical)','SOUR',NULL,false,false,'{}'),
 	 ('7577c7e9-d65b-4051-a0b1-bc95c462bdc3',NULL,NOW(),NULL,'migration_seed',NULL,'Islands Trust Denman Island (Historical)','ISLR',NULL,false,false,'{}');
      `);
     }
