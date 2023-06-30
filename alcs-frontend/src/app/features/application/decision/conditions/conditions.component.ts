@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
@@ -69,8 +70,23 @@ export class ConditionsComponent implements OnInit {
 
         if (decision.uuid === this.decisionUuid) {
           this.decision = mappedDecision;
+          const today = moment().toDate().getTime();
 
-          this.conditionDecision = decision;
+          decision.conditions = decision.conditions.sort((a, b) => {
+            if (a.completionDate && !b.completionDate) {
+              return 1;
+            } else if (!a.completionDate && b.completionDate) {
+              return -1;
+            } else if (!a.completionDate && !b.completionDate && !a.supersededDate && !b.supersededDate) {
+              return 0;
+            } else if (!a.completionDate && !b.completionDate && a.supersededDate && !b.supersededDate) {
+              return 1;
+            } else if (!a.completionDate && !b.completionDate && !a.supersededDate && b.supersededDate) {
+              return -1;
+            }
+
+            return a.type!.label.localeCompare(b.type!.label);
+          });
         }
 
         return mappedDecision;

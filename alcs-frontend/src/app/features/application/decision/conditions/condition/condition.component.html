@@ -1,12 +1,12 @@
 <div class="header">
   <h4>{{ condition.type?.label }}</h4>
-  <ng-container *ngIf="decision.isDraft === false && !condition.completionDate && !condition.supersededDate">
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.INCOMPLETE">
     <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
   </ng-container>
-  <ng-container *ngIf="condition.completionDate && !condition.supersededDate">
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.COMPLETE">
     <app-application-type-pill [type]="completeLabel"></app-application-type-pill>
   </ng-container>
-  <ng-container *ngIf="!condition.completionDate && condition.supersededDate">
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.SUPERSEDED">
     <app-application-type-pill [type]="supersededLabel"></app-application-type-pill>
   </ng-container>
 </div>
@@ -34,7 +34,7 @@
   </div>
 
   <div>
-    <div class="subheading2">Completion Required</div>
+    <div class="subheading2">Completion Date</div>
     <app-inline-datepicker
       [value]="condition.completionDate ?? undefined"
       (save)="onUpdateCondition('completionDate', $event)"
