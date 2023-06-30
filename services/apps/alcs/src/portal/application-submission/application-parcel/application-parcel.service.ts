@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { filterUndefined } from '../../../utils/undefined';
 import { ApplicationOwnerService } from '../application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from './application-parcel.dto';
 import { ApplicationParcel } from './application-parcel.entity';
@@ -89,8 +90,12 @@ export class ApplicationParcelService {
       parcel.isFarm = updateDto.isFarm;
       parcel.purchasedDate = formatIncomingDate(updateDto.purchasedDate);
       parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
-      parcel.isConfirmedByApplicant = updateDto.isConfirmedByApplicant;
+      parcel.isConfirmedByApplicant = filterUndefined(
+        updateDto.isConfirmedByApplicant,
+        parcel.isConfirmedByApplicant,
+      );
       parcel.crownLandOwnerType = updateDto.crownLandOwnerType;
+      parcel.alrArea = updateDto.alrArea;
 
       if (updateDto.ownerUuids) {
         hasOwnerUpdate = true;

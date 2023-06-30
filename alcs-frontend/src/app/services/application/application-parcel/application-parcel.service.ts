@@ -21,4 +21,20 @@ export class ApplicationParcelService {
       throw e;
     }
   }
+
+  async setParcelArea(uuid: string, alrArea: number | null): Promise<ApplicationParcelDto[]> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<ApplicationParcelDto[]>(`${this.baseUrl}/${uuid}`, {
+          alrArea,
+        })
+      );
+      this.toastService.showSuccessToast('Application updated');
+
+      return res;
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update Application Parcel');
+      throw e;
+    }
+  }
 }

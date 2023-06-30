@@ -1,16 +1,14 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { DocumentService } from '../../../document/document.service';
 import { ApplicationParcelDto } from '../../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -32,5 +30,22 @@ export class ApplicationParcelController {
       ApplicationParcel,
       ApplicationParcelDto,
     );
+  }
+
+  @UserRoles(...ANY_AUTH_ROLE)
+  @Post('/:uuid')
+  async update(@Param('uuid') uuid: string, @Body() body: { alrArea: number }) {
+    const parcels = await this.applicationParcelService.update([
+      {
+        uuid,
+        alrArea: body.alrArea,
+      },
+    ]);
+
+    return this.mapper.mapArray(
+      parcels,
+      ApplicationParcel,
+      ApplicationParcelDto,
+    )[0];
   }
 }

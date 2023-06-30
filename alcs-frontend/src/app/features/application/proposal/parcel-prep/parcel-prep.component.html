@@ -1,0 +1,62 @@
+<table mat-table [dataSource]="parcels">
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let row">1</td>
+  </ng-container>
+
+  <ng-container matColumnDef="pid">
+    <th mat-header-cell *matHeaderCellDef>PID</th>
+    <td mat-cell *matCellDef="let row">
+      {{ row.pid }}
+      <app-no-data *ngIf="!row.pid"></app-no-data>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="pin">
+    <th mat-header-cell *matHeaderCellDef>PIN</th>
+    <td mat-cell *matCellDef="let row">
+      {{ row.pin }}
+      <app-no-data *ngIf="!row.pin"></app-no-data>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="civicAddress">
+    <th mat-header-cell *matHeaderCellDef>Civic Address</th>
+    <td style="max-width: 300px" mat-cell *matCellDef="let row">
+      <span class="civic-address" [matTooltip]="row.civicAddress">{{ row.civicAddress }}</span>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="area">
+    <th mat-header-cell *matHeaderCellDef>Area (ha)</th>
+    <td mat-cell *matCellDef="let row">{{ row.mapAreaHectares }}</td>
+  </ng-container>
+  <ng-container matColumnDef="alrArea">
+    <th mat-header-cell *matHeaderCellDef>ALR Area (ha)</th>
+    <td mat-cell *matCellDef="let row">
+      <app-inline-number [value]="row.alrArea" (save)="saveParcel(row.uuid, $event)"></app-inline-number>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="owners">
+    <th mat-header-cell *matHeaderCellDef>Owner(s)</th>
+    <td mat-cell *matCellDef="let row">
+      <span [matTooltip]="row.fullOwners" [matTooltipDisabled]="!row.hasManyOwners">{{ row.owners }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let row">
+      <button
+        (click)="navigateToParcelDetails(row.uuid)"
+        class="link-button"
+        mat-icon-button
+        matTooltip="View Parcel Details"
+      >
+        <mat-icon>open_in_new</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+</table>

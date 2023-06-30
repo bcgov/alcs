@@ -59,6 +59,9 @@ export class ApplicationParcelDto {
   @AutoMap(() => String)
   parcelType: string;
 
+  @AutoMap(() => Number)
+  alrArea: number | null;
+
   certificateOfTitle?: ApplicationDocumentDto;
   owners: ApplicationOwnerDetailedDto[];
 }
@@ -110,7 +113,8 @@ export class ApplicationParcelUpdateDto {
   isFarm?: boolean | null;
 
   @IsBoolean()
-  isConfirmedByApplicant: boolean;
+  @IsOptional()
+  isConfirmedByApplicant?: boolean;
 
   @IsString()
   @IsOptional()
@@ -121,7 +125,12 @@ export class ApplicationParcelUpdateDto {
   crownLandOwnerType?: string | null;
 
   @IsArray()
-  ownerUuids: string[] | null;
+  @IsOptional()
+  ownerUuids?: string[] | null;
+
+  @IsNumber()
+  @IsOptional()
+  alrArea?: number | null;
 }
 
 export enum PARCEL_TYPE {
