@@ -84,6 +84,7 @@ export interface ApplicationParcelDto {
   parcelType?: string;
   certificateOfTitleUuid?: string;
   owners: SubmittedApplicationOwnerDto[];
+  alrArea: number;
 }
 
 export interface ApplicationSubmissionDto {
