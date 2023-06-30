@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterContentChecked, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
@@ -11,7 +11,7 @@ import { ApplicationSubmissionDto, PARCEL_OWNERSHIP_TYPE } from '../../../../../
   templateUrl: './parcel.component.html',
   styleUrls: ['./parcel.component.scss'],
 })
-export class ParcelComponent implements OnInit, OnChanges, OnDestroy {
+export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterContentChecked {
   $destroy = new Subject<void>();
 
   @Input() application!: ApplicationSubmissionDto;
@@ -25,6 +25,7 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy {
   parcels: any[] = [];
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
+  private anchorededParcelUuid: string | undefined;
 
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
@@ -40,16 +41,7 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy {
 
     this.route.fragment.pipe(takeUntil(this.$destroy)).subscribe((fragment) => {
       if (fragment) {
-        setTimeout(() => {
-          const el = document.getElementById(fragment);
-          if (el) {
-            el.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-              inline: 'start',
-            });
-          }
-        }, 200);
+        this.anchorededParcelUuid = fragment;
       }
     });
   }
@@ -73,5 +65,19 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  ngAfterContentChecked(): void {
+    if (this.anchorededParcelUuid) {
+      const el = document.getElementById(this.anchorededParcelUuid);
+      if (el) {
+        this.anchorededParcelUuid = undefined;
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'start',
+        });
+      }
+    }
   }
 }
