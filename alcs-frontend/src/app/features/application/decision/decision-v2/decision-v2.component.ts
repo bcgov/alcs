@@ -107,10 +107,10 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   }
 
   scrollToDecision() {
-    const decisionUuid = this.activatedRouter.snapshot.paramMap.get('uuid')!;
+    const decisionUuid = this.activatedRouter.snapshot.queryParamMap.get('uuid');
 
     setTimeout(() => {
-      if (this.decisions.length > 0) {
+      if (this.decisions.length > 0 && decisionUuid) {
         this.scrollToElement(decisionUuid);
       }
     });

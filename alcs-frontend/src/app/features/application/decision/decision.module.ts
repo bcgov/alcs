@@ -38,12 +38,6 @@ export const decisionChildRoutes = [
     portalOnly: false,
   },
   {
-    path: ':uuid',
-    menuTitle: 'Decision',
-    component: DecisionComponent,
-    portalOnly: false,
-  },
-  {
     path: 'create',
     menuTitle: 'Decision',
     component: DecisionInputV2Component,

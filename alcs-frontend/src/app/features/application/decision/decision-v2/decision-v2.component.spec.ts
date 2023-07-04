@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
@@ -62,6 +63,10 @@ describe('DecisionV2Component', () => {
         {
           provide: ApplicationDecisionComponentService,
           useValue: mockApplicationDecisionComponentService,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

@@ -1,7 +1,13 @@
 <section>
   <div class="header">
     <h3>View Conditions</h3>
-    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../' + decision.uuid]">
+    <button
+      type="button"
+      mat-stroked-button
+      color="primary"
+      [routerLink]="['../../']"
+      [queryParams]="{ uuid: decision?.uuid }"
+    >
       back to decision view
     </button>
   </div>
