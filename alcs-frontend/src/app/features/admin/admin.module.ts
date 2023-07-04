@@ -6,6 +6,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { DecisionConditionTypesDialogComponent } from './decision-condition-types/decision-condition-types-dialog/decision-condition-types-dialog.component';
+import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerDialogComponent } from './decision-maker/decision-maker-dialog/decision-maker-dialog.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayDialogComponent } from './holiday/holiday-dialog/holiday-dialog.component';
@@ -37,6 +39,8 @@ const routes: Routes = [
     UnarchiveComponent,
     DecisionMakerComponent,
     DecisionMakerDialogComponent,
+    DecisionConditionTypesComponent,
+    DecisionConditionTypesDialogComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })

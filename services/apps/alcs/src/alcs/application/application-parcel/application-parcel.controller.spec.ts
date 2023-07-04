@@ -42,4 +42,26 @@ describe('ApplicationParcelController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
+
+  it('should call through to service for get', async () => {
+    mockParcelService.fetchByApplicationFileId.mockResolvedValue([]);
+
+    await controller.get('');
+    expect(mockParcelService.fetchByApplicationFileId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for update', async () => {
+    mockParcelService.update.mockResolvedValue([]);
+
+    await controller.update('12', {
+      alrArea: 5,
+    });
+    expect(mockParcelService.update).toHaveBeenCalledTimes(1);
+    expect(mockParcelService.update).toHaveBeenCalledWith([
+      {
+        uuid: '12',
+        alrArea: 5,
+      },
+    ]);
+  });
 });
