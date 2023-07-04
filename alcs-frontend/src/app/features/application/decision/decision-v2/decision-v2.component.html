@@ -31,7 +31,7 @@
       <div class="loading-overlay" *ngIf="decision.loading">
         <mat-spinner></mat-spinner>
       </div>
-      <div class="decision">
+      <div class="decision" [id]="decision.uuid">
         <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
           <div>
             <strong>Modified&nbsp;By:&nbsp;</strong>
@@ -251,7 +251,7 @@
           >
             <h1 class="subheading1">Conditions</h1>
             <div>
-              <a [routerLink]="['./conditions/' + decision.uuid]"
+              <a [routerLink]="['/application/' + fileNumber + '/decision/conditions/' + decision.uuid]"
                 >View Conditions<mat-icon class="conditions-link-icon">open_in_new</mat-icon></a
               >
             </div>

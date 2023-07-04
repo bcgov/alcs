@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
+import { ConditionComponent } from './conditions/condition/condition.component';
 import { ConditionsComponent } from './conditions/conditions.component';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
@@ -28,11 +29,16 @@ import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
-import { ConditionComponent } from './conditions/condition/condition.component';
 
 export const decisionChildRoutes = [
   {
     path: '',
+    menuTitle: 'Decision',
+    component: DecisionComponent,
+    portalOnly: false,
+  },
+  {
+    path: ':uuid',
     menuTitle: 'Decision',
     component: DecisionComponent,
     portalOnly: false,

@@ -1,7 +1,9 @@
 <section>
   <div class="header">
     <h3>View Conditions</h3>
-    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../']">back to decision view</button>
+    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../' + decision.uuid]">
+      back to decision view
+    </button>
   </div>
   <section class="body" *ngIf="decision">
     <div class="decision-container">

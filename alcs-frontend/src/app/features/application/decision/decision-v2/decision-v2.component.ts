@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
@@ -65,7 +65,9 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDecisionComponentService: ApplicationDecisionComponentService,
-    private router: Router
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -95,10 +97,22 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         loading: false,
       }));
 
+      this.scrollToDecision();
+
       this.isDraftExists = this.decisions.some((d) => d.isDraft);
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
         : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
+    });
+  }
+
+  scrollToDecision() {
+    const decisionUuid = this.activatedRouter.snapshot.paramMap.get('uuid')!;
+
+    setTimeout(() => {
+      if (this.decisions.length > 0) {
+        this.scrollToElement(decisionUuid);
+      }
     });
   }
 
@@ -219,5 +233,18 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.decisionService.clearDecisions();
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  scrollToElement(elementId: string) {
+    const id = `#${CSS.escape(elementId)}`;
+    const element = this.elementRef.nativeElement.querySelector(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'start',
+      });
+    }
   }
 }
