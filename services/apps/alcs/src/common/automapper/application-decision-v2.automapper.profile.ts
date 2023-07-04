@@ -222,6 +222,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (ad) => ad.supersededDate,
           mapFrom((a) => a.supersededDate?.getTime()),
         ),
+        forMember(
+          (ad) => ad.components,
+          mapFrom((a) =>
+            a.components && a.components.length > 0
+              ? this.mapper.mapArray(
+                  a.components,
+                  ApplicationDecisionComponent,
+                  ApplicationDecisionComponentDto,
+                )
+              : [],
+          ),
+        ),
       );
 
       createMap(

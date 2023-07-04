@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { ApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
 export class ApplicationDecisionConditionDto {
@@ -36,6 +38,19 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap()
   supersededDate?: number;
+
+  @AutoMap()
+  components?: ApplicationDecisionComponentDto[];
+}
+
+export class ComponentToConditionDto {
+  @IsOptional()
+  @IsUUID()
+  componentDecisionUuid?: string;
+
+  @IsOptional()
+  @IsString()
+  componentToConditionType?: string;
 }
 
 export class UpdateApplicationDecisionConditionDto {
@@ -44,12 +59,8 @@ export class UpdateApplicationDecisionConditionDto {
   uuid?: string;
 
   @IsOptional()
-  @IsUUID()
-  componentDecisionUuid?: string;
-
-  @IsOptional()
-  @IsString()
-  componentToConditionType?: string;
+  @IsArray()
+  componentToConditions?: ComponentToConditionDto[];
 
   @IsOptional()
   @IsBoolean()

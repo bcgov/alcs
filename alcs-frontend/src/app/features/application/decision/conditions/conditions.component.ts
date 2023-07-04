@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
-import { ApplicationDecisionDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import {
+  ApplicationDecisionDto,
+  DecisionCodesDto,
+} from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import {
   DRAFT_DECISION_TYPE_LABEL,
@@ -33,6 +35,7 @@ export class ConditionsComponent implements OnInit {
   decision!: LoadingDecision;
   conditionDecision!: ApplicationDecisionDto;
   application: ApplicationDto | undefined;
+  codes!: DecisionCodesDto;
 
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
@@ -58,6 +61,7 @@ export class ConditionsComponent implements OnInit {
   }
 
   async loadDecisions(fileNumber: string) {
+    this.codes = await this.decisionService.fetchCodes();
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
       this.decisions = decisions.map((decision, ind) => {
         const mappedDecision = {
@@ -69,10 +73,26 @@ export class ConditionsComponent implements OnInit {
         };
 
         if (decision.uuid === this.decisionUuid) {
-          this.decision = mappedDecision;
-          const today = moment().toDate().getTime();
+          const conditions = decision.conditions.map((e) => {
+            
+            return {
+              ...e,
+              conditionComponentsLabels: e.components?.map((c) => {
+                const matchingType = this.codes.decisionComponentTypes.find(
+                  (type) => type.code === c.applicationDecisionComponentTypeCode
+                );
 
-          decision.conditions = decision.conditions.sort((a, b) => {
+                const label =
+                  mappedDecision.resolutionNumber && mappedDecision.resolutionYear
+                    ? `#${mappedDecision.resolutionNumber}/${mappedDecision.resolutionYear} ${matchingType?.label}`
+                    : `Draft ${matchingType?.label}`;
+
+                return label;
+              }),
+            };
+          });
+
+          mappedDecision.conditions = conditions.sort((a, b) => {
             if (a.completionDate && !b.completionDate) {
               return 1;
             } else if (!a.completionDate && b.completionDate) {
@@ -87,6 +107,8 @@ export class ConditionsComponent implements OnInit {
 
             return a.type!.label.localeCompare(b.type!.label);
           });
+
+          this.decision = mappedDecision;
         }
 
         return mappedDecision;

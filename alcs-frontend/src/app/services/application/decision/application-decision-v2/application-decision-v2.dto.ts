@@ -156,6 +156,7 @@ export interface DecisionComponentDto
   applicationDecisionComponentTypeCode: string;
   applicationDecisionComponentType?: DecisionComponentTypeDto;
   applicationDecisionUuid?: string;
+  conditionComponentsLabels?: string;
 }
 
 export interface DecisionCodesDto {
@@ -191,12 +192,18 @@ export interface ApplicationDecisionConditionDto {
   completionDate?: number | null;
   supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  components?: DecisionComponentDto[] | null;
+  conditionComponentsLabels?: string[];
 }
 
-export interface UpdateApplicationDecisionConditionDto {
-  uuid?: string;
+export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
+  tempId?: string;
+}
+export interface UpdateApplicationDecisionConditionDto {
+  uuid?: string;
+  componentToConditions?: ComponentToCondition[] | null;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;

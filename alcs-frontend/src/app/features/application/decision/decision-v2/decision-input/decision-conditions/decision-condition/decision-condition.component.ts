@@ -17,7 +17,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() selectableComponents: SelectableComponent[] = [];
 
   type = new FormControl<string | null>(null, [Validators.required]);
-  componentToCondition = new FormControl<string | null>(null, [Validators.required]);
+  componentToConditions = new FormControl<string[] | null>(null, [Validators.required]);
   approvalDependant = new FormControl<string | null>(null, [Validators.required]);
 
   securityAmount = new FormControl<string | null>(null);
@@ -30,7 +30,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     securityAmount: this.securityAmount,
     administrativeFee: this.administrativeFee,
     description: this.description,
-    componentToCondition: this.componentToCondition,
+    componentToCondition: this.componentToConditions,
   });
 
   ngOnInit(): void {
@@ -40,15 +40,15 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         approvalDependant = this.data.approvalDependant ? 'true' : 'false';
       }
 
-      const selectedOption = this.selectableComponents.find(
-        (component) =>
-          this.data.componentToConditionType &&
-          this.data.componentToConditionType === component.code &&
-          this.data.componentDecisionUuid &&
-          this.data.componentDecisionUuid === component.decisionUuid
-      );
+      const selectedOptions = this.selectableComponents
+        .filter((component) => this.data.componentToConditions?.map((e) => e.tempId)?.includes(component.tempId))
+        .map((e) => ({
+          componentDecisionUuid: e.decisionUuid,
+          componentToConditionType: e.code,
+          tempId: e.tempId,
+        }));
 
-      this.componentToCondition.setValue(selectedOption?.tempId ?? null);
+      this.componentToConditions.setValue(selectedOptions.map((e) => e.tempId) ?? null);
 
       this.form.patchValue({
         type: this.data.type?.code ?? null,
@@ -61,9 +61,14 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
 
     this.form.valueChanges.subscribe((changes) => {
       const matchingType = this.codes.find((code) => code.code === this.type.value);
-      const selectedOption = this.selectableComponents.find(
-        (component) => this.componentToCondition.value && component.tempId === this.componentToCondition.value
-      );
+
+      const selectedOptions = this.selectableComponents
+        .filter((component) => this.componentToConditions.value?.includes(component.tempId))
+        .map((e) => ({
+          componentDecisionUuid: e.decisionUuid,
+          componentToConditionType: e.code,
+        }));
+
       this.dataChange.emit({
         tempUuid: this.data.tempUuid,
         uuid: this.data.uuid,
@@ -72,20 +77,22 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
-        componentToConditionType: selectedOption?.code,
-        componentDecisionUuid: selectedOption?.decisionUuid,
+        componentToConditions: selectedOptions,
       });
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectableComponents']) {
-      const selectedValue = this.componentToCondition.value;
-      const selectedOption = this.selectableComponents.find(
-        (component) => selectedValue && component.tempId === selectedValue
-      );
-      if (!selectedOption) {
-        this.componentToCondition.setValue(null);
+      const selectedOptions = this.selectableComponents
+        .filter((component) => this.componentToConditions.value?.includes(component.tempId))
+        .map((e) => ({
+          componentDecisionUuid: e.decisionUuid,
+          componentToConditionType: e.code,
+        }));
+
+      if (selectedOptions && selectedOptions.length < 1) {
+        this.componentToConditions.setValue(null);
       }
     }
   }

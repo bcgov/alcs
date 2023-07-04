@@ -1,7 +1,7 @@
-import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import {
   UpdateApplicationDecisionConditionDto,
@@ -48,38 +48,41 @@ export class ApplicationDecisionConditionService {
       condition.approvalDependant = updateDto.approvalDependant ?? null;
 
       if (
-        updateDto.componentDecisionUuid &&
-        updateDto.componentToConditionType
+        updateDto.componentToConditions !== undefined &&
+        updateDto.componentToConditions.length > 0
       ) {
-        const matchingComponent = allComponents.find(
+        const matchingComponent = allComponents.filter(
           (component) =>
-            component.applicationDecisionUuid ===
-              updateDto.componentDecisionUuid &&
-            component.applicationDecisionComponentType.code ===
-              updateDto.componentToConditionType,
+            updateDto.componentToConditions
+              ?.flatMap((e) => e.componentDecisionUuid)
+              .includes(component.applicationDecisionUuid) &&
+            updateDto.componentToConditions
+              ?.flatMap((e) => e.componentToConditionType)
+              .includes(component.applicationDecisionComponentTypeCode),
         );
-        if (matchingComponent) {
-          condition.componentUuid = matchingComponent.uuid;
+
+        if (matchingComponent && matchingComponent.length > 0) {
+          condition.components = matchingComponent;
           updatedConditions.push(condition);
           continue;
         }
 
-        const matchingComponent2 = newComponents.find(
-          (component) =>
-            component.applicationDecisionComponentTypeCode ===
-            updateDto.componentToConditionType,
+        const matchingComponent2 = newComponents.filter((component) =>
+          updateDto.componentToConditions
+            ?.flatMap((e) => e.componentToConditionType)
+            .includes(component.applicationDecisionComponentTypeCode),
         );
-        if (matchingComponent2) {
-          condition.component = matchingComponent2;
+
+        if (matchingComponent2 && matchingComponent2.length > 0) {
+          condition.components = matchingComponent2;
           updatedConditions.push(condition);
           continue;
         }
-
         throw new ServiceValidationException(
           'Failed to find matching component',
         );
       } else {
-        condition.componentUuid = null;
+        condition.components = null;
         updatedConditions.push(condition);
       }
     }

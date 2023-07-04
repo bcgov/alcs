@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
@@ -67,9 +67,13 @@ export class ApplicationDecisionCondition extends Base {
   @Column()
   decisionUuid: string;
 
-  @ManyToOne(() => ApplicationDecisionComponent)
-  component: ApplicationDecisionComponent | null;
-
-  @Column({ type: 'uuid', nullable: true })
-  componentUuid: string | null;
+  @ManyToMany(
+    () => ApplicationDecisionComponent,
+    (component) => component.conditions,
+    { nullable: true },
+  )
+  @JoinTable({
+    name: 'application_decision_condition_component',
+  })
+  components: ApplicationDecisionComponent[] | null;
 }

@@ -23,7 +23,7 @@ const CONDITION_STATUS = {
   styleUrls: ['./condition.component.scss'],
 })
 export class ConditionComponent implements OnInit, AfterViewInit {
-  @Input() condition!: ApplicationDecisionConditionDto;
+  @Input() condition!: ApplicationDecisionConditionDto & { componentLabels?: string };
   @Input() isDraftDecision!: boolean;
 
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
@@ -40,6 +40,13 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.updateStatus();
+    if (this.condition) {
+      
+      this.condition = {
+        ...this.condition,
+        componentLabels: this.condition.conditionComponentsLabels?.join(', '),
+      };
+    }
   }
 
   ngAfterViewInit(): void {

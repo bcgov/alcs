@@ -63,6 +63,14 @@ export class ApplicationDecisionV2Controller {
       fileNumber,
     );
 
+    // console.log('decisions', decisions);
+
+    for (const decision of decisions) {
+      for (const condition of decision.conditions) {
+        console.log('conditions', decision.uuid, condition.components);
+      }
+    }
+
     return await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,

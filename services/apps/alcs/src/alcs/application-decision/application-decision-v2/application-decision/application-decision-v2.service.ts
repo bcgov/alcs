@@ -115,6 +115,7 @@ export class ApplicationDecisionV2Service {
         },
         conditions: {
           type: true,
+          components: true,
         },
       },
     });
@@ -206,6 +207,7 @@ export class ApplicationDecisionV2Service {
         },
         conditions: {
           type: true,
+          components: true,
         },
         chairReviewOutcome: true,
       },
@@ -220,6 +222,7 @@ export class ApplicationDecisionV2Service {
     decision.documents = decision.documents.filter(
       (document) => !!document.document,
     );
+
     return decision;
   }
 
@@ -302,6 +305,7 @@ export class ApplicationDecisionV2Service {
     await this.updateComponents(updateDto, existingDecision);
 
     //Must be called after update components
+    // TODO here where updateConditions happens
     await this.updateConditions(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(
