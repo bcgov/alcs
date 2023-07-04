@@ -60,7 +60,7 @@
       <a
         (click)="onToggleReadMore()"
         (keypress)="onToggleReadMore()"
-        [ngClass]="{ 'display-non': !isReadMoreVisible && condition.description }"
+        [ngClass]="{ 'display-non': !isReadMoreVisible || !condition.description }"
         >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
       >
     </div>
