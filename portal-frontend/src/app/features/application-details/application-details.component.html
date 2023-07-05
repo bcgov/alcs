@@ -304,8 +304,8 @@
         <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
       </div>
     </div>
-    <div class="edit-button">
-      <button *ngIf="showEdit" mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
     </div>
   </div>
 </section>
