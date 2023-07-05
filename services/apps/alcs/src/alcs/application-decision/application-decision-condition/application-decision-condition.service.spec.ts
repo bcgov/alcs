@@ -48,6 +48,7 @@ describe('ApplicationDecisionConditionService', () => {
       mockApplicationDecisionConditionRepository.findOneOrFail,
     ).toBeCalledWith({
       where: { uuid: 'fake' },
+      relations: { type: true },
     });
     expect(result).toBeDefined();
   });
@@ -107,6 +108,7 @@ describe('ApplicationDecisionConditionService', () => {
       mockApplicationDecisionConditionRepository.findOneOrFail,
     ).toBeCalledWith({
       where: { uuid: 'uuid' },
+      relations: { type: true },
     });
     expect(result[0].uuid).toEqual(mockDto.uuid);
   });

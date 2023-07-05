@@ -5,6 +5,7 @@ import { ApplicationDetailService } from '../../../../services/application/appli
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
   DecisionCodesDto,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
@@ -14,12 +15,6 @@ import {
   RECON_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
-
-type LoadingDecision = ApplicationDecisionDto & {
-  reconsideredByResolutions: string[];
-  modifiedByResolutions: string[];
-  index: number;
-};
 
 @Component({
   selector: 'app-conditions',
@@ -31,8 +26,8 @@ export class ConditionsComponent implements OnInit {
 
   decisionUuid: string = '';
   fileNumber: string = '';
-  decisions: LoadingDecision[] = [];
-  decision!: LoadingDecision;
+  decisions: ApplicationDecisionWithLinkedResolutionDto[] = [];
+  decision!: ApplicationDecisionWithLinkedResolutionDto;
   conditionDecision!: ApplicationDecisionDto;
   application: ApplicationDto | undefined;
   codes!: DecisionCodesDto;
@@ -64,17 +59,8 @@ export class ConditionsComponent implements OnInit {
     this.codes = await this.decisionService.fetchCodes();
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
       this.decisions = decisions.map((decision, ind) => {
-        const mappedDecision = {
-          ...decision,
-          reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-          modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
-          // TODO maybe move this to service layer so the logic is shared between decisions and conditions page
-          index: decisions.length - ind,
-        };
-
         if (decision.uuid === this.decisionUuid) {
           const conditions = decision.conditions.map((e) => {
-            
             return {
               ...e,
               conditionComponentsLabels: e.components?.map((c) => {
@@ -83,8 +69,8 @@ export class ConditionsComponent implements OnInit {
                 );
 
                 const label =
-                  mappedDecision.resolutionNumber && mappedDecision.resolutionYear
-                    ? `#${mappedDecision.resolutionNumber}/${mappedDecision.resolutionYear} ${matchingType?.label}`
+                  decision.resolutionNumber && decision.resolutionYear
+                    ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
                     : `Draft ${matchingType?.label}`;
 
                 return label;
@@ -92,7 +78,7 @@ export class ConditionsComponent implements OnInit {
             };
           });
 
-          mappedDecision.conditions = conditions.sort((a, b) => {
+          decision.conditions = conditions.sort((a, b) => {
             if (a.completionDate && !b.completionDate) {
               return 1;
             } else if (!a.completionDate && b.completionDate) {
@@ -108,10 +94,10 @@ export class ConditionsComponent implements OnInit {
             return a.type!.label.localeCompare(b.type!.label);
           });
 
-          this.decision = mappedDecision;
+          this.decision = decision;
         }
 
-        return mappedDecision;
+        return decision;
       });
     });
 

@@ -6,7 +6,7 @@
       mat-stroked-button
       color="primary"
       [routerLink]="['../../']"
-      [queryParams]="{ uuid: decision?.uuid }"
+      [queryParams]="{ uuid: decision.uuid }"
     >
       back to decision view
     </button>
@@ -16,12 +16,12 @@
       <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions">
         <div>
           <strong>Modified&nbsp;By:&nbsp;</strong>
-          {{ decision.modifiedByResolutions.join(', ') }}
+          {{ decision.modifiedByResolutions?.join(', ') }}
           <span *ngIf="!decision.modifiedBy?.length">N/A</span>
         </div>
         <div>
           <strong>Reconsidered&nbsp;By:&nbsp;</strong>
-          {{ decision.reconsideredByResolutions.join(', ') }}
+          {{ decision.reconsideredByResolutions?.join(', ') }}
           <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
         </div>
       </div>

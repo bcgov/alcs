@@ -171,6 +171,8 @@ describe('ApplicationDecisionV2Service', () => {
     mockNaruSubtypeRepository.find.mockResolvedValue([]);
 
     mockDecisionComponentService.createOrUpdate.mockResolvedValue([]);
+
+    mockDecisionConditionService.remove.mockResolvedValue({} as any);
   });
 
   describe('ApplicationDecisionService Core Tests', () => {

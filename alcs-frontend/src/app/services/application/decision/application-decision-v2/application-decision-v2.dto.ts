@@ -84,6 +84,12 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
+export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationDecisionDto {
+  reconsideredByResolutions?: string[];
+  modifiedByResolutions?: string[];
+  index: number;
+}
+
 export interface DecisionDocumentDto {
   uuid: string;
   fileName: string;

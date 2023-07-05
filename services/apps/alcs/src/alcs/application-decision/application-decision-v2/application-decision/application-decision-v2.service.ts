@@ -305,7 +305,6 @@ export class ApplicationDecisionV2Service {
     await this.updateComponents(updateDto, existingDecision);
 
     //Must be called after update components
-    // TODO here where updateConditions happens
     await this.updateConditions(updateDto, existingDecision);
 
     const updatedDecision = await this.appDecisionRepository.save(

@@ -6,7 +6,7 @@ import { ApplicationDetailService } from '../../../../services/application/appli
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
-  ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
   APPLICATION_DECISION_COMPONENT_TYPE,
   CeoCriterionDto,
   DecisionMakerDto,
@@ -25,9 +25,7 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { decisionChildRoutes } from '../decision.module';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
-type LoadingDecision = ApplicationDecisionDto & {
-  reconsideredByResolutions: string[];
-  modifiedByResolutions: string[];
+type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
 };
 
@@ -92,8 +90,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
       this.decisions = decisions.map((decision) => ({
         ...decision,
-        reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-        modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
         loading: false,
       }));
 
@@ -130,7 +126,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit`]);
   }
 
-  async onEdit(decision: LoadingDecision) {
+  async onEdit(decision: ApplicationDecisionWithLinkedResolutionDto) {
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 

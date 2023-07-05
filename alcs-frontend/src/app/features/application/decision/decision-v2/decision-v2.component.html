@@ -35,12 +35,12 @@
         <div *ngIf="decision.modifiedBy?.length || decision.reconsideredBy?.length" class="post-decisions body-text">
           <div>
             <strong>Modified&nbsp;By:&nbsp;</strong>
-            {{ decision.modifiedByResolutions.join(', ') }}
+            {{ decision.modifiedByResolutions?.join(', ') }}
             <span *ngIf="!decision.modifiedBy?.length">N/A</span>
           </div>
           <div>
             <strong>Reconsidered&nbsp;By:&nbsp;</strong>
-            {{ decision.reconsideredByResolutions.join(', ') }}
+            {{ decision.reconsideredByResolutions?.join(', ') }}
             <span *ngIf="!decision.reconsideredBy?.length">N/A</span>
           </div>
         </div>
@@ -48,7 +48,7 @@
         <div class="decision-padding">
           <div class="header">
             <div class="subheading1 title">
-              Decision #{{ decisions.length - i }}
+              Decision #{{ decision.index }}
               <div *ngIf="i === decisions.length - 1 && application">
                 <span class="days" matTooltip="Active Days">
                   <mat-icon class="icon">calendar_month</mat-icon>
