@@ -1,5 +1,5 @@
 <div class="header">
-  <h4>{{ condition.type?.label }}</h4>
+  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
   <ng-container *ngIf="conditionStatus === CONDITION_STATUS.INCOMPLETE">
     <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
   </ng-container>
