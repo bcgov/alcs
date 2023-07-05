@@ -58,7 +58,10 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       const update = await this.conditionService.update(condition.uuid, {
         [field]: value,
       });
-      this.condition = update as Condition;
+
+      const labels = this.condition.componentLabels;
+      this.condition = { ...update, componentLabels: labels } as Condition;
+
       this.updateStatus();
     }
   }
