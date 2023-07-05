@@ -185,7 +185,7 @@ export class ApplicationSubmissionController {
   @Post('/alcs/submit/:uuid')
   async submitAsApplicant(@Param('uuid') uuid: string, @Req() req) {
     const applicationSubmission =
-      await this.applicationSubmissionService.getIfCreatorByUuid(
+      await this.applicationSubmissionService.verifyAccessByUuid(
         uuid,
         req.user.entity,
       );

@@ -302,7 +302,7 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
   });
@@ -328,13 +328,13 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
     expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
+    mockAppService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission({
         typeCode: 'NOT-TURP',
       }),
