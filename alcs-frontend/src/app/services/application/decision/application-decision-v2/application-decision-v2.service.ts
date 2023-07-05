@@ -21,7 +21,7 @@ export class ApplicationDecisionV2Service {
   private decision: ApplicationDecisionDto | undefined;
   private decisions: ApplicationDecisionWithLinkedResolutionDto[] = [];
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-  $decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[] | []>([]);
+  $decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 

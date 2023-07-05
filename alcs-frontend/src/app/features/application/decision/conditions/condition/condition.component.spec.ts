@@ -31,7 +31,12 @@ describe('ConditionComponent', () => {
     fixture = TestBed.createComponent(ConditionComponent);
     component = fixture.componentInstance;
 
-    component.condition = createMock<ApplicationDecisionConditionDto>();
+    component.condition = createMock<
+      ApplicationDecisionConditionDto & {
+        conditionComponentsLabels?: string[];
+        status: string;
+      }
+    >();
     component.condition.conditionComponentsLabels = [];
 
     fixture.detectChanges();

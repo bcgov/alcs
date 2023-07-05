@@ -8,7 +8,10 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
-import { ApplicationDecisionDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import {
+  ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
+} from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -25,7 +28,7 @@ describe('DecisionV2Component', () => {
   beforeEach(async () => {
     mockApplicationDecisionService = createMock();
     mockApplicationDecisionService.$decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-    mockApplicationDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
+    mockApplicationDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
