@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import moment from 'moment';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   ApplicationDecisionWithLinkedResolutionDto,
   DecisionCodesDto,
@@ -16,6 +18,21 @@ import {
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 
+export type ApplicationDecisionConditionWithStatus = ApplicationDecisionConditionDto & {
+  conditionComponentsLabels?: string[];
+  status: string;
+};
+
+export type ApplicationDecisionWithConditionComponentLabels = ApplicationDecisionWithLinkedResolutionDto & {
+  conditions: ApplicationDecisionConditionWithStatus[];
+};
+
+export const CONDITION_STATUS = {
+  INCOMPLETE: 'incomplete',
+  COMPLETE: 'complete',
+  SUPERSEDED: 'superseded',
+};
+
 @Component({
   selector: 'app-conditions',
   templateUrl: './conditions.component.html',
@@ -26,11 +43,12 @@ export class ConditionsComponent implements OnInit {
 
   decisionUuid: string = '';
   fileNumber: string = '';
-  decisions: ApplicationDecisionWithLinkedResolutionDto[] = [];
-  decision!: ApplicationDecisionWithLinkedResolutionDto;
+  decisions: ApplicationDecisionWithConditionComponentLabels[] = [];
+  decision!: ApplicationDecisionWithConditionComponentLabels;
   conditionDecision!: ApplicationDecisionDto;
   application: ApplicationDto | undefined;
   codes!: DecisionCodesDto;
+  today!: number;
 
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
@@ -41,7 +59,9 @@ export class ConditionsComponent implements OnInit {
     private applicationDetailService: ApplicationDetailService,
     private decisionService: ApplicationDecisionV2Service,
     private activatedRouter: ActivatedRoute
-  ) {}
+  ) {
+    this.today = moment().startOf('day').toDate().getTime();
+  }
 
   ngOnInit(): void {
     this.fileNumber = this.activatedRouter.parent?.parent?.snapshot.paramMap.get('fileNumber')!;
@@ -58,49 +78,73 @@ export class ConditionsComponent implements OnInit {
   async loadDecisions(fileNumber: string) {
     this.codes = await this.decisionService.fetchCodes();
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision, ind) => {
+      this.decisions = decisions.map((decision) => {
         if (decision.uuid === this.decisionUuid) {
-          const conditions = decision.conditions.map((e) => {
-            return {
-              ...e,
-              conditionComponentsLabels: e.components?.map((c) => {
-                const matchingType = this.codes.decisionComponentTypes.find(
-                  (type) => type.code === c.applicationDecisionComponentTypeCode
-                );
+          const conditions = this.mapConditions(decision);
 
-                const label =
-                  decision.resolutionNumber && decision.resolutionYear
-                    ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
-                    : `Draft ${matchingType?.label}`;
+          this.sortConditions(decision, conditions);
 
-                return label;
-              }),
-            };
-          });
-
-          decision.conditions = conditions.sort((a, b) => {
-            if (a.completionDate && !b.completionDate) {
-              return 1;
-            } else if (!a.completionDate && b.completionDate) {
-              return -1;
-            } else if (!a.completionDate && !b.completionDate && !a.supersededDate && !b.supersededDate) {
-              return 0;
-            } else if (!a.completionDate && !b.completionDate && a.supersededDate && !b.supersededDate) {
-              return 1;
-            } else if (!a.completionDate && !b.completionDate && !a.supersededDate && b.supersededDate) {
-              return -1;
-            }
-
-            return a.type!.label.localeCompare(b.type!.label);
-          });
-
-          this.decision = decision;
+          this.decision = decision as ApplicationDecisionWithConditionComponentLabels;
         }
 
-        return decision;
+        return decision as ApplicationDecisionWithConditionComponentLabels;
       });
     });
 
     this.decisionService.loadDecisions(fileNumber);
+  }
+
+  private sortConditions(
+    decision: ApplicationDecisionWithLinkedResolutionDto,
+    conditions: ApplicationDecisionConditionWithStatus[]
+  ) {
+    decision.conditions = conditions.sort((a, b) => {
+      const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.SUPERSEDED];
+      if (a.status === b.status) {
+        return a.type!.label.localeCompare(b.type!.label);
+      } else {
+        return order.indexOf(a.status) - order.indexOf(b.status);
+      }
+    });
+  }
+
+  private mapConditions(decision: ApplicationDecisionWithLinkedResolutionDto) {
+    return decision.conditions.map((condition) => {
+      const status = this.getStatus(condition, decision);
+
+      return {
+        ...condition,
+        status,
+        conditionComponentsLabels: condition.components?.map((c) => {
+          const matchingType = this.codes.decisionComponentTypes.find(
+            (type) => type.code === c.applicationDecisionComponentTypeCode
+          );
+
+          const label =
+            decision.resolutionNumber && decision.resolutionYear
+              ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
+              : `Draft ${matchingType?.label}`;
+
+          return label;
+        }),
+      } as ApplicationDecisionConditionWithStatus;
+    });
+  }
+
+  private getStatus(
+    condition: ApplicationDecisionConditionDto,
+    decision: ApplicationDecisionWithLinkedResolutionDto
+  ) {
+    let status = '';
+    if (condition.supersededDate && condition.supersededDate <= this.today) {
+      status = CONDITION_STATUS.SUPERSEDED;
+    } else if (condition.completionDate && condition.completionDate <= this.today) {
+      status = CONDITION_STATUS.COMPLETE;
+    } else if (decision.isDraft === false) {
+      status = CONDITION_STATUS.INCOMPLETE;
+    } else {
+      status = '';
+    }
+    return status;
   }
 }

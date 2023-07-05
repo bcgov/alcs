@@ -199,7 +199,7 @@ export interface ApplicationDecisionConditionDto {
   supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
   components?: DecisionComponentDto[] | null;
-  conditionComponentsLabels?: string[];
+  // conditionComponentsLabels?: string[];
 }
 
 export interface ComponentToCondition {

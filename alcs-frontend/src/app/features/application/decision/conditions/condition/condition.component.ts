@@ -1,20 +1,16 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
-import {
-  ApplicationDecisionConditionDto,
-  UpdateApplicationDecisionConditionDto,
-} from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { UpdateApplicationDecisionConditionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
   DECISION_CONDITION_COMPLETE_LABEL,
   DECISION_CONDITION_INCOMPLETE_LABEL,
   DECISION_CONDITION_SUPERSEDED_LABEL,
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
+import { ApplicationDecisionConditionWithStatus, CONDITION_STATUS } from '../conditions.component';
 
-const CONDITION_STATUS = {
-  INCOMPLETE: 'incomplete',
-  COMPLETE: 'complete',
-  SUPERSEDED: 'superseded',
+type Condition = ApplicationDecisionConditionWithStatus & {
+  componentLabels?: string;
 };
 
 @Component({
@@ -23,7 +19,7 @@ const CONDITION_STATUS = {
   styleUrls: ['./condition.component.scss'],
 })
 export class ConditionComponent implements OnInit, AfterViewInit {
-  @Input() condition!: ApplicationDecisionConditionDto & { componentLabels?: string };
+  @Input() condition!: Condition;
   @Input() isDraftDecision!: boolean;
 
   incompleteLabel = DECISION_CONDITION_INCOMPLETE_LABEL;
@@ -41,7 +37,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.updateStatus();
     if (this.condition) {
-      
       this.condition = {
         ...this.condition,
         componentLabels: this.condition.conditionComponentsLabels?.join(', '),
@@ -63,7 +58,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       const update = await this.conditionService.update(condition.uuid, {
         [field]: value,
       });
-      this.condition = update;
+      this.condition = update as Condition;
       this.updateStatus();
     }
   }

@@ -2,6 +2,7 @@
   <div class="header">
     <h3>View Conditions</h3>
     <button
+      *ngIf="decision"
       type="button"
       mat-stroked-button
       color="primary"
@@ -63,6 +64,15 @@
     </div>
   </section>
   <div class="footer">
-    <button type="button" mat-stroked-button color="primary" [routerLink]="['../../']">back to decision view</button>
+    <button
+      *ngIf="decision"
+      type="button"
+      mat-stroked-button
+      color="primary"
+      [routerLink]="['../../']"
+      [queryParams]="{ uuid: decision.uuid }"
+    >
+      back to decision view
+    </button>
   </div>
 </section>
