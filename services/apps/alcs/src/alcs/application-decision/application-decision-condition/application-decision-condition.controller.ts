@@ -39,7 +39,7 @@ export class ApplicationDecisionConditionController {
       completionDate: formatIncomingDate(updates.completionDate),
       supersededDate: formatIncomingDate(updates.supersededDate),
     });
-    return this.mapper.mapAsync(
+    return await this.mapper.mapAsync(
       updatedCondition,
       ApplicationDecisionCondition,
       ApplicationDecisionConditionDto,

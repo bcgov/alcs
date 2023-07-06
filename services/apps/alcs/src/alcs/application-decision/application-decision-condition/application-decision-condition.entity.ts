@@ -15,6 +15,7 @@ export class ApplicationDecisionCondition extends Base {
     }
   }
 
+  @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   approvalDependant: boolean | null;
 
@@ -38,9 +39,11 @@ export class ApplicationDecisionCondition extends Base {
   })
   administrativeFee: number | null;
 
+  @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
+  @AutoMap(() => String)
   @Column({
     type: 'timestamptz',
     comment: 'Condition Completion date',
@@ -48,6 +51,7 @@ export class ApplicationDecisionCondition extends Base {
   })
   completionDate?: Date | null;
 
+  @AutoMap()
   @Column({
     type: 'timestamptz',
     comment: 'Condition Superseded date',
@@ -58,12 +62,14 @@ export class ApplicationDecisionCondition extends Base {
   @ManyToOne(() => ApplicationDecisionConditionType)
   type: ApplicationDecisionConditionType;
 
+  @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   typeCode: string | null;
 
   @ManyToOne(() => ApplicationDecision, { nullable: false })
   decision: ApplicationDecision;
 
+  @AutoMap(() => String)
   @Column()
   decisionUuid: string;
 

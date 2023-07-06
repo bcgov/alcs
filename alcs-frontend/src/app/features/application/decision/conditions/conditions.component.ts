@@ -101,7 +101,11 @@ export class ConditionsComponent implements OnInit {
     decision.conditions = conditions.sort((a, b) => {
       const order = [CONDITION_STATUS.INCOMPLETE, CONDITION_STATUS.COMPLETE, CONDITION_STATUS.SUPERSEDED];
       if (a.status === b.status) {
-        return a.type!.label.localeCompare(b.type!.label);
+        if (a.type && b.type) {
+          return a.type?.label.localeCompare(b.type.label);
+        } else {
+          return -1;
+        }
       } else {
         return order.indexOf(a.status) - order.indexOf(b.status);
       }
@@ -131,10 +135,7 @@ export class ConditionsComponent implements OnInit {
     });
   }
 
-  private getStatus(
-    condition: ApplicationDecisionConditionDto,
-    decision: ApplicationDecisionWithLinkedResolutionDto
-  ) {
+  private getStatus(condition: ApplicationDecisionConditionDto, decision: ApplicationDecisionWithLinkedResolutionDto) {
     let status = '';
     if (condition.supersededDate && condition.supersededDate <= this.today) {
       status = CONDITION_STATUS.SUPERSEDED;

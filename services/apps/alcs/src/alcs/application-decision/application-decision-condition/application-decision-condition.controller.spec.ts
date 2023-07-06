@@ -86,7 +86,7 @@ describe('ApplicationDecisionConditionController', () => {
       );
       mockApplicationDecisionConditionService.update.mockResolvedValue(updated);
 
-      await controller.update(uuid, updates);
+      const result = await controller.update(uuid, updates);
 
       expect(
         mockApplicationDecisionConditionService.getOneOrFail,
@@ -98,6 +98,12 @@ describe('ApplicationDecisionConditionController', () => {
         completionDate: date,
         supersededDate: date,
       });
+      expect(new Date(result.completionDate!)).toEqual(updated.completionDate);
+      expect(new Date(result.supersededDate!)).toEqual(updated.supersededDate);
+      expect(result.description).toEqual(updated.description);
+      expect(result.administrativeFee).toEqual(updated.administrativeFee);
+      expect(result.securityAmount).toEqual(updated.securityAmount);
+      expect(result.approvalDependant).toEqual(updated.approvalDependant);
     });
   });
 });
