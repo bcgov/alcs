@@ -84,6 +84,12 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
+export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationDecisionDto {
+  reconsideredByResolutions?: string[];
+  modifiedByResolutions?: string[];
+  index: number;
+}
+
 export interface DecisionDocumentDto {
   uuid: string;
   fileName: string;
@@ -156,6 +162,7 @@ export interface DecisionComponentDto
   applicationDecisionComponentTypeCode: string;
   applicationDecisionComponentType?: DecisionComponentTypeDto;
   applicationDecisionUuid?: string;
+  conditionComponentsLabels?: string;
 }
 
 export interface DecisionCodesDto {
@@ -188,16 +195,25 @@ export interface ApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  components?: DecisionComponentDto[] | null;
 }
 
-export interface UpdateApplicationDecisionConditionDto {
-  uuid?: string;
+export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
+  tempId?: string;
+}
+export interface UpdateApplicationDecisionConditionDto {
+  uuid?: string;
+  componentToConditions?: ComponentToCondition[] | null;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
 }

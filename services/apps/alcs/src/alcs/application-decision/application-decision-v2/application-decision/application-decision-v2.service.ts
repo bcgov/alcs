@@ -113,6 +113,10 @@ export class ApplicationDecisionV2Service {
           applicationDecisionComponentType: true,
           naruSubtype: true,
         },
+        conditions: {
+          type: true,
+          components: true,
+        },
       },
     });
 
@@ -203,6 +207,7 @@ export class ApplicationDecisionV2Service {
         },
         conditions: {
           type: true,
+          components: true,
         },
         chairReviewOutcome: true,
       },
@@ -217,6 +222,7 @@ export class ApplicationDecisionV2Service {
     decision.documents = decision.documents.filter(
       (document) => !!document.document,
     );
+
     return decision;
   }
 

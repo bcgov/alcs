@@ -1,3 +1,11 @@
+import { ApplicationDecisionOutcomeCode } from '../../src/alcs/application-decision/application-decision-outcome.entity';
+import { ApplicationDecisionMeeting } from '../../src/alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecision } from '../../src/alcs/application-decision/application-decision.entity';
+import { ApplicationModificationOutcomeType } from '../../src/alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
+import { ApplicationModification } from '../../src/alcs/application-decision/application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../../src/alcs/application-decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationOutcomeType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
+import { ApplicationReconsiderationType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationMeeting } from '../../src/alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../src/alcs/application/application-paused.entity';
 import { Application } from '../../src/alcs/application/application.entity';
@@ -12,14 +20,6 @@ import { ApplicationRegion } from '../../src/alcs/code/application-code/applicat
 import { ApplicationType } from '../../src/alcs/code/application-code/application-type/application-type.entity';
 import { Comment } from '../../src/alcs/comment/comment.entity';
 import { CommentMention } from '../../src/alcs/comment/mention/comment-mention.entity';
-import { ApplicationDecisionOutcomeCode } from '../../src/alcs/application-decision/application-decision-outcome.entity';
-import { ApplicationDecision } from '../../src/alcs/application-decision/application-decision.entity';
-import { ApplicationModification } from '../../src/alcs/application-decision/application-modification/application-modification.entity';
-import { ApplicationModificationOutcomeType } from '../../src/alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
-import { ApplicationReconsideration } from '../../src/alcs/application-decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationOutcomeType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
-import { ApplicationReconsiderationType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeeting } from '../../src/alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
 
@@ -291,6 +291,7 @@ const initApplicationDecisionMock = (application?: Application) => {
     applicationUuid: application ? application.uuid : 'fake-application-uuid',
     application,
     documents: [],
+    conditions: [],
   });
 };
 

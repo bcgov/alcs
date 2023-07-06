@@ -47,6 +47,7 @@ import { InlineTextComponent } from './inline-text/inline-text.component';
 import { InlineTextareaComponent } from './inline-textarea/inline-textarea.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
@@ -58,7 +59,6 @@ import { TimeTrackerComponent } from './time-tracker/time-tracker.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
-import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 
 @NgModule({
   declarations: [

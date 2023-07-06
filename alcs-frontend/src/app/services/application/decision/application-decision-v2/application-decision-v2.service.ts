@@ -7,6 +7,7 @@ import { verifyFileSize } from '../../../../shared/utils/file-size-checker';
 import { ToastService } from '../../../toast/toast.service';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
   CreateApplicationDecisionDto,
   DecisionCodesDto,
   UpdateApplicationDecisionDto,
@@ -18,9 +19,9 @@ import {
 export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
   private decision: ApplicationDecisionDto | undefined;
-  private decisions: ApplicationDecisionDto[] = [];
+  private decisions: ApplicationDecisionWithLinkedResolutionDto[] = [];
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-  $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
+  $decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -139,7 +140,16 @@ export class ApplicationDecisionV2Service {
 
   async loadDecisions(fileNumber: string) {
     this.clearDecisions();
-    this.decisions = await this.fetchByApplication(fileNumber);
+    const decisions = await this.fetchByApplication(fileNumber);
+    const decisionsLength = decisions.length;
+
+    this.decisions = decisions.map((decision, ind) => ({
+      ...decision,
+      reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
+      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
+      index: decisionsLength - ind,
+    }));
+
     this.$decisions.next(this.decisions);
   }
 

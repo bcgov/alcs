@@ -1,10 +1,12 @@
-import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
+import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
-import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
+import {
+  UpdateApplicationDecisionConditionDto,
+  UpdateApplicationDecisionConditionServiceDto,
+} from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 
 @Injectable()
@@ -17,6 +19,9 @@ export class ApplicationDecisionConditionService {
   async getOneOrFail(uuid: string) {
     return this.repository.findOneOrFail({
       where: { uuid },
+      relations: {
+        type: true,
+      },
     });
   }
 
@@ -43,38 +48,41 @@ export class ApplicationDecisionConditionService {
       condition.approvalDependant = updateDto.approvalDependant ?? null;
 
       if (
-        updateDto.componentDecisionUuid &&
-        updateDto.componentToConditionType
+        updateDto.componentToConditions !== undefined &&
+        updateDto.componentToConditions.length > 0
       ) {
-        const matchingComponent = allComponents.find(
+        const matchingComponent = allComponents.filter(
           (component) =>
-            component.applicationDecisionUuid ===
-              updateDto.componentDecisionUuid &&
-            component.applicationDecisionComponentType.code ===
-              updateDto.componentToConditionType,
+            updateDto.componentToConditions
+              ?.flatMap((e) => e.componentDecisionUuid)
+              .includes(component.applicationDecisionUuid) &&
+            updateDto.componentToConditions
+              ?.flatMap((e) => e.componentToConditionType)
+              .includes(component.applicationDecisionComponentTypeCode),
         );
-        if (matchingComponent) {
-          condition.componentUuid = matchingComponent.uuid;
+
+        if (matchingComponent && matchingComponent.length > 0) {
+          condition.components = matchingComponent;
           updatedConditions.push(condition);
           continue;
         }
 
-        const matchingComponent2 = newComponents.find(
-          (component) =>
-            component.applicationDecisionComponentTypeCode ===
-            updateDto.componentToConditionType,
+        const matchingComponent2 = newComponents.filter((component) =>
+          updateDto.componentToConditions
+            ?.flatMap((e) => e.componentToConditionType)
+            .includes(component.applicationDecisionComponentTypeCode),
         );
-        if (matchingComponent2) {
-          condition.component = matchingComponent2;
+
+        if (matchingComponent2 && matchingComponent2.length > 0) {
+          condition.components = matchingComponent2;
           updatedConditions.push(condition);
           continue;
         }
-
         throw new ServiceValidationException(
           'Failed to find matching component',
         );
       } else {
-        condition.componentUuid = null;
+        condition.components = null;
         updatedConditions.push(condition);
       }
     }
@@ -88,5 +96,13 @@ export class ApplicationDecisionConditionService {
 
   async remove(components: ApplicationDecisionCondition[]) {
     await this.repository.remove(components);
+  }
+
+  async update(
+    existingCondition: ApplicationDecisionCondition,
+    updates: UpdateApplicationDecisionConditionServiceDto,
+  ) {
+    await this.repository.update(existingCondition.uuid, updates);
+    return await this.getOneOrFail(existingCondition.uuid);
   }
 }

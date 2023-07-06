@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
-  ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
   APPLICATION_DECISION_COMPONENT_TYPE,
   CeoCriterionDto,
   DecisionMakerDto,
@@ -25,9 +25,7 @@ import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
 import { decisionChildRoutes } from '../decision.module';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
-type LoadingDecision = ApplicationDecisionDto & {
-  reconsideredByResolutions: string[];
-  modifiedByResolutions: string[];
+type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
 };
 
@@ -65,7 +63,9 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDecisionComponentService: ApplicationDecisionComponentService,
-    private router: Router
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -90,15 +90,25 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
       this.decisions = decisions.map((decision) => ({
         ...decision,
-        reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-        modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
         loading: false,
       }));
+
+      this.scrollToDecision();
 
       this.isDraftExists = this.decisions.some((d) => d.isDraft);
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
         : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
+    });
+  }
+
+  scrollToDecision() {
+    const decisionUuid = this.activatedRouter.snapshot.queryParamMap.get('uuid');
+
+    setTimeout(() => {
+      if (this.decisions.length > 0 && decisionUuid) {
+        this.scrollToElement(decisionUuid);
+      }
     });
   }
 
@@ -116,7 +126,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit`]);
   }
 
-  async onEdit(decision: LoadingDecision) {
+  async onEdit(decision: ApplicationDecisionWithLinkedResolutionDto) {
     await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
   }
 
@@ -215,14 +225,22 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  onNavigateToConditions() {
-    // some other ticket
-    return false;
-  }
-
   ngOnDestroy(): void {
     this.decisionService.clearDecisions();
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  scrollToElement(elementId: string) {
+    const id = `#${CSS.escape(elementId)}`;
+    const element = this.elementRef.nativeElement.querySelector(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'start',
+      });
+    }
   }
 }

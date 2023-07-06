@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { ApplicationDecisionComponentDto } from '../application-decision-v2/application-decision/component/application-decision-component.dto';
 
 export class ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
 export class ApplicationDecisionConditionDto {
@@ -30,6 +32,25 @@ export class ApplicationDecisionConditionDto {
 
   @AutoMap(() => String)
   componentUuid: string | null;
+
+  @AutoMap()
+  completionDate?: number;
+
+  @AutoMap()
+  supersededDate?: number;
+
+  @AutoMap()
+  components?: ApplicationDecisionComponentDto[];
+}
+
+export class ComponentToConditionDto {
+  @IsOptional()
+  @IsUUID()
+  componentDecisionUuid?: string;
+
+  @IsOptional()
+  @IsString()
+  componentToConditionType?: string;
 }
 
 export class UpdateApplicationDecisionConditionDto {
@@ -38,12 +59,8 @@ export class UpdateApplicationDecisionConditionDto {
   uuid?: string;
 
   @IsOptional()
-  @IsUUID()
-  componentDecisionUuid?: string;
-
-  @IsOptional()
-  @IsString()
-  componentToConditionType?: string;
+  @IsArray()
+  componentToConditions?: ComponentToConditionDto[];
 
   @IsOptional()
   @IsBoolean()
@@ -64,4 +81,23 @@ export class UpdateApplicationDecisionConditionDto {
   @IsOptional()
   @IsString()
   type?: ApplicationDecisionConditionTypeDto;
+
+  @IsOptional()
+  @IsNumber()
+  completionDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  supersededDate?: number;
+}
+
+export class UpdateApplicationDecisionConditionServiceDto {
+  componentDecisionUuid?: string;
+  componentToConditionType?: string;
+  approvalDependant?: boolean;
+  securityAmount?: number;
+  administrativeFee?: number;
+  description?: string;
+  completionDate?: Date | null;
+  supersededDate?: Date | null;
 }

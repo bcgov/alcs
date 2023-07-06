@@ -31,8 +31,8 @@ import { ApplicationDecisionComponent } from '../../alcs/application-decision/ap
 import { LinkedResolutionOutcomeType } from '../../alcs/application-decision/application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
-import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
+import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -214,6 +214,26 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
+        forMember(
+          (ad) => ad.completionDate,
+          mapFrom((a) => a.completionDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.supersededDate,
+          mapFrom((a) => a.supersededDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.components,
+          mapFrom((a) =>
+            a.components && a.components.length > 0
+              ? this.mapper.mapArray(
+                  a.components,
+                  ApplicationDecisionComponent,
+                  ApplicationDecisionComponentDto,
+                )
+              : [],
+          ),
+        ),
       );
 
       createMap(

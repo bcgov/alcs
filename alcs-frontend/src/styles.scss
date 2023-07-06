@@ -300,3 +300,19 @@ mat-button-toggle-group {
 .mat-mdc-form-field-subscript-wrapper {
   display: none !important;
 }
+
+@mixin text-ellipsis($lines: 1) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  @if ($lines > 1) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  } @else {
+    white-space: nowrap;
+  }
+}
+
+.ellipsis-3 {
+  @include text-ellipsis($lines: 3);
+}
