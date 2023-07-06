@@ -145,12 +145,12 @@
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
           value="true"
-          [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+          [ngClass]="{ 'error-outline': parcelForm.touched || (isFarm.invalid && (isFarm.dirty || isFarm.touched)) }"
           >Yes</mat-button-toggle
         >
         <mat-button-toggle
           value="false"
-          [ngClass]="{ 'error-outline': isFarm.invalid && (isFarm.dirty || isFarm.touched) }"
+          [ngClass]="{ 'error-outline': parcelForm.touched || (isFarm.invalid && (isFarm.dirty || isFarm.touched)) }"
           >No</mat-button-toggle
         >
       </mat-button-toggle-group>
@@ -243,7 +243,7 @@
       </button>
       <div>
         <app-parcel-owners
-          [isDraft]='isDraft'
+          [isDraft]="isDraft"
           [fileId]="fileId"
           [submissionUuid]="submissionUuid"
           [parcelUuid]="parcel.uuid"
