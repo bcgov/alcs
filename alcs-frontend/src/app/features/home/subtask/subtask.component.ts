@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService, ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { HomeService } from '../../../services/home/home.service';
@@ -11,7 +12,9 @@ import { CardType } from '../../../shared/card/card.component';
   templateUrl: './subtask.component.html',
   styleUrls: ['./subtask.component.scss'],
 })
-export class SubtaskComponent implements OnInit {
+export class SubtaskComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
+
   @Input() subtaskType: CARD_SUBTASK_TYPE = CARD_SUBTASK_TYPE.AUDIT;
   @Input() subtaskLabel = 'Set Please';
   @Input() assignableRoles = [ROLES.LUP, ROLES.APP_SPECIALIST];
@@ -32,12 +35,12 @@ export class SubtaskComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.$assignableUsers.subscribe((users) => {
+    this.userService.$assignableUsers.pipe(takeUntil(this.destroy)).subscribe((users) => {
       this.users = users.filter((user) => user.clientRoles.some((role) => this.assignableRoles.includes(role)));
     });
     this.userService.fetchAssignableUsers();
 
-    this.authService.$currentUser.subscribe((currentUser) => {
+    this.authService.$currentUser.pipe(takeUntil(this.destroy)).subscribe((currentUser) => {
       if (currentUser && this.subtaskType === CARD_SUBTASK_TYPE.PEER_REVIEW) {
         this.showNoi = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.SOIL_OFFICER);
         this.showAppAndNonApp = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.LUP);
@@ -92,5 +95,10 @@ export class SubtaskComponent implements OnInit {
       this.totalSubtaskCount =
         this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 }
