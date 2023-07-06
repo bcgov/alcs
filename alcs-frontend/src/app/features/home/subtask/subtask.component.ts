@@ -55,6 +55,7 @@ export class SubtaskComponent implements OnInit {
     const modifications = allSubtasks.filter((s) => s.card.type === CardType.MODI);
     const covenants = allSubtasks.filter((s) => s.card.type === CardType.COV);
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
+    const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI)
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
@@ -67,7 +68,9 @@ export class SubtaskComponent implements OnInit {
 
     this.noticeOfIntentSubtasks = [
       ...nois.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiModifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...nois.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiModifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     this.nonApplicationSubtasks = [
