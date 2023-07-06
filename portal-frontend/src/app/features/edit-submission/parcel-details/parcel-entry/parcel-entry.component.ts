@@ -157,7 +157,11 @@ export class ParcelEntryComponent implements OnInit {
       this.emitFormChangeOnSearchActions();
     }
 
-    this.showErrors ? this.parcelForm.markAllAsTouched() : this.parcelForm.markAsTouched();
+    if (this.showErrors) {
+      this.parcelForm.markAllAsTouched();
+    } else {
+      this.parcelForm.controls.isFarm.markAsTouched();
+    }
   }
 
   onReset() {
