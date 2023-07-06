@@ -22,8 +22,8 @@ export class SubtaskComponent implements OnInit {
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
   nonApplicationSubtasks: HomepageSubtaskDto[] = [];
 
-  showNoi = false;
-  showAppAndNonApp = false;
+  showNoi = true;
+  showAppAndNonApp = true;
 
   constructor(
     private homeService: HomeService,
@@ -38,7 +38,7 @@ export class SubtaskComponent implements OnInit {
     this.userService.fetchAssignableUsers();
 
     this.authService.$currentUser.subscribe((currentUser) => {
-      if (currentUser) {
+      if (currentUser && this.subtaskType === CARD_SUBTASK_TYPE.PEER_REVIEW) {
         this.showNoi = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.SOIL_OFFICER);
         this.showAppAndNonApp = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.LUP);
       }
@@ -55,7 +55,7 @@ export class SubtaskComponent implements OnInit {
     const modifications = allSubtasks.filter((s) => s.card.type === CardType.MODI);
     const covenants = allSubtasks.filter((s) => s.card.type === CardType.COV);
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
-    const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI)
+    const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
