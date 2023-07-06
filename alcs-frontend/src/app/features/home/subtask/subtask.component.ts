@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ROLES } from '../../../services/authentication/authentication.service';
+import { AuthenticationService, ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto } from '../../../services/user/user.dto';
@@ -22,13 +22,27 @@ export class SubtaskComponent implements OnInit {
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
   nonApplicationSubtasks: HomepageSubtaskDto[] = [];
 
-  constructor(private homeService: HomeService, private userService: UserService) {}
+  showNoi = false;
+  showAppAndNonApp = false;
+
+  constructor(
+    private homeService: HomeService,
+    private userService: UserService,
+    private authService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.userService.$assignableUsers.subscribe((users) => {
       this.users = users.filter((user) => user.clientRoles.some((role) => this.assignableRoles.includes(role)));
     });
     this.userService.fetchAssignableUsers();
+
+    this.authService.$currentUser.subscribe((currentUser) => {
+      if (currentUser) {
+        this.showNoi = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.SOIL_OFFICER);
+        this.showAppAndNonApp = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.LUP);
+      }
+    });
 
     this.loadSubtasks();
   }
@@ -63,7 +77,17 @@ export class SubtaskComponent implements OnInit {
       ...covenants.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
-    this.totalSubtaskCount =
-      this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
+    if (this.showNoi) {
+      this.totalSubtaskCount = this.noticeOfIntentSubtasks.length;
+    }
+
+    if (this.showAppAndNonApp) {
+      this.totalSubtaskCount = this.applicationSubtasks.length + this.nonApplicationSubtasks.length;
+    }
+
+    if (this.showAppAndNonApp && this.showNoi) {
+      this.totalSubtaskCount =
+        this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
+    }
   }
 }
