@@ -15,7 +15,6 @@ p {
 
 .header {
   justify-content: space-between;
-  //   margin-bottom: 54px;
 }
 
 .footer {
@@ -23,7 +22,7 @@ p {
 }
 
 :host ::ng-deep {
-  .display-non {
+  .display-none {
     display: none !important;
   }
 
