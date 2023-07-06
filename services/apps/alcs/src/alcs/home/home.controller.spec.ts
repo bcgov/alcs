@@ -26,6 +26,7 @@ import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CodeService } from '../code/code.service';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
+import { NoticeOfIntentModification } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
@@ -351,6 +352,35 @@ describe('HomeController', () => {
 
       expect(res[0].title).toContain(mockNoi.fileNumber);
       expect(res[0].title).toContain(mockNoi.applicant);
+    });
+
+    it('should call NOI Modification Service and map it', async () => {
+      const mockNoiModification = new NoticeOfIntentModification({
+        noticeOfIntent: new NoticeOfIntent({
+          applicant: 'fake-applicant',
+          fileNumber: 'fileNumber',
+        }),
+        card: initCardMockEntity('222'),
+      });
+      mockNoticeOfIntentModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+        [mockNoiModification],
+      );
+
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.PEER_REVIEW,
+      );
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockNoticeOfIntentModificationService.getWithIncompleteSubtaskByType,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(res[0].title).toContain(
+        mockNoiModification.noticeOfIntent.fileNumber,
+      );
+      expect(res[0].title).toContain(
+        mockNoiModification.noticeOfIntent.applicant,
+      );
     });
   });
 });
