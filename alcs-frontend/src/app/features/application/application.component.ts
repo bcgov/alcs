@@ -207,8 +207,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
         this.isAwaitingLfng =
           this.isApplicantSubmission &&
-          (this.submission?.status?.code === APPLICATION_STATUS.SUBMITTED_TO_LG ||
-            this.submission?.status?.code === APPLICATION_STATUS.IN_REVIEW);
+          [
+            APPLICATION_STATUS.SUBMITTED_TO_LG,
+            APPLICATION_STATUS.IN_REVIEW,
+            APPLICATION_STATUS.WRONG_GOV,
+            APPLICATION_STATUS.INCOMPLETE,
+          ].includes(this.submission?.status?.code);
       }
     });
 
