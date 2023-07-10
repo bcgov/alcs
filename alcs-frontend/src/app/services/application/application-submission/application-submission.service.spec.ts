@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
+import { ApplicationStatus, ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
 
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -30,6 +30,7 @@ describe('ApplicationSubmissionService', () => {
     soilToPlaceVolume: null,
     soilToRemoveAverageDepth: null,
     soilToRemoveMaximumDepth: null,
+    status: {} as ApplicationStatus,
     type: '',
     updatedAt: '',
     uuid: '',
