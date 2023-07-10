@@ -174,8 +174,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
-  isSubmittedAlc = false;
-  isSubmittedLfng = false;
+  isSubmittedToAlc = false;
+  wasSubmittedToLfng = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -203,9 +203,9 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
 
-        this.isSubmittedAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+        this.isSubmittedToAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
 
-        this.isSubmittedLfng =
+        this.wasSubmittedToLfng =
           this.isApplicantSubmission &&
           [
             APPLICATION_STATUS.SUBMITTED_TO_LG,
