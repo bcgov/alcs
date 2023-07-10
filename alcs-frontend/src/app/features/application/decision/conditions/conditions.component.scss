@@ -80,6 +80,7 @@ p {
         display: grid;
         grid-template-columns: 33% 33% 33%;
         grid-row-gap: 24px;
+        grid-column-gap: 16px;
 
         .full-width {
           grid-column: 1/4;

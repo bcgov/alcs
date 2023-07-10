@@ -13,7 +13,8 @@
 <div class="grid-3">
   <div>
     <div class="subheading2">Component to Condition</div>
-    {{ condition.componentLabels }}
+    <span class="component-labels">{{ condition.componentLabels }}</span>
+    <app-no-data *ngIf="!condition.componentLabels"></app-no-data>
   </div>
 
   <div>
