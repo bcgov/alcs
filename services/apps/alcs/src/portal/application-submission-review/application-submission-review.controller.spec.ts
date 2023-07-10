@@ -15,18 +15,17 @@ import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import { EmailStatus } from '../../providers/email/email-status.entity';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../application-submission/application-status/application-status.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
 } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { SubmissionStatusType } from '../application-submission/submission-status/submission-status-type.entity';
+import { APPLICATION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 import { ApplicationSubmissionReviewController } from './application-submission-review.controller';
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
@@ -232,7 +231,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
     mockAppService.fetchApplicationTypes.mockResolvedValue([]);
     mockAppSubmissionService.getStatus.mockResolvedValue(
-      new ApplicationStatus({
+      new SubmissionStatusType({
         label: '',
       }),
     );

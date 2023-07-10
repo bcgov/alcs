@@ -146,7 +146,8 @@ export class GenerateReviewDocumentService {
       isZoningConsistent: formatBooleanToYesNoString(dto.isZoningConsistent),
       isAuthorized: isAuthorized,
       fileNumber: submission.fileNumber,
-      status: submission.status,
+      // TODO status
+      // status: submission.status,
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
       localGovernment: localGovernment ? localGovernment.name : NO_DATA,

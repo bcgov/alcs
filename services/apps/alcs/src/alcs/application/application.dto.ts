@@ -15,7 +15,6 @@ import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
-import { StatusHistory } from './application.entity';
 
 export class AlcsApplicationSubmissionDto extends ApplicationSubmissionDetailedDto {
   primaryContact?: ApplicationOwnerDto;
@@ -211,8 +210,8 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
-  @AutoMap(() => [StatusHistory])
-  statusHistory?: StatusHistory[];
+  // @AutoMap(() => [StatusHistory])
+  // statusHistory?: StatusHistory[];
 
   @AutoMap()
   @Type(() => CardDto)
@@ -288,6 +287,6 @@ export class CreateApplicationServiceDto {
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid?: string;
-  statusHistory?: StatusHistory[];
+  // statusHistory?: StatusHistory[];
   source?: 'ALCS' | 'APPLICANT';
 }

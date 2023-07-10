@@ -39,7 +39,6 @@ describe('ApplicationService', () => {
       backgroundColor: '',
       textColor: '',
     },
-    statusHistory: [],
     source: APPLICATION_SYSTEM_SOURCE_TYPES.ALCS,
   };
 

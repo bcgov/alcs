@@ -13,15 +13,8 @@ import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-
-export class StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
+import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 export class ProposedLot {
   type: 'Lot' | 'Road Dedication';
@@ -182,13 +175,6 @@ export class ApplicationSubmission extends Base {
   @ManyToOne(() => User)
   createdBy: User;
 
-  @AutoMap()
-  @ManyToOne(() => ApplicationStatus, { nullable: false, eager: true })
-  status: ApplicationStatus;
-
-  @Column()
-  statusCode: string;
-
   @Column({
     type: 'text',
     nullable: true,
@@ -201,15 +187,6 @@ export class ApplicationSubmission extends Base {
     comment: 'Application Type Code from ALCS System',
   })
   typeCode: string;
-
-  @AutoMap(() => StatusHistory)
-  @Column({
-    comment: 'JSONB Column containing the status history of the Application',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
-  })
-  statusHistory: StatusHistory[];
 
   @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
@@ -714,4 +691,10 @@ export class ApplicationSubmission extends Base {
     (appParcel) => appParcel.applicationSubmission,
   )
   parcels: ApplicationParcel[];
+
+  @OneToMany(
+    () => ApplicationSubmissionToSubmissionStatus,
+    (status) => status.submission,
+  )
+  submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
 }

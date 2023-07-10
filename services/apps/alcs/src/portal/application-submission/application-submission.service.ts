@@ -6,7 +6,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, In, Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
@@ -19,8 +19,6 @@ import { filterUndefined } from '../../utils/undefined';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import {
   ApplicationSubmissionDetailedDto,
@@ -29,7 +27,10 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
+import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
 
+// TODO status
 const LG_VISIBLE_STATUSES = [
   APPLICATION_STATUS.SUBMITTED_TO_LG,
   APPLICATION_STATUS.IN_REVIEW,
@@ -55,8 +56,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(SubmissionStatusType)
+    private applicationStatusRepository: Repository<SubmissionStatusType>,
     @InjectRepository(NaruSubtype)
     private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
@@ -128,7 +129,7 @@ export class ApplicationSubmissionService {
 
     const applicationSubmission = new ApplicationSubmission({
       fileNumber,
-      status: initialStatus,
+      // status: initialStatus,
       typeCode: type,
       createdBy,
     });
@@ -198,7 +199,8 @@ export class ApplicationSubmissionService {
       },
     );
 
-    submission.status = status;
+    // TODO status
+    // submission.status = status;
     //Use save to trigger subscriber
     await this.applicationSubmissionRepository.save(submission);
   }
@@ -226,7 +228,6 @@ export class ApplicationSubmissionService {
           applicant: application.applicant,
           localGovernmentUuid: application.localGovernmentUuid,
           typeCode: application.typeCode,
-          statusHistory: application.statusHistory,
           dateSubmittedToAlc: new Date(),
         },
         shouldCreateCard,
@@ -300,9 +301,10 @@ export class ApplicationSubmissionService {
         //Local Government
         {
           localGovernmentUuid: localGovernment.uuid,
-          status: {
-            code: In(LG_VISIBLE_STATUSES),
-          },
+          // TODO status
+          // status: {
+          //   code: In(LG_VISIBLE_STATUSES),
+          // },
           isDraft: false,
         },
       ],
@@ -336,9 +338,10 @@ export class ApplicationSubmissionService {
             isDraft: false,
             uuid,
             localGovernmentUuid: localGovernment.uuid,
-            status: {
-              code: In(LG_VISIBLE_STATUSES),
-            },
+            // TODO status
+            // status: {
+            //   code: In(LG_VISIBLE_STATUSES),
+            // },
           },
         ],
         order: {
@@ -385,9 +388,10 @@ export class ApplicationSubmissionService {
             isDraft: false,
             fileNumber,
             localGovernmentUuid: localGovernment.uuid,
-            status: {
-              code: In(LG_VISIBLE_STATUSES),
-            },
+            // TODO status
+            // status: {
+            //   code: In(LG_VISIBLE_STATUSES),
+            // },
           },
         ],
         order: {
@@ -431,7 +435,6 @@ export class ApplicationSubmissionService {
       relations: {
         ...this.DEFAULT_RELATIONS,
         createdBy: true,
-        status: true,
       },
     });
   }
@@ -496,7 +499,6 @@ export class ApplicationSubmissionService {
         },
         relations: {
           ...this.DEFAULT_RELATIONS,
-          status: true,
         },
       });
     }
@@ -525,19 +527,21 @@ export class ApplicationSubmissionService {
     return apps.map((app) => ({
       ...this.mapper.map(app, ApplicationSubmission, ApplicationSubmissionDto),
       type: types.find((type) => type.code === app.typeCode)!.label,
-      canEdit: [
-        APPLICATION_STATUS.IN_PROGRESS,
-        APPLICATION_STATUS.INCOMPLETE,
-        APPLICATION_STATUS.WRONG_GOV,
-      ].includes(app.status.code as APPLICATION_STATUS),
-      canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
+      // TODO status
+      // canEdit: [
+      //   APPLICATION_STATUS.IN_PROGRESS,
+      //   APPLICATION_STATUS.INCOMPLETE,
+      //   APPLICATION_STATUS.WRONG_GOV,
+      // ].includes(app.status.code as APPLICATION_STATUS),
+      // canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
+      canView: true,
       canReview:
-        [
-          APPLICATION_STATUS.SUBMITTED_TO_LG,
-          APPLICATION_STATUS.IN_REVIEW,
-        ].includes(app.status.code as APPLICATION_STATUS) &&
-        userGovernment &&
-        userGovernment.uuid === app.localGovernmentUuid,
+        // TODO status
+        // [
+        //   APPLICATION_STATUS.SUBMITTED_TO_LG,
+        //   APPLICATION_STATUS.IN_REVIEW,
+        // ].includes(app.status.code as APPLICATION_STATUS) &&
+        userGovernment && userGovernment.uuid === app.localGovernmentUuid,
     }));
   }
 
@@ -554,17 +558,20 @@ export class ApplicationSubmissionService {
     return {
       ...mappedApp,
       type: types.find((type) => type.code === application.typeCode)!.label,
-      canEdit: [
-        APPLICATION_STATUS.IN_PROGRESS,
-        APPLICATION_STATUS.INCOMPLETE,
-        APPLICATION_STATUS.WRONG_GOV,
-      ].includes(application.status.code as APPLICATION_STATUS),
-      canView: application.status.code !== APPLICATION_STATUS.CANCELLED,
+      canEdit: true,
+      // TODO status
+      // canEdit: [
+      //   APPLICATION_STATUS.IN_PROGRESS,
+      //   APPLICATION_STATUS.INCOMPLETE,
+      //   APPLICATION_STATUS.WRONG_GOV,
+      // ].includes(application.status.code as APPLICATION_STATUS),
+      canView: true, // TODO status //application.status.code !== APPLICATION_STATUS.CANCELLED,
       canReview:
-        [
-          APPLICATION_STATUS.SUBMITTED_TO_LG,
-          APPLICATION_STATUS.IN_REVIEW,
-        ].includes(application.status.code as APPLICATION_STATUS) &&
+        // TODO status
+        // [
+        //   APPLICATION_STATUS.SUBMITTED_TO_LG,
+        //   APPLICATION_STATUS.IN_REVIEW,
+        // ].includes(application.status.code as APPLICATION_STATUS) &&
         userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
     };

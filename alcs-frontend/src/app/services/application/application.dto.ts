@@ -14,12 +14,6 @@ export enum PARCEL_OWNERSHIP_TYPE {
   CROWN = 'CRWN',
 }
 
-export interface StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
 
 export interface CreateApplicationDto {
   fileNumber: string;
@@ -224,7 +218,6 @@ export interface ApplicationDto {
   paused: boolean;
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
-  statusHistory: StatusHistory[];
   submittedApplication?: ApplicationSubmissionDto;
   source: APPLICATION_SYSTEM_SOURCE_TYPES;
   alrArea?: number;

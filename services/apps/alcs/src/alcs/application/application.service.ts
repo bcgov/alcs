@@ -105,7 +105,6 @@ export class ApplicationService {
       localGovernmentUuid: createDto.localGovernmentUuid,
       typeCode: createDto.typeCode,
       region,
-      statusHistory: createDto.statusHistory,
       source: createDto.source,
     });
 
@@ -159,7 +158,7 @@ export class ApplicationService {
     existingApplication.localGovernmentUuid = application.localGovernmentUuid;
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
-    existingApplication.statusHistory = application.statusHistory ?? [];
+    // existingApplication.statusHistory = application.statusHistory ?? [];
 
     if (createCard) {
       existingApplication.card = new Card();

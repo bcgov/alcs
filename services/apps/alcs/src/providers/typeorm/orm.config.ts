@@ -3,6 +3,7 @@ import { IConfig } from 'config';
 import { join } from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
+// TODO status replace this with correct schema
 export const ALCS_DATABASE_SCHEMA = 'alcs';
 
 export const getTypeOrmModuleOptions = (

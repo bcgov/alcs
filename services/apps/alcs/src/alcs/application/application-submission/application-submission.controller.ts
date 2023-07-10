@@ -6,7 +6,7 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
+import { APPLICATION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))

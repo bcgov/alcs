@@ -7,9 +7,9 @@ import { Repository } from 'typeorm';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../../common/automapper/application-submission.automapper.profile';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
+import { APPLICATION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
 describe('ApplicationSubmissionService', () => {
@@ -18,7 +18,7 @@ describe('ApplicationSubmissionService', () => {
     Repository<ApplicationSubmission>
   >;
   let mockApplicationStatusRepository: DeepMocked<
-    Repository<ApplicationStatus>
+    Repository<SubmissionStatusType>
   >;
 
   beforeEach(async () => {
@@ -40,7 +40,7 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockApplicationSubmissionRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(SubmissionStatusType),
           useValue: mockApplicationStatusRepository,
         },
       ],
@@ -102,7 +102,7 @@ describe('ApplicationSubmissionService', () => {
 
   it('should successfully retrieve status from repo', async () => {
     mockApplicationStatusRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationStatus,
+      {} as SubmissionStatusType,
     );
 
     const result = await service.getStatus(APPLICATION_STATUS.ALC_DECISION);
@@ -116,7 +116,7 @@ describe('ApplicationSubmissionService', () => {
 
   it('should successfully update the status', async () => {
     mockApplicationStatusRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationStatus,
+      {} as SubmissionStatusType,
     );
     mockApplicationSubmissionRepository.findOneOrFail.mockResolvedValue(
       {} as ApplicationSubmission,

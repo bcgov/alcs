@@ -9,9 +9,10 @@ import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
+import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../portal/application-submission/submission-status/submission-status.entity';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -53,7 +54,8 @@ import { ApplicationService } from './application.service';
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
-      ApplicationStatus,
+      SubmissionStatusType,
+      ApplicationSubmissionToSubmissionStatus,
     ]),
     NotificationModule,
     DocumentModule,

@@ -61,7 +61,6 @@ describe('ApplicationDialogComponent', () => {
     paused: true,
     decisionMeetings: [],
     dateSubmittedToAlc: Date.now(),
-    statusHistory: [],
     card: {
       assignee: mockAssignee,
       highPriority: false,

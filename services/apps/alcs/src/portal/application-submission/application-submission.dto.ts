@@ -11,8 +11,8 @@ import {
 } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ProposedLot } from './application-submission.entity';
+import { ApplicationStatusDto } from './submission-status/submission-status.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 

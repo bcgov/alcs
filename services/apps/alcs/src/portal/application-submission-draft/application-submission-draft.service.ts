@@ -63,7 +63,6 @@ export class ApplicationSubmissionDraftService {
         },
         relations: {
           naruSubtype: true,
-          status: true,
           owners: {
             type: true,
           },

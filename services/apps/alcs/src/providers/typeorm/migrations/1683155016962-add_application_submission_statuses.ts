@@ -12,5 +12,7 @@ export class addApplicationSubmissionStatuses1683155016962
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // nope
+  }
 }

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
-import { CardStatus } from '../card/card-status/card-status.entity';
+import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { CardStatus } from '../card/card-status/card-status.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -22,8 +22,8 @@ export class CodeService {
     private meetingTypesRepository: Repository<ApplicationMeetingType>,
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypesRepository: Repository<ApplicationReconsiderationType>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(SubmissionStatusType)
+    private applicationStatusRepository: Repository<SubmissionStatusType>,
   ) {}
 
   async getAll() {

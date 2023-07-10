@@ -15,19 +15,18 @@ import { ApplicationParcelOwnershipType } from './application-parcel/application
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
-import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationSubmissionStatusSubscriber } from './application-submission-status.subscriber';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ApplicationSubmission,
-      ApplicationStatus,
+      SubmissionStatusType,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
       ApplicationOwner,
@@ -46,7 +45,6 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
     ApplicationParcelService,
     ApplicationOwnerService,
     ApplicationOwnerProfile,
-    ApplicationSubmissionStatusSubscriber,
     ApplicationSubmissionValidatorService,
   ],
   controllers: [

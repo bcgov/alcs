@@ -14,13 +14,13 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import {
   ApplicationSubmissionCreateDto,
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
+import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -169,8 +169,10 @@ export class ApplicationSubmissionController {
     }
 
     if (
-      localGovernment === null &&
-      application.status.code !== APPLICATION_STATUS.IN_PROGRESS
+      localGovernment === null
+      // TODO status
+      // &&
+      // application.status.code !== APPLICATION_STATUS.IN_PROGRESS
     ) {
       throw new BadRequestException('Can only cancel in progress Applications');
     }

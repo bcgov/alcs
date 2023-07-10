@@ -23,10 +23,10 @@ import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { APPLICATION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,
@@ -92,14 +92,15 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    if (
-      ![
-        APPLICATION_STATUS.SUBMITTED_TO_ALC,
-        APPLICATION_STATUS.REFUSED_TO_FORWARD,
-      ].includes(applicationSubmission.statusCode as APPLICATION_STATUS)
-    ) {
-      throw new NotFoundException('Failed to load review');
-    }
+    // TODO status
+    // if (
+    //   ![
+    //     APPLICATION_STATUS.SUBMITTED_TO_ALC,
+    //     APPLICATION_STATUS.REFUSED_TO_FORWARD,
+    //   ].includes(applicationSubmission.statusCode as APPLICATION_STATUS)
+    // ) {
+    //   throw new NotFoundException('Failed to load review');
+    // }
 
     const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
@@ -269,7 +270,9 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    // if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    // TODO status
+    if (true) {
       await this.applicationSubmissionService.submitToAlcs(
         validationResult.application,
         req.user.entity,
@@ -316,7 +319,9 @@ export class ApplicationSubmissionReviewController {
       throw new ServiceNotFoundException('Failed to load application review');
     }
 
-    if (applicationSubmission.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    // TODO status
+    // if (applicationSubmission.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    if (true) {
       const documents = await this.applicationDocumentService.list(
         applicationSubmission.fileNumber,
       );

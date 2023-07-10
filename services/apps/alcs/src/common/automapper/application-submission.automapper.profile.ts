@@ -7,8 +7,6 @@ import {
   ApplicationOwnerDto,
 } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationStatusDto } from '../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import {
   ApplicationSubmissionDetailedDto,
   ApplicationSubmissionDto,
@@ -16,6 +14,8 @@ import {
 } from '../../portal/application-submission/application-submission.dto';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
+import { ApplicationStatusDto } from '../../portal/application-submission/submission-status/submission-status.dto';
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
@@ -32,10 +32,8 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            return Date.now();
+            // TODO status_rework this should be remapped
+            return new Date().getTime();
           }),
         ),
         forMember(
@@ -54,7 +52,7 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+      createMap(mapper, SubmissionStatusType, ApplicationStatusDto);
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
 
       createMap(
@@ -64,11 +62,8 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            //For older applications before status history was created
-            return Date.now();
+            // TODO status_rework this should be remapped
+            return new Date().getTime();
           }),
         ),
         forMember(
@@ -94,11 +89,8 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            //For older applications before status history was created
-            return Date.now();
+            // TODO status_rework this should be remapped
+            return new Date().getTime();
           }),
         ),
         forMember(

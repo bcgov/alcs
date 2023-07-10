@@ -16,17 +16,17 @@ import { ApplicationSubmissionProfile } from '../../common/automapper/applicatio
 import { User } from '../../user/user.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
+import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
-  let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
+  let mockStatusRepository: DeepMocked<Repository<SubmissionStatusType>>;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
@@ -58,7 +58,7 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(SubmissionStatusType),
           useValue: mockStatusRepository,
         },
         {
@@ -134,7 +134,7 @@ describe('ApplicationSubmissionService', () => {
   it('save a new application for create', async () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
-    mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
+    mockStatusRepository.findOne.mockResolvedValue(new SubmissionStatusType());
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
     mockApplicationService.generateNextFileNumber.mockResolvedValue(fileId);
     mockApplicationService.create.mockResolvedValue(new Application());
@@ -185,7 +185,7 @@ describe('ApplicationSubmissionService', () => {
 
   it('should load the canceled status and save the application for cancel', async () => {
     const application = new ApplicationSubmission();
-    const cancelStatus = new ApplicationStatus({
+    const cancelStatus = new SubmissionStatusType({
       code: APPLICATION_STATUS.CANCELLED,
     });
     mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
@@ -212,7 +212,7 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should update the status when submitting to local government', async () => {
-    const mockStatus = new ApplicationStatus({
+    const mockStatus = new SubmissionStatusType({
       code: 'code',
       label: 'label',
     });
@@ -244,11 +244,10 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission({
       applicant,
       typeCode: typeCode,
-      status: new ApplicationStatus({
+      status: new SubmissionStatusType({
         code: 'status-code',
         label: '',
       }),
-      statusHistory: [],
     });
     mockRepository.findOne.mockResolvedValue(application);
 
@@ -270,7 +269,7 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      statusHistory: [],
+      // statusHistory: [],
     });
 
     mockApplicationService.submit.mockRejectedValue(new Error());
@@ -295,11 +294,11 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
+      status: new SubmissionStatusType({
         code: 'status-code',
         label: '',
       }),
-      statusHistory: [],
+      // statusHistory: [],
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
@@ -321,11 +320,11 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
+      status: new SubmissionStatusType({
         code: 'status-code',
         label: '',
       }),
-      statusHistory: [],
+      // statusHistory: [],
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());
@@ -357,11 +356,11 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
+      status: new SubmissionStatusType({
         code: 'status-code',
         label: '',
       }),
-      statusHistory: [],
+      // statusHistory: [],
     });
 
     mockApplicationService.submit.mockResolvedValue(new Application());

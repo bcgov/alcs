@@ -5,9 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
+import { APPLICATION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(SubmissionStatusType)
+    private applicationStatusRepository: Repository<SubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -77,7 +77,8 @@ export class ApplicationSubmissionService {
       },
     );
 
-    submission.status = status;
+    // TODO status
+    // submission.status = status;
 
     //Use save to trigger subscriber
     await this.applicationSubmissionRepository.save(submission);

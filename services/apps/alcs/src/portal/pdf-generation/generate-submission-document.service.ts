@@ -213,7 +213,8 @@ export class GenerateSubmissionDocumentService {
 
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment?.name,
-      status: submission.status,
+      // TODO status
+      // status: submission.status,
       applicant: submission.applicant,
       primaryContact,
       organizationText:
