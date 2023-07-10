@@ -20,7 +20,9 @@ import { ApplicationSubmissionController } from './application-submission.contro
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { SubmissionStatusType } from './submission-status/submission-status-type
       ApplicationOwner,
       ApplicationOwnerType,
       NaruSubtype,
+      ApplicationSubmissionToSubmissionStatus,
     ]),
     forwardRef(() => ApplicationModule),
     AuthorizationModule,
@@ -46,6 +49,7 @@ import { SubmissionStatusType } from './submission-status/submission-status-type
     ApplicationOwnerService,
     ApplicationOwnerProfile,
     ApplicationSubmissionValidatorService,
+    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationSubmissionController,

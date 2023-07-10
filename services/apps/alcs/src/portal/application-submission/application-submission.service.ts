@@ -27,6 +27,7 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
+import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
 import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
 
@@ -67,6 +68,7 @@ export class ApplicationSubmissionService {
     private submissionDocumentGenerationService: GenerateSubmissionDocumentService,
     @Inject(forwardRef(() => GenerateReviewDocumentService))
     private generateReviewDocumentService: GenerateReviewDocumentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -127,12 +129,16 @@ export class ApplicationSubmissionService {
       );
     }
 
+    const statuses =
+      await this.applicationSubmissionStatusService.getInitialStatuses();
+
     const applicationSubmission = new ApplicationSubmission({
       fileNumber,
-      // status: initialStatus,
       typeCode: type,
       createdBy,
+      submissionStatuses: statuses,
     });
+    // TODO status statuses do not persist in db
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
     return fileNumber;
