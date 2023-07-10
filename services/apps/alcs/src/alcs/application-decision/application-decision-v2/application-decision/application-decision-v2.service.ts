@@ -412,7 +412,7 @@ export class ApplicationDecisionV2Service {
           existingDecision.components ?? [],
           false,
         );
-    } else if (existingDecision.conditions) {
+    } else if (updateDto.conditions === null && existingDecision.conditions) {
       await this.decisionConditionService.remove(existingDecision.conditions);
     }
   }
