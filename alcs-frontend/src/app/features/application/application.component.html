@@ -8,7 +8,7 @@
       heading="Application"
     ></app-details-header>
     <div class="content">
-      <div *ngIf="isSubmitted" class="nav">
+      <div *ngIf="isSubmittedAlc" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
             *ngIf="route.portalOnly ? isApplicantSubmission : true"
@@ -22,8 +22,8 @@
           </div>
         </div>
       </div>
-      <div *ngIf="isAwaitingLfng" class="nav">
-        <div *ngFor="let route of awaitingLfngRoutes" class="nav-link">
+      <div *ngIf="isSubmittedLfng" class="nav">
+        <div *ngFor="let route of submittedLfngRoutes" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isSubmitted && !isAwaitingLfng" class="nav">
+      <div *ngIf="!isSubmittedAlc && !isSubmittedLfng" class="nav">
         <div *ngFor="let route of unsubmittedRoutes" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"

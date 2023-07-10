@@ -44,7 +44,7 @@ export const unsubmittedRoutes = [
   },
 ];
 
-export const awaitingLfngRoutes = [
+export const submittedLfngRoutes = [
   {
     path: '',
     menuTitle: 'Overview',
@@ -165,7 +165,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   childRoutes = appChildRoutes;
   unsubmittedRoutes = unsubmittedRoutes;
-  awaitingLfngRoutes = awaitingLfngRoutes;
+  submittedLfngRoutes = submittedLfngRoutes;
 
   fileNumber?: string;
   application: ApplicationDto | undefined;
@@ -174,8 +174,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
-  isSubmitted = false;
-  isAwaitingLfng = false;
+  isSubmittedAlc = false;
+  isSubmittedLfng = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -203,9 +203,9 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
 
-        this.isSubmitted = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+        this.isSubmittedAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
 
-        this.isAwaitingLfng =
+        this.isSubmittedLfng =
           this.isApplicantSubmission &&
           [
             APPLICATION_STATUS.SUBMITTED_TO_LG,
