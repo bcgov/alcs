@@ -6,7 +6,12 @@ import {
   DOCUMENT_TYPE,
 } from '../../../services/application/application-document/application-document.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
-import { ApplicationReviewDto } from '../../../services/application/application.dto';
+import {
+  APPLICATION_STATUS,
+  ApplicationReviewDto,
+  ApplicationSubmissionDto,
+} from '../../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 
 @Component({
   selector: 'app-lfng-info',
@@ -18,10 +23,13 @@ export class LfngInfoComponent implements OnInit {
   resolutionDocument: ApplicationDocumentDto | undefined;
   staffReport: ApplicationDocumentDto | undefined;
   otherAttachments: ApplicationDocumentDto[] = [];
+  submission?: ApplicationSubmissionDto;
   requiresReview = true;
+  showComment = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
     private applicationReviewService: ApplicationReviewService
   ) {}
@@ -31,6 +39,10 @@ export class LfngInfoComponent implements OnInit {
       if (application) {
         this.requiresReview = application.type.code !== 'TURP';
         this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
+        this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+        this.showComment = [APPLICATION_STATUS.WRONG_GOV, APPLICATION_STATUS.INCOMPLETE].includes(
+          this.submission?.status?.code
+        );
         this.loadDocuments(application.fileNumber);
       }
     });
