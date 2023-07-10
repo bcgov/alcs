@@ -78,7 +78,7 @@ export const DECISION_CONDITION_COMPLETE_LABEL = {
   label: 'Complete',
   shortLabel: 'COMD',
   backgroundColor: '#fff',
-  borderColor: '#c08106',
+  borderColor: '#065a2f',
   textColor: '#000',
 };
 

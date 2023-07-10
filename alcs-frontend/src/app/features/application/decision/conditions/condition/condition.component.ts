@@ -39,7 +39,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (this.condition) {
       this.condition = {
         ...this.condition,
-        componentLabels: this.condition.conditionComponentsLabels?.join(', '),
+        componentLabels: this.condition.conditionComponentsLabels?.join(',\n'),
       };
     }
   }
