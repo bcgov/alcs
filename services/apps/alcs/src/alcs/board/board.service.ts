@@ -1,8 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { Any, FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import { CardService } from '../card/card.service';
 import { Board } from './board.entity';
 
@@ -70,5 +71,20 @@ export class BoardService {
     card.status = initialStatus.status;
     card.board = board;
     return this.cardService.save(card);
+  }
+
+  async getBoardsWithStatus(code: CARD_STATUS) {
+    return this.boardRepository.find({
+      where: {
+        statuses: {
+          status: {
+            code,
+          },
+        },
+      },
+      relations: {
+        statuses: true,
+      },
+    });
   }
 }

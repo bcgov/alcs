@@ -4,6 +4,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
+import { CardStatusDialogComponent } from './card-status/card-status-dialog/card-status-dialog.component';
+import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types/decision-condition-types-dialog/decision-condition-types-dialog.component';
@@ -41,6 +43,8 @@ const routes: Routes = [
     DecisionMakerDialogComponent,
     DecisionConditionTypesComponent,
     DecisionConditionTypesDialogComponent,
+    CardStatusComponent,
+    CardStatusDialogComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
 })
