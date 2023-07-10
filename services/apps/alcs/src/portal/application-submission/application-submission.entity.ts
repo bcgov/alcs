@@ -695,6 +695,9 @@ export class ApplicationSubmission extends Base {
   @OneToMany(
     () => ApplicationSubmissionToSubmissionStatus,
     (status) => status.submission,
+    {
+      cascade: true,
+    },
   )
   submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
 }

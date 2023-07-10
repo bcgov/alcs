@@ -11,8 +11,6 @@ export class ApplicationSubmissionStatusService {
   constructor(
     @InjectRepository(ApplicationSubmissionToSubmissionStatus)
     private statusesRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
-    @InjectRepository(ApplicationSubmission)
-    private submissionRepository: Repository<ApplicationSubmission>,
     @InjectRepository(SubmissionStatusType)
     private submissionStatusTypeRepository: Repository<SubmissionStatusType>,
   ) {}
