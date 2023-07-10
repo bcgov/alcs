@@ -4,7 +4,9 @@ import { ApplicationModule } from '../application/application.module';
 import { CovenantModule } from '../covenant/covenant.module';
 import { ApplicationCeoCriterionCode } from '../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
+import { NoticeOfIntentDecisionModule } from '../notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentSubtype } from '../notice-of-intent/notice-of-intent-subtype.entity';
+import { NoticeOfIntentModule } from '../notice-of-intent/notice-of-intent.module';
 import { PlanningReviewModule } from '../planning-review/planning-review.module';
 import { ApplicationCeoCriterionController } from './application-ceo-criterion/application-ceo-criterion.controller';
 import { ApplicationCeoCriterionService } from './application-ceo-criterion/application-ceo-criterion.service';
@@ -25,6 +27,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       NoticeOfIntentSubtype,
     ]),
     ApplicationModule,
+    NoticeOfIntentModule,
+    NoticeOfIntentDecisionModule,
     forwardRef(() => ApplicationDecisionModule),
     forwardRef(() => PlanningReviewModule),
     forwardRef(() => CovenantModule),
