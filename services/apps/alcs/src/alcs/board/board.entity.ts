@@ -23,10 +23,6 @@ export class Board extends Base {
   title: string;
 
   @AutoMap()
-  @Column()
-  decisionMaker: string;
-
-  @AutoMap()
   @OneToMany(() => BoardStatus, (status) => status.board, {
     eager: true,
   })
@@ -38,4 +34,8 @@ export class Board extends Base {
   @ManyToMany(() => CardType)
   @JoinTable()
   allowedCardTypes: CardType[];
+
+  @ManyToMany(() => CardType)
+  @JoinTable()
+  createCardTypes: CardType[];
 }

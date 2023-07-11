@@ -216,13 +216,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.loadCards(board.code);
     this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
-    this.boardHasCreateApplication = board.code === BOARD_TYPE_CODES.VETT;
-    this.boardHasCreatePlanningReview = board.code === BOARD_TYPE_CODES.EXEC;
-    this.boardHasCreateReconsideration = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
-    this.boardHasCreateAppModification = board.code === BOARD_TYPE_CODES.CEO;
-    this.boardHasCreateCovenant = ![BOARD_TYPE_CODES.VETT, BOARD_TYPE_CODES.NOI].includes(board.code);
-    this.boardHasCreateNOI = board.code === BOARD_TYPE_CODES.VETT;
-    this.boardHasCreateNOIModification = board.code === BOARD_TYPE_CODES.NOI;
+    this.boardHasCreateApplication = board.createCardTypes.includes(CardType.APP);
+    this.boardHasCreatePlanningReview = board.createCardTypes.includes(CardType.PLAN);
+    this.boardHasCreateReconsideration = board.createCardTypes.includes(CardType.RECON);
+    this.boardHasCreateAppModification = board.createCardTypes.includes(CardType.MODI);
+    this.boardHasCreateCovenant = board.createCardTypes.includes(CardType.COV);
+    this.boardHasCreateNOI = board.createCardTypes.includes(CardType.NOI);
+    this.boardHasCreateNOIModification = board.createCardTypes.includes(CardType.NOI_MODI);
 
     const allStatuses = board.statuses.map((status) => status.statusCode);
 

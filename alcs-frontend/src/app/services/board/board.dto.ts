@@ -1,3 +1,4 @@
+import { CardType } from '../../shared/card/card.component';
 import { ApplicationModificationDto } from '../application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto } from '../application/application.dto';
@@ -11,7 +12,8 @@ export interface BoardDto {
   title: string;
   decisionMaker: string;
   statuses: BoardStatusDto[];
-  allowedCardTypes: string[];
+  allowedCardTypes: CardType[];
+  createCardTypes: CardType[];
 }
 
 export interface BoardStatusDto {

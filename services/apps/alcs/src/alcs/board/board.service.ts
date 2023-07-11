@@ -14,6 +14,7 @@ export class BoardService {
       status: true,
     },
     allowedCardTypes: true,
+    createCardTypes: true,
   };
 
   constructor(

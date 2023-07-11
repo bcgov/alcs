@@ -20,6 +20,7 @@ export class BoardDto {
   statuses: BoardStatusDto[];
 
   allowedCardTypes: string[];
+  createCardTypes: string[];
 }
 
 export class BoardSmallDto {
