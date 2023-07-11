@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { STATUS_CODES } from 'http';
 import { Repository } from 'typeorm';
-import { ApplicationSubmission } from '../application-submission.entity';
 import { SubmissionStatusType } from './submission-status-type.entity';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
 
@@ -34,10 +33,10 @@ export class ApplicationSubmissionStatusService {
     return newStatuses;
   }
 
-  async update(
+  async setStatusDate(
     submissionUuid: string,
     statusTypeCode: string,
-    effectiveDate: Date,
+    effectiveDate?: Date | null,
   ) {
     const status = await this.statusesRepository.findOneOrFail({
       where: {

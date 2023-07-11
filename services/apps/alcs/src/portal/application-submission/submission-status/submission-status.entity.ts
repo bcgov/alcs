@@ -21,7 +21,7 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
 
   @AutoMap(() => Date)
   @Column({ type: 'timestamptz', nullable: true })
-  effectiveDate: Date | null;
+  effectiveDate?: Date | null;
 
   @AutoMap()
   @PrimaryColumn({ type: 'uuid' })
@@ -40,7 +40,11 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
   statusTypeCode: string;
 
   @AutoMap()
-  @ManyToOne(() => SubmissionStatusType, (status) => status.submissionStatuses)
+  @ManyToOne(
+    () => SubmissionStatusType,
+    (status) => status.submissionStatuses,
+    { eager: true },
+  )
   @JoinColumn({ name: 'status_type_code' })
   statusType: SubmissionStatusType;
 }

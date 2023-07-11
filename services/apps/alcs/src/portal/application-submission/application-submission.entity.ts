@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -697,7 +698,29 @@ export class ApplicationSubmission extends Base {
     (status) => status.submission,
     {
       cascade: true,
+      eager: true,
     },
   )
   submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
+
+  @AfterLoad()
+  getCurrentStatus() {
+    // using JS date object is intentional for performance reasons
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const currentStatuses = this.submissionStatuses
+      .filter((obj) => obj.effectiveDate && obj.effectiveDate < startOfDay)
+      .sort((a, b) => {
+        if (a.effectiveDate! > b.effectiveDate!) {
+          return -1;
+        } else if (a.effectiveDate! < b.effectiveDate!) {
+          return 1;
+        } else {
+          return b.statusType.weight - a.statusType.weight;
+        }
+      });
+
+    return currentStatuses[0];
+  }
 }
