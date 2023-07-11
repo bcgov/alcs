@@ -11,7 +11,6 @@ import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.compon
 import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
 import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
 import { RosoComponent } from './decision-v2/decision-component/roso/roso.component';
-import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
 import { NaruInputComponent } from './decision-v2/decision-input/decision-components/decision-component/naru-input/naru-input.component';
@@ -75,7 +74,6 @@ export const decisionChildRoutes = [
     DecisionConditionsComponent,
     TurpInputComponent,
     NfupComponent,
-    TurpComponent,
     PofoInputComponent,
     PofoComponent,
     RosoComponent,

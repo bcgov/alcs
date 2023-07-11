@@ -204,6 +204,14 @@
                     <div class="subheading2">Ag Cap Consultant</div>
                     {{ component.agCapConsultant }}
                   </div>
+                  <div *ngIf="['POFO', 'ROSO', 'PFRS'].includes(component.applicationDecisionComponentTypeCode)">
+                    <div class="subheading2">Use End Date</div>
+                    {{ component.endDate | date }}
+                  </div>
+                  <div *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP">
+                    <div class="subheading2">Expiry Date</div>
+                    {{ component.expiryDate | date }}
+                  </div>
                 </div>
 
                 <app-nfup
@@ -211,12 +219,6 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
                   [component]="component"
                 ></app-nfup>
-
-                <app-turp
-                  class="grid-3"
-                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
-                  [component]="component"
-                ></app-turp>
 
                 <app-pofo
                   class="grid-3"
