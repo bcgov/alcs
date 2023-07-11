@@ -13,9 +13,11 @@ export class newStatus1688759244902 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "alcs"."application_submission" DROP CONSTRAINT "FK_d2fb7c905282b86706cad8ef0ab"`,
     );
-    await queryRunner.query(
-      `ALTER TABLE "alcs"."application_submission" DROP COLUMN "status_code"`,
-    );
+
+    // TODO: move this to migration after migrating existing statuses to new structure
+    // await queryRunner.query(
+    //   `ALTER TABLE "alcs"."application_submission" DROP COLUMN "status_code"`,
+    // );
 
     await queryRunner.query(
       `CREATE TABLE "alcs"."application_submission_to_submission_status" ("effective_date" TIMESTAMP WITH TIME ZONE, "submission_uuid" uuid NOT NULL, "status_type_code" text NOT NULL, CONSTRAINT "PK_2aedecbaaf7b78b680dd5860c6b" PRIMARY KEY ("submission_uuid", "status_type_code"))`,
