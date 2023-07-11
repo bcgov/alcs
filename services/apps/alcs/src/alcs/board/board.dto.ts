@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { IsArray, IsString } from 'class-validator';
 
 export enum BOARD_CODES {
   CEO = 'ceo',
@@ -8,18 +9,21 @@ export enum BOARD_CODES {
 
 export class BoardDto {
   @AutoMap()
+  @IsString()
   code: string;
 
   @AutoMap()
+  @IsString()
   title: string;
 
   @AutoMap()
-  decisionMaker: string;
-
-  @AutoMap()
+  @IsArray()
   statuses: BoardStatusDto[];
 
+  @IsArray()
   allowedCardTypes: string[];
+
+  @IsArray()
   createCardTypes: string[];
 }
 

@@ -10,7 +10,6 @@ import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 export interface BoardDto {
   code: string;
   title: string;
-  decisionMaker: string;
   statuses: BoardStatusDto[];
   allowedCardTypes: CardType[];
   createCardTypes: CardType[];
