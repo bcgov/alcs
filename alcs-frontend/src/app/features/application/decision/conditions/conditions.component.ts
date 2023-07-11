@@ -80,7 +80,7 @@ export class ConditionsComponent implements OnInit {
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
       this.decisions = decisions.map((decision) => {
         if (decision.uuid === this.decisionUuid) {
-          const conditions = this.mapConditions(decision);
+          const conditions = this.mapConditions(decision, decisions);
 
           this.sortConditions(decision, conditions);
 
@@ -112,7 +112,10 @@ export class ConditionsComponent implements OnInit {
     });
   }
 
-  private mapConditions(decision: ApplicationDecisionWithLinkedResolutionDto) {
+  private mapConditions(
+    decision: ApplicationDecisionWithLinkedResolutionDto,
+    decisions: ApplicationDecisionWithLinkedResolutionDto[]
+  ) {
     return decision.conditions.map((condition) => {
       const status = this.getStatus(condition, decision);
 
@@ -123,6 +126,12 @@ export class ConditionsComponent implements OnInit {
           const matchingType = this.codes.decisionComponentTypes.find(
             (type) => type.code === c.applicationDecisionComponentTypeCode
           );
+
+          const componentsDecision = decisions.find((d) => d.uuid === c.applicationDecisionUuid);
+
+          if (componentsDecision) {
+            decision = componentsDecision;
+          }
 
           const label =
             decision.resolutionNumber && decision.resolutionYear
