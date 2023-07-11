@@ -200,4 +200,11 @@ export class CardService {
     await this.cardRepository.save(card);
     await this.cardRepository.recover(card);
   }
+
+  async getByCardStatus(code: string) {
+    return this.cardRepository.find({
+      where: { statusCode: code },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
 }

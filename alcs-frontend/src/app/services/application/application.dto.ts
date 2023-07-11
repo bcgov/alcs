@@ -14,6 +14,29 @@ export enum PARCEL_OWNERSHIP_TYPE {
   CROWN = 'CRWN',
 }
 
+export enum APPLICATION_STATUS {
+  IN_PROGRESS = 'PROG',
+  SUBMITTED_TO_ALC = 'SUBM',
+  SUBMITTED_TO_LG = 'SUBG',
+  IN_REVIEW = 'REVW',
+  REFUSED_TO_FORWARD = 'REFU',
+  INCOMPLETE = 'INCM',
+  WRONG_GOV = 'WRNG',
+  CANCELLED = 'CANC',
+  ALC_DECISION = 'ALCD',
+  CEO_DECISION = 'CEOD',
+}
+
+// export interface StatusHistory {
+//   type: 'status_change';
+//   label: string;
+//   description: string;
+//   time: number;
+// }
+
+export interface ApplicationStatus extends BaseCodeDto {
+  code: APPLICATION_STATUS;
+}
 
 export interface CreateApplicationDto {
   fileNumber: string;
@@ -89,7 +112,7 @@ export interface ApplicationSubmissionDto {
   lastStatusUpdate: number;
   applicant: string;
   type: string;
-
+  status: ApplicationStatus;
   typeCode: string;
   localGovernmentUuid: string;
   canEdit: boolean;

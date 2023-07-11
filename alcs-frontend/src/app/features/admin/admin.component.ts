@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
@@ -50,6 +51,12 @@ export const childRoutes = [
     menuTitle: 'Unarchive Cards',
     icon: 'unarchive',
     component: UnarchiveComponent,
+  },
+  {
+    path: 'card-status',
+    menuTitle: 'Columns',
+    icon: 'view_week',
+    component: CardStatusComponent,
   },
 ];
 

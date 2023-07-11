@@ -5,7 +5,6 @@ import { CardProfile } from '../../common/automapper/card.automapper.profile';
 import { NotificationModule } from '../notification/notification.module';
 import { CardHistory } from './card-history/card-history.entity';
 import { CardSubscriber } from './card-history/card.subscriber';
-import { CardStatusController } from './card-status/card-status.controller';
 import { CardStatus } from './card-status/card-status.entity';
 import { CardStatusService } from './card-status/card-status.service';
 import { CardSubtaskType } from './card-subtask/card-subtask-type/card-subtask-type.entity';
@@ -30,7 +29,7 @@ import { CardService } from './card.service';
     CodeModule,
     NotificationModule,
   ],
-  controllers: [CardStatusController, CardSubtaskController, CardController],
+  controllers: [CardSubtaskController, CardController],
   providers: [
     CardStatusService,
     CardService,

@@ -154,8 +154,6 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (parcels.length > 0) {
       this.parcelId.setValidators([Validators.required]);
       this.parcelId.updateValueAndValidity();
-
-      this.visibleToInternal.setValue(true);
       this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
 
       const selectedParcel = parcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
@@ -181,8 +179,6 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       const owners = submission.owners;
       this.ownerId.setValidators([Validators.required]);
       this.ownerId.updateValueAndValidity();
-
-      this.visibleToInternal.setValue(true);
       this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
 
       const selectedOwner = owners.find((owner) => owner.corporateSummaryUuid === uuid);
@@ -210,6 +206,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     if (this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
       await this.prepareCertificateOfTitleUpload();
+      this.visibleToInternal.setValue(true);
     } else {
       this.parcelId.setValue(null);
       this.parcelId.setValidators([]);
@@ -218,6 +215,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
     if (this.type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
       await this.prepareCorporateSummaryUpload();
+      this.visibleToInternal.setValue(true);
     } else {
       this.ownerId.setValue(null);
       this.ownerId.setValidators([]);

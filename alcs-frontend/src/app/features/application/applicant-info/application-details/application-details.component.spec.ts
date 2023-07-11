@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
+import { ApplicationStatus, SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
 
 import { ApplicationDetailsComponent } from './application-details.component';
 
@@ -45,6 +45,7 @@ describe('ApplicationDetailsComponent', () => {
       soilToPlaceVolume: null,
       soilToRemoveAverageDepth: null,
       soilToRemoveMaximumDepth: null,
+      status: {} as ApplicationStatus,
       type: '',
       updatedAt: '',
       uuid: '',

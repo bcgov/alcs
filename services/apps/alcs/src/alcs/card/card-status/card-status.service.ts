@@ -1,26 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CardService } from '../card.service';
 import { CardStatusDto } from './card-status.dto';
-import { CardStatus } from './card-status.entity';
-
-export const defaultApplicationStatus = {
-  id: '46235264-9529-4e52-9c2d-6ed2b8b9edb8',
-  code: 'TODO',
-};
+import { CARD_STATUS, CardStatus } from './card-status.entity';
 
 @Injectable()
 export class CardStatusService {
   constructor(
     @InjectRepository(CardStatus)
     private cardStatusRepository: Repository<CardStatus>,
+    private cardService: CardService,
   ) {}
 
-  async create(card: CardStatusDto): Promise<CardStatus> {
-    const cardEntity = new CardStatus();
-    cardEntity.code = card.code;
-    cardEntity.description = card.description;
+  async fetch() {
+    return await this.cardStatusRepository.find({
+      order: { label: 'ASC' },
+      select: {
+        code: true,
+        label: true,
+        description: true,
+      },
+    });
+  }
 
-    return await this.cardStatusRepository.save(cardEntity);
+  async getOneOrFail(code: string) {
+    return await this.cardStatusRepository.findOneOrFail({
+      where: { code },
+    });
+  }
+
+  async update(code: string, updateDto: CardStatusDto) {
+    const cardStatus = await this.getOneOrFail(code);
+
+    cardStatus.description = updateDto.description;
+    cardStatus.label = updateDto.label;
+
+    return await this.cardStatusRepository.save(cardStatus);
+  }
+
+  async create(createDto: CardStatusDto) {
+    const cardStatus = new CardStatus();
+
+    cardStatus.code = createDto.code;
+    cardStatus.description = createDto.description;
+    cardStatus.label = createDto.label;
+
+    return await this.cardStatusRepository.save(cardStatus);
+  }
+
+  async getCardCountByStatus(code: CARD_STATUS) {
+    const cards = await this.cardService.getByCardStatus(code);
+    return cards.length;
   }
 }

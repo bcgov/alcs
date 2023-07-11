@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationModule } from '../application/application.module';
+import { BoardModule } from '../board/board.module';
+import { CardModule } from '../card/card.module';
 import { CovenantModule } from '../covenant/covenant.module';
 import { ApplicationCeoCriterionCode } from '../application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionModule } from '../application-decision/application-decision.module';
@@ -16,6 +18,7 @@ import { ApplicationDecisionConditionTypesController } from './application-decis
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types/application-decision-condition-types.service';
 import { ApplicationDecisionMakerController } from './application-decision-maker/application-decision-maker.controller';
 import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
+import { CardStatusController } from './card-status/card-status.controller';
 import { HolidayController } from './holiday/holiday.controller';
 import { HolidayEntity } from './holiday/holiday.entity';
 import { HolidayService } from './holiday/holiday.service';
@@ -40,6 +43,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     forwardRef(() => CovenantModule),
     NoticeOfIntentModule,
     NoticeOfIntentDecisionModule,
+    CardModule,
+    BoardModule,
   ],
   controllers: [
     HolidayController,
@@ -49,6 +54,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     NoiSubtypeController,
     ApplicationDecisionMakerController,
     ApplicationDecisionConditionTypesController,
+    CardStatusController,
   ],
   providers: [
     HolidayService,

@@ -1,0 +1,56 @@
+<div mat-dialog-title>
+  <h4>{{ isEdit ? 'Edit' : 'Create' }} Column</h4>
+</div>
+<div mat-dialog-content class="dialog">
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <div>
+      <mat-form-field class="code" appearance="outline">
+        <mat-label>Code</mat-label>
+        <input
+          [disabled]="isEdit"
+          required
+          maxlength="4"
+          minlength="4"
+          matInput
+          id="code"
+          [(ngModel)]="code"
+          name="code"
+        />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field class="label" appearance="outline">
+        <mat-label>Label</mat-label>
+        <input required matInput id="label" [(ngModel)]="label" name="label" />
+      </mat-form-field>
+      <mat-hint>Note: The change will be reflected on all boards</mat-hint>
+    </div>
+
+    <div>
+      <mat-form-field class="description" appearance="outline">
+        <mat-label>Description</mat-label>
+        <input required matInput id="description" [(ngModel)]="description" name="description" />
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div class="split">
+    <div [matTooltip]="canDeleteReason" [matTooltipDisabled]="canDelete">
+      <button [disabled]="!canDelete" mat-stroked-button color="warn" mat-dialog-close="false">Delete</button>
+    </div>
+    <div class="button-container">
+      <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
+      <button
+        [loading]="isLoading"
+        (click)="onSubmit()"
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="!form.form.valid"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

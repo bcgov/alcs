@@ -39,7 +39,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (this.condition) {
       this.condition = {
         ...this.condition,
-        componentLabels: this.condition.conditionComponentsLabels?.join(', '),
+        componentLabels: this.condition.conditionComponentsLabels?.join(';\n'),
       };
     }
   }
@@ -87,10 +87,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       this.conditionStatus = CONDITION_STATUS.SUPERSEDED;
     } else if (this.condition.completionDate && this.condition.completionDate <= today) {
       this.conditionStatus = CONDITION_STATUS.COMPLETE;
-    } else if (this.isDraftDecision === false) {
-      this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
     } else {
-      this.conditionStatus = '';
+      this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
     }
   }
 }
