@@ -12,8 +12,6 @@ import { CardStatusDialogComponent } from './card-status-dialog/card-status-dial
   styleUrls: ['./card-status.component.scss'],
 })
 export class CardStatusComponent implements OnInit {
-  destroy = new Subject<void>();
-
   cardStatusDtos: CardStatusDto[] = [];
   displayedColumns: string[] = ['label', 'description', 'code', 'actions'];
 

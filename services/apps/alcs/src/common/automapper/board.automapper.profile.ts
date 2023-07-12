@@ -37,6 +37,10 @@ export class BoardAutomapperProfile extends AutomapperProfile {
           (ad) => ad.allowedCardTypes,
           mapFrom((a) => a.allowedCardTypes.map((cardType) => cardType.code)),
         ),
+        forMember(
+          (ad) => ad.createCardTypes,
+          mapFrom((a) => a.createCardTypes.map((cardType) => cardType.code)),
+        ),
       );
 
       createMap(

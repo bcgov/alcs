@@ -38,6 +38,15 @@ export class CardService {
     return await this.cardTypeRepository.find({
       select: {
         code: true,
+        label: true,
+      },
+    });
+  }
+
+  async getPortalCardTypes() {
+    return await this.cardTypeRepository.find({
+      select: {
+        code: true,
         portalHtmlDescription: true,
         label: true,
       },

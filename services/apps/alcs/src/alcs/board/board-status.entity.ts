@@ -7,6 +7,13 @@ import { Board } from './board.entity';
 @Entity()
 @Unique(['board', 'status'])
 export class BoardStatus extends Base {
+  constructor(data?: Partial<BoardStatus>) {
+    super();
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
+
   @AutoMap()
   @ManyToOne(() => Board, (board) => board.statuses, { nullable: false })
   board: Board;
@@ -18,4 +25,7 @@ export class BoardStatus extends Base {
   @AutoMap()
   @ManyToOne(() => CardStatus, { eager: true, nullable: false })
   status: CardStatus;
+
+  @Column()
+  statusCode: string;
 }

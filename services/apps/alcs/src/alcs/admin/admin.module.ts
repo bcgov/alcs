@@ -18,6 +18,7 @@ import { ApplicationDecisionConditionTypesController } from './application-decis
 import { ApplicationDecisionConditionTypesService } from './application-decision-condition-types/application-decision-condition-types.service';
 import { ApplicationDecisionMakerController } from './application-decision-maker/application-decision-maker.controller';
 import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
+import { BoardManagementController } from './board-management/board-management.controller';
 import { CardStatusController } from './card-status/card-status.controller';
 import { HolidayController } from './holiday/holiday.controller';
 import { HolidayEntity } from './holiday/holiday.entity';
@@ -55,6 +56,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     ApplicationDecisionMakerController,
     ApplicationDecisionConditionTypesController,
     CardStatusController,
+    BoardManagementController,
   ],
   providers: [
     HolidayService,

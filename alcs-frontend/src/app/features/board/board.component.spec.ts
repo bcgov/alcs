@@ -69,6 +69,15 @@ describe('BoardComponent', () => {
 
   let queryParamMapEmitter: BehaviorSubject<Map<string, any>>;
 
+  const mockBoard: BoardWithFavourite = {
+    code: 'boardCode',
+    title: 'boardTitle',
+    isFavourite: false,
+    statuses: [],
+    allowedCardTypes: [],
+    createCardTypes: [],
+  };
+
   beforeEach(async () => {
     applicationService = createMock();
     boardService = createMock();
@@ -99,6 +108,7 @@ describe('BoardComponent', () => {
     const params = {
       boardCode: 'boardCode',
     };
+
     queryParamMapEmitter = new BehaviorSubject(new Map());
 
     await TestBed.configureTestingModule({
@@ -182,16 +192,7 @@ describe('BoardComponent', () => {
   });
 
   it('should set the title when provided a board code', async () => {
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await fixture.whenStable();
 
@@ -200,17 +201,19 @@ describe('BoardComponent', () => {
     expect(component.currentBoardCode).toEqual('boardCode');
   });
 
-  it('should enable covenants when not the vetting board', () => {
+  it('should enable covenants when the board supports it', async () => {
     boardEmitter.next([
       {
         code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
         statuses: [],
-        allowedCardTypes: [],
+        createCardTypes: [CardType.COV],
+        title: '',
+        isFavourite: false,
+        allowedCardTypes: [CardType.COV],
       },
     ]);
+
+    await fixture.whenStable();
 
     expect(component.boardHasCreateCovenant).toBeTruthy();
   });
@@ -226,16 +229,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
@@ -254,16 +248,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
@@ -304,16 +289,7 @@ describe('BoardComponent', () => {
       noiModifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
