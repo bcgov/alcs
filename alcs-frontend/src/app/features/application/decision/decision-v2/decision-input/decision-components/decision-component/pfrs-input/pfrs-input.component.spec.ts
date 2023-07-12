@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PfrsInputComponent } from './pfrs-input.component';
@@ -8,9 +9,9 @@ describe('PfrsInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PfrsInputComponent ]
-    })
-    .compileComponents();
+      declarations: [PfrsInputComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PfrsInputComponent);
     component = fixture.componentInstance;

@@ -30,12 +30,20 @@
         </mat-form-field>
       </div>
 
+      <div class="full-width">
+        <mat-label>Visible on Commissioner Schedule Page</mat-label>
+        <mat-button-toggle-group [formControl]="showOnSchedule">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
       <div>
         <div>Click to add columns*</div>
         <div class="columns">
           <ul>
             <li *ngFor="let status of cardStatuses">
-              <mat-checkbox (change)="onSelectCardStatus(status, $event)" [formControlName]="status.label">
+              <mat-checkbox (change)="onSelectCardStatus(status, $event)" [formControlName]="status.code">
                 <span [innerHTML]="status.label"></span>
               </mat-checkbox>
             </li>
@@ -70,13 +78,13 @@
 
   <div class="split">
     <div [matTooltip]="canDeleteReason" [matTooltipDisabled]="canDelete">
-      <button *ngIf="isEdit" [disabled]="!canDelete" mat-stroked-button color="warn" (click)='onDelete()'>
+      <button *ngIf="isEdit" [disabled]="!canDelete" mat-stroked-button color="warn" (click)="onDelete()">
         Delete
       </button>
     </div>
     <div class="button-container">
       <ng-container *ngIf="step === 1">
-        <button mat-stroked-button color="primary" mat-dialog-close="false">Cancel</button>
+        <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
         <button
           (click)="onNextStep()"
           mat-flat-button

@@ -38,4 +38,8 @@ export class Board extends Base {
   @ManyToMany(() => CardType)
   @JoinTable()
   createCardTypes: CardType[];
+
+  @AutoMap()
+  @Column({})
+  showOnSchedule: boolean;
 }

@@ -38,7 +38,7 @@ export class AdminBoardManagementService {
     try {
       return await firstValueFrom(this.http.post<void>(`${this.url}`, dto));
     } catch (e) {
-      this.toastService.showErrorToast('Failed to create local government');
+      this.toastService.showErrorToast('Failed to create board');
       console.log(e);
     }
     return;
@@ -48,7 +48,7 @@ export class AdminBoardManagementService {
     try {
       return await firstValueFrom(this.http.put<void>(`${this.url}/${uuid}`, dto));
     } catch (e) {
-      this.toastService.showErrorToast('Failed to update local government');
+      this.toastService.showErrorToast('Failed to update board');
       console.log(e);
     }
     return;
@@ -58,7 +58,7 @@ export class AdminBoardManagementService {
     try {
       return await firstValueFrom(this.http.get<{ canDelete: boolean; reason: string }>(`${this.url}/${code}`));
     } catch (e) {
-      this.toastService.showErrorToast('Failed to delete card status');
+      this.toastService.showErrorToast('Failed to fetch delete status');
       console.log(e);
     }
     return;

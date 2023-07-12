@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RosoInputComponent } from './roso-input.component';
@@ -8,9 +9,9 @@ describe('RosoInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RosoInputComponent ]
-    })
-    .compileComponents();
+      declarations: [RosoInputComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RosoInputComponent);
     component = fixture.componentInstance;

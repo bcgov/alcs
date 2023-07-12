@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
-import { SharedModule } from '../../shared/shared.module';
 import { BoardDto } from '../board/board.dto';
 import { ToastService } from '../toast/toast.service';
 import { AdminBoardManagementService } from './admin-board-management.service';
@@ -12,7 +11,14 @@ describe('AdminBoardManagementService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
-  let mockBoard: BoardDto = { allowedCardTypes: [], code: '', createCardTypes: [], statuses: [], title: '' };
+  let mockBoard: BoardDto = {
+    allowedCardTypes: [],
+    code: '',
+    createCardTypes: [],
+    statuses: [],
+    title: '',
+    showOnSchedule: false,
+  };
 
   beforeEach(() => {
     mockHttpClient = createMock();

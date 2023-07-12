@@ -19,7 +19,8 @@ export class BoardManagementDialogComponent implements OnInit {
   title = new FormControl<string | null>(null, [Validators.required]);
   code = new FormControl<string | null>(null, [Validators.required]);
   permittedCardTypes = new FormControl<CardType[]>([], [Validators.required]);
-  createCardTypes = new FormControl<CardType[]>([], [Validators.required]);
+  createCardTypes = new FormControl<CardType[]>([]);
+  showOnSchedule = new FormControl<string>('true', [Validators.required]);
 
   step = 1;
 
@@ -28,6 +29,7 @@ export class BoardManagementDialogComponent implements OnInit {
     code: this.code,
     permittedCardTypes: this.permittedCardTypes,
     createCardTypes: this.createCardTypes,
+    showOnSchedule: this.showOnSchedule,
   });
 
   isLoading = false;
@@ -59,6 +61,7 @@ export class BoardManagementDialogComponent implements OnInit {
         title: data.board.title,
         createCardTypes: data.board.createCardTypes,
         permittedCardTypes: data.board.allowedCardTypes,
+        showOnSchedule: data.board.showOnSchedule ? 'true' : 'false',
       });
     }
     this.cardTypes = data.cardTypes;
@@ -118,6 +121,7 @@ export class BoardManagementDialogComponent implements OnInit {
       statuses: mappedStatuses,
       allowedCardTypes: this.permittedCardTypes.value ?? [],
       createCardTypes: this.createCardTypes.value ?? [],
+      showOnSchedule: this.showOnSchedule.value === 'true',
     };
 
     if (this.isEdit) {
@@ -140,7 +144,7 @@ export class BoardManagementDialogComponent implements OnInit {
   }
 
   private async loadCardStatuses() {
-    this.cardStatuses = await this.cardStatusService.fetch();
+    const cardStatuses = await this.cardStatusService.fetch();
 
     const board = this.data.board;
     const boardStatusCodes = board
@@ -158,7 +162,7 @@ export class BoardManagementDialogComponent implements OnInit {
       }
     }
 
-    this.cardStatuses.forEach((status) => {
+    cardStatuses.forEach((status) => {
       const isSelected = boardStatusCodes.includes(status.code);
       const control = this.formBuilder.control(isSelected);
       if (this.cardCounts[status.code] > 0) {
@@ -166,8 +170,10 @@ export class BoardManagementDialogComponent implements OnInit {
       }
 
       // @ts-ignore Angular wants a strictly typed form, we don't have that as the control names are dynamic
-      this.form.addControl(status.label, control);
+      this.form.addControl(status.code, control);
     });
+
+    this.cardStatuses = cardStatuses;
 
     boardStatusCodes.forEach((code) => {
       const cardStatus = this.cardStatuses.find((cardStatus) => cardStatus.code === code);

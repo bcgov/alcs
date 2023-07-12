@@ -89,6 +89,7 @@ describe('MeetingOverviewComponent', () => {
         code: 'boardCode',
         allowedCardTypes: [],
         createCardTypes: [],
+        showOnSchedule: true,
       },
     ]);
 

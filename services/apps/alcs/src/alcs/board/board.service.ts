@@ -110,7 +110,12 @@ export class BoardService {
   }
 
   async create(createDto: BoardDto) {
-    await this.saveUpdates(new Board(), createDto);
+    await this.saveUpdates(
+      new Board({
+        code: createDto.code,
+      }),
+      createDto,
+    );
   }
 
   async update(code: string, updateDto: BoardDto) {
@@ -130,6 +135,7 @@ export class BoardService {
     board.createCardTypes = updateDto.createCardTypes.map(
       (code) => cardTypes.find((cardType) => cardType.code === code)!,
     );
+    board.showOnSchedule = updateDto.showOnSchedule;
 
     await this.boardRepository.save(board);
     await this.setBoardStatuses(board, updateDto);
