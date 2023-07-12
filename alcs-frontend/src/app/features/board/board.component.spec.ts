@@ -76,6 +76,7 @@ describe('BoardComponent', () => {
     statuses: [],
     allowedCardTypes: [],
     createCardTypes: [],
+    showOnSchedule: true,
   };
 
   beforeEach(async () => {
@@ -210,6 +211,7 @@ describe('BoardComponent', () => {
         title: '',
         isFavourite: false,
         allowedCardTypes: [CardType.COV],
+        showOnSchedule: true,
       },
     ]);
 

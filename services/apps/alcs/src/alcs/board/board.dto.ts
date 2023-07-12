@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { IsArray, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsString } from 'class-validator';
 
 export enum BOARD_CODES {
   CEO = 'ceo',
@@ -25,6 +25,10 @@ export class BoardDto {
 
   @IsArray()
   createCardTypes: string[];
+
+  @AutoMap()
+  @IsBoolean()
+  showOnSchedule: boolean;
 }
 
 export class BoardSmallDto {

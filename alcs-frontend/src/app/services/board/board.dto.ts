@@ -13,6 +13,7 @@ export interface BoardDto {
   statuses: BoardStatusDto[];
   allowedCardTypes: CardType[];
   createCardTypes: CardType[];
+  showOnSchedule: boolean;
 }
 
 export interface BoardStatusDto {
