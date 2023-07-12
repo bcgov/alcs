@@ -23,7 +23,7 @@
   <div class="banner-status">
     <div>
       <div class="subheading2">Status Date</div>
-      <span *ngIf="application">{{ application.updatedAt | date }}</span>
+      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
     </div>
     <div>
       <div class="subheading2">Application Status</div>

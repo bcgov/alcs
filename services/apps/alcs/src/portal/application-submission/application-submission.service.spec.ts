@@ -244,6 +244,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission({
       applicant,
       typeCode: typeCode,
+      auditCreatedAt: new Date(),
       status: new ApplicationStatus({
         code: 'status-code',
         label: '',

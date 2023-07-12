@@ -30,6 +30,18 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         ApplicationSubmission,
         ApplicationSubmissionDto,
         forMember(
+          (a) => a.createdAt,
+          mapFrom((ad) => {
+            return ad.auditCreatedAt.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.updatedAt,
+          mapFrom((ad) => {
+            return ad.auditUpdatedAt?.getTime();
+          }),
+        ),
+        forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
             if (ad.statusHistory.length > 0) {
@@ -69,6 +81,18 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
             }
             //For older applications before status history was created
             return Date.now();
+          }),
+        ),
+        forMember(
+          (a) => a.createdAt,
+          mapFrom((ad) => {
+            return ad.auditCreatedAt.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.updatedAt,
+          mapFrom((ad) => {
+            return ad.auditUpdatedAt?.getTime();
           }),
         ),
         forMember(
