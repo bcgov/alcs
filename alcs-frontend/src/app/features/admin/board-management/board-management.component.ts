@@ -69,19 +69,6 @@ export class BoardManagementComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onDelete(boardDto: BoardDto) {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Are you sure you want to delete ${boardDto.title}?`,
-      })
-      .subscribe(async (answer) => {
-        if (answer) {
-          //TODO: Delete
-          await this.boardService.reloadBoards();
-        }
-      });
-  }
-
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

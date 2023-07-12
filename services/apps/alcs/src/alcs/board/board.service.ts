@@ -132,7 +132,10 @@ export class BoardService {
     );
 
     await this.boardRepository.save(board);
+    await this.setBoardStatuses(board, updateDto);
+  }
 
+  private async setBoardStatuses(board: Board, updateDto: BoardDto) {
     await this.boardStatusRepository.delete({
       board: {
         uuid: board.uuid,

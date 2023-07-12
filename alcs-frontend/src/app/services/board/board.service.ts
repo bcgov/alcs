@@ -28,6 +28,7 @@ export class BoardService {
   }
 
   async reloadBoards() {
+    this.boardsEmitter.next([]);
     await this.publishBoards(true);
   }
 
