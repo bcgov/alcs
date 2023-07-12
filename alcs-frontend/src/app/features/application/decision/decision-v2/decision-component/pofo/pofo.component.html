@@ -1,6 +1,15 @@
-<div class="full-width">
-  <div class="subheading2">Use End Date</div>
-  {{ component.endDate | date }}
+<div
+  class="full-width"
+  [ngClass]="{
+    'grid-uneven': component.agCapMap && component.agCapConsultant,
+    'grid-3': !component.agCapMap || !component.agCapConsultant
+  }"
+>
+  <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
+  <div>
+    <div class="subheading2">Use End Date</div>
+    {{ component.endDate | date }}
+  </div>
 </div>
 <div class="full-width">
   <div class="subheading2">Type, origin and quality of fill proposed to be placed.</div>

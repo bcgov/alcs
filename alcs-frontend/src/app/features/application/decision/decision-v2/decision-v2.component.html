@@ -195,17 +195,6 @@
                   </div>
                 </div>
 
-                <div *ngIf="component.agCapMap || component.agCapConsultant" class="grid-3 decision-content">
-                  <div *ngIf="component.agCapMap">
-                    <div class="subheading2">Ag Cap Map</div>
-                    {{ component.agCapMap }}
-                  </div>
-                  <div *ngIf="component.agCapConsultant">
-                    <div class="subheading2">Ag Cap Consultant</div>
-                    {{ component.agCapConsultant }}
-                  </div>
-                </div>
-
                 <app-nfup
                   class="grid-3"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
