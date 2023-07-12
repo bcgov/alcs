@@ -12,6 +12,7 @@ import { DOCUMENT_TYPE } from '../../alcs/application/application-document/appli
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   ApplicationSubmissionReviewDto,
@@ -34,12 +35,16 @@ export class ApplicationSubmissionReviewService {
       where: {
         applicationFileNumber: fileNumber,
       },
+      relations: {
+        createdBy: true,
+      },
     });
   }
 
-  async startReview(application: ApplicationSubmission) {
+  async startReview(application: ApplicationSubmission, createdBy: User) {
     const applicationReview = new ApplicationSubmissionReview({
       applicationFileNumber: application.fileNumber,
+      createdBy,
     });
     return await this.applicationSubmissionReviewRepository.save(
       applicationReview,

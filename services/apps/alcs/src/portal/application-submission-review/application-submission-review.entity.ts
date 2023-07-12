@@ -1,7 +1,8 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
 import { Base } from '../../common/entities/base.entity';
+import { User } from '../../user/user.entity';
 
 @Entity()
 export class ApplicationSubmissionReview extends Base {
@@ -94,4 +95,8 @@ export class ApplicationSubmissionReview extends Base {
     referencedColumnName: 'fileNumber',
   })
   application: Application;
+
+  @AutoMap()
+  @ManyToOne(() => User)
+  createdBy?: User;
 }

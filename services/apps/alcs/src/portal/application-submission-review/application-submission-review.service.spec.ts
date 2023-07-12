@@ -15,6 +15,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
@@ -83,7 +84,10 @@ describe('ApplicationSubmissionReviewService', () => {
     const appReview = new ApplicationSubmissionReview();
     mockRepository.save.mockResolvedValue(appReview);
 
-    const res = await service.startReview(new ApplicationSubmission());
+    const res = await service.startReview(
+      new ApplicationSubmission(),
+      new User(),
+    );
 
     expect(res).toBe(appReview);
   });
