@@ -1,5 +1,9 @@
+<div class="full-width" *ngIf="component.agCapMap || component.agCapConsultant">
+  <app-basic [component]="component" [fillRow]="true"></app-basic>
+</div>
+
 <div>
-  <div class="subheading2">Non-Farm Use Type</div>
+  <div class="subheading2">Residential Use Type</div>
   {{ component.naruSubtype?.label }}
 </div>
 

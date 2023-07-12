@@ -1,0 +1,10 @@
+<div class="{{ fillRow ? 'grid-3' : 'grid-2' }}">
+  <div *ngIf="component.agCapMap">
+    <div class="subheading2">Ag Cap Map</div>
+    {{ component.agCapMap }}
+  </div>
+  <div *ngIf="component.agCapConsultant">
+    <div class="subheading2">Ag Cap Consultant</div>
+    {{ component.agCapConsultant }}
+  </div>
+</div>
