@@ -2,12 +2,16 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
-import { ApplicationDecisionDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import {
+  ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
+} from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -24,7 +28,7 @@ describe('DecisionV2Component', () => {
   beforeEach(async () => {
     mockApplicationDecisionService = createMock();
     mockApplicationDecisionService.$decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-    mockApplicationDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
+    mockApplicationDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     mockAppDetailService = createMock();
     mockAppDetailService.$application = new BehaviorSubject<ApplicationDto | undefined>(undefined);
@@ -62,6 +66,10 @@ describe('DecisionV2Component', () => {
         {
           provide: ApplicationDecisionComponentService,
           useValue: mockApplicationDecisionComponentService,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

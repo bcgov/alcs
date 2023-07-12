@@ -8,7 +8,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 
 import { CeoCriterionComponent } from './ceo-criterion.component';
 
-describe('HolidayComponent', () => {
+describe('CeoCriterionComponent', () => {
   let component: CeoCriterionComponent;
   let fixture: ComponentFixture<CeoCriterionComponent>;
   let mockCeoCriterionService: DeepMocked<CeoCriterionService>;

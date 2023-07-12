@@ -23,7 +23,7 @@ import { TurDetailsComponent } from './tur-details/tur-details.component';
     PfrsDetailsComponent,
     NaruDetailsComponent,
   ],
-  imports: [CommonModule, SharedModule, NgForOf, NgIf, SharedModule],
+  imports: [CommonModule, SharedModule, NgForOf, NgIf],
   exports: [ApplicationDetailsComponent],
 })
 export class ApplicationDetailsModule {}

@@ -27,9 +27,14 @@ export class BoardService {
     });
   }
 
-  private async publishBoards() {
+  async reloadBoards() {
+    this.boardsEmitter.next([]);
+    await this.publishBoards(true);
+  }
+
+  private async publishBoards(reload = false) {
     if (this.userProfile !== undefined) {
-      if (!this.boards) {
+      if (!this.boards || reload) {
         this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${environment.apiUrl}/board`));
       }
       const mappedBoards = this.boards.map((board) => ({

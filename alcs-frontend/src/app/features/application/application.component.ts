@@ -8,7 +8,13 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
+import {
+  APPLICATION_STATUS,
+  APPLICATION_SYSTEM_SOURCE_TYPES,
+  ApplicationDto,
+  ApplicationSubmissionDto,
+} from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
@@ -20,6 +26,54 @@ import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
+
+export const unsubmittedRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'App Preview',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+];
+
+export const submittedLfngRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'Applicant Info',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'lfng-info',
+    menuTitle: 'L/FNG Info',
+    icon: 'account_balance',
+    component: LfngInfoComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
+    portalOnly: false,
+  },
+];
 
 export const appChildRoutes = [
   {
@@ -110,16 +164,22 @@ export const appChildRoutes = [
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   childRoutes = appChildRoutes;
+  unsubmittedRoutes = unsubmittedRoutes;
+  submittedLfngRoutes = submittedLfngRoutes;
 
   fileNumber?: string;
   application: ApplicationDto | undefined;
   reconsiderations: ApplicationReconsiderationDto[] = [];
   modifications: ApplicationModificationDto[] = [];
+  submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
+  isSubmittedToAlc = false;
+  wasSubmittedToLfng = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private route: ActivatedRoute,
@@ -133,13 +193,26 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       this.loadApplication();
     });
 
-    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe(async (application) => {
       if (application) {
         this.titleService.setTitle(`${environment.siteName} | ${application.fileNumber} (${application.applicant})`);
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isApplicantSubmission = application.source === 'APPLICANT';
+        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+
+        this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+
+        this.isSubmittedToAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+
+        this.wasSubmittedToLfng =
+          this.isApplicantSubmission &&
+          [
+            APPLICATION_STATUS.SUBMITTED_TO_LG,
+            APPLICATION_STATUS.IN_REVIEW,
+            APPLICATION_STATUS.WRONG_GOV,
+            APPLICATION_STATUS.INCOMPLETE,
+          ].includes(this.submission?.status?.code);
       }
     });
 

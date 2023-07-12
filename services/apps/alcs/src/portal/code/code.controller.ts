@@ -36,7 +36,7 @@ export class CodeController {
       await this.applicationService.fetchApplicationTypes();
     const applicationDocumentTypes =
       await this.applicationDocumentService.fetchTypes();
-    const submissionTypes = await this.cardService.getCardTypes();
+    const submissionTypes = await this.cardService.getPortalCardTypes();
     const naruSubtypes =
       await this.applicationSubmissionService.listNaruSubtypes();
 

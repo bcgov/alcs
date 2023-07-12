@@ -40,8 +40,7 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
     private planningReviewService: PlanningReviewService,
     private cardService: CardService,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
-    private toastService: ToastService
+    private localGovernmentService: ApplicationLocalGovernmentService
   ) {}
 
   ngOnInit(): void {

@@ -13,17 +13,14 @@
       [clearable]="false"
     ></ng-select>
 
-    <ng-select
-      appearance="outline"
-      class="condition-grid-half-2"
-      [items]="selectableComponents"
-      formControlName="componentToCondition"
-      appendTo="body"
-      bindLabel="label"
-      bindValue="tempId"
-      required
-      placeholder="Component to Condition*"
-    ></ng-select>
+    <mat-form-field class="condition-grid-half-2" appearance="outline">
+      <mat-label>Component to Condition</mat-label>
+      <mat-select appearance="outline" [formControl]="componentToConditions" multiple>
+        <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
+          component.label
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <div class="condition-grid-1">
       <mat-label>Approval Dependent*</mat-label>

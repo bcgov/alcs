@@ -1,7 +1,9 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, ManyToMany, ManyToOne } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
+import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
+import { ApplicationDecisionCondition } from '../../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
@@ -179,6 +181,14 @@ export class ApplicationDecisionComponent extends Base {
   })
   soilToRemoveAverageDepth: number | null;
 
+  @AutoMap(() => String)
+  @Column({ nullable: true })
+  naruSubtypeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => NaruSubtype)
+  naruSubtype: NaruSubtype;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;
@@ -193,4 +203,10 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => ApplicationDecision, { nullable: false })
   applicationDecision: ApplicationDecision;
+
+  @ManyToMany(
+    () => ApplicationDecisionCondition,
+    (condition) => condition.components,
+  )
+  conditions: ApplicationDecisionCondition[];
 }

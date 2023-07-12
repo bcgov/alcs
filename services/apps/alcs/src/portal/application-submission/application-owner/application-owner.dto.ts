@@ -28,6 +28,9 @@ export class ApplicationOwnerDto {
   @AutoMap()
   applicationSubmissionUuid: string;
 
+  @AutoMap(() => String)
+  corporateSummaryUuid?: string;
+
   displayName: string;
 
   @AutoMap(() => String)
@@ -78,7 +81,8 @@ export class ApplicationOwnerUpdateDto {
   email?: string;
 
   @IsString()
-  typeCode: string;
+  @IsOptional()
+  typeCode?: string;
 
   @IsUUID()
   @IsOptional()

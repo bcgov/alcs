@@ -584,7 +584,7 @@ export class ApplicationSubmission extends Base {
   //NARU
   @AutoMap(() => NaruSubtype)
   @ManyToOne(() => NaruSubtype)
-  naruSubtype: NaruSubtype | null;
+  naruSubtype: NaruSubtype | null | undefined;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -685,6 +685,20 @@ export class ApplicationSubmission extends Base {
     transformer: new ColumnNumericTransformer(),
   })
   naruToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruSleepingUnits: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruAgriTourism: string | null;
 
   @AutoMap(() => Application)
   @ManyToOne(() => Application)

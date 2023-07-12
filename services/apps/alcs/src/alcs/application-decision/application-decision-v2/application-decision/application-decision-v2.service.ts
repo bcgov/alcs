@@ -11,6 +11,7 @@ import {
   DOCUMENT_SYSTEM,
 } from '../../../../document/document.dto';
 import { DocumentService } from '../../../../document/document.service';
+import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';
@@ -52,6 +53,8 @@ export class ApplicationDecisionV2Service {
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
     @InjectRepository(LinkedResolutionOutcomeType)
     private linkedResolutionOutcomeTypeRepository: Repository<LinkedResolutionOutcomeType>,
+    @InjectRepository(NaruSubtype)
+    private naruNaruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
@@ -108,6 +111,11 @@ export class ApplicationDecisionV2Service {
         chairReviewOutcome: true,
         components: {
           applicationDecisionComponentType: true,
+          naruSubtype: true,
+        },
+        conditions: {
+          type: true,
+          components: true,
         },
       },
     });
@@ -199,6 +207,7 @@ export class ApplicationDecisionV2Service {
         },
         conditions: {
           type: true,
+          components: true,
         },
         chairReviewOutcome: true,
       },
@@ -213,6 +222,7 @@ export class ApplicationDecisionV2Service {
     decision.documents = decision.documents.filter(
       (document) => !!document.document,
     );
+
     return decision;
   }
 
@@ -402,7 +412,7 @@ export class ApplicationDecisionV2Service {
           existingDecision.components ?? [],
           false,
         );
-    } else if (existingDecision.conditions) {
+    } else if (updateDto.conditions === null && existingDecision.conditions) {
       await this.decisionConditionService.remove(existingDecision.conditions);
     }
   }
@@ -668,6 +678,9 @@ export class ApplicationDecisionV2Service {
         order: {
           label: 'ASC',
         },
+        where: {
+          isActive: true,
+        },
       }),
       this.ceoCriterionRepository.find({
         order: {
@@ -677,6 +690,7 @@ export class ApplicationDecisionV2Service {
       this.decisionComponentTypeRepository.find(),
       this.decisionConditionTypeRepository.find(),
       this.linkedResolutionOutcomeTypeRepository.find(),
+      this.naruNaruSubtypeRepository.find(),
     ]);
 
     return {
@@ -686,6 +700,7 @@ export class ApplicationDecisionV2Service {
       decisionComponentTypes: values[3],
       decisionConditionTypes: values[4],
       linkedResolutionOutcomeType: values[5],
+      naruSubtypes: values[6],
     };
   }
 

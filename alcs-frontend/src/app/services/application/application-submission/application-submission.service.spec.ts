@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
+import { ApplicationStatus, ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
 
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -13,6 +13,27 @@ describe('ApplicationSubmissionService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
 
   const mockSubmittedApplication: ApplicationSubmissionDto = {
+    applicant: '',
+    canEdit: false,
+    canReview: false,
+    canView: false,
+    createdAt: '',
+    fileNumber: '',
+    lastStatusUpdate: 0,
+    localGovernmentUuid: '',
+    owners: [],
+    soilAlreadyRemovedArea: null,
+    soilAlreadyRemovedAverageDepth: null,
+    soilAlreadyRemovedMaximumDepth: null,
+    soilAlreadyRemovedVolume: null,
+    soilToPlaceArea: null,
+    soilToPlaceVolume: null,
+    soilToRemoveAverageDepth: null,
+    soilToRemoveMaximumDepth: null,
+    status: {} as ApplicationStatus,
+    type: '',
+    updatedAt: '',
+    uuid: '',
     naruExistingStructures: null,
     naruFillOrigin: null,
     naruFillType: null,
@@ -26,12 +47,11 @@ describe('ApplicationSubmissionService', () => {
     naruSubtype: null,
     naruToPlaceArea: null,
     naruToPlaceAverageDepth: null,
+    naruSleepingUnits: null,
+    naruAgriTourism: null,
     naruToPlaceMaximumDepth: null,
     naruToPlaceVolume: null,
     naruWillImportFill: null,
-    parcels: [],
-    otherParcels: [],
-    documents: [],
     primaryContact: {} as SubmittedApplicationOwnerDto,
     parcelsAgricultureDescription: '',
     parcelsAgricultureImprovementDescription: '',

@@ -38,6 +38,15 @@ export class CardService {
     return await this.cardTypeRepository.find({
       select: {
         code: true,
+        label: true,
+      },
+    });
+  }
+
+  async getPortalCardTypes() {
+    return await this.cardTypeRepository.find({
+      select: {
+        code: true,
         portalHtmlDescription: true,
         label: true,
       },
@@ -199,5 +208,12 @@ export class CardService {
     card.archived = false;
     await this.cardRepository.save(card);
     await this.cardRepository.recover(card);
+  }
+
+  async getByCardStatus(code: string) {
+    return this.cardRepository.find({
+      where: { statusCode: code },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 }

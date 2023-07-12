@@ -16,10 +16,11 @@ import { ApplicationSubmissionDto } from '../../../../services/application/appli
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() submittedApplication!: ApplicationSubmissionDto;
+  @Input() submission!: ApplicationSubmissionDto;
   @Input() applicationType!: string;
   @Input() fileNumber!: string;
   @Input() showEdit = false;
+  @Input() isSubmitted = true;
 
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];

@@ -76,17 +76,24 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
           this.selectableComponents = [...this.allComponents, ...updatedComponents];
 
           this.decision = selectedDecision;
+
           this.mappedConditions = selectedDecision.conditions.map((condition) => {
-            const selectedComponent = this.selectableComponents.find(
-              (component) => component.uuid === condition.componentUuid
-            );
+            const selectedComponents = this.selectableComponents
+              .filter((component) =>
+                condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid)
+              )
+              .map((e) => ({
+                componentDecisionUuid: e.decisionUuid,
+                componentToConditionType: e.code,
+                tempId: e.tempId,
+              }));
 
             return {
               ...condition,
-              componentToConditionType: selectedComponent?.code,
-              componentDecisionUuid: selectedComponent?.decisionUuid,
+              componentToConditions: selectedComponents,
             };
           });
+
           this.onChanges();
         }
       });

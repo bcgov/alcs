@@ -65,3 +65,27 @@ export const RELEASED_DECISION_TYPE_LABEL = {
   description: 'Draft',
   textColor: '#000',
 };
+
+export const DECISION_CONDITION_INCOMPLETE_LABEL = {
+  label: 'Incomplete',
+  shortLabel: 'INCD',
+  backgroundColor: '#fff',
+  borderColor: '#fcba19',
+  textColor: '#000',
+};
+
+export const DECISION_CONDITION_COMPLETE_LABEL = {
+  label: 'Complete',
+  shortLabel: 'COMD',
+  backgroundColor: '#fff',
+  borderColor: '#065a2f',
+  textColor: '#000',
+};
+
+export const DECISION_CONDITION_SUPERSEDED_LABEL = {
+  label: 'Superseded',
+  shortLabel: 'SUPD',
+  backgroundColor: '#fff',
+  borderColor: '#C08106',
+  textColor: '#000',
+};

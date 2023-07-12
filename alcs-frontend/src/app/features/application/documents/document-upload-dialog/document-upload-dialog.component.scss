@@ -1,3 +1,5 @@
+@use '../../../../../styles/colors';
+
 .form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -40,4 +42,10 @@ a {
     display: flex;
     align-items: center;
   }
+}
+
+.superseded-warning {
+  background-color: colors.$secondary-color-dark;
+  color: #fff;
+  padding: 0 4px;
 }

@@ -46,6 +46,8 @@ import { InlineReviewOutcomeComponent } from './inline-review-outcome/inline-rev
 import { InlineTextComponent } from './inline-text/inline-text.component';
 import { InlineTextareaComponent } from './inline-textarea/inline-textarea.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
+import { NoDataComponent } from './no-data/no-data.component';
+import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
@@ -82,6 +84,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    BooleanToStringPipe,
+    NoDataComponent,
   ],
   imports: [
     CommonModule,
@@ -162,6 +166,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    BooleanToStringPipe,
+    NoDataComponent,
   ],
 })
 export class SharedModule {

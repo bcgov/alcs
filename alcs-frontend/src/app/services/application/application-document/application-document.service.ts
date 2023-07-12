@@ -75,13 +75,8 @@ export class ApplicationDocumentService {
     if (!isValidSize) {
       return;
     }
+    let formData = this.convertDtoToFormData(createDto);
 
-    let formData: FormData = new FormData();
-    formData.append('documentType', createDto.typeCode);
-    formData.append('source', createDto.source);
-    formData.append('visibilityFlags', createDto.visibilityFlags.join(', '));
-    formData.append('fileName', createDto.fileName);
-    formData.append('file', file, file.name);
     const res = await firstValueFrom(this.http.post(`${this.url}/application/${fileNumber}`, formData));
     this.toastService.showSuccessToast('Review document uploaded');
     return res;
@@ -117,21 +112,8 @@ export class ApplicationDocumentService {
     return firstValueFrom(this.http.get<ApplicationDocumentTypeDto[]>(`${this.url}/types`));
   }
 
-  async update(uuid: string, createDto: UpdateDocumentDto) {
-    let formData: FormData = new FormData();
-
-    const file = createDto.file;
-    if (file) {
-      const isValidSize = verifyFileSize(file, this.toastService);
-      if (!isValidSize) {
-        return;
-      }
-      formData.append('file', file, file.name);
-    }
-    formData.append('documentType', createDto.typeCode);
-    formData.append('source', createDto.source);
-    formData.append('visibilityFlags', createDto.visibilityFlags.join(', '));
-    formData.append('fileName', createDto.fileName);
+  async update(uuid: string, updateDto: UpdateDocumentDto) {
+    let formData = this.convertDtoToFormData(updateDto);
     const res = await firstValueFrom(this.http.post(`${this.url}/${uuid}`, formData));
     this.toastService.showSuccessToast('Review document uploaded');
     return res;
@@ -143,5 +125,23 @@ export class ApplicationDocumentService {
     } catch (e) {
       this.toastService.showErrorToast(`Failed to save document order`);
     }
+  }
+
+  private convertDtoToFormData(dto: UpdateDocumentDto) {
+    let formData: FormData = new FormData();
+    formData.append('documentType', dto.typeCode);
+    formData.append('source', dto.source);
+    formData.append('visibilityFlags', dto.visibilityFlags.join(', '));
+    formData.append('fileName', dto.fileName);
+    if (dto.file) {
+      formData.append('file', dto.file, dto.file.name);
+    }
+    if (dto.parcelUuid) {
+      formData.append('parcelUuid', dto.parcelUuid);
+    }
+    if (dto.ownerUuid) {
+      formData.append('ownerUuid', dto.ownerUuid);
+    }
+    return formData;
   }
 }

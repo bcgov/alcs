@@ -400,6 +400,9 @@ describe('ApplicationSubmissionService', () => {
 
     mockRepository.findOne.mockResolvedValue(mockApplication);
     mockRepository.save.mockResolvedValue(mockApplication);
+    mockApplicationService.updateByFileNumber.mockResolvedValue(
+      new Application(),
+    );
 
     const result = await service.update(fileNumber, {
       applicant,

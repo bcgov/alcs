@@ -297,7 +297,7 @@ export class ApplicationDocumentService {
     appDocument.type = undefined;
     appDocument.typeCode = documentType;
     appDocument.visibilityFlags = visibilityFlags;
-    await this.applicationDocumentRepository.save(appDocument);
+    return await this.applicationDocumentRepository.save(appDocument);
   }
 
   async setSorting(data: { uuid: string; order: number }[]) {

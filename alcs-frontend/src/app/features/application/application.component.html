@@ -8,10 +8,36 @@
       heading="Application"
     ></app-details-header>
     <div class="content">
-      <div class="nav">
+      <div *ngIf="isSubmittedToAlc" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
             *ngIf="route.portalOnly ? isApplicantSubmission : true"
+            [routerLink]="route.path ? route.path : './'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="wasSubmittedToLfng" class="nav">
+        <div *ngFor="let route of submittedLfngRoutes" class="nav-link">
+          <div
+            [routerLink]="route.path ? route.path : './'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!isSubmittedToAlc && !wasSubmittedToLfng" class="nav">
+        <div *ngFor="let route of unsubmittedRoutes" class="nav-link">
+          <div
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: route.path === '' }"

@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
+import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
@@ -139,4 +140,18 @@ export class ApplicationParcel extends Base {
     onDelete: 'SET NULL',
   })
   certificateOfTitle?: ApplicationDocument;
+
+  @AutoMap(() => String)
+  @Column({ nullable: true })
+  certificateOfTitleUuid: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  alrArea?: number | null;
 }

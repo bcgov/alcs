@@ -84,6 +84,12 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
+export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationDecisionDto {
+  reconsideredByResolutions?: string[];
+  modifiedByResolutions?: string[];
+  index: number;
+}
+
 export interface DecisionDocumentDto {
   uuid: string;
   fileName: string;
@@ -116,6 +122,13 @@ export interface TurpDecisionComponentDto {
   expiryDate?: number | null;
 }
 
+export interface NaruDecisionComponentDto {
+  expiryDate?: number | null;
+  endDate?: number | null;
+  naruSubtypeCode?: string | null;
+  naruSubtype?: NaruSubtypesDto | null;
+}
+
 export interface PofoDecisionComponentDto {
   endDate?: number | null;
   soilFillTypeToPlace?: string | null;
@@ -138,7 +151,8 @@ export interface DecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
     PofoDecisionComponentDto,
-    RosoDecisionComponentDto {
+    RosoDecisionComponentDto,
+    NaruDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -148,6 +162,7 @@ export interface DecisionComponentDto
   applicationDecisionComponentTypeCode: string;
   applicationDecisionComponentType?: DecisionComponentTypeDto;
   applicationDecisionUuid?: string;
+  conditionComponentsLabels?: string;
 }
 
 export interface DecisionCodesDto {
@@ -157,6 +172,7 @@ export interface DecisionCodesDto {
   decisionComponentTypes: DecisionComponentTypeDto[];
   decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
   linkedResolutionOutcomeTypes: LinkedResolutionOutcomeTypeDto[];
+  naruSubtypes: NaruSubtypesDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -165,10 +181,12 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+  NARU = 'NARU',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
 export interface LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
+export interface NaruSubtypesDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {
   uuid: string;
@@ -177,16 +195,25 @@ export interface ApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  components?: DecisionComponentDto[] | null;
 }
 
-export interface UpdateApplicationDecisionConditionDto {
-  uuid?: string;
+export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
+  tempId?: string;
+}
+export interface UpdateApplicationDecisionConditionDto {
+  uuid?: string;
+  componentToConditions?: ComponentToCondition[] | null;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
 }

@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
-import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
+import { ApplicationStatus, SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
 
 import { ApplicationDetailsComponent } from './application-details.component';
 
@@ -27,7 +27,28 @@ describe('ApplicationDetailsComponent', () => {
 
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
-    component.submittedApplication = {
+    component.submission = {
+      applicant: '',
+      canEdit: false,
+      canReview: false,
+      canView: false,
+      createdAt: '',
+      fileNumber: '',
+      lastStatusUpdate: 0,
+      localGovernmentUuid: '',
+      owners: [],
+      soilAlreadyRemovedArea: null,
+      soilAlreadyRemovedAverageDepth: null,
+      soilAlreadyRemovedMaximumDepth: null,
+      soilAlreadyRemovedVolume: null,
+      soilToPlaceArea: null,
+      soilToPlaceVolume: null,
+      soilToRemoveAverageDepth: null,
+      soilToRemoveMaximumDepth: null,
+      status: {} as ApplicationStatus,
+      type: '',
+      updatedAt: '',
+      uuid: '',
       naruExistingStructures: null,
       naruFillOrigin: null,
       naruFillType: null,
@@ -44,6 +65,8 @@ describe('ApplicationDetailsComponent', () => {
       naruToPlaceMaximumDepth: null,
       naruToPlaceVolume: null,
       naruWillImportFill: null,
+      naruAgriTourism: null,
+      naruSleepingUnits: null,
       nfuAgricultureSupport: null,
       nfuFillOriginDescription: null,
       nfuFillTypeDescription: null,
@@ -86,9 +109,6 @@ describe('ApplicationDetailsComponent', () => {
       turPurpose: null,
       turReduceNegativeImpacts: null,
       turTotalCorridorArea: null,
-      parcels: [],
-      otherParcels: [],
-      documents: [],
       primaryContact: {
         type: {
           code: '',

@@ -1,11 +1,9 @@
 @use '../../../styles/typography';
 
 .timeline {
-  padding: 0;
+  padding: 16px;
   border-spacing: 0;
   width: 100%;
-  max-width: 600px;
-  margin: 16px 32px;
 
   th {
     font-size: 16px;
@@ -59,4 +57,21 @@
 
 a {
   font-size: 14px !important;
+}
+
+thead {
+  width: 100%;
+
+  .timeline-line {
+    width: 2%;
+  }
+
+  .timeline-date {
+    width: 15%;
+    min-width: 120px;
+  }
+
+  .timeline-event {
+    width: 68%;
+  }
 }

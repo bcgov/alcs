@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Column } from 'typeorm';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
@@ -19,6 +20,9 @@ export class ApplicationParcelDto {
 
   @AutoMap()
   applicationSubmissionUuid: string;
+
+  @AutoMap(() => String)
+  certificateOfTitleUuid: string | null;
 
   @AutoMap(() => String)
   pid?: string | null;
@@ -54,6 +58,9 @@ export class ApplicationParcelDto {
 
   @AutoMap(() => String)
   parcelType: string;
+
+  @AutoMap(() => Number)
+  alrArea: number | null;
 
   certificateOfTitle?: ApplicationDocumentDto;
   owners: ApplicationOwnerDetailedDto[];
@@ -106,7 +113,8 @@ export class ApplicationParcelUpdateDto {
   isFarm?: boolean | null;
 
   @IsBoolean()
-  isConfirmedByApplicant: boolean;
+  @IsOptional()
+  isConfirmedByApplicant?: boolean;
 
   @IsString()
   @IsOptional()
@@ -117,7 +125,12 @@ export class ApplicationParcelUpdateDto {
   crownLandOwnerType?: string | null;
 
   @IsArray()
-  ownerUuids: string[] | null;
+  @IsOptional()
+  ownerUuids?: string[] | null;
+
+  @IsNumber()
+  @IsOptional()
+  alrArea?: number | null;
 }
 
 export enum PARCEL_TYPE {

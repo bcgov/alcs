@@ -11,6 +11,7 @@ import { ApplicationDecisionService } from '../../../../services/application/dec
 import { ToastService } from '../../../../services/toast/toast.service';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
+import { parseBooleanToString, parseStringToBoolean } from '../../../../shared/utils/boolean-helper';
 
 @Component({
   selector: 'app-edit-reconsideration-dialog',
@@ -24,12 +25,16 @@ export class EditReconsiderationDialogComponent implements OnInit {
   typeControl = new FormControl<string | undefined>(undefined, [Validators.required]);
   reviewOutcomeCodeControl = new FormControl<string | null>(null);
 
-  form = new FormGroup({
+  form: FormGroup = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
     type: this.typeControl,
     reviewOutcomeCode: this.reviewOutcomeCodeControl,
     reviewDate: new FormControl<Date | null | undefined>(null),
     reconsidersDecisions: new FormControl<string[]>([], [Validators.required]),
+    description: new FormControl<string | null>('', [Validators.required]),
+    isNewProposal: new FormControl<string | undefined>(undefined, [Validators.required]),
+    isIncorrectFalseInfo: new FormControl<string | undefined>(undefined, [Validators.required]),
+    isNewEvidence: new FormControl<string | undefined>(undefined, [Validators.required]),
   });
   decisions: { uuid: string; resolution: string }[] = [];
 
@@ -37,7 +42,7 @@ export class EditReconsiderationDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileNumber: string;
-      existingDecision: ApplicationReconsiderationDetailedDto;
+      existingRecon: ApplicationReconsiderationDetailedDto;
       codes: BaseCodeDto[];
     },
     private dialogRef: MatDialogRef<EditReconsiderationDialogComponent>,
@@ -46,15 +51,20 @@ export class EditReconsiderationDialogComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.codes = data.codes;
+
     this.form.patchValue({
-      submittedDate: new Date(data.existingDecision.submittedDate),
-      type: data.existingDecision.type.code,
+      submittedDate: new Date(data.existingRecon.submittedDate),
+      type: data.existingRecon.type.code,
       reviewOutcomeCode:
-        data.existingDecision.type.code === RECONSIDERATION_TYPE.T_33
-          ? data.existingDecision.reviewOutcome?.code || 'PEN'
+        data.existingRecon.type.code === RECONSIDERATION_TYPE.T_33
+          ? data.existingRecon.reviewOutcome?.code || 'PEN'
           : null,
-      reviewDate: data.existingDecision.reviewDate ? new Date(data.existingDecision.reviewDate) : null,
-      reconsidersDecisions: data.existingDecision.reconsideredDecisions.map((dec) => dec.uuid),
+      reviewDate: data.existingRecon.reviewDate ? new Date(data.existingRecon.reviewDate) : null,
+      reconsidersDecisions: data.existingRecon.reconsideredDecisions.map((dec) => dec.uuid),
+      description: data.existingRecon.description ?? null,
+      isNewProposal: parseBooleanToString(data.existingRecon.isNewProposal),
+      isIncorrectFalseInfo: parseBooleanToString(data.existingRecon.isIncorrectFalseInfo),
+      isNewEvidence: parseBooleanToString(data.existingRecon.isNewEvidence),
     });
   }
 
@@ -65,17 +75,31 @@ export class EditReconsiderationDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, type, reviewOutcomeCode, reviewDate, reconsidersDecisions } = this.form.getRawValue();
+    const {
+      submittedDate,
+      type,
+      reviewOutcomeCode,
+      reviewDate,
+      reconsidersDecisions,
+      description,
+      isNewProposal,
+      isIncorrectFalseInfo,
+      isNewEvidence,
+    } = this.form.getRawValue();
     const data: UpdateApplicationReconsiderationDto = {
       submittedDate: formatDateForApi(submittedDate!),
       reviewOutcomeCode: reviewOutcomeCode,
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       reconsideredDecisionUuids: reconsidersDecisions || [],
+      description: description,
+      isNewProposal: parseStringToBoolean(isNewProposal),
+      isIncorrectFalseInfo: parseStringToBoolean(isIncorrectFalseInfo),
+      isNewEvidence: parseStringToBoolean(isNewEvidence),
     };
 
     try {
-      await this.reconsiderationService.update(this.data.existingDecision.uuid, { ...data });
+      await this.reconsiderationService.update(this.data.existingRecon.uuid, { ...data });
       this.toastService.showSuccessToast('Reconsideration updated');
     } finally {
       this.isLoading = false;
@@ -86,10 +110,12 @@ export class EditReconsiderationDialogComponent implements OnInit {
   async loadDecisions(fileNumber: string) {
     const decisions = await this.decisionService.fetchByApplication(fileNumber);
     if (decisions.length > 0) {
-      this.decisions = decisions.map((decision) => ({
-        uuid: decision.uuid,
-        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
-      }));
+      this.decisions = decisions
+        .filter((e) => !e.isDraft)
+        .map((decision) => ({
+          uuid: decision.uuid,
+          resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+        }));
     }
   }
 

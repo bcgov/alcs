@@ -31,6 +31,33 @@ export class ApplicationReconsideration extends Base {
   submittedDate: Date;
 
   @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  reviewDate: Date | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Reconsideration description provided by ALCS staff',
+  })
+  description?: string;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  isNewProposal?: boolean;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  isIncorrectFalseInfo?: boolean;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  isNewEvidence?: boolean;
+
+  @AutoMap()
   @ManyToOne(() => ApplicationReconsiderationType, {
     nullable: false,
   })
@@ -47,8 +74,8 @@ export class ApplicationReconsideration extends Base {
   reviewOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
-  @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date | null;
+  @Column({ type: 'uuid' })
+  applicationUuid: string;
 
   @AutoMap()
   @ManyToOne(() => Application, { cascade: ['insert'] })
@@ -56,17 +83,13 @@ export class ApplicationReconsideration extends Base {
 
   @AutoMap()
   @Column({ type: 'uuid' })
-  applicationUuid: string;
+  cardUuid: string;
 
   @AutoMap()
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
   card: Card | null;
-
-  @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
 
   @ManyToMany(() => ApplicationDecision, (decision) => decision.reconsideredBy)
   @JoinTable({

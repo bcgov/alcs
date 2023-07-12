@@ -4,7 +4,6 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { sleep } from '../../../../test/sleep';
 import { ApplicationDocumentService } from '../../services/application/application-document/application-document.service';
-import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { DecisionMeetingService } from '../../services/decision-meeting/decision-meeting.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -85,11 +84,12 @@ describe('MeetingOverviewComponent', () => {
     boardEmitter.next([
       {
         statuses: [],
-        decisionMaker: '',
         isFavourite: true,
         title: '',
         code: 'boardCode',
         allowedCardTypes: [],
+        createCardTypes: [],
+        showOnSchedule: true,
       },
     ]);
 
