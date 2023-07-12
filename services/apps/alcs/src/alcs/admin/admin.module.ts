@@ -39,6 +39,8 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       ApplicationDecisionConditionType,
     ]),
     ApplicationModule,
+    NoticeOfIntentModule,
+    NoticeOfIntentDecisionModule,
     forwardRef(() => ApplicationDecisionModule),
     forwardRef(() => PlanningReviewModule),
     forwardRef(() => CovenantModule),
