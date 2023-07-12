@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { ApplicationSubmissionReview } from '../../../../portal/application-submission-review/application-submission-review.entity';
 import { HolidayEntity } from '../../../admin/holiday/holiday.entity';
 import {
   LocalGovernmentCreateDto,

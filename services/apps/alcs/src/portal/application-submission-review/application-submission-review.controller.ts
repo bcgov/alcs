@@ -69,12 +69,23 @@ export class ApplicationSubmissionReviewController {
       const applicationReview =
         await this.applicationReviewService.getByFileNumber(fileNumber);
 
-      if (applicationReview) {
-        return this.applicationReviewService.mapToDto(
-          applicationReview,
-          userLocalGovernment,
+      if (applicationReview.createdBy) {
+        const reviewGovernment = await this.localGovernmentService.getByGuid(
+          applicationReview.createdBy?.bceidBusinessGuid,
         );
+
+        if (reviewGovernment) {
+          return this.applicationReviewService.mapToDto(
+            applicationReview,
+            reviewGovernment,
+          );
+        }
       }
+
+      return this.applicationReviewService.mapToDto(
+        applicationReview,
+        userLocalGovernment,
+      );
     }
 
     const applicationReview =
@@ -164,6 +175,7 @@ export class ApplicationSubmissionReviewController {
 
     const applicationReview = await this.applicationReviewService.startReview(
       applicationSubmission,
+      req.user.entity,
     );
 
     await this.applicationSubmissionService.updateStatus(
