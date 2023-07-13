@@ -156,12 +156,6 @@ export class ParcelEntryComponent implements OnInit {
 
       this.emitFormChangeOnSearchActions();
     }
-
-    if (this.showErrors) {
-      this.parcelForm.markAllAsTouched();
-    } else {
-      this.parcelForm.controls.isFarm.markAsTouched();
-    }
   }
 
   onReset() {
@@ -175,6 +169,12 @@ export class ParcelEntryComponent implements OnInit {
     this.parcelForm.controls.civicAddress.reset();
 
     this.emitFormChangeOnSearchActions();
+
+    if (this.showErrors) {
+      this.parcelForm.markAllAsTouched();
+    } else {
+      this.parcelForm.controls.isFarm.markAsTouched();
+    }
   }
 
   private emitFormChangeOnSearchActions() {
