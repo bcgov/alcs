@@ -70,7 +70,7 @@ export class LocalGovernmentDialogComponent implements OnInit, OnDestroy {
     if (this.model) {
       const dto = {
         name: this.model.name,
-        bceidBusinessGuid: this.model.bceidBusinessGuid,
+        bceidBusinessGuid: this.model.bceidBusinessGuid || null,
         isFirstNation: this.model.isFirstNation === 'true',
         isActive: this.model.isActive === 'true',
         preferredRegionCode: this.model.preferredRegionCode,
