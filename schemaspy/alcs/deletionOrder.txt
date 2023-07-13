@@ -8,7 +8,6 @@ staff_journal
 planning_review
 covenant
 card_subtask
-application_decision_condition
 notification
 notice_of_intent_subtype_notice_of_intent_subtype
 notice_of_intent_modified_decisions
@@ -21,13 +20,15 @@ application_reconsidered_decisions
 application_parcel_owners_application_owner
 application_modified_decisions
 application_decision_document
+application_decision_condition_component
 card_history
 application_submission_review
 application_decision_meeting
 application_parcel
 application_owner
-comment
 application_decision_component
+comment
+application_decision_condition
 notice_of_intent_decision
 application_paused
 application_submission
@@ -45,7 +46,6 @@ notice_of_intent_subtype
 notice_of_intent_modification_outcome_type
 notice_of_intent_meeting_type
 notice_of_intent_decision_outcome
-naru_subtype
 linked_resolution_outcome_type
 card_subtask_type
 application_type
@@ -63,6 +63,7 @@ application_decision_condition_type
 application_decision_component_type
 application_decision_chair_review_outcome_type
 application_ceo_criterion_code
+naru_subtype
 card_type
 card_status
 board

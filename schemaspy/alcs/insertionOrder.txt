@@ -3,6 +3,7 @@ application_region
 board
 card_status
 card_type
+naru_subtype
 application_ceo_criterion_code
 application_decision_chair_review_outcome_type
 application_decision_component_type
@@ -20,7 +21,6 @@ application_status
 application_type
 card_subtask_type
 linked_resolution_outcome_type
-naru_subtype
 notice_of_intent_decision_outcome
 notice_of_intent_meeting_type
 notice_of_intent_modification_outcome_type
@@ -38,13 +38,15 @@ notice_of_intent_modification
 application_submission
 application_paused
 notice_of_intent_decision
-application_decision_component
+application_decision_condition
 comment
+application_decision_component
 application_owner
 application_parcel
 application_decision_meeting
 application_submission_review
 card_history
+application_decision_condition_component
 application_decision_document
 application_modified_decisions
 application_parcel_owners_application_owner
@@ -57,7 +59,6 @@ notice_of_intent_meeting
 notice_of_intent_modified_decisions
 notice_of_intent_subtype_notice_of_intent_subtype
 notification
-application_decision_condition
 card_subtask
 covenant
 planning_review
