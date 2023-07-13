@@ -9,7 +9,7 @@ import { ApplicationSubmissionProfile } from '../../../common/automapper/applica
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
 describe('ApplicationSubmissionService', () => {
@@ -105,12 +105,12 @@ describe('ApplicationSubmissionService', () => {
       {} as SubmissionStatusType,
     );
 
-    const result = await service.getStatus(APPLICATION_STATUS.ALC_DECISION);
+    const result = await service.getStatus(SUBMISSION_STATUS.ALC_DECISION);
 
     expect(result).toBeDefined();
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledTimes(1);
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledWith({
-      where: { code: APPLICATION_STATUS.ALC_DECISION },
+      where: { code: SUBMISSION_STATUS.ALC_DECISION },
     });
   });
 
@@ -125,11 +125,11 @@ describe('ApplicationSubmissionService', () => {
       {} as ApplicationSubmission,
     );
 
-    await service.updateStatus('fake', APPLICATION_STATUS.ALC_DECISION);
+    await service.updateStatus('fake', SUBMISSION_STATUS.ALC_DECISION);
 
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledTimes(1);
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledWith({
-      where: { code: APPLICATION_STATUS.ALC_DECISION },
+      where: { code: SUBMISSION_STATUS.ALC_DECISION },
     });
     expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledTimes(
       1,

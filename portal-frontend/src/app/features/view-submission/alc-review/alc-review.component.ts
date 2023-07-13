@@ -4,7 +4,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import {
-  APPLICATION_STATUS,
+  SUBMISSION_STATUS,
   ApplicationSubmissionDetailedDto,
 } from '../../../services/application-submission/application-submission.dto';
 
@@ -20,7 +20,7 @@ export class AlcReviewComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   application: ApplicationSubmissionDetailedDto | undefined;
-  APPLICATION_STATUS = APPLICATION_STATUS;
+  SUBMISSION_STATUS = SUBMISSION_STATUS;
 
   constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
 
@@ -36,7 +36,7 @@ export class AlcReviewComponent implements OnInit, OnDestroy {
   }
 
   async onReview(fileId: string) {
-    if (this.application?.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG) {
+    if (this.application?.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
       const review = await this.applicationReviewService.startReview(fileId);
       if (!review) {
         return;

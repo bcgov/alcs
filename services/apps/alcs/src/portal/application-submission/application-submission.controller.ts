@@ -20,7 +20,7 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -169,10 +169,8 @@ export class ApplicationSubmissionController {
     }
 
     if (
-      localGovernment === null
-      // TODO status
-      // &&
-      // application.status.code !== APPLICATION_STATUS.IN_PROGRESS
+      localGovernment === null &&
+      application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
     ) {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
@@ -206,7 +204,7 @@ export class ApplicationSubmissionController {
         );
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
-          APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
         return await this.applicationSubmissionService.submitToLg(

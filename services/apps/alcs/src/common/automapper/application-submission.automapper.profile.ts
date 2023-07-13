@@ -32,8 +32,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            // TODO status_rework this should be remapped
-            return new Date().getTime();
+            return ad.status.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(
@@ -62,8 +67,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            // TODO status_rework this should be remapped
-            return new Date().getTime();
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(
@@ -89,8 +99,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            // TODO status_rework this should be remapped
-            return new Date().getTime();
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(

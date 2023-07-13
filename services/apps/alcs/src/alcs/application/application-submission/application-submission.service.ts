@@ -6,8 +6,9 @@ import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionStatusService } from '../../../portal/application-submission/submission-status/application-submission-status.service';
 import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class ApplicationSubmissionService {
     @InjectRepository(SubmissionStatusType)
     private applicationStatusRepository: Repository<SubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async get(fileNumber: string) {
@@ -57,7 +59,7 @@ export class ApplicationSubmissionService {
     return mappedSubmission;
   }
 
-  async getStatus(code: APPLICATION_STATUS) {
+  async getStatus(code: SUBMISSION_STATUS) {
     return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code,
@@ -65,9 +67,7 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
-    const status = await this.getStatus(statusCode);
-
+  async updateStatus(fileNumber: string, statusCode: SUBMISSION_STATUS) {
     //Load submission without relations to prevent save from crazy cascading
     const submission = await this.applicationSubmissionRepository.findOneOrFail(
       {
@@ -77,10 +77,9 @@ export class ApplicationSubmissionService {
       },
     );
 
-    // TODO status
-    // submission.status = status;
-
-    //Use save to trigger subscriber
-    await this.applicationSubmissionRepository.save(submission);
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      statusCode,
+    );
   }
 }

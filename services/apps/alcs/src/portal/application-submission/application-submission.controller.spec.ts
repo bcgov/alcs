@@ -23,7 +23,7 @@ import {
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
 describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
@@ -143,7 +143,7 @@ describe('ApplicationSubmissionController', () => {
   it('should call out to service when cancelling an application', async () => {
     const mockApplication = new ApplicationSubmission({
       status: new SubmissionStatusType({
-        code: APPLICATION_STATUS.IN_PROGRESS,
+        code: SUBMISSION_STATUS.IN_PROGRESS,
       }),
     });
 
@@ -169,13 +169,13 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
-    mockAppService.verifyAccessByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new SubmissionStatusType({
-          code: APPLICATION_STATUS.CANCELLED,
-        }),
+    const mockApp = new ApplicationSubmission();
+    mockAppService.verifyAccessByUuid.mockResolvedValue({
+      ...mockApp,
+      status: new SubmissionStatusType({
+        code: SUBMISSION_STATUS.CANCELLED,
       }),
-    );
+    } as any);
 
     const promise = controller.cancel('file-id', {
       user: {

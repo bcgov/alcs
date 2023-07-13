@@ -7,7 +7,7 @@ import { ApplicationSubmissionReviewDto } from '../../services/application-submi
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import {
   ApplicationSubmissionDetailedDto,
-  APPLICATION_STATUS,
+  SUBMISSION_STATUS,
 } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
@@ -34,7 +34,7 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
 
   $destroy = new Subject<void>();
 
-  APPLICATION_STATUS = APPLICATION_STATUS;
+  SUBMISSION_STATUS = SUBMISSION_STATUS;
   isMobile = false;
   mobileStep = MOBILE_STEP.INTRODUCTION;
   selectedStep: MOBILE_STEP | undefined;
@@ -97,7 +97,7 @@ export class ViewSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onReview(fileId: string) {
-    if (this.application?.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG) {
+    if (this.application?.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
       const review = await this.applicationReviewService.startReview(fileId);
       if (!review) {
         return;

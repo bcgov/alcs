@@ -37,7 +37,6 @@ export class ApplicationSubmissionDto {
   @AutoMap()
   localGovernmentUuid: string;
 
-  @AutoMap()
   status: ApplicationStatusDto;
 
   @AutoMap(() => Boolean)

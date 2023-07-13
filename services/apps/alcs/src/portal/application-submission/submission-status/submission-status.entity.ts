@@ -21,7 +21,7 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
 
   @AutoMap(() => Date)
   @Column({ type: 'timestamptz', nullable: true })
-  effectiveDate?: Date | null;
+  effectiveDate: Date | null;
 
   @AutoMap()
   @PrimaryColumn({ type: 'uuid' })

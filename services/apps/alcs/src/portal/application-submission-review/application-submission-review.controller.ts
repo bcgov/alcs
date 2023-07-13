@@ -26,7 +26,8 @@ import { ApplicationOwner } from '../application-submission/application-owner/ap
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { APPLICATION_STATUS } from '../application-submission/submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../application-submission/submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,
@@ -48,6 +49,7 @@ export class ApplicationSubmissionReviewController {
     private applicationValidatorService: ApplicationSubmissionValidatorService,
     private applicationService: ApplicationService,
     private emailService: EmailService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   @Get('/:fileNumber')
@@ -92,15 +94,16 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    // TODO status
-    // if (
-    //   ![
-    //     APPLICATION_STATUS.SUBMITTED_TO_ALC,
-    //     APPLICATION_STATUS.REFUSED_TO_FORWARD,
-    //   ].includes(applicationSubmission.statusCode as APPLICATION_STATUS)
-    // ) {
-    //   throw new NotFoundException('Failed to load review');
-    // }
+    if (
+      ![
+        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+      ].includes(
+        applicationSubmission.status.statusTypeCode as SUBMISSION_STATUS,
+      )
+    ) {
+      throw new NotFoundException('Failed to load review');
+    }
 
     const localGovernments = await this.localGovernmentService.list();
     const matchingGovernment = localGovernments.find(
@@ -169,7 +172,7 @@ export class ApplicationSubmissionReviewController {
 
     await this.applicationSubmissionService.updateStatus(
       applicationSubmission,
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
     );
 
     const primaryContact = applicationSubmission.owners.find(
@@ -199,7 +202,7 @@ export class ApplicationSubmissionReviewController {
   ) {
     if (primaryContact.email) {
       const status = await this.applicationSubmissionService.getStatus(
-        APPLICATION_STATUS.IN_REVIEW,
+        SUBMISSION_STATUS.IN_REVIEW_BY_FG, // TODO is this a correct assumption? previously we only had one in review
       );
 
       const types = await this.applicationService.fetchApplicationTypes();
@@ -270,9 +273,9 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    // if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-    // TODO status
-    if (true) {
+    if (
+      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_FG
+    ) {
       await this.applicationSubmissionService.submitToAlcs(
         validationResult.application,
         req.user.entity,
@@ -281,12 +284,12 @@ export class ApplicationSubmissionReviewController {
       if (completedReview.isAuthorized !== false) {
         await this.applicationSubmissionService.updateStatus(
           application,
-          APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
         await this.applicationSubmissionService.updateStatus(
           application,
-          APPLICATION_STATUS.REFUSED_TO_FORWARD,
+          SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
       }
     } else {
@@ -319,9 +322,10 @@ export class ApplicationSubmissionReviewController {
       throw new ServiceNotFoundException('Failed to load application review');
     }
 
-    // TODO status
-    // if (applicationSubmission.statusCode === APPLICATION_STATUS.IN_REVIEW) {
-    if (true) {
+    if (
+      applicationSubmission.status.statusTypeCode ===
+      SUBMISSION_STATUS.IN_REVIEW_BY_FG
+    ) {
       const documents = await this.applicationDocumentService.list(
         applicationSubmission.fileNumber,
       );
@@ -333,6 +337,17 @@ export class ApplicationSubmissionReviewController {
       }
 
       await this.applicationReviewService.delete(applicationReview);
+
+      await this.applicationSubmissionStatusService.setStatusDate(
+        applicationSubmission.uuid,
+        SUBMISSION_STATUS.SUBMITTED_TO_LG,
+        null,
+      );
+      await this.applicationSubmissionStatusService.setStatusDate(
+        applicationSubmission.uuid,
+        SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+        null,
+      );
 
       if (returnDto.applicantComment) {
         await this.applicationSubmissionService.update(
@@ -346,12 +361,12 @@ export class ApplicationSubmissionReviewController {
       if (returnDto.reasonForReturn === 'incomplete') {
         await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
-          APPLICATION_STATUS.INCOMPLETE,
+          SUBMISSION_STATUS.INCOMPLETE,
         );
       } else {
         await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
-          APPLICATION_STATUS.WRONG_GOV,
+          SUBMISSION_STATUS.WRONG_GOV,
         );
       }
     } else {

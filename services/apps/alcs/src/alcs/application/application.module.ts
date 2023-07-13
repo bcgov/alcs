@@ -11,6 +11,7 @@ import { ApplicationSubmissionReview } from '../../portal/application-submission
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
+import { ApplicationSubmissionStatusService } from '../../portal/application-submission/submission-status/application-submission-status.service';
 import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
 import { ApplicationSubmissionToSubmissionStatus } from '../../portal/application-submission/submission-status/submission-status.entity';
 import { Board } from '../board/board.entity';
@@ -78,6 +79,7 @@ import { ApplicationService } from './application.service';
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
     ApplicationSubmissionProfile,
+    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationController,

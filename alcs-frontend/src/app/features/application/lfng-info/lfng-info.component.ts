@@ -7,9 +7,9 @@ import {
 } from '../../../services/application/application-document/application-document.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import {
-  APPLICATION_STATUS,
   ApplicationReviewDto,
   ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
 } from '../../../services/application/application.dto';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 
@@ -40,8 +40,8 @@ export class LfngInfoComponent implements OnInit {
         this.requiresReview = application.type.code !== 'TURP';
         this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
-        this.showComment = [APPLICATION_STATUS.WRONG_GOV, APPLICATION_STATUS.INCOMPLETE].includes(
-          this.submission?.status?.code
+        this.showComment = [SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(
+          this.submission?.status.code
         );
         this.loadDocuments(application.fileNumber);
       }

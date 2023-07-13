@@ -693,24 +693,39 @@ export class ApplicationSubmission extends Base {
   )
   parcels: ApplicationParcel[];
 
+  // TODO this will be removed
+  @Column({ nullable: true })
+  statusCode: string;
+
   @OneToMany(
     () => ApplicationSubmissionToSubmissionStatus,
     (status) => status.submission,
     {
-      cascade: true,
       eager: true,
+      persistence: false,
     },
   )
   submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
 
+  private _status: ApplicationSubmissionToSubmissionStatus;
+
+  get status(): ApplicationSubmissionToSubmissionStatus {
+    return this._status;
+  }
+
+  private set status(value: ApplicationSubmissionToSubmissionStatus) {
+    this._status = value;
+  }
+
   @AfterLoad()
-  getCurrentStatus() {
+  populateCurrentStatus() {
     // using JS date object is intentional for performance reasons
+    // FIXME make sure that UI and API will be using the same dates to compare and set in statuses
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
     const currentStatuses = this.submissionStatuses
-      .filter((obj) => obj.effectiveDate && obj.effectiveDate < startOfDay)
+      .filter((obj) => obj.effectiveDate && obj.effectiveDate <= startOfDay)
       .sort((a, b) => {
         if (a.effectiveDate! > b.effectiveDate!) {
           return -1;
@@ -721,6 +736,6 @@ export class ApplicationSubmission extends Base {
         }
       });
 
-    return currentStatuses[0];
+    this.status = currentStatuses[0];
   }
 }

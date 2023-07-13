@@ -23,7 +23,7 @@
       </button>
       <button
         [disabled]="
-          !applicationReview || (!application.canReview && application.status.code === APPLICATION_STATUS.IN_REVIEW)
+          !applicationReview || (!application.canReview && application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_FG)
         "
         (click)="onDownloadReviewPdf(application.fileNumber)"
         mat-flat-button
@@ -33,16 +33,16 @@
       </button>
     </div>
   </div>
-  <div *ngIf="application.status.code === APPLICATION_STATUS.IN_PROGRESS" class="warning">
+  <div *ngIf="application.status.code === SUBMISSION_STATUS.IN_PROGRESS" class="warning">
     This section will update after the application is submitted.
   </div>
-  <div *ngIf="!applicationReview && application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC" class="warning">
+  <div *ngIf="!applicationReview && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC" class="warning">
     Application not subject to Local/First Nation Government review.
   </div>
   <div
     *ngIf="
-      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG ||
-      (application.status.code === APPLICATION_STATUS.IN_REVIEW && (!applicationReview || !application.canReview))
+      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG ||
+      (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_FG && (!applicationReview || !application.canReview))
     "
     class="warning"
   >
@@ -50,8 +50,8 @@
   </div>
   <div
     *ngIf="
-      application.status.code === APPLICATION_STATUS.WRONG_GOV ||
-      application.status.code === APPLICATION_STATUS.INCOMPLETE
+      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+      application.status.code === SUBMISSION_STATUS.INCOMPLETE
     "
     class="warning"
   >
@@ -59,7 +59,7 @@
     {{ application.returnedComment }}
     <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
   </div>
-  <div *ngIf="applicationReview && (application.canReview || application.status.code !== APPLICATION_STATUS.IN_REVIEW)">
+  <div *ngIf="applicationReview && (application.canReview || application.status.code !== SUBMISSION_STATUS.IN_REVIEW_BY_FG)">
     <section>
       <h4>Contact Information</h4>
       <div class="review-table">

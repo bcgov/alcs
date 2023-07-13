@@ -10,10 +10,10 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 import {
-  APPLICATION_STATUS,
   APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
   ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
 } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -208,11 +208,11 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.wasSubmittedToLfng =
           this.isApplicantSubmission &&
           [
-            APPLICATION_STATUS.SUBMITTED_TO_LG,
-            APPLICATION_STATUS.IN_REVIEW,
-            APPLICATION_STATUS.WRONG_GOV,
-            APPLICATION_STATUS.INCOMPLETE,
-          ].includes(this.submission?.status?.code);
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+            SUBMISSION_STATUS.WRONG_GOV,
+            SUBMISSION_STATUS.INCOMPLETE,
+          ].includes(this.submission?.status.code);
       }
     });
 

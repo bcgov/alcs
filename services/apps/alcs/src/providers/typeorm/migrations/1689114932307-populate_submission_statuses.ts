@@ -25,7 +25,8 @@ export class populateSubmissionStatuses1689114932307
             (NOW(), NULL, 'migration_seed', NULL, 'Received By ALC', 'RECA', 'Application received Date Received All Items', 6),
             (NOW(), NULL, 'migration_seed', NULL, 'Under Review by ALC', 'REVA', 'Application received Discussion Date', 7),
             (NOW(), NULL, 'migration_seed', NULL, 'Decision Released', 'ALCD', 'First decision released', 8),
-            (NOW(), NULL, 'migration_seed', NULL, 'L/FNG Refused to Forward', 'RFFG', 'L/FNG Refused to forward application', 9);
+            (NOW(), NULL, 'migration_seed', NULL, 'L/FNG Refused to Forward', 'RFFG', 'L/FNG Refused to forward application', 9),
+            (NOW(), NULL, 'migration_seed', NULL, 'Cancelled', 'CANC', 'Application has been cancelled by the applicant', 10);
         `,
     );
 
@@ -112,6 +113,16 @@ export class populateSubmissionStatuses1689114932307
             FROM alcs.application_submission aps
             WHERE asst.status_type_code = 'PROG'
                 AND asst.submission_uuid = aps.uuid;`,
+    );
+
+    await queryRunner.query(
+      `
+      UPDATE alcs.application_submission_to_submission_status AS asst
+      SET effective_date = aps.audit_updated_at
+      FROM alcs.application_submission aps
+      WHERE asst.status_type_code = 'CANC'
+          AND asst.submission_uuid = aps.uuid
+          AND aps.status_code = 'CANC';`,
     );
   }
 

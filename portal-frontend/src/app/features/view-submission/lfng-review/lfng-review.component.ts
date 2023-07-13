@@ -11,7 +11,7 @@ import { ApplicationSubmissionReviewDto } from '../../../services/application-su
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
 import {
   ApplicationSubmissionDetailedDto,
-  APPLICATION_STATUS,
+  SUBMISSION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 
@@ -30,7 +30,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
   application: ApplicationSubmissionDetailedDto | undefined;
   applicationReview: ApplicationSubmissionReviewDto | undefined;
-  APPLICATION_STATUS = APPLICATION_STATUS;
+  SUBMISSION_STATUS = SUBMISSION_STATUS;
   staffReport: ApplicationDocumentDto[] = [];
   resolutionDocument: ApplicationDocumentDto[] = [];
   governmentOtherAttachments: ApplicationDocumentDto[] = [];
@@ -84,10 +84,10 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     if (
       this.application &&
       this.application.typeCode !== 'TURP' &&
-      ([APPLICATION_STATUS.SUBMITTED_TO_ALC, APPLICATION_STATUS.REFUSED_TO_FORWARD].includes(
+      ([SUBMISSION_STATUS.SUBMITTED_TO_ALC, SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG].includes(
         this.application.status.code
       ) ||
-        (this.application.status.code === APPLICATION_STATUS.IN_REVIEW && this.application.canReview))
+        (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_FG && this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
     } else {
@@ -103,7 +103,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   }
 
   async onReview(fileId: string) {
-    if (this.application?.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG) {
+    if (this.application?.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG) {
       const review = await this.applicationReviewService.startReview(fileId);
       if (!review) {
         return;

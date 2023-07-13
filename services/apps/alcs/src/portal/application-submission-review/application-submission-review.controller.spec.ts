@@ -25,7 +25,7 @@ import {
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { SubmissionStatusType } from '../application-submission/submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from '../application-submission/submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 import { ApplicationSubmissionReviewController } from './application-submission-review.controller';
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
@@ -145,7 +145,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         localGovernmentUuid: mockLG.uuid,
       }),
     );
@@ -170,7 +170,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.IN_PROGRESS,
+        statusCode: SUBMISSION_STATUS.IN_PROGRESS,
         localGovernmentUuid: mockLG.uuid,
       }),
     );
@@ -210,7 +210,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
     );
   });
 
@@ -253,7 +253,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
     );
   });
 
@@ -284,7 +284,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       }),
     );
     mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
@@ -315,7 +315,9 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should load review and call submitToAlcs when in correct status for finish', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationSubmission({
+        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+      }),
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
@@ -360,14 +362,16 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
   });
 
   it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationSubmission({
+        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+      }),
     );
     mockAppSubmissionService.submitToAlcs.mockResolvedValue(
       new Application({
@@ -409,7 +413,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.REFUSED_TO_FORWARD,
+      SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
   });
 
@@ -418,7 +422,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         uuid: 'submission-uuid',
-        statusCode: APPLICATION_STATUS.IN_REVIEW,
+        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
@@ -473,7 +477,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.INCOMPLETE,
+      SUBMISSION_STATUS.INCOMPLETE,
     );
     expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(
@@ -488,7 +492,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       }),
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);

@@ -21,7 +21,6 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
@@ -186,7 +185,7 @@ describe('ApplicationSubmissionService', () => {
   it('should load the canceled status and save the application for cancel', async () => {
     const application = new ApplicationSubmission();
     const cancelStatus = new SubmissionStatusType({
-      code: APPLICATION_STATUS.CANCELLED,
+      code: SUBMISSION_STATUS.CANCELLED,
     });
     mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
     mockRepository.findOneOrFail.mockResolvedValue(new ApplicationSubmission());

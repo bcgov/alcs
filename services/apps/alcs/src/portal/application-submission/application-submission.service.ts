@@ -29,14 +29,13 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { APPLICATION_STATUS } from './submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
-// TODO status
 const LG_VISIBLE_STATUSES = [
-  APPLICATION_STATUS.SUBMITTED_TO_LG,
-  APPLICATION_STATUS.IN_REVIEW,
-  APPLICATION_STATUS.REFUSED_TO_FORWARD,
-  APPLICATION_STATUS.SUBMITTED_TO_ALC,
+  SUBMISSION_STATUS.SUBMITTED_TO_LG,
+  SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+  SUBMISSION_STATUS.SUBMITTED_TO_ALC,
 ];
 
 @Injectable()
@@ -129,17 +128,20 @@ export class ApplicationSubmissionService {
       );
     }
 
-    const statuses =
-      await this.applicationSubmissionStatusService.getInitialStatuses();
-
     const applicationSubmission = new ApplicationSubmission({
       fileNumber,
       typeCode: type,
       createdBy,
-      submissionStatuses: statuses,
     });
-    // TODO status statuses do not persist in db
-    await this.applicationSubmissionRepository.save(applicationSubmission);
+
+    const submission = await this.applicationSubmissionRepository.save(
+      applicationSubmission,
+    );
+
+    // FIXME ideally this should happen in the same transaction as creation of submission
+    await this.applicationSubmissionStatusService.setInitialStatuses(
+      submission.uuid,
+    );
 
     return fileNumber;
   }
@@ -185,33 +187,23 @@ export class ApplicationSubmissionService {
     await this.applicationSubmissionRepository.save(applicationSubmission);
   }
 
-  async submitToLg(application: ApplicationSubmission) {
-    await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_LG);
+  async submitToLg(submission: ApplicationSubmission) {
+    this.updateStatus(submission, SUBMISSION_STATUS.SUBMITTED_TO_LG);
   }
 
   async updateStatus(
     applicationSubmission: ApplicationSubmission,
-    statusCode: APPLICATION_STATUS,
+    statusCode: SUBMISSION_STATUS,
+    effectiveDate?: Date | null,
   ) {
-    const status = await this.getStatus(statusCode);
-
-    //Load submission without relations to prevent save from crazy cascading
-    const submission = await this.applicationSubmissionRepository.findOneOrFail(
-      {
-        where: {
-          fileNumber: applicationSubmission.fileNumber,
-          isDraft: false,
-        },
-      },
+    await this.applicationSubmissionStatusService.setStatusDate(
+      applicationSubmission.uuid,
+      statusCode,
+      effectiveDate,
     );
-
-    // TODO status
-    // submission.status = status;
-    //Use save to trigger subscriber
-    await this.applicationSubmissionRepository.save(submission);
   }
 
-  async getStatus(code: APPLICATION_STATUS) {
+  async getStatus(code: SUBMISSION_STATUS) {
     return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code,
@@ -237,6 +229,12 @@ export class ApplicationSubmissionService {
           dateSubmittedToAlc: new Date(),
         },
         shouldCreateCard,
+      );
+
+      await this.updateStatus(
+        application,
+        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        submittedApp.dateSubmittedToAlc,
       );
 
       this.generateAndAttachPdfs(
@@ -290,12 +288,12 @@ export class ApplicationSubmissionService {
     });
   }
 
-  getForGovernment(localGovernment: ApplicationLocalGovernment) {
+  async getForGovernment(localGovernment: ApplicationLocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
 
-    return this.applicationSubmissionRepository.find({
+    const submissions = await this.applicationSubmissionRepository.find({
       where: [
         //Owns
         {
@@ -307,17 +305,24 @@ export class ApplicationSubmissionService {
         //Local Government
         {
           localGovernmentUuid: localGovernment.uuid,
-          // TODO status
-          // status: {
-          //   code: In(LG_VISIBLE_STATUSES),
-          // },
           isDraft: false,
         },
       ],
       order: {
         auditUpdatedAt: 'DESC',
       },
+      relations: {
+        createdBy: true,
+      },
     });
+
+    return submissions.filter(
+      (s) =>
+        s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
+        LG_VISIBLE_STATUSES.includes(
+          s.status.statusTypeCode as SUBMISSION_STATUS,
+        ),
+    );
   }
 
   async getForGovernmentByUuid(
@@ -344,10 +349,6 @@ export class ApplicationSubmissionService {
             isDraft: false,
             uuid,
             localGovernmentUuid: localGovernment.uuid,
-            // TODO status
-            // status: {
-            //   code: In(LG_VISIBLE_STATUSES),
-            // },
           },
         ],
         order: {
@@ -361,7 +362,13 @@ export class ApplicationSubmissionService {
         relations: this.DEFAULT_RELATIONS,
       });
 
-    if (!existingApplication) {
+    if (
+      !existingApplication ||
+      (existingApplication &&
+        !LG_VISIBLE_STATUSES.includes(
+          existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
+        ))
+    ) {
       throw new ServiceNotFoundException(
         `Failed to load application with uuid ${uuid}`,
       );
@@ -394,10 +401,6 @@ export class ApplicationSubmissionService {
             isDraft: false,
             fileNumber,
             localGovernmentUuid: localGovernment.uuid,
-            // TODO status
-            // status: {
-            //   code: In(LG_VISIBLE_STATUSES),
-            // },
           },
         ],
         order: {
@@ -411,7 +414,13 @@ export class ApplicationSubmissionService {
         relations: this.DEFAULT_RELATIONS,
       });
 
-    if (!existingApplication) {
+    if (
+      !existingApplication ||
+      (existingApplication &&
+        !LG_VISIBLE_STATUSES.includes(
+          existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
+        ))
+    ) {
       throw new ServiceNotFoundException(
         `Failed to load application with File ID ${fileNumber}`,
       );
@@ -530,25 +539,30 @@ export class ApplicationSubmissionService {
     userGovernment?: ApplicationLocalGovernment,
   ) {
     const types = await this.applicationService.fetchApplicationTypes();
-    return apps.map((app) => ({
-      ...this.mapper.map(app, ApplicationSubmission, ApplicationSubmissionDto),
-      type: types.find((type) => type.code === app.typeCode)!.label,
-      // TODO status
-      // canEdit: [
-      //   APPLICATION_STATUS.IN_PROGRESS,
-      //   APPLICATION_STATUS.INCOMPLETE,
-      //   APPLICATION_STATUS.WRONG_GOV,
-      // ].includes(app.status.code as APPLICATION_STATUS),
-      // canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
-      canView: true,
-      canReview:
-        // TODO status
-        // [
-        //   APPLICATION_STATUS.SUBMITTED_TO_LG,
-        //   APPLICATION_STATUS.IN_REVIEW,
-        // ].includes(app.status.code as APPLICATION_STATUS) &&
-        userGovernment && userGovernment.uuid === app.localGovernmentUuid,
-    }));
+
+    return apps.map((app) => {
+      return {
+        ...this.mapper.map(
+          app,
+          ApplicationSubmission,
+          ApplicationSubmissionDto,
+        ),
+        type: types.find((type) => type.code === app.typeCode)!.label,
+        canEdit: [
+          SUBMISSION_STATUS.IN_PROGRESS,
+          SUBMISSION_STATUS.INCOMPLETE,
+          SUBMISSION_STATUS.WRONG_GOV,
+        ].includes(app.status.statusTypeCode as SUBMISSION_STATUS),
+        canView: app.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
+        canReview:
+          [
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+          ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
+          userGovernment &&
+          userGovernment.uuid === app.localGovernmentUuid,
+      };
+    });
   }
 
   async mapToDetailedDTO(
@@ -564,27 +578,28 @@ export class ApplicationSubmissionService {
     return {
       ...mappedApp,
       type: types.find((type) => type.code === application.typeCode)!.label,
-      canEdit: true,
-      // TODO status
-      // canEdit: [
-      //   APPLICATION_STATUS.IN_PROGRESS,
-      //   APPLICATION_STATUS.INCOMPLETE,
-      //   APPLICATION_STATUS.WRONG_GOV,
-      // ].includes(application.status.code as APPLICATION_STATUS),
-      canView: true, // TODO status //application.status.code !== APPLICATION_STATUS.CANCELLED,
+      canEdit: [
+        SUBMISSION_STATUS.IN_PROGRESS,
+        SUBMISSION_STATUS.INCOMPLETE,
+        SUBMISSION_STATUS.WRONG_GOV,
+      ].includes(application.status.statusTypeCode as SUBMISSION_STATUS),
+      canView:
+        application.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
       canReview:
-        // TODO status
-        // [
-        //   APPLICATION_STATUS.SUBMITTED_TO_LG,
-        //   APPLICATION_STATUS.IN_REVIEW,
-        // ].includes(application.status.code as APPLICATION_STATUS) &&
+        [
+          SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+        ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
         userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
     };
   }
 
-  async cancel(application: ApplicationSubmission) {
-    await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
+  async cancel(submission: ApplicationSubmission) {
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      SUBMISSION_STATUS.CANCELLED,
+    );
   }
 
   private setLandUseFields(
