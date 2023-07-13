@@ -17,6 +17,8 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { ApplicationSubmissionStatusService } from '../../portal/application-submission/submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../portal/application-submission/submission-status/submission-status.dto';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
@@ -84,6 +86,7 @@ export class ApplicationService {
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private fileNumberService: FileNumberService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -204,6 +207,31 @@ export class ApplicationService {
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
     await this.applicationRepository.update(existingApplication.uuid, updates);
+
+    try {
+      if (updates.dateAcknowledgedIncomplete !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+          updates.dateAcknowledgedIncomplete,
+        );
+      }
+
+      if (updates.dateReceivedAllItems !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.RECEIVED_BY_ALC,
+          updates.dateReceivedAllItems,
+        );
+      }
+    } catch (error) {
+      if (error instanceof ServiceNotFoundException) {
+        this.logger.warn(error.message, error);
+      } else {
+        throw error;
+      }
+    }
+
     return this.getOrFail(existingApplication.fileNumber);
   }
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationSubmission } from '../application-submission.entity';
 import { SubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
@@ -12,6 +14,8 @@ export class ApplicationSubmissionStatusService {
     private statusesRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
     @InjectRepository(SubmissionStatusType)
     private submissionStatusTypeRepository: Repository<SubmissionStatusType>,
+    @InjectRepository(ApplicationSubmission)
+    private applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) {}
 
   async setInitialStatuses(submissionUuid: string) {
@@ -62,7 +66,41 @@ export class ApplicationSubmissionStatusService {
     return this.statusesRepository.save(status);
   }
 
+  async setStatusDateByFileNumber(
+    fileNumber: string,
+    statusTypeCode: string,
+    effectiveDate?: Date | null,
+  ) {
+    const submission = await this.getSubmission(fileNumber);
+    return await this.setStatusDate(
+      submission.uuid,
+      statusTypeCode,
+      effectiveDate,
+    );
+  }
+
   async getCurrentStatusesBy(submissionUuid: string) {
     return await this.statusesRepository.findBy({ submissionUuid });
+  }
+
+  async getCurrentStatusesByFileNumber(fileNumber: string) {
+    const submission = await this.getSubmission(fileNumber);
+
+    return await this.statusesRepository.findBy({
+      submissionUuid: submission?.uuid,
+    });
+  }
+
+  private async getSubmission(fileNumber: string) {
+    const submission = await this.applicationSubmissionRepository.findOneBy({
+      fileNumber,
+    });
+
+    if (!submission) {
+      throw new ServiceNotFoundException(
+        `Submission does not exist for provided application ${fileNumber}. Only applications originated in portal have statuses.`,
+      );
+    }
+    return submission;
   }
 }

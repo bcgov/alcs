@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../../alcs/application/application.module';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
+import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionModule } from '../application-submission/application-submission.module';
 import { ApplicationSubmissionStatusService } from '../application-submission/submission-status/application-submission-status.service';
 import { SubmissionStatusType } from '../application-submission/submission-status/submission-status-type.entity';
@@ -16,6 +17,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
       ApplicationSubmissionReview,
       ApplicationSubmissionToSubmissionStatus,
       SubmissionStatusType,
+      ApplicationSubmission,
     ]),
     forwardRef(() => ApplicationSubmissionModule),
     forwardRef(() => ApplicationModule),

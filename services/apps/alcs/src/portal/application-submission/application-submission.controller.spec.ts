@@ -24,6 +24,7 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
@@ -142,9 +143,13 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service when cancelling an application', async () => {
     const mockApplication = new ApplicationSubmission({
-      status: new SubmissionStatusType({
-        code: SUBMISSION_STATUS.IN_PROGRESS,
-      }),
+      submissionStatuses: [
+        new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+          submissionUuid: 'fake',
+          effectiveDate: new Date(),
+        }),
+      ],
     });
 
     mockAppService.mapToDTOs.mockResolvedValue([

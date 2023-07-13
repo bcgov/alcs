@@ -27,6 +27,10 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting/appli
 import { ApplicationDecisionMeetingService } from './application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDecisionV1Controller } from './application-decision/application-decision-v1.controller';
 import { ApplicationDecisionV1Service } from './application-decision/application-decision-v1.service';
+import { ApplicationSubmissionStatusService } from '../../../portal/application-submission/submission-status/application-submission-status.service';
+import { ApplicationSubmissionToSubmissionStatus } from '../../../portal/application-submission/submission-status/submission-status.entity';
+import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
 
 @Module({
   imports: [
@@ -43,6 +47,9 @@ import { ApplicationDecisionV1Service } from './application-decision/application
       ApplicationDecisionChairReviewOutcomeType,
       ApplicationReconsiderationOutcomeType,
       ApplicationModificationOutcomeType,
+      ApplicationSubmissionToSubmissionStatus,
+      ApplicationSubmission,
+      SubmissionStatusType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -57,6 +64,7 @@ import { ApplicationDecisionV1Service } from './application-decision/application
     ApplicationReconsiderationService,
     ReconsiderationProfile,
     ApplicationDecisionMeetingService,
+    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationModificationController,
@@ -68,6 +76,7 @@ import { ApplicationDecisionV1Service } from './application-decision/application
     ApplicationModificationService,
     ApplicationDecisionV1Service,
     ApplicationReconsiderationService,
+    ApplicationSubmissionStatusService,
   ],
 })
 export class ApplicationDecisionV1Module {}

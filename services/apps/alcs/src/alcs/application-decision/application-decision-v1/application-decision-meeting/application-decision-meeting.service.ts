@@ -1,17 +1,22 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../../../portal/application-submission/submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationService } from '../../../application/application.service';
 import { CARD_STATUS } from '../../../card/card-status/card-status.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 
 @Injectable()
 export class ApplicationDecisionMeetingService {
+  private logger = new Logger(ApplicationDecisionMeetingService.name);
+
   constructor(
     @InjectRepository(ApplicationDecisionMeeting)
     private appDecisionMeetingRepository: Repository<ApplicationDecisionMeeting>,
     private applicationService: ApplicationService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -56,12 +61,67 @@ export class ApplicationDecisionMeetingService {
       decisionMeeting,
     );
 
-    return this.appDecisionMeetingRepository.save(updatedMeeting);
+    const meeting = await this.appDecisionMeetingRepository.save(
+      updatedMeeting,
+    );
+
+    await this.updateSubmissionStatus(meeting);
+
+    return meeting;
+  }
+
+  private async updateSubmissionStatus(meeting: ApplicationDecisionMeeting) {
+    const application = await this.applicationService.getByUuidOrFail(
+      meeting.applicationUuid,
+    );
+
+    const currentStatuses =
+      await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
+        application.fileNumber,
+      );
+
+    if (!currentStatuses || (currentStatuses && currentStatuses.length < 1)) {
+      return;
+    }
+
+    const inReviewByALC = currentStatuses.find(
+      (s) => s.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+    );
+
+    const meetings = await this.getByAppFileNumber(application.fileNumber);
+
+    if (meetings?.length < 1) {
+      this.applicationSubmissionStatusService.setStatusDate(
+        currentStatuses[0].submissionUuid,
+        SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+        null,
+      );
+
+      return;
+    }
+
+    const earliestMeeting = meetings.reduce((min, current) =>
+      current.date < min.date ? current : min,
+    );
+
+    if (
+      inReviewByALC &&
+      inReviewByALC.effectiveDate &&
+      inReviewByALC.effectiveDate !== earliestMeeting.date
+    ) {
+      this.applicationSubmissionStatusService.setStatusDate(
+        inReviewByALC.submissionUuid,
+        SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+        earliestMeeting.date,
+      );
+    }
   }
 
   async delete(uuid) {
     const meeting = await this.getOrFail(uuid);
-    return this.appDecisionMeetingRepository.softRemove([meeting]);
+    const deleted = this.appDecisionMeetingRepository.softRemove([meeting]);
+    this.updateSubmissionStatus(meeting);
+    return deleted;
   }
 
   async getUpcomingReconsiderationMeetings(): Promise<
