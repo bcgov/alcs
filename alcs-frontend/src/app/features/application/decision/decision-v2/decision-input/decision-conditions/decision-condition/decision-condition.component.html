@@ -15,7 +15,7 @@
 
     <mat-form-field class="condition-grid-half-2" appearance="outline">
       <mat-label>Component to Condition</mat-label>
-      <mat-select appearance="outline" [formControl]="componentToConditions" multiple>
+      <mat-select appearance="outline" [formControl]="componentsToCondition" multiple>
         <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
           component.label
         }}</mat-option>
