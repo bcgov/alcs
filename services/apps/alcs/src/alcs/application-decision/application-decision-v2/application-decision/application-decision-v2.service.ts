@@ -12,6 +12,8 @@ import {
 } from '../../../../document/document.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationSubmissionStatusService } from '../../../../portal/application-submission/submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../portal/application-submission/submission-status/submission-status.dto';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';
@@ -59,6 +61,7 @@ export class ApplicationDecisionV2Service {
     private documentService: DocumentService,
     private decisionComponentService: ApplicationDecisionComponentService,
     private decisionConditionService: ApplicationDecisionConditionService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async getForPortal(fileNumber: string) {
@@ -332,6 +335,12 @@ export class ApplicationDecisionV2Service {
             decisionDate: updatedDecision.date,
           },
         );
+
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingDecision.application!.fileNumber,
+          SUBMISSION_STATUS.ALC_DECISION,
+          updatedDecision.date,
+        );
       }
     } else if (
       updatedDecision.isDraft &&
@@ -342,6 +351,12 @@ export class ApplicationDecisionV2Service {
         {
           decisionDate: null,
         },
+      );
+
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        existingDecision.application!.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        null,
       );
     }
 
@@ -600,10 +615,20 @@ export class ApplicationDecisionV2Service {
       await this.applicationService.update(applicationDecision.application, {
         decisionDate: null,
       });
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        applicationDecision.application.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        null,
+      );
     } else {
       await this.applicationService.update(applicationDecision.application, {
         decisionDate: existingDecisions[existingDecisions.length - 1].date,
       });
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        applicationDecision.application.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        existingDecisions[existingDecisions.length - 1].date,
+      );
     }
   }
 

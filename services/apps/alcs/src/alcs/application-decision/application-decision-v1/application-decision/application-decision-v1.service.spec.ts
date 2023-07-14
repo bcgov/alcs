@@ -13,12 +13,14 @@ import {
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
 import { DocumentService } from '../../../../document/document.service';
+import { ApplicationSubmissionStatusService } from '../../../../portal/application-submission/submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationService } from '../../../application/application.service';
-import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
-import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
+import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationDecisionV1Service } from './application-decision-v1.service';
 import {
   CreateApplicationDecisionDto,
@@ -42,6 +44,7 @@ describe('ApplicationDecisionV1Service', () => {
   >;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   let mockApplication;
   let mockDecision;
@@ -58,6 +61,7 @@ describe('ApplicationDecisionV1Service', () => {
       createMock<Repository<ApplicationDecisionMakerCode>>();
     mockCeoCriterionCodeRepository =
       createMock<Repository<ApplicationCeoCriterionCode>>();
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -95,6 +99,10 @@ describe('ApplicationDecisionV1Service', () => {
           provide: DocumentService,
           useValue: mockDocumentService,
         },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
       ],
     }).compile();
 
@@ -120,6 +128,10 @@ describe('ApplicationDecisionV1Service', () => {
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
+
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
   });
 
   describe('ApplicationDecisionService Core Tests', () => {
@@ -141,7 +153,7 @@ describe('ApplicationDecisionV1Service', () => {
       expect(result).toStrictEqual(mockDecision);
     });
 
-    it('should delete decision with uuid and update application', async () => {
+    it('should delete decision with uuid and update application and submission status', async () => {
       mockDecisionRepository.softRemove.mockResolvedValue({} as any);
       mockDecisionRepository.findOne.mockResolvedValue({
         ...mockDecision,
@@ -163,6 +175,16 @@ describe('ApplicationDecisionV1Service', () => {
         {
           decisionDate: null,
         },
+      );
+      expect(
+        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+      ).toBeCalledTimes(1);
+      expect(
+        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+      ).toBeCalledWith(
+        mockApplication.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        null,
       );
     });
 
@@ -241,7 +263,7 @@ describe('ApplicationDecisionV1Service', () => {
       expect(mockApplicationService.update).not.toHaveBeenCalled();
     });
 
-    it('should update the decision and update the application if it was the only decision', async () => {
+    it('should update the decision and update the application and submission status if it was the only decision', async () => {
       const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
       const decisionUpdate: UpdateApplicationDecisionDto = {
         date: decisionDate.getTime(),
@@ -263,6 +285,16 @@ describe('ApplicationDecisionV1Service', () => {
         {
           decisionDate,
         },
+      );
+      expect(
+        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+      ).toBeCalledTimes(1);
+      expect(
+        mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+      ).toBeCalledWith(
+        mockApplication.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        decisionDate,
       );
     });
 

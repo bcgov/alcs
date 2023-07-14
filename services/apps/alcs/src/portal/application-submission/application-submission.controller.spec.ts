@@ -143,13 +143,11 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service when cancelling an application', async () => {
     const mockApplication = new ApplicationSubmission({
-      submissionStatuses: [
-        new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
-          submissionUuid: 'fake',
-          effectiveDate: new Date(),
-        }),
-      ],
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+        submissionUuid: 'fake',
+        effectiveDate: new Date(),
+      }),
     });
 
     mockAppService.mapToDTOs.mockResolvedValue([

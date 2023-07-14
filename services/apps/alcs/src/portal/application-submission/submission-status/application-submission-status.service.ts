@@ -38,8 +38,6 @@ export class ApplicationSubmissionStatusService {
     }
 
     return await this.statusesRepository.save(newStatuses);
-
-    // return newStatuses;
   }
 
   async setStatusDate(
@@ -101,6 +99,7 @@ export class ApplicationSubmissionStatusService {
         `Submission does not exist for provided application ${fileNumber}. Only applications originated in portal have statuses.`,
       );
     }
+
     return submission;
   }
 }

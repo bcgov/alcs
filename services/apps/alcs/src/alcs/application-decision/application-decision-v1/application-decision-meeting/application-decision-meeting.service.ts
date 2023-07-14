@@ -75,6 +75,8 @@ export class ApplicationDecisionMeetingService {
       meeting.applicationUuid,
     );
 
+    console.log(application.fileNumber);
+    console.log(this.applicationSubmissionStatusService);
     const currentStatuses =
       await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
         application.fileNumber,
@@ -105,9 +107,10 @@ export class ApplicationDecisionMeetingService {
     );
 
     if (
-      inReviewByALC &&
-      inReviewByALC.effectiveDate &&
-      inReviewByALC.effectiveDate !== earliestMeeting.date
+      (inReviewByALC &&
+        inReviewByALC.effectiveDate &&
+        inReviewByALC.effectiveDate !== earliestMeeting.date) ||
+      (inReviewByALC && !inReviewByALC.effectiveDate)
     ) {
       this.applicationSubmissionStatusService.setStatusDate(
         inReviewByALC.submissionUuid,

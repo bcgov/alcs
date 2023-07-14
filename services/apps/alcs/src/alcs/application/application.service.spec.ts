@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { ApplicationSubmissionStatusService } from '../../portal/application-submission/submission-status/application-submission-status.service';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -32,6 +33,7 @@ describe('ApplicationService', () => {
   let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   const DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
     status: true,
@@ -56,6 +58,7 @@ describe('ApplicationService', () => {
     applicationTypeRepositoryMock = createMock();
     mockApplicationLocalGovernmentService = createMock();
     mockFileNumberService = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     applicationMockEntity = initApplicationMockEntity();
 
@@ -90,6 +93,10 @@ describe('ApplicationService', () => {
         {
           provide: getRepositoryToken(ApplicationType),
           useValue: applicationTypeRepositoryMock,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
         },
       ],
     }).compile();

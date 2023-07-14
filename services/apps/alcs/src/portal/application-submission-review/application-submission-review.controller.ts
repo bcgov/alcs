@@ -343,6 +343,7 @@ export class ApplicationSubmissionReviewController {
         SUBMISSION_STATUS.SUBMITTED_TO_LG,
         null,
       );
+
       await this.applicationSubmissionStatusService.setStatusDate(
         applicationSubmission.uuid,
         SUBMISSION_STATUS.IN_REVIEW_BY_FG,
