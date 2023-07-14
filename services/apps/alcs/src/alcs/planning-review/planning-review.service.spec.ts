@@ -60,6 +60,7 @@ describe('PlanningReviewService', () => {
         fileNumber: '1512311',
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'board-code',
       },
       fakeBoard,
     );
@@ -85,6 +86,7 @@ describe('PlanningReviewService', () => {
         fileNumber: existingFileNumber,
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'board-code',
       },
       fakeBoard,
     );
