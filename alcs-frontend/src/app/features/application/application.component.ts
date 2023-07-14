@@ -199,20 +199,22 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
 
-        this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+        if (this.isApplicantSubmission) {
+          this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+
+          this.wasSubmittedToLfng =
+            this.isApplicantSubmission &&
+            [
+              APPLICATION_STATUS.SUBMITTED_TO_LG,
+              APPLICATION_STATUS.IN_REVIEW,
+              APPLICATION_STATUS.WRONG_GOV,
+              APPLICATION_STATUS.INCOMPLETE,
+            ].includes(this.submission?.status?.code);
+        }
 
         this.isSubmittedToAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
-
-        this.wasSubmittedToLfng =
-          this.isApplicantSubmission &&
-          [
-            APPLICATION_STATUS.SUBMITTED_TO_LG,
-            APPLICATION_STATUS.IN_REVIEW,
-            APPLICATION_STATUS.WRONG_GOV,
-            APPLICATION_STATUS.INCOMPLETE,
-          ].includes(this.submission?.status?.code);
       }
     });
 
