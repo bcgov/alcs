@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  NODE_ENV: test
+  NODE_ENV: prod
 
 jobs:
   generate_schemaspy:
@@ -39,7 +39,7 @@ jobs:
           mkdir output
           chmod a+rwx -R output
       - name: Run Schemaspy
-        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs
+        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs,oats
       - name: Deploy to Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
