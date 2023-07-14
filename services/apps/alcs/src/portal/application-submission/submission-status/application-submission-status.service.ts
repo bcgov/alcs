@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as dayjs from 'dayjs';
 import { Repository } from 'typeorm';
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { SubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class ApplicationSubmissionStatusService {
