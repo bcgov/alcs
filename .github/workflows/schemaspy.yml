@@ -37,7 +37,7 @@ jobs:
       - name: Import OATS
         run: |
           export PGPASSWORD='postgres';
-          psql -h 127.0.0.1 -p 5432 -U postgres -f ora2pg/data/ddl_18_2_prod.sql
+          psql -h 127.0.0.1 -p 5432 -U postgres -f ora2pg/data/oats_prod_schema_ddl_18_2.sql
       - name: Create Output Folder
         run: |
           mkdir output
