@@ -693,10 +693,6 @@ export class ApplicationSubmission extends Base {
   )
   parcels: ApplicationParcel[];
 
-  // TODO this will be removed
-  @Column({ nullable: true })
-  statusCode: string;
-
   @OneToMany(
     () => ApplicationSubmissionToSubmissionStatus,
     (status) => status.submission,
