@@ -1,5 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
@@ -11,9 +14,6 @@ import { ApplicationSubmissionReview } from '../../portal/application-submission
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
-import { ApplicationSubmissionStatusService } from '../../portal/application-submission/submission-status/application-submission-status.service';
-import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
-import { ApplicationSubmissionToSubmissionStatus } from '../../portal/application-submission/submission-status/submission-status.entity';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -55,7 +55,7 @@ import { ApplicationService } from './application.service';
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
-      SubmissionStatusType,
+      ApplicationSubmissionStatusType,
       ApplicationSubmissionToSubmissionStatus,
     ]),
     NotificationModule,
@@ -64,6 +64,7 @@ import { ApplicationService } from './application.service';
     CodeModule,
     FileNumberModule,
     forwardRef(() => ApplicationSubmissionModule),
+    ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationService,
@@ -79,7 +80,6 @@ import { ApplicationService } from './application.service';
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
     ApplicationSubmissionProfile,
-    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationController,

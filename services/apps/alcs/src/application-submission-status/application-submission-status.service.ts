@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationSubmission } from '../application-submission.entity';
-import { SubmissionStatusType } from './submission-status-type.entity';
+import { ServiceNotFoundException } from '../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class ApplicationSubmissionStatusService {
   constructor(
     @InjectRepository(ApplicationSubmissionToSubmissionStatus)
     private statusesRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
-    @InjectRepository(SubmissionStatusType)
-    private submissionStatusTypeRepository: Repository<SubmissionStatusType>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private submissionStatusTypeRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) {}

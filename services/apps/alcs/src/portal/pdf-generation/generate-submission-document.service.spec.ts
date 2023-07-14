@@ -1,6 +1,6 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
@@ -12,16 +12,16 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
-import { Document } from '../../document/document.entity';
-import { ApplicationSubmissionToSubmissionStatus } from '../application-submission/submission-status/submission-status.entity';
-import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

@@ -13,6 +13,10 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { EmailService } from '../../providers/email/email.service';
@@ -24,10 +28,6 @@ import {
 } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { ApplicationSubmissionStatusService } from '../application-submission/submission-status/application-submission-status.service';
-import { SubmissionStatusType } from '../application-submission/submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../application-submission/submission-status/submission-status.entity';
 import { ApplicationSubmissionReviewController } from './application-submission-review.controller';
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
@@ -251,7 +251,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
     mockAppService.fetchApplicationTypes.mockResolvedValue([]);
     mockAppSubmissionService.getStatus.mockResolvedValue(
-      new SubmissionStatusType({
+      new ApplicationSubmissionStatusType({
         label: '',
       }),
     );

@@ -6,14 +6,14 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
 } from '../../../../document/document.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionStatusService } from '../../../../portal/application-submission/submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../../portal/application-submission/submission-status/submission-status.dto';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';

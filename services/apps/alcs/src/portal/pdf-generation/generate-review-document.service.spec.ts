@@ -7,14 +7,14 @@ import { ApplicationLocalGovernmentService } from '../../alcs/application/applic
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from '../application-submission-review/application-submission-review.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../application-submission/submission-status/submission-status.entity';
 import { GenerateReviewDocumentService } from './generate-review-document.service';
 
 describe('GenerateReviewDocumentService', () => {

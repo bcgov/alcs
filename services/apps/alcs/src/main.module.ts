@@ -11,6 +11,7 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 import { AlcsModule } from './alcs/alcs.module';
+import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';

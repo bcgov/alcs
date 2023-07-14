@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
@@ -20,7 +21,6 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)

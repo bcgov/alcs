@@ -18,6 +18,8 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
@@ -26,8 +28,6 @@ import { ApplicationOwner } from '../application-submission/application-owner/ap
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { ApplicationSubmissionStatusService } from '../application-submission/submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../application-submission/submission-status/submission-status.dto';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,

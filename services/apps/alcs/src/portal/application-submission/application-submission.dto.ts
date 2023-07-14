@@ -9,10 +9,10 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';
-import { ApplicationStatusDto } from './submission-status/submission-status.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 

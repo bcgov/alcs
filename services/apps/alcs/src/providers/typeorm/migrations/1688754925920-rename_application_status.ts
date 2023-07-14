@@ -5,7 +5,7 @@ export class renameApplicationStatus1688754925920
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "alcs"."application_status" RENAME TO "submission_status_type";`,
+      `ALTER TABLE "alcs"."application_status" RENAME TO "application_submission_status_type";`,
     );
   }
 

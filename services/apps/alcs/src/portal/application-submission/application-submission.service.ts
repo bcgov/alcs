@@ -13,6 +13,9 @@ import { DOCUMENT_TYPE } from '../../alcs/application/application-document/appli
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
@@ -27,9 +30,6 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
-import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
 const LG_VISIBLE_STATUSES = [
   SUBMISSION_STATUS.SUBMITTED_TO_LG,
@@ -56,8 +56,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(SubmissionStatusType)
-    private applicationStatusRepository: Repository<SubmissionStatusType>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectRepository(NaruSubtype)
     private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,

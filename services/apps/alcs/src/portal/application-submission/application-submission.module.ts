@@ -1,6 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../../alcs/application/application.module';
+import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
@@ -20,15 +23,12 @@ import { ApplicationSubmissionController } from './application-submission.contro
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
-import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ApplicationSubmission,
-      SubmissionStatusType,
+      ApplicationSubmissionStatusType,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
       ApplicationOwner,
@@ -40,6 +40,7 @@ import { ApplicationSubmissionToSubmissionStatus } from './submission-status/sub
     AuthorizationModule,
     forwardRef(() => DocumentModule),
     forwardRef(() => PdfGenerationModule),
+    ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationSubmissionService,
@@ -49,7 +50,6 @@ import { ApplicationSubmissionToSubmissionStatus } from './submission-status/sub
     ApplicationOwnerService,
     ApplicationOwnerProfile,
     ApplicationSubmissionValidatorService,
-    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationSubmissionController,

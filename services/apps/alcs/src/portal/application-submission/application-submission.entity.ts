@@ -9,13 +9,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 export class ProposedLot {
   type: 'Lot' | 'Road Dedication';

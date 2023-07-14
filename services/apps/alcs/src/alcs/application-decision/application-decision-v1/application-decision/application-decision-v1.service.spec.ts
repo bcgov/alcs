@@ -12,9 +12,9 @@ import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
+import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
 import { DocumentService } from '../../../../document/document.service';
-import { ApplicationSubmissionStatusService } from '../../../../portal/application-submission/submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../../portal/application-submission/submission-status/submission-status.dto';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';

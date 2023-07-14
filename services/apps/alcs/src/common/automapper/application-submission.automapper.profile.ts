@@ -2,6 +2,8 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -14,8 +16,6 @@ import {
 } from '../../portal/application-submission/application-submission.dto';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
-import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
-import { ApplicationStatusDto } from '../../portal/application-submission/submission-status/submission-status.dto';
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
@@ -69,7 +69,7 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(mapper, SubmissionStatusType, ApplicationStatusDto);
+      createMap(mapper, ApplicationSubmissionStatusType, ApplicationStatusDto);
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
 
       createMap(

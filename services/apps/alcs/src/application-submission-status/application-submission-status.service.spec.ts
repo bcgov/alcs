@@ -1,13 +1,19 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import * as dayjs from 'dayjs';
+import * as timezone from 'dayjs/plugin/timezone';
+import * as utc from 'dayjs/plugin/utc';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationSubmission } from '../application-submission.entity';
+import { ServiceNotFoundException } from '../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
-import { SubmissionStatusType } from './submission-status-type.entity';
+import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 describe('ApplicationSubmissionStatusService', () => {
   let service: ApplicationSubmissionStatusService;
@@ -15,7 +21,7 @@ describe('ApplicationSubmissionStatusService', () => {
     Repository<ApplicationSubmissionToSubmissionStatus>
   >;
   let mockSubmissionStatusTypeRepository: DeepMocked<
-    Repository<SubmissionStatusType>
+    Repository<ApplicationSubmissionStatusType>
   >;
   let mockApplicationSubmissionRepository: DeepMocked<
     Repository<ApplicationSubmission>
@@ -36,7 +42,7 @@ describe('ApplicationSubmissionStatusService', () => {
           useValue: mockApplicationSubmissionToSubmissionStatusRepository,
         },
         {
-          provide: getRepositoryToken(SubmissionStatusType),
+          provide: getRepositoryToken(ApplicationSubmissionStatusType),
           useValue: mockSubmissionStatusTypeRepository,
         },
         {
@@ -57,11 +63,11 @@ describe('ApplicationSubmissionStatusService', () => {
 
   it('should successfully set initial statuses', async () => {
     mockSubmissionStatusTypeRepository.find.mockResolvedValue([
-      new SubmissionStatusType({
+      new ApplicationSubmissionStatusType({
         weight: 0,
         code: SUBMISSION_STATUS.IN_PROGRESS,
       }),
-      new SubmissionStatusType({
+      new ApplicationSubmissionStatusType({
         weight: 1,
         code: SUBMISSION_STATUS.ALC_DECISION,
       }),

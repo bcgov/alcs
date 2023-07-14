@@ -1,4 +1,4 @@
-import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { BaseCodeDto } from '../common/dtos/base.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',

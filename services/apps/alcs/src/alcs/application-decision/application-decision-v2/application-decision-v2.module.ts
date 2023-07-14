@@ -1,14 +1,14 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationSubmissionStatusModule } from '../../../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../../application-submission-status/submission-status.entity';
 import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v2.automapper.profile';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { ReconsiderationProfile } from '../../../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../../../document/document.module';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../../portal/application-submission/naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionStatusService } from '../../../portal/application-submission/submission-status/application-submission-status.service';
-import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
-import { ApplicationSubmissionToSubmissionStatus } from '../../../portal/application-submission/submission-status/submission-status.entity';
 import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
@@ -60,13 +60,14 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
       NaruSubtype,
       ApplicationSubmissionToSubmissionStatus,
       ApplicationSubmission,
-      SubmissionStatusType,
+      ApplicationSubmissionStatusType,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
     CardModule,
     DocumentModule,
     ApplicationDecisionV2Module,
+    ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationModificationService,
@@ -80,7 +81,6 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
     ApplicationDecisionProfile,
     ApplicationDecisionComponentService,
     ApplicationDecisionConditionService,
-    ApplicationSubmissionStatusService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,

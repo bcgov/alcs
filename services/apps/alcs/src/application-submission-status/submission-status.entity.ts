@@ -7,8 +7,8 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { ApplicationSubmission } from '../application-submission.entity';
-import { SubmissionStatusType } from './submission-status-type.entity';
+import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 
 @Entity()
 export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
@@ -41,10 +41,10 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
 
   @AutoMap()
   @ManyToOne(
-    () => SubmissionStatusType,
+    () => ApplicationSubmissionStatusType,
     (status) => status.submissionStatuses,
     { eager: true },
   )
   @JoinColumn({ name: 'status_type_code' })
-  statusType: SubmissionStatusType;
+  statusType: ApplicationSubmissionStatusType;
 }

@@ -12,6 +12,10 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { User } from '../../user/user.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -20,15 +24,13 @@ import { ValidatedApplicationSubmission } from './application-submission-validat
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-import { ApplicationSubmissionStatusService } from './submission-status/application-submission-status.service';
-import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
-  let mockStatusRepository: DeepMocked<Repository<SubmissionStatusType>>;
+  let mockStatusRepository: DeepMocked<
+    Repository<ApplicationSubmissionStatusType>
+  >;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
@@ -62,7 +64,7 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockRepository,
         },
         {
-          provide: getRepositoryToken(SubmissionStatusType),
+          provide: getRepositoryToken(ApplicationSubmissionStatusType),
           useValue: mockStatusRepository,
         },
         {
@@ -149,7 +151,9 @@ describe('ApplicationSubmissionService', () => {
   it('save a new application for create', async () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
-    mockStatusRepository.findOne.mockResolvedValue(new SubmissionStatusType());
+    mockStatusRepository.findOne.mockResolvedValue(
+      new ApplicationSubmissionStatusType(),
+    );
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
     mockApplicationService.generateNextFileNumber.mockResolvedValue(fileId);
     mockApplicationService.create.mockResolvedValue(new Application());

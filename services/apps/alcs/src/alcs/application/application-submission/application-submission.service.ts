@@ -3,12 +3,12 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../../application-submission-status/submission-status.dto';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import { ApplicationSubmissionStatusService } from '../../../portal/application-submission/submission-status/application-submission-status.service';
-import { SubmissionStatusType } from '../../../portal/application-submission/submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../../../portal/application-submission/submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
 
 @Injectable()
@@ -16,8 +16,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(SubmissionStatusType)
-    private applicationStatusRepository: Repository<SubmissionStatusType>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}

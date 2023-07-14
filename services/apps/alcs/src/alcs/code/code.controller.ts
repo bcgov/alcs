@@ -3,11 +3,11 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
-import { ApplicationStatusDto } from '../../portal/application-submission/submission-status/submission-status.dto';
 import { ReconsiderationTypeDto } from '../application-decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
@@ -52,7 +52,7 @@ export class CodeController {
       ),
       applicationStatusType: this.mapper.mapArray(
         types.applicationStatusTypes,
-        SubmissionStatusType,
+        ApplicationSubmissionStatusType,
         ApplicationStatusDto,
       ),
     };

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
-import { SubmissionStatusType } from '../../portal/application-submission/submission-status/submission-status-type.entity';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
 
@@ -19,7 +19,7 @@ import { CodeService } from './code.service';
       ApplicationRegion,
       ApplicationMeetingType,
       ApplicationReconsiderationType,
-      SubmissionStatusType,
+      ApplicationSubmissionStatusType,
     ]),
   ],
   providers: [CodeService, ReconsiderationProfile],

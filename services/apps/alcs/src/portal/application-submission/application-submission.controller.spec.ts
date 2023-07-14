@@ -9,6 +9,9 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
 import {
@@ -22,9 +25,6 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { SubmissionStatusType } from './submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status/submission-status.entity';
 
 describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
@@ -175,7 +175,7 @@ describe('ApplicationSubmissionController', () => {
     const mockApp = new ApplicationSubmission();
     mockAppService.verifyAccessByUuid.mockResolvedValue({
       ...mockApp,
-      status: new SubmissionStatusType({
+      status: new ApplicationSubmissionStatusType({
         code: SUBMISSION_STATUS.CANCELLED,
       }),
     } as any);
