@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ROLES } from '../../../services/authentication/authentication.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthenticationService, ROLES } from '../../../services/authentication/authentication.service';
 import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../../../services/card/card-subtask/card-subtask.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { AssigneeDto } from '../../../services/user/user.dto';
@@ -11,7 +12,9 @@ import { CardType } from '../../../shared/card/card.component';
   templateUrl: './subtask.component.html',
   styleUrls: ['./subtask.component.scss'],
 })
-export class SubtaskComponent implements OnInit {
+export class SubtaskComponent implements OnInit, OnDestroy {
+  destroy = new Subject<void>();
+
   @Input() subtaskType: CARD_SUBTASK_TYPE = CARD_SUBTASK_TYPE.AUDIT;
   @Input() subtaskLabel = 'Set Please';
   @Input() assignableRoles = [ROLES.LUP, ROLES.APP_SPECIALIST];
@@ -22,13 +25,27 @@ export class SubtaskComponent implements OnInit {
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
   nonApplicationSubtasks: HomepageSubtaskDto[] = [];
 
-  constructor(private homeService: HomeService, private userService: UserService) {}
+  showNoi = true;
+  showAppAndNonApp = true;
+
+  constructor(
+    private homeService: HomeService,
+    private userService: UserService,
+    private authService: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
-    this.userService.$assignableUsers.subscribe((users) => {
+    this.userService.$assignableUsers.pipe(takeUntil(this.destroy)).subscribe((users) => {
       this.users = users.filter((user) => user.clientRoles.some((role) => this.assignableRoles.includes(role)));
     });
     this.userService.fetchAssignableUsers();
+
+    this.authService.$currentUser.pipe(takeUntil(this.destroy)).subscribe((currentUser) => {
+      if (currentUser && this.subtaskType === CARD_SUBTASK_TYPE.PEER_REVIEW) {
+        this.showNoi = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.SOIL_OFFICER);
+        this.showAppAndNonApp = !!currentUser.client_roles && currentUser.client_roles.includes(ROLES.LUP);
+      }
+    });
 
     this.loadSubtasks();
   }
@@ -41,6 +58,7 @@ export class SubtaskComponent implements OnInit {
     const modifications = allSubtasks.filter((s) => s.card.type === CardType.MODI);
     const covenants = allSubtasks.filter((s) => s.card.type === CardType.COV);
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
+    const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
@@ -53,7 +71,9 @@ export class SubtaskComponent implements OnInit {
 
     this.noticeOfIntentSubtasks = [
       ...nois.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiModifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...nois.filter((a) => !a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
+      ...noiModifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     this.nonApplicationSubtasks = [
@@ -63,7 +83,22 @@ export class SubtaskComponent implements OnInit {
       ...covenants.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
-    this.totalSubtaskCount =
-      this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
+    if (this.showNoi) {
+      this.totalSubtaskCount = this.noticeOfIntentSubtasks.length;
+    }
+
+    if (this.showAppAndNonApp) {
+      this.totalSubtaskCount = this.applicationSubtasks.length + this.nonApplicationSubtasks.length;
+    }
+
+    if (this.showAppAndNonApp && this.showNoi) {
+      this.totalSubtaskCount =
+        this.applicationSubtasks.length + this.noticeOfIntentSubtasks.length + this.nonApplicationSubtasks.length;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
   }
 }

@@ -4,9 +4,8 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
 @Component({
   selector: 'app-turp',
   templateUrl: './turp.component.html',
-  styleUrls: ['./turp.component.scss']
+  styleUrls: ['./turp.component.scss'],
 })
 export class TurpComponent {
   @Input() component!: DecisionComponentDto;
 }
-

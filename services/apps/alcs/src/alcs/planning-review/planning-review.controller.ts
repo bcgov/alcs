@@ -19,9 +19,9 @@ export class PlanningReviewController {
 
   @Post()
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async create(@Body() createPlanningReviewDto: CreatePlanningReviewDto) {
+  async create(@Body() createDto: CreatePlanningReviewDto) {
     const board = await this.boardService.getOneOrFail({
-      code: 'exec',
+      code: createDto.boardCode,
     });
 
     if (!board) {
@@ -29,7 +29,7 @@ export class PlanningReviewController {
     }
 
     const createdReview = await this.planningReviewService.create(
-      createPlanningReviewDto,
+      createDto,
       board,
     );
 

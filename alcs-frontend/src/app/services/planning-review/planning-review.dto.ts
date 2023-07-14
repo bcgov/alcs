@@ -7,6 +7,7 @@ export interface CreatePlanningReviewDto {
   type: string;
   localGovernmentUuid: string;
   regionCode: string;
+  boardCode: string;
 }
 
 export interface PlanningReviewDto {

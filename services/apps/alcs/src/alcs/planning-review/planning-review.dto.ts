@@ -21,6 +21,10 @@ export class CreatePlanningReviewDto {
   @IsString()
   @IsNotEmpty()
   regionCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  boardCode: string;
 }
 
 export class PlanningReviewDto {

@@ -48,39 +48,41 @@ export class ApplicationDecisionConditionService {
       condition.approvalDependant = updateDto.approvalDependant ?? null;
 
       if (
-        updateDto.componentToConditions !== undefined &&
-        updateDto.componentToConditions.length > 0
+        updateDto.componentsToCondition !== undefined &&
+        updateDto.componentsToCondition.length > 0
       ) {
-        const matchingComponent = allComponents.filter(
-          (component) =>
-            updateDto.componentToConditions
-              ?.flatMap((e) => e.componentDecisionUuid)
-              .includes(component.applicationDecisionUuid) &&
-            updateDto.componentToConditions
-              ?.flatMap((e) => e.componentToConditionType)
-              .includes(component.applicationDecisionComponentTypeCode),
-        );
+        const mappedComponents: ApplicationDecisionComponent[] = [];
+        for (const componentToCondition of updateDto.componentsToCondition) {
+          const matchingComponent = allComponents.find(
+            (component) =>
+              componentToCondition.componentDecisionUuid ===
+                component.applicationDecisionUuid &&
+              componentToCondition.componentToConditionType ===
+                component.applicationDecisionComponentTypeCode,
+          );
 
-        if (matchingComponent && matchingComponent.length > 0) {
-          condition.components = matchingComponent;
-          updatedConditions.push(condition);
-          continue;
+          if (matchingComponent) {
+            mappedComponents.push(matchingComponent);
+            updatedConditions.push(condition);
+            continue;
+          }
+
+          const matchingComponent2 = newComponents.find(
+            (component) =>
+              componentToCondition.componentToConditionType ===
+              component.applicationDecisionComponentTypeCode,
+          );
+
+          if (matchingComponent2) {
+            mappedComponents.push(matchingComponent2);
+            updatedConditions.push(condition);
+            continue;
+          }
+          throw new ServiceValidationException(
+            'Failed to find matching component',
+          );
         }
-
-        const matchingComponent2 = newComponents.filter((component) =>
-          updateDto.componentToConditions
-            ?.flatMap((e) => e.componentToConditionType)
-            .includes(component.applicationDecisionComponentTypeCode),
-        );
-
-        if (matchingComponent2 && matchingComponent2.length > 0) {
-          condition.components = matchingComponent2;
-          updatedConditions.push(condition);
-          continue;
-        }
-        throw new ServiceValidationException(
-          'Failed to find matching component',
-        );
+        condition.components = mappedComponents;
       } else {
         condition.components = null;
         updatedConditions.push(condition);

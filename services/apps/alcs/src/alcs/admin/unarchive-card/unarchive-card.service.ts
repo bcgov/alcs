@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ApplicationService } from '../../application/application.service';
-import { CovenantService } from '../../covenant/covenant.service';
 import { ApplicationModificationService } from '../../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
+import { ApplicationService } from '../../application/application.service';
+import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';

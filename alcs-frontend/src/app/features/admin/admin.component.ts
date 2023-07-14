@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BoardManagementComponent } from './board-management/board-management.component';
 import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
@@ -51,6 +52,12 @@ export const childRoutes = [
     menuTitle: 'Unarchive Cards',
     icon: 'unarchive',
     component: UnarchiveComponent,
+  },
+  {
+    path: 'boards',
+    menuTitle: 'Boards',
+    icon: 'view_kanban',
+    component: BoardManagementComponent,
   },
   {
     path: 'card-status',

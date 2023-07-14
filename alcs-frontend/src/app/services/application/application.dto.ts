@@ -101,8 +101,6 @@ export interface ApplicationParcelDto {
 export interface ApplicationSubmissionDto {
   uuid: string;
   fileNumber: string;
-  createdAt: string;
-  updatedAt: string;
   lastStatusUpdate: number;
   applicant: string;
   type: string;

@@ -247,7 +247,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         uuid: modification.uuid,
         type: PostDecisionType.Modification,
       }));
-    
+
     const mappedRecons = reconsiderations
       .filter(
         (reconsideration) =>
@@ -284,6 +284,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: existingDecision.rescindedComment,
       linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
     });
+
+    this.conditions = existingDecision.conditions;
 
     if (existingDecision.reconsiders) {
       this.onSelectPostDecision({
@@ -598,6 +600,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.showConditions = true;
     } else {
       this.conditions = [];
+      this.conditionUpdates = [];
       this.showConditions = false;
     }
   }

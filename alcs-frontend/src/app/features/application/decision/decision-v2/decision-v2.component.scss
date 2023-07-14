@@ -60,6 +60,20 @@
     display: grid;
     grid-template-columns: 33% 33% 33%;
     grid-row-gap: 24px;
+
+    .grid-2 {
+      margin-top: unset;
+    }
+  }
+
+  .grid-uneven {
+    display: grid;
+    grid-template-columns: 66% 33%;
+    grid-row-gap: 24px;
+
+    .grid-2 {
+      margin-top: unset;
+    }
   }
 
   .decision-content,

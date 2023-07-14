@@ -45,8 +45,8 @@ SELECT lives_ok('insert_card_status_in_test_calculate_paused', 'should insert ca
 
 -- create board
 prepare insert_board_in_test_calculate_paused AS
-INSERT INTO alcs.board (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,code,title,decision_maker) VALUES
-	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-08-24 13:49:58.829', NULL,'unit_test',NULL,'mock','Mock Panel','Mock Panel');
+INSERT INTO alcs.board (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,code,title,show_on_schedule) VALUES
+	 ('11111111-1111-1111-1111-111111111111',NULL,'2022-08-24 13:49:58.829', NULL,'unit_test',NULL,'mock','Mock Panel',false);
 SELECT lives_ok('insert_board_in_test_calculate_paused', 'should insert board');	 
 
 -- create card type

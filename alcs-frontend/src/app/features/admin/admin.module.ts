@@ -1,9 +1,12 @@
+import { CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AdminComponent, childRoutes } from './admin.component';
+import { BoardManagementDialogComponent } from './board-management/board-management-dialog/board-management-dialog.component';
+import { BoardManagementComponent } from './board-management/board-management.component';
 import { CardStatusDialogComponent } from './card-status/card-status-dialog/card-status-dialog.component';
 import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
@@ -45,7 +48,9 @@ const routes: Routes = [
     DecisionConditionTypesDialogComponent,
     CardStatusComponent,
     CardStatusDialogComponent,
+    BoardManagementComponent,
+    BoardManagementDialogComponent,
   ],
-  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule],
+  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule, DragDropModule],
 })
 export class AdminModule {}

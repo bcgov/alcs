@@ -1,15 +1,15 @@
 <div class="assignee">
   <h4>{{ subtaskLabel }} Subtasks: {{ totalSubtaskCount }}</h4>
 
-  <section *ngIf="noticeOfIntentSubtasks.length">
+  <section *ngIf="noticeOfIntentSubtasks.length && showNoi">
     <div class="subheading2">Notice of Intent</div>
     <app-subtask-table [subtasks]="noticeOfIntentSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf="applicationSubtasks.length">
+  <section *ngIf="applicationSubtasks.length && showAppAndNonApp">
     <div class="subheading2">Applications</div>
     <app-subtask-table [subtasks]="applicationSubtasks" [users]="users"></app-subtask-table>
   </section>
-  <section *ngIf="nonApplicationSubtasks.length">
+  <section *ngIf="nonApplicationSubtasks.length && showAppAndNonApp">
     <div class="subheading2">Non-Applications</div>
     <app-subtask-table [subtasks]="nonApplicationSubtasks" [users]="users"></app-subtask-table>
   </section>

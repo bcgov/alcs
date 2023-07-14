@@ -76,7 +76,7 @@ describe('CodeController', () => {
     ]);
     mockAppService.fetchApplicationTypes.mockResolvedValue([]);
 
-    mockCardService.getCardTypes.mockResolvedValue([
+    mockCardService.getPortalCardTypes.mockResolvedValue([
       new CardType({
         code: 'fake-code',
         portalHtmlDescription: 'fake-html',

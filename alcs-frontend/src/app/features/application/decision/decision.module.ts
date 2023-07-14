@@ -29,6 +29,7 @@ import { DecisionV2Component } from './decision-v2/decision-v2.component';
 import { ReleaseDialogComponent } from './decision-v2/release-dialog/release-dialog.component';
 import { RevertToDraftDialogComponent } from './decision-v2/revert-to-draft-dialog/revert-to-draft-dialog.component';
 import { DecisionComponent } from './decision.component';
+import { BasicComponent } from './decision-v2/decision-component/basic/basic.component';
 
 export const decisionChildRoutes = [
   {
@@ -86,6 +87,7 @@ export const decisionChildRoutes = [
     NaruInputComponent,
     ConditionsComponent,
     ConditionComponent,
+    BasicComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
 })

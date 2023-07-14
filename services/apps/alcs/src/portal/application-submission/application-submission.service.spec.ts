@@ -266,6 +266,7 @@ describe('ApplicationSubmissionService', () => {
     const application = new ApplicationSubmission({
       applicant,
       typeCode: typeCode,
+      auditCreatedAt: new Date(),
       status: new ApplicationSubmissionToSubmissionStatus({
         statusTypeCode: 'status-code',
         submissionUuid: 'fake',

@@ -10,9 +10,9 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
 import {
-  APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
   ApplicationSubmissionDto,
+  APPLICATION_SYSTEM_SOURCE_TYPES,
   SUBMISSION_STATUS,
 } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
@@ -199,20 +199,22 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
 
-        this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+        if (this.isApplicantSubmission) {
+          this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+
+          this.wasSubmittedToLfng =
+            this.isApplicantSubmission &&
+            [
+              SUBMISSION_STATUS.SUBMITTED_TO_LG,
+              SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+              SUBMISSION_STATUS.WRONG_GOV,
+              SUBMISSION_STATUS.INCOMPLETE,
+            ].includes(this.submission?.status?.code);
+        }
 
         this.isSubmittedToAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
-
-        this.wasSubmittedToLfng =
-          this.isApplicantSubmission &&
-          [
-            SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            SUBMISSION_STATUS.IN_REVIEW_BY_FG,
-            SUBMISSION_STATUS.WRONG_GOV,
-            SUBMISSION_STATUS.INCOMPLETE,
-          ].includes(this.submission?.status.code);
       }
     });
 

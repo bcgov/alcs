@@ -1,0 +1,112 @@
+<div mat-dialog-title>
+  <h4>{{ isEdit ? 'Edit' : 'Create' }} Board</h4>
+</div>
+<div mat-dialog-content class="dialog">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <ng-container *ngIf="step === 1">
+      <div>
+        <mat-form-field class="label" appearance="outline">
+          <mat-label>Name</mat-label>
+          <input required matInput [formControl]="title" id="label" />
+        </mat-form-field>
+        <mat-hint>Note: The change will be reflected on all boards</mat-hint>
+      </div>
+
+      <div>
+        <mat-form-field class="code" appearance="outline">
+          <mat-label>Code</mat-label>
+          <input [formControl]="code" required maxlength="4" minlength="4" matInput id="code" name="code" />
+        </mat-form-field>
+      </div>
+
+      <div class="full-width">
+        <mat-form-field appearance="outline">
+          <mat-label>Permitted Card Types</mat-label>
+          <mat-select multiple="true" [formControl]="permittedCardTypes">
+            <mat-option *ngFor="let cardType of cardTypes" [value]="cardType.code">
+              {{ cardType.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="full-width">
+        <mat-label>Visible on Commissioner Schedule Page</mat-label>
+        <mat-button-toggle-group [formControl]="showOnSchedule">
+          <mat-button-toggle value="true">Yes</mat-button-toggle>
+          <mat-button-toggle value="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div>
+        <div>Click to add columns*</div>
+        <div class="columns">
+          <ul>
+            <li *ngFor="let status of cardStatuses">
+              <mat-checkbox (change)="onSelectCardStatus(status, $event)" [formControlName]="status.code">
+                <span [innerHTML]="status.label"></span>
+              </mat-checkbox>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div>Columns Added to Board: {{ selectedCardStatuses.length }}</div>
+        <div class="subtext">
+          Drag and drop to re-arrange the columns. Top column is the left most column on the board.
+        </div>
+        <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+          <div class="draggable" *ngFor="let cardStatus of selectedCardStatuses" cdkDrag>
+            <span [innerHTML]="cardStatus.label"></span> <mat-icon>drag_indicator</mat-icon>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="step === 2">
+      <div class="full-width">
+        <mat-form-field appearance="outline">
+          <mat-label>Create Card Types</mat-label>
+          <mat-select multiple="true" [formControl]="createCardTypes">
+            <mat-option *ngFor="let cardType of permittedCardTypes.value" [value]="cardType">
+              {{ cardTypeMap[cardType] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </form>
+
+  <div class="split">
+    <div [matTooltip]="canDeleteReason" [matTooltipDisabled]="canDelete">
+      <button *ngIf="isEdit" [disabled]="!canDelete" mat-stroked-button color="warn" (click)="onDelete()">
+        Delete
+      </button>
+    </div>
+    <div class="button-container">
+      <ng-container *ngIf="step === 1">
+        <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+        <button
+          (click)="onNextStep()"
+          mat-flat-button
+          color="primary"
+          [disabled]="!form.valid || selectedCardStatuses.length === 0"
+        >
+          Next
+        </button>
+      </ng-container>
+      <ng-container *ngIf="step === 2">
+        <button mat-stroked-button color="primary" (click)="onPreviousStep()">Previous</button>
+        <button
+          [loading]="isLoading"
+          (click)="onSubmit()"
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="!form.valid || selectedCardStatuses.length === 0"
+        >
+          Save
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>

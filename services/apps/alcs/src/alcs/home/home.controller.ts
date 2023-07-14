@@ -30,6 +30,7 @@ import { CovenantDto } from '../covenant/covenant.dto';
 import { Covenant } from '../covenant/covenant.entity';
 import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
+import { NoticeOfIntentModification } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -181,6 +182,14 @@ export class HomeController {
       );
     const noticeOfIntentSubtasks = this.mapNoticeOfIntentToDtos(noiSubtasks);
 
+    const noiModificationsWithSubtasks =
+      await this.noticeOfIntentModificationService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
+    const noiModificationsSubtasks = this.mapNoiModificationsToDtos(
+      noiModificationsWithSubtasks,
+    );
+
     return [
       ...noticeOfIntentSubtasks,
       ...applicationSubtasks,
@@ -188,6 +197,7 @@ export class HomeController {
       ...modificationSubtasks,
       ...planningReviewSubtasks,
       ...covenantReviewSubtasks,
+      ...noiModificationsSubtasks,
     ];
   }
 
@@ -327,6 +337,31 @@ export class HomeController {
           paused: false,
           title: `${modification.application.fileNumber} (${modification.application.applicant})`,
           appType: modification.application.type,
+          parentType: 'modification',
+        });
+      }
+    }
+    return result;
+  }
+
+  private mapNoiModificationsToDtos(
+    modifications: NoticeOfIntentModification[],
+  ) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const modification of modifications) {
+      if (!modification.card) {
+        continue;
+      }
+      for (const subtask of modification.card.subtasks) {
+        result.push({
+          type: subtask.type,
+          createdAt: subtask.createdAt.getTime(),
+          assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+          uuid: subtask.uuid,
+          card: this.mapper.map(modification.card, Card, CardDto),
+          completedAt: subtask.completedAt?.getTime(),
+          paused: false,
+          title: `${modification.noticeOfIntent.fileNumber} (${modification.noticeOfIntent.applicant})`,
           parentType: 'modification',
         });
       }

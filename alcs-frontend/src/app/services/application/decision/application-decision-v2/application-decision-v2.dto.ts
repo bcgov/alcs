@@ -208,7 +208,7 @@ export interface ComponentToCondition {
 }
 export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;
-  componentToConditions?: ComponentToCondition[] | null;
+  componentsToCondition?: ComponentToCondition[] | null;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
