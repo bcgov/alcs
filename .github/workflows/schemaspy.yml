@@ -2,9 +2,9 @@ name: Generate Schemaspy Docs
 on:
   push:
     branches:
-      - feature/ALCS-910
+      - main
 env:
-  NODE_ENV: test
+  NODE_ENV: prod
 
 jobs:
   generate_schemaspy:
