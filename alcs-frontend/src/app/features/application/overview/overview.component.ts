@@ -167,7 +167,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       mappedEvents.push(...events);
     }
 
-    // TODO status remove these
+    // TODO this will be covered in next status tickets
     // for (const event of application.statusHistory) {
     //   mappedEvents.push({
     //     name: event.label,

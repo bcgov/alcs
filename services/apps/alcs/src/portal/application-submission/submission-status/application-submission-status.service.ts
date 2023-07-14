@@ -7,6 +7,7 @@ import { SubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
 
+// FIXME instead of new Date it should be utc date. Also all comparisons between dates from UI should happen in utc
 @Injectable()
 export class ApplicationSubmissionStatusService {
   constructor(
