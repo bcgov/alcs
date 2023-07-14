@@ -188,17 +188,18 @@ export class ApplicationService {
   }
 
   async updateByUuid(uuid: string, updates: ApplicationUpdateServiceDto) {
-    const existingApplication = await this.applicationRepository.findOne({
+    const appExists = await this.applicationRepository.exist({
       where: { uuid },
     });
 
-    if (!existingApplication) {
+    if (!appExists) {
       throw new ServiceNotFoundException(
         `Application not found with file number ${uuid}`,
       );
     }
 
-    return this.update(existingApplication, updates);
+    await this.applicationRepository.update(uuid, updates);
+    return this.getByUuidOrFail(uuid);
   }
 
   async update(

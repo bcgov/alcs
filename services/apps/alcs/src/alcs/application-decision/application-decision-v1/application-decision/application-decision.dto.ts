@@ -111,7 +111,7 @@ export class ApplicationDecisionDto {
   applicationFileNumber;
 
   @AutoMap()
-  date: number;
+  date?: number;
 
   @AutoMap()
   outcome: DecisionOutcomeCodeDto;

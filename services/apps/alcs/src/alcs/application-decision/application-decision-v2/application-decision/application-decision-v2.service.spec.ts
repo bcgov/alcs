@@ -223,9 +223,9 @@ describe('ApplicationDecisionV2Service', () => {
         mockDecisionRepository.save.mock.calls[0][0].reconsiders,
       ).toBeNull();
       expect(mockDecisionRepository.softRemove).toBeCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalledTimes(1);
-      expect(mockApplicationService.update).toHaveBeenCalledWith(
-        mockApplication,
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
+      expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
+        mockApplication.uuid,
         {
           decisionDate: null,
         },
@@ -368,6 +368,13 @@ describe('ApplicationDecisionV2Service', () => {
         ] as ApplicationDecisionComponentDto[],
       };
 
+      const createdDecision = new ApplicationDecision({
+        date: decisionDate,
+        isDraft: false,
+      });
+
+      mockDecisionRepository.find.mockResolvedValue([createdDecision]);
+
       await service.update(
         mockDecision.uuid,
         decisionUpdate,
@@ -376,7 +383,7 @@ describe('ApplicationDecisionV2Service', () => {
       );
 
       expect(mockDecisionRepository.findOne).toBeCalledTimes(2);
-      expect(mockDecisionRepository.save).toBeCalledTimes(1);
+      expect(mockDecisionRepository.save).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledTimes(1);
       expect(mockApplicationService.updateByUuid).toHaveBeenCalledWith(
         mockApplication.uuid,
@@ -432,8 +439,9 @@ describe('ApplicationDecisionV2Service', () => {
       );
     });
 
-    it('should not update the application if this was not the first decision', async () => {
+    it('should not update the application dates when updating a draft decision', async () => {
       const secondDecision = initApplicationDecisionMock(mockApplication);
+      secondDecision.isDraft = true;
       secondDecision.uuid = 'second-uuid';
       mockDecisionRepository.find.mockResolvedValue([
         secondDecision,
@@ -441,9 +449,7 @@ describe('ApplicationDecisionV2Service', () => {
       ]);
       mockDecisionRepository.findOne.mockResolvedValue(secondDecision);
 
-      const decisionDate = new Date(2022, 3, 3, 3, 3, 3, 3);
       const decisionUpdate: UpdateApplicationDecisionDto = {
-        date: decisionDate.getTime(),
         outcomeCode: 'New Outcome',
         isDraft: true,
       };
