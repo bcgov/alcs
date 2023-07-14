@@ -22,7 +22,6 @@ export class CreateNoticeOfIntentDialogComponent implements OnInit, OnDestroy {
   regions: ApplicationRegionDto[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   isLoading: boolean = false;
-  currentBoardCode: string = '';
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
@@ -49,7 +48,6 @@ export class CreateNoticeOfIntentDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.currentBoardCode = this.data.currentBoardCode;
     this.cardService.fetchCodes();
 
     this.localGovernmentService.list().then((res) => {
@@ -70,7 +68,7 @@ export class CreateNoticeOfIntentDialogComponent implements OnInit, OnDestroy {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         applicant: formValues.applicant!.trim(),
-        boardCode: this.currentBoardCode,
+        boardCode: this.data.currentBoardCode,
         dateSubmittedToAlc: formatDateForApi(formValues.dateSubmitted!),
       };
 
