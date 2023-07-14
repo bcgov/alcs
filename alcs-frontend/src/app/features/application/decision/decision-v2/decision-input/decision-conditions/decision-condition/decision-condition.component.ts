@@ -17,7 +17,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() selectableComponents: SelectableComponent[] = [];
 
   type = new FormControl<string | null>(null, [Validators.required]);
-  componentToConditions = new FormControl<string[] | null>(null, [Validators.required]);
+  componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
   approvalDependant = new FormControl<string | null>(null, [Validators.required]);
 
   securityAmount = new FormControl<string | null>(null);
@@ -30,7 +30,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     securityAmount: this.securityAmount,
     administrativeFee: this.administrativeFee,
     description: this.description,
-    componentToCondition: this.componentToConditions,
+    componentsToCondition: this.componentsToCondition,
   });
 
   ngOnInit(): void {
@@ -41,14 +41,14 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       }
 
       const selectedOptions = this.selectableComponents
-        .filter((component) => this.data.componentToConditions?.map((e) => e.tempId)?.includes(component.tempId))
+        .filter((component) => this.data.componentsToCondition?.map((e) => e.tempId)?.includes(component.tempId))
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
           componentToConditionType: e.code,
           tempId: e.tempId,
         }));
 
-      this.componentToConditions.setValue(selectedOptions.map((e) => e.tempId) ?? null);
+      this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
 
       this.form.patchValue({
         type: this.data.type?.code ?? null,
@@ -63,7 +63,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       const matchingType = this.codes.find((code) => code.code === this.type.value);
 
       const selectedOptions = this.selectableComponents
-        .filter((component) => this.componentToConditions.value?.includes(component.tempId))
+        .filter((component) => this.componentsToCondition.value?.includes(component.tempId))
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
           componentToConditionType: e.code,
@@ -77,7 +77,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
         description: this.description.value ?? undefined,
-        componentToConditions: selectedOptions,
+        componentsToCondition: selectedOptions,
       });
     });
   }
@@ -85,14 +85,14 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectableComponents']) {
       const selectedOptions = this.selectableComponents
-        .filter((component) => this.componentToConditions.value?.includes(component.tempId))
+        .filter((component) => this.componentsToCondition.value?.includes(component.tempId))
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
           componentToConditionType: e.code,
         }));
 
       if (selectedOptions && selectedOptions.length < 1) {
-        this.componentToConditions.setValue(null);
+        this.componentsToCondition.setValue(null);
       }
     }
   }

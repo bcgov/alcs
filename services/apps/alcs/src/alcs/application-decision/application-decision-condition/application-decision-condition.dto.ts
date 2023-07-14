@@ -60,7 +60,7 @@ export class UpdateApplicationDecisionConditionDto {
 
   @IsOptional()
   @IsArray()
-  componentToConditions?: ComponentToConditionDto[];
+  componentsToCondition?: ComponentToConditionDto[];
 
   @IsOptional()
   @IsBoolean()
