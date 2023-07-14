@@ -22,5 +22,4 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 - [Architecture](./docs/architecture.md)
 - [SchemaSpy - ALCS](https://bcgov.github.io/alcs/schemaspy/alcs/index.html)
 - [SchemaSpy - OATS](https://bcgov.github.io/alcs/schemaspy/oats/index.html)
-- [SchemaSpy - Portal](https://bcgov.github.io/alcs/schemaspy/portal/index.html)
 - [One time Jobs](./docs/jobs.md)
