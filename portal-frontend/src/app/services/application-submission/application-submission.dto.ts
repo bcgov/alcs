@@ -1,18 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
-export enum APPLICATION_STATUS {
-  IN_PROGRESS = 'PROG',
-  SUBMITTED_TO_ALC = 'SUBM',
-  SUBMITTED_TO_LG = 'SUBG',
-  IN_REVIEW = 'REVW',
-  REFUSED_TO_FORWARD = 'REFU',
-  INCOMPLETE = 'INCM',
-  WRONG_GOV = 'WRNG',
-  CANCELLED = 'CANC',
-  ALC_DECISION = 'ALCD',
-  CEO_DECISION = 'CEOD',
-}
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',

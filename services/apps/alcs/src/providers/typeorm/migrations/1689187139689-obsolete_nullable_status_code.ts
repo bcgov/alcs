@@ -11,6 +11,10 @@ export class obsoleteNullableStatusCode1689187139689
         ALTER TABLE "alcs"."application_submission"  ALTER COLUMN status_code DROP NOT NULL;
        `,
     );
+
+    await queryRunner.query(
+      `ALTER TABLE "alcs"."application_submission" DROP COLUMN "status_code"`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
