@@ -799,24 +799,24 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>avcon_1238100890_issu__000</td>
-                                    <td>(((issu_type)::text &#61; ANY ((ARRAY[&#39;INQ&#39;::character varying, &#39;CMP&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>avcon_1238100890_swo_c_000</td>
-                                    <td>(((swo_complied_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    <td>avcon_1238100890_remed_000</td>
+                                    <td>(((remediation_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_issu_chk</td>
                                     <td>(((((issu_type)::text &#61; &#39;CMP&#39;::text) AND (inquiry_code IS NULL) AND (complaint_code IS NOT NULL)) OR (((issu_type)::text &#61; &#39;INQ&#39;::text) AND (inquiry_code IS NOT NULL) AND (complaint_code IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_date IS NULL) AND (swo_terms IS NULL) AND (swo_review_requested_date IS NULL) AND (swo_ceo_review_date IS NULL) AND (swo_ceo_review_description IS NULL) AND (swo_ceo_review_result IS NULL) AND (swo_complied_ind IS NULL) AND (recommend_fine_amt IS NULL) AND (recommend_land_remediation_ind IS NULL) AND (ceo_hearing_date IS NULL) AND (ceo_decision_date IS NULL) AND (fine_amt IS NULL) AND (fine_due_date IS NULL) AND (fine_received_date IS NULL) AND (remediation_required_ind IS NULL) AND (remediation_due_date IS NULL) AND (remediation_completion_date IS NULL))))</td>
                                 </tr>
                                 <tr>
+                                    <td>avcon_1238100890_issu__000</td>
+                                    <td>(((issu_type)::text &#61; ANY ((ARRAY[&#39;INQ&#39;::character varying, &#39;CMP&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
                                     <td>avcon_1238100890_recom_000</td>
                                     <td>(((recommend_land_remediation_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
-                                    <td>avcon_1238100890_remed_000</td>
-                                    <td>(((remediation_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    <td>avcon_1238100890_swo_c_000</td>
+                                    <td>(((swo_complied_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>

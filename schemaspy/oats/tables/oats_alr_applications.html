@@ -1284,22 +1284,6 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>oats_appl_srw_ck</td>
-                                    <td>(((srw_ind)::text &#61; &#39;Y&#39;::text))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_appl_acc_ck</td>
-                                    <td>(((application_class_code)::text &#61; ANY ((ARRAY[&#39;LOA&#39;::character varying, &#39;BLK&#39;::character varying, &#39;SCH&#39;::character varying, &#39;NOI&#39;::character varying, &#39;NAN&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_appl_ospi_ck</td>
-                                    <td>(((on_site_processing_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_appl_mni_ck</td>
-                                    <td>(((ministry_notice_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
                                     <td>oats_appl_api_ck</td>
                                     <td>(((agrologist_plan_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
@@ -1308,8 +1292,24 @@
                                     <td>(((fee_waived_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
+                                    <td>oats_appl_mni_ck</td>
+                                    <td>(((ministry_notice_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_appl_ospi_ck</td>
+                                    <td>(((on_site_processing_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
                                     <td>oats_appl_sfwlgi_ck</td>
                                     <td>(((split_fee_with_local_gov_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_appl_srw_ck</td>
+                                    <td>(((srw_ind)::text &#61; &#39;Y&#39;::text))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_appl_acc_ck</td>
+                                    <td>(((application_class_code)::text &#61; ANY ((ARRAY[&#39;LOA&#39;::character varying, &#39;BLK&#39;::character varying, &#39;SCH&#39;::character varying, &#39;NOI&#39;::character varying, &#39;NAN&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_appl_fni_ck</td>
