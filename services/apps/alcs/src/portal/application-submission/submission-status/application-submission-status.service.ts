@@ -6,8 +6,8 @@ import { ApplicationSubmission } from '../application-submission.entity';
 import { SubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+import dayjs from 'dayjs';
 
-// FIXME instead of new Date it should be utc date. Also all comparisons between dates from UI should happen in utc
 @Injectable()
 export class ApplicationSubmissionStatusService {
   constructor(
@@ -30,8 +30,7 @@ export class ApplicationSubmissionStatusService {
       });
 
       if (newStatus.statusTypeCode === SUBMISSION_STATUS.IN_PROGRESS) {
-        const date = new Date();
-        date.setHours(0, 0, 0, 0);
+        const date = dayjs().tz('Canada/Pacific').startOf('day').toDate();
         newStatus.effectiveDate = date;
       }
 
@@ -58,7 +57,7 @@ export class ApplicationSubmissionStatusService {
     if (effectiveDate) {
       date = effectiveDate;
     }
-    date.setHours(0, 0, 0, 0);
+    date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
 
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
 

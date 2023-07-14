@@ -87,7 +87,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
       ([SUBMISSION_STATUS.SUBMITTED_TO_ALC, SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG].includes(
         this.application.status.code
       ) ||
-        (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_FG && this.application.canReview))
+        (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
     } else {

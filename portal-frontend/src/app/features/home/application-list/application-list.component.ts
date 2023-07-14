@@ -28,7 +28,7 @@ export class ApplicationListComponent implements OnInit {
     [SUBMISSION_STATUS.IN_PROGRESS, 'in-progress'],
     [SUBMISSION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
     [SUBMISSION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
-    [SUBMISSION_STATUS.IN_REVIEW_BY_FG, 'in-review'],
+    [SUBMISSION_STATUS.IN_REVIEW_BY_LG, 'in-review'],
     [SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG, 'refused-to-forward'],
     [SUBMISSION_STATUS.INCOMPLETE, 'incomplete'],
     [SUBMISSION_STATUS.WRONG_GOV, 'wrong-government'],

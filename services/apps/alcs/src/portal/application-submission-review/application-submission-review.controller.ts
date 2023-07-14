@@ -184,7 +184,7 @@ export class ApplicationSubmissionReviewController {
 
     await this.applicationSubmissionService.updateStatus(
       applicationSubmission,
-      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
 
     const primaryContact = applicationSubmission.owners.find(
@@ -214,7 +214,7 @@ export class ApplicationSubmissionReviewController {
   ) {
     if (primaryContact.email) {
       const status = await this.applicationSubmissionService.getStatus(
-        SUBMISSION_STATUS.IN_REVIEW_BY_FG, // TODO is this a correct assumption? previously we only had one in review
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       );
 
       const types = await this.applicationService.fetchApplicationTypes();
@@ -286,7 +286,7 @@ export class ApplicationSubmissionReviewController {
     }
 
     if (
-      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_FG
+      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG
     ) {
       await this.applicationSubmissionService.submitToAlcs(
         validationResult.application,
@@ -336,7 +336,7 @@ export class ApplicationSubmissionReviewController {
 
     if (
       applicationSubmission.status.statusTypeCode ===
-      SUBMISSION_STATUS.IN_REVIEW_BY_FG
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG
     ) {
       const documents = await this.applicationDocumentService.list(
         applicationSubmission.fileNumber,
@@ -358,7 +358,7 @@ export class ApplicationSubmissionReviewController {
 
       await this.applicationSubmissionStatusService.setStatusDate(
         applicationSubmission.uuid,
-        SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         null,
       );
 

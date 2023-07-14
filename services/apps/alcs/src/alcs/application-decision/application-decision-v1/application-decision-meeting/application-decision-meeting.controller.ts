@@ -28,6 +28,7 @@ import {
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
+import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
@@ -100,7 +101,7 @@ export class ApplicationDecisionMeetingController {
     );
 
     const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
-      date: new Date(meeting.date),
+      date: formatIncomingDate(meeting.date) ?? new Date(),
       applicationUuid: application.uuid,
     });
 

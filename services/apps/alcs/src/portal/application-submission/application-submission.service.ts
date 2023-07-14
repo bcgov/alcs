@@ -33,7 +33,7 @@ import { SUBMISSION_STATUS } from './submission-status/submission-status.dto';
 
 const LG_VISIBLE_STATUSES = [
   SUBMISSION_STATUS.SUBMITTED_TO_LG,
-  SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+  SUBMISSION_STATUS.IN_REVIEW_BY_LG,
   SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
 ];
@@ -320,7 +320,7 @@ export class ApplicationSubmissionService {
       (s) =>
         s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
         LG_VISIBLE_STATUSES.includes(
-          s.status.statusTypeCode as SUBMISSION_STATUS,
+          s.status?.statusTypeCode as SUBMISSION_STATUS,
         ),
     );
   }
@@ -557,7 +557,7 @@ export class ApplicationSubmissionService {
         canReview:
           [
             SUBMISSION_STATUS.SUBMITTED_TO_LG,
-            SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
           ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
           userGovernment &&
           userGovernment.uuid === app.localGovernmentUuid,
@@ -588,7 +588,7 @@ export class ApplicationSubmissionService {
       canReview:
         [
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
-          SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+          SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
         userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,

@@ -4,7 +4,7 @@ from db import inject_conn_pool
     This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS documents table.
 
     NOTE:
-    Before performing document import you need toimport applications from oats.
+    Before performing document import you need to import applications from oats.
 """
 
 

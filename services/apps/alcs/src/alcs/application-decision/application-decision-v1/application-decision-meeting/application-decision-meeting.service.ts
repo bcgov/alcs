@@ -75,8 +75,6 @@ export class ApplicationDecisionMeetingService {
       meeting.applicationUuid,
     );
 
-    console.log(application.fileNumber);
-    console.log(this.applicationSubmissionStatusService);
     const currentStatuses =
       await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
         application.fileNumber,
@@ -122,8 +120,10 @@ export class ApplicationDecisionMeetingService {
 
   async delete(uuid) {
     const meeting = await this.getOrFail(uuid);
-    const deleted = this.appDecisionMeetingRepository.softRemove([meeting]);
-    this.updateSubmissionStatus(meeting);
+    const deleted = await this.appDecisionMeetingRepository.softRemove([
+      meeting,
+    ]);
+    await this.updateSubmissionStatus(meeting);
     return deleted;
   }
 

@@ -157,7 +157,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         localGovernmentUuid: mockLG.uuid,
         status: new ApplicationSubmissionToSubmissionStatus({
           statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
@@ -187,7 +186,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.IN_PROGRESS,
         localGovernmentUuid: mockLG.uuid,
         status: new ApplicationSubmissionToSubmissionStatus({
           statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
@@ -232,7 +230,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
   });
 
@@ -275,7 +273,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
   });
 
@@ -306,7 +304,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         status: new ApplicationSubmissionToSubmissionStatus({
           statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           effectiveDate: new Date(1, 1, 1),
@@ -343,9 +340,8 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
         status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
           effectiveDate: new Date(1, 1, 1),
           submissionUuid: 'fake',
         }),
@@ -402,9 +398,8 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
         status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
           effectiveDate: new Date(1, 1, 1),
           submissionUuid: 'fake',
         }),
@@ -459,9 +454,8 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         uuid: 'submission-uuid',
-        statusCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
         status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
           effectiveDate: new Date(1, 1, 1),
           submissionUuid: 'fake',
         }),
@@ -537,7 +531,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         status: new ApplicationSubmissionToSubmissionStatus({
           statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           effectiveDate: new Date(1, 1, 1),

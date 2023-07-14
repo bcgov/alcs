@@ -208,7 +208,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
             this.isApplicantSubmission &&
             [
               SUBMISSION_STATUS.SUBMITTED_TO_LG,
-              SUBMISSION_STATUS.IN_REVIEW_BY_FG,
+              SUBMISSION_STATUS.IN_REVIEW_BY_LG,
               SUBMISSION_STATUS.WRONG_GOV,
               SUBMISSION_STATUS.INCOMPLETE,
             ].includes(this.submission?.status?.code);
