@@ -210,9 +210,6 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];
 
-  // @AutoMap(() => [StatusHistory])
-  // statusHistory?: StatusHistory[];
-
   @AutoMap()
   @Type(() => CardDto)
   card?: CardDto;
@@ -287,6 +284,5 @@ export class CreateApplicationServiceDto {
   dateSubmittedToAlc?: Date | null | undefined;
   regionCode?: string;
   localGovernmentUuid?: string;
-  // statusHistory?: StatusHistory[];
   source?: 'ALCS' | 'APPLICANT';
 }

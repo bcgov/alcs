@@ -161,7 +161,6 @@ export class ApplicationService {
     existingApplication.localGovernmentUuid = application.localGovernmentUuid;
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
-    // existingApplication.statusHistory = application.statusHistory ?? [];
 
     if (createCard) {
       existingApplication.card = new Card();

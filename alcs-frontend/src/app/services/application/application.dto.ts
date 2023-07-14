@@ -28,13 +28,6 @@ export enum SUBMISSION_STATUS {
   REFUSED_TO_FORWARD_LG = 'RFFG', //new L/FNG Refused to Forward
 }
 
-// export interface StatusHistory {
-//   type: 'status_change';
-//   label: string;
-//   description: string;
-//   time: number;
-// }
-
 export interface ApplicationStatus extends BaseCodeDto {
   code: SUBMISSION_STATUS;
 }
