@@ -49,7 +49,12 @@
     ></app-inline-datepicker>
   </div>
   <div>
-    <h5>Acknowledged Incomplete</h5>
+    <div class="label-wrapper">
+      <h5>Acknowledged Incomplete</h5>
+      <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
+        >info_outline
+      </mat-icon>
+    </div>
     <div>
       <app-inline-datepicker
         [value]="application?.dateAcknowledgedIncomplete"
@@ -58,7 +63,12 @@
     </div>
   </div>
   <div>
-    <h5>Received All Items</h5>
+    <div class="label-wrapper">
+      <h5>Received All Items</h5>
+      <mat-icon class="icon" matTooltip='Creates / deletes "Received by ALC" portal status and controls public release'
+        >info_outline
+      </mat-icon>
+    </div>
     <div>
       <app-inline-datepicker
         [value]="application?.dateReceivedAllItems"
@@ -67,7 +77,10 @@
     </div>
   </div>
   <div>
-    <h5>Acknowledged Complete</h5>
+    <div class="label-wrapper">
+      <h5>Acknowledged Complete</h5>
+      <mat-icon class="icon" matTooltip="Tracking starts the following business day">info_outline </mat-icon>
+    </div>
     <div>
       <app-inline-datepicker
         [value]="application?.dateAcknowledgedComplete"
