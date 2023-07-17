@@ -539,6 +539,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .subscribe(async (submissionType) => {
         if (submissionType) {
           await this.onSubmit(false, false);
+          //FIXME Do not need this since decision released will be based on the date and not status
           await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
           await this.applicationService.loadApplication(this.fileNumber);
         }

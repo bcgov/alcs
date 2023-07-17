@@ -17,24 +17,23 @@
   </div>
   <div
     *ngIf="
-      application.status.code === APPLICATION_STATUS.IN_PROGRESS ||
-      application.status.code === APPLICATION_STATUS.IN_REVIEW ||
-      application.status.code === APPLICATION_STATUS.INCOMPLETE ||
-      application.status.code === APPLICATION_STATUS.WRONG_GOV ||
-      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG
+      application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
+      application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      application.status.code === SUBMISSION_STATUS.INCOMPLETE ||
+      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG
     "
     class="warning"
   >
     This section will update after the application is submitted to the ALC.
   </div>
-  <div *ngIf="application.status.code === APPLICATION_STATUS.REFUSED_TO_FORWARD" class="warning">
+  <div *ngIf="application.status.code === SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG" class="warning">
     Application not subject to Agricultural Land Commission review.
   </div>
   <div
     *ngIf="
-      application.status.code === APPLICATION_STATUS.SUBMITTED_TO_ALC ||
-      application.status.code === APPLICATION_STATUS.ALC_DECISION ||
-      application.status.code === APPLICATION_STATUS.CEO_DECISION
+      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC ||
+      application.status.code === SUBMISSION_STATUS.ALC_DECISION
     "
   >
     <app-decisions [fileNumber]="application.fileNumber"></app-decisions>

@@ -11,10 +11,12 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 import { AlcsModule } from './alcs/alcs.module';
+import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
 import { DocumentModule } from './document/document.module';
+import { FileNumberModule } from './file-number/file-number.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
 import { MainController } from './main.controller';
@@ -24,7 +26,6 @@ import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
-import { FileNumberModule } from './file-number/file-number.module';
 
 @Module({
   imports: [

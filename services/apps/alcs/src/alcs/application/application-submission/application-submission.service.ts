@@ -3,10 +3,11 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../../application-submission-status/submission-status.dto';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
 
@@ -15,9 +16,10 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async get(fileNumber: string) {
@@ -57,7 +59,7 @@ export class ApplicationSubmissionService {
     return mappedSubmission;
   }
 
-  async getStatus(code: APPLICATION_STATUS) {
+  async getStatus(code: SUBMISSION_STATUS) {
     return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code,
@@ -65,9 +67,7 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
-    const status = await this.getStatus(statusCode);
-
+  async updateStatus(fileNumber: string, statusCode: SUBMISSION_STATUS) {
     //Load submission without relations to prevent save from crazy cascading
     const submission = await this.applicationSubmissionRepository.findOneOrFail(
       {
@@ -77,9 +77,9 @@ export class ApplicationSubmissionService {
       },
     );
 
-    submission.status = status;
-
-    //Use save to trigger subscriber
-    await this.applicationSubmissionRepository.save(submission);
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      statusCode,
+    );
   }
 }

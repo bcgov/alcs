@@ -4,11 +4,12 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../../application-submission-status/submission-status.dto';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../../common/automapper/application-submission.automapper.profile';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -18,12 +19,14 @@ describe('ApplicationSubmissionService', () => {
     Repository<ApplicationSubmission>
   >;
   let mockApplicationStatusRepository: DeepMocked<
-    Repository<ApplicationStatus>
+    Repository<ApplicationSubmissionStatusType>
   >;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
     mockApplicationSubmissionRepository = createMock();
     mockApplicationStatusRepository = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -40,11 +43,19 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockApplicationSubmissionRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(ApplicationSubmissionStatusType),
           useValue: mockApplicationStatusRepository,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
         },
       ],
     }).compile();
+
+    mockApplicationSubmissionStatusService.setStatusDate.mockResolvedValue(
+      {} as any,
+    );
 
     service = module.get<ApplicationSubmissionService>(
       ApplicationSubmissionService,
@@ -102,35 +113,28 @@ describe('ApplicationSubmissionService', () => {
 
   it('should successfully retrieve status from repo', async () => {
     mockApplicationStatusRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationStatus,
+      {} as ApplicationSubmissionStatusType,
     );
 
-    const result = await service.getStatus(APPLICATION_STATUS.ALC_DECISION);
+    const result = await service.getStatus(SUBMISSION_STATUS.ALC_DECISION);
 
     expect(result).toBeDefined();
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledTimes(1);
     expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledWith({
-      where: { code: APPLICATION_STATUS.ALC_DECISION },
+      where: { code: SUBMISSION_STATUS.ALC_DECISION },
     });
   });
 
   it('should successfully update the status', async () => {
     mockApplicationStatusRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationStatus,
+      {} as ApplicationSubmissionStatusType,
     );
-    mockApplicationSubmissionRepository.findOneOrFail.mockResolvedValue(
-      {} as ApplicationSubmission,
-    );
-    mockApplicationSubmissionRepository.save.mockResolvedValue(
-      {} as ApplicationSubmission,
-    );
+    mockApplicationSubmissionRepository.findOneOrFail.mockResolvedValue({
+      uuid: 'fake',
+    } as ApplicationSubmission);
 
-    await service.updateStatus('fake', APPLICATION_STATUS.ALC_DECISION);
+    await service.updateStatus('fake', SUBMISSION_STATUS.ALC_DECISION);
 
-    expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledTimes(1);
-    expect(mockApplicationStatusRepository.findOneOrFail).toBeCalledWith({
-      where: { code: APPLICATION_STATUS.ALC_DECISION },
-    });
     expect(mockApplicationSubmissionRepository.findOneOrFail).toBeCalledTimes(
       1,
     );
@@ -139,5 +143,12 @@ describe('ApplicationSubmissionService', () => {
         fileNumber: 'fake',
       },
     });
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      'fake',
+      SUBMISSION_STATUS.ALC_DECISION,
+    );
   });
 });

@@ -50,7 +50,6 @@ interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ow
   styleUrls: ['./parcel.component.scss'],
 })
 export class ParcelComponent {
-  // TODO instead of providing application load parcel as input or in addition to application
   $destroy = new Subject<void>();
 
   @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;

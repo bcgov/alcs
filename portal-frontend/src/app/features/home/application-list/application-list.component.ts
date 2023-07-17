@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   ApplicationSubmissionDto,
-  APPLICATION_STATUS,
+  SUBMISSION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
@@ -25,16 +25,15 @@ export class ApplicationListComponent implements OnInit {
   ];
 
   statusToCssMap = new Map<string, string>([
-    [APPLICATION_STATUS.IN_PROGRESS, 'in-progress'],
-    [APPLICATION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
-    [APPLICATION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
-    [APPLICATION_STATUS.IN_REVIEW, 'in-review'],
-    [APPLICATION_STATUS.REFUSED_TO_FORWARD, 'refused-to-forward'],
-    [APPLICATION_STATUS.INCOMPLETE, 'incomplete'],
-    [APPLICATION_STATUS.WRONG_GOV, 'wrong-government'],
-    [APPLICATION_STATUS.CANCELLED, 'cancelled'],
-    [APPLICATION_STATUS.ALC_DECISION, 'alc-decision'],
-    [APPLICATION_STATUS.CEO_DECISION, 'ceo-decision'],
+    [SUBMISSION_STATUS.IN_PROGRESS, 'in-progress'],
+    [SUBMISSION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
+    [SUBMISSION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
+    [SUBMISSION_STATUS.IN_REVIEW_BY_LG, 'in-review'],
+    [SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG, 'refused-to-forward'],
+    [SUBMISSION_STATUS.INCOMPLETE, 'incomplete'],
+    [SUBMISSION_STATUS.WRONG_GOV, 'wrong-government'],
+    [SUBMISSION_STATUS.CANCELLED, 'cancelled'],
+    [SUBMISSION_STATUS.ALC_DECISION, 'alc-decision'],
   ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

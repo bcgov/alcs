@@ -6,6 +6,8 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -15,13 +17,13 @@ import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { Application } from '../../../application/application.entity';
 import { ApplicationService } from '../../../application/application.service';
+import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
+import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
+import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
 import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModification } from '../../application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-reconsideration/application-reconsideration.entity';
-import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
-import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
-import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
 import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
@@ -42,6 +44,7 @@ export class ApplicationDecisionV1Service {
     private ceoCriterionRepository: Repository<ApplicationCeoCriterionCode>,
     private applicationService: ApplicationService,
     private documentService: DocumentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async getByAppFileNumber(number: string) {
@@ -228,6 +231,12 @@ export class ApplicationDecisionV1Service {
             decisionDate: updatedDecision.date,
           },
         );
+
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingDecision.application!.fileNumber,
+          SUBMISSION_STATUS.ALC_DECISION,
+          updatedDecision.date,
+        );
       }
     }
 
@@ -376,10 +385,20 @@ export class ApplicationDecisionV1Service {
       await this.applicationService.update(applicationDecision.application, {
         decisionDate: null,
       });
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        applicationDecision.application.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        null,
+      );
     } else {
       await this.applicationService.update(applicationDecision.application, {
         decisionDate: existingDecisions[existingDecisions.length - 1].date,
       });
+      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+        applicationDecision.application.fileNumber,
+        SUBMISSION_STATUS.ALC_DECISION,
+        existingDecisions[existingDecisions.length - 1].date,
+      );
     }
   }
 

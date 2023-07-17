@@ -23,13 +23,6 @@ import { ApplicationDocument } from './application-document/application-document
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
 
-export class StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
-
 export const APPLICATION_FILE_NUMBER_SEQUENCE = 'alcs.alcs_file_number_seq';
 
 @Entity()
@@ -246,16 +239,6 @@ export class Application extends Base {
     nullable: true,
   })
   proposalExpiryDate?: Date | null;
-
-  @AutoMap(() => [StatusHistory])
-  @Column({
-    comment:
-      'JSONB Column containing the status history of the Application from the Portal',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
-  })
-  statusHistory: StatusHistory[];
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)

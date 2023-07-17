@@ -16,6 +16,8 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
@@ -84,6 +86,7 @@ export class ApplicationService {
     private codeService: CodeService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private fileNumberService: FileNumberService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -105,7 +108,6 @@ export class ApplicationService {
       localGovernmentUuid: createDto.localGovernmentUuid,
       typeCode: createDto.typeCode,
       region,
-      statusHistory: createDto.statusHistory,
       source: createDto.source,
     });
 
@@ -159,7 +161,6 @@ export class ApplicationService {
     existingApplication.localGovernmentUuid = application.localGovernmentUuid;
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
-    existingApplication.statusHistory = application.statusHistory ?? [];
 
     if (createCard) {
       existingApplication.card = new Card();
@@ -205,6 +206,31 @@ export class ApplicationService {
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
     await this.applicationRepository.update(existingApplication.uuid, updates);
+
+    try {
+      if (updates.dateAcknowledgedIncomplete !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+          updates.dateAcknowledgedIncomplete,
+        );
+      }
+
+      if (updates.dateReceivedAllItems !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.RECEIVED_BY_ALC,
+          updates.dateReceivedAllItems,
+        );
+      }
+    } catch (error) {
+      if (error instanceof ServiceNotFoundException) {
+        this.logger.warn(error.message, error);
+      } else {
+        throw error;
+      }
+    }
+
     return this.getOrFail(existingApplication.fileNumber);
   }
 

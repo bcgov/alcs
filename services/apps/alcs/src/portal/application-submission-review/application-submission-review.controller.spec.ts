@@ -13,14 +13,15 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import { EmailStatus } from '../../providers/email/email-status.entity';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../application-submission/application-status/application-status.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -41,6 +42,7 @@ describe('ApplicationSubmissionReviewController', () => {
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockEmailService: DeepMocked<EmailService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   const mockLG = new ApplicationLocalGovernment({
     isFirstNation: false,
@@ -69,6 +71,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.mapToDto.mockResolvedValue(
       {} as ApplicationSubmissionReviewDto,
     );
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionReviewController],
@@ -106,8 +109,16 @@ describe('ApplicationSubmissionReviewController', () => {
           useValue: {},
         },
         ...mockKeyCloakProviders,
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
       ],
     }).compile();
+
+    mockApplicationSubmissionStatusService.setStatusDate.mockResolvedValue(
+      {} as any,
+    );
 
     controller = module.get<ApplicationSubmissionReviewController>(
       ApplicationSubmissionReviewController,
@@ -139,15 +150,19 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should fallback to load by owner if user has no government', async () => {
     const reviewWithApp = new ApplicationSubmissionReview({
       ...applicationReview,
-      application: new Application({}),
+      application: new Application(),
     });
 
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
         localGovernmentUuid: mockLG.uuid,
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
       }),
     );
 
@@ -171,8 +186,12 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
     mockAppSubmissionService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.IN_PROGRESS,
         localGovernmentUuid: mockLG.uuid,
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
       }),
     );
 
@@ -211,7 +230,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
   });
 
@@ -232,7 +251,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
     mockAppService.fetchApplicationTypes.mockResolvedValue([]);
     mockAppSubmissionService.getStatus.mockResolvedValue(
-      new ApplicationStatus({
+      new ApplicationSubmissionStatusType({
         label: '',
       }),
     );
@@ -254,7 +273,7 @@ describe('ApplicationSubmissionReviewController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
   });
 
@@ -285,7 +304,11 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
       }),
     );
     mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
@@ -316,7 +339,13 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should load review and call submitToAlcs when in correct status for finish', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationSubmission({
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
+      }),
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
@@ -361,14 +390,20 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.SUBMITTED_TO_ALC,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
   });
 
   it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({ statusCode: APPLICATION_STATUS.IN_REVIEW }),
+      new ApplicationSubmission({
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
+      }),
     );
     mockAppSubmissionService.submitToAlcs.mockResolvedValue(
       new Application({
@@ -410,7 +445,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.REFUSED_TO_FORWARD,
+      SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
   });
 
@@ -419,7 +454,11 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         uuid: 'submission-uuid',
-        statusCode: APPLICATION_STATUS.IN_REVIEW,
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
@@ -474,7 +513,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
-      APPLICATION_STATUS.INCOMPLETE,
+      SUBMISSION_STATUS.INCOMPLETE,
     );
     expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(
@@ -483,13 +522,20 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.update.mock.calls[0][1]).toEqual({
       returnedComment: 'test-comment',
     });
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(2);
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
-        statusCode: APPLICATION_STATUS.SUBMITTED_TO_ALC,
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake',
+        }),
       }),
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);

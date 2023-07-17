@@ -2,13 +2,13 @@ import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
 } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationStatusDto } from '../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import {
   ApplicationSubmissionDetailedDto,
   ApplicationSubmissionDto,
@@ -44,10 +44,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            return Date.now();
+            return ad.status.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(
@@ -66,7 +69,7 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(mapper, ApplicationStatus, ApplicationStatusDto);
+      createMap(mapper, ApplicationSubmissionStatusType, ApplicationStatusDto);
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
 
       createMap(
@@ -76,11 +79,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            //For older applications before status history was created
-            return Date.now();
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(
@@ -118,11 +123,13 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
         forMember(
           (a) => a.lastStatusUpdate,
           mapFrom((ad) => {
-            if (ad.statusHistory.length > 0) {
-              return ad.statusHistory[0].time;
-            }
-            //For older applications before status history was created
-            return Date.now();
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
           }),
         ),
         forMember(

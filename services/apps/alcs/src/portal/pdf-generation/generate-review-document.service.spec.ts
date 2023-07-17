@@ -7,8 +7,9 @@ import { ApplicationLocalGovernmentService } from '../../alcs/application/applic
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
-import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from '../application-submission-review/application-submission-review.service';
@@ -73,11 +74,18 @@ describe('GenerateReviewDocumentService', () => {
   it('should call cdogs service to generate pdf', async () => {
     mockCdogsService.generateDocument.mockResolvedValue({} as any);
 
-    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue({
-      fileNumber: 'fake',
-      localGovernmentUuid: 'fake-lg',
-      typeCode: 'NFUP',
-    } as ApplicationSubmission);
+    mockApplicationSubmissionService.verifyAccessByFileId.mockResolvedValue(
+      new ApplicationSubmission({
+        fileNumber: 'fake',
+        localGovernmentUuid: 'fake-lg',
+        typeCode: 'NFUP',
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          effectiveDate: new Date(1, 1, 1),
+          submissionUuid: 'fake-status',
+        }),
+      }),
+    );
 
     mockSubmissionReviewService.getByFileNumber.mockResolvedValue(
       new ApplicationSubmissionReview(),

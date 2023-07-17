@@ -9,9 +9,9 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
@@ -37,7 +37,6 @@ export class ApplicationSubmissionDto {
   @AutoMap()
   localGovernmentUuid: string;
 
-  @AutoMap()
   status: ApplicationStatusDto;
 
   @AutoMap(() => Boolean)

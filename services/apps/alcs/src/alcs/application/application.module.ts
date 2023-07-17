@@ -1,5 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
@@ -9,7 +12,6 @@ import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
 import { Board } from '../board/board.entity';
@@ -53,7 +55,8 @@ import { ApplicationService } from './application.service';
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
-      ApplicationStatus,
+      ApplicationSubmissionStatusType,
+      ApplicationSubmissionToSubmissionStatus,
     ]),
     NotificationModule,
     DocumentModule,
@@ -61,6 +64,7 @@ import { ApplicationService } from './application.service';
     CodeModule,
     FileNumberModule,
     forwardRef(() => ApplicationSubmissionModule),
+    ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationService,

@@ -12,12 +12,14 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { User } from '../../user/user.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
@@ -26,13 +28,16 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 describe('ApplicationSubmissionService', () => {
   let service: ApplicationSubmissionService;
   let mockRepository: DeepMocked<Repository<ApplicationSubmission>>;
-  let mockStatusRepository: DeepMocked<Repository<ApplicationStatus>>;
+  let mockStatusRepository: DeepMocked<
+    Repository<ApplicationSubmissionStatusType>
+  >;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
   let mockGenerateReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -43,6 +48,7 @@ describe('ApplicationSubmissionService', () => {
     mockGenerateSubmissionDocumentService = createMock();
     mockGenerateReviewDocumentService = createMock();
     mockNaruSubtypeRepository = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,7 +64,7 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationStatus),
+          provide: getRepositoryToken(ApplicationSubmissionStatusType),
           useValue: mockStatusRepository,
         },
         {
@@ -85,8 +91,19 @@ describe('ApplicationSubmissionService', () => {
           provide: getRepositoryToken(NaruSubtype),
           useValue: mockNaruSubtypeRepository,
         },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
       ],
     }).compile();
+
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+    mockApplicationSubmissionStatusService.setStatusDate.mockResolvedValue(
+      {} as any,
+    );
 
     service = module.get<ApplicationSubmissionService>(
       ApplicationSubmissionService,
@@ -134,10 +151,15 @@ describe('ApplicationSubmissionService', () => {
   it('save a new application for create', async () => {
     const fileId = 'file-id';
     mockRepository.findOne.mockResolvedValue(null);
-    mockStatusRepository.findOne.mockResolvedValue(new ApplicationStatus());
+    mockStatusRepository.findOne.mockResolvedValue(
+      new ApplicationSubmissionStatusType(),
+    );
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
     mockApplicationService.generateNextFileNumber.mockResolvedValue(fileId);
     mockApplicationService.create.mockResolvedValue(new Application());
+    mockApplicationSubmissionStatusService.setInitialStatuses.mockResolvedValue(
+      {} as any,
+    );
 
     const fileNumber = await service.create('type', new User());
 
@@ -145,6 +167,9 @@ describe('ApplicationSubmissionService', () => {
     expect(mockStatusRepository.findOne).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockApplicationService.create).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setInitialStatuses,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get by user', async () => {
@@ -167,7 +192,12 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should call through for getForGovernmentByFileId', async () => {
-    const application = new ApplicationSubmission();
+    const application = new ApplicationSubmission({
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+        submissionUuid: 'fake',
+      }),
+    });
     mockRepository.findOne.mockResolvedValue(application);
 
     const res = await service.getForGovernmentByFileId(
@@ -184,48 +214,44 @@ describe('ApplicationSubmissionService', () => {
   });
 
   it('should load the canceled status and save the application for cancel', async () => {
-    const application = new ApplicationSubmission();
-    const cancelStatus = new ApplicationStatus({
-      code: APPLICATION_STATUS.CANCELLED,
+    const application = new ApplicationSubmission({
+      uuid: 'fake',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.CANCELLED,
+        submissionUuid: 'fake',
+      }),
     });
-    mockStatusRepository.findOneOrFail.mockResolvedValue(cancelStatus);
-    mockRepository.findOneOrFail.mockResolvedValue(new ApplicationSubmission());
-
-    mockRepository.save.mockResolvedValue({} as any);
 
     await service.cancel(application);
-    expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save.mock.calls[0][0].status).toEqual(cancelStatus);
-  });
 
-  it('should throw an exception if it fails to load cancelled status', async () => {
-    const application = new ApplicationSubmission();
-    const exception = new BaseServiceException('');
-    mockStatusRepository.findOneOrFail.mockRejectedValue(exception);
-
-    const promise = service.cancel(application);
-    await expect(promise).rejects.toMatchObject(exception);
-
-    expect(mockRepository.save).toHaveBeenCalledTimes(0);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      application.uuid,
+      SUBMISSION_STATUS.CANCELLED,
+    );
   });
 
   it('should update the status when submitting to local government', async () => {
-    const mockStatus = new ApplicationStatus({
-      code: 'code',
-      label: 'label',
+    const application = new ApplicationSubmission({
+      uuid: 'fake',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.CANCELLED,
+        submissionUuid: 'fake',
+      }),
     });
 
-    mockStatusRepository.findOneOrFail.mockResolvedValue(mockStatus);
-    mockRepository.save.mockResolvedValue({} as any);
-    mockRepository.findOneOrFail.mockResolvedValue(new ApplicationSubmission());
+    await service.submitToLg(application);
 
-    await service.submitToLg(new ApplicationSubmission());
-    expect(mockStatusRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    expect(mockRepository.save.mock.calls[0][0].status).toEqual(mockStatus);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      application.uuid,
+      SUBMISSION_STATUS.SUBMITTED_TO_LG,
+      undefined,
+    );
   });
 
   it('should use application type service for mapping DTOs', async () => {
@@ -245,11 +271,10 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode: typeCode,
       auditCreatedAt: new Date(),
-      status: new ApplicationStatus({
-        code: 'status-code',
-        label: '',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: 'status-code',
+        submissionUuid: 'fake',
       }),
-      statusHistory: [],
     });
     mockRepository.findOne.mockResolvedValue(application);
 
@@ -261,7 +286,7 @@ describe('ApplicationSubmissionService', () => {
     expect(res[0].applicant).toEqual(applicant);
   });
 
-  it('should fail on submitToAlcs if grpc request failed', async () => {
+  it('should fail on submitToAlcs if error', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
@@ -271,7 +296,6 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      statusHistory: [],
     });
 
     mockApplicationService.submit.mockRejectedValue(new Error());
@@ -296,20 +320,31 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
-        code: 'status-code',
-        label: '',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: 'status-code',
+        submissionUuid: 'fake',
       }),
-      statusHistory: [],
+    });
+    const mockSubmittedApp = new Application({
+      dateSubmittedToAlc: new Date(),
     });
 
-    mockApplicationService.submit.mockResolvedValue(new Application());
+    mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
     await service.submitToAlcs(
       mockApplication as ValidatedApplicationSubmission,
       new User(),
     );
 
     expect(mockApplicationService.submit).toBeCalledTimes(1);
+
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      mockApplication.uuid,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      mockSubmittedApp.dateSubmittedToAlc,
+    );
   });
 
   it('should submit to alcs even if document generation fails', async () => {
@@ -322,14 +357,16 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
-        code: 'status-code',
-        label: '',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: 'status-code',
+        submissionUuid: 'fake',
       }),
-      statusHistory: [],
     });
 
-    mockApplicationService.submit.mockResolvedValue(new Application());
+    const mockSubmittedApp = new Application({
+      dateSubmittedToAlc: new Date(),
+    });
+    mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
     mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
       new Error('fake'),
     );
@@ -346,6 +383,14 @@ describe('ApplicationSubmissionService', () => {
     expect(
       mockGenerateSubmissionDocumentService.generateAndAttach,
     ).rejects.toMatchObject(new Error('fake'));
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      mockApplication.uuid,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      mockSubmittedApp.dateSubmittedToAlc,
+    );
   });
 
   it('should submit to alcs even if document attachment to application fails', async () => {
@@ -358,14 +403,17 @@ describe('ApplicationSubmissionService', () => {
       applicant,
       typeCode,
       localGovernmentUuid,
-      status: new ApplicationStatus({
-        code: 'status-code',
-        label: '',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: 'status-code',
+        submissionUuid: 'fake',
       }),
-      statusHistory: [],
     });
 
-    mockApplicationService.submit.mockResolvedValue(new Application());
+    const mockSubmittedApp = new Application({
+      dateSubmittedToAlc: new Date(),
+    });
+
+    mockApplicationService.submit.mockResolvedValue(mockSubmittedApp);
     mockGenerateSubmissionDocumentService.generateAndAttach.mockRejectedValue(
       new Error('fake'),
     );
@@ -384,6 +432,14 @@ describe('ApplicationSubmissionService', () => {
     expect(
       mockGenerateSubmissionDocumentService.generateAndAttach,
     ).toBeCalledWith(fileNumber, new User());
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDate,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionStatusService.setStatusDate).toBeCalledWith(
+      mockApplication.uuid,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      mockSubmittedApp.dateSubmittedToAlc,
+    );
   });
 
   it('should update fields if application exists', async () => {

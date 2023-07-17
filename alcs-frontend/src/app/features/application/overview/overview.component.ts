@@ -167,13 +167,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
       mappedEvents.push(...events);
     }
 
-    for (const event of application.statusHistory) {
-      mappedEvents.push({
-        name: event.label,
-        startDate: new Date(event.time),
-        isFulfilled: true,
-      });
-    }
+    // TODO this will be covered in next status tickets
+    // for (const event of application.statusHistory) {
+    //   mappedEvents.push({
+    //     name: event.label,
+    //     startDate: new Date(event.time),
+    //     isFulfilled: true,
+    //   });
+    // }
 
     for (const [index, decision] of decisions.entries()) {
       if (decision.auditDate) {

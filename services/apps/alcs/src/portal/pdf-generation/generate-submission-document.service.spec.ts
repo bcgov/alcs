@@ -1,6 +1,6 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
@@ -12,14 +12,16 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
-import { Document } from '../../document/document.entity';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -33,6 +35,8 @@ describe('GenerateSubmissionDocumentService', () => {
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockApplicationDocumentService: DeepMocked<ApplicationDocumentService>;
+
+  let mockSubmissionStatus;
 
   beforeEach(async () => {
     mockCdogsService = createMock();
@@ -71,6 +75,11 @@ describe('GenerateSubmissionDocumentService', () => {
       ],
     }).compile();
 
+    mockSubmissionStatus = new ApplicationSubmissionToSubmissionStatus({
+      statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+      submissionUuid: 'fake',
+    });
+
     service = module.get<GenerateSubmissionDocumentService>(
       GenerateSubmissionDocumentService,
     );
@@ -87,6 +96,7 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'NFUP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
@@ -114,6 +124,7 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'TURP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
@@ -141,6 +152,7 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'not a type',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
@@ -173,6 +185,7 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'TURP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([
       new ApplicationDocument({

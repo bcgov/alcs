@@ -1,6 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationModule } from '../../alcs/application/application.module';
+import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
@@ -15,8 +18,6 @@ import { ApplicationParcelOwnershipType } from './application-parcel/application
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
-import { ApplicationStatus } from './application-status/application-status.entity';
-import { ApplicationSubmissionStatusSubscriber } from './application-submission-status.subscriber';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmission } from './application-submission.entity';
@@ -27,17 +28,19 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
   imports: [
     TypeOrmModule.forFeature([
       ApplicationSubmission,
-      ApplicationStatus,
+      ApplicationSubmissionStatusType,
       ApplicationParcel,
       ApplicationParcelOwnershipType,
       ApplicationOwner,
       ApplicationOwnerType,
       NaruSubtype,
+      ApplicationSubmissionToSubmissionStatus,
     ]),
     forwardRef(() => ApplicationModule),
     AuthorizationModule,
     forwardRef(() => DocumentModule),
     forwardRef(() => PdfGenerationModule),
+    ApplicationSubmissionStatusModule,
   ],
   providers: [
     ApplicationSubmissionService,
@@ -46,7 +49,6 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
     ApplicationParcelService,
     ApplicationOwnerService,
     ApplicationOwnerProfile,
-    ApplicationSubmissionStatusSubscriber,
     ApplicationSubmissionValidatorService,
   ],
   controllers: [

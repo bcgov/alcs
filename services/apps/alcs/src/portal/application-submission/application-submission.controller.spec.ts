@@ -9,10 +9,11 @@ import { ApplicationLocalGovernment } from '../../alcs/application/application-c
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -142,8 +143,10 @@ describe('ApplicationSubmissionController', () => {
 
   it('should call out to service when cancelling an application', async () => {
     const mockApplication = new ApplicationSubmission({
-      status: new ApplicationStatus({
-        code: APPLICATION_STATUS.IN_PROGRESS,
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+        submissionUuid: 'fake',
+        effectiveDate: new Date(),
       }),
     });
 
@@ -169,13 +172,13 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
-    mockAppService.verifyAccessByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new ApplicationStatus({
-          code: APPLICATION_STATUS.CANCELLED,
-        }),
+    const mockApp = new ApplicationSubmission();
+    mockAppService.verifyAccessByUuid.mockResolvedValue({
+      ...mockApp,
+      status: new ApplicationSubmissionStatusType({
+        code: SUBMISSION_STATUS.CANCELLED,
       }),
-    );
+    } as any);
 
     const promise = controller.cancel('file-id', {
       user: {

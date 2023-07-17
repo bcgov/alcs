@@ -243,13 +243,13 @@
   <button (click)="onReview(application.fileNumber)" mat-button>
     <div>
       <span
-        *ngIf="application.status.code === APPLICATION_STATUS.IN_REVIEW"
+        *ngIf="application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG"
         (click)="onReview(application.fileNumber)"
         class="subheading2"
         >Continue Application Review</span
       >
       <span
-        *ngIf="application.status.code === APPLICATION_STATUS.SUBMITTED_TO_LG"
+        *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG"
         (click)="onReview(application.fileNumber)"
         class="subheading2"
         >Start Application Review</span

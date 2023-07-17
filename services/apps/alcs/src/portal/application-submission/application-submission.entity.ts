@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -8,20 +9,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
-
-export class StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
 
 export class ProposedLot {
   type: 'Lot' | 'Road Dedication';
@@ -182,13 +176,6 @@ export class ApplicationSubmission extends Base {
   @ManyToOne(() => User)
   createdBy: User;
 
-  @AutoMap()
-  @ManyToOne(() => ApplicationStatus, { nullable: false, eager: true })
-  status: ApplicationStatus;
-
-  @Column()
-  statusCode: string;
-
   @Column({
     type: 'text',
     nullable: true,
@@ -201,15 +188,6 @@ export class ApplicationSubmission extends Base {
     comment: 'Application Type Code from ALCS System',
   })
   typeCode: string;
-
-  @AutoMap(() => StatusHistory)
-  @Column({
-    comment: 'JSONB Column containing the status history of the Application',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
-  })
-  statusHistory: StatusHistory[];
 
   @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
@@ -714,4 +692,46 @@ export class ApplicationSubmission extends Base {
     (appParcel) => appParcel.applicationSubmission,
   )
   parcels: ApplicationParcel[];
+
+  @OneToMany(
+    () => ApplicationSubmissionToSubmissionStatus,
+    (status) => status.submission,
+    {
+      eager: true,
+      persistence: false,
+    },
+  )
+  submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
+
+  private _status: ApplicationSubmissionToSubmissionStatus;
+
+  get status(): ApplicationSubmissionToSubmissionStatus {
+    return this._status;
+  }
+
+  private set status(value: ApplicationSubmissionToSubmissionStatus) {
+    this._status = value;
+  }
+
+  @AfterLoad()
+  populateCurrentStatus() {
+    // using JS date object is intentional for performance reasons
+    const now = Date.now();
+
+    for (const status of this.submissionStatuses) {
+      const effectiveDate = status.effectiveDate?.getTime();
+      const currentEffectiveDate = this.status?.effectiveDate?.getTime();
+
+      if (
+        effectiveDate &&
+        effectiveDate <= now &&
+        (!currentEffectiveDate ||
+          effectiveDate > currentEffectiveDate ||
+          (effectiveDate === currentEffectiveDate &&
+            status.statusType.weight > this.status.statusType.weight))
+      ) {
+        this.status = status;
+      }
+    }
+  }
 }

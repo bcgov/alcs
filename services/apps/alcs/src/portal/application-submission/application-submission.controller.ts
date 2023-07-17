@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import {
   ApplicationSubmissionCreateDto,
@@ -170,7 +170,7 @@ export class ApplicationSubmissionController {
 
     if (
       localGovernment === null &&
-      application.status.code !== APPLICATION_STATUS.IN_PROGRESS
+      application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
     ) {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
@@ -204,7 +204,7 @@ export class ApplicationSubmissionController {
         );
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
-          APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
         return await this.applicationSubmissionService.submitToLg(
