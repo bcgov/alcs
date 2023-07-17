@@ -16,7 +16,7 @@ export class LogoutController {
       targetFrontend === 'portal'
         ? this.config.get<string>('PORTAL.FRONTEND_ROOT')
         : this.config.get<string>('ALCS.FRONTEND_ROOT');
-    const logoutUrl = `${authServerUrl}/realms/${realm}/protocol/openid-connect/logout?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+    const logoutUrl = `${authServerUrl}/realms/${realm}/protocol/openid-connect/logout?client_id=${clientId}&post_logout_redirect_uri=${encodeURIComponent(
       frontend,
     )}`;
 
