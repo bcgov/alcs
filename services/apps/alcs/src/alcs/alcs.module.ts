@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
+import { ApplicationSubmissionStatusModule } from '../application-submission-status/application-submission-status.module';
 import { AdminModule } from './admin/admin.module';
 import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { ApplicationModule } from './application/application.module';
@@ -54,6 +55,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: NoticeOfIntentDecisionModule },
       { path: 'alcs', module: StaffJournalModule },
       { path: 'alcs', module: SearchModule },
+      { path: 'alcs', module: ApplicationSubmissionStatusModule },
     ]),
   ],
   controllers: [],

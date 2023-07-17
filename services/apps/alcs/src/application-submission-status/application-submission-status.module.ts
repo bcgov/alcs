@@ -4,6 +4,7 @@ import { ApplicationSubmission } from '../portal/application-submission/applicat
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+import { ApplicationSubmissionStatusController } from './application-submission-status.controller';
 
 @Module({
   imports: [
@@ -15,5 +16,6 @@ import { ApplicationSubmissionToSubmissionStatus } from './submission-status.ent
   ],
   providers: [ApplicationSubmissionStatusService],
   exports: [ApplicationSubmissionStatusService],
+  controllers: [ApplicationSubmissionStatusController],
 })
 export class ApplicationSubmissionStatusModule {}
