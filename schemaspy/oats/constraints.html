@@ -80,7 +80,7 @@
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <i class="ion ion-key"></i>
-                            <h3 class="box-title">0 Foreign Key Constraints</h3>
+                            <h3 class="box-title">96 Foreign Key Constraints</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -103,6 +103,1746 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td>oats_issu_inqc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.inquiry_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_inquiry_codes.html'>oats_inquiry_codes</a><span>.inquiry_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_issu_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.local_gov_pog_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_issu_pog_fk2</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.filed_by_pog_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_issu_cmpc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.complaint_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_complaint_codes.html'>oats_complaint_codes</a><span>.complaint_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_noir_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_notice_intent_info_rqst.html'>oats_notice_intent_info_rqst</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_aafs_alcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_fees.html'>oats_alr_application_fees</a><span>.alr_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_change_codes.html'>oats_alr_change_codes</a><span>.alr_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_aafs_apcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_fees.html'>oats_alr_application_fees</a><span>.application_class_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_application_class_codes.html'>oats_application_class_codes</a><span>.application_class_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pog_org_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_organizations.html'>oats_organizations</a><span>.organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pog_per_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_persons.html'>oats_persons</a><span>.person_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_plrn_plrv_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_review_notes.html'>oats_planning_review_notes</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_auad_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_unvalidated_app_data.html'>oats_alr_unvalidated_app_data</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cond_apcp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_conditions.html'>oats_conditions</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cond_cdcd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_conditions.html'>oats_conditions</a><span>.condition_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_condition_codes.html'>oats_condition_codes</a><span>.condition_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sddp_subd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdiv_design_parcels.html'>oats_subdiv_design_parcels</a><span>.subdivision_design_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdivision_designs.html'>oats_subdivision_designs</a><span>.subdivision_design_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_ause_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_adjacent_land_uses.html'>oats_adjacent_land_uses</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_ause_nftc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_adjacent_land_uses.html'>oats_adjacent_land_uses</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_type_codes.html'>oats_nonfarm_use_type_codes</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_docu_docd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.document_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_document_codes.html'>oats_document_codes</a><span>.document_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_docu_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_docu_issu_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_od_sp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.subject_property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a><span>.subject_property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_od_dsc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.document_source_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_document_source_codes.html'>oats_document_source_codes</a><span>.document_source_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_docu_plrv_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_documents.html'>oats_documents</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_appy_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_parties.html'>oats_alr_application_parties</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_appy_aprc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_parties.html'>oats_alr_application_parties</a><span>.alr_appl_role_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_role_codes.html'>oats_alr_appl_role_codes</a><span>.alr_appl_role_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_appy_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_parties.html'>oats_alr_application_parties</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_org_org_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_organizations.html'>oats_organizations</a><span>.parent_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_organizations.html'>oats_organizations</a><span>.organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_org_otp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_organizations.html'>oats_organizations</a><span>.organization_type_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_organization_types.html'>oats_organization_types</a><span>.organization_type_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_aadc_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_aadc_rreq_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a><span>.reconsideration_request_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a><span>.reconsideration_request_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_rreq_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cpin_aadc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_compliance_inspections.html'>oats_compliance_inspections</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_ccrp_cond_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_condition_compliance_rpts.html'>oats_condition_compliance_rpts</a><span>.condition_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_conditions.html'>oats_conditions</a><span>.condition_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sbjp_prty_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a><span>.property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_properties.html'>oats_properties</a><span>.property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sbjp_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sbjp_issu_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_acmp_accd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_accomplishments.html'>oats_accomplishments</a><span>.accomplishment_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_accomplishment_codes.html'>oats_accomplishment_codes</a><span>.accomplishment_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_acmp_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_accomplishments.html'>oats_accomplishments</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sdpi_apcp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdiv_parcel_intents.html'>oats_subdiv_parcel_intents</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sdpi_sddp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdiv_parcel_intents.html'>oats_subdiv_parcel_intents</a><span>.subdiv_design_parcel_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdiv_design_parcels.html'>oats_subdiv_design_parcels</a><span>.subdiv_design_parcel_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_swor_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_stop_work_order_rcpnts.html'>oats_stop_work_order_rcpnts</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_swor_issu_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_stop_work_order_rcpnts.html'>oats_stop_work_order_rcpnts</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_nfuc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_type_codes.html'>oats_nonfarm_use_type_codes</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_pic_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.property_interest_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interest_codes.html'>oats_property_interest_codes</a><span>.property_interest_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_ltcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.land_title_charge_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_land_title_charge_codes.html'>oats_land_title_charge_codes</a><span>.land_title_charge_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_powc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.property_owner_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_owner_type_codes.html'>oats_property_owner_type_codes</a><span>.property_owner_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_prin_sbjp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_property_interests.html'>oats_property_interests</a><span>.subject_property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a><span>.subject_property_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_sjou_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_staff_journal_entries.html'>oats_staff_journal_entries</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_rsut_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.rsdntl_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_rsdntl_use_type_codes.html'>oats_rsdntl_use_type_codes</a><span>.rsdntl_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_exat_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.exclsn_app_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_exclsn_app_type_codes.html'>oats_exclsn_app_type_codes</a><span>.exclsn_app_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_aadc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_alcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_change_codes.html'>oats_alr_change_codes</a><span>.alr_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_mapp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.amendment_year</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.amendment_period</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_map_amendment_periods.html'>oats_map_amendment_periods</a><span>.amendment_year</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href='tables/oats_map_amendment_periods.html'>oats_map_amendment_periods</a><span>.amendment_period</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_cpsc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.capability_source_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_capability_source_codes.html'>oats_capability_source_codes</a><span>.capability_source_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_nfst_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.nonfarm_use_subtype_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_subtype_codes.html'>oats_nonfarm_use_subtype_codes</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_subtype_codes.html'>oats_nonfarm_use_subtype_codes</a><span>.nonfarm_use_subtype_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apcp_agcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.agri_capability_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_agri_capability_codes.html'>oats_agri_capability_codes</a><span>.agri_capability_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apmt_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_meetings.html'>oats_alr_application_meetings</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_apmt_apmc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_application_meetings.html'>oats_alr_application_meetings</a><span>.alr_appl_meeting_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_meeting_codes.html'>oats_alr_appl_meeting_codes</a><span>.alr_appl_meeting_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_scel_apcp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_soil_change_elements.html'>oats_soil_change_elements</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_scel_sccd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_soil_change_elements.html'>oats_soil_change_elements</a><span>.soil_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_soil_change_codes.html'>oats_soil_change_codes</a><span>.soil_change_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_subd_apcp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_subdivision_designs.html'>oats_subdivision_designs</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a><span>.alr_appl_component_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cmrc_cmdc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_committee_recommendations.html'>oats_committee_recommendations</a><span>.committee_decision_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_committee_decision_codes.html'>oats_committee_decision_codes</a><span>.committee_decision_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cmrc_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_committee_recommendations.html'>oats_committee_recommendations</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cmrc_cmtc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_committee_recommendations.html'>oats_committee_recommendations</a><span>.committee_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_committee_type_codes.html'>oats_committee_type_codes</a><span>.committee_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lgsv_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_services.html'>oats_local_gov_services</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lgsv_lgsc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_services.html'>oats_local_gov_services</a><span>.local_gov_service_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_service_codes.html'>oats_local_gov_service_codes</a><span>.local_gov_service_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_isnt_issu_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issue_notes.html'>oats_issue_notes</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_appl_apcc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.application_class_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_application_class_codes.html'>oats_application_class_codes</a><span>.application_class_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_appl_as_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alc_staff_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alc_staffs.html'>oats_alc_staffs</a><span>.alc_staff_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_plrv_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_plrv_plrc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a><span>.planning_review_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_review_codes.html'>oats_planning_review_codes</a><span>.planning_review_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_fiin_ficd_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a><span>.financial_instrument_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instrument_cds.html'>oats_financial_instrument_cds</a><span>.financial_instrument_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_fiin_aadc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a><span>.alr_appl_decision_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_fiin_finc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a><span>.financial_institute_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_institute_codes.html'>oats_financial_institute_codes</a><span>.financial_institute_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_fiin_payc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a><span>.payment_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_payment_type_codes.html'>oats_payment_type_codes</a><span>.payment_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_fiin_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lgr_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_government_reports.html'>oats_local_government_reports</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lgr_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_government_reports.html'>oats_local_government_reports</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_nfst_nftc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_subtype_codes.html'>oats_nonfarm_use_subtype_codes</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_nonfarm_use_type_codes.html'>oats_nonfarm_use_type_codes</a><span>.nonfarm_use_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lupt_pttc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_land_use_permits.html'>oats_land_use_permits</a><span>.permit_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_permit_type_codes.html'>oats_permit_type_codes</a><span>.permit_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lupt_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_land_use_permits.html'>oats_land_use_permits</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lact_lgac_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_actions.html'>oats_local_gov_actions</a><span>.local_gov_action_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_action_codes.html'>oats_local_gov_action_codes</a><span>.local_gov_action_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_lact_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_local_gov_actions.html'>oats_local_gov_actions</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pad_adr_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_org_addresses.html'>oats_person_org_addresses</a><span>.address_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_addresses.html'>oats_addresses</a><span>.address_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pad_pog_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_org_addresses.html'>oats_person_org_addresses</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_organizations.html'>oats_person_organizations</a><span>.person_organization_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pad_atp_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_person_org_addresses.html'>oats_person_org_addresses</a><span>.address_type_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_address_types.html'>oats_address_types</a><span>.address_type_cd</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_en_esc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_email_notifications.html'>oats_email_notifications</a><span>.email_status_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_email_status_codes.html'>oats_email_status_codes</a><span>.email_status_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_en_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_email_notifications.html'>oats_email_notifications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_en_etc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_email_notifications.html'>oats_email_notifications</a><span>.email_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_email_type_codes.html'>oats_email_type_codes</a><span>.email_type_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pldc_plrv_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_decisions.html'>oats_planning_decisions</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a><span>.planning_review_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_pldc_plac_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_decisions.html'>oats_planning_decisions</a><span>.planning_acceptance_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_planning_acceptance_codes.html'>oats_planning_acceptance_codes</a><span>.planning_acceptance_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_cmap_issu_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_complaint_appeals.html'>oats_complaint_appeals</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_issues.html'>oats_issues</a><span>.issue_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_rlap_appl_fk2</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_related_alr_applications.html'>oats_related_alr_applications</a><span>.secondary_alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_rlap_appl_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_related_alr_applications.html'>oats_related_alr_applications</a><span>.primary_alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a><span>.alr_application_id</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>oats_rlap_relc_fk</td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_related_alr_applications.html'>oats_related_alr_applications</a><span>.relationship_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table border='0' cellspacing='0' cellpadding='0'>
+                                                <tr>
+                                                    <td><a href='tables/oats_relationship_codes.html'>oats_relationship_codes</a><span>.relationship_code</span></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td><span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>Restrict delete</span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -132,6 +1872,441 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr>
+                                        <td><a href='tables/oats_issues.html'>oats_issues</a></td>
+                                        <td>avcon_1238100890_issu__000</td>
+                                        <td>(((issu_type)::text &#61; ANY ((ARRAY[&#39;INQ&#39;::character varying, &#39;CMP&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_issues.html'>oats_issues</a></td>
+                                        <td>avcon_1238100890_recom_000</td>
+                                        <td>(((recommend_land_remediation_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_issues.html'>oats_issues</a></td>
+                                        <td>avcon_1238100890_remed_000</td>
+                                        <td>(((remediation_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_issues.html'>oats_issues</a></td>
+                                        <td>avcon_1238100890_swo_c_000</td>
+                                        <td>(((swo_complied_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_issues.html'>oats_issues</a></td>
+                                        <td>oats_issu_chk</td>
+                                        <td>(((((issu_type)::text &#61; &#39;CMP&#39;::text) AND (inquiry_code IS NULL) AND (complaint_code IS NOT NULL)) OR (((issu_type)::text &#61; &#39;INQ&#39;::text) AND (inquiry_code IS NOT NULL) AND (complaint_code IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_by IS NULL) AND (swo_issued_date IS NULL) AND (swo_terms IS NULL) AND (swo_review_requested_date IS NULL) AND (swo_ceo_review_date IS NULL) AND (swo_ceo_review_description IS NULL) AND (swo_ceo_review_result IS NULL) AND (swo_complied_ind IS NULL) AND (recommend_fine_amt IS NULL) AND (recommend_land_remediation_ind IS NULL) AND (ceo_hearing_date IS NULL) AND (ceo_decision_date IS NULL) AND (fine_amt IS NULL) AND (fine_due_date IS NULL) AND (fine_received_date IS NULL) AND (remediation_required_ind IS NULL) AND (remediation_due_date IS NULL) AND (remediation_completion_date IS NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_application_fees.html'>oats_alr_application_fees</a></td>
+                                        <td>avcon_1362772157_submi_000</td>
+                                        <td>(((submit_to_lg_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_meeting_codes.html'>oats_alr_appl_meeting_codes</a></td>
+                                        <td>avcon_1238100890_syste_024</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_financial_instrument_cds.html'>oats_financial_instrument_cds</a></td>
+                                        <td>avcon_1238100890_exter_000</td>
+                                        <td>(((externally_managed_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_financial_instrument_cds.html'>oats_financial_instrument_cds</a></td>
+                                        <td>avcon_1238100890_syste_006</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_nonfarm_use_type_codes.html'>oats_nonfarm_use_type_codes</a></td>
+                                        <td>avcon_1238100890_syste_004</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_conditions.html'>oats_conditions</a></td>
+                                        <td>avcon_1238100890_appro_001</td>
+                                        <td>(((approval_dependant_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[]))) NOT VALID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_conditions.html'>oats_conditions</a></td>
+                                        <td>avcon_1238100890_secur_000</td>
+                                        <td>(((security_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[]))) NOT VALID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_relationship_codes.html'>oats_relationship_codes</a></td>
+                                        <td>avcon_1238100890_syste_017</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_subdiv_design_parcels.html'>oats_subdiv_design_parcels</a></td>
+                                        <td>avcon_1238100890_fully_000</td>
+                                        <td>(((fully_in_alr_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_subdiv_design_parcels.html'>oats_subdiv_design_parcels</a></td>
+                                        <td>avcon_1238100890_remai_000</td>
+                                        <td>(((remainder_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_adjacent_land_uses.html'>oats_adjacent_land_uses</a></td>
+                                        <td>oats_ause_cd_ck</td>
+                                        <td>(((cardinal_direction)::text &#61; ANY ((ARRAY[&#39;NORTH&#39;::character varying, &#39;EAST&#39;::character varying, &#39;SOUTH&#39;::character varying, &#39;WEST&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_documents.html'>oats_documents</a></td>
+                                        <td>oats_docu_chk</td>
+                                        <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_documents.html'>oats_documents</a></td>
+                                        <td>oats_od_alvi_chk</td>
+                                        <td>(((app_lg_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_documents.html'>oats_documents</a></td>
+                                        <td>oats_od_pvi_chk</td>
+                                        <td>(((publicly_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_documents.html'>oats_documents</a></td>
+                                        <td>oats_od_risri_chk</td>
+                                        <td>(((referenced_in_staff_rpt_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_organizations.html'>oats_organizations</a></td>
+                                        <td>oats_org_chk</td>
+                                        <td>(((((org_type)::text &#61; &#39;BGO&#39;::text) AND (ministry_cd IS NOT NULL) AND (organization_unit_cd IS NOT NULL) AND (alias_name IS NULL)) OR (((org_type)::text &#61; &#39;NBC&#39;::text) AND (ministry_cd IS NULL) AND (organization_unit_cd IS NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_organizations.html'>oats_organizations</a></td>
+                                        <td>oats_org_ot_chk</td>
+                                        <td>(((org_type)::text &#61; ANY ((ARRAY[&#39;BGO&#39;::character varying, &#39;NBC&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a></td>
+                                        <td>oats_aadc_chk</td>
+                                        <td>((((alr_application_id IS NOT NULL) AND (reconsideration_request_id IS NULL)) OR ((alr_application_id IS NULL) AND (reconsideration_request_id IS NOT NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a></td>
+                                        <td>oats_aadc_nsri_chk</td>
+                                        <td>(((no_statistics_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_decisions.html'>oats_alr_appl_decisions</a></td>
+                                        <td>oats_aadc_ori_chk</td>
+                                        <td>(((outright_refusal_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_capability_source_codes.html'>oats_capability_source_codes</a></td>
+                                        <td>avcon_1238100890_syste_019</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_planning_review_codes.html'>oats_planning_review_codes</a></td>
+                                        <td>avcon_1238100890_syste_021</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a></td>
+                                        <td>oats_rreq_eii_chk</td>
+                                        <td>(((error_information_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a></td>
+                                        <td>oats_rreq_nii_chk</td>
+                                        <td>(((new_information_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a></td>
+                                        <td>oats_rreq_npi_chk</td>
+                                        <td>(((new_proposal_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_reconsideration_requests.html'>oats_reconsideration_requests</a></td>
+                                        <td>oats_rreq_sr_chk</td>
+                                        <td>(((staff_recommendation)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying, &#39;NR&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_planning_acceptance_codes.html'>oats_planning_acceptance_codes</a></td>
+                                        <td>avcon_1238100890_syste_000</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_persons.html'>oats_persons</a></td>
+                                        <td>avcon_1238100890_per_t_000</td>
+                                        <td>(((per_type)::text &#61; ANY ((ARRAY[&#39;EMP&#39;::character varying, &#39;BPA&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_persons.html'>oats_persons</a></td>
+                                        <td>oats_per_chk</td>
+                                        <td>(((((per_type)::text &#61; &#39;BPA&#39;::text) AND (employee_id IS NULL)) OR (((per_type)::text &#61; &#39;EMP&#39;::text) AND ((employee_id IS NULL) OR (employee_id IS NOT NULL)))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a></td>
+                                        <td>oats_sbjp_aali_chk</td>
+                                        <td>(((alr_application_land_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a></td>
+                                        <td>oats_sbjp_chk</td>
+                                        <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_subject_properties.html'>oats_subject_properties</a></td>
+                                        <td>oats_sp_isfi_000</td>
+                                        <td>(((farm_land_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_property_owner_type_codes.html'>oats_property_owner_type_codes</a></td>
+                                        <td>avcon_1238100890_syste_014</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_financial_institute_codes.html'>oats_financial_institute_codes</a></td>
+                                        <td>avcon_1238100890_syste_013</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_permit_type_codes.html'>oats_permit_type_codes</a></td>
+                                        <td>avcon_1238100890_syste_002</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_property_interests.html'>oats_property_interests</a></td>
+                                        <td>oats_prin_ai_chk</td>
+                                        <td>(((active_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_property_interests.html'>oats_property_interests</a></td>
+                                        <td>oats_prin_chk</td>
+                                        <td>(((((prin_type)::text &#61; &#39;CHG&#39;::text) AND (property_owner_type_code IS NULL) AND (land_title_charge_code IS NOT NULL) AND (active_ind IS NULL) AND (charge_nbr IS NOT NULL) AND (charge_desc IS NOT NULL)) OR (((prin_type)::text &#61; &#39;OWN&#39;::text) AND (person_organization_id IS NOT NULL) AND (property_owner_type_code IS NOT NULL) AND (land_title_charge_code IS NULL) AND (active_ind IS NOT NULL) AND (charge_nbr IS NULL) AND (charge_desc IS NULL)) OR (((prin_type)::text &#61; &#39;NOOWN&#39;::text) AND (person_organization_id IS NULL) AND (property_owner_type_code IS NOT NULL) AND (active_ind IS NOT NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_property_interests.html'>oats_property_interests</a></td>
+                                        <td>oats_prin_pt_chk</td>
+                                        <td>(((prin_type)::text &#61; ANY ((ARRAY[&#39;OWN&#39;::character varying, &#39;CHG&#39;::character varying, &#39;NOOWN&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_accomplishment_codes.html'>oats_accomplishment_codes</a></td>
+                                        <td>avcon_1238100890_publi_000</td>
+                                        <td>(((published_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_accomplishment_codes.html'>oats_accomplishment_codes</a></td>
+                                        <td>avcon_1238100890_syste_023</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_local_gov_service_codes.html'>oats_local_gov_service_codes</a></td>
+                                        <td>avcon_1238100890_syste_001</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_change_codes.html'>oats_alr_change_codes</a></td>
+                                        <td>oats_alcc_sri_chk</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_committee_decision_codes.html'>oats_committee_decision_codes</a></td>
+                                        <td>avcon_1238100890_syste_005</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_aai_ck</td>
+                                        <td>(((agricultural_activities_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_aii_ck</td>
+                                        <td>(((alr_impact_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_asi_ck</td>
+                                        <td>(((applicationshare_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_chk3</td>
+                                        <td>(((((alr_change_code)::text &#61; &#39;NFU&#39;::text) AND ((nonfarm_use_type_code IS NOT NULL) AND (nonfarm_use_subtype_code IS NOT NULL))) OR ((nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)) OR (((alr_change_code)::text &#61; ANY ((ARRAY[&#39;INC&#39;::character varying, &#39;EXC&#39;::character varying, &#39;SDV&#39;::character varying, &#39;SCH&#39;::character varying])::text[])) AND (nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL))))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_hsi_ck</td>
+                                        <td>(((homesite_severance_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_mni_ck</td>
+                                        <td>(((material_need_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_components.html'>oats_alr_appl_components</a></td>
+                                        <td>oats_apcp_oni_ck</td>
+                                        <td>(((owners_notified_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_inquiry_codes.html'>oats_inquiry_codes</a></td>
+                                        <td>avcon_1238100890_syste_008</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_acc_ck</td>
+                                        <td>(((application_class_code)::text &#61; ANY ((ARRAY[&#39;LOA&#39;::character varying, &#39;BLK&#39;::character varying, &#39;SCH&#39;::character varying, &#39;NOI&#39;::character varying, &#39;NAN&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_api_ck</td>
+                                        <td>(((agrologist_plan_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_fni_ck</td>
+                                        <td>(((followup_noi_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_fwi_ck</td>
+                                        <td>(((fee_waived_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_mni_ck</td>
+                                        <td>(((ministry_notice_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_ospi_ck</td>
+                                        <td>(((on_site_processing_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_sfwlgi_ck</td>
+                                        <td>(((split_fee_with_local_gov_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_applications.html'>oats_alr_applications</a></td>
+                                        <td>oats_appl_srw_ck</td>
+                                        <td>(((srw_ind)::text &#61; &#39;Y&#39;::text))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_local_gov_action_codes.html'>oats_local_gov_action_codes</a></td>
+                                        <td>avcon_1238100890_syste_016</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_committee_type_codes.html'>oats_committee_type_codes</a></td>
+                                        <td>avcon_1238100890_syste_022</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_payment_type_codes.html'>oats_payment_type_codes</a></td>
+                                        <td>avcon_1238100900_syste_013</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[]))) NOT VALID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_complaint_codes.html'>oats_complaint_codes</a></td>
+                                        <td>avcon_1238100890_syste_020</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a></td>
+                                        <td>avcon_1238100890_gis_c_000</td>
+                                        <td>(((gis_created_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_planning_reviews.html'>oats_planning_reviews</a></td>
+                                        <td>avcon_1238100890_open__000</td>
+                                        <td>(((open_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_land_title_charge_codes.html'>oats_land_title_charge_codes</a></td>
+                                        <td>avcon_1238100890_syste_011</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_financial_instruments.html'>oats_financial_instruments</a></td>
+                                        <td>avcon_1238100890_auto__000</td>
+                                        <td>(((auto_renew_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying, NULL::character varying])::text[]))) NOT VALID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_local_government_reports.html'>oats_local_government_reports</a></td>
+                                        <td>avcon_1362772157_autho_000</td>
+                                        <td>(((authorization_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_local_government_reports.html'>oats_local_government_reports</a></td>
+                                        <td>avcon_1362772157_commu_000</td>
+                                        <td>(((community_pln_compliance_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying, &#39;X&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_local_government_reports.html'>oats_local_government_reports</a></td>
+                                        <td>avcon_1362772157_zonin_000</td>
+                                        <td>(((zoning_compliance_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying, &#39;X&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_nonfarm_use_subtype_codes.html'>oats_nonfarm_use_subtype_codes</a></td>
+                                        <td>avcon_1238100890_syste_015</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_document_codes.html'>oats_document_codes</a></td>
+                                        <td>oats_docd_pvi_chk</td>
+                                        <td>(((publicly_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_document_codes.html'>oats_document_codes</a></td>
+                                        <td>oats_docd_sri_chk</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_alr_appl_role_codes.html'>oats_alr_appl_role_codes</a></td>
+                                        <td>avcon_1238100890_syste_003</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_planning_decisions.html'>oats_planning_decisions</a></td>
+                                        <td>avcon_1238100890_decis_000</td>
+                                        <td>(((decision_source)::text &#61; ANY ((ARRAY[&#39;STAF&#39;::character varying, &#39;COMM&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_agri_capability_codes.html'>oats_agri_capability_codes</a></td>
+                                        <td>avcon_1238100890_syste_010</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_application_class_codes.html'>oats_application_class_codes</a></td>
+                                        <td>avcon_1238100890_appli_001</td>
+                                        <td>(((application_class_code)::text &#61; ANY ((ARRAY[&#39;LOA&#39;::character varying, &#39;BLK&#39;::character varying, &#39;SCH&#39;::character varying, &#39;NOI&#39;::character varying, &#39;NAN&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_application_class_codes.html'>oats_application_class_codes</a></td>
+                                        <td>avcon_1238100890_syste_025</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_complaint_appeals.html'>oats_complaint_appeals</a></td>
+                                        <td>avcon_1238100890_uphel_000</td>
+                                        <td>(((upheld_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_condition_codes.html'>oats_condition_codes</a></td>
+                                        <td>avcon_1238100890_syste_009</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_related_alr_applications.html'>oats_related_alr_applications</a></td>
+                                        <td>avcon_1238100890_inclu_000</td>
+                                        <td>(((include_in_staff_report_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href='tables/oats_soil_change_codes.html'>oats_soil_change_codes</a></td>
+                                        <td>avcon_1238100890_syste_012</td>
+                                        <td>(((system_required_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
