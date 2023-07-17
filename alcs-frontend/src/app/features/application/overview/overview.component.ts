@@ -177,6 +177,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
     // }
 
     for (const [index, decision] of decisions.entries()) {
+      if (decision.isDraft) {
+        continue;
+      }
+
       if (decision.auditDate) {
         mappedEvents.push({
           name: `Audited Decision #${decisions.length - index}`,

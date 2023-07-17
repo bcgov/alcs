@@ -282,6 +282,7 @@ const initApplicationDecisionMeetingMock = (
 
 const initApplicationDecisionMock = (application?: Application) => {
   return new ApplicationDecision({
+    isDraft: false,
     outcome: {
       code: 'CODE',
       label: 'label',

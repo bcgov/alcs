@@ -131,7 +131,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.date,
-          mapFrom((a) => a.date.getTime()),
+          mapFrom((a) => a.date?.getTime()),
         ),
         forMember(
           (ad) => ad.auditDate,

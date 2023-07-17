@@ -108,8 +108,12 @@ describe('ApplicationService', () => {
 
     applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
+      applicationMockEntity,
+    );
     applicationRepositoryMock.save.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.update.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.exist.mockResolvedValue(true);
   });
 
   it('should be defined', () => {
@@ -223,18 +227,17 @@ describe('ApplicationService', () => {
   });
 
   it('should call through for updateByUuid', async () => {
-    applicationRepositoryMock.softRemove.mockResolvedValue({} as any);
-
     await applicationService.updateByUuid(applicationMockEntity.uuid, {
       applicant: 'new-applicant',
     });
 
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+    expect(applicationRepositoryMock.exist).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 
   it('should fail to update if application does not exist', async () => {
-    applicationRepositoryMock.findOne.mockResolvedValue(null);
+    applicationRepositoryMock.exist.mockResolvedValue(false);
 
     const promise = applicationService.updateByUuid(
       applicationMockEntity.uuid,
@@ -249,7 +252,7 @@ describe('ApplicationService', () => {
       ),
     );
 
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.exist).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
   });
 
@@ -281,10 +284,6 @@ describe('ApplicationService', () => {
 
   it('should get application by uuid', async () => {
     const fakeUuid = 'fake';
-
-    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
-      {} as Application,
-    );
 
     const result = await applicationService.getByUuidOrFail(fakeUuid);
 
