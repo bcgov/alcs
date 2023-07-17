@@ -3,7 +3,11 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { AlcsApplicationSubmissionDto } from '../../alcs/application/application.dto';
 import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
-import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
+import {
+  ApplicationStatusDto,
+  ApplicationSubmissionToSubmissionStatusDto,
+} from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import {
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
@@ -144,6 +148,27 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
             } else {
               return [];
             }
+          }),
+        ),
+      );
+      createMap(
+        mapper,
+        ApplicationSubmissionToSubmissionStatus,
+        ApplicationSubmissionToSubmissionStatusDto,
+        forMember(
+          (a) => a.effectiveDate,
+          mapFrom((ad) => {
+            return ad.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return this.mapper.map(
+              ad.statusType,
+              ApplicationSubmissionStatusType,
+              ApplicationStatusDto,
+            );
           }),
         ),
       );

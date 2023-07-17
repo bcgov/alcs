@@ -16,6 +16,7 @@ export enum SUBMISSION_STATUS {
   CANCELLED = 'CANC',
 }
 
+// TODO rename to better reflect the origin?
 export class ApplicationStatusDto extends BaseCodeDto {
   @AutoMap()
   alcsBackgroundColor: string;
@@ -28,4 +29,21 @@ export class ApplicationStatusDto extends BaseCodeDto {
 
   @AutoMap()
   portalColor: string;
+
+  @AutoMap()
+  weight: number;
+}
+
+export class ApplicationSubmissionToSubmissionStatusDto {
+  @AutoMap()
+  submissionUuid: string;
+
+  @AutoMap()
+  effectiveDate: number;
+
+  @AutoMap()
+  statusTypeCode: string;
+
+  @AutoMap(() => ApplicationStatusDto)
+  status: ApplicationStatusDto;
 }
