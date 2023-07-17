@@ -1,10 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  ApplicationSubmissionDto,
-  SUBMISSION_STATUS,
-} from '../../../services/application-submission/application-submission.dto';
+import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 
 @Component({
@@ -23,18 +20,6 @@ export class ApplicationListComponent implements OnInit {
     'lastUpdated',
     'actions',
   ];
-
-  statusToCssMap = new Map<string, string>([
-    [SUBMISSION_STATUS.IN_PROGRESS, 'in-progress'],
-    [SUBMISSION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
-    [SUBMISSION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
-    [SUBMISSION_STATUS.IN_REVIEW_BY_LG, 'in-review'],
-    [SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG, 'refused-to-forward'],
-    [SUBMISSION_STATUS.INCOMPLETE, 'incomplete'],
-    [SUBMISSION_STATUS.WRONG_GOV, 'wrong-government'],
-    [SUBMISSION_STATUS.CANCELLED, 'cancelled'],
-    [SUBMISSION_STATUS.ALC_DECISION, 'alc-decision'],
-  ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

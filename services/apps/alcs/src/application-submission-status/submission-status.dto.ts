@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { BaseCodeDto } from '../common/dtos/base.dto';
 
 export enum SUBMISSION_STATUS {
@@ -15,4 +16,16 @@ export enum SUBMISSION_STATUS {
   CANCELLED = 'CANC',
 }
 
-export class ApplicationStatusDto extends BaseCodeDto {}
+export class ApplicationStatusDto extends BaseCodeDto {
+  @AutoMap()
+  alcsBackgroundColor: string;
+
+  @AutoMap()
+  alcsColor: string;
+
+  @AutoMap()
+  portalBackgroundColor: string;
+
+  @AutoMap()
+  portalColor: string;
+}

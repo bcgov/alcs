@@ -8,36 +8,6 @@
   font-weight: bold;
 }
 
-.incomplete,
-.wrong-government {
-  background-color: colors.$accent-color-light;
-  color: colors.$accent-color-dark;
-}
-
-.submitted-to-alc,
-.submitted-to-lg {
-  background-color: colors.$primary-color-light;
-  color: colors.$primary-color-dark;
-}
-
-.in-progress,
-.in-review {
-  background-color: colors.$secondary-color-light;
-  color: colors.$secondary-color-dark;
-}
-
-.cancelled,
-.refused-to-forward {
-  background-color: colors.$grey-light;
-  color: colors.$grey-dark;
-}
-
-.alc-decision,
-.ceo-decision {
-  background-color: #C08106;
-  color: white;
-}
-
 .table-wrapper {
   overflow-x: auto;
 

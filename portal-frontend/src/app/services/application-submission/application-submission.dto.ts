@@ -18,6 +18,8 @@ export enum SUBMISSION_STATUS {
 
 export interface ApplicationStatusDto extends BaseCodeDto {
   code: SUBMISSION_STATUS;
+  portalBackgroundColor: string;
+  portalColor: string;
 }
 
 export interface NaruSubtypeDto extends BaseCodeDto {}
