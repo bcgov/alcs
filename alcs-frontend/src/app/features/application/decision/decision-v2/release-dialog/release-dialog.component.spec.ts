@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationStatusTypeDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 
 import { ReleaseDialogComponent } from './release-dialog.component';
@@ -15,7 +15,7 @@ describe('ReleaseDialogComponent', () => {
 
   beforeEach(async () => {
     mockApplicationService = createMock();
-    mockApplicationService.$applicationStatuses = new BehaviorSubject<ApplicationStatusTypeDto[]>([]);
+    mockApplicationService.$applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
 
     await TestBed.configureTestingModule({
       declarations: [ReleaseDialogComponent],

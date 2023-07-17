@@ -367,4 +367,18 @@ describe('ApplicationController', () => {
     expect(applicationService.getOrFail).toBeCalledTimes(1);
     expect(applicationService.mapToDtos).toBeCalledTimes(1);
   });
+
+  it('should call through for cancel', async () => {
+    applicationService.cancel.mockResolvedValue();
+    await controller.cancel(mockApplicationEntity.uuid);
+
+    expect(applicationService.cancel).toBeCalledTimes(1);
+  });
+
+  it('should call through for uncancel', async () => {
+    applicationService.uncancel.mockResolvedValue();
+    await controller.uncancel(mockApplicationEntity.uuid);
+
+    expect(applicationService.uncancel).toBeCalledTimes(1);
+  });
 });

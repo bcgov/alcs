@@ -2,6 +2,6 @@
   <p>{{ data.body }}</p>
 </div>
 <div class="button-container" mat-dialog-actions align="end">
-  <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="true">Yes</button>
+  <button mat-stroked-button color="primary" [mat-dialog-close]="false">{{ data.cancelButtonText ?? 'Cancel' }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="true">{{ data.yesButtonText ?? 'Yes' }}</button>
 </div>
