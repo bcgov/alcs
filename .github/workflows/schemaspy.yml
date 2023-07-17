@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  NODE_ENV: prod
+  NODE_ENV: test
 
 jobs:
   generate_schemaspy:
