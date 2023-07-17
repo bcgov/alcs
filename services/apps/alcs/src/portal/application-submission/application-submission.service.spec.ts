@@ -197,6 +197,7 @@ describe('ApplicationSubmissionService', () => {
         statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_LG,
         submissionUuid: 'fake',
       }),
+      createdBy: new User(),
     });
     mockRepository.findOne.mockResolvedValue(application);
 

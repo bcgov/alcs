@@ -359,12 +359,14 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: this.DEFAULT_RELATIONS,
+        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
       });
 
     if (
       !existingApplication ||
       (existingApplication &&
+        existingApplication.createdBy.bceidBusinessGuid !==
+          localGovernment.bceidBusinessGuid &&
         !LG_VISIBLE_STATUSES.includes(
           existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
         ))
@@ -411,12 +413,13 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: this.DEFAULT_RELATIONS,
+        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
       });
-
     if (
       !existingApplication ||
       (existingApplication &&
+        existingApplication.createdBy.bceidBusinessGuid !==
+          localGovernment.bceidBusinessGuid &&
         !LG_VISIBLE_STATUSES.includes(
           existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
         ))
