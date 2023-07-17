@@ -7,13 +7,13 @@ export class weightColumnForStatuses1688757069693
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "alcs"."submission_status_type" ADD "weight" smallint NOT NULL DEFAULT '0'`,
+      `ALTER TABLE "alcs"."application_submission_status_type" ADD "weight" smallint NOT NULL DEFAULT '0'`,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "alcs"."submission_status_type" DROP COLUMN "weight"`,
+      `ALTER TABLE "alcs"."application_submission_status_type" DROP COLUMN "weight"`,
     );
   }
 }

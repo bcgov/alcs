@@ -7,13 +7,13 @@ export class populateSubmissionStatuses1689114932307
     await queryRunner.query(
       `
         TRUNCATE alcs.application_submission_to_submission_status;
-        DELETE FROM alcs.submission_status_type;
+        DELETE FROM alcs.application_submission_status_type;
       `,
     );
 
     await queryRunner.query(
       `
-        INSERT INTO "alcs"."submission_status_type" 
+        INSERT INTO "alcs"."application_submission_status_type" 
             ("audit_created_at", "audit_updated_at", "audit_created_by", "audit_updated_by", "label", "code", "description", "weight") VALUES
             (NOW(), NULL, 'migration_seed', NULL, 'In Progress', 'PROG', 'Application is in progress and has not been submitted', 0),
             (NOW(), NULL, 'migration_seed', NULL, 'L/FNG Returned as Incomplete', 'INCM', 'L/FNG reviewed application and sent it back as incomplete', 1),
@@ -36,7 +36,7 @@ export class populateSubmissionStatuses1689114932307
         INSERT INTO alcs.application_submission_to_submission_status (submission_uuid, status_type_code)
         SELECT as2.uuid, sst.code 
         FROM alcs.application_submission as2 
-        CROSS JOIN alcs.submission_status_type sst;
+        CROSS JOIN alcs.application_submission_status_type sst;
      `,
     );
 
@@ -123,6 +123,14 @@ export class populateSubmissionStatuses1689114932307
       WHERE asst.status_type_code = 'CANC'
           AND asst.submission_uuid = aps.uuid
           AND aps.status_code = 'CANC';`,
+    );
+
+    // set all effective dates to start of day
+    await queryRunner.query(
+      `
+      UPDATE alcs.application_submission_to_submission_status AS asst
+      SET effective_date = date_trunc('day', effective_date);
+      `,
     );
   }
 
