@@ -20,18 +20,18 @@ export class ApplicationSubmissionStatusType extends BaseCodeEntity {
   public submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
 
   @AutoMap()
-  @Column({ nullable: true })
+  @Column()
   alcsBackgroundColor: string;
 
   @AutoMap()
-  @Column({ nullable: true })
-  alcsTextColor: string;
+  @Column()
+  alcsColor: string;
 
   @AutoMap()
-  @Column({ nullable: true })
+  @Column()
   portalBackgroundColor: string;
 
   @AutoMap()
-  @Column({ nullable: true })
-  portalTextColor: string;
+  @Column()
+  portalColor: string;
 }
