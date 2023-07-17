@@ -49,6 +49,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
         this.applicationReview = appReview;
 
         this.hasCompletedStepsBeforeDocuments =
+          (appReview.isAuthorized !== null && appReview.isFirstNationGovernment) ||
           (appReview.isAuthorized !== null &&
             appReview.isOCPDesignation !== null &&
             appReview.isSubjectToZoning !== null) ||

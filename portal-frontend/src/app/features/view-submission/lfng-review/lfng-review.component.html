@@ -205,7 +205,10 @@
       <div class="review-table">
         <div
           class="full-width"
-          *ngIf="applicationReview.isOCPDesignation === null || applicationReview.isSubjectToZoning === null"
+          *ngIf="
+            !applicationReview.isFirstNationGovernment &&
+            (applicationReview.isOCPDesignation === null || applicationReview.isSubjectToZoning === null)
+          "
         >
           Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
         </div>
@@ -256,7 +259,7 @@
         </div>
       </div>
       <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
-        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+        <div *ngIf="applicationReview.isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
