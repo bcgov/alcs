@@ -26,6 +26,7 @@ export class ApplicationListComponent implements OnInit {
 
   statusToCssMap = new Map<string, string>([
     [SUBMISSION_STATUS.IN_PROGRESS, 'in-progress'],
+    [SUBMISSION_STATUS.IN_REVIEW_BY_ALC, 'in-review-alcs'],
     [SUBMISSION_STATUS.SUBMITTED_TO_ALC, 'submitted-to-alc'],
     [SUBMISSION_STATUS.SUBMITTED_TO_LG, 'submitted-to-lg'],
     [SUBMISSION_STATUS.IN_REVIEW_BY_LG, 'in-review'],
@@ -34,6 +35,8 @@ export class ApplicationListComponent implements OnInit {
     [SUBMISSION_STATUS.WRONG_GOV, 'wrong-government'],
     [SUBMISSION_STATUS.CANCELLED, 'cancelled'],
     [SUBMISSION_STATUS.ALC_DECISION, 'alc-decision'],
+    [SUBMISSION_STATUS.RECEIVED_BY_ALC, 'alc-received'],
+    [SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE, 'alc-incomplete'],
   ]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

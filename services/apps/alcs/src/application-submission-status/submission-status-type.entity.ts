@@ -18,4 +18,20 @@ export class ApplicationSubmissionStatusType extends BaseCodeEntity {
 
   @OneToMany(() => ApplicationSubmissionToSubmissionStatus, (s) => s.statusType)
   public submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
+
+  @AutoMap()
+  @Column({ nullable: true })
+  alcsBackgroundColor: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  alcsTextColor: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  portalBackgroundColor: string;
+
+  @AutoMap()
+  @Column({ nullable: true })
+  portalTextColor: string;
 }
