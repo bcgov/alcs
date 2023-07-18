@@ -116,7 +116,6 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         this.decision.resolutionYear
       );
       this.selectableComponents = [...this.allComponents, ...updatedComponents];
-      this.populateConditions(this.conditions);
       this.onChanges();
     }
 

@@ -11,7 +11,6 @@ import { ApplicationModificationService } from '../../../../../services/applicat
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
-import { SUBMISSION_STATUS } from '../../../../../services/application/application.dto';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
