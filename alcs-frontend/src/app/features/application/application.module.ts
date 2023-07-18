@@ -18,6 +18,7 @@ import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/i
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
 import { OverviewComponent } from './overview/overview.component';
+import { UncancelApplicationDialogComponent } from './overview/uncancel-application-dialog/uncancel-application-dialog.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
@@ -74,6 +75,7 @@ const routes: Routes = [
     TurProposalComponent,
     NaruProposalComponent,
     ParcelPrepComponent,
+    UncancelApplicationDialogComponent,
   ],
   imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })

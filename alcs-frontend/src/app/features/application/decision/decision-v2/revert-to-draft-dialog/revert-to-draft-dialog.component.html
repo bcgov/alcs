@@ -7,17 +7,14 @@
       This decision and document will be reverted into draft form, providing you with full editing capabilities but
       hiding it from the Applicant, Local/First Nation Government, and the Public.
     </p>
-
-    <ng-select
-      appearance="outline"
-      [items]="statuses"
-      bindLabel="label"
-      bindValue="code"
-      placeholder="Please select the portal status (optional)"
-      [clearable]="false"
-      [(ngModel)]="selectedApplicationStatus"
-    ></ng-select>
-
+    <p>
+      Upon reverting the decision to draft, the application will be updated to the status:
+      <app-application-submission-status-type-pill
+        *ngIf="mappedType"
+        [type]="mappedType"
+      ></app-application-submission-status-type-pill>
+    </p>
+    <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
     <p>
       The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
       notification manually.

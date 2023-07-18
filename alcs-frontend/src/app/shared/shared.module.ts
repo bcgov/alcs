@@ -60,6 +60,7 @@ import { TimeTrackerComponent } from './time-tracker/time-tracker.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
+import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     BooleanToStringPipe,
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,
+    WarningBannerComponent,
   ],
   imports: [
     CommonModule,
@@ -171,6 +173,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     BooleanToStringPipe,
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,
+    WarningBannerComponent,
   ],
 })
 export class SharedModule {

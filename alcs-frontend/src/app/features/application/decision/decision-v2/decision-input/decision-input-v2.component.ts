@@ -11,6 +11,7 @@ import { ApplicationModificationService } from '../../../../../services/applicat
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
+import { SUBMISSION_STATUS } from '../../../../../services/application/application.dto';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
@@ -531,16 +532,11 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         maxHeight: '80vh',
         width: '90%',
         autoFocus: false,
-        data: {
-          wasReleased: this.existingDecision?.wasReleased,
-        },
       })
       .afterClosed()
-      .subscribe(async (submissionType) => {
-        if (submissionType) {
+      .subscribe(async (didAccept) => {
+        if (didAccept) {
           await this.onSubmit(false, false);
-          //FIXME Do not need this since decision released will be based on the date and not status
-          await this.applicationSubmissionService.setSubmissionStatus(this.fileNumber, submissionType);
           await this.applicationService.loadApplication(this.fileNumber);
         }
       });

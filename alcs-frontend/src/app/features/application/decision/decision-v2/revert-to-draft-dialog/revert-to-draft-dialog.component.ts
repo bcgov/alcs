@@ -1,42 +1,46 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
-import { ApplicationStatusDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
-import { ApplicationService } from '../../../../../services/application/application.service';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ApplicationSubmissionStatusService } from '../../../../../services/application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
   selector: 'app-revert-to-draft-dialog',
   templateUrl: './revert-to-draft-dialog.component.html',
   styleUrls: ['./revert-to-draft-dialog.component.scss'],
 })
-export class RevertToDraftDialogComponent implements OnInit, OnDestroy {
-  $destroy = new Subject<void>();
-
-  statuses: ApplicationStatusDto[] = [];
-  selectedApplicationStatus = '';
+export class RevertToDraftDialogComponent {
+  mappedType?: ApplicationSubmissionStatusPill;
 
   constructor(
-    private applicationService: ApplicationService,
-    public matDialogRef: MatDialogRef<RevertToDraftDialogComponent>
-  ) {}
-
-  ngOnInit(): void {
-    this.applicationService.$applicationStatuses.pipe(takeUntil(this.$destroy)).subscribe((statuses) => {
-      if (statuses) {
-        //TODO: This will be done in a future ticket
-        //this.statuses = statuses.filter((e) => ['ALCD', 'CEOD'].includes(e.code));
-      }
-    });
+    public matDialogRef: MatDialogRef<RevertToDraftDialogComponent>,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    @Inject(MAT_DIALOG_DATA) data: { fileNumber: string }
+  ) {
+    this.calculateStatusChange(data.fileNumber);
   }
 
-  ngOnDestroy(): void {
-    this.$destroy.next();
-    this.$destroy.complete();
+  async calculateStatusChange(fileNumber: string) {
+    const statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(fileNumber);
+    const validStatuses = statusHistory
+      .filter(
+        (status) =>
+          status.effectiveDate &&
+          status.statusTypeCode !== SUBMISSION_STATUS.ALC_DECISION &&
+          status.effectiveDate < Date.now()
+      )
+      .sort((a, b) => a.effectiveDate - b.effectiveDate);
+    if (validStatuses && validStatuses.length > 0) {
+      const newStatus = validStatuses[0].status;
+      this.mappedType = {
+        label: newStatus.label,
+        backgroundColor: newStatus.alcsBackgroundColor,
+        textColor: newStatus.alcsColor,
+      };
+    }
   }
 
   onConfirm() {
-    this.matDialogRef.close({
-      status: '',
-    });
+    this.matDialogRef.close(true);
   }
 }

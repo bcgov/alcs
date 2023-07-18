@@ -1,6 +1,5 @@
 <div mat-dialog-title>
-  <h2 *ngIf="!wasReleased" class="card-title">Confirm Release Decision</h2>
-  <h2 *ngIf="wasReleased" class="card-title">Confirm Decision Re-release</h2>
+  <h2 class="card-title">Confirm Release Decision</h2>
 </div>
 <mat-dialog-content style="height: 100%">
   <div class="grid">
@@ -8,22 +7,12 @@
       This decision and document will be immediately visible to the Applicant and Local/First Nation Government. The
       decision will be visible to the Public after the prescribed amount of days is exhausted.
     </p>
-
-    <ng-select
-      appearance="outline"
-      [items]="statuses"
-      bindLabel="label"
-      bindValue="code"
-      required
-      placeholder="Please select the portal status *"
-      [clearable]="false"
-      [(ngModel)]="selectedApplicationStatus"
-    ></ng-select>
-
-    <p *ngIf="!wasReleased">
-      Applicant and Local/First Nation Government will receive an automatic email notification from the Portal.
+    <p>
+      Upon releasing the decision, the application will be updated to the status:
+      <app-application-type-pill *ngIf="mappedType" [type]="mappedType"></app-application-type-pill>
     </p>
-    <p *ngIf="wasReleased">
+    <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
+    <p>
       The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
       notification manually.
     </p>
@@ -33,8 +22,6 @@
 <mat-dialog-actions align="end">
   <div class="button-container">
     <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
-    <button mat-flat-button color="primary" [disabled]="!selectedApplicationStatus" type="button" (click)="onRelease()">
-      Release decision
-    </button>
+    <button mat-flat-button color="primary" type="button" (click)="onRelease()">Release decision</button>
   </div>
 </mat-dialog-actions>
