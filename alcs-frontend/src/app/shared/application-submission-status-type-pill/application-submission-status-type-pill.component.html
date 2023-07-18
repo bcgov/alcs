@@ -1,0 +1,12 @@
+<span class="submission-status-pill-wrapper">
+  <span
+    class="submission-status-pill"
+    [ngStyle]="{
+      backgroundColor: type.backgroundColor,
+      color: type.textColor,
+      borderColor: type.backgroundColor
+    }"
+  >
+    {{ type.label }}
+  </span>
+</span>

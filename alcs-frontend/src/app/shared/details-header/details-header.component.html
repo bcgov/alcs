@@ -45,9 +45,17 @@
         <app-no-data *ngIf="!_application.localGovernment"></app-no-data>
       </div>
     </div>
-    <div *ngIf="!_application.hasOwnProperty('decisionDate')">
-      <div class="subheading2">{{ days }}:</div>
-      <app-time-tracker [data]="_application" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+    <div>
+      <ng-container *ngIf="!_application.hasOwnProperty('decisionDate')">
+        <div class="subheading2">{{ days }}:</div>
+        <app-time-tracker [data]="_application" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+      </ng-container>
+    </div>
+    <div class="status-wrapper">
+      <app-application-submission-status-type-pill
+        *ngIf="currentStatus"
+        [type]="currentStatus"
+      ></app-application-submission-status-type-pill>
     </div>
     <div>
       <!-- TODO add status here -->

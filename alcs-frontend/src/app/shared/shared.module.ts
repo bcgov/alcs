@@ -34,6 +34,7 @@ import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
+import { ApplicationSubmissionStatusTypePillComponent } from './application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
@@ -86,6 +87,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     InlineReviewOutcomeComponent,
     BooleanToStringPipe,
     NoDataComponent,
+    ApplicationSubmissionStatusTypePillComponent,
   ],
   imports: [
     CommonModule,
@@ -168,6 +170,7 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     InlineReviewOutcomeComponent,
     BooleanToStringPipe,
     NoDataComponent,
+    ApplicationSubmissionStatusTypePillComponent,
   ],
 })
 export class SharedModule {

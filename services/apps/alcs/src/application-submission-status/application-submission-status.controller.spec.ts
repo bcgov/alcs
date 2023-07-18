@@ -64,4 +64,24 @@ describe('ApplicationSubmissionStatusController', () => {
     expect(result.length).toEqual(1);
     expect(result).toBeDefined();
   });
+
+  it('should call service to get current submission status by file number', async () => {
+    const fakeFileNumber = 'fake';
+
+    mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+
+    const result = await controller.getCurrentStatusByFileNumber(
+      fakeFileNumber,
+    );
+
+    expect(
+      mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.getCurrentStatusByFileNumber,
+    ).toBeCalledWith(fakeFileNumber);
+    expect(result).toBeDefined();
+  });
 });

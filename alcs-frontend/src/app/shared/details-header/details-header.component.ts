@@ -4,11 +4,13 @@ import { Subject } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
 import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
@@ -26,6 +28,7 @@ export class DetailsHeaderComponent {
   @Input() heading = 'Title Here';
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
+  @Input() showStatus = false;
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
 
@@ -49,6 +52,17 @@ export class DetailsHeaderComponent {
       }
       if ('retroactive' in application) {
         this.showRetroLabel = !!application.retroactive;
+      }
+
+      if (this.showStatus) {
+        this.submissionStatusService.fetchCurrentStatusByFileNumber(application.fileNumber).then(
+          (status) =>
+            (this.currentStatus = {
+              label: status.status.label,
+              backgroundColor: status.status.alcsBackgroundColor,
+              textColor: status.status.alcsColor,
+            })
+        );
       }
     }
   }
@@ -77,8 +91,9 @@ export class DetailsHeaderComponent {
   showRetroLabel = false;
   linkedCards: (CardDto & { displayName: string })[] = [];
   isNOI = false;
+  currentStatus?: ApplicationSubmissionStatusPill;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private submissionStatusService: ApplicationSubmissionStatusService) {}
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.board.code;

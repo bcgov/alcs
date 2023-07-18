@@ -65,4 +65,34 @@ describe('ApplicationSubmissionStatusService', () => {
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
+
+  it('should fetch current status by fileNumber', async () => {
+    mockHttpClient.get.mockReturnValue(
+      of({
+        submissionUuid: 'fake',
+      })
+    );
+
+    const res = await service.fetchCurrentStatusByFileNumber('1');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.submissionUuid).toEqual('fake');
+  });
+
+  it('should show a toast message if fetch current status by fileNumber fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    try {
+      await service.fetchCurrentStatusByFileNumber('1');
+    } catch {
+      // suppress error message
+    }
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
 });

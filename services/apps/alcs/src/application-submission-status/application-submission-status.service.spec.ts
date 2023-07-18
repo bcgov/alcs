@@ -325,4 +325,32 @@ describe('ApplicationSubmissionStatusService', () => {
       fileNumber: fakeFileNumber,
     });
   });
+
+  it('Should return current status by fileNumber', async () => {
+    const fakeSubmissionUuid = 'fake';
+    const fakeFileNumber = 'fake-number';
+    const mockStatus = new ApplicationSubmissionToSubmissionStatus({
+      submissionUuid: fakeSubmissionUuid,
+      statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+      effectiveDate: new Date(),
+    });
+
+    mockApplicationSubmissionRepository.findOneBy.mockResolvedValue(
+      new ApplicationSubmission({
+        uuid: fakeSubmissionUuid,
+        fileNumber: fakeFileNumber,
+        status: mockStatus,
+      }),
+    );
+
+    const status = await service.getCurrentStatusByFileNumber(fakeFileNumber);
+
+    expect(status).toEqual(mockStatus);
+    expect(mockApplicationSubmissionRepository.findOneBy).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockApplicationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
+      fileNumber: fakeFileNumber,
+    });
+  });
 });

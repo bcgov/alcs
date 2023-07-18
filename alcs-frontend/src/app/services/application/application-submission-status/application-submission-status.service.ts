@@ -18,9 +18,21 @@ export class ApplicationSubmissionStatusService {
       const result = await firstValueFrom(
         this.http.get<ApplicationSubmissionToSubmissionStatusDto[]>(`${this.baseUrl}/${fileNumber}`)
       );
-      return result
+      return result;
     } catch (e) {
       this.toastService.showErrorToast('Failed to fetch Application Submission Statuses');
+      throw e;
+    }
+  }
+
+  async fetchCurrentStatusByFileNumber(fileNumber: string): Promise<ApplicationSubmissionToSubmissionStatusDto> {
+    try {
+      const result = await firstValueFrom(
+        this.http.get<ApplicationSubmissionToSubmissionStatusDto>(`${this.baseUrl}/current-status/${fileNumber}`)
+      );
+      return result;
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to fetch Application Submission Status');
       throw e;
     }
   }
