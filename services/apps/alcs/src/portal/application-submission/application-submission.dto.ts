@@ -9,7 +9,10 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { ApplicationStatusDto } from '../../application-submission-status/submission-status.dto';
+import {
+  ApplicationStatusDto,
+  ApplicationSubmissionToSubmissionStatusDto,
+} from '../../application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';
@@ -296,6 +299,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   naruAgriTourism: string | null;
+
+  @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
+  submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 }
 
 export class ApplicationSubmissionCreateDto {
