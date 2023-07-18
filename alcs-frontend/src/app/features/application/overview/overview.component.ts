@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationMeetingDto } from '../../../services/application/application-meeting/application-meeting.dto';
@@ -14,6 +15,7 @@ import { ApplicationDecisionDto } from '../../../services/application/decision/a
 import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
+import { UncancelApplicationDialogComponent } from './uncancel-application-dialog/uncancel-application-dialog.component';
 
 const editLink = new Map<string, string>([
   ['IR', './info-request'],
@@ -60,7 +62,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     private reviewService: ApplicationReviewService,
     private confirmationDialogService: ConfirmationDialogService,
-    private applicationSubmissionStatusService: ApplicationSubmissionStatusService
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -125,6 +128,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .openDialog({
         body: `Are you sure you want to cancel this Application?`,
         cancelButtonText: 'No',
+        title: 'Cancel Application',
       })
       .subscribe(async (didConfirm) => {
         if (didConfirm && this.application) {
@@ -135,17 +139,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   async onUncancelApplication() {
-    this.confirmationDialogService
-      .openDialog({
-        body: `Are you sure you want to uncancel this Application?`,
-        cancelButtonText: 'No',
-      })
-      .subscribe(async (didConfirm) => {
-        if (didConfirm && this.application) {
-          await this.applicationDetailService.uncancelApplication(this.application.fileNumber);
-          await this.loadStatusHistory(this.application.fileNumber);
-        }
-      });
+    if (this.application) {
+      this.dialog
+        .open(UncancelApplicationDialogComponent, {
+          data: {
+            fileNumber: this.application.fileNumber,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm && this.application) {
+            await this.applicationDetailService.uncancelApplication(this.application.fileNumber);
+            await this.loadStatusHistory(this.application.fileNumber);
+          }
+        });
+    }
   }
 
   private mapApplicationToEvents(

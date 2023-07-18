@@ -132,10 +132,12 @@ export class DecisionV2Component implements OnInit, OnDestroy {
 
   async onRevertToDraft(uuid: string) {
     this.dialog
-      .open(RevertToDraftDialogComponent)
+      .open(RevertToDraftDialogComponent, {
+        data: { fileNumber: this.fileNumber },
+      })
       .beforeClosed()
-      .subscribe(async (result) => {
-        if (result) {
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
           await this.decisionService.update(uuid, {
             isDraft: true,
           });
