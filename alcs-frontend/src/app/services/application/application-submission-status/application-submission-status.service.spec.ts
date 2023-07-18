@@ -9,7 +9,6 @@ describe('ApplicationSubmissionStatusService', () => {
   let service: ApplicationSubmissionStatusService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
-  // let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(() => {
     mockToastService = createMock();
@@ -25,10 +24,6 @@ describe('ApplicationSubmissionStatusService', () => {
           provide: ToastService,
           useValue: mockToastService,
         },
-        // {
-        //   provide: ApplicationSubmissionStatusService,
-        //   useValue: mockApplicationSubmissionStatusService,
-        // },
       ],
     });
     service = TestBed.inject(ApplicationSubmissionStatusService);
@@ -73,11 +68,9 @@ describe('ApplicationSubmissionStatusService', () => {
 
   it('should fetch current status by fileNumber', async () => {
     mockHttpClient.get.mockReturnValue(
-      of(
-        {
-          submissionUuid: 'fake',
-        },
-      )
+      of({
+        submissionUuid: 'fake',
+      })
     );
 
     const res = await service.fetchCurrentStatusByFileNumber('1');
