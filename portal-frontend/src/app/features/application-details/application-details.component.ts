@@ -49,9 +49,9 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadGovernments();
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((app) => {
       this.applicationSubmission = app;
+      this.loadGovernments();
       if (app) {
         this.primaryContact = app.owners.find((owner) => owner.uuid === app.primaryContactOwnerUuid);
         this.populateLocalGovernment(app.localGovernmentUuid);

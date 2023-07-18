@@ -52,9 +52,8 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
       }
     });
 
-    this.loadDocumentCodes();
-
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.loadDocumentCodes();
       this.otherFiles = documents
         .filter((file) => (file.type ? USER_CONTROLLED_TYPES.includes(file.type.code) : true))
         .filter((file) => file.source === DOCUMENT_SOURCE.APPLICANT)
