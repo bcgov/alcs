@@ -9,6 +9,7 @@ describe('ApplicationSubmissionStatusService', () => {
   let service: ApplicationSubmissionStatusService;
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
+  // let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(() => {
     mockToastService = createMock();
@@ -24,6 +25,10 @@ describe('ApplicationSubmissionStatusService', () => {
           provide: ToastService,
           useValue: mockToastService,
         },
+        // {
+        //   provide: ApplicationSubmissionStatusService,
+        //   useValue: mockApplicationSubmissionStatusService,
+        // },
       ],
     });
     service = TestBed.inject(ApplicationSubmissionStatusService);
@@ -58,6 +63,38 @@ describe('ApplicationSubmissionStatusService', () => {
 
     try {
       await service.fetchSubmissionStatusesByFileNumber('1');
+    } catch {
+      // suppress error message
+    }
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch current status by fileNumber', async () => {
+    mockHttpClient.get.mockReturnValue(
+      of(
+        {
+          submissionUuid: 'fake',
+        },
+      )
+    );
+
+    const res = await service.fetchCurrentStatusByFileNumber('1');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.submissionUuid).toEqual('fake');
+  });
+
+  it('should show a toast message if fetch current status by fileNumber fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    try {
+      await service.fetchCurrentStatusByFileNumber('1');
     } catch {
       // suppress error message
     }

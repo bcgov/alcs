@@ -1,0 +1,15 @@
+.submission-status-pill-wrapper {
+  display: inline-block;
+  height: 25px;
+  white-space: nowrap;
+
+  .submission-status-pill {
+    border-radius: 16px;
+    padding: 2px 16px;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    border: 3px solid;
+    position: relative;
+    font-weight: 700 !important;
+  }
+}

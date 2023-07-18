@@ -46,7 +46,8 @@
     margin-top: 16px;
     margin-bottom: 8px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
   }
 
   .subheading2 {
@@ -56,4 +57,10 @@
 
 .inactive-timer {
   opacity: 0.3;
+}
+
+.status-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
 }

@@ -28,4 +28,18 @@ export class ApplicationSubmissionStatusController {
       ApplicationSubmissionToSubmissionStatusDto,
     );
   }
+
+  @Get('/current-status/:fileNumber')
+  async getCurrentStatusByFileNumber(@Param('fileNumber') fileNumber) {
+    const status =
+      await this.applicationSubmissionStatusService.getCurrentStatusByFileNumber(
+        fileNumber,
+      );
+
+    return this.mapper.mapAsync(
+      status,
+      ApplicationSubmissionToSubmissionStatus,
+      ApplicationSubmissionToSubmissionStatusDto,
+    );
+  }
 }

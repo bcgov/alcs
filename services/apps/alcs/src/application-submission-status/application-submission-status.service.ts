@@ -94,6 +94,12 @@ export class ApplicationSubmissionStatusService {
     });
   }
 
+  async getCurrentStatusByFileNumber(fileNumber: string) {
+    const submission = await this.getSubmission(fileNumber);
+
+    return submission.status;
+  }
+
   private async getSubmission(fileNumber: string) {
     const submission = await this.applicationSubmissionRepository.findOneBy({
       fileNumber,
