@@ -9,7 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
-import { ApplicationStatusTypeDto } from './application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from './application-reconsideration/application-reconsideration.dto';
 import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
@@ -21,13 +21,13 @@ export class ApplicationService {
   public $cardStatuses = new BehaviorSubject<CardStatusDto[]>([]);
   public $applicationTypes = new BehaviorSubject<ApplicationTypeDto[]>([]);
   public $applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
-  public $applicationStatuses = new BehaviorSubject<ApplicationStatusTypeDto[]>([]);
+  public $applicationStatuses = new BehaviorSubject<ApplicationStatusDto[]>([]);
 
   private baseUrl = `${environment.apiUrl}/application`;
   private statuses: CardStatusDto[] = [];
   private types: ApplicationTypeDto[] = [];
   private regions: ApplicationRegionDto[] = [];
-  private applicationStatuses: ApplicationStatusTypeDto[] = [];
+  private applicationStatuses: ApplicationStatusDto[] = [];
   private isInitialized = false;
 
   async fetchApplication(fileNumber: string): Promise<ApplicationDto> {
@@ -99,5 +99,25 @@ export class ApplicationService {
 
     this.applicationStatuses = codes.applicationStatusType;
     this.$applicationStatuses.next(this.applicationStatuses);
+  }
+
+  async cancelApplication(fileNumber: string) {
+    await this.setup();
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}/${fileNumber}/cancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to cancel Application');
+    }
+    return;
+  }
+
+  async uncancelApplication(fileNumber: string) {
+    await this.setup();
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.baseUrl}/${fileNumber}/uncancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to uncancel Application');
+    }
+    return;
   }
 }

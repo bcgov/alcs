@@ -31,4 +31,12 @@ export class ApplicationDetailService {
     }
     return updatedApp;
   }
+
+  cancelApplication(fileNumber: string) {
+    return this.applicationService.cancelApplication(fileNumber);
+  }
+
+  uncancelApplication(fileNumber: string) {
+    return this.applicationService.uncancelApplication(fileNumber);
+  }
 }

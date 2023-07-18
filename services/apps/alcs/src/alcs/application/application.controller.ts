@@ -118,6 +118,18 @@ export class ApplicationController {
     await this.applicationService.delete(applicationNumber);
   }
 
+  @Post('/:fileNumber/cancel')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async cancel(@Param('fileNumber') fileNumber): Promise<void> {
+    await this.applicationService.cancel(fileNumber);
+  }
+
+  @Post('/:fileNumber/uncancel')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async uncancel(@Param('fileNumber') fileNumber): Promise<void> {
+    await this.applicationService.uncancel(fileNumber);
+  }
+
   @Get('/card/:uuid')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async getByCardUuid(@Param('uuid') cardUuid): Promise<ApplicationDto> {

@@ -241,6 +241,23 @@ export class ApplicationService {
     return;
   }
 
+  async cancel(fileNumber: string): Promise<void> {
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      SUBMISSION_STATUS.CANCELLED,
+    );
+    return;
+  }
+
+  async uncancel(fileNumber: string) {
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
+    return;
+  }
+
   async getMany(
     findOptions?: FindOptionsWhere<Application>,
     sortOptions?: FindOptionsOrder<Application>,

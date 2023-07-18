@@ -9,7 +9,7 @@ export type ApplicationPill = {
 };
 
 @Component({
-  selector: 'app-application-type-pill',
+  selector: 'app-application-type-pill[type]',
   templateUrl: './application-type-pill.component.html',
   styleUrls: ['./application-type-pill.component.scss'],
 })

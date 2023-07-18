@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export interface DialogData {
   body: string;
+  yesButtonText?: string;
+  cancelButtonText?: string;
 }
 
 @Component({

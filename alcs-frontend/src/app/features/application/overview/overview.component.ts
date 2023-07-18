@@ -8,9 +8,11 @@ import { ApplicationModificationService } from '../../../services/application/ap
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
-import { ApplicationDto, ApplicationReviewDto } from '../../../services/application/application.dto';
+import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
+import { ApplicationDto, ApplicationReviewDto, SUBMISSION_STATUS } from '../../../services/application/application.dto';
 import { ApplicationDecisionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { TimelineEvent } from '../../../shared/timeline/timeline.component';
 
 const editLink = new Map<string, string>([
@@ -48,6 +50,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   private $review = new BehaviorSubject<ApplicationReviewDto | undefined>(undefined);
   events: TimelineEvent[] = [];
   summary = '';
+  isCancelled = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -55,7 +58,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private reviewService: ApplicationReviewService
+    private reviewService: ApplicationReviewService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +71,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
           if (app) {
             this.clearComponentData();
 
+            this.loadStatusHistory(app.fileNumber);
             this.meetingService.fetch(app.fileNumber);
             this.decisionService.fetchByApplication(app.fileNumber).then((res) => {
               this.$decisions.next(res);
@@ -112,6 +118,34 @@ export class OverviewComponent implements OnInit, OnDestroy {
   private async clearComponentData() {
     this.$decisions.next([]);
     this.$review.next(undefined);
+  }
+
+  async onCancelApplication() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to cancel this Application?`,
+        cancelButtonText: 'No',
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm && this.application) {
+          await this.applicationDetailService.cancelApplication(this.application.fileNumber);
+          await this.loadStatusHistory(this.application.fileNumber);
+        }
+      });
+  }
+
+  async onUncancelApplication() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to uncancel this Application?`,
+        cancelButtonText: 'No',
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm && this.application) {
+          await this.applicationDetailService.uncancelApplication(this.application.fileNumber);
+          await this.loadStatusHistory(this.application.fileNumber);
+        }
+      });
   }
 
   private mapApplicationToEvents(
@@ -309,5 +343,12 @@ export class OverviewComponent implements OnInit, OnDestroy {
         summary: updatedSummary ?? null,
       });
     }
+  }
+
+  private async loadStatusHistory(fileNumber: string) {
+    const statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(fileNumber);
+    this.isCancelled =
+      statusHistory.filter((status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.CANCELLED)
+        .length > 0;
   }
 }
