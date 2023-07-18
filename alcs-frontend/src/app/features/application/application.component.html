@@ -9,7 +9,7 @@
       [showStatus]="true"
     ></app-details-header>
     <div class="content">
-      <div *ngIf="isSubmittedToAlc" class="nav">
+      <div *ngIf="showSubmittedToAlcMenuItems" class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
           <div
             *ngIf="route.portalOnly ? isApplicantSubmission : true"
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="wasSubmittedToLfng" class="nav">
+      <div *ngIf="showSubmittedToLfngMenuItems" class="nav">
         <div *ngFor="let route of submittedLfngRoutes" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"
@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isSubmittedToAlc && !wasSubmittedToLfng" class="nav">
+      <div *ngIf="!showSubmittedToAlcMenuItems && !showSubmittedToLfngMenuItems" class="nav">
         <div *ngFor="let route of unsubmittedRoutes" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"

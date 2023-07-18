@@ -3,6 +3,7 @@ import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
+import { ApplicationSubmissionToSubmissionStatusDto } from './application-submission-status/application-submission-status.dto';
 
 export enum APPLICATION_SYSTEM_SOURCE_TYPES {
   APPLICANT = 'APPLICANT',
@@ -114,6 +115,7 @@ export interface ApplicationSubmissionDto {
   owners: SubmittedApplicationOwnerDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 
   primaryContactOwnerUuid?: string;
   primaryContact?: SubmittedApplicationOwnerDto;

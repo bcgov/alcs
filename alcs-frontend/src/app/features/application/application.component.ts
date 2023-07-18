@@ -174,8 +174,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
   submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
-  isSubmittedToAlc = false;
-  wasSubmittedToLfng = false;
+  showSubmittedToAlcMenuItems = false;
+  showSubmittedToLfngMenuItems = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -201,10 +201,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.modificationService.fetchByApplication(application.fileNumber);
 
         this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+        let wasSubmittedToLfng = false;
+
         if (this.isApplicantSubmission) {
           this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
 
-          this.wasSubmittedToLfng =
+          wasSubmittedToLfng =
             this.isApplicantSubmission &&
             [
               SUBMISSION_STATUS.SUBMITTED_TO_LG,
@@ -214,7 +216,12 @@ export class ApplicationComponent implements OnInit, OnDestroy {
             ].includes(this.submission?.status?.code);
         }
 
-        this.isSubmittedToAlc = this.isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+        const submittedToAlcsStatus = this.submission?.submissionStatuses.find(
+          (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate
+        );
+        this.showSubmittedToLfngMenuItems = wasSubmittedToLfng && !submittedToAlcsStatus;
+
+        this.showSubmittedToAlcMenuItems = this.isApplicantSubmission ? !!submittedToAlcsStatus : true;
       }
     });
 
