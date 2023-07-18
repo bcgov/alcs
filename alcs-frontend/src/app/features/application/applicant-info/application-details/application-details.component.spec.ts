@@ -18,7 +18,7 @@ describe('ApplicationDetailsComponent', () => {
       providers: [
         {
           provide: ApplicationDocumentService,
-        useValue: mockAppDocumentService,
+          useValue: mockAppDocumentService,
         },
       ],
       declarations: [ApplicationDetailsComponent],
