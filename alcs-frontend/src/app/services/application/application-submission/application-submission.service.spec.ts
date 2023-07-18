@@ -106,6 +106,7 @@ describe('ApplicationSubmissionService', () => {
     turPurpose: null,
     turReduceNegativeImpacts: null,
     turTotalCorridorArea: null,
+    submissionStatuses: [],
   };
 
   beforeEach(() => {

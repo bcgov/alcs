@@ -18,7 +18,7 @@ describe('ApplicationDetailsComponent', () => {
       providers: [
         {
           provide: ApplicationDocumentService,
-          useValue: mockAppDocumentService,
+        useValue: mockAppDocumentService,
         },
       ],
       declarations: [ApplicationDetailsComponent],
@@ -125,6 +125,7 @@ describe('ApplicationDetailsComponent', () => {
       westLandUseTypeDescription: '',
       subdProposedLots: [],
       typeCode: '',
+      submissionStatuses: [],
     };
     component.applicationType = 'NFUP';
     component.fileNumber = 'fake';
