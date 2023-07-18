@@ -20,10 +20,6 @@ describe('ApplicationDetailService', () => {
           provide: ApplicationService,
           useValue: applicationService,
         },
-        {
-          provide: ToastService,
-          useValue: {},
-        },
       ],
     });
     service = TestBed.inject(ApplicationDetailService);

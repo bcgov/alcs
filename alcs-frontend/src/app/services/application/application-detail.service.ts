@@ -10,7 +10,7 @@ export class ApplicationDetailService {
 
   private selectedFileNumber: string | undefined;
 
-  constructor(private applicationService: ApplicationService, private toastService: ToastService) {}
+  constructor(private applicationService: ApplicationService) {}
 
   async loadApplication(fileNumber: string) {
     this.clearApplication();
@@ -32,11 +32,13 @@ export class ApplicationDetailService {
     return updatedApp;
   }
 
-  cancelApplication(fileNumber: string) {
-    return this.applicationService.cancelApplication(fileNumber);
+  async cancelApplication(fileNumber: string) {
+    await this.applicationService.cancelApplication(fileNumber);
+    await this.loadApplication(fileNumber);
   }
 
-  uncancelApplication(fileNumber: string) {
-    return this.applicationService.uncancelApplication(fileNumber);
+  async uncancelApplication(fileNumber: string) {
+    await this.applicationService.uncancelApplication(fileNumber);
+    await this.loadApplication(fileNumber);
   }
 }
