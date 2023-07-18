@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationStatusTypeDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { ApplicationService } from '../../../../../services/application/applicat
 export class RevertToDraftDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  statuses: ApplicationStatusTypeDto[] = [];
+  statuses: ApplicationStatusDto[] = [];
   selectedApplicationStatus = '';
 
   constructor(

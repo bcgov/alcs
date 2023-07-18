@@ -1,9 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationStatusTypeDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
-import { CeoCriterionDto } from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
 
 @Component({
   selector: 'app-release-dialog',
@@ -13,7 +12,7 @@ import { CeoCriterionDto } from '../../../../../services/application/decision/ap
 export class ReleaseDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  statuses: ApplicationStatusTypeDto[] = [];
+  statuses: ApplicationStatusDto[] = [];
   selectedApplicationStatus = '';
   wasReleased = false;
 

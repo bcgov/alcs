@@ -26,6 +26,7 @@ export enum SUBMISSION_STATUS {
   IN_REVIEW_BY_ALC = 'REVA', //new Under Review by ALC
   ALC_DECISION = 'ALCD', // Decision Released
   REFUSED_TO_FORWARD_LG = 'RFFG', //new L/FNG Refused to Forward
+  CANCELLED = 'CANC', //Cancelled
 }
 
 export interface ApplicationStatus extends BaseCodeDto {

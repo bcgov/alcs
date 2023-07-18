@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
@@ -7,6 +8,7 @@ import { ApplicationMeetingService } from '../../../services/application/applica
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
+import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
 
@@ -48,6 +50,14 @@ describe('OverviewComponent', () => {
           useValue: {
             fetch: jest.fn(),
           },
+        },
+        {
+          provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: {},
         },
       ],
       declarations: [OverviewComponent],

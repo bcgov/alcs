@@ -7,6 +7,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
 import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
@@ -310,5 +313,31 @@ describe('ApplicationService', () => {
       },
       relations: BOARD_RELATIONS,
     });
+  });
+
+  it('should set the cancelled status for cancel', async () => {
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    await applicationService.cancel('');
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED);
+  });
+
+  it('should clear the cancelled status for uncancel', async () => {
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    await applicationService.uncancel('');
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED, null);
   });
 });
