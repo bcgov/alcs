@@ -29,7 +29,7 @@ export class UncancelApplicationDialogComponent {
           status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED &&
           status.effectiveDate < Date.now()
       )
-      .sort((a, b) => a.effectiveDate - b.effectiveDate);
+      .sort((a, b) => a.effectiveDate! - b.effectiveDate!);
     if (validStatuses && validStatuses.length > 0) {
       const validStatus = validStatuses[0].status;
       this.status = {

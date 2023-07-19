@@ -44,7 +44,7 @@ export interface CreateApplicationDto {
 }
 
 export interface ApplicationDecisionMeetingDto {
-  date: Date;
+  date: number;
 }
 
 export interface ProposedLot {

@@ -4,7 +4,7 @@ export interface TimelineEvent {
   startDate: Date;
   fulfilledDate?: Date;
   isFulfilled: boolean;
-  name: string;
+  htmlText: string;
   link?: string;
 }
 
