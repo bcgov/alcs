@@ -101,7 +101,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const mappedEvents: TimelineEvent[] = [];
     if (noticeOfIntent.dateSubmittedToAlc) {
       mappedEvents.push({
-        name: 'Submitted to ALC',
+        htmlText: 'Submitted to ALC',
         startDate: new Date(noticeOfIntent.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
         isFulfilled: true,
       });
@@ -109,7 +109,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     if (noticeOfIntent.dateAcknowledgedIncomplete) {
       mappedEvents.push({
-        name: 'Acknowledged Incomplete',
+        htmlText: 'Acknowledged Incomplete',
         startDate: new Date(noticeOfIntent.dateAcknowledgedIncomplete + SORTING_ORDER.ACKNOWLEDGED_INCOMPLETE),
         isFulfilled: true,
       });
@@ -117,7 +117,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     if (noticeOfIntent.dateAcknowledgedComplete) {
       mappedEvents.push({
-        name: 'Acknowledged Complete',
+        htmlText: 'Acknowledged Complete',
         startDate: new Date(noticeOfIntent.dateAcknowledgedComplete + SORTING_ORDER.ACKNOWLEDGE_COMPLETE),
         isFulfilled: true,
       });
@@ -125,7 +125,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     if (noticeOfIntent.feePaidDate) {
       mappedEvents.push({
-        name: 'Fee Received Date',
+        htmlText: 'Fee Received Date',
         startDate: new Date(noticeOfIntent.feePaidDate + SORTING_ORDER.FEE_RECEIVED),
         isFulfilled: true,
       });
@@ -133,7 +133,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     if (noticeOfIntent.dateReceivedAllItems) {
       mappedEvents.push({
-        name: 'Received All Items',
+        htmlText: 'Received All Items',
         startDate: new Date(noticeOfIntent.dateReceivedAllItems + SORTING_ORDER.FEE_RECEIVED),
         isFulfilled: true,
       });
@@ -142,14 +142,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
     for (const [index, decision] of decisions.entries()) {
       if (decision.auditDate) {
         mappedEvents.push({
-          name: `Audited Decision #${decisions.length - index}`,
+          htmlText: `Audited Decision #${decisions.length - index}`,
           startDate: new Date(decision.auditDate + SORTING_ORDER.AUDITED_DECISION),
           isFulfilled: true,
         });
       }
 
       mappedEvents.push({
-        name: `Decision #${decisions.length - index} Made${
+        htmlText: `Decision #${decisions.length - index} Made${
           decisions.length - 1 === index ? ` - Active Days: ${noticeOfIntent.activeDays}` : ''
         }`,
         startDate: new Date(decision.date + SORTING_ORDER.DECISION_MADE),
@@ -162,7 +162,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     meetings.forEach((meeting) => {
       const count = typeCount.get(meeting.meetingType.code) || 0;
       mappedEvents.push({
-        name: `${meeting.meetingType.label} #${count + 1}`,
+        htmlText: `${meeting.meetingType.label} #${count + 1}`,
         startDate: new Date(meeting.meetingStartDate + SORTING_ORDER.VISIT_REQUESTS),
         fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
         isFulfilled: !!meeting.meetingEndDate,
@@ -184,14 +184,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const events: TimelineEvent[] = [];
     for (const [index, modification] of modifications.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
       events.push({
-        name: `Modification Requested #${modifications.length - index}`,
+        htmlText: `Modification Requested #${modifications.length - index}`,
         startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
         isFulfilled: true,
       });
 
       if (modification.outcomeNotificationDate) {
         events.push({
-          name: `Modification Request Reviewed #${modifications.length - index} - ${modification.reviewOutcome.label}`,
+          htmlText: `Modification Request Reviewed #${modifications.length - index} - ${
+            modification.reviewOutcome.label
+          }`,
           startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
           isFulfilled: true,
         });

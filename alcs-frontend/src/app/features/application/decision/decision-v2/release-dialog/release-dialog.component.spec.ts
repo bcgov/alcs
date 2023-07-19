@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationStatusDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from '../../../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 
 import { ReleaseDialogComponent } from './release-dialog.component';

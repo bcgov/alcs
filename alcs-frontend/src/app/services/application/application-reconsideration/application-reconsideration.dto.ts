@@ -16,14 +16,6 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
 
 export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
 
-export interface ApplicationStatusDto extends BaseCodeDto {
-  alcsBackgroundColor: string;
-  alcsColor: string;
-  portalBackgroundColor: string;
-  portalColor: string;
-  weight: number;
-}
-
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
