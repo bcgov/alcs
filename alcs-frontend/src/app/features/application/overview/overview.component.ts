@@ -8,10 +8,9 @@ import { ApplicationModificationDto } from '../../../services/application/applic
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
-import { ApplicationDto, ApplicationReviewDto, SUBMISSION_STATUS } from '../../../services/application/application.dto';
+import { ApplicationDto, SUBMISSION_STATUS } from '../../../services/application/application.dto';
 import { ApplicationDecisionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -61,7 +60,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private decisionService: ApplicationDecisionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
-    private reviewService: ApplicationReviewService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private dialog: MatDialog
@@ -180,7 +178,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         }
 
         if (status.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE) {
-          htmlText = 'Acknowledge Incomplete - <strong>Submitted to ALC - Incomplete</strong>';
+          htmlText = 'Acknowledged Incomplete - <strong>Submitted to ALC - Incomplete</strong>';
         }
 
         mappedEvents.push({
