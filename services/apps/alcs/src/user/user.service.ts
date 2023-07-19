@@ -6,6 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
 import { Repository } from 'typeorm';
+import { ApplicationLocalGovernment } from '../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { EmailService } from '../providers/email/email.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -22,6 +23,8 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectMapper() private userMapper: Mapper,
     private emailService: EmailService,
+    @InjectRepository(ApplicationLocalGovernment)
+    private localGovernmentRepository: Repository<ApplicationLocalGovernment>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
@@ -88,12 +91,23 @@ export class UserService {
     return this.userRepository.save(updatedUser);
   }
 
+  async getUserLocalGovernment(user: User) {
+    if (user.bceidBusinessGuid) {
+      return await this.localGovernmentRepository.findOne({
+        where: { bceidBusinessGuid: user.bceidBusinessGuid },
+        select: {
+          name: true,
+        },
+      });
+    }
+  }
+
   async sendNewUserRequestEmail(email: string, userIdentifier: string) {
     const env = this.config.get('ENV');
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
+<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
 
     await this.emailService.sendEmail({
       to: this.config.get('EMAIL.DEFAULT_ADMINS'),

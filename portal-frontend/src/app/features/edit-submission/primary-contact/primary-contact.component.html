@@ -1,17 +1,21 @@
 <div class="step-description">
   <h2>Primary Contact</h2>
-  <p>Select from the listed parcel owners or identify a third party agent</p>
+  <p *ngIf="!isLocalGovernmentUser">Select from the listed parcel owners or identify a third party agent</p>
+  <p *ngIf="isLocalGovernmentUser">
+    Identify staff from the local or first nation government listed below or a third-party agent to act as the primary
+    contact.
+  </p>
   <p>*All fields are required unless stated optional.</p>
   <div class="step-documents">
     <h6>Documents needed for this step:</h6>
     <ul>
-      <li>Authorization Letter (if applicable)</li>
+      <li>Authorization Letters (if applicable)</li>
     </ul>
   </div>
 </div>
 <section>
   <div class="contacts">
-    <ng-container *ngFor="let owner of nonAgentOwners">
+    <ng-container *ngFor="let owner of parcelOwners">
       <h5>{{ owner.displayName }}</h5>
       <button
         (click)="onSelectOwner(owner.uuid)"
@@ -24,7 +28,20 @@
       </button>
       <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
     </ng-container>
-    <h5>Third Party Agent on behalf of Owner(s)</h5>
+    <ng-container *ngIf="isLocalGovernmentUser">
+      <h5>{{governmentName}} Staff</h5>
+      <button
+        (click)="onSelectGovernment()"
+        *ngIf="!selectedLocalGovernment"
+        color="primary"
+        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
+        mat-stroked-button
+      >
+        Make Primary Contact
+      </button>
+      <div class="selected" *ngIf="selectedLocalGovernment"><mat-icon>check</mat-icon>Primary Contact</div>
+    </ng-container>
+    <h5>Third-Party Agent</h5>
     <button
       *ngIf="!selectedThirdPartyAgent"
       color="primary"
@@ -66,8 +83,9 @@
           </div>
         </div>
         <div class="full-row">
-          <label *ngIf="!isCrownOwner" for="orgName">Organization Name (optional)</label>
+          <label *ngIf="!isCrownOwner && !selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
           <label *ngIf="isCrownOwner" for="orgName">Ministry or Department</label>
+          <label *ngIf="selectedLocalGovernment" for="orgName">Department</label>
           <mat-form-field appearance="outline">
             <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
           </mat-form-field>
@@ -109,19 +127,25 @@
   <h4>Primary Contact Authorization Letters</h4>
   <div>
     An authorization letter must be provided if:
-    <ol>
-      <li>the parcel under application is owned by more than one person;</li>
-      <li>the parcel(s) is owned by an organization; or</li>
-      <li>the parcel(s) is owned by a corporation (private, Crown, local government, First Nations); or</li>
-      <li>the application is being submitted by a third-party agent on behalf of the land owner(s)</li>
-    </ol>
-    <p>
-      The authorization letter must be signed by all individual land owners and the majority of directors in
-      organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
-      further instruction and an Authorization Letter template.
-    </p>
+    <ng-container *ngIf="!isLocalGovernmentUser">
+      <ol>
+        <li>the parcel under application is owned by more than one person;</li>
+        <li>the parcel(s) is owned by an organization; or</li>
+        <li>the parcel(s) is owned by a corporation (private, Crown, local government, First Nations); or</li>
+        <li>the application is being submitted by a third-party agent on behalf of the land owner(s)</li>
+      </ol>
+      <p>
+        The authorization letter must be signed by all individual land owners and the majority of directors in
+        organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
+        further instruction and an Authorization Letter template.
+      </p>
+    </ng-container>
+    <ng-container *ngIf="isLocalGovernmentUser">
+      An authorization letter must be provided only if the application is being submitted by a third-party agent. Please
+      consult the Supporting Documentation page of the <a>TODO: FIX THIS: ALC website</a> for further instruction.
+    </ng-container>
   </div>
-  <h6>Authorization Letters</h6>
+  <h6>Authorization Letters (if applicable)</h6>
   <div class="uploader">
     <app-file-drag-drop
       [allowMultiple]="true"

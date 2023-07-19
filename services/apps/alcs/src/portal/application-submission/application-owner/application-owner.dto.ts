@@ -6,7 +6,6 @@ import {
   IsUUID,
   Matches,
 } from 'class-validator';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 import { emailRegex } from '../../../utils/email.helper';
@@ -17,6 +16,7 @@ export enum APPLICATION_OWNER {
   ORGANIZATION = 'ORGZ',
   AGENT = 'AGEN',
   CROWN = 'CRWN',
+  GOVERNMENT = 'GOVR',
 }
 
 export class ApplicationOwnerTypeDto extends BaseCodeDto {}
@@ -97,23 +97,27 @@ export class ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
 export class SetPrimaryContactDto {
   @IsString()
   @IsOptional()
-  agentFirstName?: string;
+  firstName?: string;
 
   @IsString()
   @IsOptional()
-  agentLastName?: string;
+  lastName?: string;
 
   @IsString()
   @IsOptional()
-  agentOrganization?: string;
+  organization?: string;
 
   @IsString()
   @IsOptional()
-  agentPhoneNumber?: string;
+  phoneNumber?: string;
 
   @IsString()
   @IsOptional()
-  agentEmail?: string;
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  type?: APPLICATION_OWNER;
 
   @IsUUID()
   @IsOptional()

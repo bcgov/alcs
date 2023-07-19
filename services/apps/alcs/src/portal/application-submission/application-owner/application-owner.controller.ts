@@ -161,41 +161,44 @@ export class ApplicationOwnerController {
 
     //Create Owner
     if (!data.ownerUuid) {
-      await this.ownerService.deleteAgents(applicationSubmission);
-      const agentOwner = await this.ownerService.create(
+      await this.ownerService.deleteNonParcelOwners(applicationSubmission);
+      const newOwner = await this.ownerService.create(
         {
-          email: data.agentEmail,
-          typeCode: APPLICATION_OWNER.AGENT,
-          lastName: data.agentLastName,
-          firstName: data.agentFirstName,
-          phoneNumber: data.agentPhoneNumber,
-          organizationName: data.agentOrganization,
+          email: data.email,
+          typeCode: data.type,
+          lastName: data.lastName,
+          firstName: data.firstName,
+          phoneNumber: data.phoneNumber,
+          organizationName: data.organization,
           applicationSubmissionUuid: data.applicationSubmissionUuid,
         },
         applicationSubmission,
       );
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,
-        agentOwner,
+        newOwner,
       );
     } else if (data.ownerUuid) {
       const primaryContactOwner = await this.ownerService.getOwner(
         data.ownerUuid,
       );
 
-      if (primaryContactOwner.type.code === APPLICATION_OWNER.AGENT) {
-        //Update Fields for existing agent
+      if (
+        primaryContactOwner.type.code === APPLICATION_OWNER.AGENT ||
+        primaryContactOwner.type.code === APPLICATION_OWNER.GOVERNMENT
+      ) {
+        //Update Fields for non parcel owners
         await this.ownerService.update(primaryContactOwner.uuid, {
-          email: data.agentEmail,
-          typeCode: APPLICATION_OWNER.AGENT,
-          lastName: data.agentLastName,
-          firstName: data.agentFirstName,
-          phoneNumber: data.agentPhoneNumber,
-          organizationName: data.agentOrganization,
+          email: data.email,
+          typeCode: primaryContactOwner.type.code,
+          lastName: data.lastName,
+          firstName: data.firstName,
+          phoneNumber: data.phoneNumber,
+          organizationName: data.organization,
         });
       } else {
-        //Delete Agents if we aren't using one
-        await this.ownerService.deleteAgents(applicationSubmission);
+        //Delete Non parcel owners if we aren't using one
+        await this.ownerService.deleteNonParcelOwners(applicationSubmission);
       }
 
       await this.ownerService.setPrimaryContact(

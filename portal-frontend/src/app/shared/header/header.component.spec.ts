@@ -12,7 +12,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     mockAuthService = createMock();
-    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+    mockAuthService.$currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],

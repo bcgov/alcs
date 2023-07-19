@@ -13,7 +13,7 @@ describe('AuthInterceptorService', () => {
 
   beforeEach(() => {
     mockAuthService = createMock();
-    mockAuthService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+    mockAuthService.$currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
 
     TestBed.configureTestingModule({
       providers: [

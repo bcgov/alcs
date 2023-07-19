@@ -48,10 +48,10 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
         this.loadParcels();
-        const nonAgentOwners = applicationSubmission.owners.filter(
-          (owner) => owner.type.code !== APPLICATION_OWNER.AGENT
+        const parcelOwners = applicationSubmission.owners.filter(
+          (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
         );
-        this.$owners.next(nonAgentOwners);
+        this.$owners.next(parcelOwners);
       }
     });
 
@@ -159,8 +159,10 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   async onOwnersUpdated() {
     const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
-      const nonAgentOwners = owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
-      this.$owners.next(nonAgentOwners);
+      const parcelOwners = owners.filter(
+        (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+      );
+      this.$owners.next(parcelOwners);
     }
   }
 

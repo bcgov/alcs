@@ -255,7 +255,7 @@ describe('ApplicationOwnerController', () => {
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
-    mockAppOwnerService.deleteAgents.mockResolvedValue([]);
+    mockAppOwnerService.deleteNonParcelOwners.mockResolvedValue([]);
     mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.setPrimaryContact.mockResolvedValue();
     mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
@@ -271,7 +271,7 @@ describe('ApplicationOwnerController', () => {
       },
     );
 
-    expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
     expect(
@@ -288,7 +288,7 @@ describe('ApplicationOwnerController', () => {
       }),
     );
     mockAppOwnerService.setPrimaryContact.mockResolvedValue();
-    mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
+    mockAppOwnerService.deleteNonParcelOwners.mockResolvedValue({} as any);
     mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
@@ -306,7 +306,7 @@ describe('ApplicationOwnerController', () => {
     expect(
       mockApplicationSubmissionService.verifyAccessByUuid,
     ).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
   });
 
   it('should update the agent owner when calling set primary contact', async () => {

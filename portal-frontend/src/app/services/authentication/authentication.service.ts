@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { UserDto } from './authentication.dto';
 
 const JWT_TOKEN_KEY = 'jwt_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
@@ -23,7 +24,8 @@ export class AuthenticationService {
   private refreshExpires: number | undefined;
 
   isInitialized = false;
-  $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  $currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  $currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
   currentUser: ICurrentUser | undefined;
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -41,7 +43,8 @@ export class AuthenticationService {
     this.refreshExpires = decodedRefreshToken.exp! * 1000;
     this.expires = decodedToken.exp! * 1000;
     this.currentUser = decodedToken as ICurrentUser;
-    this.$currentUser.next(this.currentUser);
+    this.$currentTokenUser.next(this.currentUser);
+    this.loadUser();
   }
 
   clearTokens() {
@@ -136,5 +139,10 @@ export class AuthenticationService {
 
   private async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/portal`));
+  }
+
+  private async loadUser() {
+    const user = await firstValueFrom(this.http.get<UserDto>(`${environment.authUrl}/user/profile`));
+    this.$currentProfile.next(user);
   }
 }

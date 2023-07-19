@@ -214,16 +214,26 @@ export class ApplicationOwnerService {
     });
   }
 
-  async deleteAgents(application: ApplicationSubmission) {
+  async deleteNonParcelOwners(application: ApplicationSubmission) {
     const agentOwners = await this.repository.find({
-      where: {
-        applicationSubmission: {
-          fileNumber: application.fileNumber,
+      where: [
+        {
+          applicationSubmission: {
+            fileNumber: application.fileNumber,
+          },
+          type: {
+            code: APPLICATION_OWNER.AGENT,
+          },
         },
-        type: {
-          code: APPLICATION_OWNER.AGENT,
+        {
+          applicationSubmission: {
+            fileNumber: application.fileNumber,
+          },
+          type: {
+            code: APPLICATION_OWNER.GOVERNMENT,
+          },
         },
-      },
+      ],
     });
     return await this.repository.remove(agentOwners);
   }
