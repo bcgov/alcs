@@ -2,6 +2,7 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from '../application-submission/application-parcel/application-parcel.dto';
@@ -21,6 +22,7 @@ export class ApplicationSubmissionDraftService {
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private generateSubmissionDocumentService: GenerateSubmissionDocumentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string) {
@@ -79,7 +81,7 @@ export class ApplicationSubmissionDraftService {
       );
     }
 
-    const newReview = new ApplicationSubmission({
+    const newSubmission = new ApplicationSubmission({
       ...originalSubmission,
       uuid: undefined,
       auditCreatedAt: undefined,
@@ -89,7 +91,20 @@ export class ApplicationSubmissionDraftService {
       owners: [],
     });
     const savedSubmission = await this.applicationSubmissionRepository.save(
-      newReview,
+      newSubmission,
+    );
+    const statuses = await this.applicationSubmissionStatusService.copyStatuses(
+      originalSubmission.uuid,
+      newSubmission.uuid,
+      false,
+    );
+
+    this.applicationSubmissionRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        await transactionalEntityManager.save(newSubmission);
+
+        await transactionalEntityManager.save(statuses);
+      },
     );
 
     const ownerUuidMap = new Map<string, string>();
@@ -176,6 +191,7 @@ export class ApplicationSubmissionDraftService {
       relations: {
         owners: true,
         parcels: true,
+        createdBy: true,
       },
     });
 
@@ -191,8 +207,10 @@ export class ApplicationSubmissionDraftService {
     }
     const parcelUuids = original.parcels.map((parcel) => parcel.uuid);
     await this.applicationParcelService.deleteMany(parcelUuids);
-    await this.applicationSubmissionRepository.remove(original);
+    await this.applicationSubmissionStatusService.removeStatuses(original.uuid);
+    await this.applicationSubmissionRepository.delete({ uuid: original.uuid });
 
+    draft.createdBy = original.createdBy;
     draft.isDraft = false;
     await this.applicationSubmissionRepository.save(draft);
 

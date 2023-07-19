@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
 import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
 import { ApplicationOwnerType } from '../application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
@@ -23,6 +24,7 @@ import { ApplicationSubmissionDraftService } from './application-submission-draf
     ]),
     ApplicationSubmissionModule,
     PdfGenerationModule,
+    ApplicationSubmissionStatusModule,
   ],
   providers: [ApplicationSubmissionDraftService],
   controllers: [ApplicationSubmissionDraftController],
