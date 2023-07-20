@@ -24,7 +24,7 @@ export class ApplicationSubmissionStatusService {
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) {}
 
-  async setInitialStatuses(submissionUuid: string) {
+  async setInitialStatuses(submissionUuid: string, persist = true) {
     const statuses = await this.submissionStatusTypeRepository.find();
     const newStatuses: ApplicationSubmissionToSubmissionStatus[] = [];
 
@@ -42,7 +42,11 @@ export class ApplicationSubmissionStatusService {
       newStatuses.push(newStatus);
     }
 
-    return await this.statusesRepository.save(newStatuses);
+    if (persist) {
+      return await this.statusesRepository.save(newStatuses);
+    }
+
+    return newStatuses;
   }
 
   async setStatusDate(
@@ -112,5 +116,31 @@ export class ApplicationSubmissionStatusService {
     }
 
     return submission;
+  }
+
+  //Note: do not use fileNumber as identifier since there maybe multiple submissions with
+  //      the same fileNumber due to isDraft flag
+  async removeStatuses(submissionUuid: string) {
+    const statusesToRemove = await this.getCurrentStatusesBy(submissionUuid);
+
+    return await this.statusesRepository.remove(statusesToRemove);
+  }
+
+  async getCopiedStatuses(
+    sourceSubmissionUuid: string,
+    destinationSubmissionUuid,
+  ) {
+    const statuses = await this.statusesRepository.find({
+      where: { submissionUuid: sourceSubmissionUuid },
+    });
+    const newStatuses = statuses.map(
+      (s) =>
+        new ApplicationSubmissionToSubmissionStatus({
+          ...s,
+          submissionUuid: destinationSubmissionUuid,
+        }),
+    );
+
+    return newStatuses;
   }
 }

@@ -353,4 +353,84 @@ describe('ApplicationSubmissionStatusService', () => {
       fileNumber: fakeFileNumber,
     });
   });
+
+  it('Should remove statuses', async () => {
+    const fakeSubmissionUuid = 'fake';
+    const mockStatuses = [
+      new ApplicationSubmissionToSubmissionStatus({
+        submissionUuid: fakeSubmissionUuid,
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+        effectiveDate: new Date(),
+      }),
+    ];
+
+    mockApplicationSubmissionToSubmissionStatusRepository.findBy.mockResolvedValue(
+      mockStatuses,
+    );
+    mockApplicationSubmissionToSubmissionStatusRepository.remove.mockResolvedValue(
+      {} as any,
+    );
+
+    await service.removeStatuses(fakeSubmissionUuid);
+
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.findBy,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.findBy,
+    ).toHaveBeenCalledWith({
+      submissionUuid: fakeSubmissionUuid,
+    });
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.remove,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.remove,
+    ).toBeCalledWith(mockStatuses);
+  });
+
+  it('should return copied statuses', async () => {
+    const fakeSubmissionUuid = 'fake';
+    const fakeUpdatedSubmissionUuid = 'fake-updated';
+
+    const mockStatuses = [
+      new ApplicationSubmissionToSubmissionStatus({
+        submissionUuid: fakeSubmissionUuid,
+        statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
+      }),
+      new ApplicationSubmissionToSubmissionStatus({
+        submissionUuid: fakeSubmissionUuid,
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+        effectiveDate: new Date(),
+      }),
+    ];
+
+    const copiedStatuses = mockStatuses.map(
+      (s) =>
+        new ApplicationSubmissionToSubmissionStatus({
+          ...s,
+          submissionUuid: fakeUpdatedSubmissionUuid,
+        }),
+    );
+
+    mockApplicationSubmissionToSubmissionStatusRepository.find.mockResolvedValue(
+      mockStatuses,
+    );
+
+    const result = await service.getCopiedStatuses(
+      fakeSubmissionUuid,
+      fakeUpdatedSubmissionUuid,
+    );
+
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.find,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.find,
+    ).toBeCalledWith({
+      where: { submissionUuid: fakeSubmissionUuid },
+    });
+
+    expect(result).toMatchObject(copiedStatuses);
+  });
 });

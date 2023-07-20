@@ -701,12 +701,26 @@ export class ApplicationDecisionV2Service {
         },
       );
 
-      await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
-        applicationDecision.application.fileNumber,
-        SUBMISSION_STATUS.ALC_DECISION,
-        decisionDate,
+      await this.setDecisionReleasedStatus(decisionDate, applicationDecision);
+    }
+  }
+
+  private async setDecisionReleasedStatus(
+    decisionDate: Date | null,
+    applicationDecision: ApplicationDecision,
+  ) {
+    const statusDate = decisionDate;
+    if (applicationDecision.daysHideFromPublic) {
+      statusDate?.setDate(
+        statusDate.getDate() + applicationDecision.daysHideFromPublic,
       );
     }
+
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+      applicationDecision.application.fileNumber,
+      SUBMISSION_STATUS.ALC_DECISION,
+      statusDate,
+    );
   }
 
   private async getDecisionDocumentOrFail(decisionDocumentUuid: string) {
