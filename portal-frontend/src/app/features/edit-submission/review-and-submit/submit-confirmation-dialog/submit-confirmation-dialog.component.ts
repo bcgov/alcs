@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-submit-confirmation-dialog',
@@ -7,13 +7,10 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./submit-confirmation-dialog.component.scss'],
 })
 export class SubmitConfirmationDialogComponent {
-  constructor(private dialogRef: MatDialogRef<SubmitConfirmationDialogComponent>) {}
-
-  async onCancel(dialogResult: boolean = false) {
-    this.dialogRef.close(dialogResult);
-  }
-
-  async onSubmit() {
-    this.dialogRef.close(true);
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA)
+    protected data: {
+      governmentName: string;
+    }
+  ) {}
 }

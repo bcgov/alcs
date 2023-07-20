@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog.component';
 
-describe('OtherParcelConfirmationDialogComponent', () => {
+describe('SubmitConfirmationDialogComponent', () => {
   let component: SubmitConfirmationDialogComponent;
   let fixture: ComponentFixture<SubmitConfirmationDialogComponent>;
 
@@ -18,6 +18,10 @@ describe('OtherParcelConfirmationDialogComponent', () => {
         },
         {
           provide: MatDialogRef,
+          useValue: {},
+        },
+        {
+          provide: MAT_DIALOG_DATA,
           useValue: {},
         },
       ],

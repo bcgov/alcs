@@ -5,6 +5,7 @@ import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { CodeService } from '../../../services/code/code.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
@@ -28,14 +29,15 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
     private toastService: ToastService,
     private applicationService: ApplicationSubmissionService,
     private pdfGenerationService: PdfGenerationService,
+    private codeService: CodeService,
     private dialog: MatDialog
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((app) => {
-      this.applicationSubmission = app;
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
+      this.applicationSubmission = submission;
     });
   }
 
@@ -50,28 +52,45 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
   }
 
   async onSubmitToAlcs() {
-    const el = document.getElementsByClassName('error');
-    if (el && el.length > 0) {
-      el[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-      this.toastService.showErrorToast('Please correct all errors before submitting the form');
-    } else {
-      this.dialog
-        .open(SubmitConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe((didConfirm) => {
-          if (didConfirm) {
-            this.submit.emit();
-          }
+    if (this.applicationSubmission) {
+      const el = document.getElementsByClassName('error');
+      if (el && el.length > 0) {
+        el[0].scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
         });
+        this.toastService.showErrorToast('Please correct all errors before submitting the form');
+      } else {
+        const governmentName = await this.loadGovernmentName(this.applicationSubmission.localGovernmentUuid);
+        this.dialog
+          .open(SubmitConfirmationDialogComponent, {
+            data: {
+              governmentName: governmentName,
+            },
+          })
+          .beforeClosed()
+          .subscribe((didConfirm) => {
+            if (didConfirm) {
+              this.submit.emit();
+            }
+          });
+      }
     }
   }
 
   async onDownloadPdf(fileNumber: string | undefined) {
     if (fileNumber) {
       await this.pdfGenerationService.generateSubmission(fileNumber);
+    }
+  }
+
+  private async loadGovernmentName(uuid: string) {
+    const codes = await this.codeService.loadCodes();
+    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
+    if (localGovernment) {
+      return localGovernment.name;
+    } else {
+      return 'selected local / first nation government';
     }
   }
 }
