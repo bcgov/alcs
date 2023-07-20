@@ -27,6 +27,7 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
   otherFiles: ApplicationDocumentDto[] = [];
   files: ApplicationDocumentDto[] | undefined;
   disableEdit = false;
+  showFullApp = false;
 
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
@@ -36,6 +37,7 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
 
   ngOnChanges(changes: SimpleChanges): void {
     this.disableEdit = this.wasSubmittedToLfng || !this.isSubmittedToAlc;
+    this.showFullApp = this.wasSubmittedToLfng || this.isSubmittedToAlc;
   }
 
   ngOnDestroy(): void {

@@ -69,7 +69,7 @@
     </div>
   </div>
 </section>
-<section *ngIf="wasSubmittedToLfng || isSubmittedToAlc">
+<section *ngIf="showFullApp">
   <h3>Land Use</h3>
   <div *ngIf="submission" class="review-table">
     <div class="full-width">
@@ -136,7 +136,7 @@
     </div>
   </div>
 </section>
-<section *ngIf="wasSubmittedToLfng || isSubmittedToAlc">
+<section *ngIf="showFullApp">
   <h3>Proposal</h3>
   <app-nfu-details
     *ngIf="submission && applicationType === 'NFUP'"
@@ -180,7 +180,7 @@
     </div>
   </div>
 </section>
-<section *ngIf="wasSubmittedToLfng || isSubmittedToAlc">
+<section *ngIf="showFullApp">
   <h3>Optional Documents</h3>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
