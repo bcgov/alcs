@@ -93,11 +93,11 @@ export class ApplicationSubmissionDraftService {
     const savedSubmission = await this.applicationSubmissionRepository.save(
       newSubmission,
     );
-    const statuses = await this.applicationSubmissionStatusService.copyStatuses(
-      originalSubmission.uuid,
-      newSubmission.uuid,
-      false,
-    );
+    const statuses =
+      await this.applicationSubmissionStatusService.getCopiedStatuses(
+        originalSubmission.uuid,
+        newSubmission.uuid,
+      );
 
     this.applicationSubmissionRepository.manager.transaction(
       async (transactionalEntityManager) => {

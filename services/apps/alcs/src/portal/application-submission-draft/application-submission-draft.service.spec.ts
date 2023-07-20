@@ -91,14 +91,16 @@ describe('ApplicationSubmissionDraftService', () => {
     mockParcelService.update.mockResolvedValue([]);
     const mockTransaction = jest.fn();
     mockSubmissionRepo.manager.transaction = mockTransaction;
-    mockApplicationSubmissionStatusService.copyStatuses.mockResolvedValue([]);
+    mockApplicationSubmissionStatusService.getCopiedStatuses.mockResolvedValue(
+      [],
+    );
 
     const draft = await service.getOrCreateDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(3);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.copyStatuses,
+      mockApplicationSubmissionStatusService.getCopiedStatuses,
     ).toHaveBeenCalledTimes(1);
     expect(draft).toBeDefined();
   });

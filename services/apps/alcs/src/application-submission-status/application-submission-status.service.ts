@@ -126,10 +126,9 @@ export class ApplicationSubmissionStatusService {
     return await this.statusesRepository.remove(statusesToRemove);
   }
 
-  async copyStatuses(
+  async getCopiedStatuses(
     sourceSubmissionUuid: string,
     destinationSubmissionUuid,
-    persist = true,
   ) {
     const statuses = await this.statusesRepository.find({
       where: { submissionUuid: sourceSubmissionUuid },
@@ -141,10 +140,6 @@ export class ApplicationSubmissionStatusService {
           submissionUuid: destinationSubmissionUuid,
         }),
     );
-
-    if (persist) {
-      return await this.statusesRepository.save(newStatuses);
-    }
 
     return newStatuses;
   }
