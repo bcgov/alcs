@@ -20,18 +20,19 @@
   <div>
     <div class="subheading2">Approval Dependent</div>
     {{ condition.approvalDependant | booleanToString }}
+    <app-no-data *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"></app-no-data>
   </div>
 
   <div>
     <div class="subheading2">Security Amount</div>
     {{ condition.securityAmount }}
-    <app-no-data *ngIf="!condition.securityAmount"></app-no-data>
+    <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
   </div>
 
   <div>
     <div class="subheading2">Admin Fee</div>
     {{ condition.administrativeFee }}
-    <app-no-data *ngIf="!condition.administrativeFee"></app-no-data>
+    <app-no-data *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"></app-no-data>
   </div>
 
   <div>
@@ -55,8 +56,7 @@
     <span [id]="condition.uuid + 'Description'" [ngClass]="{ 'ellipsis-3': !isReadMoreClicked }">{{
       condition.description
     }}</span>
-
-    <app-no-data *ngIf="!condition.description"></app-no-data>
+    <app-no-data *ngIf="condition.description === null || condition.description === undefined"></app-no-data>
     <div class="read-more">
       <a
         (click)="onToggleReadMore()"

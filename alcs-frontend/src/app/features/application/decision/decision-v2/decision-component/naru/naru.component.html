@@ -5,14 +5,17 @@
 <div>
   <div class="subheading2">Residential Use Type</div>
   {{ component.naruSubtype?.label }}
+  <app-no-data *ngIf="component.naruSubtype === null || component.naruSubtype === undefined"></app-no-data>
 </div>
 
 <div>
   <div class="subheading2">Expiry Date</div>
   {{ component.expiryDate | date }}
+  <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>
 </div>
 
 <div>
   <div class="subheading2">Use End Date</div>
   {{ component.endDate | date }}
+  <app-no-data *ngIf="component.endDate === null || component.endDate === undefined"></app-no-data>
 </div>

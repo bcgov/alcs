@@ -98,10 +98,14 @@
             <div>
               <div class="subheading2">Decision Date</div>
               {{ decision.date | momentFormat }}
+              <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
             </div>
             <div>
               <div class="subheading2">Decision Maker</div>
-              {{ decision.decisionMaker ? decision.decisionMaker.label : '(Unset)' }}
+              {{ decision.decisionMaker?.label }}
+              <app-no-data
+                *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"
+              ></app-no-data>
             </div>
 
             <div>
@@ -123,7 +127,10 @@
                 <span *ngIf="!!decision.modifies">Modification Outcome</span>
                 <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
               </div>
-              {{ decision.linkedResolutionOutcome ? decision.linkedResolutionOutcome.label : 'No Data' }}
+              {{ decision.linkedResolutionOutcome?.label }}
+              <app-no-data
+                *ngIf="decision.linkedResolutionOutcome === null || decision.linkedResolutionOutcome === undefined"
+              ></app-no-data>
               {{ decision.modifies?.linkedResolutions?.join(', ') }}
               {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
             </div>
@@ -131,13 +138,16 @@
 
           <div class="decision-content">
             <div class="subheading2">Decision Description</div>
-            {{ decision.decisionDescription ? decision.decisionDescription : 'No Data' }}
+            {{ decision.decisionDescription }}
+            <app-no-data
+              *ngIf="decision.decisionDescription === null || decision.decisionDescription === undefined"
+            ></app-no-data>
           </div>
 
           <div class="decision-content grid-2">
             <div>
               <div class="subheading2">Days To Hide From Public</div>
-              {{ decision.daysHideFromPublic ? decision.daysHideFromPublic : 'No Data' }}
+              {{ decision.daysHideFromPublic }}
             </div>
             <div>
               <div class="subheading2">Stats Required</div>
@@ -149,13 +159,18 @@
             <div *ngIf="decision.outcome?.code === 'RESC'">
               <div class="subheading2">Rescinded Date</div>
               <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
-              <ng-container *ngIf="!decision.rescindedDate">No Data</ng-container>
+              <app-no-data
+                *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"
+              ></app-no-data>
             </div>
           </div>
 
           <div class="decision-content" *ngIf="decision.outcome?.code === 'RESC'">
             <div class="subheading2">Rescinded Comment</div>
-            {{ decision.rescindedComment ? decision.rescindedComment : 'No Data' }}
+            {{ decision.rescindedComment }}
+            <app-no-data
+              *ngIf="decision.rescindedComment === null || decision.rescindedComment === undefined"
+            ></app-no-data>
           </div>
 
           <div class="decision-documents decision-content">
@@ -167,11 +182,17 @@
           </div>
 
           <!-- Components -->
-          <div class="decision-content" *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
+          <div
+            class="decision-content components-wrapper"
+            *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)"
+          >
             <div class="row">
               <h5>Decision Components and Conditions</h5>
             </div>
-
+            <app-no-data
+              *ngIf="decision.components.length < 1"
+              text="No decision components are added. Edit draft to add decision components."
+            ></app-no-data>
             <div *ngFor="let component of decision.components">
               <div class="subheading1 decision-content">
                 {{ component.applicationDecisionComponentType?.label }} Component
@@ -188,10 +209,14 @@
                   <div>
                     <div class="subheading2">Agri Cap</div>
                     {{ component.agCap }}
+                    <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
                   </div>
                   <div>
                     <div class="subheading2">Agri Cap Source</div>
                     {{ component.agCapSource }}
+                    <app-no-data
+                      *ngIf="component.agCapSource === null || component.agCapSource === undefined"
+                    ></app-no-data>
                   </div>
                 </div>
 
@@ -235,7 +260,7 @@
           </div>
 
           <div
-            class="decision-content"
+            class="decision-content conditions-wrapper"
             *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions"
           >
             <h1 class="subheading1">Conditions</h1>
@@ -266,7 +291,7 @@
               <div *ngIf="decision.chairReviewRequired">
                 <div class="subheading2">Chair Review Outcome</div>
                 <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome.label }}</span>
-                <span *ngIf="decision.chairReviewOutcome === null">No Data</span>
+                <app-no-data *ngIf="decision.chairReviewOutcome === null"></app-no-data>
               </div>
             </div>
           </div>

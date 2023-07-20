@@ -9,5 +9,6 @@
   <div>
     <div class="subheading2">Expiry Date</div>
     {{ component.expiryDate | date }}
+    <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>
   </div>
 </div>

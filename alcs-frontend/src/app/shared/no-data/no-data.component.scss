@@ -1,7 +1,8 @@
 @use '../../../styles/colors';
 
 .text {
-  color: colors.$grey-dark;
+  color: colors.$grey;
+  font-weight: 400;
 }
 
 .error {

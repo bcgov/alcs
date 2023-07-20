@@ -9,15 +9,18 @@
   <div>
     <div class="subheading2">Use End Date</div>
     {{ component.endDate | date }}
+    <app-no-data *ngIf="component.endDate === null || component.endDate === undefined"></app-no-data>
   </div>
 </div>
 <div class="full-width">
   <div class="subheading2">Type of soil approved to be removed.</div>
   <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
+  <app-no-data *ngIf="component.soilTypeRemoved === null || component.soilTypeRemoved === undefined"></app-no-data>
 </div>
 <div class="full-width">
   <div class="subheading2">Type, origin and quality of fill proposed to be placed.</div>
   <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
+  <app-no-data *ngIf="component.soilFillTypeToPlace === null || component.soilFillTypeToPlace === undefined"></app-no-data>
 </div>
 <div class="full-width">
   <table>
@@ -30,7 +33,9 @@
       <tr>
         <td class="soil-table-label">Volume</td>
         <td>{{ component.soilToRemoveVolume }} m<sup>3</sup></td>
+        <app-no-data *ngIf="component.soilToRemoveVolume === null || component.soilToRemoveVolume === undefined"></app-no-data>
         <td>{{ component.soilToPlaceVolume }} m<sup>3</sup></td>
+        <app-no-data *ngIf="component.soilToPlaceVolume === null || component.soilToPlaceVolume === undefined"></app-no-data>
       </tr>
       <tr>
         <td class="soil-table-label">
@@ -38,17 +43,23 @@
           <div class="subtext">Note: 0.01 ha is 100m2</div>
         </td>
         <td>{{ component.soilToRemoveArea }} ha</td>
+        <app-no-data *ngIf="component.soilToRemoveArea === null || component.soilToRemoveArea === undefined"></app-no-data>
         <td>{{ component.soilToPlaceArea }} ha</td>
+        <app-no-data *ngIf="component.soilToPlaceArea === null || component.soilToPlaceArea === undefined"></app-no-data>
       </tr>
       <tr>
         <td class="soil-table-label">Maximum Depth</td>
         <td>{{ component.soilToRemoveMaximumDepth }} m</td>
+        <app-no-data *ngIf="component.soilToRemoveMaximumDepth === null || component.soilToRemoveMaximumDepth === undefined"></app-no-data>
         <td>{{ component.soilToPlaceMaximumDepth }} m</td>
+        <app-no-data *ngIf="component.soilToPlaceMaximumDepth === null || component.soilToPlaceMaximumDepth === undefined"></app-no-data>
       </tr>
       <tr>
         <td class="soil-table-label">Average Depth</td>
         <td>{{ component.soilToRemoveAverageDepth }} m</td>
+        <app-no-data *ngIf="component.soilToRemoveAverageDepth === null || component.soilToRemoveAverageDepth === undefined"></app-no-data>
         <td>{{ component.soilToPlaceAverageDepth }} m</td>
+        <app-no-data *ngIf="component.soilToPlaceAverageDepth === null || component.soilToPlaceAverageDepth === undefined"></app-no-data>
       </tr>
     </tbody>
   </table>
