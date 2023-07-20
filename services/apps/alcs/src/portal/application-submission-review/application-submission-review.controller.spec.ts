@@ -509,11 +509,14 @@ describe('ApplicationSubmissionReviewController', () => {
       mockAppSubmissionService.getForGovernmentByFileId,
     ).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.getByFileNumber).toHaveBeenCalledTimes(1);
-    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(2);
     expect(mockAppDocService.delete).toHaveBeenCalledTimes(1);
     expect(mockAppReviewService.delete).toHaveBeenCalledTimes(1);
-    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
+    expect(mockAppSubmissionService.updateStatus.mock.calls[1][1]).toEqual(
       SUBMISSION_STATUS.INCOMPLETE,
+    );
+    expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
+      SUBMISSION_STATUS.WRONG_GOV,
     );
     expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(

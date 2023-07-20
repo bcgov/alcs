@@ -6,8 +6,6 @@ import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
-import { ApplicationSubmissionService } from './application-submission.service';
-
 describe('ApplicationSubmissionDraftService', () => {
   let service: ApplicationSubmissionDraftService;
   let mockToastService: DeepMocked<ToastService>;
