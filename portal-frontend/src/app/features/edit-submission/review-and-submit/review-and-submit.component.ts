@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -7,6 +8,7 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
+import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/submit-confirmation-dialog.component';
 
 @Component({
   selector: 'app-review-and-submit',
@@ -25,7 +27,8 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
     private router: Router,
     private toastService: ToastService,
     private applicationService: ApplicationSubmissionService,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -55,7 +58,14 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
       });
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
     } else {
-      this.submit.emit();
+      this.dialog
+        .open(SubmitConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
+            this.submit.emit();
+          }
+        });
     }
   }
 

@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
@@ -40,6 +41,10 @@ describe('ReviewAndSubmitComponent', () => {
         },
         {
           provide: PdfGenerationService,
+          useValue: {},
+        },
+        {
+          provide: MatDialog,
           useValue: {},
         },
       ],

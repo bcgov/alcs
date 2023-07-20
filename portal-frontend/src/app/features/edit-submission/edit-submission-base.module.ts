@@ -34,6 +34,7 @@ import { SoilTableComponent } from './proposal/soil-table/soil-table.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
+import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 @NgModule({
@@ -54,6 +55,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
+    SubmitConfirmationDialogComponent,
     OtherParcelConfirmationDialogComponent,
     NfuProposalComponent,
     TurProposalComponent,
