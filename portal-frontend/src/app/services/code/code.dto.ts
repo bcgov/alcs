@@ -4,6 +4,7 @@ export interface LocalGovernmentDto {
   uuid: string;
   name: string;
   hasGuid: boolean;
+  matchesUserGuid: boolean;
 }
 
 export interface ApplicationTypeDto {

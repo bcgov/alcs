@@ -10,6 +10,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
 import { CardService } from '../../alcs/card/card.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { CodeController } from './code.controller';
 
@@ -89,15 +90,50 @@ describe('CodeController', () => {
   });
 
   it('should call out to local government service for fetching codes', async () => {
-    const codes = await portalController.loadCodes();
+    const codes = await portalController.loadCodes({
+      user: {
+        entity: new User(),
+      },
+    });
     expect(codes.localGovernments).toBeDefined();
     expect(codes.localGovernments.length).toBe(1);
     expect(codes.localGovernments[0].name).toEqual('fake-name');
-    expect(mockAppService.fetchApplicationTypes).toHaveBeenCalledTimes(1);
+    expect(codes.localGovernments[0].matchesUserGuid).toBeFalsy();
+    expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the matches flag correctly when users guid matches government', async () => {
+    const matchingGuid = 'guid';
+    mockLgService.listActive.mockResolvedValue([
+      new ApplicationLocalGovernment({
+        uuid: 'fake-uuid',
+        name: 'fake-name',
+        isFirstNation: false,
+        bceidBusinessGuid: matchingGuid,
+      }),
+    ]);
+
+    const codes = await portalController.loadCodes({
+      user: {
+        entity: new User({
+          bceidBusinessGuid: matchingGuid,
+        }),
+      },
+    });
+
+    expect(codes.localGovernments).toBeDefined();
+    expect(codes.localGovernments.length).toBe(1);
+    expect(codes.localGovernments[0].name).toEqual('fake-name');
+    expect(codes.localGovernments[0].matchesUserGuid).toBeTruthy();
+    expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to local submission service for fetching codes', async () => {
-    const codes = await portalController.loadCodes();
+    const codes = await portalController.loadCodes({
+      user: {
+        entity: new User(),
+      },
+    });
     expect(codes.submissionTypes).toBeDefined();
     expect(codes.submissionTypes.length).toBe(1);
     expect(codes.submissionTypes[0].code).toEqual('fake-code');
