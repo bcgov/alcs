@@ -54,10 +54,25 @@ except cx_Oracle.Error as e:
 count = cursor.fetchone()[0]
 print('Count =', count)
 
+
+with open(
+    "noi_docs.sql", "r", encoding="utf-8"
+) as sql_file:
+    create_noi_table = sql_file.read()
+    cursor.execute(create_noi_table)
+conn.commit()
+
+with open(
+    "app_docs.sql", "r", encoding="utf-8"
+) as sql_file:
+    create_app_table = sql_file.read()
+    cursor.execute(create_app_table)
+conn.commit()
+
 # # Execute the SQL query to retrieve the BLOB data and key column
 cursor.execute(f"""
 SELECT DOCUMENT_ID, ALR_APPLICATION_ID, FILE_NAME, DOCUMENT_BLOB, DOCUMENT_CODE, DESCRIPTION, DOCUMENT_SOURCE_CODE, UPLOADED_DATE, WHEN_UPDATED, REVISION_COUNT, dbms_lob.getLength(DOCUMENT_BLOB) as LENGTH
-FROM OATS.OATS_DOCUMENTS
+FROM OATS.ALCS_ETL_APP_DOCS
 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0
 AND DOCUMENT_ID > {starting_document_id}
 ORDER BY DOCUMENT_ID ASC
@@ -82,7 +97,7 @@ try:
                 tqdm.write(f"{application_id}/{document_id}_{filename}")
 
                 with tqdm(total=length, unit="B", unit_scale=True, desc=filename) as pbar2:
-                    s3.upload_fileobj(file, ecs_bucket, f"migrate/{application_id}/{document_id}_{filename}",
+                    s3.upload_fileobj(file, ecs_bucket, f"migrate/application/{application_id}/{document_id}_{filename}",
                         Callback=lambda bytes_transferred: pbar2.update(bytes_transferred),)
                 pbar.update(1)
                 last_document_id = document_id
