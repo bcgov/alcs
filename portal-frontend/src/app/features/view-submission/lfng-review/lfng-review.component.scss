@@ -2,9 +2,31 @@
 @use '../../../../styles/colors';
 
 .warning {
+  align-items: center;
   background-color: rgba(colors.$accent-color-light, 0.5);
+  border-radius: rem(4);
+  display: flex;
   padding: rem(16);
   margin-bottom: rem(24);
+
+  mat-icon {
+    margin-right: 12px;
+  }
+}
+
+.comment-container {
+  @extend .warning;
+  flex-direction: column;
+  align-items: flex-start;
+
+  div {
+    margin-bottom: rem(4);
+  }
+}
+
+.no-comment {
+  color: colors.$grey-dark;
+  font-style: italic;
 }
 
 .link {
