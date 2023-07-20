@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
@@ -34,7 +34,7 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
     this.loadDocuments();
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.disableEdit = this.wasSubmittedToLfng || !this.isSubmitted;
   }
 
