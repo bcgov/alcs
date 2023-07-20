@@ -31,11 +31,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
     localGovernment: this.localGovernment,
   });
 
-  constructor(
-    private codeService: CodeService,
-    private applicationSubmissionService: ApplicationSubmissionService,
-    private router: Router
-  ) {
+  constructor(private codeService: CodeService, private applicationSubmissionService: ApplicationSubmissionService) {
     super();
   }
 
