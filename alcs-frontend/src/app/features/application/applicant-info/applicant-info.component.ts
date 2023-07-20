@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
@@ -8,6 +7,7 @@ import {
   APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
   ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
 } from '../../../services/application/application.dto';
 
 @Component({
@@ -23,6 +23,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   application: ApplicationDto | undefined;
   submission?: ApplicationSubmissionDto = undefined;
   isSubmitted = false;
+  wasSubmittedToLfng = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -36,8 +37,18 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = application.fileNumber;
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
-        this.isSubmitted =
-          application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT ? !!application.dateSubmittedToAlc : true;
+        const isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+
+        this.isSubmitted = isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+
+        this.wasSubmittedToLfng =
+          isApplicantSubmission &&
+          [
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.WRONG_GOV,
+            SUBMISSION_STATUS.INCOMPLETE,
+          ].includes(this.submission?.status?.code);
       }
     });
   }

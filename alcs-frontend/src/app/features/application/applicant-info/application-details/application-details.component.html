@@ -7,7 +7,7 @@
   ></app-parcel>
   <div class="review-table edit-section">
     <div class="full-width center">
-      <button *ngIf="showEdit" [disabled]="!isSubmitted" (click)="onEdit(0)" mat-flat-button color="accent">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(0)" mat-flat-button color="accent">
         Edit Section
       </button>
     </div>
@@ -17,7 +17,7 @@
   <app-parcel *ngIf="files && submission" [files]="files" [application]="submission" parcelType="other"></app-parcel>
   <div class="review-table edit-section">
     <div class="full-width center">
-      <button *ngIf="showEdit" [disabled]="!isSubmitted" (click)="onEdit(1)" mat-flat-button color="accent">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(1)" mat-flat-button color="accent">
         Edit Section
       </button>
     </div>
@@ -63,13 +63,13 @@
       </div>
     </ng-container>
     <div class="full-width center">
-      <button *ngIf="showEdit" [disabled]="!isSubmitted" (click)="onEdit(2)" mat-flat-button color="accent">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(2)" mat-flat-button color="accent">
         Edit Section
       </button>
     </div>
   </div>
 </section>
-<section *ngIf="isSubmitted">
+<section *ngIf="wasSubmittedToLfng || isSubmitted">
   <h3>Land Use</h3>
   <div *ngIf="submission" class="review-table">
     <div class="full-width">
@@ -130,11 +130,13 @@
       </div>
     </div>
     <div class="full-width center">
-      <button *ngIf="showEdit" (click)="onEdit(4)" mat-flat-button color="accent">Edit Section</button>
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(4)" mat-flat-button color="accent">
+        Edit Section
+      </button>
     </div>
   </div>
 </section>
-<section *ngIf="isSubmitted">
+<section *ngIf="wasSubmittedToLfng || isSubmitted">
   <h3>Proposal</h3>
   <app-nfu-details
     *ngIf="submission && applicationType === 'NFUP'"
@@ -172,11 +174,13 @@
   ></app-naru-details>
   <div class="review-table edit-section">
     <div class="full-width center">
-      <button *ngIf="showEdit" (click)="onEdit(5)" mat-flat-button color="accent">Edit Section</button>
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">
+        Edit Section
+      </button>
     </div>
   </div>
 </section>
-<section *ngIf="isSubmitted">
+<section *ngIf="wasSubmittedToLfng || isSubmitted">
   <h3>Optional Documents</h3>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
@@ -197,7 +201,9 @@
       <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
     </div>
     <div class="full-width center">
-      <button *ngIf="showEdit" (click)="onEdit(6)" mat-flat-button color="accent">Edit Section</button>
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(6)" mat-flat-button color="accent">
+        Edit Section
+      </button>
     </div>
   </div>
 </section>

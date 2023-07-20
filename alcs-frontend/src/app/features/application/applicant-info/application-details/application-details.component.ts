@@ -21,15 +21,18 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   @Input() fileNumber!: string;
   @Input() showEdit = false;
   @Input() isSubmitted = true;
+  @Input() wasSubmittedToLfng = false;
 
   authorizationLetters: ApplicationDocumentDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
   files: ApplicationDocumentDto[] | undefined;
+  disableEdit = false;
 
   constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   ngOnInit(): void {
     this.loadDocuments();
+    this.disableEdit = this.wasSubmittedToLfng || !this.isSubmitted;
   }
 
   ngOnDestroy(): void {
