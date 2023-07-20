@@ -9,7 +9,7 @@ import {
   ApplicationTypeDto,
   CardStatusDto,
 } from './application-code.dto';
-import { ApplicationStatusDto } from './application-reconsideration/application-reconsideration.dto';
+import { ApplicationStatusDto } from './application-submission-status/application-submission-status.dto';
 import { ApplicationDto, CreateApplicationDto, UpdateApplicationDto } from './application.dto';
 
 @Injectable({
@@ -97,7 +97,7 @@ export class ApplicationService {
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
 
-    this.applicationStatuses = codes.applicationStatusType;
+    this.applicationStatuses = codes.applicationStatuses;
     this.$applicationStatuses.next(this.applicationStatuses);
   }
 

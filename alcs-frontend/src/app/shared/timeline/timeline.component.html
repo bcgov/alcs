@@ -23,7 +23,7 @@
             <a [routerLink]="event.link">Add date</a>
           </span>
         </td>
-        <td>{{ event.name }}</td>
+        <td><span [innerHTML]="event.htmlText"></span></td>
       </tr>
     </tbody>
   </table>
