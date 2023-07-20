@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
@@ -9,12 +9,14 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardService } from '../../alcs/card/card.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 export interface LocalGovernmentDto {
   uuid: string;
   name: string;
   hasGuid: boolean;
+  matchesUserGuid: boolean;
 }
 
 @Controller('/portal/code')
@@ -30,7 +32,7 @@ export class CodeController {
   ) {}
 
   @Get()
-  async loadCodes() {
+  async loadCodes(@Req() req) {
     const localGovernments = await this.localGovernmentService.listActive();
     const applicationTypes =
       await this.applicationService.fetchApplicationTypes();
@@ -51,7 +53,10 @@ export class CodeController {
       );
     });
     return {
-      localGovernments: this.mapLocalGovernments(localGovernments),
+      localGovernments: this.mapLocalGovernments(
+        localGovernments,
+        req.user.entity,
+      ),
       applicationTypes,
       submissionTypes,
       applicationDocumentTypes: mappedDocTypes,
@@ -61,11 +66,15 @@ export class CodeController {
 
   private mapLocalGovernments(
     governments: ApplicationLocalGovernment[],
+    user: User,
   ): LocalGovernmentDto[] {
     return governments.map((government) => ({
       name: government.name,
       uuid: government.uuid,
       hasGuid: government.bceidBusinessGuid !== null,
+      matchesUserGuid:
+        !!government.bceidBusinessGuid &&
+        government.bceidBusinessGuid === user.bceidBusinessGuid,
     }));
   }
 }
