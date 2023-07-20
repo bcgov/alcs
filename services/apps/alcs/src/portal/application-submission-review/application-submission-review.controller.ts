@@ -24,6 +24,7 @@ import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.se
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
+import { APPLICATION_OWNER } from '../application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -43,7 +44,7 @@ export class ApplicationSubmissionReviewController {
 
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
-    private applicationReviewService: ApplicationSubmissionReviewService,
+    private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
@@ -69,7 +70,9 @@ export class ApplicationSubmissionReviewController {
       }
 
       const applicationReview =
-        await this.applicationReviewService.getByFileNumber(fileNumber);
+        await this.applicationSubmissionReviewService.getByFileNumber(
+          fileNumber,
+        );
 
       if (applicationReview.createdBy) {
         const reviewGovernment = await this.localGovernmentService.getByGuid(
@@ -77,21 +80,21 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (reviewGovernment) {
-          return this.applicationReviewService.mapToDto(
+          return this.applicationSubmissionReviewService.mapToDto(
             applicationReview,
             reviewGovernment,
           );
         }
       }
 
-      return this.applicationReviewService.mapToDto(
+      return this.applicationSubmissionReviewService.mapToDto(
         applicationReview,
         userLocalGovernment,
       );
     }
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(fileNumber);
+      await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
 
     const applicationSubmission =
       await this.applicationSubmissionService.getByFileNumber(
@@ -124,7 +127,7 @@ export class ApplicationSubmissionReviewController {
       throw new BaseServiceException('Failed to load Local Government');
     }
 
-    return this.applicationReviewService.mapToDto(
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       matchingGovernment,
     );
@@ -153,13 +156,13 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    const applicationReview = await this.applicationReviewService.update(
-      fileNumber,
-      userLocalGovernment,
-      updateDto,
-    );
+    const applicationReview =
+      await this.applicationSubmissionReviewService.update(
+        fileNumber,
+        updateDto,
+      );
 
-    return this.applicationReviewService.mapToDto(
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       userLocalGovernment,
     );
@@ -177,10 +180,11 @@ export class ApplicationSubmissionReviewController {
         userLocalGovernment,
       );
 
-    const applicationReview = await this.applicationReviewService.startReview(
-      applicationSubmission,
-      req.user.entity,
-    );
+    const applicationReview =
+      await this.applicationSubmissionReviewService.startReview(
+        applicationSubmission,
+        req.user.entity,
+      );
 
     await this.applicationSubmissionService.updateStatus(
       applicationSubmission,
@@ -200,7 +204,24 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    return this.applicationReviewService.mapToDto(
+    if (
+      primaryContact &&
+      primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT
+    ) {
+      //Copy contact details over to government form
+      await this.applicationSubmissionReviewService.update(
+        applicationSubmission.fileNumber,
+        {
+          firstName: primaryContact.firstName,
+          lastName: primaryContact.lastName,
+          email: primaryContact.email,
+          department: primaryContact.organizationName,
+          phoneNumber: primaryContact.phoneNumber,
+        },
+      );
+    }
+
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       userLocalGovernment,
     );
@@ -258,7 +279,7 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(
+      await this.applicationSubmissionReviewService.getByFileNumber(
         application.fileNumber,
       );
 
@@ -270,11 +291,12 @@ export class ApplicationSubmissionReviewController {
       applicationReview.applicationFileNumber,
     );
 
-    const completedReview = this.applicationReviewService.verifyComplete(
-      applicationReview,
-      applicationDocuments,
-      userLocalGovernment.isFirstNation,
-    );
+    const completedReview =
+      this.applicationSubmissionReviewService.verifyComplete(
+        applicationReview,
+        applicationDocuments,
+        userLocalGovernment.isFirstNation,
+      );
 
     const validationResult =
       await this.applicationValidatorService.validateSubmission(application);
@@ -326,7 +348,7 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(
+      await this.applicationSubmissionReviewService.getByFileNumber(
         applicationSubmission.fileNumber,
       );
 
@@ -348,7 +370,7 @@ export class ApplicationSubmissionReviewController {
         await this.applicationDocumentService.delete(document);
       }
 
-      await this.applicationReviewService.delete(applicationReview);
+      await this.applicationSubmissionReviewService.delete(applicationReview);
 
       await this.applicationSubmissionStatusService.setStatusDate(
         applicationSubmission.uuid,

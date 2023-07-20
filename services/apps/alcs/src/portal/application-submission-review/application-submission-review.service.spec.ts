@@ -97,7 +97,7 @@ describe('ApplicationSubmissionReviewService', () => {
     mockRepository.findOneOrFail.mockResolvedValue(appReview);
     mockRepository.save.mockResolvedValue({} as any);
 
-    const res = await service.update('', mockLocalGovernment, {});
+    const res = await service.update('', {});
 
     expect(res).toBeDefined();
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -112,7 +112,7 @@ describe('ApplicationSubmissionReviewService', () => {
     mockRepository.save.mockResolvedValue({} as any);
     mockAppService.getUuid.mockResolvedValue('');
 
-    const res = await service.update('', mockLocalGovernment, {
+    const res = await service.update('', {
       isOCPDesignation: false,
       isSubjectToZoning: false,
     });

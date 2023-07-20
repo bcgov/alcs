@@ -100,10 +100,7 @@
           >ALC.Portal@gov.bc.ca</a
         >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
       </app-warning-banner>
-      <app-warning-banner
-        *ngIf="showErrors && localGovernment && localGovernment.matchesUserGuid"
-        class="full-row error"
-      >
+      <app-warning-banner *ngIf="showErrors && localGovernment && localGovernment.matchesUserGuid" class="full-row">
         You're logged in with a Business BCeID that is associated with the government selected above. You will have the
         opportunity to complete the local or first nation government review form immediately after this application is
         submitted.
