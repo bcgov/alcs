@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { ApplicationDocumentDto } from '../../../../services/application/application-document/application-document.dto';
@@ -13,7 +13,7 @@ import { ApplicationSubmissionDto } from '../../../../services/application/appli
   templateUrl: './application-details.component.html',
   styleUrls: ['./application-details.component.scss'],
 })
-export class ApplicationDetailsComponent implements OnInit, OnDestroy {
+export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() submission!: ApplicationSubmissionDto;
@@ -32,6 +32,9 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadDocuments();
+  }
+
+  ngOnChanges(): void {
     this.disableEdit = this.wasSubmittedToLfng || !this.isSubmitted;
   }
 
