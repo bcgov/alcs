@@ -243,7 +243,10 @@ export class ApplicationSubmissionValidatorService {
       applicationSubmission.owners[0].type.code ===
         APPLICATION_OWNER.INDIVIDUAL;
 
-    if (!onlyHasIndividualOwner) {
+    const isGovernmentContact =
+      primaryOwner.type.code === APPLICATION_OWNER.GOVERNMENT;
+
+    if (!onlyHasIndividualOwner && !isGovernmentContact) {
       const authorizationLetters = documents.filter(
         (document) =>
           document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
@@ -257,7 +260,10 @@ export class ApplicationSubmissionValidatorService {
       }
     }
 
-    if (primaryOwner.type.code === APPLICATION_OWNER.AGENT) {
+    if (
+      primaryOwner.type.code === APPLICATION_OWNER.AGENT ||
+      isGovernmentContact
+    ) {
       if (
         !primaryOwner.firstName ||
         !primaryOwner.lastName ||

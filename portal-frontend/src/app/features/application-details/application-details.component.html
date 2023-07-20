@@ -36,8 +36,15 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.lastName"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
-      <span *ngIf="primaryContact?.type?.code !== APPLICATION_OWNER.CROWN">Organization (optional)</span>
+      <span
+        *ngIf="
+          primaryContact?.type?.code !== APPLICATION_OWNER.CROWN &&
+          primaryContact?.type?.code !== APPLICATION_OWNER.GOVERNMENT
+        "
+        >Organization (optional)</span
+      >
       <span *ngIf="primaryContact?.type?.code === APPLICATION_OWNER.CROWN">Ministry/Department Responsible</span>
+      <span *ngIf="primaryContact?.type?.code === APPLICATION_OWNER.GOVERNMENT">Department</span>
     </div>
     <div class="grid-double">
       {{ primaryContact?.organizationName }}

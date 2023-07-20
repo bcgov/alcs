@@ -314,6 +314,40 @@ describe('ApplicationSubmissionValidatorService', () => {
     ).toBe(false);
   });
 
+  it('should not require an authorization letter when contact is goverment', async () => {
+    const mockOwner = new ApplicationOwner({
+      uuid: 'owner-uuid',
+      type: new ApplicationOwnerType({
+        code: APPLICATION_OWNER.INDIVIDUAL,
+      }),
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+    });
+
+    const governmentOwner = new ApplicationOwner({
+      uuid: 'government-owner-uuid',
+      type: new ApplicationOwnerType({
+        code: APPLICATION_OWNER.GOVERNMENT,
+      }),
+      firstName: 'Govern',
+      lastName: 'Ment',
+    });
+
+    const applicationSubmission = new ApplicationSubmission({
+      owners: [mockOwner, governmentOwner],
+      primaryContactOwnerUuid: governmentOwner.uuid,
+    });
+
+    const res = await service.validateSubmission(applicationSubmission);
+
+    expect(
+      includesError(
+        res.errors,
+        new Error(`Application has no authorization letters`),
+      ),
+    ).toBe(false);
+  });
+
   it('should not have an authorization letter error when one is provided', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',

@@ -55,9 +55,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
       if (app) {
         this.primaryContact = app.owners.find((owner) => owner.uuid === app.primaryContactOwnerUuid);
         this.populateLocalGovernment(app.localGovernmentUuid);
-        this.needsAuthorizationLetter = !(
-          app.owners.length === 1 && app.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL
-        );
+
+        this.needsAuthorizationLetter =
+          !(this.primaryContact?.type.code === APPLICATION_OWNER.GOVERNMENT) &&
+          !(
+            app.owners.length === 1 &&
+            (app.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL ||
+              app.owners[0].type.code === APPLICATION_OWNER.GOVERNMENT)
+          );
       }
     });
 

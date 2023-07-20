@@ -11,7 +11,6 @@ import { ClsModule } from 'nestjs-cls';
 import { LoggerModule } from 'nestjs-pino';
 import { CdogsModule } from '../../../libs/common/src/cdogs/cdogs.module';
 import { AlcsModule } from './alcs/alcs.module';
-import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
@@ -23,15 +22,13 @@ import { MainController } from './main.controller';
 import { MainService } from './main.service';
 import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
-import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
-import { UserService } from './user/user.service';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
-    TypeOrmModule.forFeature([HealthCheck, User]),
+    TypeOrmModule.forFeature([HealthCheck]),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
@@ -69,7 +66,6 @@ import { UserService } from './user/user.service';
   controllers: [MainController, LogoutController],
   providers: [
     MainService,
-    UserService,
     AuditSubscriber,
     {
       provide: APP_GUARD,

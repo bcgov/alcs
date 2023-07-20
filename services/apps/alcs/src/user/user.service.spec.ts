@@ -8,6 +8,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository } from 'typeorm';
 import { initUserMockEntity } from '../../test/mocks/mockEntities';
+import { ApplicationLocalGovernment } from '../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { EmailService } from '../providers/email/email.service';
 import { User } from './user.entity';
@@ -15,7 +16,10 @@ import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
-  let repositoryMock = createMock<Repository<User>>();
+  let mockUserRepository: DeepMocked<Repository<User>>;
+  let mockGovernmentRepository: DeepMocked<
+    Repository<ApplicationLocalGovernment>
+  >;
   let emailServiceMock: DeepMocked<EmailService>;
 
   const email = 'bruce.wayne@gotham.com';
@@ -23,14 +27,20 @@ describe('UserService', () => {
   mockUser.email = email;
 
   beforeEach(async () => {
-    emailServiceMock = createMock<EmailService>();
+    emailServiceMock = createMock();
+    mockUserRepository = createMock();
+    mockGovernmentRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
         {
           provide: getRepositoryToken(User),
-          useValue: repositoryMock,
+          useValue: mockUserRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationLocalGovernment),
+          useValue: mockGovernmentRepository,
         },
         { provide: EmailService, useValue: emailServiceMock },
         UserProfile,
@@ -46,13 +56,13 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    repositoryMock = module.get(getRepositoryToken(User));
+    mockUserRepository = module.get(getRepositoryToken(User));
     service = module.get<UserService>(UserService);
 
-    repositoryMock.findOne.mockResolvedValue(mockUser);
-    repositoryMock.save.mockResolvedValue(mockUser);
-    repositoryMock.find.mockResolvedValue([mockUser]);
-    repositoryMock.softRemove.mockResolvedValue(mockUser);
+    mockUserRepository.findOne.mockResolvedValue(mockUser);
+    mockUserRepository.save.mockResolvedValue(mockUser);
+    mockUserRepository.find.mockResolvedValue([mockUser]);
+    mockUserRepository.softRemove.mockResolvedValue(mockUser);
 
     emailServiceMock.sendEmail.mockResolvedValue();
   });
@@ -72,12 +82,12 @@ describe('UserService', () => {
 
   describe('createUser', () => {
     it('should save a user when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(null);
+      mockUserRepository.findOne.mockResolvedValue(null);
 
       const user = await service.create(mockUser);
 
       expect(user).toEqual(mockUser);
-      expect(repositoryMock.save).toHaveBeenCalledTimes(1);
+      expect(mockUserRepository.save).toHaveBeenCalledTimes(1);
     });
 
     it('should reject if user already exists', async () => {
@@ -91,12 +101,12 @@ describe('UserService', () => {
     it('should call delete user on the repository', async () => {
       await service.delete(mockUser.uuid);
 
-      expect(repositoryMock.softRemove).toHaveBeenCalledTimes(1);
-      expect(repositoryMock.softRemove).toHaveBeenCalledWith(mockUser);
+      expect(mockUserRepository.softRemove).toHaveBeenCalledTimes(1);
+      expect(mockUserRepository.softRemove).toHaveBeenCalledWith(mockUser);
     });
 
     it('should reject when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(null);
+      mockUserRepository.findOne.mockResolvedValue(null);
 
       await expect(service.delete(mockUser.uuid)).rejects.toMatchObject(
         new Error(`User with provided uuid ${mockUser.uuid} was not found`),
@@ -116,7 +126,7 @@ describe('UserService', () => {
     });
 
     it('should fail when user does not exist', async () => {
-      repositoryMock.findOne.mockResolvedValue(null);
+      mockUserRepository.findOne.mockResolvedValue(null);
 
       await expect(service.update('fake-uuid', mockUser)).rejects.toMatchObject(
         new ServiceNotFoundException(`User not found fake-uuid`),
@@ -130,7 +140,7 @@ describe('UserService', () => {
     const prefix = env === 'production' ? '' : `[${env}]`;
     const subject = `${prefix} Access Requested to ALCS`;
     const body = `A new user ${email}: ${userIdentifier} has requested access to ALCS.<br/> 
-<a href="https://bcgov.github.io/sso-requests/my-dashboard/integrations">CSS</a>`;
+<a href='https://bcgov.github.io/sso-requests/my-dashboard/integrations'>CSS</a>`;
 
     await service.sendNewUserRequestEmail(email, userIdentifier);
 
@@ -139,5 +149,31 @@ describe('UserService', () => {
       body,
       subject,
     });
+  });
+
+  it('should not call repository if user does not have a bc business guid', async () => {
+    mockGovernmentRepository.findOne.mockResolvedValue(
+      new ApplicationLocalGovernment(),
+    );
+
+    const res = await service.getUserLocalGovernment(new User());
+
+    expect(res).toBeUndefined();
+    expect(mockGovernmentRepository.findOne).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call repository if user has a bc business guid', async () => {
+    mockGovernmentRepository.findOne.mockResolvedValue(
+      new ApplicationLocalGovernment(),
+    );
+
+    const res = await service.getUserLocalGovernment(
+      new User({
+        bceidBusinessGuid: 'guid',
+      }),
+    );
+
+    expect(res).toBeDefined();
+    expect(mockGovernmentRepository.findOne).toHaveBeenCalledTimes(1);
   });
 });

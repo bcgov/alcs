@@ -70,7 +70,9 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
         this.application = application;
         this.fileId = application.fileNumber;
         this.submissionUuid = application.uuid;
-        const nonAgentOwners = application.owners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+        const nonAgentOwners = application.owners.filter(
+          (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+        );
         this.owners = nonAgentOwners.map((o) => ({
           ...o,
           parcels: o.parcels.filter((p) => p.parcelType === PARCEL_TYPE.OTHER),

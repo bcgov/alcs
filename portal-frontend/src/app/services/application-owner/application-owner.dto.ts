@@ -7,6 +7,7 @@ export enum APPLICATION_OWNER {
   ORGANIZATION = 'ORGZ',
   AGENT = 'AGEN',
   CROWN = 'CRWN',
+  GOVERNMENT = 'GOVR',
 }
 
 export interface ApplicationOwnerTypeDto extends BaseCodeDto {
@@ -45,11 +46,12 @@ export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
 }
 
 export interface SetPrimaryContactDto {
-  agentFirstName?: string;
-  agentLastName?: string;
-  agentOrganization?: string;
-  agentPhoneNumber?: string;
-  agentEmail?: string;
+  firstName?: string;
+  lastName?: string;
+  organization?: string;
+  phoneNumber?: string;
+  email?: string;
+  type?: APPLICATION_OWNER;
   ownerUuid?: string;
   applicationSubmissionUuid: string;
 }

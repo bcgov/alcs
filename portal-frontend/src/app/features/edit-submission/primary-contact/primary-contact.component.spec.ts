@@ -8,6 +8,8 @@ import { ApplicationDocumentService } from '../../../services/application-docume
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { UserDto } from '../../../services/authentication/authentication.dto';
+import { AuthenticationService } from '../../../services/authentication/authentication.service';
 
 import { PrimaryContactComponent } from './primary-contact.component';
 
@@ -17,6 +19,7 @@ describe('PrimaryContactComponent', () => {
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
+  let mockAuthService: DeepMocked<AuthenticationService>;
 
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
@@ -24,6 +27,9 @@ describe('PrimaryContactComponent', () => {
     mockAppService = createMock();
     mockAppDocumentService = createMock();
     mockAppOwnerService = createMock();
+    mockAuthService = createMock();
+
+    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
       providers: [
@@ -42,6 +48,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: MatDialog,
           useValue: {},
+        },
+        {
+          provide: AuthenticationService,
+          useValue: mockAuthService,
         },
       ],
       declarations: [PrimaryContactComponent],

@@ -329,4 +329,14 @@ describe('ApplicationOwnerService', () => {
       'A et al.',
     );
   });
+
+  it('should load then delete non application owners', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    mockRepo.remove.mockResolvedValue([] as any);
+
+    await service.deleteNonParcelOwners('uuid');
+
+    expect(mockRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockRepo.remove).toHaveBeenCalledTimes(1);
+  });
 });

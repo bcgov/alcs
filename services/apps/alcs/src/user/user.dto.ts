@@ -38,6 +38,8 @@ export class UserDto extends UpdateUserDto {
 
   @AutoMap()
   prettyName?: string | null;
+
+  government?: string;
 }
 
 export class CreateUserDto {

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApplicationOwnerDto, APPLICATION_OWNER } from '../../../../services/application-owner/application-owner.dto';
+import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 
 @Component({
@@ -31,7 +31,9 @@ export class ApplicationOwnersDialogComponent {
   async onUpdated() {
     const updatedOwners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (updatedOwners) {
-      this.owners = updatedOwners.filter((owner) => owner.type.code !== APPLICATION_OWNER.AGENT);
+      this.owners = updatedOwners.filter(
+        (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+      );
       this.isDirty = true;
     }
   }
