@@ -22,7 +22,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: ApplicationDto | undefined;
   submission?: ApplicationSubmissionDto = undefined;
-  isSubmitted = false;
+  isSubmittedToAlc = false;
   wasSubmittedToLfng = false;
 
   constructor(
@@ -39,7 +39,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
         const isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
 
-        this.isSubmitted = isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+        this.isSubmittedToAlc = isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
 
         this.wasSubmittedToLfng =
           isApplicantSubmission &&

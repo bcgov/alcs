@@ -20,7 +20,7 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
   @Input() applicationType!: string;
   @Input() fileNumber!: string;
   @Input() showEdit = false;
-  @Input() isSubmitted = true;
+  @Input() isSubmittedToAlc = true;
   @Input() wasSubmittedToLfng = false;
 
   authorizationLetters: ApplicationDocumentDto[] = [];
@@ -35,7 +35,7 @@ export class ApplicationDetailsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.disableEdit = this.wasSubmittedToLfng || !this.isSubmitted;
+    this.disableEdit = this.wasSubmittedToLfng || !this.isSubmittedToAlc;
   }
 
   ngOnDestroy(): void {
