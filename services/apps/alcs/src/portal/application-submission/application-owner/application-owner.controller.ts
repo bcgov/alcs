@@ -161,7 +161,7 @@ export class ApplicationOwnerController {
 
     //Create Owner
     if (!data.ownerUuid) {
-      await this.ownerService.deleteNonParcelOwners(applicationSubmission);
+      await this.ownerService.deleteNonParcelOwners(applicationSubmission.uuid);
       const newOwner = await this.ownerService.create(
         {
           email: data.email,
@@ -198,7 +198,9 @@ export class ApplicationOwnerController {
         });
       } else {
         //Delete Non parcel owners if we aren't using one
-        await this.ownerService.deleteNonParcelOwners(applicationSubmission);
+        await this.ownerService.deleteNonParcelOwners(
+          applicationSubmission.uuid,
+        );
       }
 
       await this.ownerService.setPrimaryContact(
