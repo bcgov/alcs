@@ -371,19 +371,36 @@ export class ApplicationSubmissionReviewController {
         );
       }
 
-      if (returnDto.reasonForReturn === 'incomplete') {
-        await this.applicationSubmissionService.updateStatus(
-          applicationSubmission,
-          SUBMISSION_STATUS.INCOMPLETE,
-        );
-      } else {
-        await this.applicationSubmissionService.updateStatus(
-          applicationSubmission,
-          SUBMISSION_STATUS.WRONG_GOV,
-        );
-      }
+      await this.setReturnedStatus(returnDto, applicationSubmission);
     } else {
       throw new BaseServiceException('Application not in correct status');
+    }
+  }
+
+  private async setReturnedStatus(
+    returnDto: ReturnApplicationSubmissionDto,
+    applicationSubmission: ApplicationSubmission,
+  ) {
+    if (returnDto.reasonForReturn === 'incomplete') {
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.WRONG_GOV,
+        null,
+      );
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.INCOMPLETE,
+      );
+    } else {
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.INCOMPLETE,
+        null,
+      );
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.WRONG_GOV,
+      );
     }
   }
 
