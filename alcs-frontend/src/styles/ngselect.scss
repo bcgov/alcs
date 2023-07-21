@@ -76,3 +76,23 @@
 .ng-select.ng-select-single .ng-select-container:not(.ng-appearance-outline) .ng-arrow-wrapper {
   bottom: 15px !important;
 }
+
+.ng-select.ng-invalid.ng-touched {
+  border-color: colors.$error-color !important;
+}
+
+.ng-select.ng-select-focused.ng-invalid.ng-touched .ng-select-container:after {
+  border-color: colors.$error-color;
+}
+
+.ng-select.ng-invalid.ng-touched .ng-select-container {
+  border-color: colors.$error-color !important;
+}
+
+.ng-select.ng-invalid.ng-touched .ng-select-container.ng-appearance-outline:after {
+  border-color: colors.$error-color !important;
+}
+
+.ng-select.ng-invalid.ng-touched .ng-value-container .ng-placeholder {
+  color: colors.$error-color !important;
+}

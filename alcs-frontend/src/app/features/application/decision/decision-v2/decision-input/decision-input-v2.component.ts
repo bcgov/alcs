@@ -10,7 +10,6 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
@@ -105,7 +104,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     public router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationService: ApplicationDetailService,
     public dialog: MatDialog
   ) {}
@@ -523,22 +521,78 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.resolutionYearControl.enable();
   }
 
-  async onRelease() {
-    this.dialog
-      .open(ReleaseDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        autoFocus: false,
-      })
-      .afterClosed()
-      .subscribe(async (didAccept) => {
-        if (didAccept) {
-          await this.onSubmit(false, false);
-          await this.applicationService.loadApplication(this.fileNumber);
-        }
+  private runValidation() {
+    this.form.markAllAsTouched();
+
+    if (
+      !this.form.valid ||
+      !this.conditionsValid ||
+      !this.componentsValid ||
+      (this.components.length === 0 && this.showComponents) ||
+      (this.conditionUpdates.length === 0 && this.showConditions)
+    ) {
+      console.log('invalid');
+
+      this.form.controls.decisionMaker.markAsDirty();
+      this.toastService.showErrorToast('Please correct all errors before submitting the form');
+
+      this.scrollToError();
+
+      return false;
+    } else {
+      console.log('valid');
+      return true;
+    }
+  }
+
+  private scrollToError() {
+    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('ng-invalid');
+
+    if (!elements) {
+      elements = document.getElementsByClassName('error');
+    }
+
+    let elArray: Element[] = [];
+    if (elements) {
+      elArray = Array.from(elements);
+    }
+
+    for (let i = 0; i < elArray.length; i++) {
+      if (elArray[i].nodeName === 'FORM') {
+        elArray.splice(i, 1);
+      }
+    }
+
+    if (elArray && elArray.length > 0) {
+      console.log(elArray[0]);
+
+      elArray[0].scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
       });
+    }
+  }
+
+  async onRelease() {
+    // TODO run validation first
+
+    if (this.runValidation()) {
+      this.dialog
+        .open(ReleaseDialogComponent, {
+          minWidth: '600px',
+          maxWidth: '900px',
+          maxHeight: '80vh',
+          width: '90%',
+          autoFocus: false,
+        })
+        .afterClosed()
+        .subscribe(async (didAccept) => {
+          if (didAccept) {
+            await this.onSubmit(false, false);
+            await this.applicationService.loadApplication(this.fileNumber);
+          }
+        });
+    }
   }
 
   onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {

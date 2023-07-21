@@ -96,6 +96,18 @@
         [clearable]="false"
       ></ng-select>
 
+      <!-- <mat-form-field class="condition-grid-half-2" appearance="outline">
+        <mat-label>Decision Maker</mat-label>
+        <mat-select appearance="outline" [formControl]="decisionMakerControl">
+          <mat-option
+            *ngFor="let decisionMaker of decisionMakers"
+            [value]="decisionMaker.code"
+            (change)="onSelectDecisionMaker(decisionMaker)"
+            >{{ decisionMaker.label }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field> -->
+
       <ng-select
         *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
         appearance="outline"
@@ -275,20 +287,7 @@
   </form>
 
   <div class="row flex-right">
-    <button
-      class="release-decision-btn"
-      type="button"
-      [disabled]="
-        !form.valid ||
-        !conditionsValid ||
-        !componentsValid ||
-        (components.length === 0 && showComponents) ||
-        (conditionUpdates.length === 0 && showConditions)
-      "
-      (click)="onRelease()"
-      mat-flat-button
-      color="primary"
-    >
+    <button class="release-decision-btn" type="button" (click)="onRelease()" mat-flat-button color="primary">
       Release Decision
     </button>
   </div>
