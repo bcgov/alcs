@@ -22,6 +22,13 @@ export interface ApplicationStatusDto extends BaseCodeDto {
   portalColor: string;
 }
 
+export interface ApplicationSubmissionToSubmissionStatusDto {
+  submissionUuid: string;
+  effectiveDate: number | null;
+  statusTypeCode: string;
+  status: ApplicationStatusDto;
+}
+
 export interface NaruSubtypeDto extends BaseCodeDto {}
 
 export interface ProposedLot {
@@ -46,6 +53,7 @@ export interface ApplicationSubmissionDto {
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 }
 
 export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {

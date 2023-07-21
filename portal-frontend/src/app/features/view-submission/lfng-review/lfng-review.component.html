@@ -37,7 +37,7 @@
   <div *ngIf="application.status.code === SUBMISSION_STATUS.IN_PROGRESS" class="warning">
     <mat-icon>info</mat-icon>This section will update after the application is submitted.
   </div>
-  <div *ngIf="!applicationReview && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC" class="warning">
+  <div *ngIf="!applicationReview && submittedToAlcStatus" class="warning">
     <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
   </div>
   <div
