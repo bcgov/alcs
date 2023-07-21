@@ -10,6 +10,7 @@ import { scrollToElement } from '../../shared/utils/scroll-helper';
 export enum ApplicationCreateDialogStepsEnum {
   submissionType = 0,
   applicationType = 1,
+  prescribedBody = 2,
 }
 
 @Component({
@@ -21,6 +22,7 @@ export enum ApplicationCreateDialogStepsEnum {
 export class CreateApplicationDialogComponent implements OnInit, AfterViewChecked {
   submissionStep = ApplicationCreateDialogStepsEnum.submissionType;
   applicationStep = ApplicationCreateDialogStepsEnum.applicationType;
+  prescribedBodyStep = ApplicationCreateDialogStepsEnum.prescribedBody;
 
   applicationTypes: ApplicationTypeDto[] = [];
   selectedAppType: ApplicationTypeDto | undefined = undefined;
@@ -31,6 +33,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   readMoreClicked: boolean = false;
   isReadMoreVisible: boolean = false;
   currentStepIndex: number = 0;
+  prescribedBody: string | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<CreateApplicationDialogComponent>,
@@ -61,7 +64,19 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   }
 
   async onSubmit() {
-    const res = await this.applicationService.create(this.selectedAppType!.code);
+    if (this.selectedAppType! && ['INCL', 'EXCL'].includes(this.selectedAppType!.code)) {
+      this.currentStepIndex++;
+    } else {
+      await this.createApplication();
+    }
+  }
+
+  async onSubmitInlcExcl() {
+    await this.createApplication();
+  }
+
+  private async createApplication() {
+    const res = await this.applicationService.create(this.selectedAppType!.code, this.prescribedBody);
     if (res) {
       await this.router.navigateByUrl(`/application/${res.fileId}/edit`);
       this.dialogRef.close(true);
@@ -110,5 +125,9 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
       default:
         return true;
     }
+  }
+
+  onSelectPrescribedBody(name: string) {
+    this.prescribedBody = name;
   }
 }

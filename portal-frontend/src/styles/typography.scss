@@ -33,6 +33,7 @@ h3 {
 
 h4 {
   @include typography-style(rem(18), 700);
+  line-height: 1.5rem !important;
 }
 
 h5 {

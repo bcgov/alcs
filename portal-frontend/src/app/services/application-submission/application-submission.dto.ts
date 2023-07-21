@@ -251,4 +251,7 @@ export interface ApplicationSubmissionUpdateDto {
   naruToPlaceAverageDepth?: number | null;
   naruSleepingUnits?: number | null;
   naruAgriTourism?: string | null;
+
+  //Inclusion / Exclusion Fields
+  prescribedBody?: string | null;
 }

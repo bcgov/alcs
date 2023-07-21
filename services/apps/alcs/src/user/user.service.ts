@@ -97,6 +97,7 @@ export class UserService {
         where: { bceidBusinessGuid: user.bceidBusinessGuid },
         select: {
           name: true,
+          isFirstNation: true,
         },
       });
     }

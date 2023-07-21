@@ -1,0 +1,8 @@
+@use '../../../styles/functions' as *;
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: rem(8) 0;
+  align-items: flex-start;
+}

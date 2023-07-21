@@ -40,6 +40,8 @@ export class UserDto extends UpdateUserDto {
   prettyName?: string | null;
 
   government?: string;
+  isLocalGovernment: boolean;
+  isFirstNationGovernment: boolean;
 }
 
 export class CreateUserDto {

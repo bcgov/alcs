@@ -9,7 +9,8 @@ import { scrollToElement } from '../../../shared/utils/scroll-helper';
 export enum ApplicationChangeTypeStepsEnum {
   warning = 0,
   applicationType = 1,
-  confirmation = 2,
+  prescribedBody = 2,
+  confirmation = 3,
 }
 
 @Component({
@@ -30,8 +31,10 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   warningStep = ApplicationChangeTypeStepsEnum.warning;
   applicationTypeStep = ApplicationChangeTypeStepsEnum.applicationType;
   confirmationStep = ApplicationChangeTypeStepsEnum.confirmation;
+  prescribedBodyStep = ApplicationChangeTypeStepsEnum.prescribedBody;
 
   stepIdx = 0;
+  prescribedBody: string | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
@@ -59,16 +62,17 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
       .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
   }
 
-  async onCancel(dialogResult: boolean = false) {
+  async closeDialog(dialogResult: boolean = false) {
     this.dialogRef.close(dialogResult);
   }
 
   async onSubmit() {
     const result = await this.applicationSubmissionService.updatePending(this.submissionUuid, {
       typeCode: this.selectedAppType!.code,
+      prescribedBody: this.prescribedBody,
     });
     if (result) {
-      this.onCancel(true);
+      await this.closeDialog(true);
     }
   }
 
@@ -101,10 +105,22 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   }
 
   async next() {
-    this.stepIdx += 1;
+    if (this.stepIdx === ApplicationChangeTypeStepsEnum.applicationType) {
+      if (this.selectedAppType && ['INCL', 'EXCL'].includes(this.selectedAppType.code)) {
+        this.stepIdx = ApplicationChangeTypeStepsEnum.prescribedBody;
+      } else {
+        this.stepIdx = ApplicationChangeTypeStepsEnum.confirmation;
+      }
+    } else {
+      this.stepIdx += 1;
+    }
   }
 
   async back() {
     this.stepIdx -= 1;
+  }
+
+  onSelectPrescribedBody(name: string) {
+    this.prescribedBody = name;
   }
 }

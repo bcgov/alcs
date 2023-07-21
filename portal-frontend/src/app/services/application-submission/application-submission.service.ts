@@ -54,12 +54,13 @@ export class ApplicationSubmissionService {
     }
   }
 
-  async create(type: string) {
+  async create(type: string, prescribedBody?: string) {
     try {
       this.overlayService.showSpinner();
       return await firstValueFrom(
         this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {
           type,
+          prescribedBody,
         })
       );
     } catch (e) {
