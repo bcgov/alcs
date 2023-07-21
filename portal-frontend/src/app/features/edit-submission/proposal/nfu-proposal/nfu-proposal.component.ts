@@ -61,7 +61,7 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
 
         this.form.patchValue({
           hectares: applicationSubmission.nfuHectares?.toString(),
-          purpose: applicationSubmission.nfuPurpose,
+          purpose: applicationSubmission.purpose,
           outsideLands: applicationSubmission.nfuOutsideLands,
           agricultureSupport: applicationSubmission.nfuAgricultureSupport,
           totalFillPlacement: applicationSubmission.nfuTotalFillPlacement?.toString(),
@@ -92,7 +92,7 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
   private async save() {
     if (this.fileId) {
       const nfuHectares = this.hectares.getRawValue();
-      const nfuPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const nfuOutsideLands = this.outsideLands.getRawValue();
       const nfuAgricultureSupport = this.agricultureSupport.getRawValue();
       const nfuWillImportFill = this.willImportFill.getRawValue();
@@ -106,7 +106,7 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         nfuHectares: nfuHectares ? parseFloat(nfuHectares) : null,
-        nfuPurpose,
+        purpose,
         nfuOutsideLands,
         nfuAgricultureSupport,
         nfuWillImportFill: parseStringToBoolean(nfuWillImportFill),

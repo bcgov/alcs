@@ -49,6 +49,10 @@ export class ApplicationSubmissionValidatorService {
       errors.push(new ServiceValidationException('Missing applicant'));
     }
 
+    if (!applicationSubmission.purpose) {
+      errors.push(new ServiceValidationException('Missing purpose'));
+    }
+
     const validatedParcels = await this.validateParcels(
       applicationSubmission,
       errors,
@@ -381,7 +385,6 @@ export class ApplicationSubmissionValidatorService {
   ) {
     if (
       !applicationSubmission.nfuHectares ||
-      !applicationSubmission.nfuPurpose ||
       !applicationSubmission.nfuOutsideLands ||
       !applicationSubmission.nfuAgricultureSupport ||
       applicationSubmission.nfuWillImportFill === null
@@ -411,7 +414,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      !applicationSubmission.turPurpose ||
       !applicationSubmission.turOutsideLands ||
       !applicationSubmission.turAgriculturalActivities ||
       !applicationSubmission.turReduceNegativeImpacts ||
@@ -433,7 +435,6 @@ export class ApplicationSubmissionValidatorService {
       );
     }
     if (
-      !applicationSubmission.subdPurpose ||
       !applicationSubmission.subdSuitability ||
       !applicationSubmission.subdAgricultureSupport
     ) {
@@ -470,7 +471,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      applicationSubmission.soilPurpose === null ||
       applicationSubmission.soilTypeRemoved === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
@@ -511,7 +511,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      applicationSubmission.soilPurpose === null ||
       applicationSubmission.soilFillTypeToPlace === null ||
       applicationSubmission.soilAlternativeMeasures === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
@@ -560,7 +559,6 @@ export class ApplicationSubmissionValidatorService {
     if (
       applicationSubmission.soilIsNOIFollowUp === null ||
       applicationSubmission.soilHasPreviousALCAuthorization === null ||
-      !applicationSubmission.soilPurpose ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
       errors.push(

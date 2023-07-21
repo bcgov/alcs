@@ -105,6 +105,7 @@ export interface ApplicationSubmissionDto {
   fileNumber: string;
   lastStatusUpdate: number;
   applicant: string;
+  purpose: string | null;
   type: string;
   status: ApplicationStatus;
   typeCode: string;
@@ -134,7 +135,6 @@ export interface ApplicationSubmissionDto {
 
   //NFU Specific Fields
   nfuHectares: number | null;
-  nfuPurpose: string | null;
   nfuOutsideLands: string | null;
   nfuAgricultureSupport: string | null;
   nfuWillImportFill: boolean | null;
@@ -147,7 +147,6 @@ export interface ApplicationSubmissionDto {
   nfuFillOriginDescription: string | null;
 
   //TUR Fields
-  turPurpose: string | null;
   turAgriculturalActivities: string | null;
   turReduceNegativeImpacts: string | null;
   turOutsideLands: string | null;
@@ -155,7 +154,6 @@ export interface ApplicationSubmissionDto {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  subdPurpose: string | null;
   subdSuitability: string | null;
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
@@ -166,7 +164,6 @@ export interface ApplicationSubmissionDto {
   soilNOIIDs: string | null;
   soilHasPreviousALCAuthorization: boolean | null;
   soilApplicationIDs: string | null;
-  soilPurpose: string | null;
   soilTypeRemoved: string | null;
   soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;
@@ -194,7 +191,6 @@ export interface ApplicationSubmissionDto {
 
   //NARU Fields
   naruSubtype: BaseCodeDto | null;
-  naruPurpose: string | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;

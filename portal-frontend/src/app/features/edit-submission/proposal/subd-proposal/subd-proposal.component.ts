@@ -72,7 +72,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
         }
 
         this.form.patchValue({
-          purpose: applicationSubmission.subdPurpose,
+          purpose: applicationSubmission.purpose,
           suitability: applicationSubmission.subdSuitability,
           agriculturalSupport: applicationSubmission.subdAgricultureSupport,
           lotsProposed: applicationSubmission.subdProposedLots.length.toString(10),
@@ -105,13 +105,13 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId) {
-      const subdPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const subdSuitability = this.suitability.getRawValue();
       const subdAgricultureSupport = this.agriculturalSupport.getRawValue();
       const subdIsHomeSiteSeverance = this.isHomeSiteSeverance.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        subdPurpose,
+        purpose,
         subdSuitability,
         subdAgricultureSupport,
         subdIsHomeSiteSeverance: subdIsHomeSiteSeverance !== null ? subdIsHomeSiteSeverance === 'true' : null,

@@ -1,11 +1,11 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('turPurpose')"></app-updated-banner>
+    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.turPurpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turPurpose"></app-no-data>
+    {{ _applicationSubmission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
     Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in

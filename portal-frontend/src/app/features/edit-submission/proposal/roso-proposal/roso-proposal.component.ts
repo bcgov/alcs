@@ -105,7 +105,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           hasALCAuthorization: hasALCAuthorization,
           NOIIDs: applicationSubmission.soilNOIIDs,
           applicationIDs: applicationSubmission.soilApplicationIDs,
-          purpose: applicationSubmission.soilPurpose,
+          purpose: applicationSubmission.purpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
           projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
@@ -134,12 +134,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
       const soilApplicationIDs = this.applicationIDs.getRawValue();
-      const soilPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        soilPurpose,
+        purpose,
         soilTypeRemoved,
         soilReduceNegativeImpacts,
         soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),

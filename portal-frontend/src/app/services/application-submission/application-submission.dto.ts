@@ -43,6 +43,7 @@ export interface ApplicationSubmissionDto {
   updatedAt: string;
   lastStatusUpdate: number;
   applicant: string;
+  purpose: string | null;
   type: string;
   typeCode: string;
   localGovernmentUuid: string;
@@ -73,7 +74,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
 
   //NFU Specific Fields
   nfuHectares: number | null;
-  nfuPurpose: string | null;
   nfuOutsideLands: string | null;
   nfuAgricultureSupport: string | null;
   nfuWillImportFill: boolean | null;
@@ -86,7 +86,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   nfuFillOriginDescription: string | null;
 
   //TUR Fields
-  turPurpose: string | null;
   turAgriculturalActivities: string | null;
   turReduceNegativeImpacts: string | null;
   turOutsideLands: string | null;
@@ -94,7 +93,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  subdPurpose: string | null;
   subdSuitability: string | null;
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
@@ -105,7 +103,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilNOIIDs: string | null;
   soilHasPreviousALCAuthorization: boolean | null;
   soilApplicationIDs: string | null;
-  soilPurpose: string | null;
   soilTypeRemoved: string | null;
   soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;
@@ -133,7 +130,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
 
   //NARU Fields
   naruSubtype: NaruSubtypeDto | null;
-  naruPurpose: string | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;
@@ -154,6 +150,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
 
 export interface ApplicationSubmissionUpdateDto {
   applicant?: string;
+  purpose?: string | null;
   localGovernmentUuid?: string;
   typeCode?: string;
   primaryContactOwnerUuid?: string;
@@ -174,7 +171,6 @@ export interface ApplicationSubmissionUpdateDto {
 
   //NFU Specific Fields
   nfuHectares?: number | null;
-  nfuPurpose?: string | null;
   nfuOutsideLands?: string | null;
   nfuAgricultureSupport?: string | null;
   nfuWillImportFill?: boolean | null;
@@ -187,7 +183,6 @@ export interface ApplicationSubmissionUpdateDto {
   nfuFillOriginDescription?: string | null;
 
   //TUR Fields
-  turPurpose?: string | null;
   turAgriculturalActivities?: string | null;
   turReduceNegativeImpacts?: string | null;
   turOutsideLands?: string | null;
@@ -195,7 +190,6 @@ export interface ApplicationSubmissionUpdateDto {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  subdPurpose?: string | null;
   subdSuitability?: string | null;
   subdAgricultureSupport?: string | null;
   subdIsHomeSiteSeverance?: boolean | null;
@@ -206,7 +200,6 @@ export interface ApplicationSubmissionUpdateDto {
   soilNOIIDs?: string | null;
   soilHasPreviousALCAuthorization?: boolean | null;
   soilApplicationIDs?: string | null;
-  soilPurpose?: string | null;
   soilTypeRemoved?: string | null;
   soilReduceNegativeImpacts?: string | null;
   soilToRemoveVolume?: number | null;
@@ -234,7 +227,6 @@ export interface ApplicationSubmissionUpdateDto {
 
   //NARU Fields
   naruSubtypeCode?: string | null;
-  naruPurpose?: string | null;
   naruFloorArea?: number | null;
   naruResidenceNecessity?: string | null;
   naruLocationRationale?: string | null;

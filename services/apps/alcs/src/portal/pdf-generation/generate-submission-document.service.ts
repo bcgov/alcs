@@ -211,6 +211,7 @@ export class GenerateSubmissionDocumentService {
         .tz(new Date(), 'Canada/Pacific')
         .format('MMM DD, YYYY hh:mm:ss Z'),
 
+      purpose: submission.purpose,
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment?.name,
       status: submission.status.statusType,
@@ -279,7 +280,6 @@ export class GenerateSubmissionDocumentService {
 
       // NFU Proposal
       nfuHectares: submission.nfuHectares,
-      nfuPurpose: submission.nfuPurpose,
       nfuOutsideLands: submission.nfuOutsideLands,
       nfuAgricultureSupport: submission.nfuAgricultureSupport,
       showImportFill: submission.nfuWillImportFill,
@@ -313,7 +313,6 @@ export class GenerateSubmissionDocumentService {
       ...pdfData,
 
       // TUR Proposal
-      turPurpose: submission.turPurpose,
       turAgriculturalActivities: submission.turAgriculturalActivities,
       turReduceNegativeImpacts: submission.turReduceNegativeImpacts,
       turOutsideLands: submission.turOutsideLands,
@@ -341,7 +340,6 @@ export class GenerateSubmissionDocumentService {
       ...pdfData,
 
       // SUBD Proposal
-      subdPurpose: submission.subdPurpose,
       subdSuitability: submission.subdSuitability,
       subdAgricultureSupport: submission.subdAgricultureSupport,
       subdIsHomeSiteSeverance: formatBooleanToYesNoString(

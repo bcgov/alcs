@@ -153,6 +153,8 @@ export class ApplicationSubmissionService {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
 
     applicationSubmission.applicant = updateDto.applicant;
+    applicationSubmission.purpose =
+      updateDto.purpose || applicationSubmission.purpose;
     applicationSubmission.typeCode =
       updateDto.typeCode || applicationSubmission.typeCode;
     applicationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
@@ -636,7 +638,6 @@ export class ApplicationSubmissionService {
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
     application.nfuHectares = updateDto.nfuHectares || application.nfuHectares;
-    application.nfuPurpose = updateDto.nfuPurpose || application.nfuPurpose;
     application.nfuOutsideLands =
       updateDto.nfuOutsideLands || application.nfuOutsideLands;
     application.nfuAgricultureSupport =
@@ -681,7 +682,6 @@ export class ApplicationSubmissionService {
     application: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    application.turPurpose = updateDto.turPurpose || application.turPurpose;
     application.turAgriculturalActivities =
       updateDto.turAgriculturalActivities ||
       application.turAgriculturalActivities;
@@ -703,8 +703,6 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.subdPurpose =
-      updateDto.subdPurpose || applicationSubmission.subdPurpose;
     applicationSubmission.subdSuitability =
       updateDto.subdSuitability || applicationSubmission.subdSuitability;
     applicationSubmission.subdAgricultureSupport =
@@ -747,10 +745,6 @@ export class ApplicationSubmissionService {
     applicationSubmission.soilApplicationIDs = filterUndefined(
       updateDto.soilApplicationIDs,
       applicationSubmission.soilApplicationIDs,
-    );
-    applicationSubmission.soilPurpose = filterUndefined(
-      updateDto.soilPurpose,
-      applicationSubmission.soilPurpose,
     );
     applicationSubmission.soilTypeRemoved = filterUndefined(
       updateDto.soilTypeRemoved,
@@ -873,10 +867,6 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
       applicationSubmission.naruSubtypeCode,
-    );
-    applicationSubmission.naruPurpose = filterUndefined(
-      updateDto.naruPurpose,
-      applicationSubmission.naruPurpose,
     );
     applicationSubmission.naruFloorArea = filterUndefined(
       updateDto.naruFloorArea,

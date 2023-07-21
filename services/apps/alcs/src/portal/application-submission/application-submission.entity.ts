@@ -214,7 +214,7 @@ export class ApplicationSubmission extends Base {
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  nfuPurpose: string | null;
+  purpose: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -283,10 +283,6 @@ export class ApplicationSubmission extends Base {
   //TUR Specific Fields
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  turPurpose: string | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
   turAgriculturalActivities: string | null;
 
   @AutoMap(() => String)
@@ -315,10 +311,6 @@ export class ApplicationSubmission extends Base {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  subdPurpose: string | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   subdSuitability: string | null;
@@ -356,10 +348,6 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true, name: 'soil_application_ids' })
   soilApplicationIDs: string | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  soilPurpose: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -568,10 +556,6 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   naruSubtypeCode: string | null;
 
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  naruPurpose: string | null;
-
   @AutoMap(() => Number)
   @Column({
     type: 'decimal',
@@ -677,6 +661,36 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   naruAgriTourism: string | null;
+
+  //Inclusion / Exclusion Fields
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  prescribedBody: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  inclExclHectares: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  exclWhyLand: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  inclAgricultureSupport: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  inclImprovements: string | null;
+
+  //END SUBMISSION FIELDS
 
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
