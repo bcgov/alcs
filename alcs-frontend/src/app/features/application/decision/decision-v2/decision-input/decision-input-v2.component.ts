@@ -559,32 +559,18 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   private scrollToError() {
-    let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('ng-invalid');
+    let elements = document.getElementsByClassName('ng-invalid');
+    let elArray = Array.from(elements).filter((el) => el.nodeName !== 'FORM');
 
-    let elArray: Element[] = [];
-    if (elements) {
+    if (!elArray.length) {
+      elements = document.getElementsByClassName('error-field-outlined');
       elArray = Array.from(elements);
     }
 
-    for (let i = 0; i < elArray.length; i++) {
-      if (elArray[i].nodeName === 'FORM') {
-        elArray.splice(i, 1);
-      }
-    }
-
-    if (elArray.length < 1) {
-      elements = document.getElementsByClassName('error-field-outlined');
-      if (elements) {
-        elArray = Array.from(elements);
-      }
-    }
-
-    if (elArray && elArray.length > 0) {
-      elArray[0].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
+    elArray[0]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
   }
 
   async onRelease() {
