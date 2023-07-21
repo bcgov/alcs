@@ -26,6 +26,9 @@
   .resolution-number-wrapper {
     display: grid;
     grid-template-columns: 1fr 16px 0.7fr;
+    .resolution-number-btn-wrapper {
+      width: 100%;
+    }
   }
 
   .row-no-flex,
@@ -142,5 +145,19 @@
     line-height: 24px;
     color: #565656 !important;
     margin: 24px 0 !important;
+  }
+
+  .error-field-outlined {
+    border-color: colors.$error-color !important;
+
+    .mat-button-toggle {
+      border-color: colors.$error-color;
+      color: colors.$error-color !important;
+    }
+
+    &.upload-button {
+      border: 2px solid colors.$error-color;
+      margin-bottom: 0px !important;
+    }
   }
 }

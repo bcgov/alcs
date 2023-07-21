@@ -21,6 +21,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   @Input() editable = true;
   @Input() loadData = true;
   @Input() decision: ApplicationDecisionDto | undefined;
+  @Input() showError = false;
   @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];

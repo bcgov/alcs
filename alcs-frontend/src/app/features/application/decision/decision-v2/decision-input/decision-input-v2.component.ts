@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -29,6 +29,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseBooleanToString, parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
+import { DecisionComponentsComponent } from './decision-components/decision-components.component';
+import { DecisionConditionsComponent } from './decision-conditions/decision-conditions.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -74,6 +76,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   components: DecisionComponentDto[] = [];
   conditions: ApplicationDecisionConditionDto[] = [];
   conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
+
+  @ViewChild(DecisionComponentsComponent) decisionComponentsComponent?: DecisionComponentsComponent;
+  @ViewChild(DecisionConditionsComponent) decisionConditionsComponent?: DecisionConditionsComponent;
 
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
@@ -523,6 +528,16 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   private runValidation() {
     this.form.markAllAsTouched();
+    this.componentsValid = this.componentsValid && this.components.length > 0;
+    this.conditionsValid = this.conditionsValid && this.conditionUpdates.length > 0;
+
+    if (this.decisionComponentsComponent) {
+      this.decisionComponentsComponent.onValidate();
+    }
+
+    if (this.decisionConditionsComponent) {
+      this.decisionConditionsComponent.onValidate();
+    }
 
     if (
       !this.form.valid ||
@@ -531,26 +546,20 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       (this.components.length === 0 && this.showComponents) ||
       (this.conditionUpdates.length === 0 && this.showConditions)
     ) {
-      console.log('invalid');
-
       this.form.controls.decisionMaker.markAsDirty();
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
 
-      this.scrollToError();
+      // this will ensure that error rendering complete
+      setTimeout(() => this.scrollToError());
 
       return false;
     } else {
-      console.log('valid');
       return true;
     }
   }
 
   private scrollToError() {
     let elements: HTMLCollectionOf<Element> = document.getElementsByClassName('ng-invalid');
-
-    if (!elements) {
-      elements = document.getElementsByClassName('error');
-    }
 
     let elArray: Element[] = [];
     if (elements) {
@@ -563,9 +572,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       }
     }
 
-    if (elArray && elArray.length > 0) {
-      console.log(elArray[0]);
+    if (elArray.length < 1) {
+      elements = document.getElementsByClassName('error-field-outlined');
+      if (elements) {
+        elArray = Array.from(elements);
+      }
+    }
 
+    if (elArray && elArray.length > 0) {
       elArray[0].scrollIntoView({
         behavior: 'smooth',
         block: 'center',
@@ -574,8 +588,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   async onRelease() {
-    // TODO run validation first
-
     if (this.runValidation()) {
       this.dialog
         .open(ReleaseDialogComponent, {
@@ -603,6 +615,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   onConditionsChange($event: { conditions: UpdateApplicationDecisionConditionDto[]; isValid: boolean }) {
     this.conditionUpdates = $event.conditions;
     this.conditionsValid = $event.isValid;
+    this.conditionUpdates = Array.from($event.conditions);
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {

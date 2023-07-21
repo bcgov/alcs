@@ -18,17 +18,22 @@
       </div>
 
       <div class="resolution-number-wrapper">
-        <button
-          *ngIf="!resolutionNumberControl.getRawValue()"
-          class="generate-number-btn"
-          [loading]="isLoading"
-          type="button"
-          mat-stroked-button
-          color="primary"
-          (click)="onGenerateResolutionNumber()"
-        >
-          Generate Number
-        </button>
+        <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
+          <button
+            class="generate-number-btn"
+            [loading]="isLoading"
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="onGenerateResolutionNumber()"
+            [ngClass]="{ 'error-field-outlined': !resolutionNumberControl.valid && resolutionNumberControl.touched }"
+          >
+            Generate Number
+          </button>
+          <app-error-message
+            *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
+          ></app-error-message>
+        </div>
         <div *ngIf="resolutionNumberControl.getRawValue()">
           <div class="resolution-number">
             <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
@@ -138,16 +143,21 @@
       ></ng-select>
 
       <div>
-        <mat-label class="toggle-label">Subject to Conditions*</mat-label>
-        <mat-button-toggle-group
-          id="isSubjectToConditions"
-          formControlName="isSubjectToConditions"
-          name="isSubjectToConditions"
-          (change)="onChangeSubjectToConditions($event)"
-        >
-          <mat-button-toggle value="true">Yes</mat-button-toggle>
-          <mat-button-toggle value="false">No</mat-button-toggle>
-        </mat-button-toggle-group>
+        <div>
+          <mat-label class="toggle-label">Subject to Conditions*</mat-label>
+          <mat-button-toggle-group
+            id="isSubjectToConditions"
+            formControlName="isSubjectToConditions"
+            name="isSubjectToConditions"
+            (change)="onChangeSubjectToConditions($event)"
+            [ngClass]="{
+              'error-field-outlined': !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
+            }"
+          >
+            <mat-button-toggle value="true">Yes</mat-button-toggle>
+            <mat-button-toggle value="false">No</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
       </div>
 
       <div class="full-width">
@@ -159,7 +169,14 @@
 
       <div>
         <mat-label class="toggle-label">Stats required*</mat-label>
-        <mat-button-toggle-group id="isStatsRequired" formControlName="isStatsRequired" name="isStatsRequired">
+        <mat-button-toggle-group
+          id="isStatsRequired"
+          formControlName="isStatsRequired"
+          name="isStatsRequired"
+          [ngClass]="{
+            'error-field-outlined': !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
+          }"
+        >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
@@ -191,7 +208,10 @@
     </mat-form-field>
 
     <div>
-      <app-decision-documents (beforeDocumentUpload)="onSubmit(true, true)"></app-decision-documents>
+      <app-decision-documents
+        (beforeDocumentUpload)="onSubmit(true, true)"
+        [showError]="form.touched && !existingDecision?.documents?.length"
+      ></app-decision-documents>
     </div>
 
     <app-decision-components
@@ -200,6 +220,7 @@
       [fileNumber]="fileNumber"
       [components]="components"
       (componentsChange)="onComponentChange($event)"
+      [showError]="form.touched && components.length < 1"
     >
     </app-decision-components>
 
@@ -210,6 +231,7 @@
         [components]="components"
         [conditions]="conditions"
         (conditionsChange)="onConditionsChange($event)"
+        [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
       ></app-decision-conditions>
     </div>
 
@@ -270,7 +292,7 @@
 
     <div class="btn-row">
       <button mat-stroked-button color="primary" type="button" (click)="onCancel()">Cancel</button>
-      <button type="submit" mat-flat-button color="primary">Save Decision Draft</button>
+      <button type="submit" mat-flat-button color="accent">Save Decision Draft</button>
     </div>
   </form>
 

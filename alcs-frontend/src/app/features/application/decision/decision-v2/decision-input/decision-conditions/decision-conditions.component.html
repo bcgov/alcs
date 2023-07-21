@@ -12,6 +12,15 @@
     </button>
   </div>
   <div class="buttons">
-    <button type="button" (click)="onAddNewCondition()" mat-stroked-button color="primary">Add New Condition</button>
+    <button
+      [ngClass]="{ 'error-field-outlined': showError }"
+      type="button"
+      (click)="onAddNewCondition()"
+      mat-stroked-button
+      color="primary"
+    >
+      Add New Condition
+    </button>
+    <app-error-message *ngIf="showError"></app-error-message>
   </div>
 </section>
