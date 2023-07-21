@@ -7,4 +7,6 @@ export interface UserDto {
   bceidUserName?: string | null;
   prettyName?: string | null;
   government?: string;
+  isLocalGovernment: boolean;
+  isFirstNationGovernment: boolean;
 }

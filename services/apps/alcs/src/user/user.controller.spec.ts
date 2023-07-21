@@ -78,6 +78,8 @@ describe('UserController', () => {
       settings: {
         favoriteBoards: ['cats'],
       },
+      isFirstNationGovernment: false,
+      isLocalGovernment: false,
     };
 
     controller = module.get<UserController>(UserController);

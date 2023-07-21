@@ -53,12 +53,16 @@
         <h5>Are you sure you want to change your application type?</h5>
       </div>
     </div>
+
+    <ng-container *ngIf="stepIdx === prescribedBodyStep">
+      <app-presribed-body (select)="onSelectPrescribedBody($event)"></app-presribed-body>
+    </ng-container>
   </div>
 </div>
 
 <div mat-dialog-action class="dialog-action-container">
   <div *ngIf="stepIdx === warningStep" class="dialog-controls-wrapper">
-    <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+    <button mat-stroked-button color="primary" (click)="closeDialog()">cancel</button>
     <button mat-flat-button color="primary" (click)="next()">continue</button>
   </div>
 
@@ -77,5 +81,12 @@
   <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">
     <button mat-stroked-button color="primary" (click)="back()">back</button>
     <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
+  </div>
+
+  <div class="dialog-controls-wrapper" *ngIf="stepIdx === prescribedBodyStep">
+    <button mat-stroked-button color="primary" (click)="back()">Back</button>
+    <button mat-flat-button color="primary" (click)="next()" [disabled]="!selectedAppType || !prescribedBody">
+      next
+    </button>
   </div>
 </div>

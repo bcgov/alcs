@@ -35,6 +35,7 @@ import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
+import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
 import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
@@ -57,6 +58,22 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CdkStepperModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MatRadioModule,
+  ],
+  declarations: [
+    FileDragDropComponent,
+    FileSizePipe,
+    EmailValidPipe,
+    PhoneValidPipe,
+    DragDropDirective,
+    WarningBannerComponent,
+    InfoBannerComponent,
+    NoDataComponent,
+    UpdatedBannerComponent,
+    ValidationErrorComponent,
+    CustomStepperComponent,
+    MomentPipe,
+    PresribedBodyComponent,
   ],
   exports: [
     CommonModule,
@@ -98,20 +115,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NgxMaskDirective,
     NgxMaskPipe,
     MomentPipe,
-  ],
-  declarations: [
-    FileDragDropComponent,
-    FileSizePipe,
-    EmailValidPipe,
-    PhoneValidPipe,
-    DragDropDirective,
-    WarningBannerComponent,
-    InfoBannerComponent,
-    NoDataComponent,
-    UpdatedBannerComponent,
-    ValidationErrorComponent,
-    CustomStepperComponent,
-    MomentPipe,
+    PresribedBodyComponent,
   ],
 })
 export class SharedModule {

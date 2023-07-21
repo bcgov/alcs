@@ -37,6 +37,9 @@ export class UserController {
     const mappedUser = await this.userMapper.mapAsync(user, User, UserDto);
     const government = await this.userService.getUserLocalGovernment(user);
     mappedUser.government = government ? government.name : undefined;
+    mappedUser.isLocalGovernment = !!government && !government.isFirstNation;
+    mappedUser.isFirstNationGovernment =
+      !!government && government.isFirstNation;
     return mappedUser;
   }
 
