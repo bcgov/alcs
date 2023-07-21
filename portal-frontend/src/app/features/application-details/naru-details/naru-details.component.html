@@ -12,11 +12,11 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('naruPurpose')"></app-updated-banner>
+    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.naruPurpose }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruPurpose"></app-no-data>
+    {{ _applicationSubmission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'ARFU'">

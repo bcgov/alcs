@@ -61,6 +61,8 @@ export class ApplicationSubmissionDto {
 }
 
 export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
+  @AutoMap(() => String)
+  purpose: string | null;
   @AutoMap()
   parcelsAgricultureDescription: string;
   @AutoMap()
@@ -89,9 +91,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   //NFU Specific Fields
   @AutoMap(() => Number)
   nfuHectares?: number | null;
-
-  @AutoMap(() => String)
-  nfuPurpose?: string | null;
 
   @AutoMap(() => String)
   nfuOutsideLands?: string | null;
@@ -125,9 +124,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //TUR Fields
   @AutoMap(() => String)
-  turPurpose?: string | null;
-
-  @AutoMap(() => String)
   turAgriculturalActivities?: string | null;
 
   @AutoMap(() => String)
@@ -143,9 +139,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  @AutoMap(() => String)
-  subdPurpose?: string | null;
-
   @AutoMap(() => String)
   subdSuitability?: string | null;
 
@@ -169,9 +162,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => String)
   soilApplicationIDs: string | null;
-
-  @AutoMap(() => String)
-  soilPurpose: string | null;
 
   @AutoMap(() => String)
   soilTypeRemoved: string | null;
@@ -249,9 +239,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
 
-  @AutoMap(() => String)
-  naruPurpose: string | null;
-
   @AutoMap(() => Number)
   naruFloorArea: number | null;
 
@@ -314,6 +301,11 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   applicant?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  purpose?: string;
 
   @IsUUID()
   @IsOptional()
@@ -386,11 +378,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
-  nfuPurpose?: string | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
   nfuOutsideLands?: string | null;
 
   @IsString()
@@ -432,12 +419,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   nfuFillOriginDescription?: string | null;
 
-  //TUR Fields
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  turPurpose?: string | null;
-
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
@@ -462,11 +443,6 @@ export class ApplicationSubmissionUpdateDto {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  subdPurpose?: string | null;
-
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
@@ -503,11 +479,6 @@ export class ApplicationSubmissionUpdateDto {
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
   soilApplicationIDs?: string | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  soilPurpose?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
@@ -611,10 +582,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruSubtypeCode?: string | null;
-
-  @IsString()
-  @IsOptional()
-  naruPurpose?: string | null;
 
   @IsNumber()
   @IsOptional()

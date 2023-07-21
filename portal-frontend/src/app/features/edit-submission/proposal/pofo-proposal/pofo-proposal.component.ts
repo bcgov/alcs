@@ -106,7 +106,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           hasALCAuthorization: hasALCAuthorization,
           NOIIDs: applicationSubmission.soilNOIIDs,
           applicationIDs: applicationSubmission.soilApplicationIDs,
-          purpose: applicationSubmission.soilPurpose,
+          purpose: applicationSubmission.purpose,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
@@ -136,13 +136,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
       const soilApplicationIDs = this.applicationIDs.getRawValue();
-      const soilPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
       const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        soilPurpose,
+        purpose,
         soilFillTypeToPlace,
         soilAlternativeMeasures,
         soilReduceNegativeImpacts,

@@ -59,7 +59,7 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
         this.submissionUuid = applicationSubmission.uuid;
 
         this.form.patchValue({
-          purpose: applicationSubmission.turPurpose,
+          purpose: applicationSubmission.purpose,
           outsideLands: applicationSubmission.turOutsideLands,
           agriculturalActivities: applicationSubmission.turAgriculturalActivities,
           reduceNegativeImpacts: applicationSubmission.turReduceNegativeImpacts,
@@ -85,7 +85,7 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
 
   protected async save() {
     if (this.fileId) {
-      const turPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const turOutsideLands = this.outsideLands.getRawValue();
       const turAgriculturalActivities = this.agriculturalActivities.getRawValue();
       const turReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
@@ -93,7 +93,7 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
       const turAllOwnersNotified = this.allOwnersNotified.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        turPurpose,
+        purpose,
         turOutsideLands,
         turAgriculturalActivities,
         turReduceNegativeImpacts,

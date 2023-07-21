@@ -157,7 +157,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           hasALCAuthorization: hasALCAuthorization,
           NOIIDs: applicationSubmission.soilNOIIDs,
           applicationIDs: applicationSubmission.soilApplicationIDs,
-          purpose: applicationSubmission.soilPurpose,
+          purpose: applicationSubmission.purpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
@@ -191,14 +191,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
       const soilApplicationIDs = this.applicationIDs.getRawValue();
-      const soilPurpose = this.purpose.getRawValue();
+      const purpose = this.purpose.getRawValue();
       const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
       const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
       const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
 
       const updateDto: ApplicationSubmissionUpdateDto = {
-        soilPurpose,
+        purpose,
         soilTypeRemoved,
         soilFillTypeToPlace,
         soilReduceNegativeImpacts,

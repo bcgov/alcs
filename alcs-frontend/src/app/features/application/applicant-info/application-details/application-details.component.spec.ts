@@ -29,6 +29,7 @@ describe('ApplicationDetailsComponent', () => {
     component = fixture.componentInstance;
     component.submission = {
       applicant: '',
+      purpose: '',
       canEdit: false,
       canReview: false,
       canView: false,
@@ -55,7 +56,6 @@ describe('ApplicationDetailsComponent', () => {
       naruLocationRationale: null,
       naruProjectDurationAmount: null,
       naruProjectDurationUnit: null,
-      naruPurpose: null,
       naruResidenceNecessity: null,
       naruSubtype: null,
       naruToPlaceArea: null,
@@ -74,7 +74,6 @@ describe('ApplicationDetailsComponent', () => {
       nfuOutsideLands: null,
       nfuProjectDurationAmount: null,
       nfuProjectDurationUnit: null,
-      nfuPurpose: null,
       nfuTotalFillPlacement: null,
       nfuWillImportFill: null,
       soilAlreadyPlacedArea: null,
@@ -91,7 +90,6 @@ describe('ApplicationDetailsComponent', () => {
       soilNOIIDs: null,
       soilProjectDurationAmount: null,
       soilProjectDurationUnit: null,
-      soilPurpose: null,
       soilReduceNegativeImpacts: null,
       soilToPlaceAverageDepth: null,
       soilToPlaceMaximumDepth: null,
@@ -100,11 +98,9 @@ describe('ApplicationDetailsComponent', () => {
       soilTypeRemoved: null,
       subdAgricultureSupport: null,
       subdIsHomeSiteSeverance: null,
-      subdPurpose: null,
       subdSuitability: null,
       turAgriculturalActivities: null,
       turOutsideLands: null,
-      turPurpose: null,
       turReduceNegativeImpacts: null,
       turTotalCorridorArea: null,
       primaryContact: {

@@ -8,12 +8,12 @@
   </div>
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuPurpose')"></app-updated-banner>
+    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
-    {{ applicationSubmission.nfuPurpose }}
+    {{ applicationSubmission.purpose }}
 
-    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuPurpose"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.purpose"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
     Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried

@@ -78,6 +78,16 @@ describe('ApplicationSubmissionValidatorService', () => {
     );
   });
 
+  it('should return an error for missing purpose', async () => {
+    const applicationSubmission = new ApplicationSubmission({
+      owners: [],
+    });
+
+    const res = await service.validateSubmission(applicationSubmission);
+
+    expect(includesError(res.errors, new Error('Missing purpose'))).toBe(true);
+  });
+
   it('should return an error for no parcels', async () => {
     const applicationSubmission = new ApplicationSubmission({
       owners: [],
@@ -531,7 +541,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: 1.5125,
-        nfuPurpose: 'VALID',
+        purpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
@@ -559,7 +569,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: 1.5125,
-        nfuPurpose: 'VALID',
+        purpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: false,
@@ -580,7 +590,6 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: null,
-        nfuPurpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
@@ -627,7 +636,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have an error when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilHasPreviousALCAuthorization: false,
         soilIsNOIFollowUp: false,
@@ -653,7 +661,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: null,
         soilToRemoveVolume: null,
         typeCode: 'ROSO',
@@ -729,7 +736,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have errors when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilHasPreviousALCAuthorization: false,
         soilIsNOIFollowUp: false,
@@ -760,7 +766,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilFillTypeToPlace: null,
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilToPlaceArea: null,
@@ -837,7 +842,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have errors when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
+        purpose: 'purpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilHasPreviousALCAuthorization: false,
         soilIsNOIFollowUp: false,
@@ -868,7 +873,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
+        purpose: 'purpose',
         soilFillTypeToPlace: null,
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilToPlaceArea: null,
