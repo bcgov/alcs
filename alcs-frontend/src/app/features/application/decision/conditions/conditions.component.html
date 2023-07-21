@@ -54,6 +54,9 @@
           </ng-container>
         </div>
       </div>
+      <div class="no-conditions" *ngIf="decision.conditions.length < 1">
+        <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
+      </div>
       <div *ngFor="let condition of decision.conditions; let j = index">
         <app-condition
           [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
