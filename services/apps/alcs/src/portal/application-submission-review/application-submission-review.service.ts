@@ -41,9 +41,9 @@ export class ApplicationSubmissionReviewService {
     });
   }
 
-  async startReview(application: ApplicationSubmission, createdBy: User) {
+  async startReview(submission: ApplicationSubmission, createdBy: User) {
     const applicationReview = new ApplicationSubmissionReview({
-      applicationFileNumber: application.fileNumber,
+      applicationFileNumber: submission.fileNumber,
       createdBy,
     });
     return await this.applicationSubmissionReviewRepository.save(
@@ -53,7 +53,6 @@ export class ApplicationSubmissionReviewService {
 
   async update(
     fileNumber: string,
-    localGovernment: ApplicationLocalGovernment,
     updateDto: UpdateApplicationSubmissionReviewDto,
   ) {
     const applicationReview = await this.getByFileNumber(fileNumber);

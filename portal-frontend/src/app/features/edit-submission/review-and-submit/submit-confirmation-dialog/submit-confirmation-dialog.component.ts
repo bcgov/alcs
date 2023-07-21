@@ -11,6 +11,7 @@ export class SubmitConfirmationDialogComponent {
     @Inject(MAT_DIALOG_DATA)
     protected data: {
       governmentName: string;
+      userIsGovernment: boolean;
     }
   ) {}
 }

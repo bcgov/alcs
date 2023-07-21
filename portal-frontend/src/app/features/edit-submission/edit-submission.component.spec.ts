@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
+import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -36,6 +37,10 @@ describe('EditSubmissionComponent', () => {
         },
         {
           provide: PdfGenerationService,
+          useValue: {},
+        },
+        {
+          provide: ApplicationSubmissionReviewService,
           useValue: {},
         },
       ],

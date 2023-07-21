@@ -188,7 +188,7 @@ export class ApplicationSubmissionService {
   }
 
   async submitToLg(submission: ApplicationSubmission) {
-    this.updateStatus(submission, SUBMISSION_STATUS.SUBMITTED_TO_LG);
+    await this.updateStatus(submission, SUBMISSION_STATUS.SUBMITTED_TO_LG);
   }
 
   async updateStatus(
