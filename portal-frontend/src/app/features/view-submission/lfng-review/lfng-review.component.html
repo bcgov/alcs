@@ -35,10 +35,10 @@
     </div>
   </div>
   <div *ngIf="application.status.code === SUBMISSION_STATUS.IN_PROGRESS" class="warning">
-    This section will update after the application is submitted.
+    <mat-icon>info</mat-icon>This section will update after the application is submitted.
   </div>
-  <div *ngIf="!applicationReview && application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC" class="warning">
-    Application not subject to Local/First Nation Government review.
+  <div *ngIf="!applicationReview && submittedToAlcStatus" class="warning">
+    <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
   </div>
   <div
     *ngIf="
@@ -47,14 +47,14 @@
     "
     class="warning"
   >
-    Pending Local/First Nation Government review.
+    <mat-icon>info</mat-icon>Pending Local/First Nation Government review.
   </div>
   <div
     *ngIf="
       application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
       application.status.code === SUBMISSION_STATUS.INCOMPLETE
     "
-    class="warning"
+    class="comment-container"
   >
     <div><strong>Comment for Applicant</strong></div>
     {{ application.returnedComment }}
@@ -259,7 +259,13 @@
         </div>
       </div>
       <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
-        <div *ngIf="applicationReview.isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
+        <div
+          *ngIf="
+            applicationReview.isFirstNationGovernment ||
+            applicationReview.isOCPDesignation ||
+            applicationReview.isSubjectToZoning
+          "
+        >
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{

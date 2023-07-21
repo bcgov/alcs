@@ -35,6 +35,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   resolutionDocument: ApplicationDocumentDto[] = [];
   governmentOtherAttachments: ApplicationDocumentDto[] = [];
   hasCompletedStepsBeforeDocuments = false;
+  submittedToAlcStatus = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -61,6 +62,9 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
+      this.submittedToAlcStatus = !!this.application?.submissionStatuses.find(
+        (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate
+      );
       this.loadReview();
     });
 
@@ -85,9 +89,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     if (
       this.application &&
       this.application.typeCode !== 'TURP' &&
-      ([SUBMISSION_STATUS.SUBMITTED_TO_ALC, SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG].includes(
-        this.application.status.code
-      ) ||
+      (this.submittedToAlcStatus ||
         (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
