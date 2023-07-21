@@ -96,18 +96,6 @@
         [clearable]="false"
       ></ng-select>
 
-      <!-- <mat-form-field class="condition-grid-half-2" appearance="outline">
-        <mat-label>Decision Maker</mat-label>
-        <mat-select appearance="outline" [formControl]="decisionMakerControl">
-          <mat-option
-            *ngFor="let decisionMaker of decisionMakers"
-            [value]="decisionMaker.code"
-            (change)="onSelectDecisionMaker(decisionMaker)"
-            >{{ decisionMaker.label }}</mat-option
-          >
-        </mat-select>
-      </mat-form-field> -->
-
       <ng-select
         *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
         appearance="outline"
