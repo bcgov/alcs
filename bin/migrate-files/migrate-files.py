@@ -12,8 +12,10 @@ load_dotenv()
 db_username = os.getenv("DB_USERNAME")
 db_password = os.getenv("DB_PASSWORD")
 db_dsn = os.getenv("DB_DSN")
+db_path = os.getenv("DB_PATH")
 
 # Connect to the Oracle database
+cx_Oracle.init_oracle_client(lib_dir=db_path)
 conn = cx_Oracle.connect(
     user=db_username, password=db_password, dsn=db_dsn, encoding="UTF-8"
 )
@@ -29,7 +31,7 @@ s3 = boto3.client(
     "s3",
     aws_access_key_id=ecs_access_key,
     aws_secret_access_key=ecs_secret_key,
-    use_ssl=True,
+    use_ssl=False,
     endpoint_url=ecs_host,
 )
 
@@ -38,7 +40,7 @@ starting_document_id = 0
 if os.path.isfile('last-file.pickle'):
     with open('last-file.pickle', 'rb') as file:
         starting_document_id = pickle.load(file)
-
+# starting_document_id = 999999
 print('Starting applications from:', starting_document_id)
 
 starting_planning_document_id = 0
@@ -80,6 +82,7 @@ SELECT DOCUMENT_ID, ALR_APPLICATION_ID, FILE_NAME, DOCUMENT_BLOB, DOCUMENT_CODE,
 FROM OATS.OATS_DOCUMENTS
 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0
 AND DOCUMENT_ID > {starting_document_id}
+AND ALR_APPLICATION_ID IS NOT NULL
 ORDER BY DOCUMENT_ID ASC
 """)
 
@@ -90,9 +93,10 @@ BATCH_SIZE = 10
 documents_processed = 0
 last_document_id = 0
 max_file = 0
+breakout = False
 
 try:
-    with tqdm(total=count, unit="file", desc="Uploading files to S3") as pbar:
+    with tqdm(total=application_count, unit="file", desc="Uploading files to S3") as pbar:
         while True:
             # Fetch the next batch of BLOB data
             data = cursor.fetchmany(BATCH_SIZE)
@@ -109,8 +113,11 @@ try:
                 last_document_id = document_id
                 documents_processed += 1
                 max_file += 1
+                print("number of files", max_file)
                 if max_file > 4:
-                    break
+                    breakout = True
+            if breakout:
+                break
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
@@ -147,6 +154,7 @@ SELECT DOCUMENT_ID, PLANNING_REVIEW_ID, FILE_NAME, DOCUMENT_BLOB, DOCUMENT_CODE,
 FROM OATS.OATS_DOCUMENTS
 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0
 AND DOCUMENT_ID > {starting_planning_document_id}
+AND PLANNING_REVIEW_ID IS NOT NULL
 ORDER BY DOCUMENT_ID ASC
 """)
 
@@ -176,6 +184,7 @@ try:
                 last_planning_document_id = document_id
                 documents_processed += 1
                 max_file += 1
+                print("number of files", max_file)
                 if max_file > 4:
                     break
 except Exception as e:
@@ -214,6 +223,7 @@ SELECT DOCUMENT_ID, ISSUE_ID, FILE_NAME, DOCUMENT_BLOB, DOCUMENT_CODE, DESCRIPTI
 FROM OATS.OATS_DOCUMENTS
 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0
 AND DOCUMENT_ID > {starting_issue_document_id}
+AND ISSUE_ID IS NOT NULL
 ORDER BY DOCUMENT_ID ASC
 """)
 
@@ -243,6 +253,7 @@ try:
                 last_issue_document_id = document_id
                 documents_processed += 1
                 max_file += 1
+                print("number of files", max_file)
                 if max_file > 4:
                     break
 except Exception as e:
