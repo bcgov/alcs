@@ -34,6 +34,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   @Input() codes!: DecisionCodesDto;
   @Input() components: DecisionComponentDto[] = [];
   @Input() conditions: ApplicationDecisionConditionDto[] = [];
+  @Input() showError = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
 
   @Output() conditionsChange = new EventEmitter<{
@@ -196,5 +197,9 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       conditions: this.mappedConditions,
       isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
     });
+  }
+
+  onValidate() {
+    this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
   }
 }

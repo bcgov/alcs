@@ -3,7 +3,17 @@
   <div *ngIf="editable" class="subheading2">Decision Documents *</div>
 </div>
 <div *ngIf="editable">
-  <button type="button" class="upload-button" (click)="onUploadFile()" mat-flat-button color="primary">Upload</button>
+  <button
+    type="button"
+    [ngClass]="{ 'upload-button': true, 'error-field-outlined ng-invalid': showError }"
+    class=""
+    (click)="onUploadFile()"
+    mat-flat-button
+    color="primary"
+  >
+    Upload
+  </button>
+  <app-error-message *ngIf="showError"></app-error-message>
 </div>
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3 documents">
   <ng-container matColumnDef="type">

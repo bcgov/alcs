@@ -38,6 +38,7 @@ import { ApplicationSubmissionStatusTypePillComponent } from './application-subm
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
 import { InlineDatepickerComponent } from './inline-datepicker/inline-datepicker.component';
@@ -90,6 +91,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,
     WarningBannerComponent,
+    ErrorMessageComponent,
   ],
   imports: [
     CommonModule,
@@ -174,6 +176,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,
     WarningBannerComponent,
+    ErrorMessageComponent,
   ],
 })
 export class SharedModule {

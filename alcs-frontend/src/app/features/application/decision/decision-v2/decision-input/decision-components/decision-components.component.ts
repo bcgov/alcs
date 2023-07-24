@@ -34,6 +34,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
   @Input() codes!: DecisionCodesDto;
   @Input() fileNumber!: string;
+  @Input() showError = false;
 
   @Input() components: DecisionComponentDto[] = [];
   @Output() componentsChange = new EventEmitter<{
@@ -224,5 +225,9 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       components: this.components,
       isValid,
     });
+  }
+
+  onValidate() {
+    this.childComponents.forEach((component) => component.form.markAllAsTouched());
   }
 }

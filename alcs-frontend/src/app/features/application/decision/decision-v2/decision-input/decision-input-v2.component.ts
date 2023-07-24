@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +10,6 @@ import { ApplicationModificationDto } from '../../../../../services/application/
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationSubmissionService } from '../../../../../services/application/application-submission/application-submission.service';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
@@ -30,6 +29,8 @@ import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseBooleanToString, parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
+import { DecisionComponentsComponent } from './decision-components/decision-components.component';
+import { DecisionConditionsComponent } from './decision-conditions/decision-conditions.component';
 
 export enum PostDecisionType {
   Modification = 'modification',
@@ -76,6 +77,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   conditions: ApplicationDecisionConditionDto[] = [];
   conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
 
+  @ViewChild(DecisionComponentsComponent) decisionComponentsComponent?: DecisionComponentsComponent;
+  @ViewChild(DecisionConditionsComponent) decisionConditionsComponent?: DecisionConditionsComponent;
+
   form = new FormGroup({
     outcome: new FormControl<string | null>(null, [Validators.required]),
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
@@ -105,7 +109,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     public router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationService: ApplicationDetailService,
     public dialog: MatDialog
   ) {}
@@ -523,22 +526,66 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.resolutionYearControl.enable();
   }
 
+  private runValidation() {
+    this.form.markAllAsTouched();
+    this.componentsValid = this.componentsValid && this.components.length > 0;
+    this.conditionsValid = this.conditionsValid && this.conditionUpdates.length > 0;
+
+    if (this.decisionComponentsComponent) {
+      this.decisionComponentsComponent.onValidate();
+    }
+
+    if (this.decisionConditionsComponent) {
+      this.decisionConditionsComponent.onValidate();
+    }
+
+    if (
+      !this.form.valid ||
+      !this.conditionsValid ||
+      !this.componentsValid ||
+      (this.components.length === 0 && this.showComponents) ||
+      (this.conditionUpdates.length === 0 && this.showConditions)
+    ) {
+      this.form.controls.decisionMaker.markAsDirty();
+      this.toastService.showErrorToast('Please correct all errors before submitting the form');
+
+      // this will ensure that error rendering complete
+      setTimeout(() => this.scrollToError());
+
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private scrollToError() {
+    let elements = document.getElementsByClassName('ng-invalid');
+    let elArray = Array.from(elements).filter((el) => el.nodeName !== 'FORM');
+
+    elArray[0]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  }
+
   async onRelease() {
-    this.dialog
-      .open(ReleaseDialogComponent, {
-        minWidth: '600px',
-        maxWidth: '900px',
-        maxHeight: '80vh',
-        width: '90%',
-        autoFocus: false,
-      })
-      .afterClosed()
-      .subscribe(async (didAccept) => {
-        if (didAccept) {
-          await this.onSubmit(false, false);
-          await this.applicationService.loadApplication(this.fileNumber);
-        }
-      });
+    if (this.runValidation()) {
+      this.dialog
+        .open(ReleaseDialogComponent, {
+          minWidth: '600px',
+          maxWidth: '900px',
+          maxHeight: '80vh',
+          width: '90%',
+          autoFocus: false,
+        })
+        .afterClosed()
+        .subscribe(async (didAccept) => {
+          if (didAccept) {
+            await this.onSubmit(false, false);
+            await this.applicationService.loadApplication(this.fileNumber);
+          }
+        });
+    }
   }
 
   onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {
@@ -549,6 +596,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   onConditionsChange($event: { conditions: UpdateApplicationDecisionConditionDto[]; isValid: boolean }) {
     this.conditionUpdates = $event.conditions;
     this.conditionsValid = $event.isValid;
+    this.conditionUpdates = Array.from($event.conditions);
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
