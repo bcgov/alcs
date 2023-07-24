@@ -102,7 +102,7 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async create(type: string, createdBy: User) {
+  async create(type: string, createdBy: User, prescribedBody?: string) {
     const fileNumber = await this.applicationService.generateNextFileNumber();
 
     await this.applicationService.create(
@@ -132,6 +132,7 @@ export class ApplicationSubmissionService {
       fileNumber,
       typeCode: type,
       createdBy,
+      prescribedBody,
     });
 
     const submission = await this.applicationSubmissionRepository.save(
@@ -168,6 +169,7 @@ export class ApplicationSubmissionService {
     await this.setSUBDFields(applicationSubmission, updateDto);
     await this.setSoilFields(applicationSubmission, updateDto);
     this.setNARUFields(applicationSubmission, updateDto);
+    this.setInclusionExclusionFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -931,6 +933,36 @@ export class ApplicationSubmissionService {
     applicationSubmission.naruAgriTourism = filterUndefined(
       updateDto.naruAgriTourism,
       applicationSubmission.naruAgriTourism,
+    );
+  }
+
+  private setInclusionExclusionFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.prescribedBody = filterUndefined(
+      updateDto.prescribedBody,
+      applicationSubmission.prescribedBody,
+    );
+    applicationSubmission.inclExclHectares = filterUndefined(
+      updateDto.inclExclHectares,
+      applicationSubmission.inclExclHectares,
+    );
+    applicationSubmission.exclWhyLand = filterUndefined(
+      updateDto.exclWhyLand,
+      applicationSubmission.exclWhyLand,
+    );
+    applicationSubmission.inclAgricultureSupport = filterUndefined(
+      updateDto.inclAgricultureSupport,
+      applicationSubmission.inclAgricultureSupport,
+    );
+    applicationSubmission.inclImprovements = filterUndefined(
+      updateDto.inclImprovements,
+      applicationSubmission.inclImprovements,
+    );
+    applicationSubmission.exclShareGovernmentBorders = filterUndefined(
+      updateDto.exclShareGovernmentBorders,
+      applicationSubmission.exclShareGovernmentBorders,
     );
   }
 
