@@ -13,7 +13,7 @@
   </div>
   <div class="buttons">
     <button
-      [ngClass]="{ 'error-field-outlined': showError }"
+      [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
       type="button"
       (click)="onAddNewCondition()"
       mat-stroked-button

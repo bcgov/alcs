@@ -147,7 +147,7 @@
     margin: 24px 0 !important;
   }
 
-  .error-field-outlined {
+  .error-field-outlined.ng-invalid {
     border-color: colors.$error-color !important;
 
     .mat-button-toggle {

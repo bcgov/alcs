@@ -26,7 +26,7 @@
             mat-stroked-button
             color="primary"
             (click)="onGenerateResolutionNumber()"
-            [ngClass]="{ 'error-field-outlined': !resolutionNumberControl.valid && resolutionNumberControl.touched }"
+            [ngClass]="{ 'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched }"
           >
             Generate Number
           </button>
@@ -174,7 +174,7 @@
           formControlName="isStatsRequired"
           name="isStatsRequired"
           [ngClass]="{
-            'error-field-outlined': !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
+            'error-field-outlined ng-invalid': !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
           }"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>

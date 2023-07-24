@@ -562,11 +562,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     let elements = document.getElementsByClassName('ng-invalid');
     let elArray = Array.from(elements).filter((el) => el.nodeName !== 'FORM');
 
-    if (!elArray.length) {
-      elements = document.getElementsByClassName('error-field-outlined');
-      elArray = Array.from(elements);
-    }
-
     elArray[0]?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
