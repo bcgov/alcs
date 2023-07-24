@@ -41,6 +41,7 @@
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
+        (exit)="onExit()"
       ></app-parcel-details>
     </div>
   </cdk-step>
@@ -51,6 +52,7 @@
         [showErrors]="showValidationErrors"
         [$applicationSubmission]="$applicationSubmission"
         (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
       ></app-other-parcels>
     </div>
   </cdk-step>
