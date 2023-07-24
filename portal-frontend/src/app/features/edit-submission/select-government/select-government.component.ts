@@ -26,6 +26,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
   selectGovernmentUuid = '';
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
+  isDirty = false;
 
   form = new FormGroup({
     localGovernment: this.localGovernment,
@@ -58,6 +59,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
   }
 
   onChange($event: MatAutocompleteSelectedEvent) {
+    this.isDirty = true;
     const localGovernmentName = $event.option.value;
     if (localGovernmentName) {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
@@ -95,15 +97,19 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
   }
 
   private async save() {
-    const localGovernmentName = this.localGovernment.getRawValue();
-    if (localGovernmentName) {
-      const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
+    if (this.isDirty) {
+      const localGovernmentName = this.localGovernment.getRawValue();
+      if (localGovernmentName) {
+        const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
 
-      if (localGovernment) {
-        await this.applicationSubmissionService.updatePending(this.submissionUuid, {
-          localGovernmentUuid: localGovernment.uuid,
-        });
+        if (localGovernment) {
+          const res = await this.applicationSubmissionService.updatePending(this.submissionUuid, {
+            localGovernmentUuid: localGovernment.uuid,
+          });
+          this.$applicationSubmission.next(res);
+        }
       }
+      this.isDirty = false;
     }
   }
 

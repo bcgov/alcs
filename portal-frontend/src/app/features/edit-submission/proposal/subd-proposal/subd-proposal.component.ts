@@ -104,7 +104,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const purpose = this.purpose.getRawValue();
       const subdSuitability = this.suitability.getRawValue();
       const subdAgricultureSupport = this.agriculturalSupport.getRawValue();
