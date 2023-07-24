@@ -88,7 +88,7 @@ export class ApplicationDocumentService {
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to update documents, please try again');
+      this.toastService.showErrorToast('Failed to fetch documents, please try again');
     }
     return undefined;
   }

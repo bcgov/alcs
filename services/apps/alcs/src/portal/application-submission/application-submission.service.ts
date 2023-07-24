@@ -192,7 +192,10 @@ export class ApplicationSubmissionService {
   }
 
   async submitToLg(submission: ApplicationSubmission) {
-    await this.updateStatus(submission, SUBMISSION_STATUS.SUBMITTED_TO_LG);
+    return await this.updateStatus(
+      submission,
+      SUBMISSION_STATUS.SUBMITTED_TO_LG,
+    );
   }
 
   async updateStatus(
@@ -200,7 +203,7 @@ export class ApplicationSubmissionService {
     statusCode: SUBMISSION_STATUS,
     effectiveDate?: Date | null,
   ) {
-    await this.applicationSubmissionStatusService.setStatusDate(
+    return await this.applicationSubmissionStatusService.setStatusDate(
       applicationSubmission.uuid,
       statusCode,
       effectiveDate,
