@@ -1,0 +1,135 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  Please consult the '
+  <a
+    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+    target="_blank"
+  >
+    What the Commission Considers
+  </a>
+  ' page of the ALC website for more information.
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div>
+      <label for="hectares">How many hectares are you proposing to include?</label>
+      <div class="subtext">Note: 0.01 ha is 100m<sup>2</sup></div>
+      <mat-form-field appearance="outline">
+        <input
+          id="hectares"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          min="0.01"
+          matInput
+          formControlName="hectares"
+          placeholder="Type area in hectares"
+        />
+        <span matTextSuffix>ha</span>
+      </mat-form-field>
+      <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hectares.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Be clear and concise in describing the proposal. Include why you are applying for inclusion and what the
+        proposal will achieve.
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="purpose"
+          #purposeText
+          maxlength="4000"
+          id="purpose"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="agSupport">Does the proposal support agriculture in the short or long term? Please explain.</label>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="agSupport"
+          #outsideLandsText
+          maxlength="4000"
+          id="agSupport"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
+      <div *ngIf="agSupport.invalid && (agSupport.dirty || agSupport.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="agSupport.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="improvements"
+        >Describe any improvements that have been made to, or are planned for the parcel proposed for inclusion.</label
+      >
+      <div class="subtext">
+        Describe any irrigation, drainage, fencing, material enhancement, clearing, or other improvements that have been
+        completed, are in progress, or are planned for the subject parcel(s). If there have not been any agricultural
+        improvements on the parcel(s), please specify "No Agricultural Improvements".
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="improvements"
+          #outsideLandsText
+          maxlength="4000"
+          id="improvements"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div class="subtext">Example: 40 ha of grazing land fenced in 2010.</div>
+      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
+      <div *ngIf="improvements.invalid && (improvements.dirty || improvements.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="improvements.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+  </div>
+</form>
+
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

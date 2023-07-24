@@ -25,6 +25,7 @@ import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry
 import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
+import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './proposal/naru-proposal/change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
@@ -68,6 +69,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     ChangeSubtypeConfirmationDialogComponent,
     SoilTableComponent,
     ExclProposalComponent,
+    InclProposalComponent,
   ],
   imports: [
     CommonModule,
