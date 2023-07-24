@@ -234,6 +234,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.exclProposalComponent) {
       await this.exclProposalComponent.onSave();
     }
+    if (this.inclProposalComponent) {
+      await this.inclProposalComponent.onSave();
+    }
   }
 
   async onBeforeSwitchStep(index: number) {

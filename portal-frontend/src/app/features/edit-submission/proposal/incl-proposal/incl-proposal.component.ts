@@ -9,6 +9,8 @@ import {
   DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { EditApplicationSteps } from '../../edit-submission.component';
+import { takeUntil } from 'rxjs';
+import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 
 @Component({
   selector: 'app-incl-proposal',
@@ -42,11 +44,50 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
     super(applicationDocumentService, dialog);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
+      if (applicationSubmission) {
+        this.fileId = applicationSubmission.fileNumber;
+        this.submissionUuid = applicationSubmission.uuid;
+
+        this.form.patchValue({
+          hectares: applicationSubmission.inclExclHectares?.toString(),
+          purpose: applicationSubmission.purpose,
+          agSupport: applicationSubmission.inclAgricultureSupport,
+          improvements: applicationSubmission.inclImprovements,
+        });
+
+        if (this.showErrors) {
+          this.form.markAllAsTouched();
+        }
+      }
+    });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+    });
+  }
 
   async onSave() {
     await this.save();
   }
 
-  protected async save() {}
+  protected async save() {
+    if (this.fileId) {
+      const inclExclHectares = this.hectares.value;
+      const purpose = this.purpose.value;
+      const inclAgricultureSupport = this.agSupport.value;
+      const inclImprovements = this.improvements.value;
+
+      const updateDto: ApplicationSubmissionUpdateDto = {
+        inclExclHectares: inclExclHectares ? parseFloat(inclExclHectares) : null,
+        purpose,
+        inclAgricultureSupport,
+        inclImprovements,
+      };
+
+      const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
+      this.$applicationSubmission.next(updatedApp);
+    }
+  }
 }
