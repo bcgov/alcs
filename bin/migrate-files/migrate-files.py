@@ -165,6 +165,7 @@ BATCH_SIZE = 10
 documents_processed = 0
 last_planning_document_id = 0
 max_file = 0
+breakout = False
 
 try:
     with tqdm(total=planning_review_count, unit="file", desc="Uploading files to S3") as pbar:
@@ -186,7 +187,9 @@ try:
                 max_file += 1
                 print("number of files", max_file)
                 if max_file > 4:
-                    break
+                    breakout = True
+            if breakout:
+                break
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
@@ -234,6 +237,7 @@ BATCH_SIZE = 10
 documents_processed = 0
 last_issue_document_id = 0
 max_file = 0
+breakout = False
 
 try:
     with tqdm(total=issue_count, unit="file", desc="Uploading files to S3") as pbar:
@@ -255,7 +259,9 @@ try:
                 max_file += 1
                 print("number of files", max_file)
                 if max_file > 4:
-                    break
+                    breakout = True
+            if breakout:
+                break
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
