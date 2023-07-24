@@ -12,10 +12,10 @@ load_dotenv()
 db_username = os.getenv("DB_USERNAME")
 db_password = os.getenv("DB_PASSWORD")
 db_dsn = os.getenv("DB_DSN")
-db_path = os.getenv("DB_PATH")
+# db_path = os.getenv("DB_PATH") # only necessary if running on local M1
 
 # Connect to the Oracle database
-cx_Oracle.init_oracle_client(lib_dir=db_path)
+# cx_Oracle.init_oracle_client(lib_dir=db_path) # only necessary if running on local M1
 conn = cx_Oracle.connect(
     user=db_username, password=db_password, dsn=db_dsn, encoding="UTF-8"
 )
@@ -31,7 +31,7 @@ s3 = boto3.client(
     "s3",
     aws_access_key_id=ecs_access_key,
     aws_secret_access_key=ecs_secret_key,
-    use_ssl=False,
+    use_ssl=True,
     endpoint_url=ecs_host,
 )
 
@@ -40,7 +40,7 @@ starting_document_id = 0
 if os.path.isfile('last-file.pickle'):
     with open('last-file.pickle', 'rb') as file:
         starting_document_id = pickle.load(file)
-# starting_document_id = 999999
+
 print('Starting applications from:', starting_document_id)
 
 starting_planning_document_id = 0
@@ -92,8 +92,6 @@ BATCH_SIZE = 10
 # Track progress
 documents_processed = 0
 last_document_id = 0
-max_file = 0
-breakout = False
 
 try:
     with tqdm(total=application_count, unit="file", desc="Uploading files to S3") as pbar:
@@ -112,12 +110,7 @@ try:
                 pbar.update(1)
                 last_document_id = document_id
                 documents_processed += 1
-                max_file += 1
-                print("number of files", max_file)
-                if max_file > 4:
-                    breakout = True
-            if breakout:
-                break
+
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
@@ -132,12 +125,6 @@ except Exception as e:
 
 # Display results
 print("Process complete: Successfully migrated", documents_processed, "files.")
-
-# Close the database cursor and connection
-# cursor.close()
-# conn.close()
-
-# cursor = conn.cursor()
 
 try:
     cursor.execute ('SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND PLANNING_REVIEW_ID IS NOT NULL')
@@ -164,8 +151,6 @@ BATCH_SIZE = 10
 # Track progress
 documents_processed = 0
 last_planning_document_id = 0
-max_file = 0
-breakout = False
 
 try:
     with tqdm(total=planning_review_count, unit="file", desc="Uploading files to S3") as pbar:
@@ -184,12 +169,7 @@ try:
                 pbar.update(1)
                 last_planning_document_id = document_id
                 documents_processed += 1
-                max_file += 1
-                print("number of files", max_file)
-                if max_file > 4:
-                    breakout = True
-            if breakout:
-                break
+
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
@@ -204,12 +184,6 @@ except Exception as e:
 
 # Display results
 print("Process complete: Successfully migrated", documents_processed, "files.")
-
-# Close the database cursor and connection
-# cursor.close()
-# conn.close()
-
-# cursor = conn.cursor()
 
 try:
     cursor.execute ('SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ISSUE_ID IS NOT NULL')
@@ -236,8 +210,6 @@ BATCH_SIZE = 10
 # Track progress
 documents_processed = 0
 last_issue_document_id = 0
-max_file = 0
-breakout = False
 
 try:
     with tqdm(total=issue_count, unit="file", desc="Uploading files to S3") as pbar:
@@ -256,12 +228,7 @@ try:
                 pbar.update(1)
                 last_issue_document_id = document_id
                 documents_processed += 1
-                max_file += 1
-                print("number of files", max_file)
-                if max_file > 4:
-                    breakout = True
-            if breakout:
-                break
+
 except Exception as e:
     print("Something went wrong:",e)
     print("Processed", documents_processed,  "files")
