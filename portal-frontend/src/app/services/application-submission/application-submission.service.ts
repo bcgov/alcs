@@ -104,9 +104,10 @@ export class ApplicationSubmissionService {
   }
 
   async submitToAlcs(uuid: string) {
+    let res;
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(
+      res = await firstValueFrom(
         this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${uuid}`, {})
       );
       this.toastService.showSuccessToast('Application Submitted');
@@ -116,5 +117,6 @@ export class ApplicationSubmissionService {
     } finally {
       this.overlayService.hideSpinner();
     }
+    return res;
   }
 }

@@ -1,14 +1,14 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, ContentChildren, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { APPLICATION_OWNER } from '../../services/application-owner/application-owner.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { CodeService } from '../../services/code/code.service';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
@@ -29,7 +29,6 @@ import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.co
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { StepComponent } from './step.partial';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -87,7 +86,8 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     private overlayService: OverlaySpinnerService,
     private router: Router,
     private pdfGenerationService: PdfGenerationService,
-    private applicationReviewService: ApplicationSubmissionReviewService
+    private applicationReviewService: ApplicationSubmissionReviewService,
+    private codeService: CodeService
   ) {}
 
   ngOnInit(): void {
@@ -257,17 +257,31 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   async onSubmit() {
     const submission = this.applicationSubmission;
     if (submission) {
-      await this.applicationSubmissionService.submitToAlcs(submission.uuid);
-
-      const primaryContact = submission.owners.find((owner) => owner.uuid === submission?.primaryContactOwnerUuid);
-      if (primaryContact && primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT) {
-        const review = await this.applicationReviewService.startReview(submission.fileNumber);
-        if (review) {
-          await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
+      const didSubmit = await this.applicationSubmissionService.submitToAlcs(submission.uuid);
+      if (didSubmit) {
+        let government;
+        if (this.applicationSubmission?.localGovernmentUuid) {
+          government = await this.loadGovernment(this.applicationSubmission?.localGovernmentUuid);
         }
-      } else {
-        await this.router.navigateByUrl(`/application/${submission?.fileNumber}`);
+
+        if (government && government.matchesUserGuid) {
+          const review = await this.applicationReviewService.startReview(submission.fileNumber);
+          if (review) {
+            await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
+          }
+        } else {
+          await this.router.navigateByUrl(`/application/${submission?.fileNumber}`);
+        }
       }
     }
+  }
+
+  private async loadGovernment(uuid: string) {
+    const codes = await this.codeService.loadCodes();
+    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
+    if (localGovernment) {
+      return localGovernment;
+    }
+    return;
   }
 }

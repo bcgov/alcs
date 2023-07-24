@@ -29,7 +29,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   selectedLocalGovernment = false;
   selectedOwnerUuid: string | undefined = undefined;
   isCrownOwner = false;
-  isLocalGovernmentUser = false;
+  isGovernmentUser = false;
   governmentName: string | undefined;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
@@ -69,9 +69,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     });
 
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
-      this.isLocalGovernmentUser = !!profile?.government;
+      this.isGovernmentUser = !!profile?.isLocalGovernment || !!profile?.isFirstNationGovernment;
       this.governmentName = profile?.government;
-      if (this.isLocalGovernmentUser) {
+      if (this.isGovernmentUser) {
         this.prepareGovernmentOwners();
       }
     });
@@ -106,6 +106,12 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.GOVERNMENT) || uuid == 'government';
     this.form.reset();
 
+    if (this.selectedLocalGovernment) {
+      this.organizationName.setValidators([Validators.required]);
+    } else {
+      this.organizationName.setValidators([]);
+    }
+
     if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
       this.firstName.enable();
       this.lastName.enable();
@@ -131,23 +137,29 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
       }
     }
+    this.calculateLetterRequired();
+  }
 
+  private calculateLetterRequired() {
     const isSelfApplicant =
       this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL ||
       this.owners[0].type.code === APPLICATION_OWNER.GOVERNMENT;
 
-    this.needsAuthorizationLetter = !(
-      isSelfApplicant &&
-      (this.owners.length === 1 ||
-        (this.owners.length === 2 &&
-          this.owners[1].type.code === APPLICATION_OWNER.AGENT &&
-          !this.selectedThirdPartyAgent))
-    );
+    this.needsAuthorizationLetter =
+      this.selectedThirdPartyAgent ||
+      !(
+        isSelfApplicant &&
+        (this.owners.length === 1 ||
+          (this.owners.length === 2 &&
+            this.owners[1].type.code === APPLICATION_OWNER.AGENT &&
+            !this.selectedThirdPartyAgent))
+      );
+
     this.files = this.files.map((file) => ({
       ...file,
-      errorMessage: this.needsAuthorizationLetter
-        ? undefined
-        : 'Authorization Letter not required. Please remove this file.',
+      errorMessage: !this.needsAuthorizationLetter
+        ? 'Authorization Letter not required. Please remove this file.'
+        : undefined,
     }));
   }
 
@@ -189,6 +201,12 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.selectedLocalGovernment = selectedOwner.type.code === APPLICATION_OWNER.GOVERNMENT;
       }
 
+      if (this.selectedLocalGovernment) {
+        this.organizationName.setValidators([Validators.required]);
+      } else {
+        this.organizationName.setValidators([]);
+      }
+
       if (selectedOwner && (this.selectedThirdPartyAgent || this.selectedLocalGovernment)) {
         this.selectedOwnerUuid = selectedOwner.uuid;
         this.form.patchValue({
@@ -198,6 +216,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
+
+        this.calculateLetterRequired();
       } else if (selectedOwner) {
         this.onSelectOwner(selectedOwner.uuid);
       } else {
@@ -208,7 +228,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.phoneNumber.disable();
       }
 
-      if (this.isLocalGovernmentUser) {
+      if (this.isGovernmentUser) {
         this.prepareGovernmentOwners();
       }
 
