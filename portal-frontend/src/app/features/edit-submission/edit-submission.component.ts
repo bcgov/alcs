@@ -21,6 +21,7 @@ import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
+import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
@@ -76,6 +77,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
+  @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(

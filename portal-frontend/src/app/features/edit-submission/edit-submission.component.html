@@ -154,6 +154,14 @@
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
       ></app-excl-proposal>
+      <app-incl-proposal
+        *ngIf="applicationSubmission.typeCode === 'INCL'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-incl-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
