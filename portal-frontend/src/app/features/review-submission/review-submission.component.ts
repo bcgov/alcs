@@ -97,7 +97,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
               // setTimeout is required for stepper to be initialized
               setTimeout(() => {
                 const stepInt = parseInt(stepInd);
-                //this.customStepper.navigateToStep(stepInt, true);
+                this.customStepper.navigateToStep(stepInt, true);
 
                 this.showDownloadPdf = this.isFirstNationGovernment
                   ? stepInt === ReviewApplicationFngSteps.ReviewAndSubmitFng

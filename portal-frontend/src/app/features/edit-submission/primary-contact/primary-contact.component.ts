@@ -31,7 +31,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isCrownOwner = false;
   isGovernmentUser = false;
   governmentName: string | undefined;
-  isDirty = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -95,7 +94,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   onSelectOwner(uuid: string) {
-    this.isDirty = true;
     this.selectedOwnerUuid = uuid;
     const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === uuid);
     this.parcelOwners = this.parcelOwners.map((owner) => ({
@@ -166,35 +164,27 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   protected async save() {
-    if (this.isDirty || this.form.dirty) {
-      let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
-        (owner) => owner.uuid === this.selectedOwnerUuid
-      );
+    let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
+      (owner) => owner.uuid === this.selectedOwnerUuid
+    );
 
-      if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
-        await this.applicationOwnerService.setPrimaryContact({
-          applicationSubmissionUuid: this.submissionUuid,
-          organization: this.organizationName.getRawValue() ?? '',
-          firstName: this.firstName.getRawValue() ?? '',
-          lastName: this.lastName.getRawValue() ?? '',
-          email: this.email.getRawValue() ?? '',
-          phoneNumber: this.phoneNumber.getRawValue() ?? '',
-          ownerUuid: selectedOwner?.uuid,
-          type: this.selectedThirdPartyAgent ? APPLICATION_OWNER.AGENT : APPLICATION_OWNER.GOVERNMENT,
-        });
-      } else if (selectedOwner) {
-        await this.applicationOwnerService.setPrimaryContact({
-          applicationSubmissionUuid: this.submissionUuid,
-          ownerUuid: selectedOwner.uuid,
-        });
-      }
-      await this.reloadApplication();
+    if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        organization: this.organizationName.getRawValue() ?? '',
+        firstName: this.firstName.getRawValue() ?? '',
+        lastName: this.lastName.getRawValue() ?? '',
+        email: this.email.getRawValue() ?? '',
+        phoneNumber: this.phoneNumber.getRawValue() ?? '',
+        ownerUuid: selectedOwner?.uuid,
+        type: this.selectedThirdPartyAgent ? APPLICATION_OWNER.AGENT : APPLICATION_OWNER.GOVERNMENT,
+      });
+    } else if (selectedOwner) {
+      await this.applicationOwnerService.setPrimaryContact({
+        applicationSubmissionUuid: this.submissionUuid,
+        ownerUuid: selectedOwner.uuid,
+      });
     }
-  }
-
-  private async reloadApplication() {
-    const application = await this.applicationService.getByUuid(this.submissionUuid);
-    this.$applicationSubmission.next(application);
   }
 
   private async loadOwners(submissionUuid: string, primaryContactOwnerUuid?: string) {
@@ -245,7 +235,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       if (this.showErrors) {
         this.form.markAllAsTouched();
       }
-      this.isDirty = false;
     }
   }
 
