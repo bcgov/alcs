@@ -690,6 +690,10 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   inclImprovements: string | null;
 
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  exclShareGovernmentBorders: boolean | null;
+
   //END SUBMISSION FIELDS
 
   @AutoMap(() => Application)

@@ -1,0 +1,199 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  Please consult the '
+  <a
+    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+    target="_blank"
+  >
+    What the Commission Considers
+  </a>
+  ' page of the ALC website for more information.
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="hectares">The governmental or prescribed public body that is applying to exclude land:</label>
+      <div class="subtext">
+        Note: To change this selection, you will need to use the 'Change Application Type' button at the top right of
+        the form.
+      </div>
+      <mat-form-field appearance="outline">
+        <input matInput [value]="prescribedBody ?? ''" disabled />
+      </mat-form-field>
+    </div>
+    <div>
+      <label for="hectares">How many hectares are you proposing to exclude?</label>
+      <mat-form-field appearance="outline">
+        <input
+          id="hectares"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          min="0.01"
+          matInput
+          formControlName="hectares"
+          placeholder="Type area in hectares"
+        />
+        <span matTextSuffix>ha</span>
+      </mat-form-field>
+      <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hectares.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="share-property">
+        Does any land under application share a common property line with land in another Local or First Nation
+        Government?
+      </label>
+      <mat-button-toggle-group class="input" id="share-property" formControlName="shareProperty">
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{ 'error-outline': shareProperty.invalid && (shareProperty.dirty || shareProperty.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{ 'error-outline': shareProperty.invalid && (shareProperty.dirty || shareProperty.touched) }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="shareProperty.invalid && (shareProperty.dirty || shareProperty.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="shareProperty.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="purpose"
+          #purposeText
+          maxlength="4000"
+          id="purpose"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="whyExclude"> Explain why you believe that the parcel(s) should be excluded from the ALR </label>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="whyExclude"
+          #outsideLandsText
+          maxlength="4000"
+          id="whyExclude"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
+      <div *ngIf="whyExclude.invalid && (whyExclude.dirty || whyExclude.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="whyExclude.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+  </div>
+</form>
+<section>
+  <h3>Notification and Public Hearing Requirements</h3>
+  <p>
+    A printed copy of the application will need to be used for notification. Please ensure all prior fields are complete
+    and correct before downloading the PDF of the application (Step 8 of this application form will flag outstanding
+    fields).
+  </p>
+  <app-info-banner> Please refer to Exclusion page on the ALC website for more information. </app-info-banner>
+  <button mat-flat-button color="accent">Download PDF</button>
+  <app-warning-banner>
+    You will not be able to complete the remaining portion of the application until the notification and public hearing
+    process is complete.
+  </app-warning-banner>
+  <form>
+    <div class="form-row">
+      <div class="full-row">
+        <label class="subheading2" for="advertising">Notice of Public Hearing (Advertisement)</label>
+        <div class="subtext">
+          Proof that notice of the application was provided in a form and manner acceptable to the Commission
+        </div>
+      </div>
+      <div class="full-row">
+        <app-file-drag-drop
+          id="advertising"
+          [uploadedFiles]="noticeOfPublicHearing"
+          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_ADVERTISING)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+        ></app-file-drag-drop>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="signage">Proof of Signage</label>
+        <div class="subtext">
+          Proof that a sign, in a form and manner acceptable to the Commission, was posted on the land that is the
+          subject of the application
+        </div>
+        <app-file-drag-drop
+          id="signage"
+          [uploadedFiles]="proofOfSignage"
+          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_SIGNAGE)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+        ></app-file-drag-drop>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="report">Report of Public Hearing</label>
+        <div class="subtext">Public hearing report and any other public comments received</div>
+        <app-file-drag-drop
+          id="report"
+          [uploadedFiles]="reportOfPublicHearing"
+          (uploadFiles)="attachFile($event, DOCUMENT.REPORT_OF_PUBLIC_HEARING)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+        ></app-file-drag-drop>
+      </div>
+    </div>
+  </form>
+</section>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

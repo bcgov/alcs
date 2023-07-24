@@ -117,11 +117,12 @@ export class ApplicationSubmissionController {
 
   @Post()
   async create(@Req() req, @Body() body: ApplicationSubmissionCreateDto) {
-    const { type } = body;
+    const { type, prescribedBody } = body;
     const user = req.user.entity as User;
     const newFileNumber = await this.applicationSubmissionService.create(
       type,
       user,
+      prescribedBody,
     );
     return {
       fileId: newFileNumber,

@@ -207,6 +207,14 @@ export interface ApplicationSubmissionDto {
   naruToPlaceAverageDepth: number | null;
   naruSleepingUnits: number | null;
   naruAgriTourism: string | null;
+
+  //Inclusion / Exclusion Fields
+  prescribedBody: string | null;
+  inclExclHectares: number | null;
+  exclWhyLand: string | null;
+  inclAgricultureSupport: string | null;
+  inclImprovements: string | null;
+  exclShareGovernmentBorders: boolean | null;
 }
 
 export interface ApplicationDto {

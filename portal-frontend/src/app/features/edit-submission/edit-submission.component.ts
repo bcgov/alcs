@@ -1,5 +1,5 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ContentChildren, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
@@ -20,6 +20,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
@@ -28,6 +29,7 @@ import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.co
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { StepComponent } from './step.partial';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -73,6 +75,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(PofoProposalComponent) pofoProposalComponent?: RosoProposalComponent;
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
+  @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -225,6 +228,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     }
     if (this.naruProposalComponent) {
       await this.naruProposalComponent.onSave();
+    }
+    if (this.exclProposalComponent) {
+      await this.exclProposalComponent.onSave();
     }
   }
 

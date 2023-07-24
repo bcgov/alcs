@@ -28,6 +28,12 @@ describe('ApplicationDetailsComponent', () => {
     fixture = TestBed.createComponent(ApplicationDetailsComponent);
     component = fixture.componentInstance;
     component.submission = {
+      exclShareGovernmentBorders: null,
+      exclWhyLand: null,
+      inclAgricultureSupport: null,
+      inclExclHectares: null,
+      inclImprovements: null,
+      prescribedBody: null,
       applicant: '',
       purpose: '',
       canEdit: false,

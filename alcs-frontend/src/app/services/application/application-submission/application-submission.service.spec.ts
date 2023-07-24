@@ -102,6 +102,12 @@ describe('ApplicationSubmissionService', () => {
     turOutsideLands: null,
     turReduceNegativeImpacts: null,
     turTotalCorridorArea: null,
+    inclAgricultureSupport: null,
+    inclImprovements: null,
+    exclShareGovernmentBorders: null,
+    exclWhyLand: null,
+    inclExclHectares: null,
+    prescribedBody: null,
     submissionStatuses: [],
   };
 

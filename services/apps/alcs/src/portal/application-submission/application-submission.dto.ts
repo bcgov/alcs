@@ -289,12 +289,35 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
+
+  //Inclusion / Exclusion Fields
+  @AutoMap(() => String)
+  prescribedBody: string | null;
+
+  @AutoMap(() => Number)
+  inclExclHectares: number | null;
+
+  @AutoMap(() => String)
+  exclWhyLand: string | null;
+
+  @AutoMap(() => String)
+  inclAgricultureSupport: string | null;
+
+  @AutoMap(() => String)
+  inclImprovements: string | null;
+
+  @AutoMap(() => Boolean)
+  exclShareGovernmentBorders: boolean | null;
 }
 
 export class ApplicationSubmissionCreateDto {
   @IsString()
   @IsNotEmpty()
   type: string;
+
+  @IsString()
+  @IsOptional()
+  prescribedBody?: string;
 }
 
 export class ApplicationSubmissionUpdateDto {
@@ -646,4 +669,29 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruAgriTourism?: string | null;
+
+  //Inclusion / Exclusion Fields
+  @IsString()
+  @IsOptional()
+  prescribedBody?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  inclExclHectares?: number | null;
+
+  @IsString()
+  @IsOptional()
+  exclWhyLand?: string | null;
+
+  @IsString()
+  @IsOptional()
+  inclAgricultureSupport?: string | null;
+
+  @IsString()
+  @IsOptional()
+  inclImprovements?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  exclShareGovernmentBorders?: boolean | null;
 }
