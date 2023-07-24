@@ -245,7 +245,6 @@ export interface ApplicationSubmissionUpdateDto {
   naruAgriTourism?: string | null;
 
   //Inclusion / Exclusion Fields
-  //Inclusion / Exclusion Fields
   prescribedBody?: string | null;
   inclExclHectares?: number | null;
   exclWhyLand?: string | null;

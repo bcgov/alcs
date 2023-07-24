@@ -208,7 +208,6 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private async saveProposalSteps() {
-    debugger;
     if (this.nfuProposalComponent) {
       await this.nfuProposalComponent.onSave();
     }
