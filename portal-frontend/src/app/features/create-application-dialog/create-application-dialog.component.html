@@ -88,7 +88,7 @@
   </div>
 </div>
 
-<div mat-dialog-actions class="dialog-action-container">
+<div mat-dialog-action class="dialog-action-container">
   <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === submissionStep">
     <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
     <button mat-flat-button [disabled]="!selectedSubmissionType" color="primary" (click)="onStepChange(1)">Next</button>
