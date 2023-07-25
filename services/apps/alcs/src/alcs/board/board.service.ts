@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindOptionsRelations } from 'typeorm/find-options/FindOptionsRelations';
 import { CARD_STATUS } from '../card/card-status/card-status.entity';
-import { CardType } from '../card/card-type/card-type.entity';
 import { CardService } from '../card/card.service';
 import { BoardStatus } from './board-status.entity';
 import { BoardDto } from './board.dto';
@@ -36,16 +35,10 @@ export class BoardService {
   }
 
   async list() {
-    const boards = await this.boardRepository.find({
-      relations: this.DEFAULT_RELATIONS,
-    });
-
-    //Sort board statuses
-    return boards.map((board) => {
-      board.statuses.sort((statusA, statusB) => {
-        return statusA.order - statusB.order;
-      });
-      return board;
+    return await this.boardRepository.find({
+      relations: {
+        allowedCardTypes: true,
+      },
     });
   }
 

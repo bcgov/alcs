@@ -27,6 +27,6 @@ export class AssignedTableComponent {
   constructor(private router: Router) {}
 
   async onSelectCard(card: CardDto) {
-    await this.router.navigateByUrl(`/board/${card.board.code}?card=${card.uuid}&type=${card.type}`);
+    await this.router.navigateByUrl(`/board/${card.boardCode}?card=${card.uuid}&type=${card.type}`);
   }
 }

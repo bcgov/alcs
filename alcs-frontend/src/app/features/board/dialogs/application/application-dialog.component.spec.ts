@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { APPLICATION_SYSTEM_SOURCE_TYPES, ApplicationDto } from '../../../../services/application/application.dto';
+import { BoardDto } from '../../../../services/board/board.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { AssigneeDto } from '../../../../services/user/user.dto';
@@ -62,11 +63,9 @@ describe('ApplicationDialogComponent', () => {
     decisionMeetings: [],
     dateSubmittedToAlc: Date.now(),
     card: {
+      boardCode: 'a',
       assignee: mockAssignee,
       highPriority: false,
-      board: {
-        code: 'board-code',
-      },
       status: {
         code: 'card-status',
       },
@@ -84,6 +83,14 @@ describe('ApplicationDialogComponent', () => {
 
     mockBoardService = createMock();
     mockBoardService.$boards = new EventEmitter();
+    mockBoardService.fetchBoardDetail.mockResolvedValue({
+      allowedCardTypes: [],
+      code: '',
+      createCardTypes: [],
+      showOnSchedule: false,
+      statuses: [],
+      title: '',
+    });
 
     await TestBed.configureTestingModule({
       declarations: [ApplicationDialogComponent],
@@ -106,6 +113,7 @@ describe('ApplicationDialogComponent', () => {
     fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;
     component.data = mockApplication;
+    component.boardStatuses = [];
     fixture.detectChanges();
   });
 

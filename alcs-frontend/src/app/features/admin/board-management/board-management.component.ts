@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminBoardManagementService } from '../../../services/admin-board-management/admin-board-management.service';
-import { BoardDto } from '../../../services/board/board.dto';
+import { BoardDto, MinimalBoardDto } from '../../../services/board/board.dto';
 import { BoardService } from '../../../services/board/board.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { BaseCodeDto } from '../../../shared/dto/base.dto';
@@ -16,7 +16,7 @@ import { BoardManagementDialogComponent } from './board-management-dialog/board-
 export class BoardManagementComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  boards: BoardDto[] = [];
+  boards: MinimalBoardDto[] = [];
   displayedColumns: string[] = ['boards', 'cardTypes', 'actions'];
   private cardTypes: BaseCodeDto[] = [];
   cardTypeMap: Record<string, string> = {};

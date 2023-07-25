@@ -12,6 +12,7 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { CardsDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardService } from '../../services/card/card.service';
 import { CovenantDto } from '../../services/covenant/covenant.dto';
@@ -208,14 +209,20 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setupBoard(board: BoardWithFavourite) {
+  private async setupBoard(board: BoardWithFavourite) {
     // clear cards to remove flickering
     this.cards = [];
     this.titleService.setTitle(`${environment.siteName} | ${board.title} Board`);
-
-    this.loadCards(board.code);
-    this.boardTitle = board.title;
     this.boardIsFavourite = board.isFavourite;
+
+    this.loadBoard(board.code);
+  }
+
+  private async loadBoard(boardCode: string) {
+    const response = await this.boardService.fetchBoardWithCards(boardCode);
+    const board = response.board;
+
+    this.boardTitle = board.title;
     this.boardHasCreateApplication = board.createCardTypes.includes(CardType.APP);
     this.boardHasCreatePlanningReview = board.createCardTypes.includes(CardType.PLAN);
     this.boardHasCreateReconsideration = board.createCardTypes.includes(CardType.RECON);
@@ -231,17 +238,17 @@ export class BoardComponent implements OnInit, OnDestroy {
       name: status.label,
       allowedTransitions: allStatuses,
     }));
+    this.mapAndSortCards(response, boardCode);
   }
 
-  private async loadCards(boardCode: string) {
-    const thingsWithCards = await this.boardService.fetchCards(boardCode);
-    const mappedApps = thingsWithCards.applications.map(this.mapApplicationDtoToCard.bind(this));
-    const mappedRecons = thingsWithCards.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
-    const mappedReviewMeetings = thingsWithCards.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
-    const mappedModifications = thingsWithCards.modifications.map(this.mapModificationToCard.bind(this));
-    const mappedCovenants = thingsWithCards.covenants.map(this.mapCovenantToCard.bind(this));
-    const mappedNoticeOfIntents = thingsWithCards.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
-    const mappedNoticeOfIntentModifications = thingsWithCards.noiModifications.map(
+  private mapAndSortCards(response: CardsDto, boardCode: string) {
+    const mappedApps = response.applications.map(this.mapApplicationDtoToCard.bind(this));
+    const mappedRecons = response.reconsiderations.map(this.mapReconsiderationDtoToCard.bind(this));
+    const mappedReviewMeetings = response.planningReviews.map(this.mapPlanningReviewToCard.bind(this));
+    const mappedModifications = response.modifications.map(this.mapModificationToCard.bind(this));
+    const mappedCovenants = response.covenants.map(this.mapCovenantToCard.bind(this));
+    const mappedNoticeOfIntents = response.noticeOfIntents.map(this.mapNoticeOfIntentToCard.bind(this));
+    const mappedNoticeOfIntentModifications = response.noiModifications.map(
       this.mapNoticeOfIntentModificationToCard.bind(this)
     );
     if (boardCode === BOARD_TYPE_CODES.VETT) {
@@ -456,7 +463,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       this.setUrl();
 
       if (isDirty && this.selectedBoardCode) {
-        this.loadCards(this.selectedBoardCode);
+        this.loadBoard(this.selectedBoardCode);
       }
     });
   }

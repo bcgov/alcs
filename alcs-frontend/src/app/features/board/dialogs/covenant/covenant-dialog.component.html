@@ -29,7 +29,7 @@
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
             </span>
             <span>{{ board.title }}</span>
-            <span *ngIf="card && card.board.code === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
+            <span *ngIf="card && card.boardCode === board.code"><mat-icon class="selected-board-icon">check</mat-icon></span>
           </div>
         </button>
       </mat-menu>

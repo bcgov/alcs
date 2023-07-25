@@ -7,7 +7,24 @@ export enum BOARD_CODES {
   EXECUTIVE_COMMITTEE = 'exec',
 }
 
-export class BoardDto {
+export class MinimalBoardDto {
+  @AutoMap()
+  @IsString()
+  code: string;
+
+  @AutoMap()
+  @IsString()
+  title: string;
+
+  @AutoMap()
+  @IsBoolean()
+  showOnSchedule: boolean;
+
+  @IsArray()
+  allowedCardTypes: string[];
+}
+
+export class BoardDto extends MinimalBoardDto {
   @AutoMap()
   @IsString()
   code: string;
@@ -21,25 +38,7 @@ export class BoardDto {
   statuses: BoardStatusDto[];
 
   @IsArray()
-  allowedCardTypes: string[];
-
-  @IsArray()
   createCardTypes: string[];
-
-  @AutoMap()
-  @IsBoolean()
-  showOnSchedule: boolean;
-}
-
-export class BoardSmallDto {
-  @AutoMap()
-  code: string;
-
-  @AutoMap()
-  title: string;
-
-  @AutoMap()
-  decisionMaker: string;
 }
 
 export class BoardStatusDto {

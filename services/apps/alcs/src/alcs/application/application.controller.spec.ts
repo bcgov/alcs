@@ -11,7 +11,6 @@ import {
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
-import { BoardSmallDto } from '../board/board.dto';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
@@ -58,7 +57,7 @@ describe('ApplicationController', () => {
       type: 'fake',
       uuid: 'fake',
       highPriority: false,
-      board: {} as BoardSmallDto,
+      boardCode: 'boardCode',
     } as CardDto,
     source: 'ALCS',
   };

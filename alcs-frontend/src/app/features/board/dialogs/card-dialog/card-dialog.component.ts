@@ -44,12 +44,8 @@ export class CardDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.boardService.$boards.pipe(takeUntil(this.$destroy)).subscribe((boards) => {
-      const loadedBoard = boards.find((board) => board.code === this.selectedBoard);
       this.boards = boards;
       this.allowedBoards = this.boards.filter((board) => this.card && board.allowedCardTypes.includes(this.card.type));
-      if (loadedBoard) {
-        this.boardStatuses = loadedBoard.statuses;
-      }
     });
 
     this.authService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((currentUser) => {
@@ -64,18 +60,18 @@ export class CardDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  populateCardData(card: CardDto) {
+  async populateCardData(card: CardDto) {
     this.card = card;
     this.selectedAssignee = card.assignee;
     this.selectedAssigneeName = this.selectedAssignee?.prettyName;
     this.selectedApplicationStatus = card.status.code;
-    this.selectedBoard = card.board.code;
+    this.selectedBoard = card.boardCode;
     this.allowedBoards = this.boards.filter((board) => this.card && board.allowedCardTypes.includes(this.card.type));
 
     this.$users = this.userService.$assignableUsers;
     this.userService.fetchAssignableUsers();
 
-    const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
+    const loadedBoard = await this.boardService.fetchBoardDetail(this.selectedBoard);
     if (loadedBoard) {
       this.boardStatuses = loadedBoard.statuses;
     }

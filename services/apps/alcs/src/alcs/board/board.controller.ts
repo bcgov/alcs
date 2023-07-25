@@ -20,7 +20,7 @@ import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { BoardDto } from './board.dto';
+import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -45,12 +45,22 @@ export class BoardController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getBoards() {
     const boards = await this.boardService.list();
-    return this.autoMapper.mapArray(boards, Board, BoardDto);
+    return this.autoMapper.mapArray(boards, Board, MinimalBoardDto);
   }
 
   @Get('/:boardCode')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async getCards(@Param('boardCode') boardCode: string) {
+  async getBoardDetail(@Param('boardCode') boardCode: string) {
+    const board = await this.boardService.getOneOrFail({
+      code: boardCode,
+    });
+
+    return await this.autoMapper.mapAsync(board, Board, BoardDto);
+  }
+
+  @Get('/:boardCode/cards')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async getBoardWithCards(@Param('boardCode') boardCode: string) {
     const board = await this.boardService.getOneOrFail({
       code: boardCode,
     });
@@ -86,6 +96,7 @@ export class BoardController {
       : [];
 
     return {
+      board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
       planningReviews: await this.planningReviewService.mapToDtos(

@@ -46,6 +46,8 @@ describe('BoardController', () => {
     noiModificationService = createMock();
     mockBoard = new Board({
       allowedCardTypes: [],
+      statuses: [],
+      createCardTypes: [],
       uuid: 'fake-board',
     });
 
@@ -128,7 +130,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(mockBoard.uuid);
+    await controller.getBoardWithCards(mockBoard.uuid);
 
     expect(appService.getByBoard).toHaveBeenCalledTimes(1);
     expect(appService.getByBoard).toBeCalledWith(mockBoard.uuid);
@@ -148,7 +150,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(boardCode);
+    await controller.getBoardWithCards(boardCode);
 
     expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(1);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
@@ -162,7 +164,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(boardCode);
+    await controller.getBoardWithCards(boardCode);
 
     expect(modificationService.getByBoard).toHaveBeenCalledTimes(1);
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);
