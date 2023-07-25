@@ -41,8 +41,6 @@ SELECT a.alr_area,
 FROM alcs.application a
     LEFT JOIN oats_app_prep_data AS oapd ON a.file_number = oapd.alr_application_id::TEXT
 WHERE a.alr_area != oapd.component_area
-    OR a.ag_cap != oapd.agri_capability_code
-    OR a.ag_cap_source != oapd.capability_source_code
     OR a.ag_cap_map != oapd.agri_cap_map
     OR a.ag_cap_consultant != oapd.agri_cap_consultant
     OR a.staff_observations != oapd.staff_comment_observations

@@ -23,14 +23,28 @@ class AlcsNfuSubTypeCode(Enum):
     )
     Work_Camps_Associated_Use = "Work Camps or Associated Use"
 
+
 class AlcsNfuTypeCode(Enum):
-    Agricultural_Farm = 'Agricultural / Farm'
-    Civic_Institutional = 'Civic / Institutional'
-    Commercial_Retail = 'Commercial / Retail'
-    Industrial = 'Industrial'
-    Other = 'Other'
-    Recreational = 'Recreational'
-    Residential = 'Residential'
-    Transportation_Utilities = 'Transportation / Utilities'
-    Unused = 'Unused'
-    
+    Agricultural_Farm = "Agricultural / Farm"
+    Civic_Institutional = "Civic / Institutional"
+    Commercial_Retail = "Commercial / Retail"
+    Industrial = "Industrial"
+    Other = "Other"
+    Recreational = "Recreational"
+    Residential = "Residential"
+    Transportation_Utilities = "Transportation / Utilities"
+    Unused = "Unused"
+
+
+class AlcsAgCap(Enum):
+    Mixed_Prime_Secondary = "Mixed Prime and Secondary"
+    Prime = "Prime"
+    Prime_Dominant = "Prime Dominant"
+    Secondary = "Secondary"
+    Unclassified = "Unclassified"
+
+
+class AlcsAgCapSource(Enum):
+    BCLI = "BCLI"
+    CLI = "CLI"
+    On_site = "On-site"

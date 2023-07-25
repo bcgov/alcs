@@ -2,6 +2,10 @@ from common import (
     ALRChangeCode,
     AlcsNfuTypeCode,
     AlcsNfuSubTypeCode,
+    OatsCapabilitySourceCode,
+    OatsAgriCapabilityCodes,
+    AlcsAgCap,
+    AlcsAgCapSource,
     log_end,
     log_start,
 )
@@ -13,6 +17,32 @@ from enum import Enum
 
 
 etl_name = "alcs_app_prep"
+
+
+class OatsToAlcsNfuTypes(Enum):
+    AGR = AlcsNfuTypeCode.Agricultural_Farm
+    CIV = AlcsNfuTypeCode.Civic_Institutional
+    COM = AlcsNfuTypeCode.Commercial_Retail
+    IND = AlcsNfuTypeCode.Industrial
+    OTH = AlcsNfuTypeCode.Other
+    REC = AlcsNfuTypeCode.Recreational
+    RES = AlcsNfuTypeCode.Residential
+    TRA = AlcsNfuTypeCode.Transportation_Utilities
+    UNU = AlcsNfuTypeCode.Unused
+
+
+class OatsToAlcsAgCapSource(Enum):
+    BCLI = AlcsAgCapSource.BCLI
+    CLI = AlcsAgCapSource.CLI
+    ONSI = AlcsAgCapSource.On_site
+
+
+class OatsToAlcsAgCap(Enum):
+    P = AlcsAgCap.Prime
+    PD = AlcsAgCap.Prime_Dominant
+    MIX = AlcsAgCap.Mixed_Prime_Secondary
+    S = AlcsAgCap.Secondary
+    U = AlcsAgCap.Unclassified
 
 
 @inject_conn_pool
@@ -46,6 +76,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
                 )
 
                 rows = cursor.fetchmany(batch_size)
+
                 if not rows:
                     break
                 try:
@@ -139,6 +170,8 @@ def prepare_app_prep_data(app_prep_raw_data_list):
 
     for row in app_prep_raw_data_list:
         data = dict(row)
+        data = map_basic_field(data)
+
         if data["alr_change_code"] == ALRChangeCode.NFU:
             data = mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
@@ -156,11 +189,11 @@ def prepare_app_prep_data(app_prep_raw_data_list):
 
 def mapOatsToAlcsAppPrep(data):
     if data["nonfarm_use_type_code"]:
-        data["nonfarm_use_type_code"] = OatsToAlcsNfuTypes[
-            data["nonfarm_use_type_code"]
-        ].value
+        data["nonfarm_use_type_code"] = str(
+            OatsToAlcsNfuTypes[data["nonfarm_use_type_code"]].value
+        )
     if data["nonfarm_use_subtype_code"]:
-        data["nonfarm_use_subtype_code"] = mapOatsToAlcsNfuSubTypes(
+        data["nonfarm_use_subtype_code"] = map_oats_to_alcs_nfu_subtypes(
             data["nonfarm_use_subtype_code"]
         )
     return data
@@ -252,19 +285,7 @@ def get_update_query_for_other():
     return query
 
 
-class OatsToAlcsNfuTypes(Enum):
-    AGR = AlcsNfuTypeCode.Agricultural_Farm
-    CIV = AlcsNfuTypeCode.Civic_Institutional
-    COM = AlcsNfuTypeCode.Commercial_Retail
-    IND = AlcsNfuTypeCode.Industrial
-    OTH = AlcsNfuTypeCode.Other
-    REC = AlcsNfuTypeCode.Recreational
-    RES = AlcsNfuTypeCode.Residential
-    TRA = AlcsNfuTypeCode.Transportation_Utilities
-    UNU = AlcsNfuTypeCode.Unused
-
-
-def mapOatsToAlcsNfuSubTypes(oats_code):
+def map_oats_to_alcs_nfu_subtypes(oats_code):
     # TODO this is work in progress and will be finished later
     if oats_code == 1:
         return "Accessory Buildings"
@@ -280,3 +301,16 @@ def mapOatsToAlcsNfuSubTypes(oats_code):
         return "Agricultural Subdivision Remnant"
 
     return ""
+
+
+def map_basic_field(data):
+    if data["capability_source_code"]:
+        data["capability_source_code"] = data["capability_source_code"] = str(
+            OatsToAlcsAgCapSource[data["capability_source_code"]].value
+        )
+    if data["agri_capability_code"]:
+        data["agri_capability_code"] = str(
+            OatsToAlcsAgCap[data["agri_capability_code"]].value
+        )
+
+    return data

@@ -13,3 +13,17 @@ class ALRChangeCode(Enum):
     SRW = "SRW"  # Notification of Statutory Right of Way
     CSC = "CSC"  # Conservation Covenant
     NAR = "NAR"  # Non-Adhering Residential Use
+
+
+class OatsCapabilitySourceCode(Enum):
+    BCLI = "BCLI"
+    CLI = "CLI"
+    ONSI = "ONSI"
+
+
+class OatsAgriCapabilityCodes(Enum):
+    P = "P"
+    PD = "PD"
+    MIX = "MIX"
+    S = "S"
+    U = "U"
