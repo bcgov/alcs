@@ -129,37 +129,35 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
     // replace placeholder uuid with the real one before saving
     await this.replacePlaceholderParcel();
 
-    if (this.parcelEntryChanged) {
-      // delete all OTHER parcels if user answered 'NO' on 'Is there other parcels in the community'
-      if (!parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
-        if (this.otherParcels.some((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL)) {
-          await this.applicationParcelService.deleteMany(
-            this.otherParcels.filter((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL).map((e) => e.uuid)
-          );
-        }
-
-        return;
+    // delete all OTHER parcels if user answered 'NO' on 'Is there other parcels in the community'
+    if (!parseStringToBoolean(this.hasOtherParcelsInCommunity.getRawValue())) {
+      if (this.otherParcels.some((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL)) {
+        await this.applicationParcelService.deleteMany(
+          this.otherParcels.filter((e) => e.uuid !== PLACE_HOLDER_UUID_FOR_INITIAL_PARCEL).map((e) => e.uuid)
+        );
       }
 
-      for (const parcel of this.otherParcels) {
-        parcelsToUpdate.push({
-          uuid: parcel.uuid,
-          pid: parcel.pid?.toString() || null,
-          pin: parcel.pin?.toString() || null,
-          legalDescription: parcel.legalDescription,
-          civicAddress: parcel.civicAddress,
-          isFarm: parcel.isFarm,
-          purchasedDate: parcel.purchasedDate,
-          mapAreaHectares: parcel.mapAreaHectares,
-          ownershipTypeCode: parcel.ownershipTypeCode,
-          crownLandOwnerType: parcel.crownLandOwnerType,
-          isConfirmedByApplicant: false,
-          ownerUuids: parcel.owners.map((owner) => owner.uuid),
-        });
-      }
-
-      await this.applicationParcelService.update(parcelsToUpdate);
+      return;
     }
+
+    for (const parcel of this.otherParcels) {
+      parcelsToUpdate.push({
+        uuid: parcel.uuid,
+        pid: parcel.pid?.toString() || null,
+        pin: parcel.pin?.toString() || null,
+        legalDescription: parcel.legalDescription,
+        civicAddress: parcel.civicAddress,
+        isFarm: parcel.isFarm,
+        purchasedDate: parcel.purchasedDate,
+        mapAreaHectares: parcel.mapAreaHectares,
+        ownershipTypeCode: parcel.ownershipTypeCode,
+        crownLandOwnerType: parcel.crownLandOwnerType,
+        isConfirmedByApplicant: false,
+        ownerUuids: parcel.owners.map((owner) => owner.uuid),
+      });
+    }
+
+    await this.applicationParcelService.update(parcelsToUpdate);
   }
 
   async onSave() {

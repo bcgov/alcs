@@ -64,7 +64,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
-  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherParcelsComponent;
+  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherAttachmentsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
@@ -111,12 +111,10 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
             }
 
             if (stepInd) {
-              const randomInt = Math.random() * 100;
-              console.debug(`Setting timeout for navigation ${randomInt}`);
               // setTimeout is required for stepper to be initialized
               setTimeout(() => {
                 this.customStepper.navigateToStep(parseInt(stepInd), true);
-                console.debug(`Emitted step ${randomInt}`);
+
                 if (parcelUuid) {
                   this.expandedParcelUuid = parcelUuid;
                 }
@@ -137,17 +135,15 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private async loadApplication(fileId: string) {
-    if (!this.applicationSubmission) {
-      this.overlayService.showSpinner();
-      this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
-      const documents = await this.applicationDocumentService.getByFileId(fileId);
-      if (documents) {
-        this.$applicationDocuments.next(documents);
-      }
-      this.fileId = fileId;
-      this.$applicationSubmission.next(this.applicationSubmission);
-      this.overlayService.hideSpinner();
+    this.overlayService.showSpinner();
+    this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
+    const documents = await this.applicationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$applicationDocuments.next(documents);
     }
+    this.fileId = fileId;
+    this.$applicationSubmission.next(this.applicationSubmission);
+    this.overlayService.hideSpinner();
   }
 
   async onApplicationTypeChangeClicked() {
@@ -173,7 +169,6 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    console.debug('DEACTIVATING');
     await this.saveApplication(this.customStepper.selectedIndex);
 
     return of(true);

@@ -154,10 +154,8 @@ export class ApplicationSubmissionService {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
 
     applicationSubmission.applicant = updateDto.applicant;
-    applicationSubmission.purpose = filterUndefined(
-      updateDto.purpose,
-      applicationSubmission.purpose,
-    );
+    applicationSubmission.purpose =
+      updateDto.purpose || applicationSubmission.purpose;
     applicationSubmission.typeCode =
       updateDto.typeCode || applicationSubmission.typeCode;
     applicationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
