@@ -30,6 +30,7 @@
     </div>
     <div>
       <label for="hectares">How many hectares are you proposing to exclude?</label>
+      <div class="subtext">Note: 0.01 ha is 100m<sup>2</sup></div>
       <mat-form-field appearance="outline">
         <input
           id="hectares"
@@ -53,6 +54,10 @@
         Does any land under application share a common property line with land in another Local or First Nation
         Government?
       </label>
+      <div class="subtext">
+        If any property under application shares a common boundary with a neighbouring Local or First Nation Government,
+        then that government must be notified of the application and given the opportunity to comment.
+      </div>
       <mat-button-toggle-group class="input" id="share-property" formControlName="shareProperty">
         <mat-button-toggle
           value="true"
@@ -72,6 +77,10 @@
     </div>
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Be clear and concise in describing the proposal. Include why you are applying for exclusion and what the
+        proposal will achieve.
+      </div>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="purpose"
@@ -123,7 +132,7 @@
 </form>
 <section>
   <h3>Notification and Public Hearing Requirements</h3>
-  <p>
+  <p class="requirement-description">
     A printed copy of the application will need to be used for notification. Please ensure all prior fields are complete
     and correct before downloading the PDF of the application (Step 8 of this application form will flag outstanding
     fields).
@@ -141,8 +150,6 @@
         <div class="subtext">
           Proof that notice of the application was provided in a form and manner acceptable to the Commission
         </div>
-      </div>
-      <div class="full-row">
         <app-file-drag-drop
           id="advertising"
           [uploadedFiles]="noticeOfPublicHearing"
