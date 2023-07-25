@@ -2,9 +2,11 @@
 
 This is a Python script for uploading files from the OATS database to the Dell ECS object storage service.
 
-The files are uploaded in the format `/migrate/{application_id}/{document_id}_{filename}` where:
+The files are uploaded in the format `/migrate/application||issue||planning_review/{application_id}||{issue_id}||{planning_review_id}/{document_id}_{filename}` where:
 
 - `application_id` is the associated OATS application ID
+- `issue_id` is the associated OATS issue ID
+- `planning_review_id` is the associated OATS planning_review ID
 - `document_id` is the primary key from the documents table
 - `filename` is the filename metadata from the documents table
 
@@ -32,10 +34,24 @@ ECS_ACCESS_KEY: Dell ECS access key
 ECS_SECRET_KEY: Dell ECS secret key  
 These variables can be stored in the .env file.
 
+## Arm64 quirks
+
+### If running on M1:
+
+DB_PATH: Path to oracle instant client driver folder
+example `DB_PATH=/Users/user/Downloads/instantclient_19_8`
+
+Force run python in emulation mode and reinstall requirements
+`python3-intel64 -m pip install -r requirements.txt`
+
 ## Running the Script
 
 To run the script, run the following command:
 
 `python migrate-files.py`
+
+M1:
+
+`python3-intel64 migrate-files.py`
 
 The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. The script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption.
