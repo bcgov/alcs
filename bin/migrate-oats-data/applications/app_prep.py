@@ -16,7 +16,7 @@ etl_name = "alcs_app_prep"
 
 
 @inject_conn_pool
-def process_alcs_application_prep_fields(conn=None, batch_size=10):
+def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """"""
     log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:

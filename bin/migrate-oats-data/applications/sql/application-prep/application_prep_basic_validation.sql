@@ -1,3 +1,4 @@
+-- this script selects difference between fields that do not require mapping
 WITH appl_components_grouped AS (
     SELECT oaac.alr_application_id
     FROM oats.oats_alr_appl_components oaac
@@ -25,7 +26,18 @@ oats_app_prep_data AS (
         JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = acg.alr_application_id
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = acg.alr_application_id
 )
-SELECT *
+SELECT a.alr_area,
+    a.ag_cap,
+    a.ag_cap_source,
+    a.ag_cap_map,
+    a.ag_cap_consultant,
+    a.staff_observations,
+    oapd.component_area,
+    oapd.agri_capability_code,
+    oapd.capability_source_code,
+    oapd.agri_cap_map,
+    oapd.agri_cap_consultant,
+    oapd.staff_comment_observations
 FROM alcs.application a
     LEFT JOIN oats_app_prep_data AS oapd ON a.file_number = oapd.alr_application_id::TEXT
 WHERE a.alr_area != oapd.component_area
