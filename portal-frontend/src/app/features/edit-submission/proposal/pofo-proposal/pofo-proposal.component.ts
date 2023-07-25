@@ -53,6 +53,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   });
 
   private submissionUuid = '';
+  private areComponentsDirty = false;
   fillTableData: SoilTableData = {};
   alreadyFilledTableData: SoilTableData = {};
 
@@ -131,7 +132,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
@@ -185,5 +186,9 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       this.applicationIDs.disable();
       this.applicationIDs.setValue(null);
     }
+  }
+
+  markDirty() {
+    this.areComponentsDirty = true;
   }
 }

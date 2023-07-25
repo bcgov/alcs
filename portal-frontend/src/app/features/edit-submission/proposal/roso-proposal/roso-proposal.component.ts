@@ -38,6 +38,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  areComponentsDirty = false;
 
   form = new FormGroup({
     isNOIFollowUp: this.isNOIFollowUp,
@@ -129,7 +130,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
@@ -181,5 +182,9 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       this.applicationIDs.disable();
       this.applicationIDs.setValue(null);
     }
+  }
+
+  markDirty() {
+    this.areComponentsDirty = true;
   }
 }

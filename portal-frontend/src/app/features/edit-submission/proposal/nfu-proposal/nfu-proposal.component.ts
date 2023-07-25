@@ -87,7 +87,7 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
   }
 
   private async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const nfuHectares = this.hectares.getRawValue();
       const purpose = this.purpose.getRawValue();
       const nfuOutsideLands = this.outsideLands.getRawValue();

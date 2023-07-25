@@ -91,7 +91,7 @@ export class ExclProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && this.form.dirty) {
       const inclExclHectares = this.hectares.value;
       const purpose = this.purpose.value;
       const exclWhyLand = this.whyExclude.value;

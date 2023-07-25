@@ -64,7 +64,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
-  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherAttachmentsComponent;
+  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherParcelsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
@@ -135,15 +135,17 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private async loadApplication(fileId: string) {
-    this.overlayService.showSpinner();
-    this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
-    const documents = await this.applicationDocumentService.getByFileId(fileId);
-    if (documents) {
-      this.$applicationDocuments.next(documents);
+    if (!this.applicationSubmission) {
+      this.overlayService.showSpinner();
+      this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
+      const documents = await this.applicationDocumentService.getByFileId(fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
+      this.fileId = fileId;
+      this.$applicationSubmission.next(this.applicationSubmission);
+      this.overlayService.hideSpinner();
     }
-    this.fileId = fileId;
-    this.$applicationSubmission.next(this.applicationSubmission);
-    this.overlayService.hideSpinner();
   }
 
   async onApplicationTypeChangeClicked() {

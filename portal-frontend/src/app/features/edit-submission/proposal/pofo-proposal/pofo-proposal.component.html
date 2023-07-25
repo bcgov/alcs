@@ -142,14 +142,22 @@
       <app-info-banner>
         Please refer to <a href="TODO">Contact Us</a> on the ALC website for more detail.
       </app-info-banner>
-      <app-soil-table tableHeader="Fill to be Placed" [(data)]="fillTableData"></app-soil-table>
+      <app-soil-table
+        tableHeader="Fill to be Placed"
+        [(data)]="fillTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
     </div>
     <div class="full-row">
       <label
         >Of the proposed totals provided above, please input the dimensions of fill that has already been place.</label
       >
       <div class="subtext">If no proposed fill has already been placed, please leave 0 in the fields below</div>
-      <app-soil-table tableHeader="Fill already Placed" [(data)]="alreadyFilledTableData"></app-soil-table>
+      <app-soil-table
+        tableHeader="Fill already Placed"
+        [(data)]="alreadyFilledTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
     </div>
 
     <section>

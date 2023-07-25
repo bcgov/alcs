@@ -54,7 +54,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
-  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherAttachmentsComponent;
+  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherParcelsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
@@ -135,16 +135,18 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   }
 
   private async loadDraftSubmission(fileId: string) {
-    this.overlayService.showSpinner();
-    this.applicationSubmission = await this.applicationSubmissionDraftService.getByFileId(fileId);
-    this.loadOriginalSubmission(fileId);
-    const documents = await this.applicationDocumentService.getByFileId(fileId);
-    if (documents) {
-      this.$applicationDocuments.next(documents);
+    if (!this.applicationSubmission) {
+      this.overlayService.showSpinner();
+      this.applicationSubmission = await this.applicationSubmissionDraftService.getByFileId(fileId);
+      this.loadOriginalSubmission(fileId);
+      const documents = await this.applicationDocumentService.getByFileId(fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
+      this.fileId = fileId;
+      this.$applicationSubmission.next(this.applicationSubmission);
+      this.overlayService.hideSpinner();
     }
-    this.fileId = fileId;
-    this.$applicationSubmission.next(this.applicationSubmission);
-    this.overlayService.hideSpinner();
   }
 
   // this gets fired whenever applicant navigates away from edit page

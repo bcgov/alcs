@@ -92,20 +92,25 @@ export class LandUseComponent extends StepComponent implements OnInit, OnDestroy
   }
 
   async saveProgress() {
-    const formValues = this.landUseForm.getRawValue();
-    await this.applicationService.updatePending(this.submissionUuid, {
-      parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
-      parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
-      parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
-      northLandUseType: formValues.northLandUseType,
-      northLandUseTypeDescription: formValues.northLandUseTypeDescription,
-      eastLandUseType: formValues.eastLandUseType,
-      eastLandUseTypeDescription: formValues.eastLandUseTypeDescription,
-      southLandUseType: formValues.southLandUseType,
-      southLandUseTypeDescription: formValues.southLandUseTypeDescription,
-      westLandUseType: formValues.westLandUseType,
-      westLandUseTypeDescription: formValues.westLandUseTypeDescription,
-    });
+    if (this.landUseForm.dirty) {
+      const formValues = this.landUseForm.getRawValue();
+      const updatedSubmission = await this.applicationService.updatePending(this.submissionUuid, {
+        parcelsAgricultureDescription: formValues.parcelsAgricultureDescription,
+        parcelsAgricultureImprovementDescription: formValues.parcelsAgricultureImprovementDescription,
+        parcelsNonAgricultureUseDescription: formValues.parcelsNonAgricultureUseDescription,
+        northLandUseType: formValues.northLandUseType,
+        northLandUseTypeDescription: formValues.northLandUseTypeDescription,
+        eastLandUseType: formValues.eastLandUseType,
+        eastLandUseTypeDescription: formValues.eastLandUseTypeDescription,
+        southLandUseType: formValues.southLandUseType,
+        southLandUseTypeDescription: formValues.southLandUseTypeDescription,
+        westLandUseType: formValues.westLandUseType,
+        westLandUseTypeDescription: formValues.westLandUseTypeDescription,
+      });
+      if (updatedSubmission) {
+        this.$applicationSubmission.next(updatedSubmission);
+      }
+    }
   }
 
   async onSave() {

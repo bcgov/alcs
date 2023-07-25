@@ -35,6 +35,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
   noticeOfWork: ApplicationDocumentDto[] = [];
+  areComponentsDirty = false;
 
   isNOIFollowUp = new FormControl<string | null>(null, [Validators.required]);
   NOIIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
@@ -186,7 +187,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId) {
+    if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
       const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
       const soilNOIIDs = this.NOIIDs.getRawValue();
       const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
@@ -265,5 +266,9 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeNoticeOfWork(selectedValue: string) {
     this.requiresNoticeOfWork = selectedValue === 'true';
+  }
+
+  markDirty() {
+    this.areComponentsDirty = true;
   }
 }
