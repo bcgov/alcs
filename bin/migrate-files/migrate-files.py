@@ -44,7 +44,7 @@ def application_docs(starting_document_id,batch,cursor):
         print(error.message)
 
     application_count = cursor.fetchone()[0]
-    print('Count =', application_count)
+    print('Application count =', application_count)
 
     # # Execute the SQL query to retrieve the BLOB data and key column
     cursor.execute(f"""
@@ -61,7 +61,7 @@ def application_docs(starting_document_id,batch,cursor):
     last_document_id = 0
 
     try:
-        with tqdm(total=application_count, unit="file", desc="Uploading files to S3") as pbar:
+        with tqdm(total=application_count, unit="file", desc="Uploading application files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
                 data = cursor.fetchmany(batch)
@@ -80,7 +80,7 @@ def application_docs(starting_document_id,batch,cursor):
 
     except Exception as e:
         print("Something went wrong:",e)
-        print("Processed", documents_processed,  "files")
+        print("Processed", documents_processed,  "application files")
         
         # Set resume status in case of interuption
         with open('last-file.pickle', 'wb') as file:
@@ -91,7 +91,11 @@ def application_docs(starting_document_id,batch,cursor):
         exit()
 
     # Display results
-    print("Process complete: Successfully migrated", documents_processed, "files.")
+    print("Process complete: Successfully migrated", documents_processed, "out of", application_count, "application files.")
+
+    with open('last-file.pickle', 'wb') as file:
+        pickle.dump(last_document_id, file)
+    
     return
 
 def planning_docs(starting_planning_document_id,batch,cursor):
@@ -103,7 +107,7 @@ def planning_docs(starting_planning_document_id,batch,cursor):
         print(error.message)
 
     planning_review_count = cursor.fetchone()[0]
-    print('Count =', planning_review_count)
+    print('Planning_review count =', planning_review_count)
 
     # # Execute the SQL query to retrieve the BLOB data and key column
     cursor.execute(f"""
@@ -120,7 +124,7 @@ def planning_docs(starting_planning_document_id,batch,cursor):
     last_planning_document_id = 0
 
     try:
-        with tqdm(total=planning_review_count, unit="file", desc="Uploading files to S3") as pbar:
+        with tqdm(total=planning_review_count, unit="file", desc="Uploading planning_revie files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
                 data = cursor.fetchmany(batch)
@@ -139,7 +143,7 @@ def planning_docs(starting_planning_document_id,batch,cursor):
 
     except Exception as e:
         print("Something went wrong:",e)
-        print("Processed", documents_processed,  "files")
+        print("Processed", documents_processed,  "planning_review files")
         
         # Set resume status in case of interuption
         with open('last-planning-file.pickle', 'wb') as file:
@@ -150,7 +154,11 @@ def planning_docs(starting_planning_document_id,batch,cursor):
         exit()
 
     # Display results
-    print("Process complete: Successfully migrated", documents_processed, "files.")
+    print("Process complete: Successfully migrated", documents_processed, "out of", planning_review_count, "planning_review files.")
+
+    with open('last-planning-file.pickle', 'wb') as file:
+        pickle.dump(last_planning_document_id, file)
+    
     return
 
 def issue_docs(starting_issue_document_id,batch,cursor):
@@ -162,7 +170,7 @@ def issue_docs(starting_issue_document_id,batch,cursor):
         print(error.message)
 
     issue_count = cursor.fetchone()[0]
-    print('Count =', issue_count)
+    print('Issue count =', issue_count)
 
     # # Execute the SQL query to retrieve the BLOB data and key column
     cursor.execute(f"""
@@ -198,7 +206,7 @@ def issue_docs(starting_issue_document_id,batch,cursor):
 
     except Exception as e:
         print("Something went wrong:",e)
-        print("Processed", documents_processed,  "files")
+        print("Processed", documents_processed,  "issue files")
         
         # Set resume status in case of interuption
         with open('last-issue-file.pickle', 'wb') as file:
@@ -209,7 +217,11 @@ def issue_docs(starting_issue_document_id,batch,cursor):
         exit()
 
     # Display results
-    print("Process complete: Successfully migrated", documents_processed, "files.")
+    print("Process complete: Successfully migrated", documents_processed, "out of", issue_count, "issue files.")
+
+    with open('last-issue-file.pickle', 'wb') as file:
+        pickle.dump(last_issue_document_id, file)
+
     return
 
 starting_document_id = 0
@@ -217,13 +229,14 @@ starting_document_id = 0
 if os.path.isfile('last-file.pickle'):
     with open('last-file.pickle', 'rb') as file:
         starting_document_id = pickle.load(file)
+    print('Starting applications from:', starting_document_id)
 
 starting_planning_document_id = 0
 # Determine job resume status
 if os.path.isfile('last-planning-file.pickle'):
     with open('last-planning-file.pickle', 'rb') as file:
         starting_planning_document_id = pickle.load(file)
-    print('Starting planning_review from:', starting_planning_document_id)
+    print('Starting planning_reviews from:', starting_planning_document_id)
 
 starting_issue_document_id = 0
 # Determine job resume status
@@ -237,16 +250,11 @@ cursor = conn.cursor()
 # Set batch size
 batch_size = 10
 
-if starting_issue_document_id > 0:
-    issue_docs(starting_issue_document_id,batch_size,cursor)
-elif starting_planning_document_id > 0:
-    planning_docs(starting_planning_document_id,batch_size,cursor)
-    issue_docs(0,batch_size,cursor)
-else:
-    print('Starting applications from:', starting_document_id)
-    application_docs(starting_document_id,batch_size,cursor)
-    planning_docs(0,batch_size,cursor)
-    issue_docs(0,batch_size,cursor)
+application_docs(starting_document_id,batch_size,cursor)
+planning_docs(starting_planning_document_id,batch_size,cursor)
+issue_docs(starting_issue_document_id,batch_size,cursor)
+
+print('File upload complete, closing connection')
 
 # Close the database cursor and connection
 cursor.close()
