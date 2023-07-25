@@ -1,14 +1,14 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { AfterViewInit, Component, ContentChildren, OnDestroy, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../services/application-document/application-document.service';
-import { APPLICATION_OWNER } from '../../services/application-owner/application-owner.dto';
 import { ApplicationSubmissionReviewService } from '../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDetailedDto } from '../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
+import { CodeService } from '../../services/code/code.service';
 import { PdfGenerationService } from '../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../shared/custom-stepper/custom-stepper.component';
@@ -21,6 +21,7 @@ import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
+import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
 import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
@@ -29,7 +30,6 @@ import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.co
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { StepComponent } from './step.partial';
 
 export enum EditApplicationSteps {
   AppParcel = 0,
@@ -64,7 +64,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
-  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherAttachmentsComponent;
+  @ViewChild(OtherParcelsComponent) otherParcelsComponent!: OtherParcelsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
@@ -76,6 +76,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
+  @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -87,7 +88,8 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     private overlayService: OverlaySpinnerService,
     private router: Router,
     private pdfGenerationService: PdfGenerationService,
-    private applicationReviewService: ApplicationSubmissionReviewService
+    private applicationReviewService: ApplicationSubmissionReviewService,
+    private codeService: CodeService
   ) {}
 
   ngOnInit(): void {
@@ -109,10 +111,12 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
             }
 
             if (stepInd) {
+              const randomInt = Math.random() * 100;
+              console.debug(`Setting timeout for navigation ${randomInt}`);
               // setTimeout is required for stepper to be initialized
               setTimeout(() => {
                 this.customStepper.navigateToStep(parseInt(stepInd), true);
-
+                console.debug(`Emitted step ${randomInt}`);
                 if (parcelUuid) {
                   this.expandedParcelUuid = parcelUuid;
                 }
@@ -133,15 +137,17 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   private async loadApplication(fileId: string) {
-    this.overlayService.showSpinner();
-    this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
-    const documents = await this.applicationDocumentService.getByFileId(fileId);
-    if (documents) {
-      this.$applicationDocuments.next(documents);
+    if (!this.applicationSubmission) {
+      this.overlayService.showSpinner();
+      this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
+      const documents = await this.applicationDocumentService.getByFileId(fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
+      this.fileId = fileId;
+      this.$applicationSubmission.next(this.applicationSubmission);
+      this.overlayService.hideSpinner();
     }
-    this.fileId = fileId;
-    this.$applicationSubmission.next(this.applicationSubmission);
-    this.overlayService.hideSpinner();
   }
 
   async onApplicationTypeChangeClicked() {
@@ -167,6 +173,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
+    console.debug('DEACTIVATING');
     await this.saveApplication(this.customStepper.selectedIndex);
 
     return of(true);
@@ -232,6 +239,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.exclProposalComponent) {
       await this.exclProposalComponent.onSave();
     }
+    if (this.inclProposalComponent) {
+      await this.inclProposalComponent.onSave();
+    }
   }
 
   async onBeforeSwitchStep(index: number) {
@@ -257,17 +267,31 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   async onSubmit() {
     const submission = this.applicationSubmission;
     if (submission) {
-      await this.applicationSubmissionService.submitToAlcs(submission.uuid);
-
-      const primaryContact = submission.owners.find((owner) => owner.uuid === submission?.primaryContactOwnerUuid);
-      if (primaryContact && primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT) {
-        const review = await this.applicationReviewService.startReview(submission.fileNumber);
-        if (review) {
-          await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
+      const didSubmit = await this.applicationSubmissionService.submitToAlcs(submission.uuid);
+      if (didSubmit) {
+        let government;
+        if (this.applicationSubmission?.localGovernmentUuid) {
+          government = await this.loadGovernment(this.applicationSubmission?.localGovernmentUuid);
         }
-      } else {
-        await this.router.navigateByUrl(`/application/${submission?.fileNumber}`);
+
+        if (government && government.matchesUserGuid) {
+          const review = await this.applicationReviewService.startReview(submission.fileNumber);
+          if (review) {
+            await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
+          }
+        } else {
+          await this.router.navigateByUrl(`/application/${submission?.fileNumber}`);
+        }
       }
     }
+  }
+
+  private async loadGovernment(uuid: string) {
+    const codes = await this.codeService.loadCodes();
+    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
+    if (localGovernment) {
+      return localGovernment;
+    }
+    return;
   }
 }

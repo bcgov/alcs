@@ -31,6 +31,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   parcels: ApplicationParcelDto[] = [];
   $owners = new BehaviorSubject<ApplicationOwnerDto[]>([]);
   newParcelAdded = false;
+  isDirty = false;
 
   constructor(
     private router: Router,
@@ -93,6 +94,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       return;
     }
 
+    this.isDirty = true;
     parcel.pid = formData.pid !== undefined ? formData.pid : parcel.pid;
     parcel.pin = formData.pid !== undefined ? formData.pin : parcel.pin;
     parcel.civicAddress = formData.civicAddress !== undefined ? formData.civicAddress : parcel.civicAddress;
@@ -113,25 +115,27 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   }
 
   private async saveProgress() {
-    const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
-    for (const parcel of this.parcels) {
-      parcelsToUpdate.push({
-        uuid: parcel.uuid,
-        pid: parcel.pid?.toString() || null,
-        pin: parcel.pin?.toString() || null,
-        civicAddress: parcel.civicAddress ?? null,
-        legalDescription: parcel.legalDescription,
-        isFarm: parcel.isFarm,
-        purchasedDate: parcel.purchasedDate,
-        mapAreaHectares: parcel.mapAreaHectares,
-        ownershipTypeCode: parcel.ownershipTypeCode,
-        isConfirmedByApplicant: parcel.isConfirmedByApplicant,
-        crownLandOwnerType: parcel.crownLandOwnerType,
-        ownerUuids: parcel.owners.map((owner) => owner.uuid),
-      });
+    if (this.isDirty || this.newParcelAdded) {
+      const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
+      for (const parcel of this.parcels) {
+        parcelsToUpdate.push({
+          uuid: parcel.uuid,
+          pid: parcel.pid?.toString() || null,
+          pin: parcel.pin?.toString() || null,
+          civicAddress: parcel.civicAddress ?? null,
+          legalDescription: parcel.legalDescription,
+          isFarm: parcel.isFarm,
+          purchasedDate: parcel.purchasedDate,
+          mapAreaHectares: parcel.mapAreaHectares,
+          ownershipTypeCode: parcel.ownershipTypeCode,
+          isConfirmedByApplicant: parcel.isConfirmedByApplicant,
+          crownLandOwnerType: parcel.crownLandOwnerType,
+          ownerUuids: parcel.owners.map((owner) => owner.uuid),
+        });
+      }
+      await this.applicationParcelService.update(parcelsToUpdate);
+      //TODO: Do we need to reload submission?
     }
-
-    await this.applicationParcelService.update(parcelsToUpdate);
   }
 
   async onSave() {
