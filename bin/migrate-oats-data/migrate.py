@@ -120,14 +120,14 @@ if __name__ == "__main__":
                     if args and args.batch_size:
                         import_batch_size = args.batch_size
 
-                    # console.log("Batching applications:")
-                    # process_applications(batch_size=import_batch_size)
+                    console.log("Batching applications:")
+                    process_applications(batch_size=import_batch_size)
 
-                    # console.log("Processing documents:")
-                    # process_documents(batch_size=import_batch_size)
+                    console.log("Processing documents:")
+                    process_documents(batch_size=import_batch_size)
 
-                    # console.log("Processing application documents:")
-                    # process_application_documents(batch_size=import_batch_size)
+                    console.log("Processing application documents:")
+                    process_application_documents(batch_size=import_batch_size)
 
                     console.log("Processing application prep:")
                     process_alcs_application_prep_fields(batch_size=import_batch_size)
