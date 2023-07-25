@@ -8,7 +8,7 @@ from documents import (
 )
 from rich.console import Console
 from db import connection_pool
-from batch_applications import process_applications, clean_applications
+from app_prep import process_applications, clean_applications, process_alcs_application_prep_fields
 
 import_batch_size = 10000
 
@@ -119,14 +119,16 @@ if __name__ == "__main__":
                     if args and args.batch_size:
                         import_batch_size = args.batch_size
 
-                    console.log("Batching applications:")
-                    process_applications(batch_size=import_batch_size)
+                    # console.log("Batching applications:")
+                    # process_applications(batch_size=import_batch_size)
 
-                    console.log("Processing documents:")
-                    process_documents(batch_size=import_batch_size)
+                    # console.log("Processing documents:")
+                    # process_documents(batch_size=import_batch_size)
 
-                    console.log("Processing application documents:")
-                    process_application_documents(batch_size=import_batch_size)
+                    # console.log("Processing application documents:")
+                    # process_application_documents(batch_size=import_batch_size)
+
+                    process_alcs_application_prep_fields()
 
                     console.log("Done")
             case "clean":
