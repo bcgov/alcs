@@ -5,7 +5,37 @@ import boto3
 from tqdm import tqdm
 import pickle
 
-def application_docs(starting_document_id,batch):
+# Load environment variables from .env file
+load_dotenv()
+
+# Load the database connection secrets from environment variables
+db_username = os.getenv("DB_USERNAME")
+db_password = os.getenv("DB_PASSWORD")
+db_dsn = os.getenv("DB_DSN")
+# db_path = os.getenv("DB_PATH") # only necessary if running on M1
+
+# Connect to the Oracle database
+# cx_Oracle.init_oracle_client(lib_dir=db_path) # only necessary if running on M1
+conn = cx_Oracle.connect(
+    user=db_username, password=db_password, dsn=db_dsn, encoding="UTF-8"
+)
+
+# Load the ECS connection secrets from environment variables
+ecs_host = os.getenv("ECS_HOSTNAME")
+ecs_bucket = os.getenv("ECS_BUCKET")
+ecs_access_key = os.getenv("ECS_ACCESS_KEY")
+ecs_secret_key = os.getenv("ECS_SECRET_KEY")
+
+# Connect to S3
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=ecs_access_key,
+    aws_secret_access_key=ecs_secret_key,
+    use_ssl=True,
+    endpoint_url=ecs_host,
+)
+
+def application_docs(starting_document_id,batch,cursor):
     # Get total number of files
     try:
         cursor.execute ('SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ALR_APPLICATION_ID IS NOT NULL')
@@ -26,9 +56,6 @@ def application_docs(starting_document_id,batch):
     ORDER BY DOCUMENT_ID ASC
     """)
 
-    # Set the batch size
-    BATCH_SIZE = batch
-
     # Track progress
     documents_processed = 0
     last_document_id = 0
@@ -37,7 +64,7 @@ def application_docs(starting_document_id,batch):
         with tqdm(total=application_count, unit="file", desc="Uploading files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
-                data = cursor.fetchmany(BATCH_SIZE)
+                data = cursor.fetchmany(batch)
                 if not data:
                     break
                 # Upload the batch to S3 with a progress bar
@@ -65,8 +92,9 @@ def application_docs(starting_document_id,batch):
 
     # Display results
     print("Process complete: Successfully migrated", documents_processed, "files.")
+    return
 
-def planning_docs(starting_planning_document_id,batch):
+def planning_docs(starting_planning_document_id,batch,cursor):
     # Get total number of files
     try:
         cursor.execute ('SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND PLANNING_REVIEW_ID IS NOT NULL')
@@ -87,9 +115,6 @@ def planning_docs(starting_planning_document_id,batch):
     ORDER BY DOCUMENT_ID ASC
     """)
 
-    # Set the batch size
-    BATCH_SIZE = batch
-
     # Track progress
     documents_processed = 0
     last_planning_document_id = 0
@@ -98,7 +123,7 @@ def planning_docs(starting_planning_document_id,batch):
         with tqdm(total=planning_review_count, unit="file", desc="Uploading files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
-                data = cursor.fetchmany(BATCH_SIZE)
+                data = cursor.fetchmany(batch)
                 if not data:
                     break
                 # Upload the batch to S3 with a progress bar
@@ -126,8 +151,9 @@ def planning_docs(starting_planning_document_id,batch):
 
     # Display results
     print("Process complete: Successfully migrated", documents_processed, "files.")
+    return
 
-def issue_docs(starting_issue_document_id,batch):
+def issue_docs(starting_issue_document_id,batch,cursor):
     # Get total number of files
     try:
         cursor.execute ('SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ISSUE_ID IS NOT NULL')
@@ -148,9 +174,6 @@ def issue_docs(starting_issue_document_id,batch):
     ORDER BY DOCUMENT_ID ASC
     """)
 
-    # Set the batch size
-    BATCH_SIZE = batch
-
     # Track progress
     documents_processed = 0
     last_issue_document_id = 0
@@ -159,7 +182,7 @@ def issue_docs(starting_issue_document_id,batch):
         with tqdm(total=issue_count, unit="file", desc="Uploading files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
-                data = cursor.fetchmany(BATCH_SIZE)
+                data = cursor.fetchmany(batch)
                 if not data:
                     break
                 # Upload the batch to S3 with a progress bar
@@ -187,35 +210,7 @@ def issue_docs(starting_issue_document_id,batch):
 
     # Display results
     print("Process complete: Successfully migrated", documents_processed, "files.")
-# Load environment variables from .env file
-load_dotenv()
-
-# Load the database connection secrets from environment variables
-db_username = os.getenv("DB_USERNAME")
-db_password = os.getenv("DB_PASSWORD")
-db_dsn = os.getenv("DB_DSN")
-# db_path = os.getenv("DB_PATH") # only necessary if running on local M1
-
-# Connect to the Oracle database
-# cx_Oracle.init_oracle_client(lib_dir=db_path) # only necessary if running on local M1
-conn = cx_Oracle.connect(
-    user=db_username, password=db_password, dsn=db_dsn, encoding="UTF-8"
-)
-
-# Load the ECS connection secrets from environment variables
-ecs_host = os.getenv("ECS_HOSTNAME")
-ecs_bucket = os.getenv("ECS_BUCKET")
-ecs_access_key = os.getenv("ECS_ACCESS_KEY")
-ecs_secret_key = os.getenv("ECS_SECRET_KEY")
-
-# Connect to S3
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=ecs_access_key,
-    aws_secret_access_key=ecs_secret_key,
-    use_ssl=True,
-    endpoint_url=ecs_host,
-)
+    return
 
 starting_document_id = 0
 # Determine job resume status
@@ -239,18 +234,19 @@ if os.path.isfile('last-issue-file.pickle'):
 
 cursor = conn.cursor()
 
+# Set batch size
 batch_size = 10
 
 if starting_issue_document_id > 0:
-    issue_docs(starting_issue_document_id,batch_size)
+    issue_docs(starting_issue_document_id,batch_size,cursor)
 elif starting_planning_document_id > 0:
-    planning_docs(starting_planning_document_id,batch_size)
-    issue_docs(0,batch_size)
+    planning_docs(starting_planning_document_id,batch_size,cursor)
+    issue_docs(0,batch_size,cursor)
 else:
     print('Starting applications from:', starting_document_id)
-    application_docs(starting_document_id,batch_size)
-    planning_docs(0,batch_size)
-    issue_docs(0,batch_size)
+    application_docs(starting_document_id,batch_size,cursor)
+    planning_docs(0,batch_size,cursor)
+    issue_docs(0,batch_size,cursor)
 
 # Close the database cursor and connection
 cursor.close()
