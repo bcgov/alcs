@@ -67,6 +67,7 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         .map((e) => ({
           componentDecisionUuid: e.decisionUuid,
           componentToConditionType: e.code,
+          tempId: e.tempId,
         }));
 
       this.dataChange.emit({

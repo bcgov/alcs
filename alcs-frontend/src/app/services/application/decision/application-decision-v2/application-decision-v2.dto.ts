@@ -203,7 +203,7 @@ export interface ApplicationDecisionConditionDto {
 export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
-  tempId?: string;
+  tempId: string;
 }
 export interface UpdateApplicationDecisionConditionDto {
   uuid?: string;

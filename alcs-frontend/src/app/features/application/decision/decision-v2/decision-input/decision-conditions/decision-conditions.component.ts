@@ -117,24 +117,15 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         this.decision.resolutionYear
       );
       this.selectableComponents = [...this.allComponents, ...updatedComponents];
+      const validComponentIds = this.selectableComponents.map((component) => component.tempId);
 
       this.mappedConditions = this.mappedConditions.map((condition) => {
-        const selectedComponents = this.selectableComponents
-          .filter((component) =>
-            condition.componentsToCondition
-              ?.map((conditionComponent) => conditionComponent.tempId)
-              .includes(component.tempId)
-          )
-          .map((e) => ({
-            componentDecisionUuid: e.decisionUuid,
-            componentToConditionType: e.code,
-            tempId: e.tempId,
-          }));
-
-        return {
-          ...condition,
-          componentsToCondition: selectedComponents,
-        };
+        if (condition.componentsToCondition) {
+          condition.componentsToCondition = condition.componentsToCondition.filter((component) =>
+            validComponentIds.includes(component.tempId)
+          );
+        }
+        return condition;
       });
       this.onChanges();
     }
@@ -155,6 +146,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
           componentDecisionUuid: e.decisionUuid,
           componentToConditionType: e.code,
           tempId: e.tempId,
+          uuid: e.uuid,
         }));
 
       return {
