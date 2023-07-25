@@ -4,8 +4,8 @@ import { Injectable } from '@nestjs/common';
 import { BoardStatus } from '../../alcs/board/board-status.entity';
 import {
   BoardDto,
-  BoardSmallDto,
   BoardStatusDto,
+  MinimalBoardDto,
 } from '../../alcs/board/board.dto';
 import { Board } from '../../alcs/board/board.entity';
 import { CardStatusDto } from '../../alcs/card/card-status/card-status.dto';
@@ -21,7 +21,15 @@ export class BoardAutomapperProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Board, BoardSmallDto);
+      createMap(
+        mapper,
+        Board,
+        MinimalBoardDto,
+        forMember(
+          (ad) => ad.allowedCardTypes,
+          mapFrom((a) => a.allowedCardTypes.map((cardType) => cardType.code)),
+        ),
+      );
 
       createMap(
         mapper,

@@ -5,9 +5,9 @@ import { environment } from '../../../environments/environment';
 import { ApplicationDto } from '../application/application.dto';
 import { UserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
-import { BoardDto, CardsDto } from './board.dto';
+import { BoardDto, CardsDto, MinimalBoardDto } from './board.dto';
 
-export interface BoardWithFavourite extends BoardDto {
+export interface BoardWithFavourite extends MinimalBoardDto {
   isFavourite: boolean;
 }
 
@@ -15,7 +15,7 @@ export interface BoardWithFavourite extends BoardDto {
   providedIn: 'root',
 })
 export class BoardService {
-  private boards?: BoardDto[];
+  private boards?: MinimalBoardDto[];
   private userProfile?: UserDto;
   private boardsEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
   $boards = this.boardsEmitter.asObservable();
@@ -35,7 +35,7 @@ export class BoardService {
   private async publishBoards(reload = false) {
     if (this.userProfile !== undefined) {
       if (!this.boards || reload) {
-        this.boards = await firstValueFrom(this.http.get<BoardDto[]>(`${environment.apiUrl}/board`));
+        this.boards = await firstValueFrom(this.http.get<MinimalBoardDto[]>(`${environment.apiUrl}/board`));
       }
       const mappedBoards = this.boards.map((board) => ({
         ...board,
@@ -46,8 +46,12 @@ export class BoardService {
     return;
   }
 
-  fetchCards(boardCode: string) {
-    return firstValueFrom(this.http.get<CardsDto>(`${environment.apiUrl}/board/${boardCode}`));
+  fetchBoardDetail(boardCode: string) {
+    return firstValueFrom(this.http.get<BoardDto>(`${environment.apiUrl}/board/${boardCode}`));
+  }
+
+  fetchBoardWithCards(boardCode: string) {
+    return firstValueFrom(this.http.get<CardsDto>(`${environment.apiUrl}/board/${boardCode}/cards`));
   }
 
   changeBoard(cardUuid: string, boardCode: string) {

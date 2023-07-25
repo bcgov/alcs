@@ -7,13 +7,16 @@ import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-int
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
-export interface BoardDto {
+export interface MinimalBoardDto {
   code: string;
   title: string;
-  statuses: BoardStatusDto[];
-  allowedCardTypes: CardType[];
-  createCardTypes: CardType[];
   showOnSchedule: boolean;
+  allowedCardTypes: CardType[];
+}
+
+export interface BoardDto extends MinimalBoardDto {
+  statuses: BoardStatusDto[];
+  createCardTypes: CardType[];
 }
 
 export interface BoardStatusDto {
@@ -23,6 +26,7 @@ export interface BoardStatusDto {
 }
 
 export interface CardsDto {
+  board: BoardDto;
   applications: ApplicationDto[];
   reconsiderations: ApplicationReconsiderationDto[];
   planningReviews: PlanningReviewDto[];

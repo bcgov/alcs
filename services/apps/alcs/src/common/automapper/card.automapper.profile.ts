@@ -38,6 +38,10 @@ export class CardProfile extends AutomapperProfile {
           mapFrom((c) => c.createdAt.getTime()),
         ),
         forMember(
+          (cd) => cd.boardCode,
+          mapFrom((c) => c.board?.code),
+        ),
+        forMember(
           (ad) => ad.assignee,
           mapFrom((a) => this.mapper.map(a.assignee, User, AssigneeDto)),
         ),

@@ -38,7 +38,7 @@ export class SubtaskTableComponent {
 
   async openCard(subtask: HomepageSubtaskDto) {
     await this.router.navigateByUrl(
-      `/board/${subtask.card.board.code}?card=${subtask.card.uuid}&type=${subtask.card.type}`
+      `/board/${subtask.card.boardCode}?card=${subtask.card.uuid}&type=${subtask.card.type}`
     );
   }
 

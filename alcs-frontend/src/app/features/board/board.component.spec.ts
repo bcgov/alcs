@@ -13,6 +13,7 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
@@ -73,17 +74,22 @@ describe('BoardComponent', () => {
     code: 'boardCode',
     title: 'boardTitle',
     isFavourite: false,
-    statuses: [],
     allowedCardTypes: [],
-    createCardTypes: [],
     showOnSchedule: true,
+  };
+
+  const mockDetailBoard: BoardDto = {
+    ...mockBoard,
+    statuses: [],
+    createCardTypes: [],
   };
 
   beforeEach(async () => {
     applicationService = createMock();
     boardService = createMock();
     boardService.$boards = boardEmitter;
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [],
       covenants: [],
       modifications: [],
@@ -202,26 +208,9 @@ describe('BoardComponent', () => {
     expect(component.currentBoardCode).toEqual('boardCode');
   });
 
-  it('should enable covenants when the board supports it', async () => {
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        statuses: [],
-        createCardTypes: [CardType.COV],
-        title: '',
-        isFavourite: false,
-        allowedCardTypes: [CardType.COV],
-        showOnSchedule: true,
-      },
-    ]);
-
-    await fixture.whenStable();
-
-    expect(component.boardHasCreateCovenant).toBeTruthy();
-  });
-
   it('should map an application into a card', async () => {
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [mockApplication],
       covenants: [],
       modifications: [],
@@ -240,7 +229,8 @@ describe('BoardComponent', () => {
   });
 
   it('should map a reconsideration into a card', async () => {
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [],
       covenants: [],
       modifications: [],
@@ -281,7 +271,8 @@ describe('BoardComponent', () => {
         },
       },
     } as ApplicationDto;
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [mockApplication, highPriorityApplication, highActiveDays],
       covenants: [],
       modifications: [],

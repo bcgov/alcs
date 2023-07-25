@@ -58,9 +58,7 @@ describe('ReconsiderationDialogComponent', () => {
       status: {
         code: 'FAKE_STATUS',
       },
-      board: {
-        code: 'FAKE_BOARD',
-      },
+      boardCode: 'FAKE_BOARD',
     } as CardDto,
     resultingDecision: null,
   };

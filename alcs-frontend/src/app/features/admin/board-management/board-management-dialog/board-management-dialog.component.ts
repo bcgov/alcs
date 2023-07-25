@@ -5,7 +5,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminBoardManagementService } from '../../../../services/admin-board-management/admin-board-management.service';
 import { CardStatusDto } from '../../../../services/application/application-code.dto';
-import { BoardDto, BoardStatusDto } from '../../../../services/board/board.dto';
+import { BoardDto, BoardStatusDto, MinimalBoardDto } from '../../../../services/board/board.dto';
+import { BoardService } from '../../../../services/board/board.service';
 import { CardStatusService } from '../../../../services/card/card-status/card-status.service';
 import { CardType } from '../../../../shared/card/card.component';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
@@ -45,24 +46,18 @@ export class BoardManagementDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      board: BoardDto | undefined;
+      board: MinimalBoardDto | undefined;
       cardTypes: BaseCodeDto[];
     },
     private dialogRef: MatDialogRef<BoardManagementDialogComponent>,
     private cardStatusService: CardStatusService,
     private adminBoardManagementService: AdminBoardManagementService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private boardService: BoardService
   ) {
     if (data.board) {
       this.isEdit = true;
       this.form.controls.code.disable();
-      this.form.patchValue({
-        code: data.board.code,
-        title: data.board.title,
-        createCardTypes: data.board.createCardTypes,
-        permittedCardTypes: data.board.allowedCardTypes,
-        showOnSchedule: data.board.showOnSchedule ? 'true' : 'false',
-      });
     }
     this.cardTypes = data.cardTypes;
 
@@ -71,9 +66,31 @@ export class BoardManagementDialogComponent implements OnInit {
     }
   }
 
+  async loadBoard(code: string) {
+    return await this.boardService.fetchBoardDetail(code);
+  }
+
   ngOnInit(): void {
     this.loadCanDelete();
-    this.loadCardStatuses();
+    this.prepareDialog();
+  }
+
+  private async prepareDialog() {
+    if (this.data.board) {
+      const board = await this.loadBoard(this.data.board.code);
+
+      this.form.patchValue({
+        code: board.code,
+        title: board.title,
+        createCardTypes: board.createCardTypes,
+        permittedCardTypes: board.allowedCardTypes,
+        showOnSchedule: board.showOnSchedule ? 'true' : 'false',
+      });
+
+      await this.loadCardStatuses(board);
+    } else {
+      await this.loadCardStatuses();
+    }
   }
 
   onNextStep() {
@@ -143,10 +160,9 @@ export class BoardManagementDialogComponent implements OnInit {
     }
   }
 
-  private async loadCardStatuses() {
+  private async loadCardStatuses(board?: BoardDto) {
     const cardStatuses = await this.cardStatusService.fetch();
 
-    const board = this.data.board;
     const boardStatusCodes = board
       ? board.statuses
           .sort((a, b) => {

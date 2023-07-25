@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { BoardSmallDto } from '../board/board.dto';
 import { AssigneeDto } from '../../user/user.dto';
+import { MinimalBoardDto } from '../board/board.dto';
 import { CardStatusDto, CardTypeDto } from './card-status/card-status.dto';
 import { CARD_TYPE } from './card-type/card-type.entity';
 
@@ -80,7 +80,7 @@ export class CardDto {
   highPriority?: boolean;
 
   @AutoMap()
-  board: BoardSmallDto;
+  boardCode: string;
 
   @AutoMap()
   createdAt: number;

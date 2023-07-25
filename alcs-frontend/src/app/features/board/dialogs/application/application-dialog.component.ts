@@ -68,7 +68,7 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
     this.selectedBoard = board.code;
     try {
       await this.boardService.changeBoard(this.application.card!.uuid, board.code);
-      const loadedBoard = this.boards.find((board) => board.code === this.selectedBoard);
+      const loadedBoard = await this.boardService.fetchBoardDetail(board.code);
       if (loadedBoard) {
         this.boardStatuses = loadedBoard.statuses;
       }

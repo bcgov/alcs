@@ -27,6 +27,6 @@ export interface CardDto {
   highPriority: boolean;
   status: CardStatusDto;
   assignee?: AssigneeDto;
-  board: BoardDto;
+  boardCode: string;
   createdAt: number;
 }

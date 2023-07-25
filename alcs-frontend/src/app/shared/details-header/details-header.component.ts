@@ -96,7 +96,7 @@ export class DetailsHeaderComponent {
   constructor(private router: Router, private submissionStatusService: ApplicationSubmissionStatusService) {}
 
   async onGoToCard(card: CardDto) {
-    const boardCode = card.board.code;
+    const boardCode = card.boardCode;
     const cardUuid = card.uuid;
     const cardTypeCode = card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);

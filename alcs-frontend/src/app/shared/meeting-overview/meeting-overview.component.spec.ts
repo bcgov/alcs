@@ -83,12 +83,10 @@ describe('MeetingOverviewComponent', () => {
 
     boardEmitter.next([
       {
-        statuses: [],
         isFavourite: true,
         title: '',
         code: 'boardCode',
         allowedCardTypes: [],
-        createCardTypes: [],
         showOnSchedule: true,
       },
     ]);
