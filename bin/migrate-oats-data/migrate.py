@@ -8,7 +8,7 @@ from documents import (
 )
 from rich.console import Console
 from db import connection_pool
-from app_prep import process_applications, clean_applications, process_alcs_application_prep_fields
+from applications import process_applications, clean_applications, process_alcs_application_prep_fields
 
 import_batch_size = 10000
 

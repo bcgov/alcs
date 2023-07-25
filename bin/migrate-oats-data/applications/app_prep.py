@@ -1,5 +1,10 @@
-from alcs_application_enum import AlcsNfuTypeCode, AlcsNfuSubTypeCode
-from common import ALRChangeCode
+from common import (
+    ALRChangeCode,
+    AlcsNfuTypeCode,
+    AlcsNfuSubTypeCode,
+    log_end,
+    log_start,
+)
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -7,17 +12,18 @@ import traceback
 from enum import Enum
 
 
-@inject_conn_pool
-def process_application_details(conn=None, batch_size=1000):
-    """"""
+etl_name = "alcs_app_prep"
 
 
 @inject_conn_pool
 def process_alcs_application_prep_fields(conn=None, batch_size=10):
     """"""
+    log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "applications/sql/application_prep.count.sql", "r", encoding="utf-8"
+            "applications/sql/application-prep/application_prep.count.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -29,7 +35,9 @@ def process_alcs_application_prep_fields(conn=None, batch_size=10):
         last_application_id = 0
 
         with open(
-            "applications/sql/application_prep.sql", "r", encoding="utf-8"
+            "applications/sql/application-prep/application_prep.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             application_sql = sql_file.read()
             while True:
@@ -91,8 +99,6 @@ def process_alcs_application_prep_fields(conn=None, batch_size=10):
                             page_size=batch_size,
                         )
 
-                    # Since update does not fail there will be a separate script that will return difference between oats and alcs
-
                     conn.commit()
 
                     successful_updates_count = (
@@ -104,15 +110,19 @@ def process_alcs_application_prep_fields(conn=None, batch_size=10):
                         f"retrieved/updated items count: {applications_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated application_id: {last_application_id}"
                     )
                 except Exception as e:
+                    # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     conn.rollback()
-                    print(str(e))
-                    print(traceback.format_exc())
+                    str_err = str(e)
+                    trace_err = traceback.format_exc()
+                    print(str_err)
+                    print(trace_err)
+                    log_end(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
-                    break
 
     print("Total amount of successful updates:", successful_updates_count)
     print("Total failed updates:", failed_inserts)
+    log_end(etl_name)
 
 
 def prepare_app_prep_data(app_prep_raw_data_list):
@@ -124,8 +134,8 @@ def prepare_app_prep_data(app_prep_raw_data_list):
     nfu_data_list = []
     nar_data_list = []
     exc_data_list = []
-    other_data_list = []
     inc_data_list = []
+    other_data_list = []
 
     for row in app_prep_raw_data_list:
         data = dict(row)
@@ -141,7 +151,7 @@ def prepare_app_prep_data(app_prep_raw_data_list):
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, nar_data_list, other_data_list
+    return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
 
 
 def mapOatsToAlcsAppPrep(data):
