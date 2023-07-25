@@ -79,7 +79,7 @@ def application_docs(starting_document_id,batch,cursor):
                     documents_processed += 1
 
     except Exception as e:
-        print("Something went wrong:",e)
+        print("Something went wrong with application document upload:",e)
         print("Processed", documents_processed,  "application files")
         
         # Set resume status in case of interuption
@@ -124,7 +124,7 @@ def planning_docs(starting_planning_document_id,batch,cursor):
     last_planning_document_id = 0
 
     try:
-        with tqdm(total=planning_review_count, unit="file", desc="Uploading planning_revie files to S3") as pbar:
+        with tqdm(total=planning_review_count, unit="file", desc="Uploading planning_review files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
                 data = cursor.fetchmany(batch)
@@ -142,7 +142,7 @@ def planning_docs(starting_planning_document_id,batch,cursor):
                     documents_processed += 1
 
     except Exception as e:
-        print("Something went wrong:",e)
+        print("Something went wrong with planning_review document upload:",e)
         print("Processed", documents_processed,  "planning_review files")
         
         # Set resume status in case of interuption
@@ -187,7 +187,7 @@ def issue_docs(starting_issue_document_id,batch,cursor):
     last_issue_document_id = 0
 
     try:
-        with tqdm(total=issue_count, unit="file", desc="Uploading files to S3") as pbar:
+        with tqdm(total=issue_count, unit="file", desc="Uploading issue files to S3") as pbar:
             while True:
                 # Fetch the next batch of BLOB data
                 data = cursor.fetchmany(batch)
@@ -205,7 +205,7 @@ def issue_docs(starting_issue_document_id,batch,cursor):
                     documents_processed += 1
 
     except Exception as e:
-        print("Something went wrong:",e)
+        print("Something went wrong with issue document upload:",e)
         print("Processed", documents_processed,  "issue files")
         
         # Set resume status in case of interuption
