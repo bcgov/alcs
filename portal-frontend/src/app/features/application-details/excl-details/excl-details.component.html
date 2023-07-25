@@ -1,0 +1,86 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    The governmental or prescribed public body that is applying to exclude land
+    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.prescribedBody }}
+  </div>
+
+  <div class="subheading2 grid-1">
+    How many hectares are you proposing to exclude? (hectares)
+    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.inclExclHectares }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclExclHectares"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Does any land under application share a common property line with land in another Local or First Nation Government?
+    <app-updated-banner *ngIf="updatedFields.includes('exclShareGovernmentBorders')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    <span *ngIf="_applicationSubmission.exclShareGovernmentBorders !== null">
+      {{ _applicationSubmission.exclShareGovernmentBorders ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data
+      [showRequired]="showErrors"
+      *ngIf="_applicationSubmission.exclShareGovernmentBorders === null"
+    ></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    What is the purpose of the proposal?
+    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Explain why you believe that the parcel(s) should be excluded from the ALR
+    <app-updated-banner *ngIf="updatedFields.includes('exclWhyLand')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.exclWhyLand }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.exclWhyLand"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
+  <div class="grid-double">
+    <a *ngFor="let file of noticeOfPublicHearing" (click)="openFile(file.uuid)">
+      {{ file.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="noticeOfPublicHearing.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proof of Signage</div>
+  <div class="grid-double">
+    <a *ngFor="let file of proofOfSignage" (click)="openFile(file.uuid)">
+      {{ file.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proofOfSignage.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Report of Public Hearing</div>
+  <div class="grid-double">
+    <a *ngFor="let file of reportOfPublicHearing" (click)="openFile(file.uuid)">
+      {{ file.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+  </div>
+
+  <div *ngIf="showEdit" class="edit-button">
+    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+  </div>
+</div>

@@ -291,6 +291,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-naru-details>
+  <app-excl-details
+    *ngIf="applicationSubmission.typeCode === 'EXCL'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-excl-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
