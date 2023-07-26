@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { ProposedLot } from '../../application.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -146,12 +147,17 @@ export interface RosoDecisionComponentDto {
   soilToRemoveAverageDepth?: number | null;
 }
 
+export interface SubdDecisionComponentDto {
+  subdApprovedLots?: ProposedLot[];
+}
+
 export interface DecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
     PofoDecisionComponentDto,
     RosoDecisionComponentDto,
-    NaruDecisionComponentDto {
+    NaruDecisionComponentDto,
+    SubdDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -181,6 +187,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   ROSO = 'ROSO',
   PFRS = 'PFRS',
   NARU = 'NARU',
+  SUBD = 'SUBD',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

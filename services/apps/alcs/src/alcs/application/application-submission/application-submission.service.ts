@@ -8,8 +8,11 @@ import { ApplicationSubmissionStatusType } from '../../../application-submission
 import { SUBMISSION_STATUS } from '../../../application-submission-status/submission-status.dto';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmissionUpdateDto } from '../../../portal/application-submission/application-submission.dto';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { filterUndefined } from '../../../utils/undefined';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
+import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 
 @Injectable()
 export class ApplicationSubmissionService {
@@ -81,5 +84,26 @@ export class ApplicationSubmissionService {
       submission.uuid,
       statusCode,
     );
+  }
+
+  async update(
+    fileNumber: string,
+    updateDto: AlcsApplicationSubmissionUpdateDto,
+  ) {
+    //Load submission without relations to prevent save from crazy cascading
+    const submission = await this.applicationSubmissionRepository.findOneOrFail(
+      {
+        where: {
+          fileNumber: fileNumber,
+        },
+      },
+    );
+
+    submission.subdProposedLots = filterUndefined(
+      updateDto.subProposedLots,
+      submission.subdProposedLots,
+    );
+
+    await this.applicationSubmissionRepository.save(submission);
   }
 }

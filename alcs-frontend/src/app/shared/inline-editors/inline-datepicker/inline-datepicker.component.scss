@@ -1,4 +1,4 @@
-@use '../../../styles/colors';
+@use '../../../../styles/colors';
 
 .inline-date-picker-wrapper {
   padding-top: 4px;
@@ -6,7 +6,6 @@
 
 .editing {
   display: inline-block;
-  width: 100%;
 }
 
 .editing.hidden {
@@ -34,6 +33,10 @@
   }
 }
 
+.add-date {
+  cursor: pointer;
+}
+
 .save {
   color: colors.$primary-color;
 }
@@ -51,8 +54,4 @@
   .mat-mdc-icon-button.mat-mdc-button-base {
     padding: 0 !important;
   }
-}
-
-.button-group {
-  width: 100%;
 }

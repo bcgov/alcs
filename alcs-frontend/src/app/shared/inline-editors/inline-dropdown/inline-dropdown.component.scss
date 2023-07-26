@@ -1,6 +1,6 @@
-@use '../../../styles/colors';
+@use '../../../../styles/colors';
 
-.inline-date-picker-wrapper {
+.inline-number-wrapper {
   padding-top: 4px;
 }
 
@@ -33,7 +33,7 @@
   }
 }
 
-.add-date {
+.add {
   cursor: pointer;
 }
 
