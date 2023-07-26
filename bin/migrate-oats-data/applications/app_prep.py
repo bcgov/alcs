@@ -47,7 +47,13 @@ class OatsToAlcsAgCap(Enum):
 
 @inject_conn_pool
 def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
-    """"""
+    """
+    This function is responsible for processing applications in batches, updating records in the alcs.application table.
+
+    Args:
+    conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
+    batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
+    """
     log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -82,55 +88,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
                 try:
                     applications_to_be_updated_count = len(rows)
 
-                    (
-                        nfu_data_list,
-                        nar_data_list,
-                        other_data_list,
-                        exc_data_list,
-                        inc_data_list,
-                    ) = prepare_app_prep_data(rows)
-
-                    if len(nfu_data_list) > 0:
-                        execute_batch(
-                            cursor,
-                            get_update_query_for_nfu(),
-                            nfu_data_list,
-                            page_size=batch_size,
-                        )
-
-                    if len(nar_data_list) > 0:
-                        execute_batch(
-                            cursor,
-                            get_update_query_for_nar(),
-                            nar_data_list,
-                            page_size=batch_size,
-                        )
-
-                    if len(exc_data_list) > 0:
-                        execute_batch(
-                            cursor,
-                            get_update_query_for_exc(),
-                            exc_data_list,
-                            page_size=batch_size,
-                        )
-
-                    if len(inc_data_list) > 0:
-                        execute_batch(
-                            cursor,
-                            get_update_query_for_inc(),
-                            exc_data_list,
-                            page_size=batch_size,
-                        )
-
-                    if len(other_data_list) > 0:
-                        execute_batch(
-                            cursor,
-                            get_update_query_for_other(),
-                            other_data_list,
-                            page_size=batch_size,
-                        )
-
-                    conn.commit()
+                    update_app_prep_records(conn, batch_size, cursor, rows)
 
                     successful_updates_count = (
                         successful_updates_count + applications_to_be_updated_count
@@ -156,12 +114,83 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
     log_end(etl_name)
 
 
+def update_app_prep_records(conn, batch_size, cursor, rows):
+    """
+    Function to update application records in batches.
+
+    Args:
+    conn (obj): Connection to the database.
+    batch_size (int): Number of rows to execute at one time.
+    cursor (obj): Cursor object to execute queries.
+    rows (list): Rows of data to update in the database.
+
+    Returns:
+    None: Commits the changes to the database.
+    """
+    (
+        nfu_data_list,
+        nar_data_list,
+        other_data_list,
+        exc_data_list,
+        inc_data_list,
+    ) = prepare_app_prep_data(rows)
+
+    if len(nfu_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_update_query_for_nfu(),
+            nfu_data_list,
+            page_size=batch_size,
+        )
+
+    if len(nar_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_update_query_for_nar(),
+            nar_data_list,
+            page_size=batch_size,
+        )
+
+    if len(exc_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_update_query_for_exc(),
+            exc_data_list,
+            page_size=batch_size,
+        )
+
+    if len(inc_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_update_query_for_inc(),
+            exc_data_list,
+            page_size=batch_size,
+        )
+
+    if len(other_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_update_query_for_other(),
+            other_data_list,
+            page_size=batch_size,
+        )
+
+    conn.commit()
+
+
 def prepare_app_prep_data(app_prep_raw_data_list):
     """
-    1. sort records based on application type.
-    2. build different update queries based on the type and use arrays as input
-    """
+    This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_prep_raw_data_list'.
 
+    :param app_prep_raw_data_list: A list of raw data dictionaries.
+    :return: Five lists, each containing dictionaries from 'app_prep_raw_data_list' grouped based on the 'alr_change_code' field
+
+    Detailed Workflow:
+    - Initializes empty lists
+    - Iterates over 'app_prep_raw_data_list'
+        - Maps the basic fields of the data dictionary based on the alr_change_code
+    - Returns the mapped lists
+    """
     nfu_data_list = []
     nar_data_list = []
     exc_data_list = []
