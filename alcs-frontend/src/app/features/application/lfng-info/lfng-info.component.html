@@ -174,10 +174,10 @@
         "
       >
         <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
-        <div *ngIf="applicationReview.isAuthorized === null">Not subject to Authorization</div>
         <div *ngIf="applicationReview.isAuthorized !== null">
           {{ applicationReview.isAuthorized ? 'Authorized' : 'Refused to Authorize' }}
         </div>
+        <app-no-data *ngIf="applicationReview.isAuthorized === null"></app-no-data>
       </div>
     </div>
 
@@ -196,17 +196,19 @@
             resolutionDocument.fileName
           }}</a>
         </div>
+        <app-no-data *ngIf="!resolutionDocument"></app-no-data>
       </div>
-      <div *ngIf="staffReport">
+      <div *ngIf="applicationReview.isAuthorized || staffReport">
         <div class="subheading2">Staff Report</div>
-        <div>
+        <div *ngIf="staffReport">
           <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
         </div>
+        <app-no-data *ngIf="!staffReport"></app-no-data>
       </div>
       <div>
         <div class="subheading2">Other Attachments</div>
         <div>
-          <span *ngIf="otherAttachments.length === 0">No Attachments</span>
+          <app-no-data *ngIf="otherAttachments.length === 0"></app-no-data>
           <div *ngFor="let attachment of otherAttachments">
             <a (click)="openDocument(attachment.uuid, attachment.fileName)">{{ attachment.fileName }}</a>
           </div>

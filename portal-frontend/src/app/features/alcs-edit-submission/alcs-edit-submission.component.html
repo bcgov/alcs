@@ -137,6 +137,22 @@
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-naru-proposal>
+      <app-excl-proposal
+        *ngIf="applicationSubmission.typeCode === 'EXCL'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-excl-proposal>
+      <app-incl-proposal
+        *ngIf="applicationSubmission.typeCode === 'INCL'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-incl-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

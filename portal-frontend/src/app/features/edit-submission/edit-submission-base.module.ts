@@ -110,6 +110,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     PfrsProposalComponent,
     NaruProposalComponent,
     SoilTableComponent,
+    ExclProposalComponent,
+    InclProposalComponent,
   ],
 })
 export class EditSubmissionBaseModule {}
