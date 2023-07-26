@@ -16,7 +16,6 @@ export class SubdComponent {
     const lots = this.component.subdApprovedLots;
     if (lots && this.component.uuid) {
       lots[i].alrArea = alrArea ? parseFloat(alrArea) : null;
-      debugger;
       await this.componentService.update(this.component.uuid, {
         uuid: this.component.uuid,
         subdApprovedLots: lots,

@@ -243,7 +243,6 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    debugger;
     this.subdApprovedLots.setValue(this.data.subdApprovedLots ?? null);
   }
 
