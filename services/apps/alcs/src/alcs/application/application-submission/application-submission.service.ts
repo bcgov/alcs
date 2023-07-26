@@ -71,15 +71,7 @@ export class ApplicationSubmissionService {
   }
 
   async updateStatus(fileNumber: string, statusCode: SUBMISSION_STATUS) {
-    //Load submission without relations to prevent save from crazy cascading
-    const submission = await this.applicationSubmissionRepository.findOneOrFail(
-      {
-        where: {
-          fileNumber: fileNumber,
-        },
-      },
-    );
-
+    const submission = await this.loadBarebonesSubmission(fileNumber);
     await this.applicationSubmissionStatusService.setStatusDate(
       submission.uuid,
       statusCode,
@@ -90,20 +82,21 @@ export class ApplicationSubmissionService {
     fileNumber: string,
     updateDto: AlcsApplicationSubmissionUpdateDto,
   ) {
-    //Load submission without relations to prevent save from crazy cascading
-    const submission = await this.applicationSubmissionRepository.findOneOrFail(
-      {
-        where: {
-          fileNumber: fileNumber,
-        },
-      },
-    );
-
+    const submission = await this.loadBarebonesSubmission(fileNumber);
     submission.subdProposedLots = filterUndefined(
       updateDto.subProposedLots,
       submission.subdProposedLots,
     );
 
     await this.applicationSubmissionRepository.save(submission);
+  }
+
+  private loadBarebonesSubmission(fileNumber: string) {
+    //Load submission without relations to prevent save from crazy cascading
+    return this.applicationSubmissionRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+    });
   }
 }
