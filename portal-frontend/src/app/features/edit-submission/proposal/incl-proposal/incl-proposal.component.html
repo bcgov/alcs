@@ -91,7 +91,7 @@
       <mat-form-field appearance="outline">
         <textarea
           formControlName="improvements"
-          #outsideLandsText
+          #improvementsText
           maxlength="4000"
           id="improvements"
           matInput
@@ -99,7 +99,7 @@
         ></textarea>
       </mat-form-field>
       <div class="subtext">Example: 40 ha of grazing land fenced in 2010.</div>
-      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
+      <span class="subtext">Characters left: {{ 4000 - improvementsText.textLength }}</span>
       <div *ngIf="improvements.invalid && (improvements.dirty || improvements.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="improvements.errors?.['required']">This field is required</div>
@@ -118,8 +118,118 @@
         [isRequired]="true"
       ></app-file-drag-drop>
     </div>
+    <div class="full-row" *ngIf="isGovernmentUser">
+      <label for="isFarm"
+        >Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?</label
+      >
+      <div class="subtext">
+        The ALR General Regulation does not require the {{ governmentName }} to complete a public hearing if all
+        inclusion application parcel(s) are owned by the {{ governmentName }}.
+      </div>
+      <app-info-banner> Please refer to Inclusion page on the ALC website for more information. </app-info-banner>
+      <mat-button-toggle-group
+        (change)="onSelectLocalGovernmentParcelOwner($event)"
+        class="input"
+        id="isFarm"
+        formControlName="isLFNGOwnerOfAllParcels"
+      >
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{
+            'error-outline':
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+          }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{
+            'error-outline':
+              governmentOwnsAllParcels.invalid && (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+          }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div
+        *ngIf="
+          showErrors &&
+          governmentOwnsAllParcels.invalid &&
+          (governmentOwnsAllParcels.dirty || governmentOwnsAllParcels.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="governmentOwnsAllParcels.errors?.['required']">This field is required</div>
+      </div>
+    </div>
   </div>
 </form>
+
+<section *ngIf="isGovernmentUser">
+  <h3>Notification and Public Hearing Requirements</h3>
+  <p class="requirement-description">
+    A printed copy of the application will need to be used for notification. Please ensure all prior fields are complete
+    and correct before downloading the PDF of the application (Step 8 of this application form will flag outstanding
+    fields).
+  </p>
+
+  <button [disabled]="disableNotificationFileUploads" mat-flat-button color="accent">Download PDF</button>
+  <app-warning-banner>
+    You will not be able to complete the remaining portion of the application until the notification and public hearing
+    process is complete.
+  </app-warning-banner>
+  <form>
+    <div class="form-row">
+      <div class="full-row">
+        <label class="subheading2" for="advertising">Notice of Public Hearing (Advertisement)</label>
+        <div class="subtext">
+          Proof that notice of the application was provided in a form and manner acceptable to the Commission
+        </div>
+        <app-file-drag-drop
+          id="advertising"
+          [uploadedFiles]="noticeOfPublicHearing"
+          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_ADVERTISING)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="!disableNotificationFileUploads"
+          [disabled]="disableNotificationFileUploads"
+        ></app-file-drag-drop>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="signage">Proof of Signage</label>
+        <div class="subtext">
+          Proof that a sign, in a form and manner acceptable to the Commission, was posted on the land that is the
+          subject of the application
+        </div>
+        <app-file-drag-drop
+          id="signage"
+          [uploadedFiles]="proofOfSignage"
+          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_SIGNAGE)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="!disableNotificationFileUploads"
+          [disabled]="disableNotificationFileUploads"
+        ></app-file-drag-drop>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="report">Report of Public Hearing</label>
+        <div class="subtext">Public hearing report and any other public comments received</div>
+        <app-file-drag-drop
+          id="report"
+          [uploadedFiles]="reportOfPublicHearing"
+          (uploadFiles)="attachFile($event, DOCUMENT.REPORT_OF_PUBLIC_HEARING)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="!disableNotificationFileUploads"
+          [disabled]="disableNotificationFileUploads"
+        ></app-file-drag-drop>
+      </div>
+    </div>
+  </form>
+</section>
 
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>

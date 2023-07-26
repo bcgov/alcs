@@ -695,6 +695,10 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'boolean', nullable: true })
   exclShareGovernmentBorders: boolean | null;
 
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  inclGovernmentOwnsAllParcels: boolean | null;
+
   //END SUBMISSION FIELDS
 
   @AutoMap(() => Application)

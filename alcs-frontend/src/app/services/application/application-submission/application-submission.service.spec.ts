@@ -105,6 +105,7 @@ describe('ApplicationSubmissionService', () => {
     inclAgricultureSupport: null,
     inclImprovements: null,
     exclShareGovernmentBorders: null,
+    inclGovernmentOwnsAllParcels: null,
     exclWhyLand: null,
     inclExclHectares: null,
     prescribedBody: null,
