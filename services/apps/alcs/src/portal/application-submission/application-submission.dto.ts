@@ -308,6 +308,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   exclShareGovernmentBorders: boolean | null;
+
+  @AutoMap(() => Boolean)
+  inclGovernmentOwnsAllParcels?: boolean | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -694,4 +697,8 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   exclShareGovernmentBorders?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  inclGovernmentOwnsAllParcels?: boolean | null;
 }

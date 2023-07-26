@@ -969,6 +969,10 @@ export class ApplicationSubmissionService {
       updateDto.exclShareGovernmentBorders,
       applicationSubmission.exclShareGovernmentBorders,
     );
+    applicationSubmission.inclGovernmentOwnsAllParcels = filterUndefined(
+      updateDto.inclGovernmentOwnsAllParcels,
+      applicationSubmission.inclGovernmentOwnsAllParcels,
+    );
   }
 
   async listNaruSubtypes() {

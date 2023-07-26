@@ -154,6 +154,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   inclAgricultureSupport: string | null;
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
+  inclGovernmentOwnsAllParcels: boolean | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -259,4 +260,5 @@ export interface ApplicationSubmissionUpdateDto {
   inclAgricultureSupport?: string | null;
   inclImprovements?: string | null;
   exclShareGovernmentBorders?: boolean | null;
+  inclGovernmentOwnsAllParcels?: boolean | null;
 }

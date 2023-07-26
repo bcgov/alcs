@@ -1,8 +1,10 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { UserDto } from '../../../../services/authentication/authentication.dto';
+import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { InclProposalComponent } from './incl-proposal.component';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
@@ -14,8 +16,14 @@ describe('InclProposalComponent', () => {
   let fixture: ComponentFixture<InclProposalComponent>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockAuthService: DeepMocked<AuthenticationService>;
 
   beforeEach(async () => {
+    mockApplicationService = createMock();
+    mockAppDocumentService = createMock();
+    mockAuthService = createMock();
+    mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
+
     await TestBed.configureTestingModule({
       providers: [
         {
@@ -25,6 +33,10 @@ describe('InclProposalComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: AuthenticationService,
+          useValue: mockAuthService,
         },
         {
           provide: MatDialog,
