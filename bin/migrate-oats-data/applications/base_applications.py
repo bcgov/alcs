@@ -20,6 +20,8 @@ def compile_application_insert_query(number_of_rows_to_insert):
             local_government_uuid = EXCLUDED.local_government_uuid,
             audit_created_by = EXCLUDED.audit_created_by
     """
+
+
 # ON CONFLICT needs confirmation of what value is kept
 def drop_etl_temp_table():
     """
@@ -31,24 +33,21 @@ def drop_etl_temp_table():
     """
 
 
-
 @inject_conn_pool
 def process_applications(conn=None, batch_size=10000):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of non duplicate applications and prints it to the console. Then, it fetches the applications to insert in batches using application IDs / file_number, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
-
         with open(
-            "sql/application-etl-table-create.sql", "r", encoding="utf-8"
+            "applications/sql/application-etl-table-create.sql", "r", encoding="utf-8"
         ) as sql_file:
             create_tables = sql_file.read()
             cursor.execute(create_tables)
         conn.commit()
 
-
         with open(
-            "sql/insert_batch_application_count.sql", "r", encoding="utf-8"
+            "applications/sql/insert_batch_application_count.sql", "r", encoding="utf-8"
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -56,7 +55,7 @@ def process_applications(conn=None, batch_size=10000):
         print("- Applications to insert: ", count_total)
 
         with open(
-            "sql/application_exclude_count.sql", "r", encoding="utf-8"
+            "applications/sql/application_exclude_count.sql", "r", encoding="utf-8"
         ) as sql_file:
             count_exclude = sql_file.read()
             cursor.execute(count_exclude)
@@ -64,31 +63,31 @@ def process_applications(conn=None, batch_size=10000):
         print("- Applications with excluded components: ", count_total_exclude)
         print("Component ids stored in oats.alcs_etl_application_exclude")
 
-
         failed_inserts = 0
         successful_inserts_count = 0
         last_application_id = 0
-        
 
-        with open("sql/insert-batch-application.sql", "r", encoding="utf-8") as sql_file:
+        with open(
+            "applications/sql/insert-batch-application.sql", "r", encoding="utf-8"
+        ) as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
                     f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id;"
                 )
-                
+
                 rows = cursor.fetchmany(batch_size)
                 if not rows:
                     break
-                try: 
+                try:
                     applications_to_be_inserted_count = len(rows)
 
                     insert_query = compile_application_insert_query(
                         applications_to_be_inserted_count
-                    ) 
+                    )
                     cursor.execute(insert_query, rows)
                     conn.commit()
- 
+
                     last_application_id = rows[-1][0]
                     successful_inserts_count = (
                         successful_inserts_count + applications_to_be_inserted_count
@@ -96,14 +95,12 @@ def process_applications(conn=None, batch_size=10000):
 
                     print(
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated applications so far {successful_inserts_count}; last inserted applidation_id: {last_application_id}"
-
                     )
                 except Exception as e:
                     conn.rollback()
                     print("Error", e)
-                    failed_inserts  = count_total - successful_inserts_count
-                    last_application_id = last_application_id +1
-
+                    failed_inserts = count_total - successful_inserts_count
+                    last_application_id = last_application_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
@@ -113,10 +110,9 @@ def process_applications(conn=None, batch_size=10000):
             cursor.execute(drop_etl_temp_table())
             print("etl temp table removed")
 
-
     else:
         print("Table not deleted, inserts failed")
-        #keep only the failed rows
+        # keep only the failed rows
 
 
 @inject_conn_pool
@@ -128,16 +124,6 @@ def clean_applications(conn=None):
         )
         print(f"Deleted items count = {cursor.rowcount}")
 
-        cursor.execute(
-            "DROP TABLE IF EXISTS oats.alcs_etl_application_exclude"
-        )
-        cursor.execute(
-            "DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate"
-        )
+        cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_exclude")
+        cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate")
         print(f"Tempory tables dropped")
-
-
-
-        
-
-        
