@@ -25,7 +25,9 @@
         <td>{{ i + 1 }}</td>
         <td>{{ lot.type }}</td>
         <td>{{ lot.size }}</td>
-        <td>{{ lot.alrArea }}</td>
+        <td>
+          <app-inline-number (save)="onSaveAlrArea(i, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
+        </td>
       </tr>
     </tbody>
   </table>
