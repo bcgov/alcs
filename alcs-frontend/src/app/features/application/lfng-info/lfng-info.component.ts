@@ -26,6 +26,8 @@ export class LfngInfoComponent implements OnInit {
   submission?: ApplicationSubmissionDto;
   requiresReview = true;
   showComment = false;
+  isFirstNationGovernment = false;
+  hasCompletedStepsBeforeDocuments = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
@@ -44,6 +46,16 @@ export class LfngInfoComponent implements OnInit {
           this.submission?.status.code
         );
         this.loadDocuments(application.fileNumber);
+        this.isFirstNationGovernment = !!application.localGovernment?.isFirstNation;
+
+        this.hasCompletedStepsBeforeDocuments =
+          (this.applicationReview.isAuthorized !== null && this.isFirstNationGovernment) ||
+          (this.applicationReview.isAuthorized !== null &&
+            this.applicationReview.isOCPDesignation !== null &&
+            this.applicationReview.isSubjectToZoning !== null) ||
+          (this.applicationReview.isAuthorized === null &&
+            this.applicationReview.isOCPDesignation === false &&
+            this.applicationReview.isSubjectToZoning === false);
       }
     });
   }

@@ -227,6 +227,8 @@
         <div
           *ngIf="
             !applicationReview.isFirstNationGovernment &&
+            applicationReview.isOCPDesignation !== null &&
+            applicationReview.isSubjectToZoning !== null &&
             (applicationReview.isOCPDesignation === true || applicationReview.isSubjectToZoning === true)
           "
           class="full-width"
