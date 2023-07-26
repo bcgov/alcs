@@ -10,6 +10,7 @@ import { PofoDetailsComponent } from './pofo-details/pofo-details.component';
 import { RosoDetailsComponent } from './roso-details/roso-details.component';
 import { SubdDetailsComponent } from './subd-details/subd-details.component';
 import { TurDetailsComponent } from './tur-details/tur-details.component';
+import { ExclDetailsComponent } from './excl-details/excl-details.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { TurDetailsComponent } from './tur-details/tur-details.component';
     PofoDetailsComponent,
     PfrsDetailsComponent,
     NaruDetailsComponent,
+    ExclDetailsComponent,
   ],
   imports: [CommonModule, SharedModule, NgForOf, NgIf],
   exports: [ApplicationDetailsComponent],
