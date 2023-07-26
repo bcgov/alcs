@@ -96,4 +96,10 @@
       [codes]="codes"
     ></app-naru-input>
   </div>
+  <div class="row-no-flex">
+    <app-subd-input
+      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
+      [form]="form"
+    ></app-subd-input>
+  </div>
 </form>

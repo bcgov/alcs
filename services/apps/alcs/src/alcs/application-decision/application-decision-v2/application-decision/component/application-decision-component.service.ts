@@ -50,6 +50,11 @@ export class ApplicationDecisionComponentService {
       this.patchRosoFields(component, updateDto);
       this.patchNaruFields(component, updateDto);
 
+      //SUBD
+      if (updateDto.subdApprovedLots) {
+        component.subdApprovedLots = updateDto.subdApprovedLots;
+      }
+
       updatedComponents.push(component);
     }
 

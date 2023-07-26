@@ -1,0 +1,32 @@
+<div
+  class="full-width"
+  [ngClass]="{
+    'grid-uneven': component.agCapMap && component.agCapConsultant,
+    'grid-3': !component.agCapMap || !component.agCapConsultant
+  }"
+>
+  <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
+  <div>
+    <div class="subheading2">Total Number of Lots Approved</div>
+    {{ component.subdApprovedLots?.length }}
+    <app-no-data *ngIf="component.subdApprovedLots === null || component.subdApprovedLots === undefined"></app-no-data>
+  </div>
+</div>
+<div *ngIf="component.subdApprovedLots" class="full-width">
+  <table>
+    <thead>
+      <th>#</th>
+      <th>Type</th>
+      <th>Size (ha)</th>
+      <th>ALR Area (ha)</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let lot of component.subdApprovedLots; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ lot.type }}</td>
+        <td>{{ lot.size }}</td>
+        <td>{{ lot.alrArea }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
