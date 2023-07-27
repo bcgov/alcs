@@ -39,6 +39,7 @@ describe('NoticeOfIntentDialogComponent', () => {
       name: 'local-gov',
       uuid: 'uuid',
       preferredRegionCode: 'CODE',
+      isFirstNation: false,
     },
     fileNumber: 'file-number',
     card: {

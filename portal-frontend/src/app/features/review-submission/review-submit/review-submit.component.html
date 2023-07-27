@@ -179,7 +179,11 @@
           The only option available to you is to forward this application on to the ALC.
         </div>
         <div
-          *ngIf="_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true"
+          *ngIf="
+            _applicationReview.isOCPDesignation !== null &&
+            _applicationReview.isSubjectToZoning !== null &&
+            (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
+          "
           class="full-width"
         >
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
@@ -191,7 +195,7 @@
           </div>
         </div>
         <div
-          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          *ngIf="_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null"
           class="edit-button"
         >
           <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
@@ -423,7 +427,11 @@
           The only option available to you is to forward this application on to the ALC.
         </div>
         <div
-          *ngIf="_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true"
+          *ngIf="
+            _applicationReview.isOCPDesignation !== null &&
+            _applicationReview.isSubjectToZoning !== null &&
+            (_applicationReview.isOCPDesignation === true || _applicationReview.isSubjectToZoning === true)
+          "
           class="full-width"
         >
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
@@ -435,7 +443,7 @@
           </div>
         </div>
         <div
-          *ngIf="_applicationReview.isOCPDesignation !== null || _applicationReview.isSubjectToZoning !== null"
+          *ngIf="_applicationReview.isOCPDesignation !== null && _applicationReview.isSubjectToZoning !== null"
           class="edit-button"
         >
           <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>

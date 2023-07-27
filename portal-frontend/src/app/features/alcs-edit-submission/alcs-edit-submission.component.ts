@@ -29,6 +29,8 @@ import { TurProposalComponent } from '../edit-submission/proposal/tur-proposal/t
 import { SelectGovernmentComponent } from '../edit-submission/select-government/select-government.component';
 import { ConfirmPublishDialogComponent } from './confirm-publish-dialog/confirm-publish-dialog.component';
 import { scrollToElement } from '../../shared/utils/scroll-helper';
+import { ExclProposalComponent } from '../edit-submission/proposal/excl-proposal/excl-proposal.component';
+import { InclProposalComponent } from '../edit-submission/proposal/incl-proposal/incl-proposal.component';
 
 @Component({
   selector: 'app-alcs-edit-submission',
@@ -64,6 +66,8 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(RosoProposalComponent) rosoProposalComponent?: RosoProposalComponent;
   @ViewChild(PofoProposalComponent) profoProposalComponent?: PofoProposalComponent;
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
+  @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
+  @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -208,6 +212,12 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.pfrsProposalComponent) {
       await this.pfrsProposalComponent.onSave();
+    }
+    if (this.exclProposalComponent) {
+      await this.exclProposalComponent.onSave();
+    }
+    if (this.inclProposalComponent) {
+      await this.inclProposalComponent.onSave();
     }
   }
 

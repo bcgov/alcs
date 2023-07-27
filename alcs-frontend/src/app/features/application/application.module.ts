@@ -26,6 +26,7 @@ import { NaruProposalComponent } from './proposal/naru/naru.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { ExclProposalComponent } from './proposal/excl/excl.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { TurProposalComponent } from './proposal/tur/tur.component';
@@ -73,6 +74,7 @@ const routes: Routes = [
     SubdProposalComponent,
     SoilProposalComponent,
     TurProposalComponent,
+    ExclProposalComponent,
     NaruProposalComponent,
     ParcelPrepComponent,
     UncancelApplicationDialogComponent,

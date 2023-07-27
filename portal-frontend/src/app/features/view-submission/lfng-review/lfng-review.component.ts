@@ -34,6 +34,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   staffReport: ApplicationDocumentDto[] = [];
   resolutionDocument: ApplicationDocumentDto[] = [];
   governmentOtherAttachments: ApplicationDocumentDto[] = [];
+  hasCompletedStepsBeforeResolution = false;
   hasCompletedStepsBeforeDocuments = false;
   submittedToAlcStatus = false;
 
@@ -48,6 +49,13 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
       if (appReview) {
         this.applicationReview = appReview;
+
+        this.hasCompletedStepsBeforeResolution =
+          appReview.isFirstNationGovernment ||
+          (!appReview.isFirstNationGovernment &&
+            appReview.isOCPDesignation !== null &&
+            appReview.isSubjectToZoning !== null &&
+            (appReview.isOCPDesignation === true || appReview.isSubjectToZoning === true));
 
         this.hasCompletedStepsBeforeDocuments =
           (appReview.isAuthorized !== null && appReview.isFirstNationGovernment) ||

@@ -172,6 +172,12 @@
     [applicationSubmission]="submission"
     [files]="files"
   ></app-naru-details>
+  <app-excl-details
+    *ngIf="submission && applicationType === 'EXCL'"
+    [applicationSubmission]="submission"
+    [files]="files"
+  >
+  </app-excl-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">

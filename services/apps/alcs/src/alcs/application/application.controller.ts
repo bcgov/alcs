@@ -102,6 +102,7 @@ export class ApplicationController {
         proposalExpiryDate: formatIncomingDate(updates.proposalExpiryDate),
         nfuUseSubType: updates.nfuUseSubType,
         nfuUseType: updates.nfuUseType,
+        inclExclApplicantType: updates.inclExclApplicantType,
         staffObservations: updates.staffObservations,
       },
     );
