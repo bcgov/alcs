@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExclComponent } from './excl.component';
+import { ExclProposalComponent } from './excl.component';
 
-describe('ExclComponent', () => {
+describe('ExclProposalComponent', () => {
   let component: ExclComponent;
-  let fixture: ComponentFixture<ExclComponent>;
+  let fixture: ComponentFixture<ExclProposalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExclComponent ]
-    })
-    .compileComponents();
+      declarations: [ExclProposalComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ExclComponent);
+    fixture = TestBed.createComponent(ExclProposalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

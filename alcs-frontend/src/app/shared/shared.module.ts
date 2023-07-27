@@ -40,6 +40,7 @@ import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-applicant-type.component';
 import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
 import { InlineDatepickerComponent } from './inline-datepicker/inline-datepicker.component';
 import { InlineDropdownComponent } from './inline-dropdown/inline-dropdown.component';
@@ -70,6 +71,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MomentPipe,
     StartOfDayPipe,
     MeetingOverviewComponent,
+    InlineApplicantTypeComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
@@ -143,6 +145,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
+    InlineApplicantTypeComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
