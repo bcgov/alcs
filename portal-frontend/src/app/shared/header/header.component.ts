@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
@@ -13,13 +13,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isMenuOpen = false;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.authenticationService.$currentTokenUser.pipe(takeUntil(this.$destroy)).subscribe((user) => {
-      if (user) {
-        this.isAuthenticated = true;
-      }
+      this.isAuthenticated = !!user;
+      this.changeDetectorRef.detectChanges();
     });
   }
 

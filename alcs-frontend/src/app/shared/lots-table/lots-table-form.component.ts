@@ -33,7 +33,7 @@ type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null
 export class LotsTableFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['index', 'type', 'size', 'alrArea'];
   lotsSource = new MatTableDataSource<ProposedLot>([]);
-  lotCount = 0;
+  lotCount: number | null = null;
 
   touched = false;
   disabled = false;
@@ -99,12 +99,14 @@ export class LotsTableFormComponent implements ControlValueAccessor, Validator {
     this.disabled = disabled;
   }
 
-  writeValue(proposedLots: ProposedLot[]) {
+  writeValue(proposedLots: ProposedLot[] | null) {
     this.resetForm(proposedLots ?? []);
-    this.lotCount = proposedLots.length;
+    this.lotCount = proposedLots?.length ?? null;
     let lots = this.mapFormToLots();
     this.lotsSource = new MatTableDataSource(lots);
-    this.count.setValue(this.lotCount.toString());
+    if (this.lotCount !== null) {
+      this.count.setValue(this.lotCount.toString());
+    }
   }
 
   validate(control: AbstractControl) {
@@ -135,15 +137,17 @@ export class LotsTableFormComponent implements ControlValueAccessor, Validator {
 
   private mapFormToLots() {
     const proposedLots: ProposedLot[] = [];
-    for (let index = 0; index < this.lotCount; index++) {
-      const lotType = this.form.controls[`${index}-lotType`].value;
-      const lotSize = this.form.controls[`${index}-lotSize`].value;
-      const lotAlrArea = this.form.controls[`${index}-lotAlrArea`].value;
-      proposedLots.push({
-        size: lotSize,
-        type: lotType,
-        alrArea: lotAlrArea,
-      });
+    if (this.lotCount !== null) {
+      for (let index = 0; index < this.lotCount; index++) {
+        const lotType = this.form.controls[`${index}-lotType`].value;
+        const lotSize = this.form.controls[`${index}-lotSize`].value;
+        const lotAlrArea = this.form.controls[`${index}-lotAlrArea`].value;
+        proposedLots.push({
+          size: lotSize,
+          type: lotType,
+          alrArea: lotAlrArea,
+        });
+      }
     }
     return proposedLots;
   }
