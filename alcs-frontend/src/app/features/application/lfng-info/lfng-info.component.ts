@@ -27,6 +27,7 @@ export class LfngInfoComponent implements OnInit {
   requiresReview = true;
   showComment = false;
   isFirstNationGovernment = false;
+  hasCompletedStepsBeforeResolution = false;
   hasCompletedStepsBeforeDocuments = false;
 
   constructor(
@@ -47,6 +48,13 @@ export class LfngInfoComponent implements OnInit {
         );
         this.loadDocuments(application.fileNumber);
         this.isFirstNationGovernment = !!application.localGovernment?.isFirstNation;
+
+        this.hasCompletedStepsBeforeResolution =
+          this.isFirstNationGovernment ||
+          (!this.isFirstNationGovernment &&
+            this.applicationReview.isOCPDesignation !== null &&
+            this.applicationReview.isSubjectToZoning !== null &&
+            (this.applicationReview.isOCPDesignation === true || this.applicationReview.isSubjectToZoning === true));
 
         this.hasCompletedStepsBeforeDocuments =
           (this.applicationReview.isAuthorized !== null && this.isFirstNationGovernment) ||

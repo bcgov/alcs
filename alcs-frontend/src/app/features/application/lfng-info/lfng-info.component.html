@@ -163,16 +163,7 @@
         The only option available is to forward this application on to the ALC.
       </div>
 
-      <div
-        class="full-row"
-        *ngIf="
-          isFirstNationGovernment ||
-          (!isFirstNationGovernment &&
-            applicationReview.isOCPDesignation !== null &&
-            applicationReview.isSubjectToZoning !== null &&
-            (applicationReview.isOCPDesignation === true || applicationReview.isSubjectToZoning === true))
-        "
-      >
+      <div class="full-row" *ngIf="hasCompletedStepsBeforeResolution">
         <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
         <div *ngIf="applicationReview.isAuthorized !== null">
           {{ applicationReview.isAuthorized ? 'Authorized' : 'Refused to Authorize' }}

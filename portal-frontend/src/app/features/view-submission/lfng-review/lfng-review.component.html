@@ -224,15 +224,7 @@
           <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
           The only option available is to forward this application on to the ALC.
         </div>
-        <div
-          *ngIf="
-            !applicationReview.isFirstNationGovernment &&
-            applicationReview.isOCPDesignation !== null &&
-            applicationReview.isSubjectToZoning !== null &&
-            (applicationReview.isOCPDesignation === true || applicationReview.isSubjectToZoning === true)
-          "
-          class="full-width"
-        >
+        <div *ngIf="hasCompletedStepsBeforeResolution" class="full-width">
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
           <div>
             <span *ngIf="applicationReview.isAuthorized !== null">{{
