@@ -1,6 +1,14 @@
+import { NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { NgxMaskDirective } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { ConditionComponent } from './conditions/condition/condition.component';
 import { ConditionsComponent } from './conditions/conditions.component';
@@ -11,6 +19,7 @@ import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.compon
 import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
 import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
 import { RosoComponent } from './decision-v2/decision-component/roso/roso.component';
+import { SubdComponent } from './decision-v2/decision-component/subd/subd.component';
 import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
@@ -19,6 +28,7 @@ import { NfuInputComponent } from './decision-v2/decision-input/decision-compone
 import { PfrsInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pfrs-input/pfrs-input.component';
 import { PofoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pofo-input/pofo-input.component';
 import { RosoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/roso-input/roso-input.component';
+import { SubdInputComponent } from './decision-v2/decision-input/decision-components/decision-component/subd-input/subd-input.component';
 import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
 import { DecisionComponentsComponent } from './decision-v2/decision-input/decision-components/decision-components.component';
 import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
@@ -82,13 +92,29 @@ export const decisionChildRoutes = [
     RosoComponent,
     RosoInputComponent,
     PfrsInputComponent,
+    SubdInputComponent,
     PfrsComponent,
     NaruComponent,
+    SubdComponent,
     NaruInputComponent,
     ConditionsComponent,
     ConditionComponent,
     BasicComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(decisionChildRoutes), MatTabsModule],
+  imports: [
+    SharedModule.forRoot(),
+    RouterModule.forChild(decisionChildRoutes),
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatTableModule,
+    NgIf,
+    NgxMaskDirective,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatFormFieldModule,
+  ],
 })
 export class DecisionModule {}

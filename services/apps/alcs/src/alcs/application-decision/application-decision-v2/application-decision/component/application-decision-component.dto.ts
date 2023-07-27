@@ -1,7 +1,8 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
+import { ProposedLot } from '../../../../../portal/application-submission/application-submission.entity';
 
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
@@ -91,6 +92,10 @@ export class UpdateApplicationDecisionComponentDto {
   @IsString()
   @IsOptional()
   naruSubtypeCode: string;
+
+  @IsArray()
+  @IsOptional()
+  subdApprovedLots?: ProposedLot[];
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -174,6 +179,9 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap(() => NaruSubtypeDto)
   naruSubtype: NaruSubtypeDto;
+
+  @AutoMap(() => [ProposedLot])
+  subdApprovedLots: ProposedLot[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {

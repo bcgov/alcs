@@ -8,9 +8,17 @@ from documents import (
 )
 from rich.console import Console
 from db import connection_pool
-from batch_applications import process_applications, clean_applications
+from applications import (
+    process_applications,
+    clean_applications,
+    process_alcs_application_prep_fields,
+)
+from constants import BATCH_UPLOAD_SIZE
 
-import_batch_size = 10000
+import_batch_size = BATCH_UPLOAD_SIZE
+
+# TODO tidy import menu setup
+
 
 def application_import_command_parser(import_batch_size, subparsers):
     application_import_command = subparsers.add_parser(
@@ -42,9 +50,7 @@ def document_import_command_parser(import_batch_size, subparsers):
     document_import_command.set_defaults(func=process_documents)
 
 
-def application_document_import_command_parser(
-    import_batch_size, subparsers
-):
+def application_document_import_command_parser(import_batch_size, subparsers):
     application_document_import_command = subparsers.add_parser(
         "app-document-import",
         help=f"Links imported documents with application documents  specified batch size: (default: {import_batch_size})",
@@ -56,9 +62,22 @@ def application_document_import_command_parser(
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    application_document_import_command.set_defaults(
-        func=import_batch_size
+    application_document_import_command.set_defaults(func=import_batch_size)
+
+
+def app_prep_import_command_parser(import_batch_size, subparsers):
+    app_prep_import_command = subparsers.add_parser(
+        "app-prep-import",
+        help=f"Import App prep into ALCS (update applications table) in specified batch size: (default: {import_batch_size})",
     )
+    app_prep_import_command.add_argument(
+        "--batch-size",
+        type=int,
+        default=import_batch_size,
+        metavar="",
+        help=f"batch size (default: {import_batch_size})",
+    )
+    app_prep_import_command.set_defaults(func=import_batch_size)
 
 
 def import_command_parser(subparsers):
@@ -84,6 +103,7 @@ def setup_menu_args_parser(import_batch_size):
     application_import_command_parser(import_batch_size, subparsers)
     document_import_command_parser(import_batch_size, subparsers)
     application_document_import_command_parser(import_batch_size, subparsers)
+    app_prep_import_command_parser(import_batch_size, subparsers)
     import_command_parser(subparsers)
 
     subparsers.add_parser("clean", help="Clean all imported data")
@@ -114,7 +134,6 @@ if __name__ == "__main__":
                 with console.status("[bold green]Import OATS into ALCS...") as status:
                     console.log("Processing applications:")
                     # this will be enabled once application import is ready
-                   
 
                     if args and args.batch_size:
                         import_batch_size = args.batch_size
@@ -128,12 +147,14 @@ if __name__ == "__main__":
                     console.log("Processing application documents:")
                     process_application_documents(batch_size=import_batch_size)
 
+                    console.log("Processing application prep:")
+                    process_alcs_application_prep_fields(batch_size=import_batch_size)
+
                     console.log("Done")
             case "clean":
                 with console.status("[bold green]Cleaning previous ETL...") as status:
                     console.log("Cleaning data:")
                     # this will be enabled once application import is ready
-                    
 
                     clean_application_documents()
                     clean_documents()
@@ -164,6 +185,19 @@ if __name__ == "__main__":
                     )
 
                     process_application_documents(batch_size=import_batch_size)
+            case "app-prep-import":
+                console.log("Beginning OATS -> ALCS app-prep import process")
+                with console.status(
+                    "[bold green]App prep import (applications table update in ALCS)..."
+                ) as status:
+                    if args.batch_size:
+                        import_batch_size = args.batch_size
+
+                    console.log(
+                        f"Processing app-prep import in batch size = {import_batch_size}"
+                    )
+
+                    process_alcs_application_prep_fields(batch_size=import_batch_size)
 
     finally:
         if connection_pool:

@@ -255,6 +255,12 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
                   [component]="component"
                 ></app-naru>
+
+                <app-subd
+                  class="grid-3"
+                  *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
+                  [component]="component"
+                ></app-subd>
               </div>
             </div>
           </div>

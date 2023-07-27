@@ -143,19 +143,20 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   private calculateLetterRequired() {
-    const isSelfApplicant =
-      this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL ||
-      this.owners[0].type.code === APPLICATION_OWNER.GOVERNMENT;
-
-    this.needsAuthorizationLetter =
-      this.selectedThirdPartyAgent ||
-      !(
-        isSelfApplicant &&
-        (this.owners.length === 1 ||
-          (this.owners.length === 2 &&
-            this.owners[1].type.code === APPLICATION_OWNER.AGENT &&
-            !this.selectedThirdPartyAgent))
-      );
+    if (this.selectedLocalGovernment) {
+      this.needsAuthorizationLetter = false;
+    } else {
+      const isSelfApplicant = this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
+      this.needsAuthorizationLetter =
+        this.selectedThirdPartyAgent ||
+        !(
+          isSelfApplicant &&
+          (this.owners.length === 1 ||
+            (this.owners.length === 2 &&
+              this.owners[1].type.code === APPLICATION_OWNER.AGENT &&
+              !this.selectedThirdPartyAgent))
+        );
+    }
 
     this.files = this.files.map((file) => ({
       ...file,
@@ -226,8 +227,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
-
-        this.calculateLetterRequired();
       } else if (selectedOwner) {
         this.onSelectOwner(selectedOwner.uuid);
       } else {
@@ -246,6 +245,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.form.markAllAsTouched();
       }
       this.isDirty = false;
+      this.calculateLetterRequired();
     }
   }
 

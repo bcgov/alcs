@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProposedLot } from '../../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionCodesDto,
@@ -9,11 +10,13 @@ import {
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
   RosoDecisionComponentDto,
+  SubdDecisionComponentDto,
   TurpDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
+import { SubdInputComponent } from './subd-input/subd-input.component';
 
 @Component({
   selector: 'app-decision-component',
@@ -24,6 +27,8 @@ export class DecisionComponentComponent implements OnInit {
   @Input() data!: DecisionComponentDto;
   @Input() codes!: DecisionCodesDto;
   @Output() dataChange = new EventEmitter<DecisionComponentDto>();
+
+  @ViewChild(SubdInputComponent) subdInputComponent?: SubdInputComponent;
 
   COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
 
@@ -55,6 +60,9 @@ export class DecisionComponentComponent implements OnInit {
   // naru
   naruSubtypeCode = new FormControl<string | null>(null, [Validators.required]);
   naruEndDate = new FormControl<Date | null>(null);
+
+  //subd
+  subdApprovedLots = new FormControl<ProposedLot[]>([], [Validators.required]);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -100,6 +108,9 @@ export class DecisionComponentComponent implements OnInit {
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
           this.patchNaruFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+          this.patchSubdFields();
           break;
         default:
           this.toastService.showErrorToast('Wrong decision component type');
@@ -161,6 +172,9 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
         dataChange = { ...dataChange, ...this.getNaruDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+        dataChange = { ...dataChange, ...this.getSubdDataChange() };
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
@@ -227,6 +241,11 @@ export class DecisionComponentComponent implements OnInit {
     this.naruSubtypeCode.setValue(this.data.naruSubtypeCode ?? null);
   }
 
+  private patchSubdFields() {
+    this.form.addControl('subdApprovedLots', this.subdApprovedLots);
+    this.subdApprovedLots.setValue(this.data.subdApprovedLots ?? null);
+  }
+
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -285,5 +304,15 @@ export class DecisionComponentComponent implements OnInit {
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
       naruSubtypeCode: this.naruSubtypeCode.value ?? null,
     };
+  }
+
+  private getSubdDataChange(): SubdDecisionComponentDto {
+    return {
+      subdApprovedLots: this.subdApprovedLots.value ?? undefined,
+    };
+  }
+
+  markTouched() {
+    this.subdInputComponent?.markAllAsTouched();
   }
 }

@@ -1,0 +1,57 @@
+@use '../../../../styles/colors';
+
+.inline-number-wrapper {
+  padding-top: 4px;
+}
+
+.editing {
+  display: inline-block;
+}
+
+.editing.hidden {
+  display: none;
+}
+
+.edit-button {
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.edit-icon {
+  font-size: inherit;
+  line-height: 22px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+
+  button:not(:last-child) {
+    margin-right: 2px !important;
+  }
+}
+
+.add {
+  cursor: pointer;
+}
+
+.save {
+  color: colors.$primary-color;
+}
+
+:host::ng-deep {
+  .mat-form-field-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  button mat-icon {
+    overflow: visible;
+  }
+
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    padding: 0 !important;
+  }
+}

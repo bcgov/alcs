@@ -528,8 +528,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   private runValidation() {
     this.form.markAllAsTouched();
-    this.componentsValid = this.componentsValid && this.components.length > 0;
-    this.conditionsValid = this.conditionsValid && this.conditionUpdates.length > 0;
+    const requiresConditions = this.showConditions;
+    const requiresComponents = this.showComponents;
 
     if (this.decisionComponentsComponent) {
       this.decisionComponentsComponent.onValidate();
@@ -543,8 +543,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       !this.form.valid ||
       !this.conditionsValid ||
       !this.componentsValid ||
-      (this.components.length === 0 && this.showComponents) ||
-      (this.conditionUpdates.length === 0 && this.showConditions)
+      (this.components.length === 0 && requiresComponents) ||
+      (this.conditionUpdates.length === 0 && requiresConditions)
     ) {
       this.form.controls.decisionMaker.markAsDirty();
       this.toastService.showErrorToast('Please correct all errors before submitting the form');
@@ -594,9 +594,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   onConditionsChange($event: { conditions: UpdateApplicationDecisionConditionDto[]; isValid: boolean }) {
-    this.conditionUpdates = $event.conditions;
-    this.conditionsValid = $event.isValid;
     this.conditionUpdates = Array.from($event.conditions);
+    this.conditionsValid = $event.isValid;
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {

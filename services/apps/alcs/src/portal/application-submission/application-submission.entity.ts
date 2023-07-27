@@ -18,8 +18,9 @@ import { ApplicationParcel } from './application-parcel/application-parcel.entit
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 export class ProposedLot {
-  type: 'Lot' | 'Road Dedication';
-  size: number;
+  type: 'Lot' | 'Road Dedication' | null;
+  alrArea?: number | null;
+  size: number | null;
 }
 
 @Entity()
@@ -693,6 +694,10 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   exclShareGovernmentBorders: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  inclGovernmentOwnsAllParcels: boolean | null;
 
   //END SUBMISSION FIELDS
 
