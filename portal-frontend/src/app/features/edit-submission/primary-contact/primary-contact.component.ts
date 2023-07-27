@@ -143,9 +143,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   private calculateLetterRequired() {
-    const isSelfApplicant =
-      this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL ||
-      this.owners[0].type.code === APPLICATION_OWNER.GOVERNMENT;
+    const isSelfApplicant = this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL || this.selectedLocalGovernment;
 
     this.needsAuthorizationLetter =
       this.selectedThirdPartyAgent ||
@@ -226,8 +224,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
-
-        this.calculateLetterRequired();
       } else if (selectedOwner) {
         this.onSelectOwner(selectedOwner.uuid);
       } else {
@@ -246,6 +242,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.form.markAllAsTouched();
       }
       this.isDirty = false;
+      this.calculateLetterRequired();
     }
   }
 

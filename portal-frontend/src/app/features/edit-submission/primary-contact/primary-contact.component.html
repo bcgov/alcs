@@ -160,7 +160,7 @@
       (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
       (deleteFile)="onDeleteFile($event)"
       (openFile)="openFile($event)"
-      [showErrors]="showErrors || selectedLocalGovernment"
+      [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter"
     ></app-file-drag-drop>
   </div>
