@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
+import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
   UpdateApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionServiceDto,
@@ -14,6 +15,8 @@ export class ApplicationDecisionConditionService {
   constructor(
     @InjectRepository(ApplicationDecisionCondition)
     private repository: Repository<ApplicationDecisionCondition>,
+    @InjectRepository(ApplicationDecisionConditionType)
+    private typeRepository: Repository<ApplicationDecisionConditionType>,
   ) {}
 
   async getOneOrFail(uuid: string) {
@@ -41,7 +44,14 @@ export class ApplicationDecisionConditionService {
       } else {
         condition = new ApplicationDecisionCondition();
       }
-      condition.typeCode = updateDto.type?.code ?? null;
+      if (updateDto.type?.code) {
+        condition.type = await this.typeRepository.findOneOrFail({
+          where: {
+            code: updateDto.type.code,
+          },
+        });
+      }
+
       condition.administrativeFee = updateDto.administrativeFee ?? null;
       condition.description = updateDto.description ?? null;
       condition.securityAmount = updateDto.securityAmount ?? null;
