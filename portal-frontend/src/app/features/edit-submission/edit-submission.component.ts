@@ -94,6 +94,10 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnInit(): void {
     this.expandedParcelUuid = undefined;
+
+    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
+      this.applicationSubmission = submission;
+    });
   }
 
   ngAfterViewInit(): void {
