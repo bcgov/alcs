@@ -226,6 +226,14 @@ export class Application extends Base {
   })
   nfuUseSubType?: string | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Inclusion Exclusion Applicant Type',
+    nullable: true,
+  })
+  inclExclApplicantType?: string | null;
+
   @Column({
     type: 'timestamptz',
     comment: 'The date at which the proposal use ends',

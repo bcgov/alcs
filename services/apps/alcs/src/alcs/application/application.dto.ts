@@ -148,6 +148,10 @@ export class UpdateApplicationDto {
   nfuUseSubType?: string;
 
   @IsOptional()
+  @IsString()
+  inclExclApplicantType?: string;
+
+  @IsOptional()
   @IsNumber()
   proposalEndDate?: number;
 
@@ -245,6 +249,9 @@ export class ApplicationDto {
   @AutoMap(() => String)
   nfuUseSubType?: string;
 
+  @AutoMap(() => String)
+  inclExclApplicantType?: string;
+
   proposalEndDate?: number;
   proposalExpiryDate?: number;
 }
@@ -271,6 +278,7 @@ export class ApplicationUpdateServiceDto {
   agCapConsultant?: string;
   nfuUseType?: string;
   nfuUseSubType?: string;
+  inclExclApplicantType?: string;
   proposalEndDate?: Date | null;
   proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
