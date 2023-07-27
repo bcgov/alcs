@@ -47,6 +47,7 @@ import { InlineNumberComponent } from './inline-editors/inline-number/inline-num
 import { InlineReviewOutcomeComponent } from './inline-editors/inline-review-outcome/inline-review-outcome.component';
 import { InlineTextComponent } from './inline-editors/inline-text/inline-text.component';
 import { InlineTextareaComponent } from './inline-editors/inline-textarea/inline-textarea.component';
+import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
 import { LotsTableFormComponent } from './lots-table/lots-table-form.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { NoDataComponent } from './no-data/no-data.component';
@@ -94,6 +95,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     ErrorMessageComponent,
     LotsTableFormComponent,
+    InlineNgSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -117,6 +119,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     RouterModule,
     MatDatepickerModule,
     MatDialogModule,
+    NgSelectModule,
   ],
   exports: [
     CommonModule,
@@ -150,6 +153,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     InlineNumberComponent,
     InlineTextComponent,
     InlineDropdownComponent,
+    InlineNgSelectComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     DetailsHeaderComponent,
