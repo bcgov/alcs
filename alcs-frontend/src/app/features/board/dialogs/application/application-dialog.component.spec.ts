@@ -55,6 +55,7 @@ describe('ApplicationDialogComponent', () => {
       uuid: 'fake',
       name: 'Local Government',
       preferredRegionCode: 'FAKE_CODE',
+      isFirstNation: false,
     },
     summary: 'MOCK SUMMARY',
     activeDays: 10,
