@@ -9,15 +9,11 @@
     </div>
 
     <div *ngIf="isAuthenticated" class="controls">
-      <button *ngIf="isAuthenticated" class="inbox-btn" routerLink="/home" mat-flat-button color="primary">
-        Portal Inbox
-      </button>
-      <button *ngIf="isAuthenticated" class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">
-        Log Out
-      </button>
+      <button class="inbox-btn" routerLink="/home" mat-flat-button color="primary">Portal Inbox</button>
+      <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
     </div>
 
-    <div *ngIf="isAuthenticated && isMenuOpen" class="mobile-menu-wrapper">
+    <div *ngIf="isMenuOpen" class="mobile-menu-wrapper">
       <h1 (click)="onMenuClicked('/home')">Portal Inbox</h1>
       <h1 (click)="onLogout()">Log Out</h1>
     </div>
