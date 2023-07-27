@@ -50,6 +50,7 @@ export interface ApplicationDecisionMeetingDto {
 export interface ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
   size: number | null;
+  alrArea?: number | null;
 }
 
 export interface ApplicationReviewDto {
@@ -98,6 +99,10 @@ export interface ApplicationParcelDto {
   certificateOfTitleUuid?: string;
   owners: SubmittedApplicationOwnerDto[];
   alrArea: number;
+}
+
+export interface UpdateApplicationSubmissionDto {
+  subProposedLots?: ProposedLot[];
 }
 
 export interface ApplicationSubmissionDto {

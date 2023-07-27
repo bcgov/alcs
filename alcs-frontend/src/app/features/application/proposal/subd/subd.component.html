@@ -1,18 +1,22 @@
-<div class='container'>
-  <div class='subheading1'>Proposed Lot Areas</div>
-  <div *ngIf="applicationSubmission" class="parcel-table">
-    <div class="grid-1 subheading2">#</div>
-    <div class="grid-2 subheading2">Type</div>
-    <div class="grid-3 subheading2">Size</div>
-    <ng-container *ngFor="let lot of applicationSubmission.subdProposedLots; let i = index">
-      <div class="grid-1">
+<div class="container">
+  <div class="subheading1">Proposed Lot Areas</div>
+  <div *ngIf="proposedLots" class="parcel-table">
+    <div class="subheading2">#</div>
+    <div class="subheading2">Type</div>
+    <div class="subheading2">Size (ha)</div>
+    <div class="subheading2">ALR Area (ha)</div>
+    <ng-container *ngFor="let lot of proposedLots; let i = index">
+      <div>
         {{ i + 1 }}
       </div>
-      <div class="grid-2">
+      <div>
         {{ lot.type }}
       </div>
-      <div class="grid-3">
+      <div>
         {{ lot.size }}
+      </div>
+      <div>
+        <app-inline-number [value]="lot.alrArea?.toString()" (save)="saveALRArea(i, $event)"></app-inline-number>
       </div>
     </ng-container>
   </div>

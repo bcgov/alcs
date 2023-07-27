@@ -116,6 +116,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           applicationDecisionComponentType: this.decisionComponentTypes.find(
             (e) => e.code === typeCode && e.uiCode !== 'COPY'
           ),
+          subdApprovedLots: this.application.submittedApplication?.subdProposedLots,
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
@@ -151,6 +152,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
       case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+      case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
@@ -228,6 +230,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   onValidate() {
-    this.childComponents.forEach((component) => component.form.markAllAsTouched());
+    this.childComponents.forEach((component) => {
+      component.form.markAllAsTouched();
+      if ('markTouched' in component) {
+        component.markTouched();
+      }
+    });
   }
 }

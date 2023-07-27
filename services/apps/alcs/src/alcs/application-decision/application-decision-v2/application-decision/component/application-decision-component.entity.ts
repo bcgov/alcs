@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, Index, ManyToMany, ManyToOne } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
+import { ProposedLot } from '../../../../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecisionCondition } from '../../../application-decision-condition/application-decision-condition.entity';
@@ -188,6 +189,15 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => NaruSubtype)
   naruSubtype: NaruSubtype;
+
+  @AutoMap(() => [ProposedLot])
+  @Column({
+    comment: 'JSONB Column containing the approved subdivision lots',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  subdApprovedLots: ProposedLot[];
 
   @AutoMap()
   @Column({ nullable: false })

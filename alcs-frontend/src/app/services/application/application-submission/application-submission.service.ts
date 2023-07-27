@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationSubmissionDto } from '../application.dto';
+import { ApplicationSubmissionDto, UpdateApplicationSubmissionDto } from '../application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,15 @@ export class ApplicationSubmissionService {
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application Submission Status');
+      throw e;
+    }
+  }
+
+  update(fileNumber: string, update: UpdateApplicationSubmissionDto) {
+    try {
+      return firstValueFrom(this.http.patch<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}`, update));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to update Application Submission');
       throw e;
     }
   }

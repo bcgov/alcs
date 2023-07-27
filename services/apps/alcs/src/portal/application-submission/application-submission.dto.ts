@@ -148,6 +148,7 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   subdIsHomeSiteSeverance?: boolean | null;
 
+  @AutoMap(() => [ProposedLot])
   subdProposedLots?: ProposedLot[];
 
   //Soil Fields

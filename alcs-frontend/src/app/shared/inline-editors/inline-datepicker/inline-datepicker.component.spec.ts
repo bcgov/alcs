@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { StartOfDayPipe } from '../pipes/startOfDay.pipe';
+import { StartOfDayPipe } from '../../pipes/startOfDay.pipe';
 
 import { InlineDatepickerComponent } from './inline-datepicker.component';
 

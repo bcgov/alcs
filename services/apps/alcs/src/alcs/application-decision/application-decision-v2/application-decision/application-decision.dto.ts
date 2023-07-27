@@ -16,7 +16,7 @@ import { ApplicationDecisionMakerCodeDto } from '../../application-decision-make
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import {
   ApplicationDecisionComponentDto,
-  CreateApplicationDecisionComponentDto,
+  UpdateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
 
 export class UpdateApplicationDecisionDto {
@@ -108,7 +108,7 @@ export class UpdateApplicationDecisionDto {
   isDraft: boolean;
 
   @IsOptional()
-  decisionComponents?: CreateApplicationDecisionComponentDto[];
+  decisionComponents?: UpdateApplicationDecisionComponentDto[];
 
   @IsOptional()
   @IsArray()

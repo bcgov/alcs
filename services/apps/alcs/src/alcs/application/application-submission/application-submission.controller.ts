@@ -7,6 +7,7 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
+import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -47,6 +48,19 @@ export class ApplicationSubmissionController {
       fileNumber,
       status as SUBMISSION_STATUS,
     );
+    return this.get(fileNumber);
+  }
+
+  @UserRoles(...ANY_AUTH_ROLE)
+  @Patch('/:fileNumber')
+  async updateSubmission(
+    @Param('fileNumber') fileNumber: string,
+    @Body() updateDto: AlcsApplicationSubmissionUpdateDto,
+  ) {
+    if (!fileNumber) {
+      throw new ServiceValidationException('File number is required');
+    }
+    await this.applicationSubmissionService.update(fileNumber, updateDto);
     return this.get(fileNumber);
   }
 }
