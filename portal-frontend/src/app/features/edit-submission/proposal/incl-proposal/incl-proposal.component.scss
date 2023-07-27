@@ -1,0 +1,9 @@
+@use '../../../../../styles/functions' as *;
+
+section {
+  margin-top: rem(32);
+}
+
+.requirement-description {
+  margin: rem(8) 0 !important;
+}

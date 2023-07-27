@@ -220,6 +220,7 @@ export interface ApplicationSubmissionDto {
   inclAgricultureSupport: string | null;
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
+  inclGovernmentOwnsAllParcels: boolean | null;
 }
 
 export interface ApplicationDto {
