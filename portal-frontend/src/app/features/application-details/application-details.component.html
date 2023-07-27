@@ -48,7 +48,10 @@
     </div>
     <div class="grid-double">
       {{ primaryContact?.organizationName }}
-      <app-no-data *ngIf="!primaryContact?.organizationName"></app-no-data>
+      <app-no-data
+        [showRequired]="showErrors && primaryContact?.type?.code === APPLICATION_OWNER.GOVERNMENT"
+        *ngIf="!primaryContact?.organizationName"
+      ></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">
