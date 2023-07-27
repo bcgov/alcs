@@ -2,6 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from './application-decision-condition.service';
@@ -11,9 +12,13 @@ describe('ApplicationDecisionConditionService', () => {
   let mockApplicationDecisionConditionRepository: DeepMocked<
     Repository<ApplicationDecisionCondition>
   >;
+  let mockAppDecCondTypeRepository: DeepMocked<
+    Repository<ApplicationDecisionConditionType>
+  >;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
+    mockAppDecCondTypeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -21,6 +26,10 @@ describe('ApplicationDecisionConditionService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionCondition),
           useValue: mockApplicationDecisionConditionRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationDecisionConditionType),
+          useValue: mockAppDecCondTypeRepository,
         },
       ],
     }).compile();
