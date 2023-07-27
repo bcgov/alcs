@@ -46,7 +46,7 @@ def process_nois(conn=None, batch_size=10000):
                 try: 
                     applications_to_be_inserted_count = len(rows)
 
-                    insert_query = compile_application_insert_query(
+                    insert_query = noi_insert_query(
                         applications_to_be_inserted_count
                     ) 
                     cursor.execute(insert_query, rows)
