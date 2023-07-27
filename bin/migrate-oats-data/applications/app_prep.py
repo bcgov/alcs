@@ -4,6 +4,7 @@ from common import (
     AlcsNfuSubTypeCode,
     OatsCapabilitySourceCode,
     OatsAgriCapabilityCodes,
+    OATS_NFU_SUBTYPES,
     AlcsAgCap,
     AlcsAgCapSource,
     log_end,
@@ -20,29 +21,29 @@ etl_name = "alcs_app_prep"
 
 
 class OatsToAlcsNfuTypes(Enum):
-    AGR = AlcsNfuTypeCode.Agricultural_Farm
-    CIV = AlcsNfuTypeCode.Civic_Institutional
-    COM = AlcsNfuTypeCode.Commercial_Retail
-    IND = AlcsNfuTypeCode.Industrial
-    OTH = AlcsNfuTypeCode.Other
-    REC = AlcsNfuTypeCode.Recreational
-    RES = AlcsNfuTypeCode.Residential
-    TRA = AlcsNfuTypeCode.Transportation_Utilities
-    UNU = AlcsNfuTypeCode.Unused
+    AGR = AlcsNfuTypeCode.Agricultural_Farm.value
+    CIV = AlcsNfuTypeCode.Civic_Institutional.value
+    COM = AlcsNfuTypeCode.Commercial_Retail.value
+    IND = AlcsNfuTypeCode.Industrial.value
+    OTH = AlcsNfuTypeCode.Other.value
+    REC = AlcsNfuTypeCode.Recreational.value
+    RES = AlcsNfuTypeCode.Residential.value
+    TRA = AlcsNfuTypeCode.Transportation_Utilities.value
+    UNU = AlcsNfuTypeCode.Unused.value
 
 
 class OatsToAlcsAgCapSource(Enum):
-    BCLI = AlcsAgCapSource.BCLI
-    CLI = AlcsAgCapSource.CLI
-    ONSI = AlcsAgCapSource.On_site
+    BCLI = AlcsAgCapSource.BCLI.value
+    CLI = AlcsAgCapSource.CLI.value
+    ONSI = AlcsAgCapSource.On_site.value
 
 
 class OatsToAlcsAgCap(Enum):
-    P = AlcsAgCap.Prime
-    PD = AlcsAgCap.Prime_Dominant
-    MIX = AlcsAgCap.Mixed_Prime_Secondary
-    S = AlcsAgCap.Secondary
-    U = AlcsAgCap.Unclassified
+    P = AlcsAgCap.Prime.value
+    PD = AlcsAgCap.Prime_Dominant.value
+    MIX = AlcsAgCap.Mixed_Prime_Secondary.value
+    S = AlcsAgCap.Secondary.value
+    U = AlcsAgCap.Unclassified.value
 
 
 @inject_conn_pool
@@ -54,6 +55,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
+
     log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -201,14 +203,14 @@ def prepare_app_prep_data(app_prep_raw_data_list):
         data = dict(row)
         data = map_basic_field(data)
 
-        if data["alr_change_code"] == ALRChangeCode.NFU:
+        if data["alr_change_code"] == ALRChangeCode.NFU.value:
             data = mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.NAR:
+        elif data["alr_change_code"] == ALRChangeCode.NAR.value:
             nar_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.EXC:
+        elif data["alr_change_code"] == ALRChangeCode.EXC.value:
             exc_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.INC:
+        elif data["alr_change_code"] == ALRChangeCode.INC.value:
             inc_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -217,14 +219,18 @@ def prepare_app_prep_data(app_prep_raw_data_list):
 
 
 def mapOatsToAlcsAppPrep(data):
+    oats_type_code = data["nonfarm_use_type_code"]
+    oats_subtype_code = data["nonfarm_use_subtype_code"]
+
     if data["nonfarm_use_type_code"]:
         data["nonfarm_use_type_code"] = str(
             OatsToAlcsNfuTypes[data["nonfarm_use_type_code"]].value
         )
     if data["nonfarm_use_subtype_code"]:
         data["nonfarm_use_subtype_code"] = map_oats_to_alcs_nfu_subtypes(
-            data["nonfarm_use_subtype_code"]
+            oats_type_code, oats_subtype_code
         )
+
     return data
 
 
@@ -314,22 +320,15 @@ def get_update_query_for_other():
     return query
 
 
-def map_oats_to_alcs_nfu_subtypes(oats_code):
-    # TODO this is work in progress and will be finished later
-    if oats_code == 1:
-        return "Accessory Buildings"
-    if oats_code == 2:
-        return "Additional Dwelling(s)"
-    if oats_code == 3:
-        return "Additional Structures for Farm Help"
-    if oats_code == 4:
-        return "Agricultural Land Use Remnant"
-    if oats_code == 5:
-        return "Agricultural Lease"
-    if oats_code == 6:
-        return "Agricultural Subdivision Remnant"
+def map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
+    for dict_obj in OATS_NFU_SUBTYPES:
+        if str(dict_obj["type_key"]) == str(nfu_type_code) and str(
+            dict_obj["subtype_key"]
+        ) == str(nfu_subtype_code):
+            return dict_obj["value"]
 
-    return ""
+    # Return None when no matching key found
+    return None
 
 
 def map_basic_field(data):

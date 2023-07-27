@@ -2,3 +2,4 @@
 out
 tmp
 *.pickle
+*etl_log.txt
