@@ -22,6 +22,7 @@ import { UncancelApplicationDialogComponent } from './overview/uncancel-applicat
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { InclProposalComponent } from './proposal/incl/incl.component';
 import { NaruProposalComponent } from './proposal/naru/naru.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
 import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.component';
@@ -76,6 +77,7 @@ const routes: Routes = [
     TurProposalComponent,
     ExclProposalComponent,
     NaruProposalComponent,
+    InclProposalComponent,
     ParcelPrepComponent,
     UncancelApplicationDialogComponent,
   ],
