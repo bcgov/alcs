@@ -25,17 +25,17 @@ def process_nois(conn=None, batch_size=10000):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
-        print("- Applications to insert: ", count_total)
+        print("- NOIs to insert: ", count_total)
 
         failed_inserts = 0
         successful_inserts_count = 0
         last_application_id = 0
 
-        with open("sql/insert-batch-application.sql", "r", encoding="utf-8") as sql_file:
+        with open("sql/insert_noi.sql", "r", encoding="utf-8") as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE ae.application_id > {last_application_id} ORDER by ae.application_id;"
+                    f"{application_sql} WHERE ng._noi_application_id > {last_application_id} ORDER by ng.noi_application_id;"
                 )
                 
                 rows = cursor.fetchmany(batch_size)
@@ -56,7 +56,7 @@ def process_nois(conn=None, batch_size=10000):
                     )
 
                     print(
-                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated applications so far {successful_inserts_count}; last inserted applidation_id: {last_application_id}"
+                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_applidation_id: {last_application_id}"
 
                     )
                 except Exception as e:
@@ -68,3 +68,12 @@ def process_nois(conn=None, batch_size=10000):
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)        
+
+@inject_conn_pool
+def clean_nois(conn=None):
+    print("Start NOI cleaning")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM alcs.notice_of_intent a WHERE a.audit_created_by = 'oats_etl'"
+        )
+        print(f"Deleted items count = {cursor.rowcount}")

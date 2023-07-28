@@ -146,10 +146,3 @@ FROM
     LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
     LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON ng.noi_application_id = alcs_gov.application_id
-    -- SELECT
-    --     oaa.alr_application_id,
-    --     oaac.alr_change_code
-    -- FROM
-    --     noi_grouped noi
-    --     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = noi.alr_application_id
-    --     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = noi.alr_application_id
