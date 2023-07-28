@@ -1,0 +1,17 @@
+<div class="full-width" *ngIf="component.agCapMap || component.agCapConsultant">
+  <app-basic [component]="component" [fillRow]="true"></app-basic>
+</div>
+
+<div>
+  <div class="subheading2">Applicant Type</div>
+  {{ component.inclExclApplicantType }}
+  <app-no-data
+    *ngIf="component.inclExclApplicantType === null || component.inclExclApplicantType === undefined"
+  ></app-no-data>
+</div>
+
+<div>
+  <div class="subheading2">Expiry Date</div>
+  {{ component.expiryDate | date }}
+  <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>
+</div>

@@ -261,6 +261,15 @@
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
                   [component]="component"
                 ></app-subd>
+
+                <app-incl-excl
+                  class="grid-3"
+                  *ngIf="
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL ||
+                    component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL
+                  "
+                  [component]="component"
+                ></app-incl-excl>
               </div>
             </div>
           </div>
