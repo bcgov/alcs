@@ -21,6 +21,7 @@ export class ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
   alrArea?: number | null;
   size: number | null;
+  planNumbers: string | null;
 }
 
 @Entity()

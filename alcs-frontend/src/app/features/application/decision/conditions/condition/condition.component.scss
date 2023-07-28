@@ -1,3 +1,14 @@
 .component-labels {
   white-space: pre-wrap;
 }
+
+.parcel-table {
+  display: grid;
+  grid-template-columns: max-content max-content max-content max-content;
+  grid-column-gap: 36px;
+  grid-row-gap: 12px;
+}
+
+.container {
+  margin: 32px 0;
+}

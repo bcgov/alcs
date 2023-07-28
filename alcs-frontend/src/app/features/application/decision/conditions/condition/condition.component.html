@@ -20,7 +20,9 @@
   <div>
     <div class="subheading2">Approval Dependent</div>
     {{ condition.approvalDependant | booleanToString }}
-    <app-no-data *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"></app-no-data>
+    <app-no-data
+      *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"
+    ></app-no-data>
   </div>
 
   <div>
@@ -32,7 +34,9 @@
   <div>
     <div class="subheading2">Admin Fee</div>
     {{ condition.administrativeFee }}
-    <app-no-data *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"></app-no-data>
+    <app-no-data
+      *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
+    ></app-no-data>
   </div>
 
   <div>
@@ -49,6 +53,30 @@
       [value]="condition.supersededDate ?? undefined"
       (save)="onUpdateCondition('supersededDate', $event)"
     ></app-inline-datepicker>
+  </div>
+
+  <div *ngIf="isRequireSurveyPlan">
+    <div>Survey Plans</div>
+    <div *ngIf="subdComponent !== undefined" class="parcel-table">
+      <div class="subheading2">#</div>
+      <div class="subheading2">Type</div>
+      <div class="subheading2">Size (ha)</div>
+      <div class="subheading2">Plan numbers</div>
+      <ng-container *ngFor="let lot of subdComponent.subdApprovedLots; let i = index">
+        <div>
+          {{ i + 1 }}
+        </div>
+        <div>
+          {{ lot.type }}
+        </div>
+        <div>
+          {{ lot.size }}
+        </div>
+        <div>
+          <app-inline-text [value]="lot.planNumbers ?? undefined" (save)="savePlanNumbers(i, $event)"></app-inline-text>
+        </div>
+      </ng-container>
+    </div>
   </div>
 
   <div class="full-width">

@@ -51,6 +51,7 @@ export interface ProposedLot {
   type: 'Lot' | 'Road Dedication' | null;
   size: number | null;
   alrArea?: number | null;
+  planNumbers: string | null;
 }
 
 export interface ApplicationReviewDto {

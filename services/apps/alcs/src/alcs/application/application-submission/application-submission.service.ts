@@ -87,6 +87,7 @@ export class ApplicationSubmissionService {
       updateDto.subProposedLots,
       submission.subdProposedLots,
     );
+    console.log('submission.subdProposedLots', submission.subdProposedLots);
 
     await this.applicationSubmissionRepository.save(submission);
   }
