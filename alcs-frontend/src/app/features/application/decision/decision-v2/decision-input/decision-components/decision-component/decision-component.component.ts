@@ -64,6 +64,9 @@ export class DecisionComponentComponent implements OnInit {
   //subd
   subdApprovedLots = new FormControl<ProposedLot[]>([], [Validators.required]);
 
+  //incl/excl
+  applicantType = new FormControl<string | null>(null, [Validators.required]);
+
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
@@ -111,6 +114,10 @@ export class DecisionComponentComponent implements OnInit {
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
           this.patchSubdFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+        case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+          this.patchInclExclFields();
           break;
         default:
           this.toastService.showErrorToast('Wrong decision component type');
@@ -175,6 +182,10 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
         dataChange = { ...dataChange, ...this.getSubdDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+        dataChange = { ...dataChange, ...this.getInclExclDataChange() };
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
@@ -246,6 +257,14 @@ export class DecisionComponentComponent implements OnInit {
     this.subdApprovedLots.setValue(this.data.subdApprovedLots ?? null);
   }
 
+  private patchInclExclFields() {
+    this.form.addControl('applicantType', this.applicantType);
+    this.form.addControl('expiryDate', this.expiryDate);
+
+    this.applicantType.setValue(this.data.inclExclApplicantType ?? null);
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+  }
+
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -314,5 +333,12 @@ export class DecisionComponentComponent implements OnInit {
 
   markTouched() {
     this.subdInputComponent?.markAllAsTouched();
+  }
+
+  private getInclExclDataChange() {
+    return {
+      inclExclApplicantType: this.applicantType.value ?? undefined,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
+    };
   }
 }

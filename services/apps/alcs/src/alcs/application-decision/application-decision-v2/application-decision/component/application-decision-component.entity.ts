@@ -199,6 +199,14 @@ export class ApplicationDecisionComponent extends Base {
   })
   subdApprovedLots: ProposedLot[];
 
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'Stores the applicant type for inclusion and exclusion components',
+  })
+  inclExclApplicantType: string | null;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;

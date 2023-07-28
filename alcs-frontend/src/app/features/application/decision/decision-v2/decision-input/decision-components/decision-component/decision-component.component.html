@@ -102,4 +102,13 @@
       [form]="form"
     ></app-subd-input>
   </div>
+  <div class="row-no-flex">
+    <app-incl-excl-input
+      *ngIf="
+        data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
+        data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
+      "
+      [form]="form"
+    ></app-incl-excl-input>
+  </div>
 </form>

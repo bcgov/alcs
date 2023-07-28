@@ -55,6 +55,14 @@ export class ApplicationDecisionComponentService {
         component.subdApprovedLots = updateDto.subdApprovedLots;
       }
 
+      //INCL / EXCL
+      if (updateDto.inclExclApplicantType !== undefined) {
+        component.inclExclApplicantType = updateDto.inclExclApplicantType;
+        component.expiryDate = updateDto.expiryDate
+          ? new Date(updateDto.expiryDate)
+          : null;
+      }
+
       updatedComponents.push(component);
     }
 
