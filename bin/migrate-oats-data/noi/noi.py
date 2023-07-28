@@ -2,16 +2,14 @@ from db import inject_conn_pool
 
 def noi_insert_query(number_of_rows_to_insert):
     nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
-    # need to update for noi's
     return f"""
-        INSERT INTO alcs.notice_of_intent (file_number, summary, 
+        INSERT INTO alcs.notice_of_intent (file_number, 
                                       applicant, region_code, local_government_uuid, audit_created_by)
 
         VALUES{nois_to_insert}
         ON CONFLICT (file_number) DO UPDATE SET
             file_number = EXCLUDED.file_number,
-            type_code = EXCLUDED.type_code,
-            summary = EXCLUDED.summary,
+            applicant = EXCLUDED.applicant,
             region_code = EXCLUDED.region_code,
             local_government_uuid = EXCLUDED.local_government_uuid,
             audit_created_by = EXCLUDED.audit_created_by
