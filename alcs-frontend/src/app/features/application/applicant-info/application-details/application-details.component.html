@@ -178,6 +178,12 @@
     [files]="files"
   >
   </app-excl-details>
+  <app-incl-details
+    *ngIf="submission && applicationType === 'INCL'"
+    [applicationSubmission]="submission"
+    [files]="files"
+  >
+  </app-incl-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">

@@ -101,8 +101,8 @@
       (click)="onSubmit()"
       [disabled]="!selectedAppType || !selectedSubmissionType"
     >
-      <ng-container *ngIf="['INCL', 'EXCL'].includes(selectedAppType?.code!)">next</ng-container>
-      <ng-container *ngIf="!['INCL', 'EXCL'].includes(selectedAppType?.code!)">create</ng-container>
+      <ng-container *ngIf="selectedAppType?.code === 'EXCL'">next</ng-container>
+      <ng-container *ngIf="selectedAppType?.code !== 'EXCL'">create</ng-container>
     </button>
   </div>
   <div class="dialog-controls-wrapper" *ngIf="currentStepIndex === prescribedBodyStep">

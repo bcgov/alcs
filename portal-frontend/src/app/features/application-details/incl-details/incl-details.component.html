@@ -1,0 +1,89 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    How many hectares are you proposing to include? (hectares)
+    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.inclExclHectares }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclExclHectares"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    What is the purpose of the proposal?
+    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Does the proposal support agriculture in the short or long term?
+    <app-updated-banner *ngIf="updatedFields.includes('inclAgricultureSupport')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.inclAgricultureSupport }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclAgricultureSupport"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe any improvements that have been made to, or are planned for the parcel proposed for inclusion.
+    <app-updated-banner *ngIf="updatedFields.includes('inclImprovements')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    {{ _applicationSubmission.inclImprovements }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclImprovements"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?
+    <app-updated-banner *ngIf="updatedFields.includes('inclGovernmentOwnsAllParcels')"></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    <span *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null">
+      {{ _applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data
+      [showRequired]="showErrors"
+      *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === null"
+    ></app-no-data>
+  </div>
+
+  <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === false">
+    <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
+    <div class="grid-double">
+      <a *ngFor="let file of noticeOfPublicHearing" (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data [showRequired]="showErrors" *ngIf="noticeOfPublicHearing.length === 0"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Proof of Signage</div>
+    <div class="grid-double">
+      <a *ngFor="let file of proofOfSignage" (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data [showRequired]="showErrors" *ngIf="proofOfSignage.length === 0"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Report of Public Hearing</div>
+    <div class="grid-double">
+      <a *ngFor="let file of reportOfPublicHearing" (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+    </div>
+  </ng-container>
+
+  <div *ngIf="showEdit" class="edit-button">
+    <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
+  </div>
+</div>

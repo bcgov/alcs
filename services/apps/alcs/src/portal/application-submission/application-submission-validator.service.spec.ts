@@ -967,4 +967,265 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
   });
+
+  describe('INCL Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'INCL',
+        inclImprovements: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal missing inclusion fields`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if submission is complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        applicant: 'applicant',
+        purpose: 'purpose',
+        typeCode: 'INCL',
+        inclImprovements: 'inclImprovements',
+        inclAgricultureSupport: 'inclAgricultureSupport',
+        inclExclHectares: 2,
+        inclGovernmentOwnsAllParcels: true,
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
+          type: new ApplicationDocumentCode({
+            code: DOCUMENT_TYPE.PROPOSAL_MAP,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal missing inclusion fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proposal map / site plan`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require documents when government does not own all parcels', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: false,
+        typeCode: 'INCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of signage`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should note require documents when government owns all parcels', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: true,
+        typeCode: 'INCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of signage`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(false);
+    });
+  });
+
+  describe('EXCL Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'EXCL',
+        prescribedBody: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal missing exclusion fields`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        applicant: 'applicant',
+        purpose: 'purpose',
+        typeCode: 'EXCL',
+        prescribedBody: 'inclImprovements',
+        exclShareGovernmentBorders: false,
+        inclExclHectares: 2,
+        exclWhyLand: 'exclWhyLand',
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
+          type: new ApplicationDocumentCode({
+            code: DOCUMENT_TYPE.PROPOSAL_MAP,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal missing inclusion fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proposal map / site plan`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require all documents', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'EXCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of signage`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if all documents are provided', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: true,
+        typeCode: 'EXCL',
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+          type: new ApplicationDocumentCode({
+            code: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+          }),
+        }),
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+          type: new ApplicationDocumentCode({
+            code: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+          }),
+        }),
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+          type: new ApplicationDocumentCode({
+            code: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of signage`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(false);
+    });
+  });
 });
