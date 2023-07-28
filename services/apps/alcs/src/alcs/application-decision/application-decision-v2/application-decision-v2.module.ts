@@ -13,7 +13,9 @@ import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
 import { ApplicationCeoCriterionCode } from '../application-ceo-criterion/application-ceo-criterion.entity';
+import { ApplicationDecisionComponentLotController } from '../application-component-lot/application-decision-component-lot.controller';
 import { ApplicationDecisionComponentLot } from '../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionComponentLotService } from '../application-component-lot/application-decision-component-lot.service';
 import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionType } from '../application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionController } from '../application-decision-condition/application-decision-condition.controller';
@@ -85,11 +87,13 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
     ApplicationDecisionProfile,
     ApplicationDecisionComponentService,
     ApplicationDecisionConditionService,
+    ApplicationDecisionComponentLotService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,
     ApplicationDecisionComponentController,
     ApplicationDecisionConditionController,
+    ApplicationDecisionComponentLotController,
   ],
   exports: [ApplicationDecisionV2Service],
 })

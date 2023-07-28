@@ -307,8 +307,12 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private getSubdDataChange(): SubdDecisionComponentDto {
+    // return {
+    //   subdApprovedLots: this.subdApprovedLots.value ?? undefined,
+    // };
+    // TODO fix this
     return {
-      subdApprovedLots: this.subdApprovedLots.value ?? undefined,
+      subdApprovedLots: undefined,
     };
   }
 

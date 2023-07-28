@@ -21,12 +21,12 @@
       <th>ALR Area (ha)</th>
     </thead>
     <tbody>
-      <tr *ngFor="let lot of component.subdApprovedLots; let i = index">
+      <tr *ngFor="let lot of component.subdApprovedLots">
         <td>{{ lot.number }}</td>
         <td>{{ lot.type }}</td>
         <td>{{ lot.size }}</td>
         <td>
-          <app-inline-number (save)="onSaveAlrArea(i, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
+          <app-inline-number (save)="onSaveAlrArea(lot, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
         </td>
       </tr>
     </tbody>

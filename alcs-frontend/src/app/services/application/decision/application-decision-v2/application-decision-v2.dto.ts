@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
-import { ProposedLot } from '../../application.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -112,6 +111,19 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
+export interface UpdateProposedDecisionLotDto {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
+}
+
+export interface ProposedDecisionLotDto extends UpdateProposedDecisionLotDto {
+  uuid: string;
+  planNumbers: string | null;
+  number: number;
+  componentUuid: string;
+}
+
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
@@ -148,7 +160,7 @@ export interface RosoDecisionComponentDto {
 }
 
 export interface SubdDecisionComponentDto {
-  subdApprovedLots?: ProposedLot[];
+  subdApprovedLots?: ProposedDecisionLotDto[];
 }
 
 export interface DecisionComponentDto

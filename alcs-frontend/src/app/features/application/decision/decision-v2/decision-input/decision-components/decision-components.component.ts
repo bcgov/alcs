@@ -18,6 +18,7 @@ import {
   DecisionCodesDto,
   DecisionComponentDto,
   DecisionComponentTypeDto,
+  ProposedDecisionLotDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DecisionComponentComponent } from './decision-component/decision-component.component';
@@ -116,7 +117,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           applicationDecisionComponentType: this.decisionComponentTypes.find(
             (e) => e.code === typeCode && e.uiCode !== 'COPY'
           ),
-          subdApprovedLots: this.application.submittedApplication?.subdProposedLots,
+          subdApprovedLots: this.application.submittedApplication?.subdProposedLots.map(
+            (e, index) =>
+              ({
+                ...e,
+                number: index,
+              } as ProposedDecisionLotDto)
+          ),
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
