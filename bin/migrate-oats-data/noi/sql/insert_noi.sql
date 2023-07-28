@@ -127,24 +127,29 @@ WITH
         WHERE
             oo2.organization_type_cd = 'PANEL'
             OR oo3.organization_type_cd = 'PANEL'
-    ),
-    -- Step 4: Perform lookup to retrieve type code
-    application_type_lookup AS (
-        SELECT
-            oaac.alr_application_id AS application_id,
-            oacc."description" AS "description",
-            oaac.alr_change_code AS code
-        FROM
-            oats.oats_alr_appl_components AS oaac
-            JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
-            LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
-        WHERE
-            aee.component_id IS NULL
     )
 SELECT
-    oaa.alr_application_id,
-    oaac.alr_change_code
+    ng.noi_application_id :: text AS file_number,
+    CASE
+        WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
+        WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
+        ELSE 'Unknown'
+    END AS applicant,
+    ar.code AS region_code,
+    alcs_gov.gov_uuid AS local_government_uuid,
+    'oats_etl' AS audit_created_by
 FROM
-    noi_grouped noi
-    JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = noi.alr_application_id
-    JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = noi.alr_application_id
+    noi_grouped AS ng
+    -- JOIN oats.alcs_etl_application_duplicate AS ae ON oa.alr_application_id = ae.application_id
+    -- AND ae.duplicated IS false
+    LEFT JOIN applicant_lookup ON ng.noi_application_id = applicant_lookup.application_id
+    LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
+    LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
+    LEFT JOIN alcs_gov ON ng.noi_application_id = alcs_gov.application_id
+    -- SELECT
+    --     oaa.alr_application_id,
+    --     oaac.alr_change_code
+    -- FROM
+    --     noi_grouped noi
+    --     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = noi.alr_application_id
+    --     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = noi.alr_application_id
