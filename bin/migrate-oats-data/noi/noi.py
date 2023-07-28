@@ -20,7 +20,7 @@ def process_nois(conn=None, batch_size=10000):
     with conn.cursor() as cursor:
 
         with open(
-            "sql/insert_noi_count.sql", "r", encoding="utf-8"
+            "noi/sql/insert_noi_count.sql", "r", encoding="utf-8"
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -31,11 +31,11 @@ def process_nois(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_application_id = 0
 
-        with open("sql/insert_noi.sql", "r", encoding="utf-8") as sql_file:
+        with open("noi/sql/insert_noi.sql", "r", encoding="utf-8") as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE ng._noi_application_id > {last_application_id} ORDER by ng.noi_application_id;"
+                    f"{application_sql} WHERE ng.noi_application_id > {last_application_id} ORDER by ng.noi_application_id;"
                 )
                 
                 rows = cursor.fetchmany(batch_size)

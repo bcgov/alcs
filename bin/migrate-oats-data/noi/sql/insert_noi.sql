@@ -136,7 +136,10 @@ SELECT
         ELSE 'Unknown'
     END AS applicant,
     ar.code AS region_code,
-    alcs_gov.gov_uuid AS local_government_uuid,
+    CASE
+        WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
+        ELSE '001cfdad-bc6e-4d25-9294-1550603da980' --Peace River
+    END AS local_government_uuid,
     'oats_etl' AS audit_created_by
 FROM
     noi_grouped AS ng
