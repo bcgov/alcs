@@ -117,6 +117,22 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
+    if (applicationSubmission.typeCode === 'EXCL') {
+      await this.validateExclProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+
+    if (applicationSubmission.typeCode === 'INCL') {
+      await this.validateInclProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
         ? ({
@@ -656,6 +672,135 @@ export class ApplicationSubmissionValidatorService {
           `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,
         ),
       );
+    }
+  }
+
+  private async validateExclProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.prescribedBody === null ||
+      applicationSubmission.exclShareGovernmentBorders === null ||
+      applicationSubmission.exclWhyLand === null ||
+      applicationSubmission.inclExclHectares === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing exclusion fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    const proofOfAdvertising = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+    );
+    if (proofOfAdvertising.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proof of advertising`,
+        ),
+      );
+    }
+
+    const proofOfSignage = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+    );
+    if (proofOfSignage.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proof of signage`,
+        ),
+      );
+    }
+
+    const reportOfHearing = applicantDocuments.filter(
+      (document) =>
+        document.typeCode === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+    );
+    if (reportOfHearing.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing report of public hearing`,
+        ),
+      );
+    }
+  }
+
+  private async validateInclProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.inclImprovements === null ||
+      applicationSubmission.inclAgricultureSupport === null ||
+      applicationSubmission.inclExclHectares === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing inclusion fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.inclGovernmentOwnsAllParcels === false) {
+      const proofOfAdvertising = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+      );
+      if (proofOfAdvertising.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing proof of advertising`,
+          ),
+        );
+      }
+
+      const proofOfSignage = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+      );
+      if (proofOfSignage.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing proof of signage`,
+          ),
+        );
+      }
+
+      const reportOfHearing = applicantDocuments.filter(
+        (document) =>
+          document.typeCode === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+      );
+      if (reportOfHearing.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing report of public hearing`,
+          ),
+        );
+      }
     }
   }
 }

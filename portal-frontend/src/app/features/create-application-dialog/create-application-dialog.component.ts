@@ -64,7 +64,7 @@ export class CreateApplicationDialogComponent implements OnInit, AfterViewChecke
   }
 
   async onSubmit() {
-    if (this.selectedAppType! && ['INCL', 'EXCL'].includes(this.selectedAppType!.code)) {
+    if (this.selectedAppType && this.selectedAppType.code === 'EXCL') {
       this.currentStepIndex++;
     } else {
       await this.createApplication();
