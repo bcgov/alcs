@@ -116,8 +116,6 @@ export class DecisionComponentComponent implements OnInit {
           this.patchSubdFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
-          this.patchInclExclFields();
-          break;
         case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
           this.patchInclExclFields();
           break;
@@ -186,8 +184,6 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getSubdDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
-        dataChange = { ...dataChange, ...this.getInclExclDataChange() };
-        break;
       case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
         dataChange = { ...dataChange, ...this.getInclExclDataChange() };
         break;
