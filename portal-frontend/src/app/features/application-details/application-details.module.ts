@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../shared/shared.module';
 import { ApplicationDetailsComponent } from './application-details.component';
+import { InclDetailsComponent } from './incl-details/incl-details.component';
 import { NaruDetailsComponent } from './naru-details/naru-details.component';
 import { NfuDetailsComponent } from './nfu-details/nfu-details.component';
 import { ParcelComponent } from './parcel/parcel.component';
@@ -25,6 +26,7 @@ import { ExclDetailsComponent } from './excl-details/excl-details.component';
     PfrsDetailsComponent,
     NaruDetailsComponent,
     ExclDetailsComponent,
+    InclDetailsComponent,
   ],
   imports: [CommonModule, SharedModule, NgxMaskPipe],
   exports: [ApplicationDetailsComponent],

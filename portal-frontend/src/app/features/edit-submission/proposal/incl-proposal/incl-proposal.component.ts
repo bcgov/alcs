@@ -16,6 +16,14 @@ import { EditApplicationSteps } from '../../edit-submission.component';
 import { takeUntil } from 'rxjs';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 
+interface InclForm {
+  hectares: FormControl<string | null>;
+  purpose: FormControl<string | null>;
+  agSupport: FormControl<string | null>;
+  improvements: FormControl<string | null>;
+  isLFNGOwnerOfAllParcels?: FormControl<string | null | undefined>;
+}
+
 @Component({
   selector: 'app-incl-proposal',
   templateUrl: './incl-proposal.component.html',
@@ -35,7 +43,7 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
   improvements = new FormControl<string | null>(null, [Validators.required]);
   governmentOwnsAllParcels = new FormControl<string | undefined>(undefined, [Validators.required]);
 
-  form = new FormGroup({
+  form = new FormGroup<InclForm>({
     hectares: this.hectares,
     purpose: this.purpose,
     agSupport: this.agSupport,
@@ -74,6 +82,7 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
             formatBooleanToString(applicationSubmission.inclGovernmentOwnsAllParcels)
           );
           this.disableNotificationFileUploads = applicationSubmission.inclGovernmentOwnsAllParcels;
+          this.form.setControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
         }
 
         if (this.showErrors) {
@@ -98,8 +107,7 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
         this.isGovernmentUser = userProfile?.isLocalGovernment || userProfile?.isFirstNationGovernment;
         this.governmentName = userProfile.government;
 
-        // @ts-ignore Angular / Typescript hate dynamic controls
-        this.form.addControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
+        this.form.setControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
       }
     });
   }

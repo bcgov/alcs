@@ -303,6 +303,15 @@
     [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-excl-details>
+  <app-incl-details
+    *ngIf="applicationSubmission.typeCode === 'INCL'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-incl-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>
