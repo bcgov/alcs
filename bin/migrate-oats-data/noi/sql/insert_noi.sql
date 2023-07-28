@@ -1,4 +1,5 @@
 WITH
+    -- Step 1: filter out multiple component NOIs
     noi_grouped AS (
         SELECT
             oaac.alr_application_id as noi_application_id
@@ -10,8 +11,9 @@ WITH
         GROUP BY
             oaac.alr_application_id
         HAVING
-            count(oaac.alr_application_id) < 2 -- ignore all applications wit multiple components
+            count(oaac.alr_application_id) < 2
     ),
+    -- Step 2: get applicant 
     applicant_lookup AS (
         SELECT DISTINCT
             oaap.alr_application_id AS application_id,
@@ -37,7 +39,7 @@ WITH
         GROUP BY
             oaap.alr_application_id
     ),
-    -- Step 2: get local gov application name & match to uuid
+    -- Step 3: get local gov application name & match to uuid
     oats_gov AS (
         SELECT
             oaap.alr_application_id AS application_id,
@@ -109,7 +111,7 @@ WITH
                 END
             ) = alg."name"
     ),
-    -- Step 3: Perform a lookup to retrieve the region code for each application ID
+    -- Step 4: Perform a lookup to retrieve the region code for each application ID
     panel_lookup AS (
         SELECT DISTINCT
             oaap.alr_application_id AS application_id,
@@ -138,13 +140,11 @@ SELECT
     ar.code AS region_code,
     CASE
         WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
-        ELSE '001cfdad-bc6e-4d25-9294-1550603da980' --Peace River
+        ELSE '001cfdad-bc6e-4d25-9294-1550603da980' --Peace River if unable to find uuid
     END AS local_government_uuid,
     'oats_etl' AS audit_created_by
 FROM
     noi_grouped AS ng
-    -- JOIN oats.alcs_etl_application_duplicate AS ae ON oa.alr_application_id = ae.application_id
-    -- AND ae.duplicated IS false
     LEFT JOIN applicant_lookup ON ng.noi_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
     LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"

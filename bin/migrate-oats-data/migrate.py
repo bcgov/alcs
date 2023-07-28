@@ -234,6 +234,19 @@ if __name__ == "__main__":
                     )
 
                     process_nois(batch_size=import_batch_size)
+            case "application-import":
+                console.log("Beginning OATS -> ALCS application import process")
+                with console.status(
+                    "[bold green]application import (application table update in ALCS)..."
+                ) as status:
+                    if args.batch_size:
+                        import_batch_size = args.batch_size
+
+                    console.log(
+                        f"Processing applications import in batch size = {import_batch_size}"
+                    )
+
+                    process_applications(batch_size=import_batch_size)
 
     finally:
         if connection_pool:
