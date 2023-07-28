@@ -205,8 +205,8 @@ export class ApplicationSubmissionReviewController {
     }
 
     if (
-      primaryContact &&
-      primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT
+      userLocalGovernment.uuid === applicationSubmission.localGovernmentUuid &&
+      primaryContact
     ) {
       //Copy contact details over to government form
       await this.applicationSubmissionReviewService.update(

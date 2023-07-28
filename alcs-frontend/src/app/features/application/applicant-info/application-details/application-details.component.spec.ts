@@ -29,6 +29,7 @@ describe('ApplicationDetailsComponent', () => {
     component = fixture.componentInstance;
     component.submission = {
       exclShareGovernmentBorders: null,
+      inclGovernmentOwnsAllParcels: null,
       exclWhyLand: null,
       inclAgricultureSupport: null,
       inclExclHectares: null,

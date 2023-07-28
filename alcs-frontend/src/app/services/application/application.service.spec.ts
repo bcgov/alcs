@@ -23,6 +23,7 @@ describe('ApplicationService', () => {
       uuid: '',
       name: '',
       preferredRegionCode: '',
+      isFirstNation: false,
     },
     paused: false,
     pausedDays: 0,

@@ -1,4 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { AuthenticationService } from '../../../../services/authentication/authentication.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
+import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { FilesStepComponent } from '../../files-step.partial';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
@@ -19,13 +23,17 @@ import { ApplicationSubmissionUpdateDto } from '../../../../services/application
 })
 export class InclProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   DOCUMENT = DOCUMENT_TYPE;
-
   currentStep = EditApplicationSteps.Proposal;
+  private submissionUuid = '';
+  isGovernmentUser = false;
+  governmentName? = '';
+  disableNotificationFileUploads = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   agSupport = new FormControl<string | null>(null, [Validators.required]);
   improvements = new FormControl<string | null>(null, [Validators.required]);
+  governmentOwnsAllParcels = new FormControl<string | undefined>(undefined, [Validators.required]);
 
   form = new FormGroup({
     hectares: this.hectares,
@@ -33,11 +41,15 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
     agSupport: this.agSupport,
     improvements: this.improvements,
   });
-  private submissionUuid = '';
+
   proposalMap: ApplicationDocumentDto[] = [];
+  noticeOfPublicHearing: ApplicationDocumentDto[] = [];
+  proofOfSignage: ApplicationDocumentDto[] = [];
+  reportOfPublicHearing: ApplicationDocumentDto[] = [];
 
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
+    private authenticationService: AuthenticationService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog
   ) {
@@ -57,6 +69,13 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
           improvements: applicationSubmission.inclImprovements,
         });
 
+        if (applicationSubmission.inclGovernmentOwnsAllParcels !== null) {
+          this.governmentOwnsAllParcels.setValue(
+            formatBooleanToString(applicationSubmission.inclGovernmentOwnsAllParcels)
+          );
+          this.disableNotificationFileUploads = applicationSubmission.inclGovernmentOwnsAllParcels;
+        }
+
         if (this.showErrors) {
           this.form.markAllAsTouched();
         }
@@ -65,6 +84,23 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
 
     this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+      this.noticeOfPublicHearing = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_ADVERTISING
+      );
+      this.proofOfSignage = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
+      this.reportOfPublicHearing = documents.filter(
+        (document) => document.type?.code === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING
+      );
+    });
+
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((userProfile) => {
+      if (userProfile) {
+        this.isGovernmentUser = userProfile?.isLocalGovernment || userProfile?.isFirstNationGovernment;
+        this.governmentName = userProfile.government;
+
+        // @ts-ignore Angular / Typescript hate dynamic controls
+        this.form.addControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
+      }
     });
   }
 
@@ -78,16 +114,22 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
       const purpose = this.purpose.value;
       const inclAgricultureSupport = this.agSupport.value;
       const inclImprovements = this.improvements.value;
+      const inclGovernmentOwnsAllParcels = this.governmentOwnsAllParcels.value;
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         inclExclHectares: inclExclHectares ? parseFloat(inclExclHectares) : null,
         purpose,
         inclAgricultureSupport,
         inclImprovements,
+        inclGovernmentOwnsAllParcels: parseStringToBoolean(inclGovernmentOwnsAllParcels),
       };
 
       const updatedApp = await this.applicationSubmissionService.updatePending(this.submissionUuid, updateDto);
       this.$applicationSubmission.next(updatedApp);
     }
+  }
+
+  onSelectLocalGovernmentParcelOwner($event: MatButtonToggleChange) {
+    this.disableNotificationFileUploads = $event.value === 'true';
   }
 }

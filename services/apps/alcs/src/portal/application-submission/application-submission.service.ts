@@ -77,9 +77,7 @@ export class ApplicationSubmissionService {
         fileNumber,
         isDraft: false,
       },
-      relations: {
-        naruSubtype: true,
-      },
+      relations: this.DEFAULT_RELATIONS,
     });
     if (!application) {
       throw new Error('Failed to find document');
@@ -968,6 +966,10 @@ export class ApplicationSubmissionService {
     applicationSubmission.exclShareGovernmentBorders = filterUndefined(
       updateDto.exclShareGovernmentBorders,
       applicationSubmission.exclShareGovernmentBorders,
+    );
+    applicationSubmission.inclGovernmentOwnsAllParcels = filterUndefined(
+      updateDto.inclGovernmentOwnsAllParcels,
+      applicationSubmission.inclGovernmentOwnsAllParcels,
     );
   }
 

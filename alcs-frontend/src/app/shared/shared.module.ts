@@ -40,6 +40,7 @@ import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
 import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
+import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-applicant-type.component';
 import { InlineBooleanComponent } from './inline-editors/inline-boolean/inline-boolean.component';
 import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/inline-datepicker.component';
 import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
@@ -47,6 +48,7 @@ import { InlineNumberComponent } from './inline-editors/inline-number/inline-num
 import { InlineReviewOutcomeComponent } from './inline-editors/inline-review-outcome/inline-review-outcome.component';
 import { InlineTextComponent } from './inline-editors/inline-text/inline-text.component';
 import { InlineTextareaComponent } from './inline-editors/inline-textarea/inline-textarea.component';
+import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
 import { LotsTableFormComponent } from './lots-table/lots-table-form.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { NoDataComponent } from './no-data/no-data.component';
@@ -71,6 +73,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MomentPipe,
     StartOfDayPipe,
     MeetingOverviewComponent,
+    InlineApplicantTypeComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
@@ -94,6 +97,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     ErrorMessageComponent,
     LotsTableFormComponent,
+    InlineNgSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -117,6 +121,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     RouterModule,
     MatDatepickerModule,
     MatDialogModule,
+    NgSelectModule,
   ],
   exports: [
     CommonModule,
@@ -145,11 +150,13 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
+    InlineApplicantTypeComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
     InlineTextComponent,
     InlineDropdownComponent,
+    InlineNgSelectComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     DetailsHeaderComponent,
