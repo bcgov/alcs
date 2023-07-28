@@ -115,6 +115,7 @@ export class ApplicationDecisionV2Service {
         components: {
           applicationDecisionComponentType: true,
           naruSubtype: true,
+          lots: true,
         },
         conditions: {
           type: true,

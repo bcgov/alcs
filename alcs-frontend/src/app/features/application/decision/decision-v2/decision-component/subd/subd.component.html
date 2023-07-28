@@ -22,7 +22,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let lot of component.subdApprovedLots; let i = index">
-        <td>{{ i + 1 }}</td>
+        <td>{{ lot.number }}</td>
         <td>{{ lot.type }}</td>
         <td>{{ lot.size }}</td>
         <td>

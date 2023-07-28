@@ -52,6 +52,8 @@ export interface ProposedLot {
   size: number | null;
   alrArea?: number | null;
   planNumbers: string | null;
+  number: number;
+  componentUuid: string;
 }
 
 export interface ApplicationReviewDto {

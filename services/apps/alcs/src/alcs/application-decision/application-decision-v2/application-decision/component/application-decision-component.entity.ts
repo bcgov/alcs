@@ -1,9 +1,17 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, Index, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
 import { ProposedLot } from '../../../../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
+import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
 import { ApplicationDecisionCondition } from '../../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
@@ -219,4 +227,8 @@ export class ApplicationDecisionComponent extends Base {
     (condition) => condition.components,
   )
   conditions: ApplicationDecisionCondition[];
+
+  @AutoMap(() => [ApplicationDecisionComponentLot])
+  @OneToMany(() => ApplicationDecisionComponentLot, (lot) => lot.component)
+  lots: ApplicationDecisionComponentLot[];
 }

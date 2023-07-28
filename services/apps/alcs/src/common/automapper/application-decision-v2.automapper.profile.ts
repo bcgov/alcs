@@ -12,6 +12,8 @@ import { ApplicationDecisionDocument } from '../../alcs/application-decision/app
 import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/application-decision/application-decision-outcome-type/application-decision-outcome-type.entity';
 
+import { ApplicationDecisionComponentLotDto } from '../../alcs/application-decision/application-component-lot/application-decision-component-lot.dto';
+import { ApplicationDecisionComponentLot } from '../../alcs/application-decision/application-component-lot/application-decision-component-lot.entity';
 import { ApplicationDecisionMakerCodeDto } from '../../alcs/application-decision/application-decision-maker/decision-maker.dto';
 import { ApplicationDecisionOutcomeCode } from '../../alcs/application-decision/application-decision-outcome.entity';
 import {
@@ -46,6 +48,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecision,
         ApplicationDecisionDto,
+        forMember(
+          (ad) => ad.documents,
+          mapFrom((a) =>
+            this.mapper.mapArray(
+              a.documents || [],
+              ApplicationDecisionDocument,
+              DecisionDocumentDto,
+            ),
+          ),
+        ),
         forMember(
           (ad) => ad.documents,
           mapFrom((a) =>
@@ -170,6 +182,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto),
           ),
         ),
+        forMember(
+          (ad) => ad.subdApprovedLots,
+          mapFrom((a) =>
+            a.lots
+              ? this.mapper.mapArray(
+                  a.lots,
+                  ApplicationDecisionComponentLot,
+                  ApplicationDecisionComponentLotDto,
+                )
+              : [],
+          ),
+        ),
       );
       createMap(
         mapper,
@@ -280,6 +304,16 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         LinkedResolutionOutcomeType,
         LinkedResolutionOutcomeTypeDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionComponentLot,
+        ApplicationDecisionComponentLotDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
+        ),
       );
     };
   }

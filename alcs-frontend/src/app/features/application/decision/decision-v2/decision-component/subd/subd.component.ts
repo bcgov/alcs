@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationDecisionComponentService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
