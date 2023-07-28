@@ -113,7 +113,7 @@ def oats_gov():
                 """
     return query
 
-def alcs_gov():
+def alcs_gov(oats_gov_data):
     query = """
                     SELECT
                         oats_gov.application_id AS application_id,

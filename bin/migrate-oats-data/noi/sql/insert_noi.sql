@@ -19,3 +19,7 @@ FROM
     noi_grouped noi
     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = noi.alr_application_id
     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = noi.alr_application_id
+    JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
+    JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
+WHERE
+    oo.organization_type_cd IN ('MUNI', 'FN', 'RD')
