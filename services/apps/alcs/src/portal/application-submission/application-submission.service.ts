@@ -162,6 +162,10 @@ export class ApplicationSubmissionService {
     applicationSubmission.returnedComment = updateDto.returnedComment;
     applicationSubmission.hasOtherParcelsInCommunity =
       updateDto.hasOtherParcelsInCommunity;
+    applicationSubmission.prescribedBody = filterUndefined(
+      updateDto.prescribedBody,
+      updateDto.prescribedBody,
+    );
 
     this.setLandUseFields(applicationSubmission, updateDto);
     this.setNFUFields(applicationSubmission, updateDto);
