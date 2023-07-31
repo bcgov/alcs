@@ -14,7 +14,7 @@
           {{ file.fileSize | filesize }}
           <span class="file-size-parentheses">)</span>
         </div>
-        <button [disabled]="disabled" mat-button aria-label="Remove File" (click)="_deleteFile(file)">
+        <button mat-button aria-label="Remove File" (click)="_deleteFile(file)">
           <mat-icon>close</mat-icon>
           REMOVE
         </button>

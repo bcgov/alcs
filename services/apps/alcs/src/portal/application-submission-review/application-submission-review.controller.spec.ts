@@ -209,22 +209,26 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should update the applications status when calling create', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
+
+    const user = new User({
+      bceidBusinessGuid: 'id',
+    });
+
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         owners: [],
+        createdBy: user,
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
 
     await controller.create(fileNumber, {
       user: {
-        entity: new User({
-          bceidBusinessGuid: 'id',
-        }),
+        entity: user,
       },
     });
 
-    expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
+    expect(mockLGService.getByGuid).toHaveBeenCalledTimes(2);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
       mockAppSubmissionService.getForGovernmentByFileId,
@@ -238,6 +242,11 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should send an email through the service when creating with a valid primary contact', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
+
+    const user = new User({
+      bceidBusinessGuid: 'id',
+    });
+
     mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
       new ApplicationSubmission({
         owners: [
@@ -248,6 +257,7 @@ describe('ApplicationSubmissionReviewController', () => {
           }),
         ],
         primaryContactOwnerUuid: 'uuid',
+        createdBy: user,
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
@@ -261,14 +271,12 @@ describe('ApplicationSubmissionReviewController', () => {
 
     await controller.create(fileNumber, {
       user: {
-        entity: new User({
-          bceidBusinessGuid: 'id',
-        }),
+        entity: user,
       },
     });
 
     expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
-    expect(mockLGService.getByGuid).toHaveBeenCalledTimes(1);
+    expect(mockLGService.getByGuid).toHaveBeenCalledTimes(2);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
       mockAppSubmissionService.getForGovernmentByFileId,
