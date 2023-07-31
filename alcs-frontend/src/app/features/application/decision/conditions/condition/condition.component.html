@@ -57,12 +57,19 @@
 
   <div *ngIf="isRequireSurveyPlan">
     <div>Survey Plans</div>
+    <ng-container *ngFor="let plan of planNumbers">
+      <app-inline-text
+        [value]="plan.planNumbers ?? undefined"
+        (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
+      ></app-inline-text>
+    </ng-container>
+
     <div *ngIf="subdComponent !== undefined" class="parcel-table">
       <div class="subheading2">#</div>
       <div class="subheading2">Type</div>
       <div class="subheading2">Size (ha)</div>
       <div class="subheading2">Plan numbers</div>
-      <ng-container *ngFor="let lot of subdComponent.subdApprovedLots; let i = index">
+      <ng-container *ngFor="let lot of subdComponent.lots; let i = index">
         <div>
           {{ lot.number }}
         </div>
@@ -73,7 +80,10 @@
           {{ lot.size }}
         </div>
         <div>
-          <app-inline-text [value]="lot.planNumbers ?? undefined" (save)="savePlanNumbers(i, $event)"></app-inline-text>
+          <app-inline-text
+            [value]="lot.planNumbers ?? undefined"
+            (save)="savePlanNumbers(lot.uuid, condition.uuid, $event)"
+          ></app-inline-text>
         </div>
       </ng-container>
     </div>

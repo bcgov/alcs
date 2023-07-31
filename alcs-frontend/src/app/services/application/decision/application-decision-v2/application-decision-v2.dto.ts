@@ -117,6 +117,7 @@ export interface UpdateProposedDecisionLotDto {
   alrArea?: number | null;
 }
 
+// TODO remove planNUmbers from this dto and move to the component
 export interface ProposedDecisionLotDto {
   ///  extends UpdateProposedDecisionLotDto
   uuid: string;
@@ -239,4 +240,16 @@ export interface UpdateApplicationDecisionConditionDto {
   completionDate?: number | null;
   supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+}
+
+export interface ApplicationDecisionComponentToConditionLotDto {
+  componentLotUuid: string;
+  conditionUuid: string;
+  planNumbers: string | null;
+}
+
+export interface ApplicationDecisionComponentToConditionDto {
+  applicationDecisionComponentUuid: string;
+  applicationDecisionConditionUuid: string;
+  planNumbers: string | null;
 }

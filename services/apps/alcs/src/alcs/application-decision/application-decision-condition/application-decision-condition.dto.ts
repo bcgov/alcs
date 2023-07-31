@@ -101,3 +101,21 @@ export class UpdateApplicationDecisionConditionServiceDto {
   completionDate?: Date | null;
   supersededDate?: Date | null;
 }
+
+export class ApplicationDecisionConditionComponentDto {
+  applicationDecisionConditionUuid: string;
+  applicationDecisionComponentUuid: string;
+  planNumbers: string | null;
+}
+
+export class UpdateApplicationDecisionConditionComponentDto {
+  @IsString()
+  applicationDecisionConditionUuid: string;
+
+  @IsString()
+  applicationDecisionComponentUuid: string;
+
+  @IsString()
+  @IsOptional()
+  planNumbers: string | null;
+}

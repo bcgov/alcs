@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationDecisionConditionComponent } from '../application-decision-component-to-condition/application-decision-component-to-condition.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
@@ -17,6 +18,8 @@ export class ApplicationDecisionConditionService {
     private repository: Repository<ApplicationDecisionCondition>,
     @InjectRepository(ApplicationDecisionConditionType)
     private typeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(ApplicationDecisionConditionComponent)
+    private conditionComponentRepository: Repository<ApplicationDecisionConditionComponent>,
   ) {}
 
   async getOneOrFail(uuid: string) {
@@ -116,5 +119,36 @@ export class ApplicationDecisionConditionService {
   ) {
     await this.repository.update(existingCondition.uuid, updates);
     return await this.getOneOrFail(existingCondition.uuid);
+  }
+
+  async getPlanNumbers(uuid: string) {
+    return await this.conditionComponentRepository.findBy({
+      applicationDecisionConditionUuid: uuid,
+    });
+  }
+
+  async updateConditionPlanNumbers(
+    conditionUuid: string,
+    componentUuid: string,
+    planNumbers: string | null,
+  ) {
+    console.log(
+      'updateConditionPlanNumbers',
+      conditionUuid,
+      componentUuid,
+      planNumbers,
+    );
+
+    const conditionToComponent =
+      await this.conditionComponentRepository.findOneByOrFail({
+        applicationDecisionComponentUuid: componentUuid,
+        applicationDecisionConditionUuid: conditionUuid,
+      });
+
+    conditionToComponent.planNumbers = planNumbers;
+
+    console.log('after updateConditionPlanNumbers', conditionToComponent);
+
+    this.conditionComponentRepository.save(conditionToComponent);
   }
 }

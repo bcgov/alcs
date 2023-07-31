@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
-import { ApplicationDecisionComponentService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
+import { ApplicationDecisionComponentToConditionLotService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component-to-condition-lot/application-decision-component-to-condition-lot.service';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import {
+  ApplicationDecisionComponentToConditionDto,
   DecisionComponentDto,
+  ProposedDecisionLotDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
@@ -38,10 +40,11 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   conditionStatus: string = '';
   isRequireSurveyPlan = false;
   subdComponent?: DecisionComponentDto;
+  planNumbers: ApplicationDecisionComponentToConditionDto[] = [];
 
   constructor(
     private conditionService: ApplicationDecisionConditionService,
-    private componentService: ApplicationDecisionComponentService
+    private conditionLotService: ApplicationDecisionComponentToConditionLotService
   ) {}
 
   ngOnInit() {
@@ -53,10 +56,35 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       };
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
-      if (this.condition.components) {
-        debugger
-        this.subdComponent = this.condition.components.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
+      this.loadLots();
+      this.loadPlanNumber();
+    }
+  }
+
+  async loadLots() {
+    if (this.condition.components) {
+      const subdComponent = this.condition.components.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
+      if (subdComponent && subdComponent.uuid) {
+        const planNumbers = await this.conditionLotService.fetchConditionLots(this.condition.uuid, subdComponent.uuid);
+        subdComponent.lots = subdComponent.lots?.map(
+          (l) =>
+            ({
+              ...l,
+              planNumbers: planNumbers.find((p) => p.componentLotUuid === l.uuid)?.planNumbers,
+            } as ProposedDecisionLotDto)
+        );
+        this.subdComponent = subdComponent;
       }
+    }
+  }
+
+  async loadPlanNumber() {
+    if (
+      this.condition.components &&
+      this.condition.components.some((e) => e.applicationDecisionComponentTypeCode !== 'SUBD') &&
+      this.isRequireSurveyPlan
+    ) {
+      this.planNumbers = await this.conditionService.fetchPlanNumbers(this.condition.uuid);
     }
   }
 
@@ -108,15 +136,15 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async savePlanNumbers(index: number, planNumbers: string | null) {
-    if (this.subdComponent && this.subdComponent.uuid && this.subdComponent?.subdApprovedLots) {
-      const lots = this.subdComponent?.subdApprovedLots;
-      lots[index].planNumbers = planNumbers ?? null;
-      await this.componentService.update(this.subdComponent.uuid, {
-        uuid: this.subdComponent.uuid,
-        subdApprovedLots: lots,
-        applicationDecisionComponentTypeCode: this.subdComponent.applicationDecisionComponentTypeCode,
-      });
+  async savePlanNumbers(lotUuid: string, conditionUuid: string, planNumbers: string | null) {
+    if (this.subdComponent && this.subdComponent.uuid && this.subdComponent?.lots) {
+      await this.conditionLotService.update(lotUuid, conditionUuid, planNumbers);
+    }
+  }
+
+  async updateConditionPlanNumbers(conditionUuid: string, componentUuid: string, $value: string | null) {
+    if (this.isRequireSurveyPlan) {
+      this.conditionService.updatePlanNumbers(conditionUuid, componentUuid, $value);
     }
   }
 }

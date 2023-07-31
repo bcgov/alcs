@@ -119,7 +119,9 @@ export class ApplicationDecisionV2Service {
         },
         conditions: {
           type: true,
-          components: true,
+          components: {
+            lots: true,
+          },
         },
       },
     });

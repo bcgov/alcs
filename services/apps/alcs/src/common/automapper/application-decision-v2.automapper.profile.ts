@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
 import {
+  ApplicationDecisionConditionComponentDto,
   ApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition.dto';
@@ -35,6 +36,9 @@ import { ApplicationDecision } from '../../alcs/application-decision/application
 import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
 import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/application-decision/application-condition-to-component-lot/application-condition-to-component-lot.controller.dto';
+import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponent } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -326,6 +330,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           (a) => a.type,
           mapFrom((ac) => ac.type),
         ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionToComponentLot,
+        ApplicationDecisionConditionToComponentLotDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionComponent,
+        ApplicationDecisionConditionComponentDto,
       );
     };
   }
