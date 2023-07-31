@@ -186,7 +186,7 @@ export class ApplicationSubmissionService {
       );
     }
 
-    return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
+    return this.getOrFailByUuid(submissionUuid);
   }
 
   async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {

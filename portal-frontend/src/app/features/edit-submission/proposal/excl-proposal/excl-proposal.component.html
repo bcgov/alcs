@@ -125,6 +125,7 @@
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
+        [allowMultiple]="true"
         [isRequired]="true"
       ></app-file-drag-drop>
     </div>
@@ -137,7 +138,9 @@
     and correct before downloading the PDF of the application (Step 8 of this application form will flag outstanding
     fields).
   </p>
-  <app-info-banner> Please refer to Exclusion page on the ALC website for more information. </app-info-banner>
+  <app-info-banner>
+    Please refer to <a>FIXME: Exclusion</a> page on the ALC website for more information.
+  </app-info-banner>
   <button mat-flat-button color="accent">Download PDF</button>
   <app-warning-banner>
     You will not be able to complete the remaining portion of the application until the notification and public hearing
@@ -157,6 +160,7 @@
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
+          [allowMultiple]="true"
           [isRequired]="true"
         ></app-file-drag-drop>
       </div>
@@ -174,6 +178,7 @@
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="true"
+          [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -187,6 +192,7 @@
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="true"
+          [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
     </div>

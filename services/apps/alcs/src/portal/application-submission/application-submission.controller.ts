@@ -141,13 +141,13 @@ export class ApplicationSubmissionController {
         req.user.entity,
       );
 
-    const application = await this.applicationSubmissionService.update(
+    const updatedSubmission = await this.applicationSubmissionService.update(
       submission.uuid,
       updateDto,
     );
 
     return await this.applicationSubmissionService.mapToDetailedDTO(
-      application,
+      updatedSubmission,
       req.user.entity,
     );
   }

@@ -105,7 +105,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
         const fileId = paramMap.get('fileId');
-        if (fileId && !this.applicationSubmission) {
+        if (fileId) {
           this.loadApplication(fileId).then(() => {
             const stepInd = paramMap.get('stepInd');
             const parcelUuid = queryParamMap.get('parcelUuid');
@@ -138,16 +138,18 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     this.$destroy.complete();
   }
 
-  private async loadApplication(fileId: string) {
-    this.overlayService.showSpinner();
-    this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
-    const documents = await this.applicationDocumentService.getByFileId(fileId);
-    if (documents) {
-      this.$applicationDocuments.next(documents);
+  private async loadApplication(fileId: string, reload = false) {
+    if (!this.applicationSubmission || reload) {
+      this.overlayService.showSpinner();
+      this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
+      const documents = await this.applicationDocumentService.getByFileId(fileId);
+      if (documents) {
+        this.$applicationDocuments.next(documents);
+      }
+      this.fileId = fileId;
+      this.$applicationSubmission.next(this.applicationSubmission);
+      this.overlayService.hideSpinner();
     }
-    this.fileId = fileId;
-    this.$applicationSubmission.next(this.applicationSubmission);
-    this.overlayService.hideSpinner();
   }
 
   async onApplicationTypeChangeClicked() {
@@ -165,7 +167,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
         .beforeClosed()
         .subscribe((result) => {
           if (result) {
-            this.loadApplication(this.fileId);
+            this.loadApplication(this.fileId, true);
           }
         });
     }

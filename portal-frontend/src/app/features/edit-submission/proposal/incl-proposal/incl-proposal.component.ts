@@ -21,7 +21,7 @@ interface InclForm {
   purpose: FormControl<string | null>;
   agSupport: FormControl<string | null>;
   improvements: FormControl<string | null>;
-  isLFNGOwnerOfAllParcels?: FormControl<string | null | undefined>;
+  governmentOwnsAllParcels?: FormControl<string | null | undefined>;
 }
 
 @Component({
@@ -33,7 +33,7 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
   DOCUMENT = DOCUMENT_TYPE;
   currentStep = EditApplicationSteps.Proposal;
   private submissionUuid = '';
-  isGovernmentUser = false;
+  showGovernmentQuestions = false;
   governmentName? = '';
   disableNotificationFileUploads = false;
 
@@ -78,11 +78,12 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
         });
 
         if (applicationSubmission.inclGovernmentOwnsAllParcels !== null) {
+          this.showGovernmentQuestions = true;
           this.governmentOwnsAllParcels.setValue(
             formatBooleanToString(applicationSubmission.inclGovernmentOwnsAllParcels)
           );
           this.disableNotificationFileUploads = applicationSubmission.inclGovernmentOwnsAllParcels;
-          this.form.setControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
+          this.form.setControl('governmentOwnsAllParcels', this.governmentOwnsAllParcels);
         }
 
         if (this.showErrors) {
@@ -104,10 +105,15 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
 
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((userProfile) => {
       if (userProfile) {
-        this.isGovernmentUser = userProfile?.isLocalGovernment || userProfile?.isFirstNationGovernment;
+        this.showGovernmentQuestions =
+          this.showGovernmentQuestions || userProfile?.isLocalGovernment || userProfile?.isFirstNationGovernment;
         this.governmentName = userProfile.government;
-
-        this.form.setControl('isLFNGOwnerOfAllParcels', this.governmentOwnsAllParcels);
+        if (this.showGovernmentQuestions) {
+          this.form.setControl('governmentOwnsAllParcels', this.governmentOwnsAllParcels);
+          if (this.showErrors) {
+            this.form.markAllAsTouched();
+          }
+        }
       }
     });
   }
