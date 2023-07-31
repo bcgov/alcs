@@ -55,7 +55,7 @@
     </div>
 
     <ng-container *ngIf="stepIdx === prescribedBodyStep">
-      <app-presribed-body (select)="onSelectPrescribedBody($event)"></app-presribed-body>
+      <app-presribed-body [value]="prescribedBody" (select)="onSelectPrescribedBody($event)"></app-presribed-body>
     </ng-container>
   </div>
 </div>
@@ -68,14 +68,7 @@
 
   <div *ngIf="stepIdx === applicationTypeStep" class="dialog-controls-wrapper">
     <button mat-stroked-button color="primary" (click)="back()">back</button>
-    <button
-      mat-flat-button
-      color="primary"
-      [disabled]="!selectedAppType"
-      (click)="next()"
-    >
-      update
-    </button>
+    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
   </div>
 
   <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">

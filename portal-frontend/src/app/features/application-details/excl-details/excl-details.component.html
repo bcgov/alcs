@@ -58,25 +58,31 @@
 
   <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
   <div class="grid-double">
-    <a *ngFor="let file of noticeOfPublicHearing" (click)="openFile(file.uuid)">
-      {{ file.fileName }}
-    </a>
+    <div *ngFor="let file of noticeOfPublicHearing">
+      <a (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+    </div>
     <app-no-data [showRequired]="showErrors" *ngIf="noticeOfPublicHearing.length === 0"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Proof of Signage</div>
   <div class="grid-double">
-    <a *ngFor="let file of proofOfSignage" (click)="openFile(file.uuid)">
-      {{ file.fileName }}
-    </a>
+    <div *ngFor="let file of proofOfSignage">
+      <a (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+    </div>
     <app-no-data [showRequired]="showErrors" *ngIf="proofOfSignage.length === 0"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Report of Public Hearing</div>
   <div class="grid-double">
-    <a *ngFor="let file of reportOfPublicHearing" (click)="openFile(file.uuid)">
-      {{ file.fileName }}
-    </a>
+    <div *ngFor="let file of reportOfPublicHearing">
+      <a (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+    </div>
     <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
   </div>
 

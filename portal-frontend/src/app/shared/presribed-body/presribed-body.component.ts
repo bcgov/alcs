@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 const FIRST_NATION = 'First Nation Government';
@@ -10,6 +10,7 @@ const LOCAL = 'Local Government';
   styleUrls: ['./presribed-body.component.scss'],
 })
 export class PresribedBodyComponent implements OnInit {
+  @Input() value: string | undefined;
   @Output() select = new EventEmitter<string>();
 
   PRESCRIBED_BODIES = [
@@ -40,6 +41,8 @@ export class PresribedBodyComponent implements OnInit {
       enabled: true,
       selected: false,
     }));
+
+    this.selectedValue = this.value;
 
     this.authenticationService.$currentProfile.subscribe((profile) => {
       if (profile && profile.government) {
