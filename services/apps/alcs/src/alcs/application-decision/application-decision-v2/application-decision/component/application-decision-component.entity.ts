@@ -198,6 +198,7 @@ export class ApplicationDecisionComponent extends Base {
   @ManyToOne(() => NaruSubtype)
   naruSubtype: NaruSubtype;
 
+  // TODO remove this
   @AutoMap(() => [ProposedLot])
   @Column({
     comment: 'JSONB Column containing the approved subdivision lots',
@@ -229,6 +230,8 @@ export class ApplicationDecisionComponent extends Base {
   conditions: ApplicationDecisionCondition[];
 
   @AutoMap(() => [ApplicationDecisionComponentLot])
-  @OneToMany(() => ApplicationDecisionComponentLot, (lot) => lot.component)
+  @OneToMany(() => ApplicationDecisionComponentLot, (lot) => lot.component, {
+    cascade: ['soft-remove', 'insert', 'update'],
+  })
   lots: ApplicationDecisionComponentLot[];
 }

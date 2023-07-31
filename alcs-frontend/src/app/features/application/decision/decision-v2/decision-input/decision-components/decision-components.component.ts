@@ -124,6 +124,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
                 number: index,
               } as ProposedDecisionLotDto)
           ),
+          lots: this.application.submittedApplication?.subdProposedLots.map(
+            (e, index) =>
+              ({
+                ...e,
+                number: index,
+              } as ProposedDecisionLotDto)
+          ),
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {

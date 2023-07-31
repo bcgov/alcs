@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -11,7 +11,12 @@ import {
 } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 
-type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null; alrArea: string | null };
+type ProposedLot = {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: string | null;
+  alrArea: string | null;
+  uuid: string | null;
+};
 
 @Component({
   selector: 'app-lots-table',
@@ -63,6 +68,7 @@ export class LotsTableFormComponent implements ControlValueAccessor, Validator {
         size: null,
         alrArea: null,
         type: null,
+        uuid: null,
       });
     }
 
@@ -84,6 +90,7 @@ export class LotsTableFormComponent implements ControlValueAccessor, Validator {
       this.form.addControl(`${index}-lotType`, new FormControl(lot.type, [Validators.required]));
       this.form.addControl(`${index}-lotSize`, new FormControl(lot.size, [Validators.required]));
       this.form.addControl(`${index}-lotAlrArea`, new FormControl(lot.alrArea, [Validators.required]));
+      this.form.addControl(`${index}-lotUuid`, new FormControl(lot.uuid));
     });
   }
 
@@ -142,10 +149,12 @@ export class LotsTableFormComponent implements ControlValueAccessor, Validator {
         const lotType = this.form.controls[`${index}-lotType`].value;
         const lotSize = this.form.controls[`${index}-lotSize`].value;
         const lotAlrArea = this.form.controls[`${index}-lotAlrArea`].value;
+        const lotUuid = this.form.controls[`${index}-lotUuid`].value;
         proposedLots.push({
           size: lotSize,
           type: lotType,
           alrArea: lotAlrArea,
+          uuid: lotUuid,
         });
       }
     }

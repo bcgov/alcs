@@ -54,6 +54,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
       if (this.condition.components) {
+        debugger
         this.subdComponent = this.condition.components.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
       }
     }

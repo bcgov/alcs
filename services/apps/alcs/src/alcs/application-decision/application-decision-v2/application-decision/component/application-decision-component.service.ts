@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionComponentLotService } from '../../../application-component-lot/application-decision-component-lot.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   CreateApplicationDecisionComponentDto,
@@ -13,11 +15,15 @@ export class ApplicationDecisionComponentService {
   constructor(
     @InjectRepository(ApplicationDecisionComponent)
     private componentRepository: Repository<ApplicationDecisionComponent>,
+    private componentLotService: ApplicationDecisionComponentLotService,
   ) {}
 
   async getOneOrFail(uuid: string) {
     return this.componentRepository.findOneOrFail({
       where: { uuid },
+      relations: {
+        lots: true,
+      },
     });
   }
 
@@ -51,9 +57,7 @@ export class ApplicationDecisionComponentService {
       this.patchNaruFields(component, updateDto);
 
       //SUBD
-      if (updateDto.subdApprovedLots) {
-        component.subdApprovedLots = updateDto.subdApprovedLots;
-      }
+      this.updateComponentLots(component, updateDto);
 
       updatedComponents.push(component);
     }
@@ -63,6 +67,83 @@ export class ApplicationDecisionComponentService {
     }
 
     return updatedComponents;
+  }
+
+  private async updateComponentLots(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    if (updateDto.subdApprovedLots) {
+      component.subdApprovedLots = updateDto.subdApprovedLots;
+      console.log('updateComponentLots:', updateDto.uuid);
+      // TODO: insert lots here
+      if (updateDto.uuid) {
+        // check updateDto.lots
+        // if lots uuid are the same => then update values
+        // if lots uuid is different delete the one that is not present and create new lot
+
+        console.log('updateComponentLots:', updateDto.lots?.length);
+
+        // // in case if all lots were removed
+        // if (updateDto.lots && updateDto.lots.length < 1) {
+        //   component.lots.forEach((e) => lotsToRemove.push(e.uuid));
+        // }
+
+        const lotsToRemove = component.lots
+          .filter((l1) => !updateDto.lots?.some((l2) => l1.uuid === l2.uuid))
+          .map((l) => l.uuid);
+
+        component.lots = component.lots.filter(
+          (l) => !lotsToRemove.includes(l.uuid),
+        );
+
+        updateDto.lots?.forEach((lot, index) => {
+          if (lot.uuid) {
+            const lotToUpdate = component.lots.find((e) => e.uuid === lot.uuid);
+            if (lotToUpdate) {
+              lotToUpdate.alrArea = lot.alrArea;
+              lotToUpdate.type = lot.type;
+              lotToUpdate.size = lot.size;
+              console.log(
+                'lot to update:',
+                lot.uuid,
+                lot.alrArea,
+                lotToUpdate,
+                component.lots[index],
+              );
+            }
+          } else {
+            component.lots.push(
+              new ApplicationDecisionComponentLot({
+                componentUuid: updateDto.uuid,
+                alrArea: lot.alrArea,
+                size: lot.size,
+                type: lot.type,
+                number: index + 1,
+              }),
+            );
+            console.log('lot to create: componentUuid', updateDto.uuid);
+          }
+        });
+
+        if (lotsToRemove.length > 0) {
+          await this.componentLotService.softRemove(lotsToRemove);
+        }
+      } else {
+        // this is a new component so it does not have lots and the lot is simply created
+        component.lots = updateDto.subdApprovedLots.map(
+          (e, index) =>
+            new ApplicationDecisionComponentLot({
+              componentUuid: updateDto.uuid,
+              alrArea: e.alrArea,
+              size: e.size,
+              type: e.type,
+              number: index + 1,
+            }),
+        );
+        console.log('create lots on component', component.lots);
+      }
+    }
   }
 
   private patchNfuFields(
@@ -158,6 +239,9 @@ export class ApplicationDecisionComponentService {
 
   async softRemove(components: ApplicationDecisionComponent[]) {
     await this.componentRepository.softRemove(components);
+    components.forEach(
+      async (e) => await this.componentLotService.softRemoveBy(e.uuid),
+    );
   }
 
   async getAllByApplicationUuid(applicationUuid: string) {

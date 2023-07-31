@@ -64,7 +64,7 @@
       <div class="subheading2">Plan numbers</div>
       <ng-container *ngFor="let lot of subdComponent.subdApprovedLots; let i = index">
         <div>
-          {{ i + 1 }}
+          {{ lot.number }}
         </div>
         <div>
           {{ lot.type }}

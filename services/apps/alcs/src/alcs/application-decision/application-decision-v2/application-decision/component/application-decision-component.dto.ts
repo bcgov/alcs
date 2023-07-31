@@ -97,6 +97,10 @@ export class UpdateApplicationDecisionComponentDto {
   @IsArray()
   @IsOptional()
   subdApprovedLots?: ProposedLot[];
+
+  @IsArray()
+  @IsOptional()
+  lots?: ApplicationDecisionComponentLotDto[];
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -183,6 +187,9 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap(() => [ApplicationDecisionComponentLotDto])
   subdApprovedLots?: ApplicationDecisionComponentLotDto[];
+
+  @AutoMap(() => [ApplicationDecisionComponentLotDto])
+  lots?: ApplicationDecisionComponentLotDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {

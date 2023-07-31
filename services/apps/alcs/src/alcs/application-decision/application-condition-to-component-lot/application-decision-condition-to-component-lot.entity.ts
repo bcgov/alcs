@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
+import { ApplicationDecisionComponentLot } from '../application-component-lot/application-decision-component-lot.entity';
 import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 
@@ -28,4 +29,9 @@ export class ApplicationDecisionConditionToComponentLot extends Base {
 
   @ManyToOne(() => ApplicationDecisionCondition, { nullable: true })
   condition: ApplicationDecisionCondition;
+
+  @ManyToMany(() => ApplicationDecisionComponentLot, (e) => e.conditionLots, {
+    cascade: ['soft-remove'],
+  })
+  componentLot: ApplicationDecisionComponentLot[];
 }

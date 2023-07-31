@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProposedLot } from '../../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionCodesDto,
@@ -9,6 +8,7 @@ import {
   NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
+  ProposedDecisionLotDto,
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
   TurpDecisionComponentDto,
@@ -62,7 +62,7 @@ export class DecisionComponentComponent implements OnInit {
   naruEndDate = new FormControl<Date | null>(null);
 
   //subd
-  subdApprovedLots = new FormControl<ProposedLot[]>([], [Validators.required]);
+  subdApprovedLots = new FormControl<ProposedDecisionLotDto[]>([], [Validators.required]);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -243,7 +243,8 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    this.subdApprovedLots.setValue(this.data.subdApprovedLots ?? null);
+    const lots = this.data.subdApprovedLots?.sort((a, b) => a.number - b.number) ?? null;
+    this.subdApprovedLots.setValue(lots);
   }
 
   private getNfuDataChange(): NfuDecisionComponentDto {
@@ -307,13 +308,16 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private getSubdDataChange(): SubdDecisionComponentDto {
-    // return {
-    //   subdApprovedLots: this.subdApprovedLots.value ?? undefined,
-    // };
-    // TODO fix this
+    const update = this.subdApprovedLots.value?.map((e) => ({ ...e } as ProposedDecisionLotDto));
+
     return {
-      subdApprovedLots: undefined,
+      subdApprovedLots: update ?? undefined,
+      lots: update ?? undefined,
     };
+    // TODO fix this
+    // return {
+    //   subdApprovedLots: undefined,
+    // };
   }
 
   markTouched() {

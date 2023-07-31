@@ -194,6 +194,18 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : [],
           ),
         ),
+        forMember(
+          (ad) => ad.lots,
+          mapFrom((a) =>
+            a.lots
+              ? this.mapper.mapArray(
+                  a.lots,
+                  ApplicationDecisionComponentLot,
+                  ApplicationDecisionComponentLotDto,
+                )
+              : [],
+          ),
+        ),
       );
       createMap(
         mapper,

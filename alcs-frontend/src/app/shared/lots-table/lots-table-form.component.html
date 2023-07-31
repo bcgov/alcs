@@ -48,7 +48,7 @@
               separatorLimit="9999999999"
               min="0.01"
               formControlName="{{ i }}-lotSize"
-              (change)='fireChanged()'
+              (change)="fireChanged()"
             />
             <span matTextSuffix>ha</span>
           </mat-form-field>
@@ -67,9 +67,18 @@
               separatorLimit="9999999999"
               min="0.01"
               formControlName="{{ i }}-lotAlrArea"
-              (change)='fireChanged()'
+              (change)="fireChanged()"
             />
             <span matTextSuffix>ha</span>
+          </mat-form-field>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="uuid" hidden>
+        <th mat-header-cell *matHeaderCellDef>uuid</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <mat-form-field appearance="outline">
+            <input type="text" matInput formControlName="{{ i }}-lotUuid" />
           </mat-form-field>
         </td>
       </ng-container>

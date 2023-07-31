@@ -117,11 +117,15 @@ export interface UpdateProposedDecisionLotDto {
   alrArea?: number | null;
 }
 
-export interface ProposedDecisionLotDto extends UpdateProposedDecisionLotDto {
+export interface ProposedDecisionLotDto {
+  ///  extends UpdateProposedDecisionLotDto
   uuid: string;
   planNumbers: string | null;
   number: number;
   componentUuid: string;
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
 }
 
 export interface NfuDecisionComponentDto {
@@ -161,6 +165,7 @@ export interface RosoDecisionComponentDto {
 
 export interface SubdDecisionComponentDto {
   subdApprovedLots?: ProposedDecisionLotDto[];
+  lots?: ProposedDecisionLotDto[];
 }
 
 export interface DecisionComponentDto
