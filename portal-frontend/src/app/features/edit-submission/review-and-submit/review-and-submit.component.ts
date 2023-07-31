@@ -61,20 +61,7 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
         });
         this.toastService.showErrorToast('Please correct all errors before submitting the form');
       } else {
-        const government = await this.loadGovernment(this.applicationSubmission.localGovernmentUuid);
-        this.dialog
-          .open(SubmitConfirmationDialogComponent, {
-            data: {
-              governmentName: government?.name ?? 'selected local / first nation government',
-              userIsGovernment: government?.matchesUserGuid ?? false,
-            },
-          })
-          .beforeClosed()
-          .subscribe((didConfirm) => {
-            if (didConfirm) {
-              this.submit.emit();
-            }
-          });
+        this.submit.emit();
       }
     }
   }
@@ -83,14 +70,5 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
     if (fileNumber) {
       await this.pdfGenerationService.generateSubmission(fileNumber);
     }
-  }
-
-  private async loadGovernment(uuid: string) {
-    const codes = await this.codeService.loadCodes();
-    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
-    if (localGovernment) {
-      return localGovernment;
-    }
-    return;
   }
 }

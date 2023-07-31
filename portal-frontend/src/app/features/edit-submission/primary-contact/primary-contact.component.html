@@ -28,8 +28,8 @@
       </button>
       <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
     </ng-container>
-    <ng-container *ngIf="isGovernmentUser">
-      <h5>{{ governmentName }} Staff</h5>
+    <ng-container *ngIf="isGovernmentUser || selectedLocalGovernment">
+      <h5>{{ governmentName ?? 'Local / First Nation Government' }} Staff</h5>
       <button
         (click)="onSelectGovernment()"
         *ngIf="!selectedLocalGovernment"

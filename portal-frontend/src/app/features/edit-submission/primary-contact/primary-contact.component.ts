@@ -72,7 +72,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
       this.isGovernmentUser = !!profile?.isLocalGovernment || !!profile?.isFirstNationGovernment;
       this.governmentName = profile?.government;
-      if (this.isGovernmentUser) {
+      if (this.isGovernmentUser || this.selectedLocalGovernment) {
         this.prepareGovernmentOwners();
       }
     });
@@ -237,7 +237,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.phoneNumber.disable();
       }
 
-      if (this.isGovernmentUser) {
+      if (this.isGovernmentUser || this.selectedLocalGovernment) {
         this.prepareGovernmentOwners();
       }
 

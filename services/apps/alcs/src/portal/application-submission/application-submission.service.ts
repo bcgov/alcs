@@ -6,7 +6,8 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, RelationOptions, Repository } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
@@ -85,13 +86,17 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async getOrFailByUuid(uuid: string) {
+  async getOrFailByUuid(
+    uuid: string,
+    relations: FindOptionsRelations<ApplicationSubmission> = {},
+  ) {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
       },
       relations: {
         naruSubtype: true,
+        ...relations,
       },
     });
     if (!application) {
@@ -186,7 +191,7 @@ export class ApplicationSubmissionService {
       );
     }
 
-    return this.getOrFailByUuid(submissionUuid);
+    return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
   async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {
