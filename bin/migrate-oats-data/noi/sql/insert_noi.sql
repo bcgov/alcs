@@ -7,7 +7,7 @@ WITH
             oats.oats_alr_appl_components oaac
             JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
         WHERE
-            oaa.application_class_code IN ('NOI')
+            oaa.application_class_code = 'NOI'
         GROUP BY
             oaac.alr_application_id
         HAVING
@@ -35,7 +35,7 @@ WITH
             LEFT JOIN oats.oats_persons op ON op.person_id = opo.person_id
             LEFT JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
         WHERE
-            oaap.alr_appl_role_code = 'APPL'
+            oaap.alr_appl_role_code IN ('APPL','AGENT') 
         GROUP BY
             oaap.alr_application_id
     ),
