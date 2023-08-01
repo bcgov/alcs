@@ -724,7 +724,7 @@ export class ApplicationSubmission extends Base {
       persistence: false,
     },
   )
-  submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
+  submissionStatuses: ApplicationSubmissionToSubmissionStatus[] = [];
 
   private _status: ApplicationSubmissionToSubmissionStatus;
 

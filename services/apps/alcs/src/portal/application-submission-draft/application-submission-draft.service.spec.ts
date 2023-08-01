@@ -105,7 +105,7 @@ describe('ApplicationSubmissionDraftService', () => {
     expect(draft).toBeDefined();
   });
 
-  it('should delete a draft, attached parcels and owners', async () => {
+  it('should delete a draft, attached parcels, statuses and owners', async () => {
     mockSubmissionRepo.findOne.mockResolvedValue(
       new ApplicationSubmission({
         owners: [],
@@ -115,12 +115,18 @@ describe('ApplicationSubmissionDraftService', () => {
 
     mockSubmissionRepo.remove.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
+    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue(
+      {} as any,
+    );
 
     await service.deleteDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.remove).toHaveBeenCalledTimes(1);
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.removeStatuses,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should load two submissions and save one as not draft when publishing', async () => {
