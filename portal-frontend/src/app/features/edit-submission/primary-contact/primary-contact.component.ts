@@ -146,7 +146,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (this.selectedLocalGovernment) {
       this.needsAuthorizationLetter = false;
     } else {
-      const isSelfApplicant = this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
+      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
       this.needsAuthorizationLetter =
         this.selectedThirdPartyAgent ||
         !(
