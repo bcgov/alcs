@@ -99,7 +99,7 @@ export class ApplicationSubmissionDraftService {
         newSubmission.uuid,
       );
 
-    this.applicationSubmissionRepository.manager.transaction(
+    await this.applicationSubmissionRepository.manager.transaction(
       async (transactionalEntityManager) => {
         await transactionalEntityManager.save(newSubmission);
 
@@ -247,6 +247,10 @@ export class ApplicationSubmissionDraftService {
     for (const owner of draftSubmission.owners) {
       await this.applicationOwnerService.delete(owner);
     }
+
+    await this.applicationSubmissionStatusService.removeStatuses(
+      draftSubmission.uuid,
+    );
 
     const parcelUuids = draftSubmission.parcels.map((parcel) => parcel.uuid);
     await this.applicationParcelService.deleteMany(parcelUuids);
