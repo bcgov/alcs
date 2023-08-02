@@ -20,6 +20,7 @@
         <label for="parcelsAgricultureDescription">
           Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
         </label>
+        <div class="subtext">You may describe multiple parcels collectively or individually.</div>
         <mat-form-field class="display-block" appearance="outline">
           <textarea
             #parcelsAgricultureDescriptionText
@@ -42,6 +43,12 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsAgricultureDescription.errors?.['required']">This field is required</div>
         </div>
+        <div>
+          <mat-hint class="subtext"
+            >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. <br />Example 2: Parcel 1: 10%
+            blueberry crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
+          </mat-hint>
+        </div>
       </div>
       <div class="full-row">
         <h6>
@@ -49,6 +56,11 @@
             Quantify and describe in detail all agricultural improvements made to the parcel(s).
           </label>
         </h6>
+        <div class="subtext">
+          Describe any irrigation, drainage, fencing, material enhancement, clearing, etc. undertaken on the parcel(s).
+          If there have been no agricultural improvements on the parcel(s), please specify "No Agricultural
+          Improvements".
+        </div>
         <mat-form-field class="display-block" appearance="outline">
           <textarea
             #parcelsAgricultureImprovementDescriptionText
@@ -73,11 +85,16 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsAgricultureImprovementDescription.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Example: 40 ha of grazing land fenced in 2010.</div>
       </div>
       <div class="full-row">
         <label for="parcelsNonAgricultureUseDescription">
           Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
         </label>
+        <div class="subtext">
+          Describe any non-agricultural uses such as home-based businesses, commercial, recreational, institutional,
+          industrial, etc. If all activity is agricultural, please specify "No non-agricultural activity".
+        </div>
         <mat-form-field class="display-block" appearance="outline">
           <textarea
             #parcelsNonAgricultureUseDescriptionText
@@ -100,9 +117,14 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsNonAgricultureUseDescription.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Example: House and 100 square metre detached auto repair shop.</div>
       </div>
     </div>
     <h5>Identify the land uses surrounding the parcel(s) under application.</h5>
+    <div class="subtext">
+      Choose the Primary Land Use Type from the drop-down list. If there is more than one land use type, choose the main
+      land use and describe all the uses under Specific Activity.
+    </div>
     <div class="form-row">
       <div class="full-row">
         <label for="northLandUseType">North</label>
