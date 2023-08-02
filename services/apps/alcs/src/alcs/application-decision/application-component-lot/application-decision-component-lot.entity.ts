@@ -13,6 +13,7 @@ export class ProposedLot {
   planNumbers: string | null;
 }
 
+//Contains the approved subdivision lots
 @Entity()
 export class ApplicationDecisionComponentLot extends Base {
   constructor(data?: Partial<ApplicationDecisionComponentLot>) {

@@ -73,8 +73,8 @@ export class ApplicationDecisionComponentService {
     component: ApplicationDecisionComponent,
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
-    if (updateDto.subdApprovedLots) {
-      component.subdApprovedLots = updateDto.subdApprovedLots;
+    if (updateDto.lots) {
+      // component.subdApprovedLots = updateDto.subdApprovedLots;
       if (updateDto.uuid) {
         const lotsToRemove = component.lots
           .filter((l1) => !updateDto.lots?.some((l2) => l1.uuid === l2.uuid))
@@ -110,7 +110,7 @@ export class ApplicationDecisionComponentService {
         }
       } else {
         // this is a new component so it does not have lots and the lot is simply created
-        component.lots = updateDto.subdApprovedLots.map(
+        component.lots = updateDto.lots.map(
           (e, index) =>
             new ApplicationDecisionComponentLot({
               componentUuid: updateDto.uuid,

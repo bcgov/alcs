@@ -28,7 +28,7 @@
         <th mat-header-cell *matHeaderCellDef>Type</th>
         <td mat-cell *matCellDef="let element; let i = index">
           <mat-form-field appearance="outline">
-            <mat-select placeholder="Please select" formControlName="{{ i }}-lotType">
+            <mat-select placeholder="Please select" formControlName="{{ i }}-lotType" (selectionChange)="fireChanged()">
               <mat-option value="Lot"> Lot </mat-option>
               <mat-option value="Road Dedication"> Road Dedication </mat-option>
             </mat-select>

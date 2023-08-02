@@ -243,7 +243,7 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    const lots = this.data.subdApprovedLots?.sort((a, b) => a.number - b.number) ?? null;
+    const lots = this.data.lots?.sort((a, b) => a.number - b.number) ?? null;
     this.subdApprovedLots.setValue(lots);
   }
 
@@ -309,15 +309,9 @@ export class DecisionComponentComponent implements OnInit {
 
   private getSubdDataChange(): SubdDecisionComponentDto {
     const update = this.subdApprovedLots.value?.map((e) => ({ ...e } as ProposedDecisionLotDto));
-
     return {
-      subdApprovedLots: update ?? undefined,
       lots: update ?? undefined,
     };
-    // TODO fix this
-    // return {
-    //   subdApprovedLots: undefined,
-    // };
   }
 
   markTouched() {

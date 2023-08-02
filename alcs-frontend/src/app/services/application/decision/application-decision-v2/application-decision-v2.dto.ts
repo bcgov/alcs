@@ -117,9 +117,7 @@ export interface UpdateProposedDecisionLotDto {
   alrArea?: number | null;
 }
 
-// TODO remove planNUmbers from this dto and move to the component
 export interface ProposedDecisionLotDto {
-  ///  extends UpdateProposedDecisionLotDto
   uuid: string;
   planNumbers: string | null;
   number: number;

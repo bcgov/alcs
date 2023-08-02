@@ -96,10 +96,6 @@ export class UpdateApplicationDecisionComponentDto {
 
   @IsArray()
   @IsOptional()
-  subdApprovedLots?: ProposedLot[];
-
-  @IsArray()
-  @IsOptional()
   lots?: ApplicationDecisionComponentLotDto[];
 }
 
@@ -184,9 +180,6 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap(() => NaruSubtypeDto)
   naruSubtype: NaruSubtypeDto;
-
-  @AutoMap(() => [ApplicationDecisionComponentLotDto])
-  subdApprovedLots?: ApplicationDecisionComponentLotDto[];
 
   @AutoMap(() => [ApplicationDecisionComponentLotDto])
   lots?: ApplicationDecisionComponentLotDto[];

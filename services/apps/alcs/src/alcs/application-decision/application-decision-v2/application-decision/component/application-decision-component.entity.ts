@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   Index,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -198,16 +197,6 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => NaruSubtype)
   naruSubtype: NaruSubtype;
-
-  // TODO remove this
-  @AutoMap(() => [ProposedLot])
-  @Column({
-    comment: 'JSONB Column containing the approved subdivision lots',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
-  })
-  subdApprovedLots: ProposedLot[];
 
   @AutoMap()
   @Column({ nullable: false })
