@@ -30,5 +30,4 @@
 		END AS "system"
     FROM 
       oats_documents_to_insert oti
-      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text
-	  JOIN alcs.notice_of_intent noi ON noi.file_number = oti.alr_application_id::text 
+      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text 
