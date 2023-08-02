@@ -7,7 +7,7 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
-import { ApplicationDecisionConditionComponent } from '../application-decision-component-to-condition/application-decision-component-to-condition.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import {
   ApplicationDecisionConditionComponentDto,
   ApplicationDecisionConditionDto,
@@ -55,7 +55,7 @@ export class ApplicationDecisionConditionController {
 
     return await this.mapper.mapArrayAsync(
       planNumbers,
-      ApplicationDecisionConditionComponent,
+      ApplicationDecisionConditionComponentPlanNumber,
       ApplicationDecisionConditionComponentDto,
     );
   }
@@ -75,7 +75,7 @@ export class ApplicationDecisionConditionController {
 
     return await this.mapper.mapAsync(
       planNumber,
-      ApplicationDecisionConditionComponent,
+      ApplicationDecisionConditionComponentPlanNumber,
       ApplicationDecisionConditionComponentDto,
     );
   }

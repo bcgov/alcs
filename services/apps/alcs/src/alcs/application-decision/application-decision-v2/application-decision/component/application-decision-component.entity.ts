@@ -3,15 +3,16 @@ import {
   Column,
   Entity,
   Index,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
 } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
-import { ProposedLot } from '../../../../../portal/application-submission/application-submission.entity';
 import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
 import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../../../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionCondition } from '../../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
@@ -216,7 +217,7 @@ export class ApplicationDecisionComponent extends Base {
   @ManyToMany(
     () => ApplicationDecisionCondition,
     (condition) => condition.components,
-    { cascade: false },
+    { nullable: true, cascade: false },
   )
   conditions: ApplicationDecisionCondition[];
 
@@ -225,4 +226,15 @@ export class ApplicationDecisionComponent extends Base {
     cascade: ['soft-remove', 'insert', 'update'],
   })
   lots: ApplicationDecisionComponentLot[];
+
+  @OneToMany(
+    () => ApplicationDecisionConditionComponentPlanNumber,
+    (c) => c.component,
+    {
+      cascade: ['insert', 'update'],
+    },
+  )
+  componentToConditions:
+    | ApplicationDecisionConditionComponentPlanNumber[]
+    | null;
 }

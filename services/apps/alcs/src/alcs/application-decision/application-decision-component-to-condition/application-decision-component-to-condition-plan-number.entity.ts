@@ -8,10 +8,11 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
+import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 
 @Entity()
-export class ApplicationDecisionConditionComponent extends BaseEntity {
-  constructor(data?: Partial<ApplicationDecisionConditionComponent>) {
+export class ApplicationDecisionConditionComponentPlanNumber extends BaseEntity {
+  constructor(data?: Partial<ApplicationDecisionConditionComponentPlanNumber>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -39,12 +40,23 @@ export class ApplicationDecisionConditionComponent extends BaseEntity {
 
   @ManyToOne(
     () => ApplicationDecisionCondition,
-    (c) => c.conditionToComponents,
-    { cascade: false, persistence: false },
+    (c) => c.conditionToComponentsWithPlanNumber,
+    { persistence: false },
   )
   @JoinColumn({
     name: 'application_decision_condition_uuid',
     referencedColumnName: 'uuid',
   })
   condition: ApplicationDecisionCondition;
+
+  @ManyToOne(
+    () => ApplicationDecisionComponent,
+    (c) => c.componentToConditions,
+    { persistence: false },
+  )
+  @JoinColumn({
+    name: 'application_decision_component_uuid',
+    referencedColumnName: 'uuid',
+  })
+  component: ApplicationDecisionComponent;
 }

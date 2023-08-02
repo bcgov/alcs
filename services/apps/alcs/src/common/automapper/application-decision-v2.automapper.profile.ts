@@ -38,7 +38,7 @@ import { NaruSubtypeDto } from '../../portal/application-submission/application-
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/application-decision/application-condition-to-component-lot/application-condition-to-component-lot.controller.dto';
 import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
-import { ApplicationDecisionConditionComponent } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -340,7 +340,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        ApplicationDecisionConditionComponent,
+        ApplicationDecisionConditionComponentPlanNumber,
         ApplicationDecisionConditionComponentDto,
       );
     };
