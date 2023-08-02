@@ -1,7 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
+import { ApplicationDecisionConditionComponent } from '../application-decision-component-to-condition/application-decision-component-to-condition.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
@@ -76,10 +85,30 @@ export class ApplicationDecisionCondition extends Base {
   @ManyToMany(
     () => ApplicationDecisionComponent,
     (component) => component.conditions,
-    { nullable: true },
+    { nullable: true, cascade: false },
   )
   @JoinTable({
     name: 'application_decision_condition_component',
+    // joinColumn: {
+    //   name: 'application_decision_condition_uuid',
+    //   referencedColumnName: 'uuid',
+    // },
+    // inverseJoinColumn: {
+    //   name: 'application_decision_component_uuid',
+    //   referencedColumnName: 'uuid',
+    // },
   })
   components: ApplicationDecisionComponent[] | null;
+
+  @OneToMany(() => ApplicationDecisionConditionComponent, (c) => c.condition, {
+    cascade: ['insert', 'update'],
+    // orphanedRowAction: 'delete',
+    // cascade: false,
+    // persistence: false,
+  })
+  // @JoinColumn({
+  //   name: 'uuid',
+  //   referencedColumnName: 'application_decision_condition_uuid',
+  // })
+  conditionToComponents: ApplicationDecisionConditionComponent[] | null;
 }

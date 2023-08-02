@@ -16,7 +16,6 @@ export class SubdComponent implements OnInit {
   @Input() component!: DecisionComponentDto;
 
   ngOnInit(): void {
-    console.log('here')
     this.component.subdApprovedLots = this.component.subdApprovedLots?.sort((a, b) => a.number - b.number) ?? undefined;
     this.component.lots = this.component.lots?.sort((a, b) => a.number - b.number) ?? undefined;
   }

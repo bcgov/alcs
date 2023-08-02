@@ -15,13 +15,11 @@ export class ApplicationDecisionComponentLotService {
     uuid: string,
     updateDto: UpdateApplicationDecisionComponentLotDto,
   ) {
-    console.log('before update', updateDto);
     const existingLot = await this.componentLotRepository.findOneByOrFail({
       uuid,
     });
 
     existingLot.alrArea = updateDto.alrArea;
-    console.log('after update', existingLot);
     return await this.componentLotRepository.save(existingLot);
   }
 
@@ -30,8 +28,6 @@ export class ApplicationDecisionComponentLotService {
       componentUuid,
     });
 
-    console.log('components to remove', componentLots, componentUuid);
-
     return await this.componentLotRepository.softRemove(componentLots);
   }
 
@@ -39,8 +35,6 @@ export class ApplicationDecisionComponentLotService {
     const componentLots = await this.componentLotRepository.findBy({
       uuid: In(uuids),
     });
-
-    console.log('components to remove by uuid', componentLots, uuids);
 
     return await this.componentLotRepository.softRemove(componentLots);
   }

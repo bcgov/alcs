@@ -75,8 +75,6 @@ export class ApplicationDecisionComponentService {
   ) {
     if (updateDto.subdApprovedLots) {
       component.subdApprovedLots = updateDto.subdApprovedLots;
-      console.log('updateComponentLots:', updateDto.uuid);
-      // TODO: insert lots here
       if (updateDto.uuid) {
         // check updateDto.lots
         // if lots uuid are the same => then update values

@@ -13,10 +13,15 @@ import {
   DECISION_CONDITION_INCOMPLETE_LABEL,
   DECISION_CONDITION_SUPERSEDED_LABEL,
 } from '../../../../../shared/application-type-pill/application-type-pill.constants';
-import { ApplicationDecisionConditionWithStatus, CONDITION_STATUS } from '../conditions.component';
+import {
+  ApplicationDecisionConditionWithStatus,
+  ConditionComponentLabels,
+  CONDITION_STATUS,
+} from '../conditions.component';
 
 type Condition = ApplicationDecisionConditionWithStatus & {
-  componentLabels?: string;
+  componentLabelsStr?: string;
+  componentLabels?: ConditionComponentLabels[];
 };
 
 @Component({
@@ -52,7 +57,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (this.condition) {
       this.condition = {
         ...this.condition,
-        componentLabels: this.condition.conditionComponentsLabels?.join(';\n'),
+        componentLabelsStr: this.condition.conditionComponentsLabels?.flatMap((e) => e.label).join(';\n'),
       };
 
       this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
@@ -79,12 +84,15 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   }
 
   async loadPlanNumber() {
+    const subdComponent = this.condition.components?.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
     if (
       this.condition.components &&
       this.condition.components.some((e) => e.applicationDecisionComponentTypeCode !== 'SUBD') &&
       this.isRequireSurveyPlan
     ) {
-      this.planNumbers = await this.conditionService.fetchPlanNumbers(this.condition.uuid);
+      this.planNumbers = (await this.conditionService.fetchPlanNumbers(this.condition.uuid)).filter(
+        (e) => e.applicationDecisionComponentUuid !== subdComponent?.uuid
+      );
     }
   }
 
@@ -146,5 +154,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     if (this.isRequireSurveyPlan) {
       this.conditionService.updatePlanNumbers(conditionUuid, componentUuid, $value);
     }
+  }
+
+  getComponentLabel(componentUuid: string) {
+    return this.condition.conditionComponentsLabels?.find((e) => e.componentUuid === componentUuid)?.label;
   }
 }

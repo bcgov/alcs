@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   Index,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -226,6 +227,7 @@ export class ApplicationDecisionComponent extends Base {
   @ManyToMany(
     () => ApplicationDecisionCondition,
     (condition) => condition.components,
+    { cascade: false },
   )
   conditions: ApplicationDecisionCondition[];
 

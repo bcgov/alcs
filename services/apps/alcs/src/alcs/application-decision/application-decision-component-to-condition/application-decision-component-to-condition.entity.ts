@@ -1,5 +1,13 @@
 import { AutoMap } from '@automapper/classes';
-import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
+import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
 
 @Entity()
 export class ApplicationDecisionConditionComponent extends BaseEntity {
@@ -28,4 +36,15 @@ export class ApplicationDecisionConditionComponent extends BaseEntity {
     nullable: true,
   })
   planNumbers?: string | null;
+
+  @ManyToOne(
+    () => ApplicationDecisionCondition,
+    (c) => c.conditionToComponents,
+    { cascade: false, persistence: false },
+  )
+  @JoinColumn({
+    name: 'application_decision_condition_uuid',
+    referencedColumnName: 'uuid',
+  })
+  condition: ApplicationDecisionCondition;
 }

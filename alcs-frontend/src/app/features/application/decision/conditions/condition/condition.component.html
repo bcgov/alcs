@@ -13,7 +13,7 @@
 <div class="grid-3">
   <div>
     <div class="subheading2">Component to Condition</div>
-    <span class="component-labels">{{ condition.componentLabels }}</span>
+    <span class="component-labels">{{ condition.componentLabelsStr }}</span>
     <app-no-data *ngIf="!condition.componentLabels"></app-no-data>
   </div>
 
@@ -56,37 +56,46 @@
   </div>
 
   <div *ngIf="isRequireSurveyPlan">
-    <div>Survey Plans</div>
     <ng-container *ngFor="let plan of planNumbers">
+      <div class="subheading2">
+        <span>{{ getComponentLabel(plan.applicationDecisionComponentUuid) }} Survey Plans</span>
+        <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+      </div>
       <app-inline-text
         [value]="plan.planNumbers ?? undefined"
         (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
       ></app-inline-text>
     </ng-container>
 
-    <div *ngIf="subdComponent !== undefined" class="parcel-table">
-      <div class="subheading2">#</div>
-      <div class="subheading2">Type</div>
-      <div class="subheading2">Size (ha)</div>
-      <div class="subheading2">Plan numbers</div>
-      <ng-container *ngFor="let lot of subdComponent.lots; let i = index">
-        <div>
-          {{ lot.number }}
-        </div>
-        <div>
-          {{ lot.type }}
-        </div>
-        <div>
-          {{ lot.size }}
-        </div>
-        <div>
-          <app-inline-text
-            [value]="lot.planNumbers ?? undefined"
-            (save)="savePlanNumbers(lot.uuid, condition.uuid, $event)"
-          ></app-inline-text>
-        </div>
-      </ng-container>
-    </div>
+    <ng-container *ngIf="subdComponent !== undefined">
+      <div class="subheading2">
+        <span>{{ getComponentLabel(subdComponent.uuid!) }} Survey Plans</span>
+        <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+      </div>
+      <div class="parcel-table">
+        <div class="subheading2">#</div>
+        <div class="subheading2">Type</div>
+        <div class="subheading2">Size (ha)</div>
+        <div class="subheading2">Plan numbers</div>
+        <ng-container *ngFor="let lot of subdComponent.lots; let i = index">
+          <div>
+            {{ lot.number }}
+          </div>
+          <div>
+            {{ lot.type }}
+          </div>
+          <div>
+            {{ lot.size }}
+          </div>
+          <div>
+            <app-inline-text
+              [value]="lot.planNumbers ?? undefined"
+              (save)="savePlanNumbers(lot.uuid, condition.uuid, $event)"
+            ></app-inline-text>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
 
   <div class="full-width">

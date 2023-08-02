@@ -313,6 +313,8 @@ export class ApplicationDecisionV2Service {
 
     await this.updateComponents(updateDto, existingDecision);
 
+    await this.appDecisionRepository.save(existingDecision);
+
     //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
