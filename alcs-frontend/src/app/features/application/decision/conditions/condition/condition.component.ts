@@ -71,13 +71,15 @@ export class ConditionComponent implements OnInit, AfterViewInit {
       const subdComponent = this.condition.components.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
       if (subdComponent && subdComponent.uuid) {
         const planNumbers = await this.conditionLotService.fetchConditionLots(this.condition.uuid, subdComponent.uuid);
-        subdComponent.lots = subdComponent.lots?.map(
-          (l) =>
-            ({
-              ...l,
-              planNumbers: planNumbers.find((p) => p.componentLotUuid === l.uuid)?.planNumbers,
-            } as ProposedDecisionLotDto)
-        );
+        subdComponent.lots = subdComponent.lots
+          ?.map(
+            (l) =>
+              ({
+                ...l,
+                planNumbers: planNumbers.find((p) => p.componentLotUuid === l.uuid)?.planNumbers,
+              } as ProposedDecisionLotDto)
+          )
+          .sort((l1, l2) => l1.number - l2.number);
         this.subdComponent = subdComponent;
       }
     }
