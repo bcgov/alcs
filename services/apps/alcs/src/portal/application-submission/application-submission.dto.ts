@@ -156,16 +156,10 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //Soil Fields
   @AutoMap(() => Boolean)
-  soilIsNOIFollowUp: boolean | null;
+  soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
-  soilNOIIDs: string | null;
-
-  @AutoMap(() => Boolean)
-  soilHasPreviousALCAuthorization: boolean | null;
-
-  @AutoMap(() => String)
-  soilApplicationIDs: string | null;
+  soilFollowUpIDs: string | null;
 
   @AutoMap(() => String)
   soilTypeRemoved: string | null;
@@ -498,21 +492,12 @@ export class ApplicationSubmissionUpdateDto {
   //Soil Fields
   @IsBoolean()
   @IsOptional()
-  soilIsNOIFollowUp?: boolean | null;
+  soilIsFollowUp?: boolean | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
-  soilNOIIDs?: string | null;
-
-  @IsBoolean()
-  @IsOptional()
-  soilHasPreviousALCAuthorization?: boolean | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  soilApplicationIDs?: string | null;
+  soilFollowUpIDs?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)

@@ -747,21 +747,13 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.soilIsNOIFollowUp = filterUndefined(
-      updateDto.soilIsNOIFollowUp,
-      applicationSubmission.soilIsNOIFollowUp,
+    applicationSubmission.soilIsFollowUp = filterUndefined(
+      updateDto.soilIsFollowUp,
+      applicationSubmission.soilIsFollowUp,
     );
-    applicationSubmission.soilNOIIDs = filterUndefined(
-      updateDto.soilNOIIDs,
-      applicationSubmission.soilNOIIDs,
-    );
-    applicationSubmission.soilHasPreviousALCAuthorization = filterUndefined(
-      updateDto.soilHasPreviousALCAuthorization,
-      applicationSubmission.soilHasPreviousALCAuthorization,
-    );
-    applicationSubmission.soilApplicationIDs = filterUndefined(
-      updateDto.soilApplicationIDs,
-      applicationSubmission.soilApplicationIDs,
+    applicationSubmission.soilFollowUpIDs = filterUndefined(
+      updateDto.soilFollowUpIDs,
+      applicationSubmission.soilFollowUpIDs,
     );
     applicationSubmission.soilTypeRemoved = filterUndefined(
       updateDto.soilTypeRemoved,

@@ -346,19 +346,11 @@ export class ApplicationSubmission extends Base {
   //Soil & Fill
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
-  soilIsNOIFollowUp: boolean | null;
+  soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true, name: 'soil_noi_ids' })
-  soilNOIIDs: string | null;
-
-  @AutoMap(() => Boolean)
-  @Column({ type: 'boolean', nullable: true })
-  soilHasPreviousALCAuthorization: boolean | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true, name: 'soil_application_ids' })
-  soilApplicationIDs: string | null;
+  @Column({ type: 'text', nullable: true, name: 'soil_follow_up_ids' })
+  soilFollowUpIDs: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
