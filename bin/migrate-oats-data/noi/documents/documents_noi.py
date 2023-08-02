@@ -1,7 +1,7 @@
 from db import inject_conn_pool
 
 """
-    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS document_noi table.
+    This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS document table.
 
     NOTE:
     Before performing document import you need to import applications from oats.
@@ -14,7 +14,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
     """
     documents_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-        INSERT INTO alcs."document_noi" (oats_document_id, file_name, oats_application_id, "source", 
+        INSERT INTO alcs."document" (oats_document_id, file_name, oats_application_id, "source", 
                                     audit_created_by, file_key, mime_type, tags, "system") 
         VALUES {documents_to_insert} 
         ON CONFLICT (oats_document_id) DO UPDATE SET 
@@ -84,10 +84,3 @@ def process_documents_noi(conn=None, batch_size=10000):
     print("Total amount of failed inserts:", failed_inserts)
 
 
-@inject_conn_pool
-def clean_documents_noi(conn=None):
-    print("Start documents_noi cleaning")
-    with conn.cursor() as cursor:
-        cursor.execute("DELETE FROM alcs.document_noi WHERE audit_created_by = 'oats_etl';")
-        conn.commit()
-        print(f"Deleted items count = {cursor.rowcount}")
