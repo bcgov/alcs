@@ -70,6 +70,7 @@ describe('ApplicationSubmissionService', () => {
     nfuFillVolume: null,
     nfuHectares: null,
     nfuMaxFillDepth: null,
+    nfuAverageFillDepth: null,
     nfuOutsideLands: null,
     nfuProjectDurationAmount: null,
     nfuProjectDurationUnit: null,

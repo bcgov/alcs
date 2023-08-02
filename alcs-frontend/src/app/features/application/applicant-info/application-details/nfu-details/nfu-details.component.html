@@ -42,21 +42,19 @@
     <div class="grid-double">
       {{ applicationSubmission.nfuFillOriginDescription }}
     </div>
-    <div class="full-width">
-      <span class="subheading1">Project Dimensions</span>
+
+    <div class="subheading1 full-width">Fill to be Placed</div>
+    <div class="full-width soil-table">
+      <div class="grid-1"><strong>Volume</strong></div>
+      <div class="grid-2">{{ applicationSubmission.nfuFillVolume }} m<sup>3</sup></div>
+      <div class="grid-1"><strong>Area</strong></div>
+      <div class="grid-2">{{ applicationSubmission.nfuTotalFillPlacement }} ha</div>
+      <div class="grid-1"><strong>Maximum Depth</strong></div>
+      <div class="grid-2">{{ applicationSubmission.nfuMaxFillDepth }} m</div>
+      <div class="grid-1"><strong>Average Depth</strong></div>
+      <div class="grid-2">{{ applicationSubmission.nfuAverageFillDepth }} m</div>
     </div>
-    <div class="subheading2 grid-1">Total fill placement area (ha)</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuTotalFillPlacement }}
-    </div>
-    <div class="subheading2 grid-1">Maximum depth of material to be placed as fill (m)</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuMaxFillDepth }}
-    </div>
-    <div class="subheading2 grid-1">Volume of material to be placed as fill (m3)</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuFillVolume }}
-    </div>
+
     <div class="full-width">
       <span class="subheading1">Project Duration</span>
     </div>

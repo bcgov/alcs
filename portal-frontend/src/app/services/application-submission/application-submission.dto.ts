@@ -79,6 +79,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   nfuWillImportFill: boolean | null;
   nfuTotalFillPlacement: number | null;
   nfuMaxFillDepth: number | null;
+  nfuAverageFillDepth: number | null;
   nfuFillVolume: number | null;
   nfuProjectDurationAmount: number | null;
   nfuProjectDurationUnit: string | null;
@@ -185,6 +186,7 @@ export interface ApplicationSubmissionUpdateDto {
   nfuWillImportFill?: boolean | null;
   nfuTotalFillPlacement?: number | null;
   nfuMaxFillDepth?: number | null;
+  nfuAverageFillDepth?: number | null;
   nfuFillVolume?: number | null;
   nfuProjectDurationAmount?: number | null;
   nfuProjectDurationUnit?: string | null;

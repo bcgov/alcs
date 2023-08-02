@@ -108,6 +108,9 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   nfuMaxFillDepth?: number | null;
 
   @AutoMap(() => Number)
+  nfuAverageFillDepth?: number | null;
+
+  @AutoMap(() => Number)
   nfuFillVolume?: number | null;
 
   @AutoMap(() => Number)
@@ -423,6 +426,10 @@ export class ApplicationSubmissionUpdateDto {
   @IsNumber()
   @IsOptional()
   nfuMaxFillDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  nfuAverageFillDepth?: number | null;
 
   @IsNumber()
   @IsOptional()
