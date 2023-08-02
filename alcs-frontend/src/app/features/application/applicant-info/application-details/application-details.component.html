@@ -26,6 +26,11 @@
 <section>
   <h3>Primary Contact Information</h3>
   <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.type?.label }}
+      <app-no-data *ngIf="!submission.primaryContact?.type?.label"></app-no-data>
+    </div>
     <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
       {{ submission.primaryContact?.firstName }}
