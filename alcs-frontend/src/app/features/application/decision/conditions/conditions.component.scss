@@ -78,7 +78,7 @@ p {
 
       .grid-3 {
         display: grid;
-        grid-template-columns: 33% 33% 33%;
+        grid-template-columns: 31% 31% 31%;
         grid-row-gap: 24px;
         grid-column-gap: 16px;
 
@@ -95,7 +95,7 @@ p {
   }
 
   .lot-table {
-    margin-top:12px;
+    margin-top: 12px;
     display: grid;
     grid-template-columns: max-content max-content max-content 0.8fr;
     grid-column-gap: 36px;
@@ -120,5 +120,16 @@ p {
 
   .component-labels {
     white-space: pre-wrap;
+  }
+
+  .inline-plan-numbers {
+    width: 100%;
+
+    .editing {
+      width: 100%;
+      .mat-mdc-form-field {
+        width: 100%;
+      }
+    }
   }
 }

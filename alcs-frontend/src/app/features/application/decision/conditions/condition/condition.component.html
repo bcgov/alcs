@@ -55,16 +55,19 @@
     ></app-inline-datepicker>
   </div>
 
-  <div *ngIf="isRequireSurveyPlan && planNumbers.length > 0" class="full-width">
+  <div *ngIf="isRequireSurveyPlan && planNumbers.length > 0" class="full-width grid-3">
     <ng-container *ngFor="let plan of planNumbers">
-      <div class="subheading2">
-        <span>{{ getComponentLabel(plan.applicationDecisionComponentUuid) }} Survey Plans</span>
-        <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+      <div class="full-width">
+        <div class="subheading2">
+          <span>{{ getComponentLabel(plan.applicationDecisionComponentUuid) }} Survey Plans</span>
+          <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+        </div>
+        <app-inline-text
+          class="inline-plan-numbers"
+          [value]="plan.planNumbers ?? undefined"
+          (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
+        ></app-inline-text>
       </div>
-      <app-inline-text
-        [value]="plan.planNumbers ?? undefined"
-        (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
-      ></app-inline-text>
     </ng-container>
   </div>
 

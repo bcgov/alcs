@@ -76,17 +76,6 @@ export class ApplicationDecisionComponentService {
     if (updateDto.subdApprovedLots) {
       component.subdApprovedLots = updateDto.subdApprovedLots;
       if (updateDto.uuid) {
-        // check updateDto.lots
-        // if lots uuid are the same => then update values
-        // if lots uuid is different delete the one that is not present and create new lot
-
-        console.log('updateComponentLots:', updateDto.lots?.length);
-
-        // // in case if all lots were removed
-        // if (updateDto.lots && updateDto.lots.length < 1) {
-        //   component.lots.forEach((e) => lotsToRemove.push(e.uuid));
-        // }
-
         const lotsToRemove = component.lots
           .filter((l1) => !updateDto.lots?.some((l2) => l1.uuid === l2.uuid))
           .map((l) => l.uuid);
@@ -102,13 +91,6 @@ export class ApplicationDecisionComponentService {
               lotToUpdate.alrArea = lot.alrArea;
               lotToUpdate.type = lot.type;
               lotToUpdate.size = lot.size;
-              console.log(
-                'lot to update:',
-                lot.uuid,
-                lot.alrArea,
-                lotToUpdate,
-                component.lots[index],
-              );
             }
           } else {
             component.lots.push(
@@ -120,7 +102,6 @@ export class ApplicationDecisionComponentService {
                 number: index + 1,
               }),
             );
-            console.log('lot to create: componentUuid', updateDto.uuid);
           }
         });
 
@@ -139,7 +120,6 @@ export class ApplicationDecisionComponentService {
               number: index + 1,
             }),
         );
-        console.log('create lots on component', component.lots);
       }
     }
   }
