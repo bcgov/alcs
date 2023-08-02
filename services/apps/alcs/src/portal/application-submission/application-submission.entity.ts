@@ -247,6 +247,16 @@ export class ApplicationSubmission extends Base {
     scale: 2,
     transformer: new ColumnNumericTransformer(),
   })
+  nfuAverageFillDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
   nfuMaxFillDepth: number | null;
 
   @AutoMap(() => Number)
