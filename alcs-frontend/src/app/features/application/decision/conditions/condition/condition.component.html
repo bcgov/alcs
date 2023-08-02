@@ -55,7 +55,7 @@
     ></app-inline-datepicker>
   </div>
 
-  <div *ngIf="isRequireSurveyPlan">
+  <div *ngIf="isRequireSurveyPlan && planNumbers.length > 0" class="full-width">
     <ng-container *ngFor="let plan of planNumbers">
       <div class="subheading2">
         <span>{{ getComponentLabel(plan.applicationDecisionComponentUuid) }} Survey Plans</span>
@@ -66,13 +66,15 @@
         (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
       ></app-inline-text>
     </ng-container>
+  </div>
 
-    <ng-container *ngIf="subdComponent !== undefined">
+  <div *ngIf="isRequireSurveyPlan" class="full-width">
+    <div *ngIf="subdComponent !== undefined">
       <div class="subheading2">
         <span>{{ getComponentLabel(subdComponent.uuid!) }} Survey Plans</span>
         <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
       </div>
-      <div class="parcel-table">
+      <div class="lot-table">
         <div class="subheading2">#</div>
         <div class="subheading2">Type</div>
         <div class="subheading2">Size (ha)</div>
@@ -80,22 +82,26 @@
         <ng-container *ngFor="let lot of subdComponent.lots; let i = index">
           <div>
             {{ lot.number }}
+            <app-no-data *ngIf="lot.number === null || lot.number === undefined"></app-no-data>
           </div>
           <div>
             {{ lot.type }}
+            <app-no-data *ngIf="lot.type === null || lot.number === undefined"></app-no-data>
           </div>
           <div>
             {{ lot.size }}
+            <app-no-data *ngIf="lot.size === null || lot.number === undefined"></app-no-data>
           </div>
           <div>
-            <app-inline-text
+            <app-inline-textarea
               [value]="lot.planNumbers ?? undefined"
+              [placeholder]="'Add plan'"
               (save)="savePlanNumbers(lot.uuid, condition.uuid, $event)"
-            ></app-inline-text>
+            ></app-inline-textarea>
           </div>
         </ng-container>
       </div>
-    </ng-container>
+    </div>
   </div>
 
   <div class="full-width">

@@ -176,4 +176,13 @@
   .pre-wrapped-text {
     white-space: pre-wrap;
   }
+
+  .lot-table {
+    margin-top:12px;
+    display: grid;
+    grid-template-columns: max-content max-content max-content 0.8fr;
+    grid-column-gap: 36px;
+    grid-row-gap: 12px;
+    align-items: center;
+  }
 }

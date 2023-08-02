@@ -173,10 +173,12 @@ export class ApplicationDecisionConditionService {
       },
     });
 
-    this.repository.manager.transaction(async (transactionalEntityManager) => {
-      await transactionalEntityManager.remove(conditionComponents);
-      await transactionalEntityManager.remove(conditions);
-    });
+    await this.repository.manager.transaction(
+      async (transactionalEntityManager) => {
+        await transactionalEntityManager.remove(conditionComponents);
+        await transactionalEntityManager.remove(conditions);
+      },
+    );
   }
 
   async update(

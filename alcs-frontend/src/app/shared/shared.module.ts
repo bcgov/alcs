@@ -44,11 +44,12 @@ import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-app
 import { InlineBooleanComponent } from './inline-editors/inline-boolean/inline-boolean.component';
 import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/inline-datepicker.component';
 import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
+import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
 import { InlineNumberComponent } from './inline-editors/inline-number/inline-number.component';
 import { InlineReviewOutcomeComponent } from './inline-editors/inline-review-outcome/inline-review-outcome.component';
 import { InlineTextComponent } from './inline-editors/inline-text/inline-text.component';
+import { InlineTextareaEditComponent } from './inline-editors/inline-textarea-edit/inline-textarea-edit.component';
 import { InlineTextareaComponent } from './inline-editors/inline-textarea/inline-textarea.component';
-import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
 import { LotsTableFormComponent } from './lots-table/lots-table-form.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
 import { NoDataComponent } from './no-data/no-data.component';
@@ -74,6 +75,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     StartOfDayPipe,
     MeetingOverviewComponent,
     InlineApplicantTypeComponent,
+    InlineTextareaEditComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
@@ -151,6 +153,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     StartOfDayPipe,
     MatTooltipModule,
     InlineApplicantTypeComponent,
+    InlineTextareaEditComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,

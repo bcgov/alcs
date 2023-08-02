@@ -93,4 +93,32 @@ p {
       color: colors.$grey-dark;
     }
   }
+
+  .lot-table {
+    margin-top:12px;
+    display: grid;
+    grid-template-columns: max-content max-content max-content 0.8fr;
+    grid-column-gap: 36px;
+    grid-row-gap: 12px;
+    align-items: center;
+  }
+
+  .container {
+    margin: 32px 0;
+  }
+
+  .subheading2 {
+    display: flex;
+    gap: 4px;
+  }
+
+  .icon {
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+  }
+
+  .component-labels {
+    white-space: pre-wrap;
+  }
 }
