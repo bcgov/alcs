@@ -13,6 +13,10 @@ from applications import (
     clean_applications,
     process_alcs_application_prep_fields,
 )
+from noi import (
+    process_nois,
+    clean_nois,
+)
 from constants import BATCH_UPLOAD_SIZE
 
 import_batch_size = BATCH_UPLOAD_SIZE
@@ -79,6 +83,19 @@ def app_prep_import_command_parser(import_batch_size, subparsers):
     )
     app_prep_import_command.set_defaults(func=import_batch_size)
 
+def noi_import_command_parser(import_batch_size, subparsers):
+    noi_import_command = subparsers.add_parser(
+        "noi-import",
+        help=f"Import NOI with specified batch size: (default: {import_batch_size})",
+    )
+    noi_import_command.add_argument(
+        "--batch-size",
+        type=int,
+        default=import_batch_size,
+        metavar="",
+        help=f"batch size (default: {import_batch_size})",
+    )
+    noi_import_command.set_defaults(func=import_batch_size)
 
 def import_command_parser(subparsers):
     import_command = subparsers.add_parser(
@@ -104,6 +121,7 @@ def setup_menu_args_parser(import_batch_size):
     document_import_command_parser(import_batch_size, subparsers)
     application_document_import_command_parser(import_batch_size, subparsers)
     app_prep_import_command_parser(import_batch_size, subparsers)
+    noi_import_command_parser(import_batch_size, subparsers)
     import_command_parser(subparsers)
 
     subparsers.add_parser("clean", help="Clean all imported data")
@@ -150,6 +168,9 @@ if __name__ == "__main__":
                     console.log("Processing application prep:")
                     process_alcs_application_prep_fields(batch_size=import_batch_size)
 
+                    console.log("Processing NOIs:")
+                    process_nois(batch_size=import_batch_size)
+
                     console.log("Done")
             case "clean":
                 with console.status("[bold green]Cleaning previous ETL...") as status:
@@ -159,6 +180,7 @@ if __name__ == "__main__":
                     clean_application_documents()
                     clean_documents()
                     clean_applications()
+                    clean_nois()
 
                     console.log("Done")
             case "document-import":
@@ -198,6 +220,32 @@ if __name__ == "__main__":
                     )
 
                     process_alcs_application_prep_fields(batch_size=import_batch_size)
+            case "noi-import":
+                console.log("Beginning OATS -> ALCS NOI import process")
+                with console.status(
+                    "[bold green]NOI import (notice_of_intent table update in ALCS)..."
+                ) as status:
+                    if args.batch_size:
+                        import_batch_size = args.batch_size
+
+                    console.log(
+                        f"Processing NOI import in batch size = {import_batch_size}"
+                    )
+
+                    process_nois(batch_size=import_batch_size)
+            case "application-import":
+                console.log("Beginning OATS -> ALCS application import process")
+                with console.status(
+                    "[bold green]application import (application table update in ALCS)..."
+                ) as status:
+                    if args.batch_size:
+                        import_batch_size = args.batch_size
+
+                    console.log(
+                        f"Processing applications import in batch size = {import_batch_size}"
+                    )
+
+                    process_applications(batch_size=import_batch_size)
 
     finally:
         if connection_pool:

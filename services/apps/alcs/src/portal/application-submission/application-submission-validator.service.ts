@@ -414,6 +414,7 @@ export class ApplicationSubmissionValidatorService {
         !applicationSubmission.nfuFillOriginDescription ||
         applicationSubmission.nfuTotalFillPlacement === null ||
         applicationSubmission.nfuMaxFillDepth === null ||
+        applicationSubmission.nfuAverageFillDepth === null ||
         applicationSubmission.nfuFillVolume === null ||
         applicationSubmission.nfuProjectDurationAmount === null ||
         !applicationSubmission.nfuProjectDurationUnit

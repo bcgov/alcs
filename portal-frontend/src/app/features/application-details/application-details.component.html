@@ -23,8 +23,12 @@
     Changes made to this section will not be flagged as
     <app-updated-banner></app-updated-banner> - ensure accuracy before saving.
   </app-warning-banner>
-
   <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ primaryContact?.type?.label }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.type?.label"></app-no-data>
+    </div>
     <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
       {{ primaryContact?.firstName }}

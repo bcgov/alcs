@@ -291,6 +291,7 @@ export class GenerateSubmissionDocumentService {
       nfuFillOriginDescription: submission.nfuFillOriginDescription,
       nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
       nfuMaxFillDepth: submission.nfuMaxFillDepth,
+      nfuAverageFillDepth: submission.nfuAverageFillDepth,
       nfuFillVolume: submission.nfuFillVolume,
       nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
       nfuProjectDurationUnit: submission.nfuProjectDurationUnit,

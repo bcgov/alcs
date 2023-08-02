@@ -6,8 +6,7 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, RelationOptions, Repository } from 'typeorm';
-import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
@@ -656,38 +655,42 @@ export class ApplicationSubmissionService {
       updateDto.nfuOutsideLands || application.nfuOutsideLands;
     application.nfuAgricultureSupport =
       updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
-    application.nfuWillImportFill =
-      updateDto.nfuWillImportFill !== undefined
-        ? updateDto.nfuWillImportFill
-        : application.nfuWillImportFill;
-    application.nfuTotalFillPlacement =
-      updateDto.nfuTotalFillPlacement !== undefined
-        ? updateDto.nfuTotalFillPlacement
-        : application.nfuTotalFillPlacement;
-    application.nfuMaxFillDepth =
-      updateDto.nfuMaxFillDepth !== undefined
-        ? updateDto.nfuMaxFillDepth
-        : application.nfuMaxFillDepth;
-    application.nfuFillVolume =
-      updateDto.nfuFillVolume !== undefined
-        ? updateDto.nfuFillVolume
-        : application.nfuFillVolume;
-    application.nfuProjectDurationUnit =
-      updateDto.nfuProjectDurationUnit !== undefined
-        ? updateDto.nfuProjectDurationUnit
-        : application.nfuProjectDurationUnit;
-    application.nfuProjectDurationAmount =
-      updateDto.nfuProjectDurationAmount !== undefined
-        ? updateDto.nfuProjectDurationAmount
-        : application.nfuProjectDurationAmount;
-    application.nfuFillTypeDescription =
-      updateDto.nfuFillTypeDescription !== undefined
-        ? updateDto.nfuFillTypeDescription
-        : application.nfuFillTypeDescription;
-    application.nfuFillOriginDescription =
-      updateDto.nfuFillOriginDescription !== undefined
-        ? updateDto.nfuFillOriginDescription
-        : application.nfuFillOriginDescription;
+    application.nfuWillImportFill = filterUndefined(
+      updateDto.nfuWillImportFill,
+      application.nfuWillImportFill,
+    );
+    application.nfuTotalFillPlacement = filterUndefined(
+      updateDto.nfuTotalFillPlacement,
+      application.nfuTotalFillPlacement,
+    );
+    application.nfuMaxFillDepth = filterUndefined(
+      updateDto.nfuMaxFillDepth,
+      application.nfuMaxFillDepth,
+    );
+    application.nfuAverageFillDepth = filterUndefined(
+      updateDto.nfuAverageFillDepth,
+      application.nfuAverageFillDepth,
+    );
+    application.nfuFillVolume = filterUndefined(
+      updateDto.nfuFillVolume,
+      application.nfuFillVolume,
+    );
+    application.nfuProjectDurationUnit = filterUndefined(
+      updateDto.nfuProjectDurationUnit,
+      application.nfuProjectDurationUnit,
+    );
+    application.nfuProjectDurationAmount = filterUndefined(
+      updateDto.nfuProjectDurationAmount,
+      application.nfuProjectDurationAmount,
+    );
+    application.nfuFillTypeDescription = filterUndefined(
+      updateDto.nfuFillTypeDescription,
+      application.nfuFillTypeDescription,
+    );
+    application.nfuFillOriginDescription = filterUndefined(
+      updateDto.nfuFillOriginDescription,
+      application.nfuFillOriginDescription,
+    );
 
     return application;
   }
