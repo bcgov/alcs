@@ -1,21 +1,13 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
-    Are you submitting this application as a follow-up to an ALC Notice of Intent (NOI)?
+    Has the ALC previously received an application or Notice of Intent for this proposal?
   </div>
   <div class="grid-double">
-    {{ _applicationSubmission.soilIsNOIFollowUp ? 'Yes' : 'No' }}
+    {{ _applicationSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
   </div>
-  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="subheading2 grid-1">Notice of Intent (NOI) ID</div>
-  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="grid-double">
-    {{ _applicationSubmission.soilNOIIDs }}
-  </div>
-  <div class="subheading2 grid-1">Does this proposal have previous ALC authorization?</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilHasPreviousALCAuthorization ? 'Yes' : 'No' }}
-  </div>
-  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="subheading2 grid-1">Application ID</div>
-  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="grid-double">
-    {{ _applicationSubmission.soilApplicationIDs }}
+  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
+  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="grid-double">
+    {{ _applicationSubmission.soilFollowUpIDs }}
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">

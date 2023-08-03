@@ -574,8 +574,7 @@ export class ApplicationSubmissionValidatorService {
     applicantDocuments: ApplicationDocument[],
   ) {
     if (
-      applicationSubmission.soilIsNOIFollowUp === null ||
-      applicationSubmission.soilHasPreviousALCAuthorization === null ||
+      applicationSubmission.soilIsFollowUp === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
       errors.push(
@@ -586,23 +585,12 @@ export class ApplicationSubmissionValidatorService {
     }
 
     if (
-      applicationSubmission.soilIsNOIFollowUp &&
-      !applicationSubmission.soilNOIIDs
+      applicationSubmission.soilIsFollowUp &&
+      !applicationSubmission.soilFollowUpIDs
     ) {
       errors.push(
         new ServiceValidationException(
-          `${applicationSubmission.typeCode} Proposal missing NOI IDs`,
-        ),
-      );
-    }
-
-    if (
-      applicationSubmission.soilHasPreviousALCAuthorization &&
-      !applicationSubmission.soilApplicationIDs
-    ) {
-      errors.push(
-        new ServiceValidationException(
-          `${applicationSubmission.typeCode} Proposal missing Application IDs`,
+          `${applicationSubmission.typeCode} Proposal missing Application or NOI IDs`,
         ),
       );
     }
@@ -667,7 +655,7 @@ export class ApplicationSubmissionValidatorService {
     const noticeOfWork = applicationDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
     );
-    if (applicationSubmission.soilIsNOIFollowUp && noticeOfWork.length === 0) {
+    if (applicationSubmission.soilIsFollowUp && noticeOfWork.length === 0) {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,

@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -28,10 +29,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
 
-  isNOIFollowUp = new FormControl<string | null>(null, [Validators.required]);
-  NOIIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
-  hasALCAuthorization = new FormControl<string | null>(null, [Validators.required]);
-  applicationIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
+  isFollowUp = new FormControl<string | null>(null, [Validators.required]);
+  followUpIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
@@ -40,10 +39,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
-    isNOIFollowUp: this.isNOIFollowUp,
-    NOIIDs: this.NOIIDs,
-    hasALCAuthorization: this.hasALCAuthorization,
-    applicationIDs: this.applicationIDs,
+    isFollowUp: this.isFollowUp,
+    followUpIDs: this.followUpIDs,
     purpose: this.purpose,
     fillTypeToPlace: this.fillTypeToPlace,
     alternativeMeasures: this.alternativeMeasures,
@@ -86,27 +83,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
-        let isNOIFollowUp = null;
-        if (applicationSubmission.soilIsNOIFollowUp !== null) {
-          isNOIFollowUp = applicationSubmission.soilIsNOIFollowUp ? 'true' : 'false';
-          if (isNOIFollowUp) {
-            this.NOIIDs.enable();
-          }
-        }
-
-        let hasALCAuthorization = null;
-        if (applicationSubmission.soilHasPreviousALCAuthorization !== null) {
-          hasALCAuthorization = applicationSubmission.soilHasPreviousALCAuthorization ? 'true' : 'false';
-          if (hasALCAuthorization) {
-            this.applicationIDs.enable();
-          }
+        if (applicationSubmission.soilIsFollowUp) {
+          this.followUpIDs.enable();
         }
 
         this.form.patchValue({
-          isNOIFollowUp: isNOIFollowUp,
-          hasALCAuthorization: hasALCAuthorization,
-          NOIIDs: applicationSubmission.soilNOIIDs,
-          applicationIDs: applicationSubmission.soilApplicationIDs,
+          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
+          followUpIDs: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
@@ -133,10 +116,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId && this.form.dirty) {
-      const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
-      const soilNOIIDs = this.NOIIDs.getRawValue();
-      const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
-      const soilApplicationIDs = this.applicationIDs.getRawValue();
+      const isFollowUp = this.isFollowUp.getRawValue();
+      const soilFollowUpIDs = this.followUpIDs.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilFillTypeToPlace = this.fillTypeToPlace.getRawValue();
       const soilAlternativeMeasures = this.alternativeMeasures.getRawValue();
@@ -147,10 +128,8 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilFillTypeToPlace,
         soilAlternativeMeasures,
         soilReduceNegativeImpacts,
-        soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),
-        soilNOIIDs,
-        soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
-        soilApplicationIDs,
+        soilIsFollowUp: parseStringToBoolean(isFollowUp),
+        soilFollowUpIDs,
         soilToPlaceVolume: this.fillTableData?.volume ?? null,
         soilToPlaceArea: this.fillTableData?.area ?? null,
         soilToPlaceMaximumDepth: this.fillTableData?.maximumDepth ?? null,
@@ -170,21 +149,12 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  onChangeNOI(selectedValue: string) {
+  onChangeFollowUp(selectedValue: string) {
     if (selectedValue === 'true') {
-      this.NOIIDs.enable();
+      this.followUpIDs.enable();
     } else if (selectedValue === 'false') {
-      this.NOIIDs.disable();
-      this.NOIIDs.setValue(null);
-    }
-  }
-
-  onChangeALCAuthorization(selectedValue: string) {
-    if (selectedValue === 'true') {
-      this.applicationIDs.enable();
-    } else if (selectedValue === 'false') {
-      this.applicationIDs.disable();
-      this.applicationIDs.setValue(null);
+      this.followUpIDs.disable();
+      this.followUpIDs.setValue(null);
     }
   }
 

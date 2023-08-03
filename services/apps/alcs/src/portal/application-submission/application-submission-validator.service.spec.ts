@@ -639,8 +639,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyRemovedVolume: 5,
         soilAlreadyRemovedMaximumDepth: 5,
         soilToRemoveMaximumDepth: 5,
@@ -679,24 +678,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOIDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'ROSO',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`ROSO Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`ROSO Proposal missing Application IDs`),
+          new Error(`ROSO Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -704,8 +698,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'ROSO',
       });
 
@@ -739,8 +732,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyPlacedVolume: 5,
         soilAlreadyPlacedMaximumDepth: 5,
         soilToPlaceMaximumDepth: 5,
@@ -785,24 +777,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOI IDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'POFO',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`POFO Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`POFO Proposal missing Application IDs`),
+          new Error(`POFO Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -810,8 +797,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'POFO',
       });
 
@@ -846,8 +832,7 @@ describe('ApplicationSubmissionValidatorService', () => {
         owners: [],
         purpose: 'purpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyPlacedVolume: 5,
         soilAlreadyPlacedMaximumDepth: 5,
         soilToPlaceMaximumDepth: 5,
@@ -893,24 +878,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOI IDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'PFRS',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`PFRS Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`PFRS Proposal missing Application IDs`),
+          new Error(`PFRS Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -918,8 +898,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'PFRS',
       });
 
@@ -950,8 +929,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should require a notice of work for both mining and notice true', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         soilIsExtractionOrMining: true,
         soilHasSubmittedNotice: true,
         typeCode: 'PFRS',

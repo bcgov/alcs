@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
@@ -37,10 +38,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   noticeOfWork: ApplicationDocumentDto[] = [];
   areComponentsDirty = false;
 
-  isNOIFollowUp = new FormControl<string | null>(null, [Validators.required]);
-  NOIIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
-  hasALCAuthorization = new FormControl<string | null>(null, [Validators.required]);
-  applicationIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
+  isFollowUp = new FormControl<string | null>(null, [Validators.required]);
+  followUpIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
@@ -52,10 +51,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   hasSubmittedNotice = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
 
   form = new FormGroup({
-    isNOIFollowUp: this.isNOIFollowUp,
-    NOIIDs: this.NOIIDs,
-    hasALCAuthorization: this.hasALCAuthorization,
-    applicationIDs: this.applicationIDs,
+    isFollowUp: this.isFollowUp,
+    followUpIDs: this.followUpIDs,
     purpose: this.purpose,
     soilTypeRemoved: this.soilTypeRemoved,
     reduceNegativeImpacts: this.reduceNegativeImpacts,
@@ -120,44 +117,21 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
-        let isNOIFollowUp = null;
-        if (applicationSubmission.soilIsNOIFollowUp !== null) {
-          isNOIFollowUp = applicationSubmission.soilIsNOIFollowUp ? 'true' : 'false';
-          if (isNOIFollowUp) {
-            this.NOIIDs.enable();
-          }
+        if (applicationSubmission.soilIsFollowUp) {
+          this.followUpIDs.enable();
         }
 
-        let hasALCAuthorization = null;
-        if (applicationSubmission.soilHasPreviousALCAuthorization !== null) {
-          hasALCAuthorization = applicationSubmission.soilHasPreviousALCAuthorization ? 'true' : 'false';
-          if (hasALCAuthorization) {
-            this.applicationIDs.enable();
-          }
+        if (applicationSubmission.soilIsExtractionOrMining) {
+          this.hasSubmittedNotice.enable();
         }
 
-        let isExtractionOrMining = null;
-        if (applicationSubmission.soilIsExtractionOrMining !== null) {
-          isExtractionOrMining = applicationSubmission.soilIsExtractionOrMining ? 'true' : 'false';
-          if (isExtractionOrMining) {
-            this.hasSubmittedNotice.enable();
-          }
-        }
-
-        let hasSubmittedNotice = null;
-        if (applicationSubmission.soilHasSubmittedNotice !== null) {
-          hasSubmittedNotice = applicationSubmission.soilHasSubmittedNotice ? 'true' : 'false';
-        }
-
-        if (isExtractionOrMining && hasSubmittedNotice) {
+        if (applicationSubmission.soilIsExtractionOrMining && applicationSubmission.soilHasSubmittedNotice) {
           this.requiresNoticeOfWork = true;
         }
 
         this.form.patchValue({
-          isNOIFollowUp: isNOIFollowUp,
-          hasALCAuthorization: hasALCAuthorization,
-          NOIIDs: applicationSubmission.soilNOIIDs,
-          applicationIDs: applicationSubmission.soilApplicationIDs,
+          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
+          followUpIDs: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
@@ -165,8 +139,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
           projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
-          isExtractionOrMining: isExtractionOrMining,
-          hasSubmittedNotice: hasSubmittedNotice,
+          isExtractionOrMining: formatBooleanToString(applicationSubmission.soilIsExtractionOrMining),
+          hasSubmittedNotice: formatBooleanToString(applicationSubmission.soilHasSubmittedNotice),
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -188,10 +162,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   protected async save() {
     if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
-      const isNOIFollowUp = this.isNOIFollowUp.getRawValue();
-      const soilNOIIDs = this.NOIIDs.getRawValue();
-      const hasALCAuthorization = this.hasALCAuthorization.getRawValue();
-      const soilApplicationIDs = this.applicationIDs.getRawValue();
+      const isFollowUp = this.isFollowUp.getRawValue();
+      const followUpIDs = this.followUpIDs.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
       const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
@@ -204,10 +176,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         soilFillTypeToPlace,
         soilReduceNegativeImpacts,
         soilAlternativeMeasures,
-        soilIsNOIFollowUp: parseStringToBoolean(isNOIFollowUp),
-        soilNOIIDs,
-        soilHasPreviousALCAuthorization: parseStringToBoolean(hasALCAuthorization),
-        soilApplicationIDs,
+        soilIsFollowUp: parseStringToBoolean(isFollowUp),
+        soilFollowUpIDs: followUpIDs,
         soilToRemoveVolume: this.removalTableData?.volume ?? null,
         soilToRemoveArea: this.removalTableData?.area ?? null,
         soilToRemoveMaximumDepth: this.removalTableData?.maximumDepth ?? null,
@@ -237,21 +207,12 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  onChangeNOI(selectedValue: string) {
+  onChangeIsFollowUp(selectedValue: string) {
     if (selectedValue === 'true') {
-      this.NOIIDs.enable();
+      this.followUpIDs.enable();
     } else if (selectedValue === 'false') {
-      this.NOIIDs.disable();
-      this.NOIIDs.setValue(null);
-    }
-  }
-
-  onChangeALCAuthorization(selectedValue: string) {
-    if (selectedValue === 'true') {
-      this.applicationIDs.enable();
-    } else if (selectedValue === 'false') {
-      this.applicationIDs.disable();
-      this.applicationIDs.setValue(null);
+      this.followUpIDs.disable();
+      this.followUpIDs.setValue(null);
     }
   }
 

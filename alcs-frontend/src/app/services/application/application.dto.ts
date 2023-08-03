@@ -166,10 +166,8 @@ export interface ApplicationSubmissionDto {
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
-  soilIsNOIFollowUp: boolean | null;
-  soilNOIIDs: string | null;
-  soilHasPreviousALCAuthorization: boolean | null;
-  soilApplicationIDs: string | null;
+  soilIsFollowUp: boolean | null;
+  soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;
   soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;

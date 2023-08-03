@@ -1,45 +1,22 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
-    Are you submitting this application as a follow-up to an ALC Notice of Intent (NOI)?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsNOIFollowUp')"></app-updated-banner>
+    Has the ALC previously received an application or Notice of Intent for this proposal?
+    <app-updated-banner *ngIf="updatedFields.includes('soilIsFollowUp')"></app-updated-banner>
   </div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.soilIsNOIFollowUp !== null">
-      {{ _applicationSubmission.soilIsNOIFollowUp ? 'Yes' : 'No' }}
+    <span *ngIf="_applicationSubmission.soilIsFollowUp !== null">
+      {{ _applicationSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
     </span>
-    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilIsNOIFollowUp === null"></app-no-data>
+    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilIsFollowUp === null"></app-no-data>
   </div>
 
-  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="subheading2 grid-1">
-    Notice of Intent (NOI) ID
-    <app-updated-banner *ngIf="updatedFields.includes('soilNOIIDs')"></app-updated-banner>
+  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">
+    Application or NOI ID
+    <app-updated-banner *ngIf="updatedFields.includes('soilFollowUpIDs')"></app-updated-banner>
   </div>
-  <div *ngIf="_applicationSubmission.soilIsNOIFollowUp" class="grid-double">
-    {{ _applicationSubmission.soilNOIIDs }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilNOIIDs"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Does this proposal have previous ALC authorization?
-    <app-updated-banner *ngIf="updatedFields.includes('soilHasPreviousALCAuthorization')"></app-updated-banner>
-  </div>
-  <div class="grid-double">
-    <span *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization !== null">
-      {{ _applicationSubmission.soilHasPreviousALCAuthorization ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data
-      [showRequired]="showErrors"
-      *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization === null"
-    ></app-no-data>
-  </div>
-
-  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="subheading2 grid-1">
-    Application ID
-    <app-updated-banner *ngIf="updatedFields.includes('soilApplicationIDs')"></app-updated-banner>
-  </div>
-  <div *ngIf="_applicationSubmission.soilHasPreviousALCAuthorization" class="grid-double">
-    {{ _applicationSubmission.soilApplicationIDs }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilApplicationIDs"></app-no-data>
+  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="grid-double">
+    {{ _applicationSubmission.soilFollowUpIDs }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFollowUpIDs"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">
