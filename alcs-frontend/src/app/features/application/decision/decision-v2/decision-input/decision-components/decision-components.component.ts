@@ -118,16 +118,16 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
             (e) => e.code === typeCode && e.uiCode !== 'COPY'
           ),
           subdApprovedLots: this.application.submittedApplication?.subdProposedLots.map(
-            (e, index) =>
+            (lot, index) =>
               ({
-                ...e,
+                ...lot,
                 number: index,
               } as ProposedDecisionLotDto)
           ),
           lots: this.application.submittedApplication?.subdProposedLots.map(
-            (e, index) =>
+            (lot, index) =>
               ({
-                ...e,
+                ...lot,
                 number: index,
               } as ProposedDecisionLotDto)
           ),

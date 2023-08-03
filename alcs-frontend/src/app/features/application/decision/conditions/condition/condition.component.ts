@@ -103,7 +103,9 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
       this.planNumbers =
         this.condition.components
-          ?.filter((e) => e.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD)
+          ?.filter(
+            (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+          )
           .map(
             (component) =>
               ({
