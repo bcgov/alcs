@@ -9,7 +9,7 @@ with oats_documents_to_map as (
 		od.alr_application_id AS oats_application_id
 	FROM oats.oats_documents od 
 
-		JOIN alcs."document_noi" d 
+		JOIN alcs."document" d 
 		ON  d.oats_document_id = od.document_id::TEXT  
 		
 		JOIN alcs.application_document_code adc -- reusing application table mapping
