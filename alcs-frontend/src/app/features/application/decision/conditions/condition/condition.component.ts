@@ -74,13 +74,13 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         const planNumbers = await this.conditionLotService.fetchConditionLots(this.condition.uuid, subdComponent.uuid);
         subdComponent.lots = subdComponent.lots
           ?.map(
-            (l) =>
+            (lot) =>
               ({
-                ...l,
-                planNumbers: planNumbers.find((p) => p.componentLotUuid === l.uuid)?.planNumbers,
+                ...lot,
+                planNumbers: planNumbers.find((planNumber) => planNumber.componentLotUuid === lot.uuid)?.planNumbers,
               } as ProposedDecisionLotDto)
           )
-          .sort((l1, l2) => l1.number - l2.number);
+          .sort((a, b) => a.number - b.number);
         this.subdComponent = subdComponent;
       }
     }
@@ -88,17 +88,17 @@ export class ConditionComponent implements OnInit, AfterViewInit {
 
   async loadPlanNumber() {
     const subdComponent = this.condition.components?.find(
-      (e) => e.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+      (component) => component.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD
     );
     if (
       this.condition.components &&
       this.condition.components.some(
-        (e) => e.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+        (component) => component.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
       ) &&
       this.isRequireSurveyPlan
     ) {
       const planNumbers = (await this.conditionService.fetchPlanNumbers(this.condition.uuid)).filter(
-        (e) => e.applicationDecisionComponentUuid !== subdComponent?.uuid
+        (planNumber) => planNumber.applicationDecisionComponentUuid !== subdComponent?.uuid
       );
 
       this.planNumbers =
@@ -111,7 +111,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
               ({
                 applicationDecisionComponentUuid: component.uuid,
                 applicationDecisionConditionUuid: this.condition.uuid,
-                planNumbers: planNumbers.find((e) => e.applicationDecisionComponentUuid === component.uuid)
+                planNumbers: planNumbers.find((planNumber) => planNumber.applicationDecisionComponentUuid === component.uuid)
                   ?.planNumbers,
               } as ApplicationDecisionConditionToComponentPlanNumberDto)
           ) ?? [];
