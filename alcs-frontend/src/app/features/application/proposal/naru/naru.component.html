@@ -1,12 +1,4 @@
 <div>
-  <div class="subheading2">Expiry Date</div>
-  <app-inline-datepicker
-    [value]="application?.proposalExpiryDate"
-    (save)="updateApplicationValue('proposalExpiryDate', $event)"
-  ></app-inline-datepicker>
-</div>
-
-<div>
   <div class="subheading2">Use End Date</div>
   <app-inline-datepicker
     [value]="application?.proposalEndDate"

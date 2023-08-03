@@ -30,7 +30,6 @@ import { ProposalComponent } from './proposal/proposal.component';
 import { ExclProposalComponent } from './proposal/excl/excl.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
-import { TurProposalComponent } from './proposal/tur/tur.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
 import { DecisionMeetingComponent } from './review/decision-meeting/decision-meeting.component';
 import { ReviewComponent } from './review/review.component';
@@ -74,7 +73,6 @@ const routes: Routes = [
     NfuProposalComponent,
     SubdProposalComponent,
     SoilProposalComponent,
-    TurProposalComponent,
     ExclProposalComponent,
     NaruProposalComponent,
     InclProposalComponent,
