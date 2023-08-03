@@ -1,14 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-inline-edit[value]',
+  selector: 'app-inline-textarea[value]',
   templateUrl: './inline-textarea.component.html',
   styleUrls: ['./inline-textarea.component.scss'],
 })
 export class InlineTextareaComponent {
-  @Input() value: string = '';
+  @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
-  @Output() save = new EventEmitter<string>();
+  @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
 
@@ -30,8 +30,8 @@ export class InlineTextareaComponent {
   }
 
   confirmEdit() {
-    if (this.pendingValue !== this.value && this.pendingValue !== undefined) {
-      this.save.emit(this.pendingValue);
+    if (this.pendingValue !== this.value) {
+      this.save.emit(this.pendingValue?.toString() ?? null);
       this.value = this.pendingValue;
     }
 

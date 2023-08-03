@@ -3,9 +3,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionComponentLotService } from '../../../application-component-lot/application-decision-component-lot.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   CreateApplicationDecisionComponentDto,
+  UpdateApplicationDecisionComponentDto,
 } from './application-decision-component.dto';
 import { ApplicationDecisionComponent } from './application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision-component.service';
@@ -15,9 +18,11 @@ describe('ApplicationDecisionComponentService', () => {
   let mockApplicationDecisionComponentRepository: DeepMocked<
     Repository<ApplicationDecisionComponent>
   >;
+  let mockApplicationDecisionComponentLotService: DeepMocked<ApplicationDecisionComponentLotService>;
 
   beforeEach(async () => {
     mockApplicationDecisionComponentRepository = createMock();
+    mockApplicationDecisionComponentLotService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -25,6 +30,10 @@ describe('ApplicationDecisionComponentService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionComponent),
           useValue: mockApplicationDecisionComponentRepository,
+        },
+        {
+          provide: ApplicationDecisionComponentLotService,
+          useValue: mockApplicationDecisionComponentLotService,
         },
       ],
     }).compile();
@@ -52,6 +61,9 @@ describe('ApplicationDecisionComponentService', () => {
       mockApplicationDecisionComponentRepository.findOneOrFail,
     ).toBeCalledWith({
       where: { uuid: 'fake' },
+      relations: {
+        lots: true,
+      },
     });
     expect(result).toBeDefined();
   });
@@ -169,6 +181,9 @@ describe('ApplicationDecisionComponentService', () => {
       mockApplicationDecisionComponentRepository.findOneOrFail,
     ).toBeCalledWith({
       where: { uuid: 'fake' },
+      relations: {
+        lots: true,
+      },
     });
     expect(result[0].uuid).toEqual(mockDto.uuid);
     expect(result[0].alrArea).toEqual(mockDto.alrArea);
@@ -248,6 +263,9 @@ describe('ApplicationDecisionComponentService', () => {
       mockApplicationDecisionComponentRepository.findOneOrFail,
     ).toBeCalledWith({
       where: { uuid: 'fake' },
+      relations: {
+        lots: true,
+      },
     });
     expect(result[0].uuid).toEqual(mockDto.uuid);
     expect(result[0].alrArea).toEqual(mockDto.alrArea);
@@ -280,5 +298,41 @@ describe('ApplicationDecisionComponentService', () => {
     };
 
     expect(mockValidationWrapper).toThrow(ServiceValidationException);
+  });
+
+  it('should call lot service if there any lots to remove', async () => {
+    mockApplicationDecisionComponentRepository.findOneOrFail.mockResolvedValue({
+      lots: [new ApplicationDecisionComponentLot({ uuid: 'remove' })],
+    } as ApplicationDecisionComponent);
+    mockApplicationDecisionComponentRepository.save.mockResolvedValue(
+      {} as ApplicationDecisionComponent,
+    );
+    mockApplicationDecisionComponentLotService.softRemove.mockResolvedValue([]);
+
+    const updateDtos = [
+      {
+        uuid: 'fake',
+        lots: [
+          {
+            index: 1,
+            componentUuid: '2',
+            type: null,
+            alrArea: null,
+            size: null,
+          },
+        ],
+      } as UpdateApplicationDecisionComponentDto,
+    ];
+
+    const result = await service.createOrUpdate(updateDtos);
+
+    expect(result).toBeDefined();
+    expect(
+      mockApplicationDecisionComponentRepository.findOneOrFail,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationDecisionComponentLotService.softRemove,
+    ).toBeCalledTimes(1);
+    expect(mockApplicationDecisionComponentRepository.save).toBeCalledTimes(1);
   });
 });

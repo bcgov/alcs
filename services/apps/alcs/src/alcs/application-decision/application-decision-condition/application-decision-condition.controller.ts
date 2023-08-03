@@ -1,13 +1,15 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import {
+  ApplicationDecisionConditionComponentDto,
   ApplicationDecisionConditionDto,
   UpdateApplicationDecisionConditionDto,
 } from './application-decision-condition.dto';
@@ -43,6 +45,38 @@ export class ApplicationDecisionConditionController {
       updatedCondition,
       ApplicationDecisionCondition,
       ApplicationDecisionConditionDto,
+    );
+  }
+
+  @Get('/plan-numbers/:uuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async getPlanNumbers(@Param('uuid') uuid: string) {
+    const planNumbers = await this.conditionService.getPlanNumbers(uuid);
+
+    return await this.mapper.mapArrayAsync(
+      planNumbers,
+      ApplicationDecisionConditionComponentPlanNumber,
+      ApplicationDecisionConditionComponentDto,
+    );
+  }
+
+  @Patch('/plan-numbers/condition/:conditionUuid/component/:componentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateConditionPlanNumbers(
+    @Param('conditionUuid') conditionUuid: string,
+    @Param('componentUuid') componentUuid: string,
+    @Body() planNumbers: string | null,
+  ) {
+    const planNumber = await this.conditionService.updateConditionPlanNumbers(
+      conditionUuid,
+      componentUuid,
+      planNumbers,
+    );
+
+    return await this.mapper.mapAsync(
+      planNumber,
+      ApplicationDecisionConditionComponentPlanNumber,
+      ApplicationDecisionConditionComponentDto,
     );
   }
 }

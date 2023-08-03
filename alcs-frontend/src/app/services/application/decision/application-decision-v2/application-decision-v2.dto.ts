@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
-import { ProposedLot } from '../../application.dto';
 
 export enum DecisionMaker {
   CEO = 'CEOP',
@@ -112,6 +111,22 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
+export interface UpdateProposedDecisionLotDto {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
+}
+
+export interface ProposedDecisionLotDto {
+  uuid: string;
+  planNumbers: string | null;
+  index: number;
+  componentUuid: string;
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
+}
+
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
@@ -148,7 +163,8 @@ export interface RosoDecisionComponentDto {
 }
 
 export interface SubdDecisionComponentDto {
-  subdApprovedLots?: ProposedLot[];
+  // subdApprovedLots?: ProposedDecisionLotDto[];
+  lots?: ProposedDecisionLotDto[];
 }
 
 export interface InclExclDecisionComponentDto {
@@ -229,4 +245,16 @@ export interface UpdateApplicationDecisionConditionDto {
   completionDate?: number | null;
   supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+}
+
+export interface ApplicationDecisionComponentToConditionLotDto {
+  componentLotUuid: string;
+  conditionUuid: string;
+  planNumbers: string | null;
+}
+
+export interface ApplicationDecisionConditionToComponentPlanNumberDto {
+  applicationDecisionComponentUuid: string;
+  applicationDecisionConditionUuid: string;
+  planNumbers: string | null;
 }

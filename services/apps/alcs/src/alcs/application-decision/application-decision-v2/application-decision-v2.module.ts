@@ -13,6 +13,13 @@ import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
 import { ApplicationCeoCriterionCode } from '../application-ceo-criterion/application-ceo-criterion.entity';
+import { ApplicationDecisionComponentLotController } from '../application-component-lot/application-decision-component-lot.controller';
+import { ApplicationDecisionComponentLot } from '../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionComponentLotService } from '../application-component-lot/application-decision-component-lot.service';
+import { ApplicationConditionToComponentLotController } from '../application-condition-to-component-lot/application-condition-to-component-lot.controller';
+import { ApplicationConditionToComponentLotService } from '../application-condition-to-component-lot/application-condition-to-component-lot.service';
+import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionConditionType } from '../application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionConditionController } from '../application-decision-condition/application-decision-condition.controller';
 import { ApplicationDecisionCondition } from '../application-decision-condition/application-decision-condition.entity';
@@ -61,6 +68,9 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
       ApplicationSubmissionToSubmissionStatus,
       ApplicationSubmission,
       ApplicationSubmissionStatusType,
+      ApplicationDecisionComponentLot,
+      ApplicationDecisionConditionToComponentLot,
+      ApplicationDecisionConditionComponentPlanNumber,
     ]),
     forwardRef(() => BoardModule),
     ApplicationModule,
@@ -81,11 +91,15 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
     ApplicationDecisionProfile,
     ApplicationDecisionComponentService,
     ApplicationDecisionConditionService,
+    ApplicationDecisionComponentLotService,
+    ApplicationConditionToComponentLotService,
   ],
   controllers: [
     ApplicationDecisionV2Controller,
     ApplicationDecisionComponentController,
     ApplicationDecisionConditionController,
+    ApplicationDecisionComponentLotController,
+    ApplicationConditionToComponentLotController,
   ],
   exports: [ApplicationDecisionV2Service],
 })

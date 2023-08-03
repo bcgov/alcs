@@ -1,26 +1,28 @@
-import { Component, Input } from '@angular/core';
-import { ApplicationDecisionComponentService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { Component, Input, OnInit } from '@angular/core';
+import { ApplicationDecisionComponentLotService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component-lot/application-decision-component-lot.service';
+import {
+  DecisionComponentDto,
+  ProposedDecisionLotDto,
+} from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-subd[component]',
   templateUrl: './subd.component.html',
   styleUrls: ['./subd.component.scss'],
 })
-export class SubdComponent {
-  constructor(private componentService: ApplicationDecisionComponentService) {}
+export class SubdComponent implements OnInit {
+  constructor(private componentLotService: ApplicationDecisionComponentLotService) {}
 
   @Input() component!: DecisionComponentDto;
 
-  async onSaveAlrArea(i: number, alrArea: string | null) {
-    const lots = this.component.subdApprovedLots;
-    if (lots && this.component.uuid) {
-      lots[i].alrArea = alrArea ? parseFloat(alrArea) : null;
-      await this.componentService.update(this.component.uuid, {
-        uuid: this.component.uuid,
-        subdApprovedLots: lots,
-        applicationDecisionComponentTypeCode: this.component.applicationDecisionComponentTypeCode,
-      });
+  ngOnInit(): void {
+    this.component.lots = this.component.lots?.sort((a, b) => a.index - b.index) ?? undefined;
+  }
+
+  async onSaveAlrArea(lot: ProposedDecisionLotDto, alrArea: string | null) {
+    if (lot.uuid) {
+      lot.alrArea = alrArea ? parseFloat(alrArea) : null;
+      await this.componentLotService.update(lot.uuid, lot);
     }
   }
 }

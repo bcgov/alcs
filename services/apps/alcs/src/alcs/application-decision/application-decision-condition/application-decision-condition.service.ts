@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import {
@@ -17,6 +19,10 @@ export class ApplicationDecisionConditionService {
     private repository: Repository<ApplicationDecisionCondition>,
     @InjectRepository(ApplicationDecisionConditionType)
     private typeRepository: Repository<ApplicationDecisionConditionType>,
+    @InjectRepository(ApplicationDecisionConditionComponentPlanNumber)
+    private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
+    @InjectRepository(ApplicationDecisionConditionToComponentLot)
+    private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
   ) {}
 
   async getOneOrFail(uuid: string) {
@@ -92,6 +98,7 @@ export class ApplicationDecisionConditionService {
             'Failed to find matching component',
           );
         }
+
         condition.components = mappedComponents;
       } else {
         condition.components = null;
@@ -106,8 +113,19 @@ export class ApplicationDecisionConditionService {
     return updatedConditions;
   }
 
-  async remove(components: ApplicationDecisionCondition[]) {
-    await this.repository.remove(components);
+  async remove(conditions: ApplicationDecisionCondition[]) {
+    const lots = await this.conditionComponentLotRepository.find({
+      where: {
+        conditionUuid: In(conditions.map((e) => e.uuid)),
+      },
+    });
+
+    await this.repository.manager.transaction(
+      async (transactionalEntityManager) => {
+        await transactionalEntityManager.remove(lots);
+        await transactionalEntityManager.remove(conditions);
+      },
+    );
   }
 
   async update(
@@ -116,5 +134,38 @@ export class ApplicationDecisionConditionService {
   ) {
     await this.repository.update(existingCondition.uuid, updates);
     return await this.getOneOrFail(existingCondition.uuid);
+  }
+
+  async getPlanNumbers(uuid: string) {
+    return await this.conditionComponentPlanNumbersRepository.findBy({
+      applicationDecisionConditionUuid: uuid,
+    });
+  }
+
+  async updateConditionPlanNumbers(
+    conditionUuid: string,
+    componentUuid: string,
+    planNumbers: string | null,
+  ) {
+    let conditionToComponent =
+      await this.conditionComponentPlanNumbersRepository.findOneBy({
+        applicationDecisionComponentUuid: componentUuid,
+        applicationDecisionConditionUuid: conditionUuid,
+      });
+
+    if (conditionToComponent) {
+      conditionToComponent.planNumbers = planNumbers;
+    } else {
+      conditionToComponent =
+        new ApplicationDecisionConditionComponentPlanNumber({
+          applicationDecisionComponentUuid: componentUuid,
+          applicationDecisionConditionUuid: conditionUuid,
+          planNumbers,
+        });
+    }
+
+    await this.conditionComponentPlanNumbersRepository.save(
+      conditionToComponent,
+    );
   }
 }

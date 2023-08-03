@@ -8,27 +8,32 @@
   <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
   <div>
     <div class="subheading2">Total Number of Lots Approved</div>
-    {{ component.subdApprovedLots?.length }}
-    <app-no-data *ngIf="component.subdApprovedLots === null || component.subdApprovedLots === undefined"></app-no-data>
+    {{ component.lots?.length }}
+    <app-no-data *ngIf="component.lots === null || component.lots === undefined"></app-no-data>
   </div>
 </div>
-<div *ngIf="component.subdApprovedLots" class="full-width">
-  <table>
-    <thead>
-      <th>#</th>
-      <th>Type</th>
-      <th>Size (ha)</th>
-      <th>ALR Area (ha)</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let lot of component.subdApprovedLots; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ lot.type }}</td>
-        <td>{{ lot.size }}</td>
-        <td>
-          <app-inline-number (save)="onSaveAlrArea(i, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="component.lots" class="full-width">
+  <div class="lot-table">
+    <div class="subheading2">#</div>
+    <div class="subheading2">Type</div>
+    <div class="subheading2">Size (ha)</div>
+    <div class="subheading2">ALR Area (ha)</div>
+    <ng-container *ngFor="let lot of component.lots; let i = index">
+      <div>
+        {{ lot.index }}
+        <app-no-data *ngIf="lot.index === null || lot.index === undefined"></app-no-data>
+      </div>
+      <div>
+        {{ lot.type }}
+        <app-no-data *ngIf="lot.type === null || lot.type === undefined"></app-no-data>
+      </div>
+      <div>
+        {{ lot.size }}
+        <app-no-data *ngIf="lot.size === null || lot.size === undefined"></app-no-data>
+      </div>
+      <div>
+        <app-inline-number (save)="onSaveAlrArea(lot, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
+      </div>
+    </ng-container>
+  </div>
 </div>

@@ -1,7 +1,16 @@
 import { AutoMap } from '@automapper/classes';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
+import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
@@ -82,4 +91,15 @@ export class ApplicationDecisionCondition extends Base {
     name: 'application_decision_condition_component',
   })
   components: ApplicationDecisionComponent[] | null;
+
+  @OneToMany(
+    () => ApplicationDecisionConditionComponentPlanNumber,
+    (c) => c.condition,
+    {
+      cascade: ['insert', 'update', 'remove'],
+    },
+  )
+  conditionToComponentsWithPlanNumber:
+    | ApplicationDecisionConditionComponentPlanNumber[]
+    | null;
 }

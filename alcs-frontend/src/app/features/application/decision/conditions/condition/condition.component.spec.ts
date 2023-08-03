@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import { ApplicationDecisionConditionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { SharedModule } from '../../../../../shared/shared.module';
+import { ApplicationDecisionConditionWithStatus, ConditionComponentLabels } from '../conditions.component';
 
 import { ConditionComponent } from './condition.component';
 
@@ -32,9 +33,9 @@ describe('ConditionComponent', () => {
     component = fixture.componentInstance;
 
     component.condition = createMock<
-      ApplicationDecisionConditionDto & {
-        conditionComponentsLabels?: string[];
-        status: string;
+      ApplicationDecisionConditionWithStatus & {
+        componentLabelsStr?: string;
+        componentLabels?: ConditionComponentLabels[];
       }
     >();
     component.condition.conditionComponentsLabels = [];

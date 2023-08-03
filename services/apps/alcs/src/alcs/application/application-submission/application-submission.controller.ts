@@ -60,6 +60,7 @@ export class ApplicationSubmissionController {
     if (!fileNumber) {
       throw new ServiceValidationException('File number is required');
     }
+
     await this.applicationSubmissionService.update(fileNumber, updateDto);
     return this.get(fileNumber);
   }

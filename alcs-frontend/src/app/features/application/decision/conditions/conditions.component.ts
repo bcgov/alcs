@@ -18,8 +18,14 @@ import {
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 
+export type ConditionComponentLabels = {
+  label: string[];
+  componentUuid: string;
+  conditionUuid: string;
+};
+
 export type ApplicationDecisionConditionWithStatus = ApplicationDecisionConditionDto & {
-  conditionComponentsLabels?: string[];
+  conditionComponentsLabels?: ConditionComponentLabels[];
   status: string;
 };
 
@@ -138,7 +144,7 @@ export class ConditionsComponent implements OnInit {
               ? `#${decision.resolutionNumber}/${decision.resolutionYear} ${matchingType?.label}`
               : `Draft ${matchingType?.label}`;
 
-          return label;
+          return { label, conditionUuid: condition.uuid, componentUuid: c.uuid };
         }),
       } as ApplicationDecisionConditionWithStatus;
     });

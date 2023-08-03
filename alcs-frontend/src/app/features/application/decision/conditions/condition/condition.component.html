@@ -13,14 +13,16 @@
 <div class="grid-3">
   <div>
     <div class="subheading2">Component to Condition</div>
-    <span class="component-labels">{{ condition.componentLabels }}</span>
+    <span class="component-labels">{{ condition.componentLabelsStr }}</span>
     <app-no-data *ngIf="!condition.componentLabels"></app-no-data>
   </div>
 
   <div>
     <div class="subheading2">Approval Dependent</div>
     {{ condition.approvalDependant | booleanToString }}
-    <app-no-data *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"></app-no-data>
+    <app-no-data
+      *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"
+    ></app-no-data>
   </div>
 
   <div>
@@ -32,7 +34,9 @@
   <div>
     <div class="subheading2">Admin Fee</div>
     {{ condition.administrativeFee }}
-    <app-no-data *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"></app-no-data>
+    <app-no-data
+      *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
+    ></app-no-data>
   </div>
 
   <div>
@@ -49,6 +53,58 @@
       [value]="condition.supersededDate ?? undefined"
       (save)="onUpdateCondition('supersededDate', $event)"
     ></app-inline-datepicker>
+  </div>
+
+  <div *ngIf="isRequireSurveyPlan && planNumbers.length > 0" class="full-width grid-3">
+    <ng-container *ngFor="let plan of planNumbers">
+      <div class="full-width">
+        <div class="subheading2">
+          <span>{{ getComponentLabel(plan.applicationDecisionComponentUuid) }} Survey Plans</span>
+          <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+        </div>
+        <app-inline-text
+          class="inline-plan-numbers"
+          [value]="plan.planNumbers ?? undefined"
+          (save)="updateConditionPlanNumbers(condition.uuid, plan.applicationDecisionComponentUuid, $event)"
+        ></app-inline-text>
+      </div>
+    </ng-container>
+  </div>
+
+  <div *ngIf="isRequireSurveyPlan" class="full-width">
+    <div *ngIf="subdComponent !== undefined">
+      <div class="subheading2">
+        <span>{{ getComponentLabel(subdComponent.uuid!) }} Survey Plans</span>
+        <mat-icon class="icon" matTooltip="Separate multiple plans with a comma">info_outline </mat-icon>
+      </div>
+      <div class="lot-table">
+        <div class="subheading2">#</div>
+        <div class="subheading2">Type</div>
+        <div class="subheading2">Size (ha)</div>
+        <div class="subheading2">Plan numbers</div>
+        <ng-container *ngFor="let lot of subdComponent.lots; let i = index">
+          <div>
+            {{ lot.index }}
+            <app-no-data *ngIf="lot.index === null || lot.index === undefined"></app-no-data>
+          </div>
+          <div>
+            {{ lot.type }}
+            <app-no-data *ngIf="lot.type === null || lot.type === undefined"></app-no-data>
+          </div>
+          <div>
+            {{ lot.size }}
+            <app-no-data *ngIf="lot.size === null || lot.size === undefined"></app-no-data>
+          </div>
+          <div>
+            <app-inline-textarea
+              [value]="lot.planNumbers ?? undefined"
+              [placeholder]="'Add plan'"
+              (save)="savePlanNumbers(lot.uuid, condition.uuid, $event)"
+            ></app-inline-textarea>
+          </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
 
   <div class="full-width">

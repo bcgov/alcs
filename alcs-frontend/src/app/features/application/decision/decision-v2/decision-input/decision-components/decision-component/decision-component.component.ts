@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProposedLot } from '../../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionCodesDto,
@@ -9,6 +8,7 @@ import {
   NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
+  ProposedDecisionLotDto,
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
   TurpDecisionComponentDto,
@@ -62,7 +62,7 @@ export class DecisionComponentComponent implements OnInit {
   naruEndDate = new FormControl<Date | null>(null);
 
   //subd
-  subdApprovedLots = new FormControl<ProposedLot[]>([], [Validators.required]);
+  subdApprovedLots = new FormControl<ProposedDecisionLotDto[]>([], [Validators.required]);
 
   //incl/excl
   applicantType = new FormControl<string | null>(null, [Validators.required]);
@@ -254,7 +254,8 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    this.subdApprovedLots.setValue(this.data.subdApprovedLots ?? null);
+    const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
+    this.subdApprovedLots.setValue(lots);
   }
 
   private patchInclExclFields() {
@@ -326,8 +327,9 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private getSubdDataChange(): SubdDecisionComponentDto {
+    const update = this.subdApprovedLots.value?.map((e) => ({ ...e } as ProposedDecisionLotDto));
     return {
-      subdApprovedLots: this.subdApprovedLots.value ?? undefined,
+      lots: update ?? undefined,
     };
   }
 

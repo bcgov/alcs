@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
-import { ProposedLot } from '../../../../../portal/application-submission/application-submission.entity';
+import { ApplicationDecisionComponentLotDto } from '../../../application-component-lot/application-decision-component-lot.dto';
 
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
@@ -95,7 +95,7 @@ export class UpdateApplicationDecisionComponentDto {
 
   @IsArray()
   @IsOptional()
-  subdApprovedLots?: ProposedLot[];
+  lots?: ApplicationDecisionComponentLotDto[];
 
   @IsString()
   @IsOptional()
@@ -184,8 +184,8 @@ export class ApplicationDecisionComponentDto {
   @AutoMap(() => NaruSubtypeDto)
   naruSubtype: NaruSubtypeDto;
 
-  @AutoMap(() => [ProposedLot])
-  subdApprovedLots: ProposedLot[];
+  @AutoMap(() => [ApplicationDecisionComponentLotDto])
+  lots?: ApplicationDecisionComponentLotDto[];
 
   @AutoMap(() => String)
   inclExclApplicantType?: string;

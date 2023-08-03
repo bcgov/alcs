@@ -116,7 +116,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           applicationDecisionComponentType: this.decisionComponentTypes.find(
             (e) => e.code === typeCode && e.uiCode !== 'COPY'
           ),
-          subdApprovedLots: this.application.submittedApplication?.subdProposedLots,
+          lots: this.application.submittedApplication?.subdProposedLots.map((lot, index) => ({
+            ...lot,
+            index: index,
+            uuid: '',
+          })),
         };
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {

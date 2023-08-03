@@ -115,10 +115,13 @@ export class ApplicationDecisionV2Service {
         components: {
           applicationDecisionComponentType: true,
           naruSubtype: true,
+          lots: true,
         },
         conditions: {
           type: true,
-          components: true,
+          components: {
+            lots: true,
+          },
         },
       },
     });
@@ -207,6 +210,7 @@ export class ApplicationDecisionV2Service {
         },
         components: {
           applicationDecisionComponentType: true,
+          lots: true,
         },
         conditions: {
           type: true,
