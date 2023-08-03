@@ -5,7 +5,10 @@ export class planNumber1691021151956 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "alcs"."application_decision" DROP CONSTRAINT "FK_e88e4a5dc4db0a7ba934b99dbe0"`,
+      `ALTER TABLE "alcs"."application_decision" DROP CONSTRAINT IF EXISTS "FK_e88e4a5dc4db0a7ba934b99dbe0"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "alcs"."application_decision" DROP CONSTRAINT IF EXISTS "FK_dc34f50291af0299bd44e8d0448"`,
     );
     await queryRunner.query(
       `CREATE TABLE "alcs"."application_decision_condition_to_component_lot" ("audit_deleted_date_at" TIMESTAMP WITH TIME ZONE, "audit_created_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(), "audit_updated_at" TIMESTAMP WITH TIME ZONE DEFAULT now(), "audit_created_by" character varying NOT NULL, "audit_updated_by" character varying, "uuid" uuid NOT NULL DEFAULT gen_random_uuid(), "plan_numbers" text NOT NULL, "condition_uuid" uuid, "component_lot_uuid" uuid NOT NULL, CONSTRAINT "PK_9c03e6af9a3996fcccf250ca610" PRIMARY KEY ("uuid"))`,
