@@ -25,19 +25,3 @@ export class ApplicationDecisionComponentLotDto {
   size: number | null;
   uuid: string;
 }
-
-// export class ApplicationDecisionComponentToConditionLotDto {
-//   @IsString()
-//   @IsOptional()
-//   uuid: string;
-
-//   @IsString()
-//   componentLotUuid: string;
-
-//   @IsString()
-//   conditionUuid: string;
-
-//   @IsString()
-//   @IsOptional()
-//   planNumbers: string;
-// }

@@ -20,7 +20,7 @@ export class ApplicationDecisionConditionService {
     @InjectRepository(ApplicationDecisionConditionType)
     private typeRepository: Repository<ApplicationDecisionConditionType>,
     @InjectRepository(ApplicationDecisionConditionComponentPlanNumber)
-    private conditionComponentRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
+    private conditionComponentPlanNumbersRepository: Repository<ApplicationDecisionConditionComponentPlanNumber>,
     @InjectRepository(ApplicationDecisionConditionToComponentLot)
     private conditionComponentLotRepository: Repository<ApplicationDecisionConditionToComponentLot>,
   ) {}
@@ -137,7 +137,7 @@ export class ApplicationDecisionConditionService {
   }
 
   async getPlanNumbers(uuid: string) {
-    return await this.conditionComponentRepository.findBy({
+    return await this.conditionComponentPlanNumbersRepository.findBy({
       applicationDecisionConditionUuid: uuid,
     });
   }
@@ -148,7 +148,7 @@ export class ApplicationDecisionConditionService {
     planNumbers: string | null,
   ) {
     let conditionToComponent =
-      await this.conditionComponentRepository.findOneBy({
+      await this.conditionComponentPlanNumbersRepository.findOneBy({
         applicationDecisionComponentUuid: componentUuid,
         applicationDecisionConditionUuid: conditionUuid,
       });
@@ -164,6 +164,8 @@ export class ApplicationDecisionConditionService {
         });
     }
 
-    await this.conditionComponentRepository.save(conditionToComponent);
+    await this.conditionComponentPlanNumbersRepository.save(
+      conditionToComponent,
+    );
   }
 }

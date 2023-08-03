@@ -2,6 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionConditionType } from './application-decision-condition-code.entity';
 import { UpdateApplicationDecisionConditionDto } from './application-decision-condition.dto';
 import { ApplicationDecisionCondition } from './application-decision-condition.entity';
@@ -15,10 +17,18 @@ describe('ApplicationDecisionConditionService', () => {
   let mockAppDecCondTypeRepository: DeepMocked<
     Repository<ApplicationDecisionConditionType>
   >;
+  let mockApplicationDecisionConditionComponentPlanNumber: DeepMocked<
+    Repository<ApplicationDecisionConditionComponentPlanNumber>
+  >;
+  let mockApplicationDecisionConditionToComponentLot: DeepMocked<
+    Repository<ApplicationDecisionConditionToComponentLot>
+  >;
 
   beforeEach(async () => {
     mockApplicationDecisionConditionRepository = createMock();
     mockAppDecCondTypeRepository = createMock();
+    mockApplicationDecisionConditionComponentPlanNumber = createMock();
+    mockApplicationDecisionConditionToComponentLot = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -30,6 +40,18 @@ describe('ApplicationDecisionConditionService', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionConditionType),
           useValue: mockAppDecCondTypeRepository,
+        },
+        {
+          provide: getRepositoryToken(
+            ApplicationDecisionConditionComponentPlanNumber,
+          ),
+          useValue: mockApplicationDecisionConditionComponentPlanNumber,
+        },
+        {
+          provide: getRepositoryToken(
+            ApplicationDecisionConditionToComponentLot,
+          ),
+          useValue: mockApplicationDecisionConditionToComponentLot,
         },
       ],
     }).compile();
@@ -68,15 +90,18 @@ describe('ApplicationDecisionConditionService', () => {
       new ApplicationDecisionCondition(),
     ];
 
+    const mockTransaction = jest.fn();
+    mockApplicationDecisionConditionRepository.manager.transaction =
+      mockTransaction;
+
     mockApplicationDecisionConditionRepository.remove.mockResolvedValue(
       {} as ApplicationDecisionCondition,
     );
+    mockApplicationDecisionConditionToComponentLot.find.mockResolvedValue([]);
 
     await service.remove(conditions);
 
-    expect(
-      mockApplicationDecisionConditionRepository.remove,
-    ).toHaveBeenCalledWith(conditions);
+    expect(mockTransaction).toBeCalledTimes(1);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
