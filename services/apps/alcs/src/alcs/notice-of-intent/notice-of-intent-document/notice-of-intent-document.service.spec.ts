@@ -248,6 +248,7 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(res).toBeDefined();
   });
 
+  // TODO: Re-enabled when adding Step 7
   // it('should set the type and description for multiple files', async () => {
   //   const mockDocument1 = new NoticeOfIntentDocument({
   //     typeCode: DOCUMENT_TYPE.DECISION_DOCUMENT,

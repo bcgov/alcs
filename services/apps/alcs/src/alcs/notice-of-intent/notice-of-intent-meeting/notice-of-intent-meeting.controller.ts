@@ -80,10 +80,10 @@ export class NoticeOfIntentMeetingController {
   }
 
   private async validateAndPrepareCreateData(
-    fileNumber: string,
+    uuid: string,
     meeting: CreateNoticeOfIntentMeetingDto,
   ) {
-    const noi = await this.noiService.getOrFailByUuid(fileNumber);
+    const noi = await this.noiService.getOrFailByUuid(uuid);
     const meetingType = (
       await this.noiMeetingService.fetNoticeOfIntentMeetingTypes()
     ).find((e) => e.code === meeting.meetingTypeCode);
