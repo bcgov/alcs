@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Base } from '../../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
+import { ApplicationDecisionConditionToComponentLot } from '../application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
 import { ApplicationDecisionConditionComponentPlanNumber } from '../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 import { ApplicationDecisionComponent } from '../application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision.entity';
@@ -95,7 +96,7 @@ export class ApplicationDecisionCondition extends Base {
     () => ApplicationDecisionConditionComponentPlanNumber,
     (c) => c.condition,
     {
-      cascade: ['insert', 'update'],
+      cascade: ['insert', 'update', 'remove'],
     },
   )
   conditionToComponentsWithPlanNumber:

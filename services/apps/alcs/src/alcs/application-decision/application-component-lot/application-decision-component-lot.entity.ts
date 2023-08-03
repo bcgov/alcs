@@ -66,7 +66,7 @@ export class ApplicationDecisionComponentLot extends Base {
     () => ApplicationDecisionConditionToComponentLot,
     (e) => e.componentLot,
     {
-      cascade: ['soft-remove', 'insert', 'update'],
+      cascade: ['soft-remove', 'insert', 'update', 'remove'],
     },
   )
   conditionLots: ApplicationDecisionConditionToComponentLot[];

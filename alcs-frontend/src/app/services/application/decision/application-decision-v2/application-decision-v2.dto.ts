@@ -253,7 +253,7 @@ export interface ApplicationDecisionComponentToConditionLotDto {
   planNumbers: string | null;
 }
 
-export interface ApplicationDecisionComponentToConditionDto {
+export interface ApplicationDecisionConditionToComponentPlanNumberDto {
   applicationDecisionComponentUuid: string;
   applicationDecisionConditionUuid: string;
   planNumbers: string | null;

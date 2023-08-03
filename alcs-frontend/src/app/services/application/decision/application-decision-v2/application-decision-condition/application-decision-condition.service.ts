@@ -4,8 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ToastService } from '../../../../toast/toast.service';
 import {
-  ApplicationDecisionComponentToConditionDto,
   ApplicationDecisionConditionDto,
+  ApplicationDecisionConditionToComponentPlanNumberDto,
   UpdateApplicationDecisionConditionDto,
 } from '../application-decision-v2.dto';
 
@@ -35,7 +35,7 @@ export class ApplicationDecisionConditionService {
   async fetchPlanNumbers(uuid: string) {
     try {
       const res = await firstValueFrom(
-        this.http.get<ApplicationDecisionComponentToConditionDto[]>(`${this.url}/plan-numbers/${uuid}`)
+        this.http.get<ApplicationDecisionConditionToComponentPlanNumberDto[]>(`${this.url}/plan-numbers/${uuid}`)
       );
       return res;
     } catch (e) {

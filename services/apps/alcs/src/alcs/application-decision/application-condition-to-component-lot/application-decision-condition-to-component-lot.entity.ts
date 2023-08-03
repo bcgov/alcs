@@ -23,7 +23,10 @@ export class ApplicationDecisionConditionToComponentLot extends Base {
   @Column({ nullable: true })
   conditionUuid: string;
 
-  @ManyToOne(() => ApplicationDecisionCondition, { nullable: true })
+  @ManyToOne(() => ApplicationDecisionCondition, {
+    nullable: true,
+    persistence: false,
+  })
   condition: ApplicationDecisionCondition;
 
   @AutoMap()
@@ -31,7 +34,7 @@ export class ApplicationDecisionConditionToComponentLot extends Base {
   componentLotUuid: string;
 
   @ManyToOne(() => ApplicationDecisionComponentLot, {
-    cascade: ['soft-remove'],
+    persistence: false,
   })
   componentLot: ApplicationDecisionComponentLot;
 }

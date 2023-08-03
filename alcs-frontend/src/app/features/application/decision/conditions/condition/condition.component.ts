@@ -3,7 +3,8 @@ import moment from 'moment';
 import { ApplicationDecisionComponentToConditionLotService } from '../../../../../services/application/decision/application-decision-v2/application-decision-component-to-condition-lot/application-decision-component-to-condition-lot.service';
 import { ApplicationDecisionConditionService } from '../../../../../services/application/decision/application-decision-v2/application-decision-condition/application-decision-condition.service';
 import {
-  ApplicationDecisionComponentToConditionDto,
+  ApplicationDecisionConditionToComponentPlanNumberDto,
+  APPLICATION_DECISION_COMPONENT_TYPE,
   DecisionComponentDto,
   ProposedDecisionLotDto,
   UpdateApplicationDecisionConditionDto,
@@ -45,7 +46,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   conditionStatus: string = '';
   isRequireSurveyPlan = false;
   subdComponent?: DecisionComponentDto;
-  planNumbers: ApplicationDecisionComponentToConditionDto[] = [];
+  planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
 
   constructor(
     private conditionService: ApplicationDecisionConditionService,
@@ -86,15 +87,32 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   }
 
   async loadPlanNumber() {
-    const subdComponent = this.condition.components?.find((e) => e.applicationDecisionComponentTypeCode === 'SUBD');
+    const subdComponent = this.condition.components?.find(
+      (e) => e.applicationDecisionComponentTypeCode === APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+    );
     if (
       this.condition.components &&
-      this.condition.components.some((e) => e.applicationDecisionComponentTypeCode !== 'SUBD') &&
+      this.condition.components.some(
+        (e) => e.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD
+      ) &&
       this.isRequireSurveyPlan
     ) {
-      this.planNumbers = (await this.conditionService.fetchPlanNumbers(this.condition.uuid)).filter(
+      const planNumbers = (await this.conditionService.fetchPlanNumbers(this.condition.uuid)).filter(
         (e) => e.applicationDecisionComponentUuid !== subdComponent?.uuid
       );
+
+      this.planNumbers =
+        this.condition.components
+          ?.filter((e) => e.applicationDecisionComponentTypeCode !== APPLICATION_DECISION_COMPONENT_TYPE.SUBD)
+          .map(
+            (component) =>
+              ({
+                applicationDecisionComponentUuid: component.uuid,
+                applicationDecisionConditionUuid: this.condition.uuid,
+                planNumbers: planNumbers.find((e) => e.applicationDecisionComponentUuid === component.uuid)
+                  ?.planNumbers,
+              } as ApplicationDecisionConditionToComponentPlanNumberDto)
+          ) ?? [];
     }
   }
 
