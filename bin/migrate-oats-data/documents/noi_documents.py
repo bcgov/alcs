@@ -11,9 +11,9 @@ def compile_document_insert_query(number_of_rows_to_insert):
     """
     documents_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-       insert into alcs.noi_document
+       insert into alcs.notice_of_intent_document
             (	
-                application_uuid ,
+                notice_of_intent_uuid ,
                 document_uuid ,
                 type_code ,
                 visibility_flags,
@@ -23,7 +23,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
             )
         VALUES {documents_to_insert} 
         ON CONFLICT (oats_document_id, oats_application_id) DO UPDATE SET 
-            application_uuid = EXCLUDED.application_uuid, 
+            notice_of_intent_uuid = EXCLUDED.notice_of_intnent_uuid, 
             document_uuid = EXCLUDED.document_uuid, 
             type_code = EXCLUDED.type_code,
             visibility_flags = EXCLUDED.visibility_flags,
@@ -93,7 +93,7 @@ def clean_noi_documents(conn=None):
     print("Start noi documents cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.noi_document WHERE audit_created_by = 'oats_etl';"
+            "DELETE FROM alcs.notice_of_intent_document WHERE audit_created_by = 'oats_etl';"
         )
         conn.commit()
         print(f"Deleted items count = {cursor.rowcount}")

@@ -12,7 +12,7 @@ WITH
             oats.oats_documents od
             JOIN alcs."document" d 
             ON  d.oats_document_id = od.document_id::TEXT  
-            JOIN alcs.application_document_code adc -- using adc as it is the same mapping 
+            JOIN alcs.document_code adc 
             ON adc.oats_code = od.document_code
             JOIN alcs.notice_of_intent a 
             ON a.file_number = od.alr_application_id::TEXT

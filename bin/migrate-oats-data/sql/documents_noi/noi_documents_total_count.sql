@@ -1,6 +1,6 @@
 with oats_documents_to_map as (
 	select
-		a.uuid AS application_uuid,
+		a.uuid AS noi_uuid,
 		d.uuid AS document_uuid,
 		adc.code,
 		publicly_viewable_ind AS is_public,
@@ -12,7 +12,7 @@ with oats_documents_to_map as (
 		JOIN alcs."document" d 
 		ON  d.oats_document_id = od.document_id::TEXT  
 		
-		JOIN alcs.application_document_code adc -- reusing application table mapping
+		JOIN alcs.document_code adc 
 		ON adc.oats_code = od.document_code
 		
 		JOIN alcs.notice_of_intent a 
