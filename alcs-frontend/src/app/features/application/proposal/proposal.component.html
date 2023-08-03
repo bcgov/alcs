@@ -36,7 +36,6 @@
         (save)="updateApplicationValue('agCapConsultant', $event)"
       ></app-inline-text>
     </div>
-    <app-proposal-tur *ngIf="application && application.type.code === 'TURP'"></app-proposal-tur>
     <app-proposal-excl *ngIf="application && application.type.code === 'EXCL'"></app-proposal-excl>
     <app-proposal-incl *ngIf="application && application.type.code === 'INCL'"></app-proposal-incl>
   </div>
