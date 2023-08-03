@@ -118,7 +118,7 @@
         [isRequired]="true"
       ></app-file-drag-drop>
     </div>
-    <div class="full-row" *ngIf="isGovernmentUser">
+    <div class="full-row" *ngIf="showGovernmentQuestions">
       <label for="isFarm"
         >Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?</label
       >
@@ -126,12 +126,14 @@
         The ALR General Regulation does not require the {{ governmentName }} to complete a public hearing if all
         inclusion application parcel(s) are owned by the {{ governmentName }}.
       </div>
-      <app-info-banner> Please refer to Inclusion page on the ALC website for more information. </app-info-banner>
+      <app-info-banner>
+        Please refer to <a>FIXME: Inclusion</a> page on the ALC website for more information.
+      </app-info-banner>
       <mat-button-toggle-group
         (change)="onSelectLocalGovernmentParcelOwner($event)"
         class="input"
         id="isFarm"
-        formControlName="isLFNGOwnerOfAllParcels"
+        formControlName="governmentOwnsAllParcels"
       >
         <mat-button-toggle
           value="true"
@@ -165,7 +167,7 @@
   </div>
 </form>
 
-<section *ngIf="isGovernmentUser">
+<section *ngIf="showGovernmentQuestions">
   <h3>Notification and Public Hearing Requirements</h3>
   <p class="requirement-description">
     A printed copy of the application will need to be used for notification. Please ensure all prior fields are complete
@@ -194,6 +196,7 @@
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
+          [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -211,6 +214,7 @@
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
+          [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -225,6 +229,7 @@
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
+          [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>
     </div>

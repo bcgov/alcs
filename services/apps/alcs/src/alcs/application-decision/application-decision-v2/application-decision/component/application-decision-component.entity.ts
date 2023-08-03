@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   Index,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -198,6 +197,14 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => NaruSubtype)
   naruSubtype: NaruSubtype;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'Stores the applicant type for inclusion and exclusion components',
+  })
+  inclExclApplicantType: string | null;
 
   @AutoMap()
   @Column({ nullable: false })

@@ -1,0 +1,24 @@
+<form [formGroup]="form" class="turp-component-form">
+  <div class="grid">
+    <div>
+      <mat-label class='toggle-label'>Applicant Type*</mat-label>
+      <mat-button-toggle-group required id="isFirstNation" formControlName="applicantType" name="isFirstNation">
+        <mat-button-toggle value="Land Owner">Land Owner</mat-button-toggle>
+        <mat-button-toggle value="L/FNG Initiated">L/FNG Initiated</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

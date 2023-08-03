@@ -29,6 +29,7 @@ import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.co
 import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
+import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditApplicationSteps {
@@ -138,8 +139,8 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     this.$destroy.complete();
   }
 
-  private async loadApplication(fileId: string) {
-    if (!this.applicationSubmission) {
+  private async loadApplication(fileId: string, reload = false) {
+    if (!this.applicationSubmission || reload) {
       this.overlayService.showSpinner();
       this.applicationSubmission = await this.applicationSubmissionService.getByFileId(fileId);
       const documents = await this.applicationDocumentService.getByFileId(fileId);
@@ -167,7 +168,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
         .beforeClosed()
         .subscribe((result) => {
           if (result) {
-            this.loadApplication(this.fileId);
+            this.loadApplication(this.fileId, true);
           }
         });
     }
@@ -266,6 +267,25 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   async onSubmit() {
+    if (this.applicationSubmission) {
+      const government = await this.loadGovernment(this.applicationSubmission.localGovernmentUuid);
+      this.dialog
+        .open(SubmitConfirmationDialogComponent, {
+          data: {
+            governmentName: government?.name ?? 'selected local / first nation government',
+            userIsGovernment: government?.matchesUserGuid ?? false,
+          },
+        })
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
+            this.submit();
+          }
+        });
+    }
+  }
+
+  private async submit() {
     const submission = this.applicationSubmission;
     if (submission) {
       const didSubmit = await this.applicationSubmissionService.submitToAlcs(submission.uuid);

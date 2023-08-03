@@ -72,7 +72,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
       this.isGovernmentUser = !!profile?.isLocalGovernment || !!profile?.isFirstNationGovernment;
       this.governmentName = profile?.government;
-      if (this.isGovernmentUser) {
+      if (this.isGovernmentUser || this.selectedLocalGovernment) {
         this.prepareGovernmentOwners();
       }
     });
@@ -146,7 +146,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (this.selectedLocalGovernment) {
       this.needsAuthorizationLetter = false;
     } else {
-      const isSelfApplicant = this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
+      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
       this.needsAuthorizationLetter =
         this.selectedThirdPartyAgent ||
         !(
@@ -237,7 +237,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.phoneNumber.disable();
       }
 
-      if (this.isGovernmentUser) {
+      if (this.isGovernmentUser || this.selectedLocalGovernment) {
         this.prepareGovernmentOwners();
       }
 

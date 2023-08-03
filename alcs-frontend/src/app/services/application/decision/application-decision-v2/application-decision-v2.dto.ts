@@ -167,13 +167,18 @@ export interface SubdDecisionComponentDto {
   lots?: ProposedDecisionLotDto[];
 }
 
+export interface InclExclDecisionComponentDto {
+  inclExclApplicantType?: string | null;
+}
+
 export interface DecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
     PofoDecisionComponentDto,
     RosoDecisionComponentDto,
     NaruDecisionComponentDto,
-    SubdDecisionComponentDto {
+    SubdDecisionComponentDto,
+    InclExclDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -204,6 +209,8 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   PFRS = 'PFRS',
   NARU = 'NARU',
   SUBD = 'SUBD',
+  INCL = 'INCL',
+  EXCL = 'EXCL',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

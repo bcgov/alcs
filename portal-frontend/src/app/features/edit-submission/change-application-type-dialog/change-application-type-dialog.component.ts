@@ -106,7 +106,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
 
   async next() {
     if (this.stepIdx === ApplicationChangeTypeStepsEnum.applicationType) {
-      if (this.selectedAppType && ['INCL', 'EXCL'].includes(this.selectedAppType.code)) {
+      if (this.selectedAppType && this.selectedAppType.code === 'EXCL') {
         this.stepIdx = ApplicationChangeTypeStepsEnum.prescribedBody;
       } else {
         this.stepIdx = ApplicationChangeTypeStepsEnum.confirmation;
@@ -117,7 +117,15 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
   }
 
   async back() {
-    this.stepIdx -= 1;
+    if (
+      this.stepIdx === ApplicationChangeTypeStepsEnum.confirmation &&
+      this.selectedAppType &&
+      this.selectedAppType.code !== 'EXCL'
+    ) {
+      this.stepIdx = ApplicationChangeTypeStepsEnum.applicationType;
+    } else {
+      this.stepIdx -= 1;
+    }
   }
 
   onSelectPrescribedBody(name: string) {

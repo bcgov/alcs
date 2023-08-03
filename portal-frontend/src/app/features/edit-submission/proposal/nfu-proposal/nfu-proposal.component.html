@@ -19,7 +19,7 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="hectares">How many hectares are proposed for non-farm use? (hectares)</label>
+      <label for="hectares">How many hectares are proposed for non-farm use?</label>
       <mat-form-field appearance="outline">
         <input
           id="hectares"
@@ -31,7 +31,7 @@
           formControlName="hectares"
           placeholder="Type size in hectares"
         />
-        <span *ngIf="hectares.value" matTextSuffix>ha</span>
+        <span matTextSuffix>ha</span>
       </mat-form-field>
       <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -132,18 +132,18 @@
     <h3>Soil & Fill Components</h3>
     <div class="form-row">
       <div class="full-row">
-        <label for="fillTypeDescription">Describe the type and amount of fill proposed to be placed.</label>
+        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
+        <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="fillTypeDescription"
-            #fillTypeDescriptionText
+            #fillTypeToPlaceText
             maxlength="4000"
-            id="fillTypeDescription"
+            id="fillType"
             matInput
-            placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillTypeDescriptionText.textLength }}</span>
+        <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
         <div
           *ngIf="fillTypeDescription.invalid && (fillTypeDescription.dirty || fillTypeDescription.touched)"
           class="field-error"
@@ -151,20 +151,23 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="fillTypeDescription.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</div>
       </div>
+    </div>
+
+    <div class="form-row">
       <div class="full-row">
-        <label for="fillOriginDescription">Briefly describe the origin and quality of fill.</label>
+        <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
         <mat-form-field appearance="outline">
           <textarea
             formControlName="fillOriginDescription"
-            #fillOriginDescriptionText
+            #fillOriginToPlaceText
             maxlength="4000"
-            id="fillOriginDescription"
+            id="fillOrigin"
             matInput
-            placeholder="Type comment"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillOriginDescriptionText.textLength }}</span>
+        <span class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</span>
         <div
           *ngIf="fillOriginDescription.invalid && (fillOriginDescription.dirty || fillOriginDescription.touched)"
           class="field-error"
@@ -173,85 +176,19 @@
           <div *ngIf="fillOriginDescription.errors?.['required']">This field is required</div>
         </div>
       </div>
-      <div class="full-row">
-        <h4>Project Dimensions</h4>
-      </div>
-      <div>
-        <label for="totalFillPlacement">Total fill placement area (ha)</label>
-        <div>
-          <mat-hint class="subtext">Enter area in hectares (ha) (Note: 0.01 ha is 100 m<sup>2</sup>)</mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            id="totalFillPlacement"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="totalFillPlacement"
-            placeholder="Type fill depth in hectares"
-          />
-          <span *ngIf="totalFillPlacement.value" matTextSuffix>ha</span>
-        </mat-form-field>
-        <div
-          *ngIf="totalFillPlacement.invalid && (totalFillPlacement.dirty || totalFillPlacement.touched)"
-          class="field-error"
-        >
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="totalFillPlacement.errors?.['required']">This field is required</div>
-        </div>
-      </div>
-      <div>
-        <label for="maxFillDepth">Maximum depth of material to be placed as fill</label>
-        <div>
-          <mat-hint class="subtext">Enter depth in meters (m)<sup>&nbsp;</sup></mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            id="maxFillDepth"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="maxFillDepth"
-            placeholder="Type placement area in meters"
-          />
-          <span *ngIf="maxFillDepth.value" matTextSuffix>m</span>
-        </mat-form-field>
-        <div *ngIf="maxFillDepth.invalid && (maxFillDepth.dirty || maxFillDepth.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="maxFillDepth.errors?.['required']">This field is required</div>
-        </div>
-      </div>
-      <div>
-        <label for="fillVolume">Volume of material to be placed as fill</label>
-        <div>
-          <mat-hint class="subtext">Enter volume in cubic meters (m<sup>3</sup>) without a comma</mat-hint>
-        </div>
-        <mat-form-field appearance="outline">
-          <input
-            min="0.01"
-            id="fillVolume"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="fillVolume"
-            placeholder="Type volume in cubic meters"
-          />
-          <span *ngIf="fillVolume.value" matTextSuffix>m<sup>3</sup></span>
-        </mat-form-field>
-        <div *ngIf="fillVolume.invalid && (fillVolume.dirty || fillVolume.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fillVolume.errors?.['required']">This field is required</div>
-        </div>
-      </div>
     </div>
+
+    <app-soil-table
+      [disabled]="willImportFill.value === 'false'"
+      tableHeader="Fill to be Placed"
+      [(data)]="fillTableData"
+      (dataChange)="markDirty()"
+    ></app-soil-table>
   </section>
+
   <section>
     <h4>Project Duration</h4>
+    <div class="subtext">Estimated duration of the project</div>
     <div class="form-row">
       <div>
         <label for="projectDurationUnit">Duration</label>

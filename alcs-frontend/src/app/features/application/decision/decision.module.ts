@@ -14,6 +14,7 @@ import { ConditionComponent } from './conditions/condition/condition.component';
 import { ConditionsComponent } from './conditions/conditions.component';
 import { DecisionV1DialogComponent } from './decision-v1/decision-v1-dialog/decision-v1-dialog.component';
 import { DecisionV1Component } from './decision-v1/decision-v1.component';
+import { InclExclComponent } from './decision-v2/decision-component/incl-excl/incl-excl.component';
 import { NaruComponent } from './decision-v2/decision-component/naru/naru.component';
 import { NfupComponent } from './decision-v2/decision-component/nfup/nfup.component';
 import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.component';
@@ -23,6 +24,7 @@ import { SubdComponent } from './decision-v2/decision-component/subd/subd.compon
 import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
+import { InclExclInputComponent } from './decision-v2/decision-input/decision-components/decision-component/incl-excl-input/incl-excl-input.component';
 import { NaruInputComponent } from './decision-v2/decision-input/decision-components/decision-component/naru-input/naru-input.component';
 import { NfuInputComponent } from './decision-v2/decision-input/decision-components/decision-component/nfu-input/nfu-input.component';
 import { PfrsInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pfrs-input/pfrs-input.component';
@@ -96,6 +98,8 @@ export const decisionChildRoutes = [
     PfrsComponent,
     NaruComponent,
     SubdComponent,
+    InclExclComponent,
+    InclExclInputComponent,
     NaruInputComponent,
     ConditionsComponent,
     ConditionComponent,

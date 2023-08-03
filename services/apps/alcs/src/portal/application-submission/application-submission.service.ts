@@ -85,13 +85,17 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async getOrFailByUuid(uuid: string) {
+  async getOrFailByUuid(
+    uuid: string,
+    relations: FindOptionsRelations<ApplicationSubmission> = {},
+  ) {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
       },
       relations: {
         naruSubtype: true,
+        ...relations,
       },
     });
     if (!application) {
@@ -162,6 +166,10 @@ export class ApplicationSubmissionService {
     applicationSubmission.returnedComment = updateDto.returnedComment;
     applicationSubmission.hasOtherParcelsInCommunity =
       updateDto.hasOtherParcelsInCommunity;
+    applicationSubmission.prescribedBody = filterUndefined(
+      updateDto.prescribedBody,
+      updateDto.prescribedBody,
+    );
 
     this.setLandUseFields(applicationSubmission, updateDto);
     this.setNFUFields(applicationSubmission, updateDto);
@@ -182,7 +190,7 @@ export class ApplicationSubmissionService {
       );
     }
 
-    return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
+    return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
   async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {
@@ -647,38 +655,42 @@ export class ApplicationSubmissionService {
       updateDto.nfuOutsideLands || application.nfuOutsideLands;
     application.nfuAgricultureSupport =
       updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
-    application.nfuWillImportFill =
-      updateDto.nfuWillImportFill !== undefined
-        ? updateDto.nfuWillImportFill
-        : application.nfuWillImportFill;
-    application.nfuTotalFillPlacement =
-      updateDto.nfuTotalFillPlacement !== undefined
-        ? updateDto.nfuTotalFillPlacement
-        : application.nfuTotalFillPlacement;
-    application.nfuMaxFillDepth =
-      updateDto.nfuMaxFillDepth !== undefined
-        ? updateDto.nfuMaxFillDepth
-        : application.nfuMaxFillDepth;
-    application.nfuFillVolume =
-      updateDto.nfuFillVolume !== undefined
-        ? updateDto.nfuFillVolume
-        : application.nfuFillVolume;
-    application.nfuProjectDurationUnit =
-      updateDto.nfuProjectDurationUnit !== undefined
-        ? updateDto.nfuProjectDurationUnit
-        : application.nfuProjectDurationUnit;
-    application.nfuProjectDurationAmount =
-      updateDto.nfuProjectDurationAmount !== undefined
-        ? updateDto.nfuProjectDurationAmount
-        : application.nfuProjectDurationAmount;
-    application.nfuFillTypeDescription =
-      updateDto.nfuFillTypeDescription !== undefined
-        ? updateDto.nfuFillTypeDescription
-        : application.nfuFillTypeDescription;
-    application.nfuFillOriginDescription =
-      updateDto.nfuFillOriginDescription !== undefined
-        ? updateDto.nfuFillOriginDescription
-        : application.nfuFillOriginDescription;
+    application.nfuWillImportFill = filterUndefined(
+      updateDto.nfuWillImportFill,
+      application.nfuWillImportFill,
+    );
+    application.nfuTotalFillPlacement = filterUndefined(
+      updateDto.nfuTotalFillPlacement,
+      application.nfuTotalFillPlacement,
+    );
+    application.nfuMaxFillDepth = filterUndefined(
+      updateDto.nfuMaxFillDepth,
+      application.nfuMaxFillDepth,
+    );
+    application.nfuAverageFillDepth = filterUndefined(
+      updateDto.nfuAverageFillDepth,
+      application.nfuAverageFillDepth,
+    );
+    application.nfuFillVolume = filterUndefined(
+      updateDto.nfuFillVolume,
+      application.nfuFillVolume,
+    );
+    application.nfuProjectDurationUnit = filterUndefined(
+      updateDto.nfuProjectDurationUnit,
+      application.nfuProjectDurationUnit,
+    );
+    application.nfuProjectDurationAmount = filterUndefined(
+      updateDto.nfuProjectDurationAmount,
+      application.nfuProjectDurationAmount,
+    );
+    application.nfuFillTypeDescription = filterUndefined(
+      updateDto.nfuFillTypeDescription,
+      application.nfuFillTypeDescription,
+    );
+    application.nfuFillOriginDescription = filterUndefined(
+      updateDto.nfuFillOriginDescription,
+      application.nfuFillOriginDescription,
+    );
 
     return application;
   }

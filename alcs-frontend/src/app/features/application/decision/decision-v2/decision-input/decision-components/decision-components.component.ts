@@ -158,6 +158,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           this.patchNaruFields(component);
         }
 
+        if (
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.INCL ||
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.EXCL
+        ) {
+          this.patchInclExclFields(component);
+        }
+
         this.components.push(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
@@ -167,6 +174,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
       case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
       case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+      case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
         this.components.push({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
@@ -213,6 +222,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     component.endDate = this.application.proposalEndDate;
     component.expiryDate = this.application.proposalExpiryDate;
     component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
+  }
+
+  private patchInclExclFields(component: DecisionComponentDto) {
+    if (this.application.inclExclApplicantType) {
+      component.inclExclApplicantType = this.application.inclExclApplicantType;
+    } else {
+      component.inclExclApplicantType =
+        this.application.submittedApplication?.inclGovernmentOwnsAllParcels === false
+          ? 'L/FNG Initiated'
+          : 'Land Owner';
+    }
   }
 
   private updateComponentsMenuItems() {

@@ -33,6 +33,7 @@
     <div class="full-row pmbc-search">
       <label *ngIf="!isCrownLand" for="lookup-pid">Enter PID to auto-fill parcel details</label>
       <label *ngIf="isCrownLand" for="lookup-pid">Enter PID or PIN to auto-fill parcel details</label>
+      <div class="subtext">Please ensure the auto-filled information is accurate by comparing with your records</div>
       <div>
         <div class="lookup-pid-fields">
           <mat-form-field class="lookup-search-by" *ngIf="isCrownLand" appearance="outline">
@@ -65,6 +66,7 @@
 
     <div class="full-row">
       <label for="legal-description">Legal Description</label>
+      <div class="subtext">Can be found on the parcel's Certificate of Title</div>
       <mat-form-field class="full-width-input" appearance="outline">
         <input
           id="legal-description"
@@ -117,7 +119,7 @@
       </mat-form-field>
     </div>
 
-    <div *ngIf="!isCrownLand">
+    <div class="full-row" *ngIf="!isCrownLand">
       <label for="purchase-date">Parcel Purchase Date</label>
       <mat-form-field (click)="purchaseDatePicker.open()" class="full-width-input date-picker" appearance="outline">
         <input
@@ -140,8 +142,11 @@
       </div>
     </div>
 
-    <div>
+    <div class="full-row">
       <label for="isFarm">Farm Classification</label>
+      <div class="subtext">
+        As determined by <a class='subtext' href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
+      </div>
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
           value="true"

@@ -204,11 +204,17 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
+    const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
+    const creatingGovernment = await this.localGovernmentService.getByGuid(
+      creatingGuid,
+    );
+
     if (
-      userLocalGovernment.uuid === applicationSubmission.localGovernmentUuid &&
-      primaryContact
+      creatingGovernment?.uuid === applicationSubmission.localGovernmentUuid &&
+      primaryContact &&
+      primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT
     ) {
-      //Copy contact details over to government form
+      //Copy contact details over to government form when applying to self
       await this.applicationSubmissionReviewService.update(
         applicationSubmission.fileNumber,
         {

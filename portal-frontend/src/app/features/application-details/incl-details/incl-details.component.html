@@ -43,43 +43,51 @@
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?
-    <app-updated-banner *ngIf="updatedFields.includes('inclGovernmentOwnsAllParcels')"></app-updated-banner>
-  </div>
-  <div class="grid-double">
-    <span *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null">
-      {{ _applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
-    </span>
-    <app-no-data
-      [showRequired]="showErrors"
-      *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === null"
-    ></app-no-data>
-  </div>
+  <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null || isGovernmentCreator">
+    <div class="subheading2 grid-1">
+      Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?
+      <app-updated-banner *ngIf="updatedFields.includes('inclGovernmentOwnsAllParcels')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      <span *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null">
+        {{ _applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
+      </span>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === null"
+      ></app-no-data>
+    </div>
+  </ng-container>
 
   <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels === false">
     <div class="subheading2 grid-1">Notice of Public Hearing (Advertisement)</div>
     <div class="grid-double">
-      <a *ngFor="let file of noticeOfPublicHearing" (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
+      <div *ngFor="let file of noticeOfPublicHearing">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+      </div>
       <app-no-data [showRequired]="showErrors" *ngIf="noticeOfPublicHearing.length === 0"></app-no-data>
     </div>
 
     <div class="subheading2 grid-1">Proof of Signage</div>
     <div class="grid-double">
-      <a *ngFor="let file of proofOfSignage" (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
+      <div *ngFor="let file of proofOfSignage">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+      </div>
       <app-no-data [showRequired]="showErrors" *ngIf="proofOfSignage.length === 0"></app-no-data>
     </div>
 
     <div class="subheading2 grid-1">Report of Public Hearing</div>
     <div class="grid-double">
-      <a *ngFor="let file of reportOfPublicHearing" (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
-      <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+      <div *ngFor="let file of reportOfPublicHearing">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+        <app-no-data [showRequired]="showErrors" *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+      </div>
     </div>
   </ng-container>
 

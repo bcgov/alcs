@@ -22,6 +22,7 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
   governmentName = 'applying government';
 
   _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
+  isGovernmentCreator = false;
 
   @Input() set applicationSubmission(applicationSubmission: ApplicationSubmissionDetailedDto | undefined) {
     if (applicationSubmission) {
@@ -55,6 +56,7 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((userProfile) => {
       if (userProfile && userProfile.government && this.showEdit) {
         this.governmentName = userProfile.government;
+        this.isGovernmentCreator = true;
       }
     });
   }
