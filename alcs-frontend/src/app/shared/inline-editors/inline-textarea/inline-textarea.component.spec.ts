@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InlineTextareaComponent } from './inline-textarea.component';
 
-describe('InlineTextComponent', () => {
+describe('InlineTextareaComponent', () => {
   let component: InlineTextareaComponent;
   let fixture: ComponentFixture<InlineTextareaComponent>;
 
