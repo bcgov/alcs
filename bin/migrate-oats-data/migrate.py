@@ -234,6 +234,7 @@ if __name__ == "__main__":
                     )
 
                     process_documents(batch_size=import_batch_size)
+                    process_documents_noi(batch_size=import_batch_size)
             case "app-document-import":
                 console.log("Beginning OATS -> ALCS app-document-import process")
                 with console.status(
@@ -286,19 +287,6 @@ if __name__ == "__main__":
                     )
 
                     process_applications(batch_size=import_batch_size)
-            case "document-noi-import":
-                console.log("Beginning OATS -> ALCS document-noi-import process")
-                with console.status(
-                    "[bold green]Link application documents in ALCS..."
-                ) as status:
-                    if args.batch_size:
-                        import_batch_size = args.batch_size
-
-                    console.log(
-                        f"Processing documents_noi in batch size = {import_batch_size}"
-                    )
-
-                    process_documents_noi(batch_size=import_batch_size)
             case "noi-document-import":
                 console.log("Beginning OATS -> ALCS noi-document-import process")
                 with console.status(
