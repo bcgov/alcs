@@ -186,18 +186,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
             this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto),
           ),
         ),
-        // forMember(
-        //   (ad) => ad.subdApprovedLots,
-        //   mapFrom((a) =>
-        //     a.lots
-        //       ? this.mapper.mapArray(
-        //           a.lots,
-        //           ApplicationDecisionComponentLot,
-        //           ApplicationDecisionComponentLotDto,
-        //         )
-        //       : [],
-        //   ),
-        // ),
         forMember(
           (ad) => ad.lots,
           mapFrom((a) =>

@@ -82,7 +82,6 @@ export class ApplicationDecisionComponentService {
     updateDto: CreateApplicationDecisionComponentDto,
   ) {
     if (updateDto.lots) {
-      // component.subdApprovedLots = updateDto.subdApprovedLots;
       if (updateDto.uuid) {
         const lotsToRemove = component.lots
           .filter((l1) => !updateDto.lots?.some((l2) => l1.uuid === l2.uuid))
