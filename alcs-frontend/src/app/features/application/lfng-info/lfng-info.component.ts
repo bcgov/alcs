@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
-import {
-  ApplicationDocumentService,
-  DOCUMENT_TYPE,
-} from '../../../services/application/application-document/application-document.service';
+import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import {
   ApplicationReviewDto,
@@ -12,6 +9,7 @@ import {
   SUBMISSION_STATUS,
 } from '../../../services/application/application.dto';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-lfng-info',

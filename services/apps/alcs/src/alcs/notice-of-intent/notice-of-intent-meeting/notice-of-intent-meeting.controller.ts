@@ -83,7 +83,7 @@ export class NoticeOfIntentMeetingController {
     fileNumber: string,
     meeting: CreateNoticeOfIntentMeetingDto,
   ) {
-    const noi = await this.noiService.getOrFail(fileNumber);
+    const noi = await this.noiService.getOrFailByUuid(fileNumber);
     const meetingType = (
       await this.noiMeetingService.fetNoticeOfIntentMeetingTypes()
     ).find((e) => e.code === meeting.meetingTypeCode);

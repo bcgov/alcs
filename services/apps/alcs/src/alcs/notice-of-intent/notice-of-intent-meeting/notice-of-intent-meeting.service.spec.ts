@@ -61,7 +61,7 @@ describe('NoticeOfIntentMeetingService', () => {
     mockNoiMeetingRepository.find.mockResolvedValue([mockMeeting]);
     mockNoiMeetingRepository.findOne.mockResolvedValue(mockMeeting);
     mockNoiMeetingRepository.save.mockResolvedValue(mockMeeting);
-    mockNoiService.getOrFail.mockResolvedValue(mockNoi);
+    mockNoiService.getOrFailByUuid.mockResolvedValue(mockNoi);
   });
 
   it('should be defined', () => {

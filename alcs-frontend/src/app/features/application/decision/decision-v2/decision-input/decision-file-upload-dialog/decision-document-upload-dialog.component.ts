@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DOCUMENT_SOURCE } from '../../../../../../services/application/application-document/application-document.service';
 import { DecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-decision-document-upload-dialog',

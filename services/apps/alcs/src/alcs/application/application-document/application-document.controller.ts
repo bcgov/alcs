@@ -20,17 +20,15 @@ import { UserRoles } from '../../../common/authorization/roles.decorator';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
+  DocumentTypeDto,
 } from '../../../document/document.dto';
 import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from './application-document-code.entity';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-} from './application-document.dto';
+} from '../../../document/document-code.entity';
+import { ApplicationDocumentDto } from './application-document.dto';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -199,11 +197,7 @@ export class ApplicationDocumentController {
   @UserRoles(...ANY_AUTH_ROLE)
   async listTypes() {
     const types = await this.applicationDocumentService.fetchTypes();
-    return this.mapper.mapArray(
-      types,
-      ApplicationDocumentCode,
-      ApplicationDocumentTypeDto,
-    );
+    return this.mapper.mapArray(types, DocumentCode, DocumentTypeDto);
   }
 
   @Get('/:uuid/open')

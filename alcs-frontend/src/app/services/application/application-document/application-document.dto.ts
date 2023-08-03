@@ -1,15 +1,14 @@
-import { BaseCodeDto } from '../../../shared/dto/base.dto';
-import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM, DOCUMENT_TYPE } from './application-document.service';
-
-export interface ApplicationDocumentTypeDto extends BaseCodeDto {
-  code: DOCUMENT_TYPE;
-  oatsCode: string;
-}
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+  DOCUMENT_TYPE,
+  DocumentTypeDto,
+} from '../../../shared/document/document.dto';
 
 export interface ApplicationDocumentDto {
   uuid: string;
   documentUuid: string;
-  type?: ApplicationDocumentTypeDto;
+  type?: DocumentTypeDto;
   description?: string;
   visibilityFlags: string[];
   source: DOCUMENT_SOURCE;

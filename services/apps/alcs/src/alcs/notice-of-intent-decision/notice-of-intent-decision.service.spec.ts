@@ -93,7 +93,7 @@ describe('NoticeOfIntentDecisionService', () => {
 
     mockDecisionDocumentRepository.find.mockResolvedValue([]);
 
-    mockNOIService.getOrFail.mockResolvedValue(mockNOI);
+    mockNOIService.getOrFailByUuid.mockResolvedValue(mockNOI);
     mockNOIService.getByFileNumber.mockResolvedValue(mockNOI);
     mockNOIService.update.mockResolvedValue({} as any);
     mockNOIService.updateByUuid.mockResolvedValue({} as any);

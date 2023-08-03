@@ -6,11 +6,8 @@ import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/a
 import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-} from '../../alcs/application/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationMeetingDto,
@@ -30,6 +27,7 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
 import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
+import { DocumentTypeDto } from '../../document/document.dto';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -144,7 +142,7 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.system),
         ),
       );
-      createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
+      createMap(mapper, DocumentCode, DocumentTypeDto);
 
       createMap(
         mapper,

@@ -4,9 +4,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
@@ -374,7 +374,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
         }),
       }),
@@ -511,7 +511,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
   it('should report error for other document missing description', async () => {
     const incompleteDocument = new ApplicationDocument({
-      type: new ApplicationDocumentCode({
+      type: new DocumentCode({
         code: DOCUMENT_TYPE.OTHER,
       }),
       document: new Document({
@@ -1003,7 +1003,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const documents = [
         new ApplicationDocument({
           typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
-          type: new ApplicationDocumentCode({
+          type: new DocumentCode({
             code: DOCUMENT_TYPE.PROPOSAL_MAP,
           }),
         }),
@@ -1123,7 +1123,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const documents = [
         new ApplicationDocument({
           typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
-          type: new ApplicationDocumentCode({
+          type: new DocumentCode({
             code: DOCUMENT_TYPE.PROPOSAL_MAP,
           }),
         }),
@@ -1187,19 +1187,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       const documents = [
         new ApplicationDocument({
           typeCode: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
-          type: new ApplicationDocumentCode({
+          type: new DocumentCode({
             code: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
           }),
         }),
         new ApplicationDocument({
           typeCode: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
-          type: new ApplicationDocumentCode({
+          type: new DocumentCode({
             code: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
           }),
         }),
         new ApplicationDocument({
           typeCode: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
-          type: new ApplicationDocumentCode({
+          type: new DocumentCode({
             code: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
           }),
         }),

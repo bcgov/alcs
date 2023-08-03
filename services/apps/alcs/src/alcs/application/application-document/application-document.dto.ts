@@ -1,10 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { BaseCodeDto } from '../../../common/dtos/base.dto';
-
-export class ApplicationDocumentTypeDto extends BaseCodeDto {
-  @AutoMap()
-  oatsCode: string;
-}
+import { DocumentTypeDto } from '../../../document/document.dto';
 
 export class ApplicationDocumentDto {
   @AutoMap(() => String)
@@ -13,8 +8,8 @@ export class ApplicationDocumentDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap(() => ApplicationDocumentTypeDto)
-  type?: ApplicationDocumentTypeDto;
+  @AutoMap(() => DocumentTypeDto)
+  type?: DocumentTypeDto;
 
   @AutoMap(() => [String])
   visibilityFlags: string[];

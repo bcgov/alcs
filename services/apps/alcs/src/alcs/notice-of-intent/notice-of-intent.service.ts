@@ -70,10 +70,10 @@ export class NoticeOfIntentService {
     );
     const savedNoticeOfIntent = await this.repository.save(noticeOfIntent);
 
-    return this.getOrFail(savedNoticeOfIntent.uuid);
+    return this.getOrFailByUuid(savedNoticeOfIntent.uuid);
   }
 
-  async getOrFail(uuid: string) {
+  async getOrFailByUuid(uuid: string) {
     const noticeOfIntent = await this.get(uuid);
     if (!noticeOfIntent) {
       throw new ServiceNotFoundException(
@@ -286,5 +286,29 @@ export class NoticeOfIntentService {
       });
     });
     return results;
+  }
+
+  async getFileNumber(uuid: string) {
+    const noticeOfIntent = await this.repository.findOneOrFail({
+      where: {
+        uuid,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    return noticeOfIntent.fileNumber;
+  }
+
+  async getUuid(fileNumber: string) {
+    const noticeOfIntent = await this.repository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+      select: {
+        fileNumber: true,
+      },
+    });
+    return noticeOfIntent.fileNumber;
   }
 }

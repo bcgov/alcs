@@ -1,3 +1,5 @@
+import { AutoMap } from '@automapper/classes';
+import { BaseCodeDto } from '../common/dtos/base.dto';
 import { User } from '../user/user.entity';
 
 export enum DOCUMENT_SOURCE {
@@ -21,4 +23,9 @@ export class CreateDocumentDto {
   uploadedBy?: User | null;
   source: DOCUMENT_SOURCE;
   system: DOCUMENT_SYSTEM;
+}
+
+export class DocumentTypeDto extends BaseCodeDto {
+  @AutoMap()
+  oatsCode: string;
 }

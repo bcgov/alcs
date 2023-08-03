@@ -2,7 +2,7 @@ import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
 import {
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { DocumentService } from '../../document/document.service';
 
 @Controller('document')

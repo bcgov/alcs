@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
-import { ApplicationDocumentCode } from './application-document-code.entity';
+import { DocumentCode } from '../../../document/document-code.entity';
 
 export enum VISIBILITY_FLAG {
   APPLICANT = 'A',
@@ -34,8 +34,8 @@ export class ApplicationDocument extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @ManyToOne(() => ApplicationDocumentCode)
-  type?: ApplicationDocumentCode;
+  @ManyToOne(() => DocumentCode)
+  type?: DocumentCode;
 
   @Column({ nullable: true })
   typeCode?: string | null;

@@ -14,7 +14,7 @@ import { ApplicationParcel } from '../../../portal/application-submission/applic
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import { User } from '../../../user/user.entity';
 import { CodeService } from '../../code/code.service';
-import { DOCUMENT_TYPE } from './application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { ApplicationDocumentController } from './application-document.controller';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';

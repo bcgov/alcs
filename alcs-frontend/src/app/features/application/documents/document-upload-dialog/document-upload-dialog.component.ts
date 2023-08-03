@@ -3,16 +3,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-  UpdateDocumentDto,
-} from '../../../../services/application/application-document/application-document.dto';
-import {
-  ApplicationDocumentService,
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
   DOCUMENT_TYPE,
-} from '../../../../services/application/application-document/application-document.service';
+  DocumentTypeDto,
+} from '../../../../shared/document/document.dto';
+import {
+  ApplicationDocumentDto,
+  UpdateDocumentDto,
+} from '../../../../services/application/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
 import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
@@ -42,7 +42,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   visibleToInternal = new FormControl<boolean>(false, [Validators.required]);
   visibleToPublic = new FormControl<boolean>(false, [Validators.required]);
 
-  documentTypes: ApplicationDocumentTypeDto[] = [];
+  documentTypes: DocumentTypeDto[] = [];
   documentSources = Object.values(DOCUMENT_SOURCE);
   selectableParcels: { uuid: string; index: number; pid?: string }[] = [];
   selectableOwners: { uuid: string; label: string }[] = [];
@@ -141,7 +141,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  filterDocumentTypes(term: string, item: ApplicationDocumentTypeDto) {
+  filterDocumentTypes(term: string, item: DocumentTypeDto) {
     const termLower = term.toLocaleLowerCase();
     return (
       item.label.toLocaleLowerCase().indexOf(termLower) > -1 ||
@@ -197,7 +197,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onDocTypeSelected($event?: ApplicationDocumentTypeDto) {
+  async onDocTypeSelected($event?: DocumentTypeDto) {
     if ($event) {
       this.type.setValue($event.code);
     } else {

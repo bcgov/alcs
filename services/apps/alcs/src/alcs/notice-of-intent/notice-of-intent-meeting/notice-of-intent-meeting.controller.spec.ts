@@ -102,7 +102,7 @@ describe('NoticeOfIntentMeetingController', () => {
   });
 
   it('should create meeting if notice of intent exists', async () => {
-    mockNoticeOfIntentService.getOrFail.mockResolvedValue(mockNoi);
+    mockNoticeOfIntentService.getOrFailByUuid.mockResolvedValue(mockNoi);
     mockNoticeOfIntentMeetingService.create.mockResolvedValue(mockMeeting);
 
     const meetingToUpdate: CreateNoticeOfIntentMeetingDto = {

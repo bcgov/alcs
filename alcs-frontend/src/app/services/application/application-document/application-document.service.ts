@@ -2,57 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { DocumentTypeDto } from '../../../shared/document/document.dto';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { verifyFileSize } from '../../../shared/utils/file-size-checker';
 import { ToastService } from '../../toast/toast.service';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-  CreateDocumentDto,
-  UpdateDocumentDto,
-} from './application-document.dto';
-
-export enum DOCUMENT_TYPE {
-  //ALCS
-  DECISION_DOCUMENT = 'DPAC',
-  OTHER = 'OTHR',
-  ORIGINAL_APPLICATION = 'ORIG',
-
-  //Government Review
-  RESOLUTION_DOCUMENT = 'RESO',
-  STAFF_REPORT = 'STFF',
-
-  //Applicant Uploaded
-  CORPORATE_SUMMARY = 'CORS',
-  PROFESSIONAL_REPORT = 'PROR',
-  PHOTOGRAPH = 'PHTO',
-  AUTHORIZATION_LETTER = 'AAGR',
-  CERTIFICATE_OF_TITLE = 'CERT',
-
-  //App Documents
-  SERVING_NOTICE = 'POSN',
-  PROPOSAL_MAP = 'PRSK',
-  HOMESITE_SEVERANCE = 'HOME',
-  CROSS_SECTIONS = 'SPCS',
-  RECLAMATION_PLAN = 'RECP',
-  NOTICE_OF_WORK = 'NOWE',
-  PROOF_OF_SIGNAGE = 'POSA',
-  REPORT_OF_PUBLIC_HEARING = 'ROPH',
-  PROOF_OF_ADVERTISING = 'POAA',
-}
-
-export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
-  ALC = 'ALC',
-  LFNG = 'L/FNG',
-  AFFECTED_PARTY = 'Affected Party',
-  PUBLIC = 'Public',
-}
-
-export enum DOCUMENT_SYSTEM {
-  ALCS = 'ALCS',
-  PORTAL = 'Portal',
-}
+import { ApplicationDocumentDto, CreateDocumentDto, UpdateDocumentDto } from './application-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -81,7 +35,7 @@ export class ApplicationDocumentService {
     let formData = this.convertDtoToFormData(createDto);
 
     const res = await firstValueFrom(this.http.post(`${this.url}/application/${fileNumber}`, formData));
-    this.toastService.showSuccessToast('Review document uploaded');
+    this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
@@ -112,19 +66,19 @@ export class ApplicationDocumentService {
   }
 
   async fetchTypes() {
-    return firstValueFrom(this.http.get<ApplicationDocumentTypeDto[]>(`${this.url}/types`));
+    return firstValueFrom(this.http.get<DocumentTypeDto[]>(`${this.url}/types`));
   }
 
   async update(uuid: string, updateDto: UpdateDocumentDto) {
     let formData = this.convertDtoToFormData(updateDto);
     const res = await firstValueFrom(this.http.post(`${this.url}/${uuid}`, formData));
-    this.toastService.showSuccessToast('Review document uploaded');
+    this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
   async updateSort(sortOrder: { uuid: string; order: number }[]) {
     try {
-      await firstValueFrom(this.http.post<ApplicationDocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
+      await firstValueFrom(this.http.post<DocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
     } catch (e) {
       this.toastService.showErrorToast(`Failed to save document order`);
     }

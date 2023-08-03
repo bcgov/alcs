@@ -11,7 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,

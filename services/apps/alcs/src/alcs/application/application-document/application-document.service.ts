@@ -21,9 +21,9 @@ import { PortalApplicationDocumentUpdateDto } from '../../../portal/application-
 import { User } from '../../../user/user.entity';
 import { ApplicationService } from '../application.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from './application-document-code.entity';
+} from '../../../document/document-code.entity';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -41,8 +41,8 @@ export class ApplicationDocumentService {
     private applicationService: ApplicationService,
     @InjectRepository(ApplicationDocument)
     private applicationDocumentRepository: Repository<ApplicationDocument>,
-    @InjectRepository(ApplicationDocumentCode)
-    private applicationDocumentCodeRepository: Repository<ApplicationDocumentCode>,
+    @InjectRepository(DocumentCode)
+    private applicationDocumentCodeRepository: Repository<DocumentCode>,
   ) {}
 
   async attachDocument({

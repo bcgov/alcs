@@ -12,7 +12,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';

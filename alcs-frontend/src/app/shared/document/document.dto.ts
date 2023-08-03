@@ -1,11 +1,10 @@
-import { AutoMap } from '@automapper/classes';
-import { Column, Entity } from 'typeorm';
-import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
+import { BaseCodeDto } from '../dto/base.dto';
 
 export enum DOCUMENT_TYPE {
   //ALCS
   DECISION_DOCUMENT = 'DPAC',
   OTHER = 'OTHR',
+  ORIGINAL_APPLICATION = 'ORIG',
 
   //Government Review
   RESOLUTION_DOCUMENT = 'RESO',
@@ -17,6 +16,8 @@ export enum DOCUMENT_TYPE {
   PHOTOGRAPH = 'PHTO',
   AUTHORIZATION_LETTER = 'AAGR',
   CERTIFICATE_OF_TITLE = 'CERT',
+
+  //App Documents
   SERVING_NOTICE = 'POSN',
   PROPOSAL_MAP = 'PRSK',
   HOMESITE_SEVERANCE = 'HOME',
@@ -26,26 +27,22 @@ export enum DOCUMENT_TYPE {
   PROOF_OF_SIGNAGE = 'POSA',
   REPORT_OF_PUBLIC_HEARING = 'ROPH',
   PROOF_OF_ADVERTISING = 'POAA',
-
-  ORIGINAL_SUBMISSION = 'SUBO',
-  UPDATED_SUBMISSION = 'SUBU',
 }
 
-export const DOCUMENT_TYPES = Object.values(DOCUMENT_TYPE);
+export enum DOCUMENT_SOURCE {
+  APPLICANT = 'Applicant',
+  ALC = 'ALC',
+  LFNG = 'L/FNG',
+  AFFECTED_PARTY = 'Affected Party',
+  PUBLIC = 'Public',
+}
 
-@Entity()
-export class ApplicationDocumentCode extends BaseCodeEntity {
-  constructor(data?: Partial<ApplicationDocumentCode>) {
-    super();
-    if (data) {
-      Object.assign(this, data);
-    }
-  }
+export enum DOCUMENT_SYSTEM {
+  ALCS = 'ALCS',
+  PORTAL = 'Portal',
+}
 
-  @AutoMap()
-  @Column({ type: 'text', unique: true })
+export interface DocumentTypeDto extends BaseCodeDto {
+  code: DOCUMENT_TYPE;
   oatsCode: string;
-
-  @Column({ nullable: true })
-  portalLabel?: string;
 }
