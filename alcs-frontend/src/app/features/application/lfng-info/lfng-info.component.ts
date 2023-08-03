@@ -57,7 +57,7 @@ export class LfngInfoComponent implements OnInit {
             (this.applicationReview.isOCPDesignation === true || this.applicationReview.isSubjectToZoning === true));
 
         this.hasCompletedStepsBeforeDocuments =
-          (this.applicationReview.isAuthorized !== null && this.isFirstNationGovernment) ||
+          this.isFirstNationGovernment ||
           (this.applicationReview.isAuthorized !== null &&
             this.applicationReview.isOCPDesignation !== null &&
             this.applicationReview.isSubjectToZoning !== null) ||

@@ -121,18 +121,24 @@
           <div>
             <div class="subheading2">Zoning Bylaw Name</div>
             <div>{{ applicationReview.zoningBylawName }}</div>
+            <app-no-data *ngIf="!applicationReview.zoningBylawName"></app-no-data>
           </div>
           <div>
             <div class="subheading2">Zoning Designation</div>
             <div>{{ applicationReview.zoningDesignation }}</div>
+            <app-no-data *ngIf="!applicationReview.zoningDesignation"></app-no-data>
           </div>
           <div>
             <div class="subheading2">Minimum Lot Size (hectares)</div>
             <div>{{ applicationReview.zoningMinimumLotSize }}</div>
+            <app-no-data *ngIf="!applicationReview.zoningMinimumLotSize"></app-no-data>
           </div>
           <div>
             <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
-            <div>{{ applicationReview.isZoningConsistent ? 'Yes' : 'No' }}</div>
+            <div *ngIf="applicationReview.OCPConsistent !== null">
+              {{ applicationReview.isZoningConsistent ? 'Yes' : 'No' }}
+            </div>
+            <app-no-data *ngIf="applicationReview.isZoningConsistent === null"></app-no-data>
           </div>
         </ng-container>
       </div>
@@ -180,7 +186,7 @@
       </div>
     </div>
     <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
-      <div>
+      <div *ngIf="isFirstNationGovernment || applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
         <div class="subheading2">Resolution Document</div>
         <div>
           <a *ngIf="resolutionDocument" (click)="openDocument(resolutionDocument.uuid, resolutionDocument.fileName)">{{
@@ -189,7 +195,12 @@
         </div>
         <app-no-data *ngIf="!resolutionDocument"></app-no-data>
       </div>
-      <div *ngIf="applicationReview.isAuthorized || staffReport">
+      <div
+        *ngIf="
+          (applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning) &&
+          (applicationReview.isAuthorized || staffReport)
+        "
+      >
         <div class="subheading2">Staff Report</div>
         <div *ngIf="staffReport">
           <a (click)="openDocument(staffReport.uuid, staffReport.fileName)">{{ staffReport.fileName }}</a>
