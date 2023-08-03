@@ -224,7 +224,6 @@ export class ApplicationDecisionComponent extends Base {
   @ManyToMany(
     () => ApplicationDecisionCondition,
     (condition) => condition.components,
-    { nullable: true, cascade: false },
   )
   conditions: ApplicationDecisionCondition[];
 

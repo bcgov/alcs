@@ -88,14 +88,6 @@ export class ApplicationDecisionCondition extends Base {
   )
   @JoinTable({
     name: 'application_decision_condition_component',
-    joinColumn: {
-      name: 'application_decision_condition_uuid',
-      referencedColumnName: 'uuid',
-    },
-    inverseJoinColumn: {
-      name: 'application_decision_component_uuid',
-      referencedColumnName: 'uuid',
-    },
   })
   components: ApplicationDecisionComponent[] | null;
 
