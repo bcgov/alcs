@@ -29,7 +29,7 @@ export class NoticeOfIntentMeetingService {
   ) {}
 
   async getByAppFileNumber(number: string): Promise<NoticeOfIntentMeeting[]> {
-    const noi = await this.noiService.getOrFail(number);
+    const noi = await this.noiService.getOrFailByUuid(number);
     return this.noiRepository.find({
       where: { noticeOfIntentUuid: noi.uuid },
       relations: DEFAULT_RELATIONS,

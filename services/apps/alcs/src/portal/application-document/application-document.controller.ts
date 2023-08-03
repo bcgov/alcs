@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,

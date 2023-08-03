@@ -7,9 +7,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
@@ -218,7 +218,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
@@ -250,12 +250,12 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.STAFF_REPORT,
         }),
       }),
@@ -286,7 +286,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
@@ -314,12 +314,12 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.STAFF_REPORT,
         }),
       }),
@@ -345,7 +345,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),

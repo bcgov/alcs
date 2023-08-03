@@ -3,8 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationDocumentService, DOCUMENT_SOURCE, DOCUMENT_TYPE } from './application-document.service';
+import { ApplicationDocumentService } from './application-document.service';
 
 describe('ApplicationDocumentService', () => {
   let service: ApplicationDocumentService;

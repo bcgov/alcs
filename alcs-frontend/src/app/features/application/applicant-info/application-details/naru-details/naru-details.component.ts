@@ -1,11 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
-import {
-  ApplicationDocumentService,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application/application-document/application-document.service';
+import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
+import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-naru-details[applicationSubmission]',

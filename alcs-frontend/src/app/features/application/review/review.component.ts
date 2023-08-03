@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
 
 @Component({
   selector: 'app-review',

@@ -7,6 +7,7 @@ import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/not
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoiDocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
@@ -50,6 +51,12 @@ export const childRoutes = [
     menuTitle: 'Post-Decision',
     icon: 'edit_note',
     component: PostDecisionComponent,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: NoiDocumentsComponent,
   },
 ];
 

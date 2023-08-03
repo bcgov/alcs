@@ -2,12 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
-import {
-  ApplicationDocumentService,
-  DOCUMENT_SYSTEM,
-} from '../../../services/application/application-document/application-document.service';
+import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DocumentUploadDialogComponent } from './document-upload-dialog/document-upload-dialog.component';

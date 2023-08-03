@@ -4,7 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
+import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -152,7 +152,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachExternalDocument.mockResolvedValue(
       new ApplicationDocument({
         application: undefined,
-        type: new ApplicationDocumentCode(),
+        type: new DocumentCode(),
         uuid: fakeUuid,
         document: new Document({
           uploadedAt: new Date(),

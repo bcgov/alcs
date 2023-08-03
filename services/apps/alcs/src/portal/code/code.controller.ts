@@ -3,12 +3,12 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocumentTypeDto } from '../../alcs/application/application-document/application-document.dto';
+import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardService } from '../../alcs/card/card.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { DocumentTypeDto } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
@@ -46,11 +46,7 @@ export class CodeController {
       if (docType.portalLabel) {
         docType.label = docType.portalLabel;
       }
-      return this.mapper.map(
-        docType,
-        ApplicationDocumentCode,
-        ApplicationDocumentTypeDto,
-      );
+      return this.mapper.map(docType, DocumentCode, DocumentTypeDto);
     });
     return {
       localGovernments: this.mapLocalGovernments(

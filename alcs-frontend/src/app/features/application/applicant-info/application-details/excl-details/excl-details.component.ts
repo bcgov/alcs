@@ -1,10 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
-import {
-  ApplicationDocumentService,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application/application-document/application-document.service';
+import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../../../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-excl-details',

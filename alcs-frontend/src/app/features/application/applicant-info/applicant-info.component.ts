@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 import {
   APPLICATION_SYSTEM_SOURCE_TYPES,

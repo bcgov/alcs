@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
 import { SharedModule } from '../../shared/shared.module';
+import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
+import { NoiDocumentsComponent } from './documents/documents.component';
 import { InfoRequestDialogComponent } from './info-requests/info-request-dialog/info-request-dialog.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { NoticeOfIntentMeetingDialogComponent } from './info-requests/notice-of-intent-meeting-dialog/notice-of-intent-meeting-dialog.component';
@@ -36,6 +38,8 @@ const routes: Routes = [
     DecisionDialogComponent,
     PostDecisionComponent,
     EditModificationDialogComponent,
+    NoiDocumentsComponent,
+    DocumentUploadDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],
 })
