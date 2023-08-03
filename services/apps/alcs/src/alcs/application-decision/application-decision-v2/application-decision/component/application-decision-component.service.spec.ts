@@ -314,7 +314,7 @@ describe('ApplicationDecisionComponentService', () => {
         uuid: 'fake',
         lots: [
           {
-            number: 1,
+            index: 1,
             componentUuid: '2',
             type: null,
             alrArea: null,

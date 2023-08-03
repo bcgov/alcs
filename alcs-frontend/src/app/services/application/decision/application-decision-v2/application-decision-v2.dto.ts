@@ -120,7 +120,7 @@ export interface UpdateProposedDecisionLotDto {
 export interface ProposedDecisionLotDto {
   uuid: string;
   planNumbers: string | null;
-  number: number;
+  index: number;
   componentUuid: string;
   type: 'Lot' | 'Road Dedication' | null;
   size: number | null;
@@ -163,7 +163,7 @@ export interface RosoDecisionComponentDto {
 }
 
 export interface SubdDecisionComponentDto {
-  subdApprovedLots?: ProposedDecisionLotDto[];
+  // subdApprovedLots?: ProposedDecisionLotDto[];
   lots?: ProposedDecisionLotDto[];
 }
 

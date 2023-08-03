@@ -16,8 +16,7 @@ export class SubdComponent implements OnInit {
   @Input() component!: DecisionComponentDto;
 
   ngOnInit(): void {
-    this.component.subdApprovedLots = this.component.subdApprovedLots?.sort((a, b) => a.number - b.number) ?? undefined;
-    this.component.lots = this.component.lots?.sort((a, b) => a.number - b.number) ?? undefined;
+    this.component.lots = this.component.lots?.sort((a, b) => a.index - b.index) ?? undefined;
   }
 
   async onSaveAlrArea(lot: ProposedDecisionLotDto, alrArea: string | null) {

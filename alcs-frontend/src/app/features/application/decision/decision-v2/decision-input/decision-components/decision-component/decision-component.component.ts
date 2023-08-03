@@ -254,7 +254,7 @@ export class DecisionComponentComponent implements OnInit {
 
   private patchSubdFields() {
     this.form.addControl('subdApprovedLots', this.subdApprovedLots);
-    const lots = this.data.lots?.sort((a, b) => a.number - b.number) ?? null;
+    const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
     this.subdApprovedLots.setValue(lots);
   }
 

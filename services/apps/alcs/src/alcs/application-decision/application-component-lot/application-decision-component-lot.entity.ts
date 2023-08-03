@@ -25,7 +25,7 @@ export class ApplicationDecisionComponentLot extends Base {
 
   @AutoMap()
   @Column({ type: 'int' })
-  number: number;
+  index: number;
 
   @AutoMap(() => String)
   @Column({

@@ -106,7 +106,7 @@ export class ApplicationDecisionComponentService {
                 alrArea: lot.alrArea,
                 size: lot.size,
                 type: lot.type,
-                number: index + 1,
+                index: index + 1,
               }),
             );
           }
@@ -124,7 +124,7 @@ export class ApplicationDecisionComponentService {
               alrArea: e.alrArea,
               size: e.size,
               type: e.type,
-              number: index + 1,
+              index: index + 1,
             }),
         );
       }

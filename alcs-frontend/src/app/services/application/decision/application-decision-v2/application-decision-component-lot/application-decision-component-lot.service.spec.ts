@@ -42,7 +42,7 @@ describe('ApplicationDecisionComponentLotService', () => {
     await service.update(fakeUuid, {
       uuid: fakeUuid,
       planNumbers: null,
-      number: 0,
+      index: 0,
       componentUuid: '',
       type: null,
       size: null,
@@ -65,7 +65,7 @@ describe('ApplicationDecisionComponentLotService', () => {
       await service.update(fakeUuid, {
         uuid: fakeUuid,
         planNumbers: null,
-        number: 0,
+        index: 0,
         componentUuid: '',
         type: null,
         size: null,

@@ -18,7 +18,7 @@ export class UpdateApplicationDecisionComponentLotDto {
 }
 
 export class ApplicationDecisionComponentLotDto {
-  number: number;
+  index: number;
   componentUuid: string;
   type: 'Lot' | 'Road Dedication' | null;
   alrArea: number | null;
