@@ -135,7 +135,7 @@
           </div>
           <div>
             <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
-            <div *ngIf="applicationReview.OCPConsistent !== null">
+            <div *ngIf="applicationReview.isZoningConsistent !== null">
               {{ applicationReview.isZoningConsistent ? 'Yes' : 'No' }}
             </div>
             <app-no-data *ngIf="applicationReview.isZoningConsistent === null"></app-no-data>
