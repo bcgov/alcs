@@ -1,6 +1,12 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
@@ -37,6 +43,8 @@ const NO_DATA = 'No Data';
 
 @Injectable()
 export class GenerateSubmissionDocumentService {
+  private logger = new Logger(GenerateSubmissionDocumentService.name);
+
   constructor(
     private documentGenerationService: CdogsService,
     @Inject(forwardRef(() => ApplicationSubmissionService))
@@ -59,19 +67,24 @@ export class GenerateSubmissionDocumentService {
 
     const template = await this.getPdfTemplateBySubmissionType(submission);
 
-    const pdf = await this.documentGenerationService.generateDocument(
-      `${fileNumber}_submission_Date_Time`,
-      `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${template.templateName}`,
-      template.payload,
-    );
+    if (template) {
+      const pdf = await this.documentGenerationService.generateDocument(
+        `${fileNumber}_submission_Date_Time`,
+        `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${
+          template.templateName
+        }`,
+        template.payload,
+      );
 
-    return pdf;
+      return pdf;
+    }
+    return;
   }
 
   async generateAndAttach(fileNumber: string, user: User) {
     const generatedRes = await this.generate(fileNumber, user);
 
-    if (generatedRes.status === HttpStatus.OK) {
+    if (generatedRes && generatedRes.status === HttpStatus.OK) {
       await this.applicationDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
         fileName: `${fileNumber}_APP_Submission.pdf`,
@@ -94,7 +107,7 @@ export class GenerateSubmissionDocumentService {
   async generateUpdate(fileNumber: string, user: User) {
     const generatedRes = await this.generate(fileNumber, user);
 
-    if (generatedRes.status === HttpStatus.OK) {
+    if (generatedRes && generatedRes.status === HttpStatus.OK) {
       const documents = await this.applicationDocumentService.list(fileNumber);
 
       const submissionDocuments = documents.filter(
@@ -141,7 +154,7 @@ export class GenerateSubmissionDocumentService {
 
   private async getPdfTemplateBySubmissionType(
     submission: ApplicationSubmission,
-  ): Promise<PdfTemplate> {
+  ): Promise<PdfTemplate | undefined> {
     const documents = await this.applicationDocumentService.list(
       submission.fileNumber,
     );
@@ -162,9 +175,10 @@ export class GenerateSubmissionDocumentService {
         payload = this.populateSubdData(payload, submission, documents);
         return { payload, templateName: 'subd-submission-template.docx' };
       default:
-        throw new ServiceNotFoundException(
+        this.logger.error(
           `Could not find template for application submission type ${submission.typeCode}`,
         );
+        return;
     }
   }
 

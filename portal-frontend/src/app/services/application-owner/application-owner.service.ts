@@ -53,7 +53,7 @@ export class ApplicationOwnerService {
       const res = await firstValueFrom(
         this.httpClient.patch<ApplicationOwnerDto>(`${this.serviceUrl}/${uuid}`, updateDto)
       );
-      this.toastService.showSuccessToast('Owner updated');
+      this.toastService.showSuccessToast('Owner saved');
       return res;
     } catch (e) {
       console.error(e);
@@ -67,11 +67,11 @@ export class ApplicationOwnerService {
       const res = await firstValueFrom(
         this.httpClient.post<ApplicationOwnerDto>(`${this.serviceUrl}/setPrimaryContact`, updateDto)
       );
-      this.toastService.showSuccessToast('Primary Contact Updated');
+      this.toastService.showSuccessToast('Application saved');
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to update Primary Contact, please try again later');
+      this.toastService.showErrorToast('Failed to update Application, please try again later');
       return undefined;
     }
   }
