@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
@@ -116,33 +117,20 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
-        let isFollowUp = null;
-        if (applicationSubmission.soilIsFollowUp !== null) {
-          isFollowUp = applicationSubmission.soilIsFollowUp ? 'true' : 'false';
-          if (isFollowUp) {
-            this.followUpIDs.enable();
-          }
+        if (applicationSubmission.soilIsFollowUp) {
+          this.followUpIDs.enable();
         }
 
-        let isExtractionOrMining = null;
-        if (applicationSubmission.soilIsExtractionOrMining !== null) {
-          isExtractionOrMining = applicationSubmission.soilIsExtractionOrMining ? 'true' : 'false';
-          if (isExtractionOrMining) {
-            this.hasSubmittedNotice.enable();
-          }
+        if (applicationSubmission.soilIsExtractionOrMining) {
+          this.hasSubmittedNotice.enable();
         }
 
-        let hasSubmittedNotice = null;
-        if (applicationSubmission.soilHasSubmittedNotice !== null) {
-          hasSubmittedNotice = applicationSubmission.soilHasSubmittedNotice ? 'true' : 'false';
-        }
-
-        if (isExtractionOrMining && hasSubmittedNotice) {
+        if (applicationSubmission.soilIsExtractionOrMining && applicationSubmission.soilHasSubmittedNotice) {
           this.requiresNoticeOfWork = true;
         }
 
         this.form.patchValue({
-          isFollowUp: isFollowUp,
+          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
           followUpIDs: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,
@@ -151,8 +139,8 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
           projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
-          isExtractionOrMining: isExtractionOrMining,
-          hasSubmittedNotice: hasSubmittedNotice,
+          isExtractionOrMining: formatBooleanToString(applicationSubmission.soilIsExtractionOrMining),
+          hasSubmittedNotice: formatBooleanToString(applicationSubmission.soilHasSubmittedNotice),
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();

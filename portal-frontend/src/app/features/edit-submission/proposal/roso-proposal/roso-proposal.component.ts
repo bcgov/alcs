@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -81,16 +82,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.soilToRemoveMaximumDepth ?? undefined,
         };
 
-        let isFollowUp = null;
-        if (applicationSubmission.soilIsFollowUp !== null) {
-          isFollowUp = applicationSubmission.soilIsFollowUp ? 'true' : 'false';
-          if (isFollowUp) {
-            this.followUpIds.enable();
-          }
+        if (applicationSubmission.soilIsFollowUp) {
+          this.followUpIds.enable();
         }
 
         this.form.patchValue({
-          isFollowUp: isFollowUp,
+          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
           followUpIds: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
           soilTypeRemoved: applicationSubmission.soilTypeRemoved,

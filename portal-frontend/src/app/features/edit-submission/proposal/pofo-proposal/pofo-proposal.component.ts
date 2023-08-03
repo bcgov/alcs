@@ -10,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -82,16 +83,12 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           maximumDepth: applicationSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
-        let isFollowUp = null;
-        if (applicationSubmission.soilIsFollowUp !== null) {
-          isFollowUp = applicationSubmission.soilIsFollowUp ? 'true' : 'false';
-          if (isFollowUp) {
-            this.followUpIDs.enable();
-          }
+        if (applicationSubmission.soilIsFollowUp) {
+          this.followUpIDs.enable();
         }
 
         this.form.patchValue({
-          isFollowUp: isFollowUp,
+          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
           followUpIDs: applicationSubmission.soilFollowUpIDs,
           purpose: applicationSubmission.purpose,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
