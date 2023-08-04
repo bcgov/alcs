@@ -1,6 +1,6 @@
-import * as config from 'config';
 import { MJMLParseResults } from 'mjml-core';
 import { EmailTemplateService } from '../../libs/common/src/email-template-service/email-template.service';
+import { header, footer, portalButton } from './partials';
 
 export interface StatusUpdateEMail {
   fileNumber: string;
@@ -23,18 +23,7 @@ const template = `<mjml>
     </mj-style>
   </mj-head>
   <mj-body width="600px">
-    <mj-section background-color="white" padding="40px 0px 0px 0px">
-      <mj-column width="400px">
-        <mj-text font-size="21px"><b>Application ID #{{fileNumber}}</b></mj-text>
-        <mj-text font-size="15px">Owner Name: <b>{{applicantName}}</b></mj-text>
-        <mj-text font-size="15px">Status: <b>{{status}}</b></mj-text>
-      </mj-column>
-      <mj-column width="200px">
-        <mj-image align="right" width="86px" height="56px" src="${config.get<string>(
-          'PORTAL.FRONTEND_ROOT',
-        )}/assets/email/alc_logo.png"></mj-image>
-      </mj-column>
-    </mj-section>
+    ${header}
 
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
@@ -56,29 +45,9 @@ const template = `<mjml>
       </mj-column>
     </mj-section>
 
-    <mj-section background-color="white" padding="0px 0px 72px 0px">
-      <mj-column width="600px" css-class='line-height'>
-        <mj-button
-          width="272px"
-          height="43px" 
-          font-size="16px"
-          css-class='align-left'
-          background-color="#065A2F"
-          color='white'
-          href="https://alcs-dev-portal.apps.silver.devops.gov.bc.ca">
-            GO TO ALC PORTAL
-          </mj-button>
-      </mj-column>
-    </mj-section>
+   ${portalButton}
 
-    <mj-section background-color="#FBE0D1" padding="0px">
-      <mj-column width="400px" css-class='line-height'>
-        <mj-text><a href="https://www.alc.gov.bc.ca/" target="_blank"> Provincial Agricultural Land Commission (gov.bc.ca) </a></mj-text>
-      </mj-column>
-      <mj-column width="200px" css-class='line-height'>
-      <mj-text> Contact: <a href='tel:604-660-7000'> 604-660-7000 </a></mj-text>
-      </mj-column>
-    </mj-section>
+   ${footer}
   </mj-body>
 </mjml>
 `;
