@@ -122,4 +122,13 @@ describe('CardStatusController', () => {
     expect(res.canDelete).toBeTruthy();
     expect(mockBoardService.getBoardsWithStatus).toHaveBeenCalledTimes(1);
   });
+
+  it('should call the service for delete', async () => {
+    mockCardStatusService.delete.mockResolvedValue({} as any);
+
+    const res = await controller.delete('FAKE-CODE');
+
+    expect(res).toBeDefined();
+    expect(mockCardStatusService.delete).toHaveBeenCalledTimes(1);
+  });
 });

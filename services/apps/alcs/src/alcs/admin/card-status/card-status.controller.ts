@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -79,6 +80,12 @@ export class CardStatusController {
   @UserRoles(AUTH_ROLE.ADMIN)
   async update(@Param('code') code: string, @Body() updateDto: CardStatusDto) {
     return await this.cardStatusService.update(code, updateDto);
+  }
+
+  @Delete('/:code')
+  @UserRoles(AUTH_ROLE.ADMIN)
+  async delete(@Param('code') code: string) {
+    return await this.cardStatusService.delete(code);
   }
 
   @Post('')

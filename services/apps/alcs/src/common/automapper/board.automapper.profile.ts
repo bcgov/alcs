@@ -38,7 +38,9 @@ export class BoardAutomapperProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.statuses,
           mapFrom((a) =>
-            this.mapper.mapArray(a.statuses, BoardStatus, BoardStatusDto),
+            this.mapper
+              .mapArray(a.statuses, BoardStatus, BoardStatusDto)
+              .sort((a1, b) => a1.order - b.order),
           ),
         ),
         forMember(

@@ -60,4 +60,9 @@ export class CardStatusDialogComponent implements OnInit {
       this.canDeleteReason = res.reason;
     }
   }
+
+  async onDelete() {
+    await this.cardStatusService.delete(this.code);
+    this.dialogRef.close(true);
+  }
 }
