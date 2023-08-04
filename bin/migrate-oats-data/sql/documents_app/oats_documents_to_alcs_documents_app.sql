@@ -20,7 +20,7 @@
       alr_application_id::text AS oats_application_id,
       'oats_etl' AS "source",
       'oats_etl' AS audit_created_by,
-      '/migrate/' || alr_application_id || '/' || document_id || '_' || file_name AS file_key,
+      '/migrate/application/' || alr_application_id || '/' || document_id || '_' || file_name AS file_key,
       'pdf' AS mime_type,
 	  '{"ORCS Classification: 85100-20"}'::text[] as tags,
 	  CASE
@@ -30,4 +30,4 @@
 		END AS "system"
     FROM 
       oats_documents_to_insert oti
-      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text
+      JOIN alcs.application a ON a.file_number = oti.alr_application_id::text 
