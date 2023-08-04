@@ -37,7 +37,7 @@ def process_documents_noi(conn=None, batch_size=10000):
     """
     with conn.cursor() as cursor:
         with open(
-            "sql/documents_noi/documents_noi_total_count.sql", "r", encoding="utf-8"
+            "sql/documents_noi/oats_documents_to_alcs_documents_noi_total_count.sql", "r", encoding="utf-8"
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -48,7 +48,7 @@ def process_documents_noi(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_document_id = 0
 
-        with open("sql/documents_noi/documents_noi.sql", "r", encoding="utf-8") as sql_file:
+        with open("sql/documents_noi/oats_documents_to_alcs_documents_noi.sql", "r", encoding="utf-8") as sql_file:
             documents_to_insert_sql = sql_file.read()
             while True:
                 cursor.execute(

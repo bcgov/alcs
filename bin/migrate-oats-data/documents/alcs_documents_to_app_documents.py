@@ -1,7 +1,7 @@
 from db import inject_conn_pool
 
 """
-    This script links data from ALCS documents table to ALCS noi_documents table based on data from OATS.
+    This script links data from ALCS documents table to ALCS application_documents table based on data from OATS.
 """
 
 
@@ -11,9 +11,9 @@ def compile_document_insert_query(number_of_rows_to_insert):
     """
     documents_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-       insert into alcs.notice_of_intent_document
+       insert into alcs.application_document
             (	
-                notice_of_intent_uuid ,
+                application_uuid ,
                 document_uuid ,
                 type_code ,
                 visibility_flags,
@@ -23,7 +23,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
             )
         VALUES {documents_to_insert} 
         ON CONFLICT (oats_document_id, oats_application_id) DO UPDATE SET 
-            notice_of_intent_uuid = EXCLUDED.notice_of_intnent_uuid, 
+            application_uuid = EXCLUDED.application_uuid, 
             document_uuid = EXCLUDED.document_uuid, 
             type_code = EXCLUDED.type_code,
             visibility_flags = EXCLUDED.visibility_flags,
@@ -32,25 +32,25 @@ def compile_document_insert_query(number_of_rows_to_insert):
 
 
 @inject_conn_pool
-def process_noi_documents(conn=None, batch_size=10000):
+def process_application_documents(conn=None, batch_size=10000):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
         with open(
-            "sql/documents_noi/noi_documents_total_count.sql", "r", encoding="utf-8"
+            "sql/documents_app/alcs_documents_to_app_documents_total_count.sql", "r", encoding="utf-8"
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             total_count = cursor.fetchone()[0]
-        print("Total count of noi documents to transfer:", total_count)
+        print("Total count of documents to transfer:", total_count)
 
         failed_inserts = 0
         successful_inserts_count = 0
         last_document_id = 0
 
         with open(
-            "sql/documents_noi/noi_documents.sql", "r", encoding="utf-8"
+            "sql/documents_app/alcs_documents_to_app_documents.sql", "r", encoding="utf-8"
         ) as sql_file:
             documents_to_insert_sql = sql_file.read()
             while True:
@@ -89,11 +89,11 @@ def process_noi_documents(conn=None, batch_size=10000):
 
 
 @inject_conn_pool
-def clean_noi_documents(conn=None):
-    print("Start noi documents cleaning")
+def clean_application_documents(conn=None):
+    print("Start application documents cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.notice_of_intent_document WHERE audit_created_by = 'oats_etl';"
+            "DELETE FROM alcs.application_document WHERE audit_created_by = 'oats_etl';"
         )
         conn.commit()
         print(f"Deleted items count = {cursor.rowcount}")
