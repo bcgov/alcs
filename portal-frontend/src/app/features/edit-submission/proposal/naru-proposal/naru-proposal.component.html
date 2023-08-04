@@ -50,11 +50,11 @@
       <mat-form-field appearance="outline">
         <textarea formControlName="purpose" #purposeText maxlength="4000" id="purpose" matInput></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
 
     <ng-container *ngIf="subtype.value === 'ARFU'">
@@ -97,7 +97,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</span>
         <div
           *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
           class="field-error"
@@ -105,6 +104,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -123,7 +123,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</span>
         <div
           *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
           class="field-error"
@@ -131,6 +130,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -151,11 +151,11 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</span>
         <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
       </div>
     </ng-container>
 
@@ -196,7 +196,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</span>
         <div
           *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
           class="field-error"
@@ -204,6 +203,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -219,7 +219,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</span>
         <div
           *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
           class="field-error"
@@ -227,6 +226,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -247,11 +247,11 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</span>
         <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
       </div>
     </ng-container>
 
@@ -316,7 +316,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</span>
         <div
           *ngIf="residenceNecessity.invalid && (residenceNecessity.dirty || residenceNecessity.touched)"
           class="field-error"
@@ -324,6 +323,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="residenceNecessity.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - residenceNecessityText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -339,7 +339,6 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</span>
         <div
           *ngIf="locationRationale.invalid && (locationRationale.dirty || locationRationale.touched)"
           class="field-error"
@@ -347,6 +346,7 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="locationRationale.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - locationRationaleText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -367,11 +367,11 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</span>
         <div *ngIf="infrastructure.invalid && (infrastructure.dirty || infrastructure.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="infrastructure.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - infrastructureText.textLength }}</div>
       </div>
 
       <div class="full-row">
@@ -389,11 +389,11 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - agriTourismText.textLength }}</span>
         <div *ngIf="agriTourism.invalid && (agriTourism.dirty || agriTourism.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="agriTourism.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - agriTourismText.textLength }}</div>
       </div>
     </ng-container>
 
@@ -415,7 +415,6 @@
           matInput
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</span>
       <div
         *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
         class="field-error"
@@ -423,6 +422,7 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</div>
     </div>
 
     <div class="full-row">
@@ -477,12 +477,12 @@
         <mat-form-field appearance="outline">
           <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
         <div *ngIf="fillType.invalid && (fillType.dirty || fillType.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="fillType.errors?.['required']">This field is required</div>
         </div>
-        <div class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</div>
+        <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
       </div>
     </div>
 
@@ -498,11 +498,11 @@
             matInput
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</span>
         <div *ngIf="fillOrigin.invalid && (fillOrigin.dirty || fillOrigin.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="fillOrigin.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
       </div>
     </div>
 

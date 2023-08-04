@@ -209,12 +209,12 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
       <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</div>
+      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
     </div>
 
     <div class="full-row">
@@ -230,12 +230,12 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</span>
       <div *ngIf="soilTypeRemoved.invalid && (soilTypeRemoved.dirty || soilTypeRemoved.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="soilTypeRemoved.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</div>
+      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</div>
     </div>
 
     <div class="full-row">
@@ -256,7 +256,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - soilAlternativeMeasuresText.textLength }}</span>
       <div
         *ngIf="alternativeMeasures.invalid && (alternativeMeasures.dirty || alternativeMeasures.touched)"
         class="field-error"
@@ -264,7 +263,8 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="alternativeMeasures.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</div>
+      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - soilAlternativeMeasuresText.textLength }}</div>
     </div>
 
     <div class="full-row">
@@ -282,7 +282,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</span>
       <div
         *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
         class="field-error"
@@ -290,10 +289,11 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">
+      <mat-hint class="subtext">
         Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
         temporary or permanent drainage, etc.
-      </div>
+      </mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>

@@ -43,11 +43,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="agriculture-activities">
@@ -64,7 +64,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - agriculturalActivitiesText.textLength }}</span>
       <div
         *ngIf="agriculturalActivities.invalid && (agriculturalActivities.dirty || agriculturalActivities.touched)"
         class="field-error"
@@ -72,6 +71,7 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="agriculturalActivities.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - agriculturalActivitiesText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="negative-impact">
@@ -87,7 +87,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</span>
       <div
         *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
         class="field-error"
@@ -95,6 +94,7 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="negative-impact">Could this proposal be accommodated on lands outside of the ALR?</label>
@@ -108,11 +108,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
       <div *ngIf="outsideLands.invalid && (outsideLands.dirty || outsideLands.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="outsideLands.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="total-area">Total area of corridor</label>

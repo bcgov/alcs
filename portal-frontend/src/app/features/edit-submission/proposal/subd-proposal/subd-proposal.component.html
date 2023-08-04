@@ -54,10 +54,10 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">
+      <mat-hint class="subtext">
         Example: If the proposal is to subdivide a 5 ha lot with road dedication from a 20 ha parcel, the total number
         of lots proposed is three.
-      </div>
+      </mat-hint>
     </div>
     <div class="full-row">
       <label for="purpose">Enter your proposed lot areas (ha)</label>
@@ -125,11 +125,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="suitability"> Why do you believe this parcel is suitable for subdivision? </label>
@@ -147,11 +147,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - suitabilityText.textLength }}</span>
       <div *ngIf="suitability.invalid && (suitability.dirty || suitability.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="suitability.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - suitabilityText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="agricultural-support"
@@ -167,7 +167,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - agriculturalSupportText.textLength }}</span>
       <div
         *ngIf="agriculturalSupport.invalid && (agriculturalSupport.dirty || agriculturalSupport.touched)"
         class="field-error"
@@ -175,6 +174,7 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="agriculturalSupport.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - agriculturalSupportText.textLength }}</div>
     </div>
     <div class="full-row">
       <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>

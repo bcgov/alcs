@@ -55,11 +55,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="agSupport">Does the proposal support agriculture in the short or long term? Please explain.</label>
@@ -73,11 +73,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</span>
       <div *ngIf="agSupport.invalid && (agSupport.dirty || agSupport.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="agSupport.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="improvements"
@@ -98,12 +98,12 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <div class="subtext">Example: 40 ha of grazing land fenced in 2010.</div>
-      <span class="subtext">Characters left: {{ 4000 - improvementsText.textLength }}</span>
       <div *ngIf="improvements.invalid && (improvements.dirty || improvements.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="improvements.errors?.['required']">This field is required</div>
       </div>
+      <mat-hint class="subtext">Example: 40 ha of grazing land fenced in 2010.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - improvementsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
