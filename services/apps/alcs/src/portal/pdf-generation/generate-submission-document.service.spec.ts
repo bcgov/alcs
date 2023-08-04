@@ -166,12 +166,9 @@ describe('GenerateSubmissionDocumentService', () => {
       name: user.user.entity,
     });
 
-    await expect(service.generate('fake', userEntity)).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Could not find template for application submission type not a type`,
-      ),
-    );
+    const res = await service.generate('fake', userEntity);
 
+    expect(res).toBeUndefined();
     expect(mockCdogsService.generateDocument).toBeCalledTimes(0);
   });
 
