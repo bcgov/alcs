@@ -5,8 +5,8 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
@@ -30,7 +30,7 @@ describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
 
   const localGovernmentUuid = 'local-government';
@@ -56,7 +56,7 @@ describe('ApplicationSubmissionController', () => {
           useValue: mockDocumentService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLgService,
         },
         {
@@ -100,7 +100,7 @@ describe('ApplicationSubmissionController', () => {
 
     mockAppSubmissionService.mapToDTOs.mockResolvedValue([]);
     mockLgService.list.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: localGovernmentUuid,
         bceidBusinessGuid,
         name: 'fake-name',

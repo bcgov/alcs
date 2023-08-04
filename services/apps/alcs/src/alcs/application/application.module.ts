@@ -18,10 +18,11 @@ import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeModule } from '../code/code.module';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { NotificationModule } from '../notification/notification.module';
-import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
-import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentController } from '../local-government/local-government.controller';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
@@ -50,13 +51,13 @@ import { ApplicationService } from './application.service';
       ApplicationMeeting,
       ApplicationDocument,
       DocumentCode,
-      ApplicationLocalGovernment,
       ApplicationParcel,
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
       ApplicationSubmissionStatusType,
       ApplicationSubmissionToSubmissionStatus,
+      LocalGovernment,
     ]),
     NotificationModule,
     DocumentModule,
@@ -65,6 +66,7 @@ import { ApplicationService } from './application.service';
     FileNumberModule,
     forwardRef(() => ApplicationSubmissionModule),
     ApplicationSubmissionStatusModule,
+    LocalGovernmentModule,
   ],
   providers: [
     ApplicationService,
@@ -76,7 +78,7 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,
-    ApplicationLocalGovernmentService,
+    LocalGovernmentService,
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
     ApplicationSubmissionProfile,
@@ -85,7 +87,7 @@ import { ApplicationService } from './application.service';
     ApplicationController,
     ApplicationMeetingController,
     ApplicationDocumentController,
-    ApplicationLocalGovernmentController,
+    LocalGovernmentController,
     ApplicationSubmissionController,
     ApplicationSubmissionReviewController,
     ApplicationParcelController,
@@ -97,7 +99,7 @@ import { ApplicationService } from './application.service';
     ApplicationSubtaskProfile,
     ApplicationMeetingService,
     ApplicationPausedService,
-    ApplicationLocalGovernmentService,
+    LocalGovernmentService,
     ApplicationDocumentService,
   ],
 })

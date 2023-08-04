@@ -14,8 +14,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { generateStatusHtml } from '../../../../../templates/emails/submission-status.template';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
@@ -46,7 +46,7 @@ export class ApplicationSubmissionReviewController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
     private applicationService: ApplicationService,
     private emailService: EmailService,
@@ -236,7 +236,7 @@ export class ApplicationSubmissionReviewController {
   private async sendStatusEmail(
     applicationSubmission: ApplicationSubmission,
     fileNumber: string,
-    userLocalGovernment: ApplicationLocalGovernment,
+    userLocalGovernment: LocalGovernment,
     primaryContact: ApplicationOwner,
   ) {
     if (primaryContact.email) {

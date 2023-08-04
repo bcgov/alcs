@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
-import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -16,7 +16,7 @@ import { SearchService } from './search.service';
       NoticeOfIntent,
       PlanningReview,
       Covenant,
-      ApplicationLocalGovernment,
+      LocalGovernment,
     ]),
   ],
   providers: [SearchService, ApplicationProfile],

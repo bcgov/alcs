@@ -4,8 +4,8 @@ import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
@@ -16,7 +16,7 @@ import { CodeController } from './code.controller';
 
 describe('CodeController', () => {
   let portalController: CodeController;
-  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockCardService: DeepMocked<CardService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
@@ -39,7 +39,7 @@ describe('CodeController', () => {
       providers: [
         CodeController,
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLgService,
         },
         {
@@ -69,7 +69,7 @@ describe('CodeController', () => {
     portalController = app.get<CodeController>(CodeController);
 
     mockLgService.listActive.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,
@@ -105,7 +105,7 @@ describe('CodeController', () => {
   it('should set the matches flag correctly when users guid matches government', async () => {
     const matchingGuid = 'guid';
     mockLgService.listActive.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,

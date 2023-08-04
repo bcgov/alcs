@@ -6,6 +6,7 @@ import {
   ROLES_ALLOWED_BOARDS,
 } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
@@ -52,7 +53,10 @@ export class NoticeOfIntentController {
     });
 
     const createdNoi = await this.noticeOfIntentService.create(
-      createDto,
+      {
+        ...createDto,
+        dateSubmittedToAlc: formatIncomingDate(createDto.dateSubmittedToAlc),
+      },
       board,
     );
 

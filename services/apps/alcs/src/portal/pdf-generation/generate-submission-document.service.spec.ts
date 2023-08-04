@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -30,7 +30,7 @@ describe('GenerateSubmissionDocumentService', () => {
   let service: GenerateSubmissionDocumentService;
   let mockCdogsService: DeepMocked<CdogsService>;
   let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
@@ -56,7 +56,7 @@ describe('GenerateSubmissionDocumentService', () => {
           useValue: mockApplicationSubmissionService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockApplicationLocalGovernmentService,
         },
         { provide: ApplicationService, useValue: mockApplicationService },

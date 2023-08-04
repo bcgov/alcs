@@ -2,13 +2,13 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from './application-local-government.entity';
-import { ApplicationLocalGovernmentService } from './application-local-government.service';
+import { LocalGovernment } from './local-government.entity';
+import { LocalGovernmentService } from './local-government.service';
 
-describe('ApplicationLocalGovernmentService', () => {
-  let mockRepository: DeepMocked<Repository<ApplicationLocalGovernment>>;
+describe('LocalGovernmentService', () => {
+  let mockRepository: DeepMocked<Repository<LocalGovernment>>;
 
-  let service: ApplicationLocalGovernmentService;
+  let service: LocalGovernmentService;
 
   const mockLocalGovernments = [
     {
@@ -18,22 +18,20 @@ describe('ApplicationLocalGovernmentService', () => {
   ];
 
   beforeEach(async () => {
-    mockRepository = createMock<Repository<ApplicationLocalGovernment>>();
+    mockRepository = createMock<Repository<LocalGovernment>>();
     mockRepository.find.mockResolvedValue(mockLocalGovernments);
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ApplicationLocalGovernmentService,
+        LocalGovernmentService,
         {
-          provide: getRepositoryToken(ApplicationLocalGovernment),
+          provide: getRepositoryToken(LocalGovernment),
           useValue: mockRepository,
         },
       ],
     }).compile();
 
-    service = module.get<ApplicationLocalGovernmentService>(
-      ApplicationLocalGovernmentService,
-    );
+    service = module.get<LocalGovernmentService>(LocalGovernmentService);
   });
 
   it('should be defined', () => {
@@ -50,7 +48,7 @@ describe('ApplicationLocalGovernmentService', () => {
 
   it('should call repository on getByUuId', async () => {
     const uuid = 'fake';
-    mockRepository.findOne.mockResolvedValue({} as ApplicationLocalGovernment);
+    mockRepository.findOne.mockResolvedValue(new LocalGovernment());
 
     await service.getByUuid(uuid);
 
@@ -66,7 +64,7 @@ describe('ApplicationLocalGovernmentService', () => {
   });
 
   it('should call repository on create', async () => {
-    mockRepository.save.mockResolvedValue({} as ApplicationLocalGovernment);
+    mockRepository.save.mockResolvedValue(new LocalGovernment());
 
     await service.create({
       name: 'name',
@@ -81,10 +79,8 @@ describe('ApplicationLocalGovernmentService', () => {
   });
 
   it('should call repository on update', async () => {
-    mockRepository.findOneOrFail.mockResolvedValue(
-      new ApplicationLocalGovernment(),
-    );
-    mockRepository.save.mockResolvedValue({} as ApplicationLocalGovernment);
+    mockRepository.findOneOrFail.mockResolvedValue(new LocalGovernment());
+    mockRepository.save.mockResolvedValue(new LocalGovernment());
 
     await service.update('', {
       name: 'name',

@@ -49,6 +49,7 @@ export class CreateApplicationDialogComponent implements OnInit, OnDestroy {
     });
 
     this.localGovernmentService.list().then((res) => {
+      debugger;
       this.localGovernments = res;
     });
   }

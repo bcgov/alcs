@@ -1,11 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { Base } from '../../../../common/entities/base.entity';
-import { ApplicationRegion } from '../../../code/application-code/application-region/application-region.entity';
+import { Base } from '../../common/entities/base.entity';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 
 @Entity()
-export class ApplicationLocalGovernment extends Base {
-  constructor(data?: Partial<ApplicationLocalGovernment>) {
+export class LocalGovernment extends Base {
+  constructor(data?: Partial<LocalGovernment>) {
     super();
     if (data) {
       Object.assign(this, data);

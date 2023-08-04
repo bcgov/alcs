@@ -5,7 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import {
   DocumentCode,
   DOCUMENT_TYPE,
@@ -27,7 +27,7 @@ describe('ApplicationSubmissionReviewService', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppService: DeepMocked<ApplicationService>;
 
-  const mockLocalGovernment = new ApplicationLocalGovernment({
+  const mockLocalGovernment = new LocalGovernment({
     isFirstNation: true,
     isActive: true,
   });

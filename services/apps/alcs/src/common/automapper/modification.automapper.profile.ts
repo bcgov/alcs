@@ -12,8 +12,8 @@ import {
   ApplicationModificationOutcomeCodeDto,
 } from '../../alcs/application-decision/application-modification/application-modification.dto';
 import { ApplicationModification } from '../../alcs/application-decision/application-modification/application-modification.entity';
-import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
@@ -41,8 +41,8 @@ export class ModificationProfile extends AutomapperProfile {
           mapFrom((a) =>
             this.mapper.map(
               a.localGovernment,
-              ApplicationLocalGovernment,
-              ApplicationLocalGovernmentDto,
+              LocalGovernment,
+              LocalGovernmentDto,
             ),
           ),
         ),
