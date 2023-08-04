@@ -83,6 +83,7 @@
 
     <div>
       <label for="map-area">Approx. Map Area (Hectares)</label>
+      <div class="subtext">The area of the entire parcel in hectares, not just the area under application.</div>
       <mat-form-field class="full-width-input" appearance="outline">
         <input
           id="map-area"
@@ -112,7 +113,7 @@
       </div>
     </div>
 
-    <div *ngIf="isCrownLand">
+    <div class="full-row" *ngIf="isCrownLand">
       <label for="pin">PIN (optional)</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
@@ -133,19 +134,20 @@
         <mat-datepicker-toggle matIconSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #purchaseDatePicker startView="multi-year"></mat-datepicker>
       </mat-form-field>
-      <div>
-        <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
-      </div>
       <div *ngIf="purchaseDate.invalid && (purchaseDate.dirty || purchaseDate.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purchaseDate.errors?.['required']">This field is required</div>
+      </div>
+      <div>
+        <mat-hint class="subtext"> Example: 2020-Mar-01 </mat-hint>
       </div>
     </div>
 
     <div class="full-row">
       <label for="isFarm">Farm Classification</label>
       <div class="subtext">
-        As determined by <a class='subtext' href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
+        As determined by
+        <a class="subtext" href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
       </div>
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
@@ -353,7 +355,6 @@
         isConfirmedByApplicant.invalid &&
         (isConfirmedByApplicant.dirty || isConfirmedByApplicant.touched)
     }"
-    class=""
     >I confirm that the owner information provided above matches the current Certificate of Title. Mismatched
     information can cause significant delays to processing time.
   </mat-checkbox>

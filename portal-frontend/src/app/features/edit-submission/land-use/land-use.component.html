@@ -32,7 +32,6 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - parcelsAgricultureDescriptionText.textLength }}</span>
         <div
           *ngIf="
             parcelsAgricultureDescription.invalid &&
@@ -43,12 +42,11 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsAgricultureDescription.errors?.['required']">This field is required</div>
         </div>
-        <div>
-          <mat-hint class="subtext"
-            >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. <br />Example 2: Parcel 1: 10%
-            blueberry crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
-          </mat-hint>
-        </div>
+        <mat-hint class="subtext"
+          >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. Example 2: Parcel 1: 10%
+          blueberry crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
+        </mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - parcelsAgricultureDescriptionText.textLength }}</div>
       </div>
       <div class="full-row">
         <h6>
@@ -72,9 +70,6 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <span class="subtext"
-          >Characters left: {{ 4000 - parcelsAgricultureImprovementDescriptionText.textLength }}</span
-        >
         <div
           *ngIf="
             parcelsAgricultureImprovementDescription.invalid &&
@@ -85,7 +80,8 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsAgricultureImprovementDescription.errors?.['required']">This field is required</div>
         </div>
-        <div class="subtext">Example: 40 ha of grazing land fenced in 2010.</div>
+        <mat-hint class="subtext">Example: 40 ha of grazing land fenced in 2010.</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - parcelsAgricultureImprovementDescriptionText.textLength }}</div>
       </div>
       <div class="full-row">
         <label for="parcelsNonAgricultureUseDescription">
@@ -106,7 +102,6 @@
             maxlength="4000"
           ></textarea>
         </mat-form-field>
-        <span class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</span>
         <div
           *ngIf="
             parcelsNonAgricultureUseDescription.invalid &&
@@ -117,7 +112,8 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsNonAgricultureUseDescription.errors?.['required']">This field is required</div>
         </div>
-        <div class="subtext">Example: House and 100 square metre detached auto repair shop.</div>
+        <mat-hint class="subtext">Example: House and 100 square metre detached auto repair shop.</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</div>
       </div>
     </div>
     <h5>Identify the land uses surrounding the parcel(s) under application.</h5>

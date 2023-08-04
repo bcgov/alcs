@@ -82,11 +82,11 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</span>
       <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
       <label>Proposal Dimensions</label>
@@ -175,12 +175,12 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
       <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</div>
+      <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+      <span class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</span>
     </div>
     <div class="full-row">
       <label for="alternativeMeasures">
@@ -200,7 +200,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - alternativeMeasuresText.textLength }}</span>
       <div
         *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
         class="field-error"
@@ -208,10 +207,11 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">
+      <mat-hint class="subtext">
         Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
         temporary or permanent drainage, etc.
-      </div>
+      </mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - alternativeMeasuresText.textLength }}</div>
     </div>
     <div class="full-row">
       <label for="agricultural-support">
@@ -228,7 +228,6 @@
           placeholder="Type comment"
         ></textarea>
       </mat-form-field>
-      <span class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</span>
       <div
         *ngIf="reduceNegativeImpacts.invalid && (reduceNegativeImpacts.dirty || reduceNegativeImpacts.touched)"
         class="field-error"
@@ -236,10 +235,11 @@
         <mat-icon>warning</mat-icon>
         <div *ngIf="reduceNegativeImpacts.errors?.['required']">This field is required</div>
       </div>
-      <div class="subtext">
+      <mat-hint class="subtext">
         Example: Project phasing, providing landscape screening, fencing, buffering, erosion and sediment control,
         temporary or permanent drainage, etc.
-      </div>
+      </mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
     </div>
     <div class="full-row">
       <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
