@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Logger,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -21,6 +22,11 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
+import { ApplicationSubmission } from './application-submission.entity';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { generateStatusHtml } from '../../../../../templates/emails/submitted-to-lfng/applicant.template';
+import { EmailService } from '../../providers/email/email.service';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -31,6 +37,8 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
+    private applicationService: ApplicationService,
+    private emailService: EmailService,
   ) {}
 
   @Get()
@@ -208,6 +216,25 @@ export class ApplicationSubmissionController {
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
+        // TODO: Check if first time submission
+        const userLocalGovernment = await this.getUserGovernmentOrFail(
+          req.user.entity,
+        );
+
+        const primaryContact = applicationSubmission.owners.find(
+          (owner) =>
+            owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+        );
+
+        if (primaryContact && primaryContact.email) {
+          await this.sendStatusEmail(
+            applicationSubmission,
+            applicationSubmission.fileNumber,
+            userLocalGovernment,
+            primaryContact,
+          );
+        }
+
         return await this.applicationSubmissionService.submitToLg(
           validatedApplicationSubmission,
         );
@@ -216,5 +243,62 @@ export class ApplicationSubmissionController {
       this.logger.debug(validationResult.errors);
       throw new BadRequestException('Invalid Application');
     }
+  }
+
+  private async sendStatusEmail(
+    applicationSubmission: ApplicationSubmission,
+    fileNumber: string,
+    userLocalGovernment: ApplicationLocalGovernment,
+    primaryContact: ApplicationOwner,
+  ) {
+    // TODO: Refactor duplicated code from application-submission-review
+    if (primaryContact.email) {
+      const status = await this.applicationSubmissionService.getStatus(
+        SUBMISSION_STATUS.SUBMITTED_TO_LG,
+      );
+
+      const types = await this.applicationService.fetchApplicationTypes();
+
+      const matchingType = types.find(
+        (type) => type.code === applicationSubmission.typeCode,
+      );
+
+      const emailTemplate = generateStatusHtml({
+        fileNumber,
+        applicantName: applicationSubmission.applicant || 'Unknown',
+        applicationType:
+          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
+        governmentName: userLocalGovernment.name,
+        status: status.label,
+      });
+
+      this.emailService.sendEmail({
+        body: emailTemplate.html,
+        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
+          applicationSubmission.applicant || 'Unknown'
+        })`,
+        to: [primaryContact.email],
+      });
+    }
+  }
+
+  private async getUserGovernmentOrFail(user: User) {
+    const userGovernment = await this.getUserGovernment(user);
+    if (!userGovernment) {
+      throw new NotFoundException('User not part of any local government');
+    }
+    return userGovernment;
+  }
+
+  private async getUserGovernment(user: User) {
+    if (user.bceidBusinessGuid) {
+      const localGovernment = await this.localGovernmentService.getByGuid(
+        user.bceidBusinessGuid,
+      );
+      if (localGovernment) {
+        return localGovernment;
+      }
+    }
+    return undefined;
   }
 }
