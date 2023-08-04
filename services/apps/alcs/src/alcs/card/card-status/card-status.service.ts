@@ -53,4 +53,10 @@ export class CardStatusService {
     const cards = await this.cardService.getByCardStatus(code);
     return cards.length;
   }
+
+  async delete(code: string) {
+    const cardStatus = await this.getOneOrFail(code);
+
+    return await this.cardStatusRepository.remove(cardStatus);
+  }
 }

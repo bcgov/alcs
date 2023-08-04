@@ -37,7 +37,7 @@
 
   <div class="split">
     <div [matTooltip]="canDeleteReason" [matTooltipDisabled]="canDelete">
-      <button [disabled]="!canDelete" mat-stroked-button color="warn" mat-dialog-close="false">Delete</button>
+      <button [disabled]="!canDelete" (click)='onDelete()' mat-stroked-button color="warn">Delete</button>
     </div>
     <div class="button-container">
       <button mat-stroked-button color="primary" mat-dialog-close="false">Close</button>
