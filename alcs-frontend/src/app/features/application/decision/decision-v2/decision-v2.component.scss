@@ -155,6 +155,7 @@
     .mdc-tab__text-label {
       color: colors.$black !important;
     }
+
     .mdc-tab {
       margin-left: 8px;
     }
@@ -178,7 +179,7 @@
   }
 
   .lot-table {
-    margin-top:12px;
+    margin-top: 12px;
     display: grid;
     grid-template-columns: max-content max-content max-content 0.8fr;
     grid-column-gap: 36px;
