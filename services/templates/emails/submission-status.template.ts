@@ -26,7 +26,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="40px 0px 0px 0px">
       <mj-column width="400px">
         <mj-text font-size="21px"><b>Application ID #{{fileNumber}}</b></mj-text>
-        <mj-text font-size="15px">Applicant: <b>{{applicantName}}</b></mj-text>
+        <mj-text font-size="15px">Owner Name: <b>{{applicantName}}</b></mj-text>
         <mj-text font-size="15px">Status: <b>{{status}}</b></mj-text>
       </mj-column>
       <mj-column width="200px">
@@ -48,10 +48,10 @@ const template = `<mjml>
           If you are an agent acting on behalf of the landowner(s), it is your responsibility to advise your client(s) of this, and any future, correspondence.
         </mj-text>
         <mj-text font-size='16px'>
-          Login to the Agricultural Land Commission Application Portal for further updates on your application as it progresses through the application process.
+          Login to the Agricultural Land Commission Portal for further updates on your application as it progresses through the application process.
         </mj-text>
         <mj-text font-size='16px'>
-          This is an ALC Application Portal notification only. Please do not reply to this email.
+          This is an ALC Portal notification only. Please do not reply to this email.
         </mj-text>
       </mj-column>
     </mj-section>
@@ -66,7 +66,7 @@ const template = `<mjml>
           background-color="#065A2F"
           color='white'
           href="https://alcs-dev-portal.apps.silver.devops.gov.bc.ca">
-            GO TO APPLICATION PORTAL
+            GO TO ALC PORTAL
           </mj-button>
       </mj-column>
     </mj-section>
