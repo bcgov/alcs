@@ -6,7 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../alcs/local-government/local-government.entity';
 import { EmailService } from '../providers/email/email.service';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -23,8 +23,8 @@ export class UserService {
     private userRepository: Repository<User>,
     @InjectMapper() private userMapper: Mapper,
     private emailService: EmailService,
-    @InjectRepository(ApplicationLocalGovernment)
-    private localGovernmentRepository: Repository<ApplicationLocalGovernment>,
+    @InjectRepository(LocalGovernment)
+    private localGovernmentRepository: Repository<LocalGovernment>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 

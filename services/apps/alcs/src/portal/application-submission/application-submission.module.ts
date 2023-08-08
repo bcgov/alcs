@@ -9,6 +9,7 @@ import { ApplicationOwnerProfile } from '../../common/automapper/application-own
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
+import { FileNumberModule } from '../../file-number/file-number.module';
 import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
 import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
@@ -41,6 +42,7 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
     forwardRef(() => DocumentModule),
     forwardRef(() => PdfGenerationModule),
     ApplicationSubmissionStatusModule,
+    FileNumberModule,
   ],
   providers: [
     ApplicationSubmissionService,

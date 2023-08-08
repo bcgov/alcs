@@ -5,7 +5,7 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { ApplicationMeetingService } from '../application/application-meeting/application-meeting.service';
 import { ApplicationPausedService } from '../application/application-paused/application-paused.service';
 import { Application } from '../application/application.entity';
@@ -94,7 +94,7 @@ export class ApplicationImportService {
     private meetingService: ApplicationMeetingService,
     private pausedService: ApplicationPausedService,
     private boardService: BoardService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
   ) {}
 
   importCsv() {

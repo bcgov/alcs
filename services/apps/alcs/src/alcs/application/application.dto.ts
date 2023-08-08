@@ -14,7 +14,7 @@ import { ApplicationDecisionMeetingDto } from '../application-decision/applicati
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationLocalGovernmentDto } from './application-code/application-local-government/application-local-government.dto';
+import { LocalGovernmentDto } from '../local-government/local-government.dto';
 
 export class AlcsApplicationSubmissionDto extends ApplicationSubmissionDetailedDto {
   primaryContact?: ApplicationOwnerDto;
@@ -208,8 +208,8 @@ export class ApplicationDto {
   @AutoMap(() => ApplicationRegionDto)
   region: ApplicationRegionDto;
 
-  @AutoMap(() => ApplicationLocalGovernmentDto)
-  localGovernment: ApplicationLocalGovernmentDto;
+  @AutoMap(() => LocalGovernmentDto)
+  localGovernment: LocalGovernmentDto;
 
   @AutoMap(() => ApplicationDecisionMeetingDto)
   decisionMeetings: ApplicationDecisionMeetingDto[];

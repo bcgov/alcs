@@ -10,8 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
@@ -29,7 +29,7 @@ export class ApplicationSubmissionController {
 
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
   ) {}
 
@@ -161,7 +161,7 @@ export class ApplicationSubmissionController {
         uuid,
         req.user.entity,
       );
-    let localGovernment: ApplicationLocalGovernment | null = null;
+    let localGovernment: LocalGovernment | null = null;
 
     if (user.bceidBusinessGuid) {
       localGovernment = await this.localGovernmentService.getByGuid(

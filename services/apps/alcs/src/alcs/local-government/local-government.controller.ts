@@ -1,23 +1,23 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
-import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
-import { UserRoles } from '../../../../common/authorization/roles.decorator';
-import { ApplicationLocalGovernmentDto } from './application-local-government.dto';
-import { ApplicationLocalGovernmentService } from './application-local-government.service';
+import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
+import { UserRoles } from '../../common/authorization/roles.decorator';
+import { LocalGovernmentDto } from './local-government.dto';
+import { LocalGovernmentService } from './local-government.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-local-government')
 @UseGuards(RolesGuard)
-export class ApplicationLocalGovernmentController {
+export class LocalGovernmentController {
   constructor(
-    private applicationLocalGovernmentService: ApplicationLocalGovernmentService,
+    private applicationLocalGovernmentService: LocalGovernmentService,
   ) {}
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
-  async list(): Promise<ApplicationLocalGovernmentDto[]> {
+  async list(): Promise<LocalGovernmentDto[]> {
     const localGovernments =
       await this.applicationLocalGovernmentService.listActive();
 

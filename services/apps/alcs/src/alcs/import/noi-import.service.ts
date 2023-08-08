@@ -5,7 +5,7 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { BoardService } from '../board/board.service';
 import { CardService } from '../card/card.service';
 import { NoticeOfIntentDecisionService } from '../notice-of-intent-decision/notice-of-intent-decision.service';
@@ -79,7 +79,7 @@ export class NoticeOfIntentImportService {
     private noticeOfIntentService: NoticeOfIntentService,
     private meetingService: NoticeOfIntentMeetingService,
     private boardService: BoardService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private cardService: CardService,
     private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
   ) {}
@@ -164,12 +164,12 @@ export class NoticeOfIntentImportService {
 
       const noticeOfIntent = await this.noticeOfIntentService.create(
         {
+          typeCode: '',
           fileNumber: mappedRow.fileNumber,
           applicant: mappedRow.applicant || 'Unknown',
-          dateSubmittedToAlc: mappedRow.submittedToAlc.getTime(),
+          dateSubmittedToAlc: mappedRow.submittedToAlc,
           localGovernmentUuid: localGovernment.uuid,
           regionCode: regionCode,
-          boardCode: 'noi',
         },
         vettingBoard,
       );

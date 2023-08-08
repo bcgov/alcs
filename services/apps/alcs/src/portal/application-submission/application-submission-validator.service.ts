@@ -1,6 +1,6 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -37,7 +37,7 @@ export class ApplicationSubmissionValidatorService {
   );
 
   constructor(
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private appParcelService: ApplicationParcelService,
     private appDocumentService: ApplicationDocumentService,
   ) {}

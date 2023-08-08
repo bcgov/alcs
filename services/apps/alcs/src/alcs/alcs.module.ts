@@ -12,6 +12,7 @@ import { CommissionerModule } from './commissioner/commissioner.module';
 import { CovenantModule } from './covenant/covenant.module';
 import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
+import { LocalGovernmentModule } from './local-government/local-government.module';
 import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
 import { NotificationModule } from './notification/notification.module';
@@ -38,6 +39,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     StaffJournalModule,
     NoticeOfIntentDecisionModule,
     SearchModule,
+    LocalGovernmentModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -56,6 +58,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: StaffJournalModule },
       { path: 'alcs', module: SearchModule },
       { path: 'alcs', module: ApplicationSubmissionStatusModule },
+      { path: 'alcs', module: LocalGovernmentModule },
     ]),
   ],
   controllers: [],

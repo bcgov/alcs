@@ -3,27 +3,27 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernmentController } from './application-local-government.controller';
-import { ApplicationLocalGovernment } from './application-local-government.entity';
-import { ApplicationLocalGovernmentService } from './application-local-government.service';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { LocalGovernmentController } from './local-government.controller';
+import { LocalGovernment } from './local-government.entity';
+import { LocalGovernmentService } from './local-government.service';
 
-describe('ApplicationLocalGovernmentController', () => {
-  let controller: ApplicationLocalGovernmentController;
-  let mockService: DeepMocked<ApplicationLocalGovernmentService>;
+describe('LocalGovernmentController', () => {
+  let controller: LocalGovernmentController;
+  let mockService: DeepMocked<LocalGovernmentService>;
 
   beforeEach(async () => {
-    mockService = createMock<ApplicationLocalGovernmentService>();
+    mockService = createMock<LocalGovernmentService>();
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [ApplicationLocalGovernmentController],
+      controllers: [LocalGovernmentController],
       providers: [
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockService,
         },
         {
@@ -34,8 +34,8 @@ describe('ApplicationLocalGovernmentController', () => {
       ],
     }).compile();
 
-    controller = module.get<ApplicationLocalGovernmentController>(
-      ApplicationLocalGovernmentController,
+    controller = module.get<LocalGovernmentController>(
+      LocalGovernmentController,
     );
   });
 
@@ -51,7 +51,7 @@ describe('ApplicationLocalGovernmentController', () => {
         code: 'code',
         label: 'label',
       },
-    } as ApplicationLocalGovernment;
+    } as LocalGovernment;
     mockService.list.mockResolvedValue([mockGovernment]);
     const res = await mockService.list();
 

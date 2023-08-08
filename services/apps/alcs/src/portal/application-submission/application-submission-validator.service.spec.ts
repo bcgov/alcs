@@ -1,8 +1,8 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import {
   DocumentCode,
   DOCUMENT_TYPE,
@@ -26,7 +26,7 @@ function includesError(errors: Error[], target: Error) {
 
 describe('ApplicationSubmissionValidatorService', () => {
   let service: ApplicationSubmissionValidatorService;
-  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
@@ -39,7 +39,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       providers: [
         ApplicationSubmissionValidatorService,
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLGService,
         },
         {
@@ -407,7 +407,7 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should accept local government when its valid', async () => {
-    const mockLg = new ApplicationLocalGovernment({
+    const mockLg = new LocalGovernment({
       uuid: 'lg-uuid',
       name: 'lg',
       bceidBusinessGuid: 'CATS',

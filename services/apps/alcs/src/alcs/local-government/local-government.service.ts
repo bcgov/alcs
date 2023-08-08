@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
-import { HolidayEntity } from '../../../admin/holiday/holiday.entity';
+import { HolidayEntity } from '../admin/holiday/holiday.entity';
 import {
   LocalGovernmentCreateDto,
   LocalGovernmentUpdateDto,
-} from '../../../admin/local-government/local-government.dto';
-import { ApplicationLocalGovernment } from './application-local-government.entity';
+} from '../admin/local-government/local-government.dto';
+import { LocalGovernment } from './local-government.entity';
 
 @Injectable()
-export class ApplicationLocalGovernmentService {
-  private logger: Logger = new Logger(ApplicationLocalGovernmentService.name);
+export class LocalGovernmentService {
+  private logger: Logger = new Logger(LocalGovernmentService.name);
 
   constructor(
-    @InjectRepository(ApplicationLocalGovernment)
-    private repository: Repository<ApplicationLocalGovernment>,
+    @InjectRepository(LocalGovernment)
+    private repository: Repository<LocalGovernment>,
   ) {}
 
   async list() {
@@ -79,7 +79,7 @@ export class ApplicationLocalGovernmentService {
   }
 
   async create(createDto: LocalGovernmentCreateDto) {
-    const newGovernment = new ApplicationLocalGovernment();
+    const newGovernment = new LocalGovernment();
     newGovernment.name = createDto.name;
     newGovernment.bceidBusinessGuid = createDto.bceidBusinessGuid;
     newGovernment.isFirstNation = createDto.isFirstNation;

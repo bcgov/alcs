@@ -8,7 +8,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository } from 'typeorm';
 import { initUserMockEntity } from '../../test/mocks/mockEntities';
-import { ApplicationLocalGovernment } from '../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../alcs/local-government/local-government.entity';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import { EmailService } from '../providers/email/email.service';
 import { User } from './user.entity';
@@ -17,9 +17,7 @@ import { UserService } from './user.service';
 describe('UserService', () => {
   let service: UserService;
   let mockUserRepository: DeepMocked<Repository<User>>;
-  let mockGovernmentRepository: DeepMocked<
-    Repository<ApplicationLocalGovernment>
-  >;
+  let mockGovernmentRepository: DeepMocked<Repository<LocalGovernment>>;
   let emailServiceMock: DeepMocked<EmailService>;
 
   const email = 'bruce.wayne@gotham.com';
@@ -39,7 +37,7 @@ describe('UserService', () => {
           useValue: mockUserRepository,
         },
         {
-          provide: getRepositoryToken(ApplicationLocalGovernment),
+          provide: getRepositoryToken(LocalGovernment),
           useValue: mockGovernmentRepository,
         },
         { provide: EmailService, useValue: emailServiceMock },
@@ -152,9 +150,7 @@ describe('UserService', () => {
   });
 
   it('should not call repository if user does not have a bc business guid', async () => {
-    mockGovernmentRepository.findOne.mockResolvedValue(
-      new ApplicationLocalGovernment(),
-    );
+    mockGovernmentRepository.findOne.mockResolvedValue(new LocalGovernment());
 
     const res = await service.getUserLocalGovernment(new User());
 
@@ -163,9 +159,7 @@ describe('UserService', () => {
   });
 
   it('should call repository if user has a bc business guid', async () => {
-    mockGovernmentRepository.findOne.mockResolvedValue(
-      new ApplicationLocalGovernment(),
-    );
+    mockGovernmentRepository.findOne.mockResolvedValue(new LocalGovernment());
 
     const res = await service.getUserLocalGovernment(
       new User({

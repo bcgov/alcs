@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import {
   ApplicationDocument,
@@ -49,7 +49,7 @@ export class GenerateSubmissionDocumentService {
     private documentGenerationService: CdogsService,
     @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationSubmissionService: ApplicationSubmissionService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationService: ApplicationService,
     @Inject(forwardRef(() => ApplicationParcelService))
     private parcelService: ApplicationParcelService,

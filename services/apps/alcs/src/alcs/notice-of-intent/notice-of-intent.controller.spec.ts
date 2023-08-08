@@ -62,6 +62,7 @@ describe('NoticeOfIntentController', () => {
       regionCode: 'region-code',
       boardCode: 'fake',
       dateSubmittedToAlc: 0,
+      typeCode: '',
     });
 
     expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);

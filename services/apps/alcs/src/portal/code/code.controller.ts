@@ -1,8 +1,8 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -24,7 +24,7 @@ export interface LocalGovernmentDto {
 export class CodeController {
   constructor(
     @InjectMapper() private mapper: Mapper,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private cardService: CardService,
@@ -61,7 +61,7 @@ export class CodeController {
   }
 
   private mapLocalGovernments(
-    governments: ApplicationLocalGovernment[],
+    governments: LocalGovernment[],
     user: User,
   ): LocalGovernmentDto[] {
     return governments.map((government) => ({

@@ -3,8 +3,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import {
   DocumentCode,
   DOCUMENT_TYPE,
@@ -38,14 +38,14 @@ describe('ApplicationSubmissionReviewController', () => {
   let controller: ApplicationSubmissionReviewController;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockEmailService: DeepMocked<EmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
-  const mockLG = new ApplicationLocalGovernment({
+  const mockLG = new LocalGovernment({
     isFirstNation: false,
     isActive: true,
     bceidBusinessGuid: '',
@@ -86,7 +86,7 @@ describe('ApplicationSubmissionReviewController', () => {
           useValue: mockAppSubmissionService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLGService,
         },
         {

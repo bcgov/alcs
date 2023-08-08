@@ -5,8 +5,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
@@ -17,6 +17,7 @@ import { ApplicationSubmissionStatusType } from '../../application-submission-st
 import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
@@ -33,11 +34,12 @@ describe('ApplicationSubmissionService', () => {
   >;
   let mockNaruSubtypeRepository: DeepMocked<Repository<NaruSubtype>>;
   let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
   let mockGenerateReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockFileNumberService: DeepMocked<FileNumberService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -49,6 +51,7 @@ describe('ApplicationSubmissionService', () => {
     mockGenerateReviewDocumentService = createMock();
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
+    mockFileNumberService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -72,7 +75,7 @@ describe('ApplicationSubmissionService', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLGService,
         },
         {
@@ -94,6 +97,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockApplicationSubmissionStatusService,
+        },
+        {
+          provide: FileNumberService,
+          useValue: mockFileNumberService,
         },
       ],
     }).compile();
@@ -155,7 +162,7 @@ describe('ApplicationSubmissionService', () => {
       new ApplicationSubmissionStatusType(),
     );
     mockRepository.save.mockResolvedValue(new ApplicationSubmission());
-    mockApplicationService.generateNextFileNumber.mockResolvedValue(fileId);
+    mockFileNumberService.generateNextFileNumber.mockResolvedValue(fileId);
     mockApplicationService.create.mockResolvedValue(new Application());
     mockApplicationSubmissionStatusService.setInitialStatuses.mockResolvedValue(
       {} as any,
@@ -203,7 +210,7 @@ describe('ApplicationSubmissionService', () => {
 
     const res = await service.getForGovernmentByFileId(
       '',
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: '',
         name: '',
         isFirstNation: false,

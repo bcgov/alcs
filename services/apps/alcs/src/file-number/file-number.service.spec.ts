@@ -70,4 +70,16 @@ describe('FileNumberService', () => {
     expect(mockCovenantRepo.exist).toHaveBeenCalledTimes(1);
     expect(mockNOIRepo.exist).toHaveBeenCalledTimes(1);
   });
+
+  it('should generate and return new fileNumber', async () => {
+    mockAppRepo.findOne
+      .mockResolvedValueOnce({} as Application)
+      .mockResolvedValue(null);
+    mockAppRepo.query.mockResolvedValue([{ nextval: '2512' }]);
+
+    const result = await service.generateNextFileNumber();
+
+    expect(mockAppRepo.query).toBeCalledTimes(1);
+    expect(result).toEqual('2512');
+  });
 });
