@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { CreateApplicationDialogComponent } from '../create-application-dialog/create-application-dialog.component';
+import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   }
 
   async onCreateApplication() {
-    this.dialog.open(CreateApplicationDialogComponent, {
+    this.dialog.open(CreateSubmissionDialogComponent, {
       panelClass: 'no-padding',
       disableClose: true,
       autoFocus: false,

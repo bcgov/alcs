@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
 import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
-import { ApplicationTypeDto, LocalGovernmentDto, SubmissionTypeDto } from './code.dto';
+import { ApplicationTypeDto, LocalGovernmentDto, NoticeOfIntentTypeDto, SubmissionTypeDto } from './code.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,7 @@ export class CodeService {
       this.httpClient.get<{
         localGovernments: LocalGovernmentDto[];
         applicationTypes: ApplicationTypeDto[];
+        noticeOfIntentTypes: NoticeOfIntentTypeDto[];
         applicationDocumentTypes: ApplicationDocumentTypeDto[];
         submissionTypes: SubmissionTypeDto[];
         naruSubtypes: NaruSubtypeDto[];

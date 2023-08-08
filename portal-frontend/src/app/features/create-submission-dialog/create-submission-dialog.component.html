@@ -1,0 +1,150 @@
+<div class="dialog-container">
+  <div mat-dialog-title>
+    <h4 *ngIf="currentStep !== steps.prescribedBody">Create New</h4>
+    <h4 *ngIf="currentStep === steps.prescribedBody">
+      The governmental or prescribed public body that is applying to exclude land:
+    </h4>
+  </div>
+
+  <div mat-dialog-content class="steps" [ngClass]="{ 'app-type-dialog': currentStep === steps.applicationType }">
+    <ng-container *ngIf="currentStep === steps.submissionType">
+      <div class="step-description">Select an option to learn more about the submission type.</div>
+      <div class="step-submission-type">
+        <mat-radio-group [value]="selectedSubmissionType?.code" (change)="onSubmissionTypeSelected($event)" color="primary">
+          <mat-radio-button
+            *ngFor="let subType of submissionTypes"
+            [value]="subType.code"
+            class="radio-option"
+            required
+          >
+            {{ subType.label }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div id="warningBanner" class="warning-banner" *ngIf="selectedSubmissionType">
+        <div>
+          <b class="sub-type-label">{{ selectedSubmissionType.label }}</b>
+          <div
+            class="typeDescription"
+            [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+            [innerHtml]="selectedSubmissionType.portalHtmlDescription"
+          ></div>
+        </div>
+      </div>
+      <span
+        class="read-more-btn"
+        [ngClass]="{ 'display-none': !isReadMoreVisible }"
+        *ngIf="selectedSubmissionType"
+        (click)="onReadMoreClicked()"
+        ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+      >
+    </ng-container>
+    <ng-container *ngIf="currentStep === steps.applicationType">
+      <div class="step-description">Select an option to learn more about the application type.</div>
+      <div class="step-application-type">
+        <mat-radio-group
+          [value]="selectedAppType?.code"
+          class="app-type-radio-group"
+          aria-labelledby="radio-label"
+          (change)="onAppTypeSelected($event)"
+          color="primary"
+          required
+        >
+          <mat-radio-button *ngFor="let appType of applicationTypes" class="radio-option" [value]="appType.code">
+            {{ appType.portalLabel }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div id="warningBanner" class="warning-banner" *ngIf="selectedAppType">
+        <div>
+          <b class="app-type-label radio-option">{{ selectedAppType.portalLabel }}</b>
+        </div>
+        <div
+          class="typeDescription"
+          [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+          [innerHtml]="selectedAppType.htmlDescription"
+        ></div>
+        <span class="read-more-btn" [ngClass]="{ 'display-none': !isReadMoreVisible }" (click)="onReadMoreClicked()"
+          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+        >
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentStep === steps.noticeOfIntentType">
+      <div class="step-description">Select an option to learn more about the notice of intent type.</div>
+      <div class="step-noi-type">
+        <mat-radio-group
+          class="app-type-radio-group"
+          aria-labelledby="radio-label"
+          (change)="onNoiTypeSelected($event)"
+          color="primary"
+          required
+        >
+          <mat-radio-button *ngFor="let appType of noticeOfIntentTypes" class="radio-option" [value]="appType.code">
+            {{ appType.portalLabel }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div id="warningBanner" class="warning-banner" *ngIf="selectedNoiType">
+        <div>
+          <b class="app-type-label radio-option">{{ selectedNoiType.portalLabel }}</b>
+        </div>
+        <div
+          class="typeDescription"
+          [ngClass]="{ 'ellipsis-3': !readMoreClicked }"
+          [innerHtml]="selectedNoiType.htmlDescription"
+        ></div>
+        <span class="read-more-btn" [ngClass]="{ 'display-none': !isReadMoreVisible }" (click)="onReadMoreClicked()"
+          ><u>Read {{ readMoreClicked ? 'Less' : 'More' }}</u></span
+        >
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentStep === steps.prescribedBody">
+      <app-presribed-body (select)="onSelectPrescribedBody($event)"></app-presribed-body>
+    </ng-container>
+  </div>
+</div>
+
+<div mat-dialog-action class="dialog-action-container">
+  <div class="dialog-controls-wrapper" *ngIf="currentStep === steps.submissionType">
+    <button mat-stroked-button color="primary" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button [disabled]="!selectedSubmissionType" color="primary" (click)="onConfirmSubmissionType()">
+      Next
+    </button>
+  </div>
+  <div class="dialog-controls-wrapper" *ngIf="currentStep === steps.applicationType">
+    <button mat-stroked-button color="primary" (click)="onStepChange(steps.submissionType)">Back</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmitApplication()"
+      [disabled]="!selectedAppType || !selectedSubmissionType"
+    >
+      <ng-container *ngIf="selectedAppType?.code === 'EXCL'">next</ng-container>
+      <ng-container *ngIf="selectedAppType?.code !== 'EXCL'">create</ng-container>
+    </button>
+  </div>
+  <div class="dialog-controls-wrapper" *ngIf="currentStep === steps.noticeOfIntentType">
+    <button mat-stroked-button color="primary" (click)="onStepChange(steps.submissionType)">Back</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmitNoi()"
+      [disabled]="!selectedNoiType || !selectedSubmissionType"
+    >
+      create
+    </button>
+  </div>
+  <div class="dialog-controls-wrapper" *ngIf="currentStep === steps.prescribedBody">
+    <button mat-stroked-button color="primary" (click)="onStepChange(steps.applicationType)">Back</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSubmitInlcExcl()"
+      [disabled]="!selectedAppType || !selectedSubmissionType || !prescribedBody"
+    >
+      <ng-container>create</ng-container>
+    </button>
+  </div>
+</div>
