@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { ApplicationSubmissionStatusModule } from '../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusModule } from './application/application-submission-status/application-submission-status.module';
 import { AdminModule } from './admin/admin.module';
 import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { ApplicationModule } from './application/application.module';

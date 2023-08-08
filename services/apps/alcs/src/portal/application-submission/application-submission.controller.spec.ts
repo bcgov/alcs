@@ -9,9 +9,9 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
-import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
 import {

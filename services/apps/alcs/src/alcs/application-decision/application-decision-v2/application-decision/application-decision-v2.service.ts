@@ -6,8 +6,8 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,

@@ -2,7 +2,7 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from '../application-submission/application-parcel/application-parcel.dto';

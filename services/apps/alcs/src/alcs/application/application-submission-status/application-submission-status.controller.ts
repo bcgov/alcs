@@ -1,8 +1,8 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param } from '@nestjs/common';
-import { ANY_AUTH_ROLE } from '../common/authorization/roles';
-import { UserRoles } from '../common/authorization/roles.decorator';
+import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
+import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
 import { ApplicationSubmissionToSubmissionStatusDto } from './submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';

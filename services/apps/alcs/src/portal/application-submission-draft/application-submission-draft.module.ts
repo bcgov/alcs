@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationSubmissionStatusModule } from '../../application-submission-status/application-submission-status.module';
-import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionStatusModule } from '../../alcs/application/application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { ApplicationOwnerType } from '../application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationParcelOwnershipType } from '../application-submission/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';

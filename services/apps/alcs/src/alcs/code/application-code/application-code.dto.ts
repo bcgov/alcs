@@ -1,4 +1,4 @@
-import { ApplicationStatusDto } from '../../../application-submission-status/submission-status.dto';
+import { ApplicationStatusDto } from '../../application/application-submission-status/submission-status.dto';
 import { ReconsiderationTypeDto } from '../../application-decision/application-reconsideration/application-reconsideration.dto';
 import { CardStatusDto } from '../../card/card-status/card-status.dto';
 import { ApplicationRegionDto } from './application-region/application-region.dto';

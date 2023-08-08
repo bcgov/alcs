@@ -2,8 +2,8 @@ import { ServiceNotFoundException } from '@app/common/exceptions/base.exception'
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../../application/application.service';
 import { CARD_STATUS } from '../../../card/card-status/card-status.entity';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';

@@ -7,7 +7,7 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
+import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 
 @Entity()

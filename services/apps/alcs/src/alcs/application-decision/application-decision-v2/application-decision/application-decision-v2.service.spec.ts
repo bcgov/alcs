@@ -12,8 +12,8 @@ import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
-import { ApplicationSubmissionStatusService } from '../../../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationService } from '../../../application/application.service';
