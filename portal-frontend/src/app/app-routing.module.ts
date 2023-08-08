@@ -4,7 +4,7 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
-import { ViewSubmissionComponent } from './features/view-submission/view-submission.component';
+import { ViewSubmissionComponent } from './features/applications/view-submission/view-submission.component';
 import { AlcsAuthGuard } from './services/authentication/alcs-auth.guard';
 import { AuthGuard } from './services/authentication/auth.guard';
 
@@ -40,21 +40,21 @@ const routes: Routes = [
     title: 'Edit Application',
     path: 'application/:fileId/edit',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./features/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
+    loadChildren: () => import('./features/applications/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
   },
   {
     title: 'ALCS Edit Application',
     path: 'alcs/application/:fileId/edit',
     canActivate: [AlcsAuthGuard],
     loadChildren: () =>
-      import('./features/alcs-edit-submission/alcs-edit-submission.module').then((m) => m.AlcsEditSubmissionModule),
+      import('./features/applications/alcs-edit-submission/alcs-edit-submission.module').then((m) => m.AlcsEditSubmissionModule),
   },
   {
     title: 'Review Application',
     path: 'application/:fileId/review',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./features/review-submission/review-submission.module').then((m) => m.ReviewSubmissionModule),
+      import('./features/applications/review-submission/review-submission.module').then((m) => m.ReviewSubmissionModule),
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
