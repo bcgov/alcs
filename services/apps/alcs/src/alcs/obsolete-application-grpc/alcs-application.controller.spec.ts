@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { ApplicationService } from '../application/application.service';
 import { ApplicationGrpcController } from './alcs-application.controller';
 
 describe('ApplicationGrpcController', () => {

@@ -140,11 +140,13 @@ export class NoticeOfIntentSubmissionController {
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
       );
+      //TODO: Uncomment when we add status
       // return await this.noticeOfIntentSubmissionService.updateStatus(
       //   noticeOfIntentSubmission,
       //   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       // );
     } else {
+      //TODO: Uncomment when we add validation
       //this.logger.debug(validationResult.errors);
       //throw new BadRequestException('Invalid Application');
     }

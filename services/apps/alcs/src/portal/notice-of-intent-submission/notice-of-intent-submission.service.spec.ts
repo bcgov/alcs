@@ -72,37 +72,39 @@ describe('NoticeOfIntentSubmissionService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return the fetched application', async () => {
-    const application = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(application);
+  it('should return the fetched notice of intent', async () => {
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOne.mockResolvedValue(noiSubmission);
 
     const app = await service.getOrFailByFileNumber('');
-    expect(app).toBe(application);
+    expect(app).toBe(noiSubmission);
   });
 
-  it('should return the fetched application when fetching with user', async () => {
-    const application = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(application);
+  it('should return the fetched notice of intent when fetching with user', async () => {
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOne.mockResolvedValue(noiSubmission);
 
     const app = await service.getIfCreatorByFileNumber('', new User());
-    expect(app).toBe(application);
+    expect(app).toBe(noiSubmission);
   });
 
-  it('should throw an exception if the application is not found the fetched application', async () => {
+  it('should throw an exception if the notice of intent is not found', async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
-    const promise = service.getIfCreatorByFileNumber('', new User());
+    const promise = service.getIfCreatorByFileNumber('file-number', new User());
     await expect(promise).rejects.toMatchObject(
-      new Error(`Failed to load application with File ID `),
+      new Error(
+        `Failed to load notice of intent submission with File ID file-number`,
+      ),
     );
   });
 
-  it("should throw an error if application doesn't exist", async () => {
+  it("should throw an error if notice of intent doesn't exist", async () => {
     mockRepository.findOne.mockResolvedValue(null);
 
     const promise = service.getOrFailByFileNumber('');
     await expect(promise).rejects.toMatchObject(
-      new Error('Failed to find document'),
+      new Error('Failed to find notice of intent submission'),
     );
   });
 
@@ -121,25 +123,25 @@ describe('NoticeOfIntentSubmissionService', () => {
   });
 
   it('should call through for get by user', async () => {
-    const application = new NoticeOfIntentSubmission();
-    mockRepository.find.mockResolvedValue([application]);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.find.mockResolvedValue([noiSubmission]);
 
     const res = await service.getByUser(new User());
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
-    expect(res[0]).toBe(application);
+    expect(res[0]).toBe(noiSubmission);
   });
 
   it('should call through for getByFileId', async () => {
-    const application = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(application);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOne.mockResolvedValue(noiSubmission);
 
     const res = await service.getByFileNumber('', new User());
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(res).toBe(application);
+    expect(res).toBe(noiSubmission);
   });
 
-  it('should use application type service for mapping DTOs', async () => {
+  it('should use notice of intent type service for mapping DTOs', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
 
@@ -182,7 +184,9 @@ describe('NoticeOfIntentSubmissionService', () => {
     await expect(
       service.submitToAlcs(noticeOfIntentSubmission),
     ).rejects.toMatchObject(
-      new BaseServiceException(`Failed to submit application: ${fileNumber}`),
+      new BaseServiceException(
+        `Failed to submit notice of intent: ${fileNumber}`,
+      ),
     );
   });
 

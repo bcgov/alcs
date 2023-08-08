@@ -55,7 +55,7 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'varchar',
-    comment: 'The Applicants name on the application',
+    comment: 'The purpose of the application',
     nullable: true,
   })
   purpose?: string | null;

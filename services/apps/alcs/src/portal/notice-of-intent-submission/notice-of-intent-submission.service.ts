@@ -49,7 +49,7 @@ export class NoticeOfIntentSubmissionService {
         relations: this.DEFAULT_RELATIONS,
       });
     if (!noticeOfIntent) {
-      throw new Error('Failed to find document');
+      throw new Error('Failed to find notice of intent submission');
     }
     return noticeOfIntent;
   }
@@ -66,7 +66,7 @@ export class NoticeOfIntentSubmissionService {
         relations,
       });
     if (!noticeOfIntent) {
-      throw new Error('Failed to find document');
+      throw new Error('Failed to find submission');
     }
     return noticeOfIntent;
   }
@@ -125,7 +125,7 @@ export class NoticeOfIntentSubmissionService {
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
-  //
+  //TODO: Uncomment when adding submitting
   // async submitToAlcs(
   //   application: ValidatedApplicationSubmission,
   //   user: User,
@@ -229,26 +229,23 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async getIfCreatorByFileNumber(fileNumber: string, user: User) {
-    const applicationSubmission = await this.getByFileNumber(fileNumber, user);
-    if (!applicationSubmission) {
+    const noiSubmission = await this.getByFileNumber(fileNumber, user);
+    if (!noiSubmission) {
       throw new ServiceNotFoundException(
-        `Failed to load application with File ID ${fileNumber}`,
+        `Failed to load notice of intent submission with File ID ${fileNumber}`,
       );
     }
-    return applicationSubmission;
+    return noiSubmission;
   }
 
   async getIfCreatorByUuid(uuid: string, user: User) {
-    const applicationSubmission = await this.getByUuid(uuid);
-    if (
-      !applicationSubmission ||
-      applicationSubmission.createdBy.uuid !== user.uuid
-    ) {
+    const noiSubmission = await this.getByUuid(uuid);
+    if (!noiSubmission || noiSubmission.createdBy.uuid !== user.uuid) {
       throw new ServiceNotFoundException(
-        `Failed to load application with ID ${uuid}`,
+        `Failed to load notice of intent submission with ID ${uuid}`,
       );
     }
-    return applicationSubmission;
+    return noiSubmission;
   }
 
   async verifyAccessByFileId(fileId: string, user: User) {
@@ -303,16 +300,16 @@ export class NoticeOfIntentSubmissionService {
     });
   }
 
-  async mapToDetailedDTO(application: NoticeOfIntentSubmission) {
+  async mapToDetailedDTO(noiSubmission: NoticeOfIntentSubmission) {
     const types = await this.noticeOfIntentService.fetchTypes();
     const mappedApp = this.mapper.map(
-      application,
+      noiSubmission,
       NoticeOfIntentSubmission,
       NoticeOfIntentSubmissionDetailedDto,
     );
     return {
       ...mappedApp,
-      type: types.find((type) => type.code === application.typeCode)!.label,
+      type: types.find((type) => type.code === noiSubmission.typeCode)!.label,
       canEdit: true,
       canView: true,
     };
@@ -328,6 +325,7 @@ export class NoticeOfIntentSubmissionService {
         dateSubmittedToAlc: new Date(),
       });
 
+      //TODO: Uncomment once statuses are added
       // await this.updateStatus(
       //   application,
       //   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
@@ -337,7 +335,7 @@ export class NoticeOfIntentSubmissionService {
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(
-        `Failed to submit application: ${noticeOfIntent.fileNumber}`,
+        `Failed to submit notice of intent: ${noticeOfIntent.fileNumber}`,
       );
     }
   }
