@@ -7,6 +7,7 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
 import { User } from '../../user/user.entity';
@@ -121,6 +122,9 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockNoiSubmissionService.verifyAccessByUuid.mockResolvedValue(
       mockApplication,
     );
+    mockNoiSubmissionService.cancel.mockResolvedValue(
+      new NoticeOfIntentSubmissionToSubmissionStatus(),
+    );
 
     const noticeOfIntentSubmission = await controller.cancel('file-id', {
       user: {
@@ -129,7 +133,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     });
 
     expect(noticeOfIntentSubmission).toBeDefined();
-    //expect(mockNoiSubmissionService.cancel).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.cancel).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
       1,
     );

@@ -7,6 +7,8 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { ApplicationStatusDto } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -31,6 +33,8 @@ export class NoticeOfIntentSubmissionDto {
 
   @AutoMap()
   type: string;
+
+  status: NoticeOfIntentStatusDto;
 
   canEdit: boolean;
   canView: boolean;

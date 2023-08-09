@@ -9,6 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { FileNumberService } from '../../file-number/file-number.service';
@@ -36,6 +38,7 @@ export class NoticeOfIntentSubmissionService {
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private fileNumberService: FileNumberService,
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -80,15 +83,19 @@ export class NoticeOfIntentSubmissionService {
       typeCode: type,
     });
 
-    //TODO: Set Initial Status here
-
     const noiSubmission = new NoticeOfIntentSubmission({
       fileNumber,
       typeCode: type,
       createdBy,
     });
 
-    await this.noticeOfIntentSubmissionRepository.save(noiSubmission);
+    const savedSubmission = await this.noticeOfIntentSubmissionRepository.save(
+      noiSubmission,
+    );
+
+    await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(
+      savedSubmission.uuid,
+    );
 
     return fileNumber;
   }
@@ -325,12 +332,12 @@ export class NoticeOfIntentSubmissionService {
         dateSubmittedToAlc: new Date(),
       });
 
-      //TODO: Uncomment once statuses are added
-      // await this.updateStatus(
-      //   application,
-      //   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      //   submittedApp.dateSubmittedToAlc,
-      // );
+      await this.noticeOfIntentSubmissionStatusService.setStatusDate(
+        submittedNoi.uuid,
+        NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        submittedNoi.dateSubmittedToAlc,
+      );
+
       return submittedNoi;
     } catch (ex) {
       this.logger.error(ex);
@@ -338,5 +345,34 @@ export class NoticeOfIntentSubmissionService {
         `Failed to submit notice of intent: ${noticeOfIntent.fileNumber}`,
       );
     }
+  }
+
+  async updateStatus(
+    fileNumber: string,
+    statusCode: NOI_SUBMISSION_STATUS,
+    effectiveDate?: Date | null,
+  ) {
+    const submission = await this.loadBarebonesSubmission(fileNumber);
+    await this.noticeOfIntentSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      statusCode,
+      effectiveDate,
+    );
+  }
+
+  async cancel(noticeOfIntentSubmission: NoticeOfIntentSubmission) {
+    return await this.noticeOfIntentSubmissionStatusService.setStatusDate(
+      noticeOfIntentSubmission.uuid,
+      NOI_SUBMISSION_STATUS.CANCELLED,
+    );
+  }
+
+  private loadBarebonesSubmission(fileNumber: string) {
+    //Load submission without relations to prevent save from crazy cascading
+    return this.noticeOfIntentSubmissionRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+    });
   }
 }

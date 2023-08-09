@@ -1,3 +1,27 @@
+import { BaseCodeDto } from '../../shared/dto/base.dto';
+
+export enum NOI_SUBMISSION_STATUS {
+  IN_PROGRESS = 'PROG',
+  SUBMITTED_TO_ALC = 'SUBM', //Submitted to ALC
+  SUBMITTED_TO_ALC_INCOMPLETE = 'SUIN', //Submitted to ALC - Incomplete
+  RECEIVED_BY_ALC = 'RECA', //Received By ALC
+  ALC_DECISION = 'ALCD', //Decision Released
+  CANCELLED = 'CANC',
+}
+
+export interface NoticeOfIntentSubmissionStatusDto extends BaseCodeDto {
+  code: NOI_SUBMISSION_STATUS;
+  portalBackgroundColor: string;
+  portalColor: string;
+}
+
+export interface NoticeOfIntentSubmissionToSubmissionStatusDto {
+  submissionUuid: string;
+  effectiveDate: number | null;
+  statusTypeCode: string;
+  status: NoticeOfIntentSubmissionStatusDto;
+}
+
 export interface NoticeOfIntentSubmissionDto {
   fileNumber: string;
   uuid: string;
@@ -6,6 +30,8 @@ export interface NoticeOfIntentSubmissionDto {
   applicant: string;
   localGovernmentUuid: string;
   type: string;
+  status: NoticeOfIntentSubmissionStatusDto;
+  submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
   canEdit: boolean;
   canView: boolean;
 }

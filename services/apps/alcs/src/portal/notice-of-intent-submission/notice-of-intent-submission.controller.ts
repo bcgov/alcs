@@ -9,7 +9,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import {
@@ -105,16 +104,13 @@ export class NoticeOfIntentSubmissionController {
 
   @Post('/:uuid/cancel')
   async cancel(@Param('uuid') uuid: string, @Req() req) {
-    const user = req.user.entity;
-
     const noticeOfIntentSubmission =
       await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
         uuid,
         req.user.entity,
       );
 
-    //TODO: Hook this up
-    //await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
+    await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
 
     return {
       cancelled: true,
