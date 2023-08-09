@@ -219,40 +219,53 @@ export class ApplicationSubmissionController {
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
-        // TODO: Check if first time submission
-
-        const submittedLocalGovernment =
-          await this.getSubmissionGovernmentOrFail(applicationSubmission);
-
-        const primaryContact = applicationSubmission.owners.find(
-          (owner) =>
-            owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-        );
-
-        if (primaryContact && primaryContact.email) {
-          await this.sendStatusEmail(
-            applicationSubmission,
-            applicationSubmission.fileNumber,
-            submittedLocalGovernment,
-            primaryContact,
+        const wasSubmittedToLfng =
+          applicationSubmission.submissionStatuses.find(
+            (s) =>
+              [
+                SUBMISSION_STATUS.SUBMITTED_TO_LG,
+                SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+                SUBMISSION_STATUS.WRONG_GOV,
+                SUBMISSION_STATUS.INCOMPLETE,
+              ].includes(s.statusTypeCode as SUBMISSION_STATUS) &&
+              !!s.effectiveDate,
           );
-        }
 
-        if (applicationSubmission.localGovernmentUuid) {
+        // Send status emails for first time submissions
+        if (!wasSubmittedToLfng) {
           const submittedLocalGovernment =
-            await this.localGovernmentService.getByUuid(
-              applicationSubmission.localGovernmentUuid,
-            );
+            await this.getSubmissionGovernmentOrFail(applicationSubmission);
 
-          if (
-            submittedLocalGovernment &&
-            submittedLocalGovernment.emails.length > 0
-          ) {
-            await this.sendStatusGovEmail(
+          const primaryContact = applicationSubmission.owners.find(
+            (owner) =>
+              owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+          );
+
+          if (primaryContact && primaryContact.email) {
+            await this.sendStatusEmail(
               applicationSubmission,
               applicationSubmission.fileNumber,
               submittedLocalGovernment,
+              primaryContact,
             );
+          }
+
+          if (applicationSubmission.localGovernmentUuid) {
+            const submittedLocalGovernment =
+              await this.localGovernmentService.getByUuid(
+                applicationSubmission.localGovernmentUuid,
+              );
+
+            if (
+              submittedLocalGovernment &&
+              submittedLocalGovernment.emails.length > 0
+            ) {
+              await this.sendStatusGovEmail(
+                applicationSubmission,
+                applicationSubmission.fileNumber,
+                submittedLocalGovernment,
+              );
+            }
           }
         }
 
