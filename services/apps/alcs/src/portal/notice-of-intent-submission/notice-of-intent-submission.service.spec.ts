@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { NoticeOfIntentType } from '../../alcs/code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
+import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
@@ -23,6 +25,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -30,6 +33,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockLGService = createMock();
     mockNoiDocService = createMock();
     mockFileNumberService = createMock();
+    mockNoiStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -59,6 +63,10 @@ describe('NoticeOfIntentSubmissionService', () => {
         {
           provide: FileNumberService,
           useValue: mockFileNumberService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNoiStatusService,
         },
       ],
     }).compile();
@@ -114,12 +122,14 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockRepository.save.mockResolvedValue(new NoticeOfIntentSubmission());
     mockFileNumberService.generateNextFileNumber.mockResolvedValue(fileId);
     mockNoiService.create.mockResolvedValue(new NoticeOfIntent());
+    mockNoiStatusService.setInitialStatuses.mockResolvedValue([]);
 
     const fileNumber = await service.create('type', new User());
 
     expect(fileNumber).toEqual(fileId);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockNoiService.create).toHaveBeenCalledTimes(1);
+    expect(mockNoiStatusService.setInitialStatuses).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get by user', async () => {
@@ -158,6 +168,10 @@ describe('NoticeOfIntentSubmissionService', () => {
       applicant,
       typeCode: typeCode,
       auditCreatedAt: new Date(),
+      status: new NoticeOfIntentSubmissionToSubmissionStatus({
+        statusTypeCode: 'status-code',
+        submissionUuid: 'fake',
+      }),
     });
     mockRepository.findOne.mockResolvedValue(noiSubmission);
 
@@ -204,11 +218,15 @@ describe('NoticeOfIntentSubmissionService', () => {
     const mockNoticeOfIntent = new NoticeOfIntent({
       dateSubmittedToAlc: new Date(),
     });
+    mockNoiStatusService.setStatusDate.mockResolvedValue(
+      new NoticeOfIntentSubmissionToSubmissionStatus(),
+    );
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
     await service.submitToAlcs(mockNoiSubmission);
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
+    expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if notice of intent exists', async () => {

@@ -7,12 +7,12 @@ import {
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
-import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
+import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 
 @Entity()
-export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
-  constructor(data?: Partial<ApplicationSubmissionToSubmissionStatus>) {
+export class NoticeOfIntentSubmissionToSubmissionStatus extends BaseEntity {
+  constructor(data?: Partial<NoticeOfIntentSubmissionToSubmissionStatus>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -29,11 +29,11 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
 
   @AutoMap()
   @ManyToOne(
-    () => ApplicationSubmission,
+    () => NoticeOfIntentSubmission,
     (submission) => submission.submissionStatuses,
   )
   @JoinColumn({ name: 'submission_uuid' })
-  submission: ApplicationSubmission;
+  submission: NoticeOfIntentSubmission;
 
   @AutoMap()
   @PrimaryColumn()
@@ -41,10 +41,10 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
 
   @AutoMap()
   @ManyToOne(
-    () => ApplicationSubmissionStatusType,
+    () => NoticeOfIntentSubmissionStatusType,
     (status) => status.submissionStatuses,
     { eager: true },
   )
   @JoinColumn({ name: 'status_type_code' })
-  statusType: ApplicationSubmissionStatusType;
+  statusType: NoticeOfIntentSubmissionStatusType;
 }

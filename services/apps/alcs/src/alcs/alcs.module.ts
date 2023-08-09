@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { ApplicationSubmissionStatusModule } from '../application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusModule } from './application/application-submission-status/application-submission-status.module';
 import { AdminModule } from './admin/admin.module';
 import { ApplicationDecisionModule } from './application-decision/application-decision.module';
 import { ApplicationModule } from './application/application.module';
@@ -14,6 +14,7 @@ import { HomeModule } from './home/home.module';
 import { ImportModule } from './import/import.module';
 import { LocalGovernmentModule } from './local-government/local-government.module';
 import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice-of-intent-decision.module';
+import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
 import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
@@ -58,6 +59,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: StaffJournalModule },
       { path: 'alcs', module: SearchModule },
       { path: 'alcs', module: ApplicationSubmissionStatusModule },
+      { path: 'alcs', module: NoticeOfIntentSubmissionStatusModule },
       { path: 'alcs', module: LocalGovernmentModule },
     ]),
   ],

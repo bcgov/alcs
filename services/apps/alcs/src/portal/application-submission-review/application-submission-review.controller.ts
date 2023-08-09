@@ -18,8 +18,8 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';

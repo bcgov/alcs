@@ -1,11 +1,11 @@
 import { AutoMap } from '@automapper/classes';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { BaseCodeEntity } from '../common/entities/base.code.entity';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-status.entity';
 
 @Entity()
-export class ApplicationSubmissionStatusType extends BaseCodeEntity {
-  constructor(data?: Partial<ApplicationSubmissionStatusType>) {
+export class NoticeOfIntentSubmissionStatusType extends BaseCodeEntity {
+  constructor(data?: Partial<NoticeOfIntentSubmissionStatusType>) {
     super();
     if (data) {
       Object.assign(this, data);
@@ -16,8 +16,11 @@ export class ApplicationSubmissionStatusType extends BaseCodeEntity {
   @Column({ type: 'smallint', default: 0 })
   weight: number;
 
-  @OneToMany(() => ApplicationSubmissionToSubmissionStatus, (s) => s.statusType)
-  public submissionStatuses: ApplicationSubmissionToSubmissionStatus[];
+  @OneToMany(
+    () => NoticeOfIntentSubmissionToSubmissionStatus,
+    (s) => s.statusType,
+  )
+  public submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatus[];
 
   @AutoMap()
   @Column()

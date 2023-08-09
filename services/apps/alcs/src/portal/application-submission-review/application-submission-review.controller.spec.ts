@@ -13,10 +13,10 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { EmailService } from '../../providers/email/email.service';

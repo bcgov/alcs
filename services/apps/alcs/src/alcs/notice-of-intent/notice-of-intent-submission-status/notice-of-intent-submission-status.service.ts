@@ -1,40 +1,40 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationSubmission } from '../portal/application-submission/application-submission.entity';
-import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
-import { SUBMISSION_STATUS } from './submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from './submission-status.entity';
+import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
+import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-status.entity';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 @Injectable()
-export class ApplicationSubmissionStatusService {
+export class NoticeOfIntentSubmissionStatusService {
   constructor(
-    @InjectRepository(ApplicationSubmissionToSubmissionStatus)
-    private statusesRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
-    @InjectRepository(ApplicationSubmissionStatusType)
-    private submissionStatusTypeRepository: Repository<ApplicationSubmissionStatusType>,
-    @InjectRepository(ApplicationSubmission)
-    private applicationSubmissionRepository: Repository<ApplicationSubmission>,
+    @InjectRepository(NoticeOfIntentSubmissionToSubmissionStatus)
+    private statusesRepository: Repository<NoticeOfIntentSubmissionToSubmissionStatus>,
+    @InjectRepository(NoticeOfIntentSubmissionStatusType)
+    private submissionStatusTypeRepository: Repository<NoticeOfIntentSubmissionStatusType>,
+    @InjectRepository(NoticeOfIntentSubmission)
+    private noticeOfIntentSubmissionRepository: Repository<NoticeOfIntentSubmission>,
   ) {}
 
   async setInitialStatuses(submissionUuid: string, persist = true) {
     const statuses = await this.submissionStatusTypeRepository.find();
-    const newStatuses: ApplicationSubmissionToSubmissionStatus[] = [];
+    const newStatuses: NoticeOfIntentSubmissionToSubmissionStatus[] = [];
 
     for (const status of statuses) {
-      const newStatus = new ApplicationSubmissionToSubmissionStatus({
+      const newStatus = new NoticeOfIntentSubmissionToSubmissionStatus({
         submissionUuid: submissionUuid,
         statusTypeCode: status.code,
       });
 
-      if (newStatus.statusTypeCode === SUBMISSION_STATUS.IN_PROGRESS) {
+      if (newStatus.statusTypeCode === NOI_SUBMISSION_STATUS.IN_PROGRESS) {
         const date = dayjs().tz('Canada/Pacific').startOf('day').toDate();
         newStatus.effectiveDate = date;
       }
@@ -62,12 +62,10 @@ export class ApplicationSubmissionStatusService {
     });
 
     let date = new Date();
-
     if (effectiveDate) {
       date = effectiveDate;
     }
     date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
-
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
 
     return this.statusesRepository.save(status);
@@ -105,13 +103,13 @@ export class ApplicationSubmissionStatusService {
   }
 
   private async getSubmission(fileNumber: string) {
-    const submission = await this.applicationSubmissionRepository.findOneBy({
+    const submission = await this.noticeOfIntentSubmissionRepository.findOneBy({
       fileNumber,
     });
 
     if (!submission) {
       throw new ServiceNotFoundException(
-        `Submission does not exist for provided application ${fileNumber}. Only applications originated in portal have statuses.`,
+        `Submission does not exist for provided notice of intent ${fileNumber}. Only notice of intents originated in portal have statuses.`,
       );
     }
 
@@ -135,7 +133,7 @@ export class ApplicationSubmissionStatusService {
     });
     const newStatuses = statuses.map(
       (s) =>
-        new ApplicationSubmissionToSubmissionStatus({
+        new NoticeOfIntentSubmissionToSubmissionStatus({
           ...s,
           submissionUuid: destinationSubmissionUuid,
         }),

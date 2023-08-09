@@ -1,8 +1,8 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ApplicationSubmissionStatusModule } from '../../../application-submission-status/application-submission-status.module';
-import { ApplicationSubmissionStatusType } from '../../../application-submission-status/submission-status-type.entity';
-import { ApplicationSubmissionToSubmissionStatus } from '../../../application-submission-status/submission-status.entity';
+import { ApplicationSubmissionStatusModule } from '../../application/application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from '../../application/application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../application/application-submission-status/submission-status.entity';
 import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v2.automapper.profile';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { ReconsiderationProfile } from '../../../common/automapper/reconsideration.automapper.profile';

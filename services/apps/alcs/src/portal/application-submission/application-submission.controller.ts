@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';

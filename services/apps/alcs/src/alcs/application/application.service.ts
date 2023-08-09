@@ -16,8 +16,8 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from './application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
