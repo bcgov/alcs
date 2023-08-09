@@ -11,14 +11,14 @@ import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submis
 @UserRoles(...ANY_AUTH_ROLE)
 export class NoticeOfIntentSubmissionStatusController {
   constructor(
-    private applicationSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/:fileNumber')
   async getStatusesByFileNumber(@Param('fileNumber') fileNumber) {
     const statuses =
-      await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
+      await this.noticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber(
         fileNumber,
       );
 
@@ -32,7 +32,7 @@ export class NoticeOfIntentSubmissionStatusController {
   @Get('/current-status/:fileNumber')
   async getCurrentStatusByFileNumber(@Param('fileNumber') fileNumber) {
     const status =
-      await this.applicationSubmissionStatusService.getCurrentStatusByFileNumber(
+      await this.noticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber(
         fileNumber,
       );
 

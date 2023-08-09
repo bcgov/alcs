@@ -21,7 +21,7 @@ export class NoticeOfIntentSubmissionStatusService {
     @InjectRepository(NoticeOfIntentSubmissionStatusType)
     private submissionStatusTypeRepository: Repository<NoticeOfIntentSubmissionStatusType>,
     @InjectRepository(NoticeOfIntentSubmission)
-    private applicationSubmissionRepository: Repository<NoticeOfIntentSubmission>,
+    private noticeOfIntentSubmissionRepository: Repository<NoticeOfIntentSubmission>,
   ) {}
 
   async setInitialStatuses(submissionUuid: string, persist = true) {
@@ -103,13 +103,13 @@ export class NoticeOfIntentSubmissionStatusService {
   }
 
   private async getSubmission(fileNumber: string) {
-    const submission = await this.applicationSubmissionRepository.findOneBy({
+    const submission = await this.noticeOfIntentSubmissionRepository.findOneBy({
       fileNumber,
     });
 
     if (!submission) {
       throw new ServiceNotFoundException(
-        `Submission does not exist for provided application ${fileNumber}. Only applications originated in portal have statuses.`,
+        `Submission does not exist for provided notice of intent ${fileNumber}. Only notice of intents originated in portal have statuses.`,
       );
     }
 
