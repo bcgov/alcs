@@ -15,6 +15,7 @@ from applications import (
     process_applications,
     clean_applications,
     process_alcs_application_prep_fields,
+    process_alcs_application_fee_fields,
 )
 from noi import (
     process_nois,
@@ -40,6 +41,7 @@ def application_import_command_parser(import_batch_size, subparsers):
         help=f"batch size (default: {import_batch_size})",
     )
     application_import_command.set_defaults(func=process_applications)
+    application_import_command.set_defaults(func=process_alcs_application_fee_fields)
 
 
 def document_import_command_parser(import_batch_size, subparsers):
@@ -191,6 +193,8 @@ if __name__ == "__main__":
 
                     console.log("Batching applications:")
                     process_applications(batch_size=import_batch_size)
+                    console.log("Updating app fee fields")
+                    process_alcs_application_fee_fields(batch_size=import_batch_size)
 
                     console.log("Processing NOIs:")
                     process_nois(batch_size=import_batch_size)
@@ -287,6 +291,7 @@ if __name__ == "__main__":
                     )
 
                     process_applications(batch_size=import_batch_size)
+                    process_alcs_application_fee_fields(batch_size=import_batch_size)
             case "noi-document-import":
                 console.log("Beginning OATS -> ALCS noi-document-import process")
                 with console.status(

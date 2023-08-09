@@ -7,12 +7,11 @@ from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
-from enum import Enum
 
 etl_name = "alcs_app_populate"
 
 @inject_conn_pool
-def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def process_alcs_application_fee_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for processing applications in batches, updating records in the alcs.application table.
 
@@ -31,7 +30,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        print("- Total Application Prep data to insert: ", count_total)
+        print("- Total Application fee data to insert: ", count_total)
 
         failed_inserts = 0
         successful_updates_count = 0
@@ -45,7 +44,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE app_id > {last_application_id} ORDER BY app_id;"
+                    f"{application_sql} WHERE af.app_id > {last_application_id} ORDER BY af.app_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -99,9 +98,9 @@ def update_application_records(conn, batch_size, cursor, rows):
 def get_update_query_for_fee():
     query = """
                 UPDATE alcs.application
-                SET fee_amount = %(fee_amount)s
-                    fee_waived = %(fee_waived)s
-                    fee_split_with_lg = %(fee_split_with_lg)%
+                SET fee_amount = %(fee_amount)s,
+                    fee_waived = %(fee_waived)s,
+                    fee_split_with_lg = %(fee_split_with_lg)s
                 WHERE
                     alcs.application.file_number = %(app_id)s::TEXT;
     """
