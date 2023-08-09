@@ -74,9 +74,12 @@ export class ApplicationSubmissionReviewController {
           fileNumber,
         );
 
-      if (applicationReview.createdBy) {
+      if (
+        applicationReview.createdBy &&
+        applicationReview.createdBy.bceidBusinessGuid
+      ) {
         const reviewGovernment = await this.localGovernmentService.getByGuid(
-          applicationReview.createdBy?.bceidBusinessGuid,
+          applicationReview.createdBy.bceidBusinessGuid,
         );
 
         if (reviewGovernment) {
@@ -206,7 +209,7 @@ export class ApplicationSubmissionReviewController {
 
     const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
     const creatingGovernment = await this.localGovernmentService.getByGuid(
-      creatingGuid,
+      creatingGuid!,
     );
 
     if (

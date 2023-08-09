@@ -7,6 +7,7 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
@@ -269,10 +270,10 @@ describe('NoticeOfIntentSubmissionController', () => {
       new NoticeOfIntent(),
     );
     mockNoiSubmissionService.getIfCreatorByUuid.mockResolvedValue(
-      new NoticeOfIntentSubmission({
-        typeCode: 'TURP',
-      }),
+      new NoticeOfIntentSubmission(),
     );
+
+    mockNoiSubmissionService.updateStatus.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -284,5 +285,10 @@ describe('NoticeOfIntentSubmissionController', () => {
       1,
     );
     expect(mockNoiSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.updateStatus).toHaveBeenCalledWith(
+      undefined,
+      NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+    );
   });
 });

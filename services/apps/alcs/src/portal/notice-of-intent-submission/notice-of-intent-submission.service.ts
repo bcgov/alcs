@@ -6,7 +6,13 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import {
+  FindOptionsRelations,
+  FindOptionsWhere,
+  IsNull,
+  Not,
+  Repository,
+} from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -196,14 +202,41 @@ export class NoticeOfIntentSubmissionService {
   //   }
   // }
 
-  getByUser(user: User) {
-    return this.noticeOfIntentSubmissionRepository.find({
-      where: {
+  async getByUser(user: User) {
+    const searchQueries: FindOptionsWhere<NoticeOfIntentSubmission>[] = [];
+
+    searchQueries.push({
+      createdBy: {
+        uuid: user.uuid,
+      },
+      isDraft: false,
+    });
+
+    if (user.bceidBusinessGuid) {
+      searchQueries.push({
         createdBy: {
-          uuid: user.uuid,
+          bceidBusinessGuid: user.bceidBusinessGuid,
         },
         isDraft: false,
-      },
+      });
+
+      const matchingLocalGovernment =
+        await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
+      if (matchingLocalGovernment) {
+        searchQueries.push({
+          localGovernmentUuid: matchingLocalGovernment.uuid,
+          isDraft: false,
+          //TODO: Test this once we can submit NOIs
+          submissionStatuses: {
+            effectiveDate: Not(IsNull()),
+            statusTypeCode: Not(NOI_SUBMISSION_STATUS.IN_PROGRESS),
+          },
+        });
+      }
+    }
+
+    return this.noticeOfIntentSubmissionRepository.find({
+      where: searchQueries,
       order: {
         auditUpdatedAt: 'DESC',
       },
@@ -348,11 +381,11 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async updateStatus(
-    fileNumber: string,
+    uuid: string,
     statusCode: NOI_SUBMISSION_STATUS,
     effectiveDate?: Date | null,
   ) {
-    const submission = await this.loadBarebonesSubmission(fileNumber);
+    const submission = await this.loadBarebonesSubmission(uuid);
     await this.noticeOfIntentSubmissionStatusService.setStatusDate(
       submission.uuid,
       statusCode,
@@ -367,11 +400,11 @@ export class NoticeOfIntentSubmissionService {
     );
   }
 
-  private loadBarebonesSubmission(fileNumber: string) {
+  private loadBarebonesSubmission(uuid: string) {
     //Load submission without relations to prevent save from crazy cascading
     return this.noticeOfIntentSubmissionRepository.findOneOrFail({
       where: {
-        fileNumber,
+        uuid,
       },
     });
   }
