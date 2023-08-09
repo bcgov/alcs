@@ -6,6 +6,14 @@ import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { EmailStatus } from './email-status.entity';
 
+export interface StatusUpdateEmail {
+  fileNumber: string;
+  applicantName: string;
+  status: string;
+  applicationType: string;
+  governmentName: string;
+}
+
 @Injectable()
 export class EmailService {
   private logger: Logger = new Logger(EmailService.name);

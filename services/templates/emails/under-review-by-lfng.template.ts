@@ -1,14 +1,7 @@
 import { MJMLParseResults } from 'mjml-core';
 import { EmailTemplateService } from '../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from './partials';
-
-export interface StatusUpdateEMail {
-  fileNumber: string;
-  applicantName: string;
-  status: string;
-  applicationType: string;
-  governmentName: string;
-}
+import { StatusUpdateEmail } from '../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -51,7 +44,7 @@ const template = `<mjml>
 `;
 
 export const generateStatusHtml = (
-  data: StatusUpdateEMail,
+  data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);
 };
