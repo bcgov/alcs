@@ -262,6 +262,10 @@ export class NoticeOfIntentService {
     return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 
+  async listTypes() {
+    return this.typeRepository.find();
+  }
+
   async listSubtypes() {
     return this.subtypeRepository.find({
       where: {
@@ -341,10 +345,6 @@ export class NoticeOfIntentService {
       },
     });
     return noticeOfIntent.fileNumber;
-  }
-
-  async fetchTypes() {
-    return this.typeRepository.find();
   }
 
   async submit(createDto: CreateNoticeOfIntentServiceDto) {

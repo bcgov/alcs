@@ -22,11 +22,11 @@ enum MOBILE_STEP {
 }
 
 @Component({
-  selector: 'app-view-submission',
-  templateUrl: './view-submission.component.html',
-  styleUrls: ['./view-submission.component.scss'],
+  selector: 'app-view-application-submission',
+  templateUrl: './view-application-submission.component.html',
+  styleUrls: ['./view-application-submission.component.scss'],
 })
-export class ViewSubmissionComponent implements OnInit, OnDestroy {
+export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   application: ApplicationSubmissionDetailedDto | undefined;
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);

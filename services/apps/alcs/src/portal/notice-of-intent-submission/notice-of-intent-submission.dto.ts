@@ -139,8 +139,4 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   westLandUseTypeDescription?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  hasOtherParcelsInCommunity?: boolean | null;
 }

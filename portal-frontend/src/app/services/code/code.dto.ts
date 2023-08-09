@@ -7,12 +7,18 @@ export interface LocalGovernmentDto {
   matchesUserGuid: boolean;
 }
 
+export interface SubmissionTypeDto extends BaseCodeDto {
+  portalHtmlDescription: string;
+}
+
 export interface ApplicationTypeDto {
   code: string;
   portalLabel: string;
   htmlDescription: string;
 }
 
-export interface SubmissionTypeDto extends BaseCodeDto {
-  portalHtmlDescription: string;
+export interface NoticeOfIntentTypeDto {
+  code: string;
+  portalLabel: string;
+  htmlDescription: string;
 }

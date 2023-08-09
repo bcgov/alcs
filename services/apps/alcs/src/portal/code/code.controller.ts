@@ -3,6 +3,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -11,6 +12,7 @@ import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.se
 import { DocumentTypeDto } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 
 export interface LocalGovernmentDto {
   uuid: string;
@@ -29,6 +31,7 @@ export class CodeController {
     private applicationDocumentService: ApplicationDocumentService,
     private cardService: CardService,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
   @Get()
@@ -39,6 +42,7 @@ export class CodeController {
     const applicationDocumentTypes =
       await this.applicationDocumentService.fetchTypes();
     const submissionTypes = await this.cardService.getPortalCardTypes();
+    const noticeOfIntentTypes = await this.noticeOfIntentService.listTypes();
     const naruSubtypes =
       await this.applicationSubmissionService.listNaruSubtypes();
 
@@ -54,6 +58,7 @@ export class CodeController {
         req.user.entity,
       ),
       applicationTypes,
+      noticeOfIntentTypes,
       submissionTypes,
       applicationDocumentTypes: mappedDocTypes,
       naruSubtypes,

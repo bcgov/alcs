@@ -284,7 +284,7 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async mapToDTOs(apps: NoticeOfIntentSubmission[]) {
-    const types = await this.noticeOfIntentService.fetchTypes();
+    const types = await this.noticeOfIntentService.listTypes();
 
     return apps.map((app) => {
       return {
@@ -301,7 +301,7 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async mapToDetailedDTO(noiSubmission: NoticeOfIntentSubmission) {
-    const types = await this.noticeOfIntentService.fetchTypes();
+    const types = await this.noticeOfIntentService.listTypes();
     const mappedApp = this.mapper.map(
       noiSubmission,
       NoticeOfIntentSubmission,

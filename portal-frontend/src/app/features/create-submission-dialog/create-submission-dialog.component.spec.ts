@@ -4,11 +4,12 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
-import { CreateApplicationDialogComponent } from './create-application-dialog.component';
+import { NoticeOfIntentSubmissionService } from '../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { CreateSubmissionDialogComponent } from './create-submission-dialog.component';
 
-describe('CreateApplicationDialogComponent', () => {
-  let component: CreateApplicationDialogComponent;
-  let fixture: ComponentFixture<CreateApplicationDialogComponent>;
+describe('CreateSubmissionDialogComponent', () => {
+  let component: CreateSubmissionDialogComponent;
+  let fixture: ComponentFixture<CreateSubmissionDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,12 +24,16 @@ describe('CreateApplicationDialogComponent', () => {
           provide: CodeService,
           useValue: {},
         },
+        {
+          provide: NoticeOfIntentSubmissionService,
+          useValue: {},
+        },
       ],
-      declarations: [CreateApplicationDialogComponent],
+      declarations: [CreateSubmissionDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CreateApplicationDialogComponent);
+    fixture = TestBed.createComponent(CreateSubmissionDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

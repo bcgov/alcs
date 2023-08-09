@@ -10,11 +10,11 @@ import { ApplicationSubmissionService } from '../../../services/application-subm
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { ViewSubmissionComponent } from './view-submission.component';
+import { ViewApplicationSubmissionComponent } from './view-application-submission.component';
 
-describe('ViewSubmissionComponent', () => {
-  let component: ViewSubmissionComponent;
-  let fixture: ComponentFixture<ViewSubmissionComponent>;
+describe('ViewApplicationSubmissionComponent', () => {
+  let component: ViewApplicationSubmissionComponent;
+  let fixture: ComponentFixture<ViewApplicationSubmissionComponent>;
 
   let mockRoute;
   let mockAppService: DeepMocked<ApplicationSubmissionService>;
@@ -64,11 +64,11 @@ describe('ViewSubmissionComponent', () => {
           useValue: {},
         },
       ],
-      declarations: [ViewSubmissionComponent],
+      declarations: [ViewApplicationSubmissionComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ViewSubmissionComponent);
+    fixture = TestBed.createComponent(ViewApplicationSubmissionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

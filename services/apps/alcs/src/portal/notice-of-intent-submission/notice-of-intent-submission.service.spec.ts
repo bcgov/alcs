@@ -145,7 +145,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
 
-    mockNoiService.fetchTypes.mockResolvedValue([
+    mockNoiService.listTypes.mockResolvedValue([
       new NoticeOfIntentType({
         code: typeCode,
         portalLabel: 'portalLabel',
@@ -162,7 +162,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(noiSubmission);
 
     const res = await service.mapToDTOs([noiSubmission]);
-    expect(mockNoiService.fetchTypes).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.listTypes).toHaveBeenCalledTimes(1);
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
   });
