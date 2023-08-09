@@ -84,7 +84,7 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
     }
   }
 
-  async onSubmitInlcExcl() {
+  async onSubmitInclExcl() {
     await this.createApplication();
   }
 
@@ -112,7 +112,6 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
   onSubmissionTypeSelected(event: MatRadioChange) {
     this.selectedSubmissionType = this.submissionTypes.find((e) => e.code === event.value);
     this.readMoreClicked = false;
-    debugger;
   }
 
   onReadMoreClicked() {

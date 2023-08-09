@@ -80,8 +80,8 @@
           color="primary"
           required
         >
-          <mat-radio-button *ngFor="let appType of noticeOfIntentTypes" class="radio-option" [value]="appType.code">
-            {{ appType.portalLabel }}
+          <mat-radio-button *ngFor="let type of noticeOfIntentTypes" class="radio-option" [value]="type.code">
+            {{ type.portalLabel }}
           </mat-radio-button>
         </mat-radio-group>
       </div>
@@ -141,7 +141,7 @@
     <button
       mat-flat-button
       color="primary"
-      (click)="onSubmitInlcExcl()"
+      (click)="onSubmitInclExcl()"
       [disabled]="!selectedAppType || !selectedSubmissionType || !prescribedBody"
     >
       <ng-container>create</ng-container>

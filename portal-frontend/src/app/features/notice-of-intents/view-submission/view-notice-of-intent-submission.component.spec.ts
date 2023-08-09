@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewNoticeOfIntentSubmissionComponent } from './view-notice-of-intent-submission.component';
 
-describe('ViewSubmissionComponent', () => {
+describe('ViewNoticeOfIntentSubmissionComponent', () => {
   let component: ViewNoticeOfIntentSubmissionComponent;
   let fixture: ComponentFixture<ViewNoticeOfIntentSubmissionComponent>;
 

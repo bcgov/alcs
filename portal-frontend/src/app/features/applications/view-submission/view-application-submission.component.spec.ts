@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 
 import { ViewApplicationSubmissionComponent } from './view-application-submission.component';
 
-describe('ViewSubmissionComponent', () => {
+describe('ViewApplicationSubmissionComponent', () => {
   let component: ViewApplicationSubmissionComponent;
   let fixture: ComponentFixture<ViewApplicationSubmissionComponent>;
 
