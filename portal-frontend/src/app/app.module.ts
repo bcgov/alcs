@@ -13,6 +13,7 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { CreateSubmissionDialogComponent } from './features/create-submission-dialog/create-submission-dialog.component';
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
+import { NoiListComponent } from './features/home/noi-list/noi-list.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AlcReviewComponent } from './features/applications/view-submission/alc-review/alc-review.component';
@@ -38,6 +39,7 @@ import { DecisionsComponent } from './features/applications/view-submission/alc-
     HomeComponent,
     AuthorizationComponent,
     ApplicationListComponent,
+    NoiListComponent,
     CreateSubmissionDialogComponent,
     LandingPageComponent,
     ConfirmationDialogComponent,

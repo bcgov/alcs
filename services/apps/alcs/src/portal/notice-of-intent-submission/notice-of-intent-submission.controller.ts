@@ -9,6 +9,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import {
@@ -136,11 +138,10 @@ export class NoticeOfIntentSubmissionController {
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
       );
-      //TODO: Uncomment when we add status
-      // return await this.noticeOfIntentSubmissionService.updateStatus(
-      //   noticeOfIntentSubmission,
-      //   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      // );
+      return await this.noticeOfIntentSubmissionService.updateStatus(
+        noticeOfIntentSubmission.uuid,
+        NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      );
     } else {
       //TODO: Uncomment when we add validation
       //this.logger.debug(validationResult.errors);
