@@ -45,7 +45,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE acg.alr_application_id > {last_application_id} ORDER BY acg.alr_application_id;"
+                    f"{application_sql} WHERE app_id > {last_application_id} ORDER BY app_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -60,7 +60,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
                     successful_updates_count = (
                         successful_updates_count + applications_to_be_updated_count
                     )
-                    last_application_id = dict(rows[-1])["alr_application_id"]
+                    last_application_id = dict(rows[-1])["app_id"]
 
                     print(
                         f"retrieved/updated items count: {applications_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated application_id: {last_application_id}"
@@ -93,12 +93,16 @@ def update_application_records(conn, batch_size, cursor, rows):
     Returns:
     None: Commits the changes to the database.
     """
-    execute_batch(cursor, get_update_query_for_fee(), )
+    execute_batch(cursor, get_update_query_for_fee(), rows, page_size=batch_size)
+    conn.commit()
 
 def get_update_query_for_fee():
     query = """
                 UPDATE alcs.application
-                SET fee_amount =
-                    fee_waived =
-                    fee_split_with_lg = 
-                    """
+                SET fee_amount = %(fee_amount)s
+                    fee_waived = %(fee_waived)s
+                    fee_split_with_lg = %(fee_split_with_lg)%
+                WHERE
+                    alcs.application.file_number = %(app_id)s::TEXT;
+    """
+    return query
