@@ -71,7 +71,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateStatusApplicantHtml = (
+export const generateSUBGApplicantHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

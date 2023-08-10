@@ -22,8 +22,8 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 import {
-  generateStatusApplicantHtml,
-  generateStatusGovernmentHtml,
+  generateSUBGApplicantHtml,
+  generateSUBGGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-lfng';
 import { EmailService } from '../../providers/email/email.service';
 
@@ -240,7 +240,7 @@ export class ApplicationSubmissionController {
 
           if (primaryContact) {
             await this.emailService.sendStatusEmail({
-              generateHtml: generateStatusApplicantHtml,
+              generateStatusHtml: generateSUBGApplicantHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               localGovernment: submittedLocalGovernment,
@@ -250,7 +250,7 @@ export class ApplicationSubmissionController {
 
           if (submittedLocalGovernment) {
             await this.emailService.sendStatusEmail({
-              generateHtml: generateStatusGovernmentHtml,
+              generateStatusHtml: generateSUBGGovernmentHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               localGovernment: submittedLocalGovernment,

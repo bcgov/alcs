@@ -62,7 +62,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateStatusGovernmentHtml = (
+export const generateSUBGGovernmentHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

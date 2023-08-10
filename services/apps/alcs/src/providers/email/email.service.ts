@@ -23,7 +23,7 @@ export interface StatusUpdateEmail {
 }
 
 type StatusEmailData = {
-  generateHtml: MJMLParseResults;
+  generateStatusHtml: MJMLParseResults;
   status: SUBMISSION_STATUS;
   applicationSubmission: ApplicationSubmission;
   localGovernment: ApplicationLocalGovernment;
@@ -192,7 +192,7 @@ export class EmailService {
     const fileNumber = data.applicationSubmission.fileNumber;
     const applicantName = data.applicationSubmission.applicant || 'Unknown';
 
-    const emailTemplate = data.generateHtml({
+    const emailTemplate = data.generateStatusHtml({
       fileNumber,
       applicantName,
       applicationType:

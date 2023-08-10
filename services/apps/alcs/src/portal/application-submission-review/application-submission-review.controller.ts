@@ -13,7 +13,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateStatusHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
+import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
+import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
@@ -193,7 +194,7 @@ export class ApplicationSubmissionReviewController {
 
     if (primaryContact) {
       await this.emailService.sendStatusEmail({
-        generateHtml: generateStatusHtml,
+        generateStatusHtml: generateREVGHtml,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
         localGovernment: userLocalGovernment,
@@ -355,6 +356,20 @@ export class ApplicationSubmissionReviewController {
             returnedComment: returnDto.applicantComment,
           },
         );
+      }
+
+      const primaryContact = applicationSubmission.owners.find(
+        (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+      );
+
+      if (primaryContact) {
+        await this.emailService.sendStatusEmail({
+          generateStatusHtml: generateWRNGHtml,
+          status: SUBMISSION_STATUS.WRONG_GOV,
+          applicationSubmission,
+          localGovernment: userLocalGovernment,
+          primaryContact,
+        });
       }
 
       await this.setReturnedStatus(returnDto, applicationSubmission);
