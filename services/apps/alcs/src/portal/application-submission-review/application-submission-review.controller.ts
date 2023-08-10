@@ -33,6 +33,7 @@ import {
 } from './application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -291,6 +292,19 @@ export class ApplicationSubmissionReviewController {
           application,
           SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
+
+        const primaryContact = application.owners.find(
+          (owner) => owner.uuid === application.primaryContactOwnerUuid,
+        );
+
+        await this.emailService.sendStatusEmail({
+          generateStatusHtml: generateRFFGHtml,
+          status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+          applicationSubmission: application,
+          localGovernment: userLocalGovernment,
+          primaryContact,
+          ccGovernment: true,
+        });
       }
     } else {
       throw new BaseServiceException('Application not in correct status');
@@ -359,6 +373,8 @@ export class ApplicationSubmissionReviewController {
         );
       }
 
+      await this.setReturnedStatus(returnDto, applicationSubmission);
+
       const primaryContact = applicationSubmission.owners.find(
         (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
       );
@@ -385,8 +401,6 @@ export class ApplicationSubmissionReviewController {
           });
         }
       }
-
-      await this.setReturnedStatus(returnDto, applicationSubmission);
     } else {
       throw new BaseServiceException('Application not in correct status');
     }
