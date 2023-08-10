@@ -32,6 +32,7 @@ import {
   UpdateApplicationSubmissionReviewDto,
 } from './application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -363,13 +364,25 @@ export class ApplicationSubmissionReviewController {
       );
 
       if (primaryContact) {
-        await this.emailService.sendStatusEmail({
-          generateStatusHtml: generateWRNGHtml,
-          status: SUBMISSION_STATUS.WRONG_GOV,
-          applicationSubmission,
-          localGovernment: userLocalGovernment,
-          primaryContact,
-        });
+        if (returnDto.reasonForReturn === 'wrongGovernment') {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateWRNGHtml,
+            status: SUBMISSION_STATUS.WRONG_GOV,
+            applicationSubmission,
+            localGovernment: userLocalGovernment,
+            primaryContact,
+          });
+        }
+
+        if (returnDto.reasonForReturn === 'incomplete') {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateINCMHtml,
+            status: SUBMISSION_STATUS.INCOMPLETE,
+            applicationSubmission,
+            localGovernment: userLocalGovernment,
+            primaryContact,
+          });
+        }
       }
 
       await this.setReturnedStatus(returnDto, applicationSubmission);
