@@ -14,10 +14,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { generateStatusHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
 import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
@@ -25,7 +23,6 @@ import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { APPLICATION_OWNER } from '../application-submission/application-owner/application-owner.dto';
-import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
@@ -48,7 +45,6 @@ export class ApplicationSubmissionReviewController {
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
-    private applicationService: ApplicationService,
     private emailService: EmailService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
@@ -195,13 +191,14 @@ export class ApplicationSubmissionReviewController {
       (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
-    if (primaryContact && primaryContact.email) {
-      await this.sendStatusEmail(
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateHtml: generateStatusHtml,
+        status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
-        fileNumber,
-        userLocalGovernment,
+        localGovernment: userLocalGovernment,
         primaryContact,
-      );
+      });
     }
 
     const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
@@ -231,45 +228,6 @@ export class ApplicationSubmissionReviewController {
       applicationReview,
       userLocalGovernment,
     );
-  }
-
-  private async sendStatusEmail(
-    applicationSubmission: ApplicationSubmission,
-    fileNumber: string,
-    userLocalGovernment: ApplicationLocalGovernment,
-    primaryContact: ApplicationOwner,
-  ) {
-    if (primaryContact.email) {
-      const status = await this.applicationSubmissionService.getStatus(
-        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-      );
-
-      const types = await this.applicationService.fetchApplicationTypes();
-      const matchingType = types.find(
-        (type) => type.code === applicationSubmission.typeCode,
-      );
-
-      const emailTemplate = generateStatusHtml({
-        fileNumber,
-        applicantName: applicationSubmission.applicant || 'Unknown',
-        applicationType:
-          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
-        governmentName: userLocalGovernment.name,
-        status: status.label,
-      });
-
-      this.emailService.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-          applicationSubmission.applicant || 'Unknown'
-        })`,
-        to: [primaryContact.email],
-      });
-    } else {
-      this.logger.warn(
-        'Cannot send status email, primary contact has no email',
-      );
-    }
   }
 
   @Post('/:fileNumber/finish')

@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Logger,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -22,9 +21,6 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { ApplicationSubmission } from './application-submission.entity';
-import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
 import {
   generateStatusApplicantHtml,
   generateStatusGovernmentHtml,
@@ -40,7 +36,6 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
-    private applicationService: ApplicationService,
     private emailService: EmailService,
   ) {}
 
@@ -234,38 +229,32 @@ export class ApplicationSubmissionController {
         // Send status emails for first time submissions
         if (!wasSubmittedToLfng) {
           const submittedLocalGovernment =
-            await this.getSubmissionGovernmentOrFail(applicationSubmission);
+            await this.emailService.getSubmissionGovernmentOrFail(
+              applicationSubmission,
+            );
 
           const primaryContact = applicationSubmission.owners.find(
             (owner) =>
               owner.uuid === applicationSubmission.primaryContactOwnerUuid,
           );
 
-          if (primaryContact && primaryContact.email) {
-            await this.sendStatusEmail(
+          if (primaryContact) {
+            await this.emailService.sendStatusEmail({
+              generateHtml: generateStatusApplicantHtml,
+              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
-              applicationSubmission.fileNumber,
-              submittedLocalGovernment,
+              localGovernment: submittedLocalGovernment,
               primaryContact,
-            );
+            });
           }
 
-          if (applicationSubmission.localGovernmentUuid) {
-            const submittedLocalGovernment =
-              await this.localGovernmentService.getByUuid(
-                applicationSubmission.localGovernmentUuid,
-              );
-
-            if (
-              submittedLocalGovernment &&
-              submittedLocalGovernment.emails.length > 0
-            ) {
-              await this.sendStatusGovEmail(
-                applicationSubmission,
-                applicationSubmission.fileNumber,
-                submittedLocalGovernment,
-              );
-            }
+          if (submittedLocalGovernment) {
+            await this.emailService.sendStatusEmail({
+              generateHtml: generateStatusGovernmentHtml,
+              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+              applicationSubmission,
+              localGovernment: submittedLocalGovernment,
+            });
           }
         }
 
@@ -277,101 +266,5 @@ export class ApplicationSubmissionController {
       this.logger.debug(validationResult.errors);
       throw new BadRequestException('Invalid Application');
     }
-  }
-
-  private async sendStatusEmail(
-    applicationSubmission: ApplicationSubmission,
-    fileNumber: string,
-    submittedLocalGovernment: ApplicationLocalGovernment,
-    primaryContact: ApplicationOwner,
-  ) {
-    // TODO: Refactor duplicated code from application-submission-review
-    if (primaryContact.email) {
-      const status = await this.applicationSubmissionService.getStatus(
-        SUBMISSION_STATUS.SUBMITTED_TO_LG,
-      );
-
-      const types = await this.applicationService.fetchApplicationTypes();
-
-      const matchingType = types.find(
-        (type) => type.code === applicationSubmission.typeCode,
-      );
-
-      const emailTemplate = generateStatusApplicantHtml({
-        fileNumber,
-        applicantName: applicationSubmission.applicant || 'Unknown',
-        applicationType:
-          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
-        governmentName: submittedLocalGovernment.name,
-        status: status.label,
-      });
-
-      this.emailService.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-          applicationSubmission.applicant || 'Unknown'
-        })`,
-        to: [primaryContact.email],
-      });
-    }
-  }
-
-  private async sendStatusGovEmail(
-    applicationSubmission: ApplicationSubmission,
-    fileNumber: string,
-    submittedLocalGovernment: ApplicationLocalGovernment,
-  ) {
-    if (submittedLocalGovernment.emails.length > 0) {
-      const status = await this.applicationSubmissionService.getStatus(
-        SUBMISSION_STATUS.SUBMITTED_TO_LG,
-      );
-
-      const types = await this.applicationService.fetchApplicationTypes();
-
-      const matchingType = types.find(
-        (type) => type.code === applicationSubmission.typeCode,
-      );
-
-      const emailTemplate = generateStatusGovernmentHtml({
-        fileNumber,
-        applicantName: applicationSubmission.applicant || 'Unknown',
-        applicationType:
-          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
-        governmentName: submittedLocalGovernment.name,
-        status: status.label,
-      });
-
-      submittedLocalGovernment.emails.forEach((email) => {
-        this.emailService.sendEmail({
-          body: emailTemplate.html,
-          subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-            applicationSubmission.applicant || 'Unknown'
-          })`,
-          to: [email],
-        });
-      });
-    }
-  }
-
-  private async getSubmissionGovernmentOrFail(
-    submission: ApplicationSubmission,
-  ) {
-    const submissionGovernment = await this.getSubmissionGovernment(submission);
-    if (!submissionGovernment) {
-      throw new NotFoundException('Submission local government not found');
-    }
-    return submissionGovernment;
-  }
-
-  private async getSubmissionGovernment(submission: ApplicationSubmission) {
-    if (submission.localGovernmentUuid) {
-      const localGovernment = await this.localGovernmentService.getByUuid(
-        submission.localGovernmentUuid,
-      );
-      if (localGovernment) {
-        return localGovernment;
-      }
-    }
-    return undefined;
   }
 }

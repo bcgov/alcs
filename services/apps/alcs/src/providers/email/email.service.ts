@@ -1,10 +1,18 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MJMLParseResults } from 'mjml-core';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { EmailStatus } from './email-status.entity';
+import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
+import { ApplicationService } from '../../alcs/application/application.service';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -13,6 +21,14 @@ export interface StatusUpdateEmail {
   applicationType: string;
   governmentName: string;
 }
+
+type StatusEmailData = {
+  generateHtml: MJMLParseResults;
+  status: SUBMISSION_STATUS;
+  applicationSubmission: ApplicationSubmission;
+  localGovernment: ApplicationLocalGovernment;
+  primaryContact?: ApplicationOwner;
+};
 
 @Injectable()
 export class EmailService {
@@ -23,6 +39,9 @@ export class EmailService {
     private httpService: HttpService,
     @InjectRepository(EmailStatus)
     private repository: Repository<EmailStatus>,
+    private localGovernmentService: ApplicationLocalGovernmentService,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    private applicationService: ApplicationService,
   ) {}
 
   private token = '';
@@ -135,6 +154,74 @@ export class EmailService {
           status: 'failed',
           errors: errorMessage,
         }),
+      );
+    }
+  }
+
+  async getSubmissionGovernmentOrFail(submission: ApplicationSubmission) {
+    const submissionGovernment = await this.getSubmissionGovernment(submission);
+    if (!submissionGovernment) {
+      throw new NotFoundException('Submission local government not found');
+    }
+    return submissionGovernment;
+  }
+
+  private async getSubmissionGovernment(submission: ApplicationSubmission) {
+    if (submission.localGovernmentUuid) {
+      const localGovernment = await this.localGovernmentService.getByUuid(
+        submission.localGovernmentUuid,
+      );
+      if (localGovernment) {
+        return localGovernment;
+      }
+    }
+    return undefined;
+  }
+
+  async sendStatusEmail(data: StatusEmailData) {
+    const status = await this.applicationSubmissionService.getStatus(
+      data.status,
+    );
+
+    const types = await this.applicationService.fetchApplicationTypes();
+
+    const matchingType = types.find(
+      (type) => type.code === data.applicationSubmission.typeCode,
+    );
+
+    const fileNumber = data.applicationSubmission.fileNumber;
+    const applicantName = data.applicationSubmission.applicant || 'Unknown';
+
+    const emailTemplate = data.generateHtml({
+      fileNumber,
+      applicantName,
+      applicationType:
+        matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
+      governmentName: data.localGovernment.name,
+      status: status.label,
+    });
+
+    if (data.primaryContact && data.primaryContact.email) {
+      // Send to owner
+      this.sendEmail({
+        body: emailTemplate.html,
+        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+        to: [data.primaryContact.email],
+      });
+    } else if (data.localGovernment.emails.length > 0) {
+      // Send to government
+      data.localGovernment.emails.forEach((email) => {
+        this.sendEmail({
+          body: emailTemplate.html,
+          subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+          to: [email],
+        });
+      });
+    } else {
+      this.logger.warn(
+        `Cannot send status email, ${
+          data.primaryContact?.email ? 'primary contact' : 'local government'
+        } has no email`,
       );
     }
   }
