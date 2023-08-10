@@ -8,7 +8,7 @@ WITH
         FROM
             oats.oats_alr_applications oa
             JOIN alcs.application aa ON aa.file_number = oa.alr_application_id :: TEXT
-        WHERE aa.fee_amount IS NULL
+        WHERE aa.fee_amount IS NULL  -- Newly imported applications will have NULL values for fee_amount, will not update existing values
     )
 SELECT
     *
