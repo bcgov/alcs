@@ -381,6 +381,7 @@ export class ApplicationSubmissionReviewController {
             applicationSubmission,
             localGovernment: userLocalGovernment,
             primaryContact,
+            ccGovernment: true,
           });
         }
       }

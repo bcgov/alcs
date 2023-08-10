@@ -28,6 +28,7 @@ type StatusEmailData = {
   applicationSubmission: ApplicationSubmission;
   localGovernment: ApplicationLocalGovernment;
   primaryContact?: ApplicationOwner;
+  ccGovernment?: boolean;
 };
 
 @Injectable()
@@ -207,15 +208,14 @@ export class EmailService {
         body: emailTemplate.html,
         subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
         to: [data.primaryContact.email],
+        cc: data.ccGovernment ? data.localGovernment.emails : [],
       });
     } else if (data.localGovernment.emails.length > 0) {
       // Send to government
-      data.localGovernment.emails.forEach((email) => {
-        this.sendEmail({
-          body: emailTemplate.html,
-          subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
-          to: [email],
-        });
+      this.sendEmail({
+        body: emailTemplate.html,
+        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+        to: data.localGovernment.emails,
       });
     } else {
       this.logger.warn(
