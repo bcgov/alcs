@@ -408,4 +408,8 @@ export class NoticeOfIntentSubmissionService {
       },
     });
   }
+
+  async setPrimaryContact(submissionUuid: string, uuid: any) {
+    //TODO:? ??
+  }
 }

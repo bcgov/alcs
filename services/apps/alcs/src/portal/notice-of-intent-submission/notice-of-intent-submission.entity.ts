@@ -12,6 +12,7 @@ import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 
 @Entity()
 export class NoticeOfIntentSubmission extends Base {
@@ -186,6 +187,12 @@ export class NoticeOfIntentSubmission extends Base {
     referencedColumnName: 'fileNumber',
   })
   noticeOfIntent: NoticeOfIntent;
+
+  @OneToMany(
+    () => NoticeOfIntentOwner,
+    (owner) => owner.noticeOfIntentSubmission,
+  )
+  owners: NoticeOfIntentOwner[];
 
   @OneToMany(
     () => NoticeOfIntentSubmissionToSubmissionStatus,

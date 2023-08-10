@@ -2,12 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
 } from '../../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
+import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 
 @Component({
   selector: 'app-application-crown-owner-dialog',
@@ -61,7 +61,7 @@ export class ApplicationCrownOwnerDialogComponent {
       lastName: this.lastName.getRawValue() || undefined,
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: APPLICATION_OWNER.CROWN,
+      typeCode: OWNER_TYPE.CROWN,
       applicationSubmissionUuid: this.data.submissionUuid,
     };
 
@@ -80,7 +80,7 @@ export class ApplicationCrownOwnerDialogComponent {
       lastName: this.lastName.getRawValue(),
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: APPLICATION_OWNER.CROWN,
+      typeCode: OWNER_TYPE.CROWN,
     };
     if (this.existingUuid) {
       const res = await this.appOwnerService.update(this.existingUuid, updateDto);

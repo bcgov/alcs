@@ -2,21 +2,17 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
 } from '../../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
 import { CodeService } from '../../../../../services/code/code.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../../shared/dto/document.dto';
+import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 
@@ -26,8 +22,8 @@ import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submis
   styleUrls: ['./application-owner-dialog.component.scss'],
 })
 export class ApplicationOwnerDialogComponent {
-  OWNER_TYPE = APPLICATION_OWNER;
-  type = new FormControl<string | null>(APPLICATION_OWNER.INDIVIDUAL);
+  OWNER_TYPE = OWNER_TYPE;
+  type = new FormControl<string | null>(OWNER_TYPE.INDIVIDUAL);
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -49,7 +45,7 @@ export class ApplicationOwnerDialogComponent {
     corporateSummary: this.corporateSummary,
   });
   private pendingFile: File | undefined;
-  private documentCodes: ApplicationDocumentTypeDto[] = [];
+  private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<ApplicationOwnerDialogComponent>,
@@ -87,7 +83,7 @@ export class ApplicationOwnerDialogComponent {
   }
 
   onChangeType($event: MatButtonToggleChange) {
-    if ($event.value === APPLICATION_OWNER.ORGANIZATION) {
+    if ($event.value === OWNER_TYPE.ORGANIZATION) {
       this.organizationName.setValidators([Validators.required]);
       this.corporateSummary.setValidators([Validators.required]);
     } else {
@@ -210,6 +206,6 @@ export class ApplicationOwnerDialogComponent {
 
   private async loadDocumentCodes() {
     const codes = await this.codeService.loadCodes();
-    this.documentCodes = codes.applicationDocumentTypes;
+    this.documentCodes = codes.documentTypes;
   }
 }

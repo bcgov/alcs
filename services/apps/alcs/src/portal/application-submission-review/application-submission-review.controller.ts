@@ -14,17 +14,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { generateStatusHtml } from '../../../../../templates/emails/submission-status.template';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
-import { APPLICATION_OWNER } from '../application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -215,7 +215,7 @@ export class ApplicationSubmissionReviewController {
     if (
       creatingGovernment?.uuid === applicationSubmission.localGovernmentUuid &&
       primaryContact &&
-      primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT
+      primaryContact.type.code === OWNER_TYPE.GOVERNMENT
     ) {
       //Copy contact details over to government form when applying to self
       await this.applicationSubmissionReviewService.update(

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { AuthenticationService } from '../../../../../services/authentication/authentication.service';
+import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -8,10 +9,7 @@ import { ApplicationSubmissionService } from '../../../../../services/applicatio
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { takeUntil } from 'rxjs';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';

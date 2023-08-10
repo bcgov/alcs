@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
@@ -14,6 +10,7 @@ import {
   SUBMISSION_STATUS,
 } from '../../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 
 @Component({
   selector: 'app-lfng-review',

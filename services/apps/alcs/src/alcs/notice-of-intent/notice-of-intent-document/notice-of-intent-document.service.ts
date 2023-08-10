@@ -1,5 +1,9 @@
 import { MultipartFile } from '@fastify/multipart';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   ArrayOverlap,
@@ -16,6 +20,7 @@ import {
   DOCUMENT_SYSTEM,
 } from '../../../document/document.dto';
 import { DocumentService } from '../../../document/document.service';
+import { PortalNoticeOfIntentDocumentUpdateDto } from '../../../portal/notice-of-intent-document/notice-of-intent-document.dto';
 import { User } from '../../../user/user.entity';
 import { NoticeOfIntentService } from '../notice-of-intent.service';
 import {
@@ -197,37 +202,36 @@ export class NoticeOfIntentDocumentService {
     );
     return this.get(savedDocument.uuid);
   }
-  // TODO: Re-enable as part of creating Step 7
-  // async updateDescriptionAndType(
-  //   updates: PortalNoticeOfIntentDocumentUpdateDto[],
-  //   noticeOfIntentUuid: string,
-  // ) {
-  //   const results: NoticeOfIntentDocument[] = [];
-  //   for (const update of updates) {
-  //     const file = await this.noticeOfIntentDocumentRepository.findOne({
-  //       where: {
-  //         uuid: update.uuid,
-  //         noticeOfIntentUuid,
-  //       },
-  //       relations: {
-  //         document: true,
-  //       },
-  //     });
-  //     if (!file) {
-  //       throw new BadRequestException(
-  //         'Failed to find file linked to provided noticeOfIntent',
-  //       );
-  //     }
-  //
-  //     file.typeCode = update.type;
-  //     file.description = update.description;
-  //     const updatedFile = await this.noticeOfIntentDocumentRepository.save(
-  //       file,
-  //     );
-  //     results.push(updatedFile);
-  //   }
-  //   return results;
-  // }
+  async updateDescriptionAndType(
+    updates: PortalNoticeOfIntentDocumentUpdateDto[],
+    noticeOfIntentUuid: string,
+  ) {
+    const results: NoticeOfIntentDocument[] = [];
+    for (const update of updates) {
+      const file = await this.noticeOfIntentDocumentRepository.findOne({
+        where: {
+          uuid: update.uuid,
+          noticeOfIntentUuid,
+        },
+        relations: {
+          document: true,
+        },
+      });
+      if (!file) {
+        throw new BadRequestException(
+          'Failed to find file linked to provided noticeOfIntent',
+        );
+      }
+
+      file.typeCode = update.type;
+      file.description = update.description;
+      const updatedFile = await this.noticeOfIntentDocumentRepository.save(
+        file,
+      );
+      results.push(updatedFile);
+    }
+    return results;
+  }
 
   async deleteByType(documentType: DOCUMENT_TYPE, noticeOfIntentUuid: string) {
     const documents = await this.noticeOfIntentDocumentRepository.find({

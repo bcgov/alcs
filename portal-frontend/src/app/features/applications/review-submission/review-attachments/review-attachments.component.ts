@@ -1,13 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
 

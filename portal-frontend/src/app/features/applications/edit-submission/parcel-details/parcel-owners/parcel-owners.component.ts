@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationOwnerDto, APPLICATION_OWNER } from '../../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto } from '../../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
 import { ConfirmationDialogService } from '../../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
 import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
 
@@ -44,7 +45,7 @@ export class ParcelOwnersComponent {
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
-    if (owner.type.code === APPLICATION_OWNER.CROWN) {
+    if (owner.type.code === OWNER_TYPE.CROWN) {
       dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
         data: {
           isDraft: this.isDraft,

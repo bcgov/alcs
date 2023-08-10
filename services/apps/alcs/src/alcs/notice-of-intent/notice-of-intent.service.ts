@@ -341,10 +341,10 @@ export class NoticeOfIntentService {
         fileNumber,
       },
       select: {
-        fileNumber: true,
+        uuid: true,
       },
     });
-    return noticeOfIntent.fileNumber;
+    return noticeOfIntent.uuid;
   }
 
   async submit(createDto: CreateNoticeOfIntentServiceDto) {

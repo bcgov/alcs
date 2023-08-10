@@ -3,12 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto } from '../../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
@@ -16,6 +13,8 @@ import {
 } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
+import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
@@ -334,9 +333,9 @@ export class ParcelEntryComponent implements OnInit {
     return owners
       .filter((owner) => {
         if (this.isCrownLand) {
-          return [APPLICATION_OWNER.CROWN].includes(owner.type.code);
+          return [OWNER_TYPE.CROWN].includes(owner.type.code);
         } else {
-          return [APPLICATION_OWNER.INDIVIDUAL, APPLICATION_OWNER.ORGANIZATION].includes(owner.type.code);
+          return [OWNER_TYPE.INDIVIDUAL, OWNER_TYPE.ORGANIZATION].includes(owner.type.code);
         }
       })
       .map((owner) => {

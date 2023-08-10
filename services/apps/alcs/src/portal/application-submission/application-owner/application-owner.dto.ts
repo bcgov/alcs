@@ -8,18 +8,12 @@ import {
 } from 'class-validator';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import {
+  OWNER_TYPE,
+  OwnerTypeDto,
+} from '../../../common/owner-type/owner-type.entity';
 import { emailRegex } from '../../../utils/email.helper';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
-
-export enum APPLICATION_OWNER {
-  INDIVIDUAL = 'INDV',
-  ORGANIZATION = 'ORGZ',
-  AGENT = 'AGEN',
-  CROWN = 'CRWN',
-  GOVERNMENT = 'GOVR',
-}
-
-export class ApplicationOwnerTypeDto extends BaseCodeDto {}
 
 export class ApplicationOwnerDto {
   @AutoMap()
@@ -49,7 +43,7 @@ export class ApplicationOwnerDto {
   email?: string | null;
 
   @AutoMap()
-  type: ApplicationOwnerTypeDto;
+  type: OwnerTypeDto;
 
   @AutoMap(() => ApplicationDocumentDto)
   corporateSummary?: ApplicationDocumentDto;
@@ -117,7 +111,7 @@ export class SetPrimaryContactDto {
 
   @IsString()
   @IsOptional()
-  type?: APPLICATION_OWNER;
+  type?: OWNER_TYPE;
 
   @IsUUID()
   @IsOptional()

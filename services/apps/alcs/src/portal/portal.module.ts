@@ -12,6 +12,7 @@ import { ApplicationSubmissionReviewModule } from './application-submission-revi
 import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { CodeController } from './code/code.controller';
 import { PortalDocumentModule } from './document/document.module';
+import { PortalNoticeOfIntentDocumentModule } from './notice-of-intent-document/notice-of-intent-document.module';
 import { NoticeOfIntentSubmissionModule } from './notice-of-intent-submission/notice-of-intent-submission.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
@@ -32,6 +33,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
     PortalApplicationDecisionModule,
     NoticeOfIntentModule,
     NoticeOfIntentSubmissionModule,
+    PortalNoticeOfIntentDocumentModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
@@ -42,6 +44,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
       { path: 'portal', module: ApplicationSubmissionDraftModule },
       { path: 'portal', module: PdfGenerationModule },
       { path: 'portal', module: PortalApplicationDecisionModule },
+      { path: 'portal', module: PortalNoticeOfIntentDocumentModule },
     ]),
   ],
   controllers: [CodeController],

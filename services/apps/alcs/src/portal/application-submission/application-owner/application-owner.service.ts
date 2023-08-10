@@ -2,13 +2,15 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../../common/owner-type/owner-type.entity';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerUpdateDto,
 } from './application-owner.dto';
@@ -19,8 +21,8 @@ export class ApplicationOwnerService {
   constructor(
     @InjectRepository(ApplicationOwner)
     private repository: Repository<ApplicationOwner>,
-    @InjectRepository(ApplicationOwnerType)
-    private typeRepository: Repository<ApplicationOwnerType>,
+    @InjectRepository(OwnerType)
+    private typeRepository: Repository<OwnerType>,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
     @Inject(forwardRef(() => ApplicationSubmissionService))
@@ -222,7 +224,7 @@ export class ApplicationOwnerService {
             uuid: submissionUuid,
           },
           type: {
-            code: APPLICATION_OWNER.AGENT,
+            code: OWNER_TYPE.AGENT,
           },
         },
         {
@@ -230,7 +232,7 @@ export class ApplicationOwnerService {
             uuid: submissionUuid,
           },
           type: {
-            code: APPLICATION_OWNER.GOVERNMENT,
+            code: OWNER_TYPE.GOVERNMENT,
           },
         },
       ],

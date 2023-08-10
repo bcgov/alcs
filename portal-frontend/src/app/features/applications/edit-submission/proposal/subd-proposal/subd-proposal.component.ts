@@ -4,15 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_TYPE,
-} from '../../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { PARCEL_TYPE } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 
