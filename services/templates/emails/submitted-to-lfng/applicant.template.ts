@@ -1,16 +1,10 @@
 import { MJMLParseResults } from 'mjml-core';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from '../partials';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
-
-const appFees = [
-  { type: 'Exclusion', fee: 750 },
-  { type: 'Subdivision', fee: 750 },
-  { type: 'Non-Farm Use', fee: 750 },
-  { type: 'Non-Adhering Residential Use', fee: 450 },
-  { type: 'Soil or Fill Use', fee: 750 },
-  { type: 'Inclusion', fee: 0 },
-];
+import {
+  StatusUpdateEmail,
+  appFees,
+} from '../../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -30,7 +24,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to acknowledge that you have submitted the above noted  <b>{{ applicationType }}</b> application to the <b>{{ governmentName }}</b>.
+          This email is to acknowledge that you have submitted the above noted <b>{{ applicationType }}</b> application to the <b>{{ governmentName }}</b>.
         </mj-text>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">

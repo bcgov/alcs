@@ -31,6 +31,15 @@ type StatusEmailData = {
   ccGovernment?: boolean;
 };
 
+export const appFees = [
+  { type: 'Exclusion', fee: 750 },
+  { type: 'Subdivision', fee: 750 },
+  { type: 'Non-Farm Use', fee: 750 },
+  { type: 'Non-Adhering Residential Use', fee: 450 },
+  { type: 'Soil or Fill Use', fee: 750 },
+  { type: 'Inclusion', fee: 0 },
+];
+
 @Injectable()
 export class EmailService {
   private logger: Logger = new Logger(EmailService.name);
