@@ -26,7 +26,7 @@ type StatusEmailData = {
   generateStatusHtml: MJMLParseResults;
   status: SUBMISSION_STATUS;
   applicationSubmission: ApplicationSubmission;
-  localGovernment: ApplicationLocalGovernment;
+  government: ApplicationLocalGovernment;
   primaryContact?: ApplicationOwner;
   ccGovernment?: boolean;
 };
@@ -207,7 +207,7 @@ export class EmailService {
       applicantName,
       applicationType:
         matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
-      governmentName: data.localGovernment.name,
+      governmentName: data.government.name,
       status: status.label,
     });
 
@@ -217,14 +217,14 @@ export class EmailService {
         body: emailTemplate.html,
         subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
         to: [data.primaryContact.email],
-        cc: data.ccGovernment ? data.localGovernment.emails : [],
+        cc: data.ccGovernment ? data.government.emails : [],
       });
-    } else if (data.localGovernment.emails.length > 0) {
+    } else if (data.government.emails.length > 0) {
       // Send to government
       this.sendEmail({
         body: emailTemplate.html,
         subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
-        to: data.localGovernment.emails,
+        to: data.government.emails,
       });
     } else {
       this.logger.warn(

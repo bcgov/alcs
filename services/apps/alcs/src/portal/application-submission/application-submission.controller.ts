@@ -26,6 +26,10 @@ import {
   generateSUBGGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-lfng';
 import { EmailService } from '../../providers/email/email.service';
+import {
+  generateSUBGTurApplicantHtml,
+  generateSUBGTurGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -202,6 +206,15 @@ export class ApplicationSubmissionController {
         applicationSubmission,
       );
 
+    const submissionGovernment =
+      await this.emailService.getSubmissionGovernmentOrFail(
+        applicationSubmission,
+      );
+
+    const primaryContact = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
     if (validationResult.application) {
       const validatedApplicationSubmission = validationResult.application;
       if (validatedApplicationSubmission.typeCode === 'TURP') {
@@ -209,6 +222,26 @@ export class ApplicationSubmissionController {
           validatedApplicationSubmission,
           req.user.entity,
         );
+
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBGTurApplicantHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission,
+            government: submissionGovernment,
+            primaryContact,
+          });
+        }
+
+        if (submissionGovernment) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBGTurGovernmentHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission,
+            government: submissionGovernment,
+          });
+        }
+
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
@@ -228,32 +261,22 @@ export class ApplicationSubmissionController {
 
         // Send status emails for first time submissions
         if (!wasSubmittedToLfng) {
-          const submittedLocalGovernment =
-            await this.emailService.getSubmissionGovernmentOrFail(
-              applicationSubmission,
-            );
-
-          const primaryContact = applicationSubmission.owners.find(
-            (owner) =>
-              owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-          );
-
           if (primaryContact) {
             await this.emailService.sendStatusEmail({
               generateStatusHtml: generateSUBGApplicantHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
-              localGovernment: submittedLocalGovernment,
+              government: submissionGovernment,
               primaryContact,
             });
           }
 
-          if (submittedLocalGovernment) {
+          if (submissionGovernment) {
             await this.emailService.sendStatusEmail({
               generateStatusHtml: generateSUBGGovernmentHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
-              localGovernment: submittedLocalGovernment,
+              government: submissionGovernment,
             });
           }
         }

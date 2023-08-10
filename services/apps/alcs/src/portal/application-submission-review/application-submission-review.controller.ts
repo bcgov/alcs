@@ -199,7 +199,7 @@ export class ApplicationSubmissionReviewController {
         generateStatusHtml: generateREVGHtml,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
-        localGovernment: userLocalGovernment,
+        government: userLocalGovernment,
         primaryContact,
       });
     }
@@ -301,7 +301,7 @@ export class ApplicationSubmissionReviewController {
           generateStatusHtml: generateRFFGHtml,
           status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
           applicationSubmission: application,
-          localGovernment: userLocalGovernment,
+          government: userLocalGovernment,
           primaryContact,
           ccGovernment: true,
         });
@@ -385,7 +385,7 @@ export class ApplicationSubmissionReviewController {
             generateStatusHtml: generateWRNGHtml,
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
-            localGovernment: userLocalGovernment,
+            government: userLocalGovernment,
             primaryContact,
           });
         }
@@ -395,7 +395,7 @@ export class ApplicationSubmissionReviewController {
             generateStatusHtml: generateINCMHtml,
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,
-            localGovernment: userLocalGovernment,
+            government: userLocalGovernment,
             primaryContact,
             ccGovernment: true,
           });
