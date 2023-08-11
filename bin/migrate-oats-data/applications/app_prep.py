@@ -172,7 +172,7 @@ def update_app_prep_records(conn, batch_size, cursor, rows):
         execute_batch(
             cursor,
             get_update_query_for_inc(),
-            inc_data_list, # sneaky bug
+            inc_data_list,
             page_size=batch_size,
         )
 
