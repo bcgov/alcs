@@ -34,6 +34,7 @@ import {
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -282,19 +283,29 @@ export class ApplicationSubmissionReviewController {
         req.user.entity,
         completedReview,
       );
+
+      const primaryContact = application.owners.find(
+        (owner) => owner.uuid === application.primaryContactOwnerUuid,
+      );
+
       if (completedReview.isAuthorized !== false) {
         await this.applicationSubmissionService.updateStatus(
           application,
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
+
+        await this.emailService.sendStatusEmail({
+          generateStatusHtml: generateSUBMApplicantHtml,
+          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          applicationSubmission: application,
+          government: userLocalGovernment,
+          primaryContact,
+          ccGovernment: true,
+        });
       } else {
         await this.applicationSubmissionService.updateStatus(
           application,
           SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
-        );
-
-        const primaryContact = application.owners.find(
-          (owner) => owner.uuid === application.primaryContactOwnerUuid,
         );
 
         await this.emailService.sendStatusEmail({
