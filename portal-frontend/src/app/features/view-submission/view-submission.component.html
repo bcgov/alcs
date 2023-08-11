@@ -82,12 +82,7 @@
         </div>
         <div class="buttons" *ngIf="application">
           <div>
-            <button
-              *ngIf="application.canEdit"
-              mat-stroked-button
-              color="warn"
-              (click)="onCancel(application.fileNumber)"
-            >
+            <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.uuid)">
               Cancel Application
             </button>
           </div>

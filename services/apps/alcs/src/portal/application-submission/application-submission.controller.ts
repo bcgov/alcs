@@ -30,6 +30,7 @@ import {
   generateSUBGTurApplicantHtml,
   generateSUBGTurGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
+import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -184,6 +185,25 @@ export class ApplicationSubmissionController {
       application.status.statusTypeCode !== SUBMISSION_STATUS.IN_PROGRESS
     ) {
       throw new BadRequestException('Can only cancel in progress Applications');
+    }
+
+    const primaryContact = application.owners.find(
+      (owner) => owner.uuid === application.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = application.localGovernmentUuid
+      ? await this.emailService.getSubmissionGovernmentOrFail(application)
+      : null;
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateCANCHtml,
+        status: SUBMISSION_STATUS.CANCELLED,
+        applicationSubmission: application,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
     }
 
     await this.applicationSubmissionService.cancel(application);

@@ -294,28 +294,32 @@ export class ApplicationSubmissionReviewController {
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
 
-        await this.emailService.sendStatusEmail({
-          generateStatusHtml: generateSUBMApplicantHtml,
-          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-          applicationSubmission: application,
-          government: userLocalGovernment,
-          primaryContact,
-          ccGovernment: true,
-        });
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBMApplicantHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       } else {
         await this.applicationSubmissionService.updateStatus(
           application,
           SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
 
-        await this.emailService.sendStatusEmail({
-          generateStatusHtml: generateRFFGHtml,
-          status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
-          applicationSubmission: application,
-          government: userLocalGovernment,
-          primaryContact,
-          ccGovernment: true,
-        });
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateRFFGHtml,
+            status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       }
     } else {
       throw new BaseServiceException('Application not in correct status');

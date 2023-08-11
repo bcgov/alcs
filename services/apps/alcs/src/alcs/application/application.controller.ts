@@ -29,6 +29,10 @@ import {
   UpdateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
+import { ApplicationSubmissionService } from './application-submission/application-submission.service';
+import { EmailService } from '../../providers/email/email.service';
+import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -36,7 +40,9 @@ import { ApplicationService } from './application.service';
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private cardService: CardService,
+    private emailService: EmailService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
@@ -122,6 +128,31 @@ export class ApplicationController {
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
+    const applicationSubmission = await this.applicationSubmissionService.get(
+      fileNumber,
+    );
+
+    const primaryContact = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = applicationSubmission.localGovernmentUuid
+      ? await this.emailService.getSubmissionGovernmentOrFail(
+          applicationSubmission,
+        )
+      : null;
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateCANCHtml,
+        status: SUBMISSION_STATUS.CANCELLED,
+        applicationSubmission,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
+
     await this.applicationService.cancel(fileNumber);
   }
 
