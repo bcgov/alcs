@@ -8,6 +8,7 @@ import { ModificationProfile } from '../../../common/automapper/modification.aut
 import { ReconsiderationProfile } from '../../../common/automapper/reconsideration.automapper.profile';
 import { DocumentModule } from '../../../document/document.module';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionModule } from '../../../portal/application-submission/application-submission.module';
 import { ApplicationModule } from '../../application/application.module';
 import { BoardModule } from '../../board/board.module';
 import { CardModule } from '../../card/card.module';
@@ -56,6 +57,7 @@ import { ApplicationDecisionV1Service } from './application-decision/application
     CardModule,
     DocumentModule,
     ApplicationSubmissionStatusModule,
+    ApplicationSubmissionModule,
   ],
   providers: [
     ApplicationModificationService,

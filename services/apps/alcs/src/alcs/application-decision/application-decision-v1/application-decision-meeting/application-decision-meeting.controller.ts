@@ -30,6 +30,11 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting.entit
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 
+import { EmailService } from '../../../../providers/email/email.service';
+import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
+import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionService } from '../../../../portal/application-submission/application-submission.service';
+
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
 @UseGuards(RolesGuard)
@@ -37,6 +42,8 @@ export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
     private applicationService: ApplicationService,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    private emailService: EmailService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -104,6 +111,34 @@ export class ApplicationDecisionMeetingController {
       date: formatIncomingDate(meeting.date) ?? new Date(),
       applicationUuid: application.uuid,
     });
+
+    // TODO: Only send email for first discussion create/update:
+    debugger;
+
+    const applicationSubmission =
+      await this.applicationSubmissionService.getOrFailByFileNumber(
+        meeting.applicationFileNumber,
+      );
+
+    const primaryContact = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment =
+      await this.emailService.getSubmissionGovernmentOrFail(
+        applicationSubmission,
+      );
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateREVAHtml,
+        status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+        applicationSubmission,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: true,
+      });
+    }
 
     return this.mapper.map(
       newMeeting,
