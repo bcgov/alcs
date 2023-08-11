@@ -5,16 +5,22 @@ import {
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
-} from '../../../../../services/application-owner/application-owner.dto';
-import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
-import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
+} from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import {
+  NoticeOfIntentOwnerCreateDto,
+  NoticeOfIntentOwnerDto,
+  NoticeOfIntentOwnerUpdateDto,
+} from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
+import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
+import { OWNER_TYPE } from '../../dto/owner.dto';
 
 @Component({
-  selector: 'app-application-crown-owner-dialog',
-  templateUrl: './application-crown-owner-dialog.component.html',
-  styleUrls: ['./application-crown-owner-dialog.component.scss'],
+  selector: 'app-crown-owner-dialog',
+  templateUrl: './crown-owner-dialog.component.html',
+  styleUrls: ['./crown-owner-dialog.component.scss'],
 })
-export class ApplicationCrownOwnerDialogComponent {
+export class CrownOwnerDialogComponent {
   ministryName = new FormControl<string | null>('', [Validators.required]);
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -33,14 +39,14 @@ export class ApplicationCrownOwnerDialogComponent {
   });
 
   constructor(
-    private dialogRef: MatDialogRef<ApplicationCrownOwnerDialogComponent>,
-    private appOwnerService: ApplicationOwnerService,
+    private dialogRef: MatDialogRef<CrownOwnerDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       submissionUuid: string;
       fileId: string;
       parcelUuid?: string;
-      existingOwner?: ApplicationOwnerDto;
+      ownerService: ApplicationOwnerService | NoticeOfIntentOwnerService;
+      existingOwner?: ApplicationOwnerDto | NoticeOfIntentOwnerDto;
     }
   ) {
     if (data && data.existingOwner) {
@@ -55,7 +61,7 @@ export class ApplicationCrownOwnerDialogComponent {
   }
 
   async onCreate() {
-    const createDto: ApplicationOwnerCreateDto = {
+    const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
       organizationName: this.ministryName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
@@ -63,9 +69,10 @@ export class ApplicationCrownOwnerDialogComponent {
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: OWNER_TYPE.CROWN,
       applicationSubmissionUuid: this.data.submissionUuid,
+      noticeOfIntentSubmissionUuid: this.data.submissionUuid,
     };
 
-    const res = await this.appOwnerService.create(createDto);
+    const res = await this.data.ownerService.create(createDto);
     this.dialogRef.close(res);
   }
 
@@ -74,7 +81,7 @@ export class ApplicationCrownOwnerDialogComponent {
   }
 
   async onSave() {
-    const updateDto: ApplicationOwnerUpdateDto = {
+    const updateDto: ApplicationOwnerUpdateDto & NoticeOfIntentOwnerUpdateDto = {
       organizationName: this.ministryName.getRawValue(),
       firstName: this.firstName.getRawValue(),
       lastName: this.lastName.getRawValue(),
@@ -83,7 +90,7 @@ export class ApplicationCrownOwnerDialogComponent {
       typeCode: OWNER_TYPE.CROWN,
     };
     if (this.existingUuid) {
-      const res = await this.appOwnerService.update(this.existingUuid, updateDto);
+      const res = await this.data.ownerService.update(this.existingUuid, updateDto);
       this.dialogRef.close(res);
     }
   }

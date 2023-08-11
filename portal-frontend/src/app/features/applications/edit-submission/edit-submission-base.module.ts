@@ -15,14 +15,10 @@ import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
-import { ApplicationCrownOwnerDialogComponent } from './parcel-details/application-crown-owner-dialog/application-crown-owner-dialog.component';
-import { ApplicationOwnerDialogComponent } from './parcel-details/application-owner-dialog/application-owner-dialog.component';
-import { ApplicationOwnersDialogComponent } from './parcel-details/application-owners-dialog/application-owners-dialog.component';
 import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-details/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
-import { ParcelOwnersComponent } from './parcel-details/parcel-owners/parcel-owners.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
@@ -48,10 +44,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     EditSubmissionComponent,
     DeleteParcelDialogComponent,
     SelectGovernmentComponent,
-    ParcelOwnersComponent,
-    ApplicationOwnersDialogComponent,
-    ApplicationOwnerDialogComponent,
-    ApplicationCrownOwnerDialogComponent,
     LandUseComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,
@@ -92,10 +84,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     EditSubmissionComponent,
     DeleteParcelDialogComponent,
     SelectGovernmentComponent,
-    ParcelOwnersComponent,
-    ApplicationOwnersDialogComponent,
-    ApplicationOwnerDialogComponent,
-    ApplicationCrownOwnerDialogComponent,
     LandUseComponent,
     OtherParcelsComponent,
     OtherAttachmentsComponent,

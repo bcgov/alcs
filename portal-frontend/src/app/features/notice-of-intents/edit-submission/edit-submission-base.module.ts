@@ -13,7 +13,6 @@ import { DeleteParcelDialogComponent } from './parcels/delete-parcel/delete-parc
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
-import { ParcelOwnersComponent } from './parcels/parcel-owners/parcel-owners.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,6 @@ import { ParcelOwnersComponent } from './parcels/parcel-owners/parcel-owners.com
     ParcelEntryComponent,
     ParcelEntryConfirmationDialogComponent,
     DeleteParcelDialogComponent,
-    ParcelOwnersComponent,
   ],
   imports: [
     CommonModule,
@@ -42,7 +40,6 @@ import { ParcelOwnersComponent } from './parcels/parcel-owners/parcel-owners.com
     ParcelEntryComponent,
     ParcelEntryConfirmationDialogComponent,
     DeleteParcelDialogComponent,
-    ParcelOwnersComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

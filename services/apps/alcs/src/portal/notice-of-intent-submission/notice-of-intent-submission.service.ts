@@ -34,7 +34,13 @@ export class NoticeOfIntentSubmissionService {
   private logger: Logger = new Logger(NoticeOfIntentSubmissionService.name);
 
   private DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentSubmission> = {
-    //TODO
+    owners: {
+      type: true,
+      corporateSummary: {
+        document: true,
+      },
+      parcels: true,
+    },
   };
 
   constructor(

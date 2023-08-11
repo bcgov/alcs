@@ -2,13 +2,13 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 
-import { ApplicationCrownOwnerDialogComponent } from './application-crown-owner-dialog.component';
+import { CrownOwnerDialogComponent } from './crown-owner-dialog.component';
 
 describe('ApplicationCrownOwnerDialogComponent', () => {
-  let component: ApplicationCrownOwnerDialogComponent;
-  let fixture: ComponentFixture<ApplicationCrownOwnerDialogComponent>;
+  let component: CrownOwnerDialogComponent;
+  let fixture: ComponentFixture<CrownOwnerDialogComponent>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
 
   beforeEach(async () => {
@@ -29,11 +29,11 @@ describe('ApplicationCrownOwnerDialogComponent', () => {
           useValue: {},
         },
       ],
-      declarations: [ApplicationCrownOwnerDialogComponent],
+      declarations: [CrownOwnerDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationCrownOwnerDialogComponent);
+    fixture = TestBed.createComponent(CrownOwnerDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

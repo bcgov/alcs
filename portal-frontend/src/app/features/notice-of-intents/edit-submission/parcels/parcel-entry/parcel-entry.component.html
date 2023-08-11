@@ -2,8 +2,8 @@
   <div class="type">
     <label>Select ownership type:</label>
     <div class="warning">
-      The answer to the following question will change the rest of the application form. Do not change this answer once
-      selected.
+      The answer to the following question will change the rest of the notice of intent form. Do not change this answer
+      once selected.
     </div>
     <mat-button-toggle-group
       class="input"
@@ -257,6 +257,8 @@
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
           (onOwnerRemoved)="onOwnerRemoved($event)"
+          [ownerService]="noticeOfIntentOwnerService"
+          [documentService]="noticeOfIntentDocumentService"
           [disabled]="_disabled"
         ></app-parcel-owners>
       </div>
@@ -332,16 +334,16 @@
         Add new government contact
       </button>
       <div>
-<!--        <app-parcel-owners-->
-<!--          [fileId]="fileId"-->
-<!--          [submissionUuid]="submissionUuid"-->
-<!--          [parcelUuid]="parcel.uuid"-->
-<!--          [owners]="parcel.owners"-->
-<!--          (onOwnersUpdated)="onOwnersUpdated.emit()"-->
-<!--          (onOwnerRemoved)="onOwnerRemoved($event)"-->
-<!--          [disabled]="_disabled"-->
-<!--          [isCrown]="true"-->
-<!--        ></app-parcel-owners>-->
+        <!--        <app-parcel-owners-->
+        <!--          [fileId]="fileId"-->
+        <!--          [submissionUuid]="submissionUuid"-->
+        <!--          [parcelUuid]="parcel.uuid"-->
+        <!--          [owners]="parcel.owners"-->
+        <!--          (onOwnersUpdated)="onOwnersUpdated.emit()"-->
+        <!--          (onOwnerRemoved)="onOwnerRemoved($event)"-->
+        <!--          [disabled]="_disabled"-->
+        <!--          [isCrown]="true"-->
+        <!--        ></app-parcel-owners>-->
       </div>
     </ng-container>
   </section>

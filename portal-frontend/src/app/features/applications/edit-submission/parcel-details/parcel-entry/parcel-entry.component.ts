@@ -18,9 +18,9 @@ import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
-import { ApplicationCrownOwnerDialogComponent } from '../application-crown-owner-dialog/application-crown-owner-dialog.component';
-import { ApplicationOwnerDialogComponent } from '../application-owner-dialog/application-owner-dialog.component';
-import { ApplicationOwnersDialogComponent } from '../application-owners-dialog/application-owners-dialog.component';
+import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
+import { AllOwnersDialogComponent } from '../../../../../shared/owner-dialogs/owners-dialog/all-owners-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
 export interface ParcelEntryFormData {
@@ -110,8 +110,8 @@ export class ParcelEntryComponent implements OnInit {
   constructor(
     private parcelService: ParcelService,
     private applicationParcelService: ApplicationParcelService,
-    private applicationOwnerService: ApplicationOwnerService,
-    private applicationDocumentService: ApplicationDocumentService,
+    public applicationOwnerService: ApplicationOwnerService,
+    public applicationDocumentService: ApplicationDocumentService,
     private dialog: MatDialog
   ) {}
 
@@ -284,11 +284,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewOwner() {
-    const dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
+    const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
         submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
+        ownerService: this.applicationOwnerService,
+        documentService: this.applicationDocumentService,
       },
     });
     dialog.beforeClosed().subscribe((createdDto) => {
@@ -301,11 +303,12 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewGovernmentContact() {
-    const dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
+    const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
         submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
+        ownerService: this.applicationOwnerService,
       },
     });
     dialog.beforeClosed().subscribe((createdDto) => {
@@ -345,7 +348,17 @@ export class ParcelEntryComponent implements OnInit {
           isSelected,
         };
       })
-      .sort(this.applicationOwnerService.sortOwners);
+      .sort(this.sortOwners);
+  }
+
+  sortOwners(a: ApplicationOwnerDto, b: ApplicationOwnerDto) {
+    if (a.displayName < b.displayName) {
+      return -1;
+    }
+    if (a.displayName > b.displayName) {
+      return 1;
+    }
+    return 0;
   }
 
   onTypeOwner($event: Event) {
@@ -357,11 +370,13 @@ export class ParcelEntryComponent implements OnInit {
 
   onSeeAllOwners() {
     this.dialog
-      .open(ApplicationOwnersDialogComponent, {
+      .open(AllOwnersDialogComponent, {
         data: {
           owners: this.owners,
           fileId: this.fileId,
           submissionUuid: this.submissionUuid,
+          ownerService: this.applicationOwnerService,
+          documentService: this.applicationDocumentService,
         },
       })
       .beforeClosed()

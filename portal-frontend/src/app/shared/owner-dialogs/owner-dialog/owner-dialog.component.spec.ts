@@ -2,15 +2,15 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
-import { CodeService } from '../../../../../services/code/code.service';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import { CodeService } from '../../../services/code/code.service';
 
-import { ApplicationOwnerDialogComponent } from './application-owner-dialog.component';
+import { OwnerDialogComponent } from './owner-dialog.component';
 
 describe('ApplicationOwnerDialogComponent', () => {
-  let component: ApplicationOwnerDialogComponent;
-  let fixture: ComponentFixture<ApplicationOwnerDialogComponent>;
+  let component: OwnerDialogComponent;
+  let fixture: ComponentFixture<OwnerDialogComponent>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
@@ -47,11 +47,11 @@ describe('ApplicationOwnerDialogComponent', () => {
           useValue: {},
         },
       ],
-      declarations: [ApplicationOwnerDialogComponent],
+      declarations: [OwnerDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationOwnerDialogComponent);
+    fixture = TestBed.createComponent(OwnerDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

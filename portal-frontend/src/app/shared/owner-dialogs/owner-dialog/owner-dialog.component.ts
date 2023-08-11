@@ -2,26 +2,29 @@ import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import {
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
-} from '../../../../../services/application-owner/application-owner.dto';
-import { ApplicationOwnerService } from '../../../../../services/application-owner/application-owner.service';
-import { CodeService } from '../../../../../services/code/code.service';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../../shared/dto/document.dto';
-import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
-import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
-import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
+} from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
+import { CodeService } from '../../../services/code/code.service';
+import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentOwnerCreateDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
+import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../dto/document.dto';
+import { OWNER_TYPE } from '../../dto/owner.dto';
+import { FileHandle } from '../../file-drag-drop/drag-drop.directive';
+import { RemoveFileConfirmationDialogComponent } from '../../../features/applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 
 @Component({
-  selector: 'app-application-owner-dialog',
-  templateUrl: './application-owner-dialog.component.html',
-  styleUrls: ['./application-owner-dialog.component.scss'],
+  selector: 'app-owner-dialog',
+  templateUrl: './owner-dialog.component.html',
+  styleUrls: ['./owner-dialog.component.scss'],
 })
-export class ApplicationOwnerDialogComponent {
+export class OwnerDialogComponent {
   OWNER_TYPE = OWNER_TYPE;
   type = new FormControl<string | null>(OWNER_TYPE.INDIVIDUAL);
   firstName = new FormControl<string | null>('', [Validators.required]);
@@ -48,10 +51,8 @@ export class ApplicationOwnerDialogComponent {
   private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
-    private dialogRef: MatDialogRef<ApplicationOwnerDialogComponent>,
-    private appOwnerService: ApplicationOwnerService,
+    private dialogRef: MatDialogRef<OwnerDialogComponent>,
     private codeService: CodeService,
-    private documentService: ApplicationDocumentService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -60,6 +61,8 @@ export class ApplicationOwnerDialogComponent {
       isDraft: boolean;
       parcelUuid?: string;
       existingOwner?: ApplicationOwnerDto;
+      documentService: ApplicationDocumentService | NoticeOfIntentDocumentService;
+      ownerService: ApplicationOwnerService | NoticeOfIntentOwnerService;
     }
   ) {
     if (data && data.existingOwner) {
@@ -101,7 +104,7 @@ export class ApplicationOwnerDialogComponent {
     }
 
     const documentUuid = await this.uploadPendingFile(this.pendingFile);
-    const createDto: ApplicationOwnerCreateDto = {
+    const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
       organizationName: this.organizationName.getRawValue() || undefined,
       firstName: this.firstName.getRawValue() || undefined,
       lastName: this.lastName.getRawValue() || undefined,
@@ -110,9 +113,10 @@ export class ApplicationOwnerDialogComponent {
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: this.type.getRawValue()!,
       applicationSubmissionUuid: this.data.submissionUuid,
+      noticeOfIntentSubmissionUuid: this.data.submissionUuid,
     };
 
-    const res = await this.appOwnerService.create(createDto);
+    const res = await this.data.ownerService.create(createDto);
     this.dialogRef.close(res);
   }
 
@@ -132,7 +136,7 @@ export class ApplicationOwnerDialogComponent {
       typeCode: this.type.getRawValue()!,
     };
     if (this.existingUuid) {
-      const res = await this.appOwnerService.update(this.existingUuid, updateDto);
+      const res = await this.data.ownerService.update(this.existingUuid, updateDto);
       this.dialogRef.close(res);
     }
   }
@@ -186,7 +190,7 @@ export class ApplicationOwnerDialogComponent {
       const fileURL = URL.createObjectURL(this.pendingFile);
       window.open(fileURL, '_blank');
     } else if (this.existingUuid && this.data.existingOwner?.corporateSummary?.uuid) {
-      const res = await this.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
+      const res = await this.data.documentService.openFile(this.data.existingOwner?.corporateSummary?.uuid);
       if (res) {
         window.open(res.url, '_blank');
       }
@@ -196,7 +200,7 @@ export class ApplicationOwnerDialogComponent {
   private async uploadPendingFile(file?: File) {
     let documentUuid;
     if (file) {
-      documentUuid = await this.appOwnerService.uploadCorporateSummary(this.data.fileId, file);
+      documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
       if (!documentUuid) {
         return;
       }

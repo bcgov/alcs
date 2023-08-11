@@ -1,5 +1,5 @@
 <div class="owner-table-wrapper">
-  <table class="owner-table" mat-table [dataSource]="_owners">
+  <table class="owner-table" mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="type">
       <th mat-header-cell [hidden]="isCrown" *matHeaderCellDef>Type</th>
       <td mat-cell [hidden]="isCrown" *matCellDef="let element">{{ element.type.label }}</td>

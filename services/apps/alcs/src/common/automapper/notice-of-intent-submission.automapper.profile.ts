@@ -7,6 +7,8 @@ import {
   NoticeOfIntentSubmissionToSubmissionStatusDto,
 } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
+import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
+import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import {
   NoticeOfIntentSubmissionDetailedDto,
   NoticeOfIntentSubmissionDto,
@@ -41,6 +43,20 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
           (a) => a.status,
           mapFrom((ad) => {
             return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.owners,
+          mapFrom((ad) => {
+            if (ad.owners) {
+              return this.mapper.mapArray(
+                ad.owners,
+                NoticeOfIntentOwner,
+                NoticeOfIntentOwnerDto,
+              );
+            } else {
+              return [];
+            }
           }),
         ),
       );

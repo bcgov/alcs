@@ -116,16 +116,6 @@ export class ApplicationOwnerService {
     return undefined;
   }
 
-  sortOwners(a: ApplicationOwnerDto, b: ApplicationOwnerDto) {
-    if (a.displayName < b.displayName) {
-      return -1;
-    }
-    if (a.displayName > b.displayName) {
-      return 1;
-    }
-    return 0;
-  }
-
   async uploadCorporateSummary(applicationFileId: string, file: File) {
     try {
       return await this.documentService.uploadFile<{ uuid: string }>(

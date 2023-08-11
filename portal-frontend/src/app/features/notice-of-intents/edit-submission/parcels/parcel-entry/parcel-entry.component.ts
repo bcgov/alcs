@@ -11,14 +11,13 @@ import { NoticeOfIntentOwnerService } from '../../../../../services/notice-of-in
 import { NoticeOfIntentParcelDto } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
-import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
+import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
+import { AllOwnersDialogComponent } from '../../../../../shared/owner-dialogs/owners-dialog/all-owners-dialog.component';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
-import { ApplicationCrownOwnerDialogComponent } from '../../../../applications/edit-submission/parcel-details/application-crown-owner-dialog/application-crown-owner-dialog.component';
-import { ApplicationOwnerDialogComponent } from '../../../../applications/edit-submission/parcel-details/application-owner-dialog/application-owner-dialog.component';
-import { ApplicationOwnersDialogComponent } from '../../../../applications/edit-submission/parcel-details/application-owners-dialog/application-owners-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
 export interface ParcelEntryFormData {
@@ -101,15 +100,14 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  DOCUMENT_TYPES = DOCUMENT_TYPE;
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
 
   constructor(
     private parcelService: ParcelService,
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
-    private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
-    private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    public noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
+    public noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private dialog: MatDialog
   ) {}
 
@@ -282,11 +280,13 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewOwner() {
-    const dialog = this.dialog.open(ApplicationOwnerDialogComponent, {
+    const dialog = this.dialog.open(OwnerDialogComponent, {
       data: {
         fileId: this.fileId,
         submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
+        ownerService: this.noticeOfIntentOwnerService,
+        documentService: this.noticeOfIntentDocumentService,
       },
     });
     dialog.beforeClosed().subscribe((createdDto) => {
@@ -299,11 +299,12 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   onAddNewGovernmentContact() {
-    const dialog = this.dialog.open(ApplicationCrownOwnerDialogComponent, {
+    const dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
         fileId: this.fileId,
         submissionUuid: this.submissionUuid,
         parcelUuid: this.parcel.uuid,
+        ownerService: this.noticeOfIntentOwnerService,
       },
     });
     dialog.beforeClosed().subscribe((createdDto) => {
@@ -355,11 +356,13 @@ export class ParcelEntryComponent implements OnInit {
 
   onSeeAllOwners() {
     this.dialog
-      .open(ApplicationOwnersDialogComponent, {
+      .open(AllOwnersDialogComponent, {
         data: {
           owners: this.owners,
           fileId: this.fileId,
           submissionUuid: this.submissionUuid,
+          ownerService: this.noticeOfIntentOwnerService,
+          documentService: this.noticeOfIntentDocumentService,
         },
       })
       .beforeClosed()

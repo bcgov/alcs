@@ -2,10 +2,12 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
-import { ApplicationParcelUpdateDto } from '../../../../services/application-parcel/application-parcel.dto';
 import { NoticeOfIntentOwnerDto } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
-import { NoticeOfIntentParcelDto } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
+import {
+  NoticeOfIntentParcelDto,
+  NoticeOfIntentParcelUpdateDto,
+} from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
@@ -106,13 +108,13 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     parcel.crownLandOwnerType =
       formData.crownLandOwnerType !== undefined ? formData.crownLandOwnerType : parcel.crownLandOwnerType;
     if (formData.owners) {
-      //parcel.owners = formData.owners;
+      parcel.owners = formData.owners;
     }
   }
 
   private async saveProgress() {
     if (this.isDirty || this.newParcelAdded) {
-      const parcelsToUpdate: ApplicationParcelUpdateDto[] = [];
+      const parcelsToUpdate: NoticeOfIntentParcelUpdateDto[] = [];
       for (const parcel of this.parcels) {
         parcelsToUpdate.push({
           uuid: parcel.uuid,
@@ -126,7 +128,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
           ownershipTypeCode: parcel.ownershipTypeCode,
           isConfirmedByApplicant: parcel.isConfirmedByApplicant,
           crownLandOwnerType: parcel.crownLandOwnerType,
-          ownerUuids: [],
+          ownerUuids: parcel.owners.map((owner) => owner.uuid),
         });
       }
       await this.noiParcelService.update(parcelsToUpdate);
