@@ -71,7 +71,7 @@ describe('ApplicationDocumentService', () => {
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
-  it('should make a delete request for update file', async () => {
+  it('should make a patch request for update file', async () => {
     mockHttpClient.patch.mockReturnValue(of({}));
 
     await service.update('fileId', []);

@@ -5,14 +5,12 @@ import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import {
   ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
   ApplicationDocumentUpdateDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
 } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../services/code/code.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -27,13 +25,13 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   currentStep = EditApplicationSteps.Attachments;
 
   displayedColumns = ['type', 'description', 'fileName', 'actions'];
-  selectableTypes: ApplicationDocumentTypeDto[] = [];
+  selectableTypes: DocumentTypeDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
 
   private isDirty = false;
 
   form = new FormGroup({} as any);
-  private documentCodes: ApplicationDocumentTypeDto[] = [];
+  private documentCodes: DocumentTypeDto[] = [];
 
   constructor(
     private router: Router,
@@ -117,7 +115,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   private async loadDocumentCodes() {
     const codes = await this.codeService.loadCodes();
-    this.documentCodes = codes.applicationDocumentTypes;
+    this.documentCodes = codes.documentTypes;
     this.selectableTypes = this.documentCodes.filter((code) => USER_CONTROLLED_TYPES.includes(code.code));
   }
 }

@@ -7,12 +7,14 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../../common/owner-type/owner-type.entity';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner.controller';
-import { APPLICATION_OWNER } from './application-owner.dto';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
@@ -282,8 +284,8 @@ describe('ApplicationOwnerController', () => {
   it('should set the owner and delete agents when using a non-agent owner', async () => {
     mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
-        type: new ApplicationOwnerType({
-          code: APPLICATION_OWNER.INDIVIDUAL,
+        type: new OwnerType({
+          code: OWNER_TYPE.INDIVIDUAL,
         }),
       }),
     );
@@ -312,8 +314,8 @@ describe('ApplicationOwnerController', () => {
   it('should update the agent owner when calling set primary contact', async () => {
     mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
-        type: new ApplicationOwnerType({
-          code: APPLICATION_OWNER.AGENT,
+        type: new OwnerType({
+          code: OWNER_TYPE.AGENT,
         }),
       }),
     );

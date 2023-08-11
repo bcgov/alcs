@@ -1,17 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { APPLICATION_OWNER, ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
 import { PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
+import { OWNER_TYPE } from '../../../shared/dto/owner.dto';
 
 @Component({
   selector: 'app-application-details',
@@ -37,7 +35,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   otherFiles: ApplicationDocumentDto[] = [];
   needsAuthorizationLetter = true;
   appDocuments: ApplicationDocumentDto[] = [];
-  APPLICATION_OWNER = APPLICATION_OWNER;
+  OWNER_TYPE = OWNER_TYPE;
 
   private localGovernments: LocalGovernmentDto[] = [];
   private otherFileTypes = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIONAL_REPORT, DOCUMENT_TYPE.OTHER];
@@ -57,11 +55,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this.populateLocalGovernment(app.localGovernmentUuid);
 
         this.needsAuthorizationLetter =
-          !(this.primaryContact?.type.code === APPLICATION_OWNER.GOVERNMENT) &&
+          !(this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT) &&
           !(
             app.owners.length === 1 &&
-            (app.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL ||
-              app.owners[0].type.code === APPLICATION_OWNER.GOVERNMENT)
+            (app.owners[0].type.code === OWNER_TYPE.INDIVIDUAL || app.owners[0].type.code === OWNER_TYPE.GOVERNMENT)
           );
       }
     });

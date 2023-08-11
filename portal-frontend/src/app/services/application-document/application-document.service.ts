@@ -2,15 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../shared/dto/document.dto';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentUpdateDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from './application-document.dto';
+import { ApplicationDocumentDto, ApplicationDocumentUpdateDto } from './application-document.dto';
 
 @Injectable({
   providedIn: 'root',

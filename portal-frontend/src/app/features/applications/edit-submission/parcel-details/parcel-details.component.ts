@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
-import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import {
   ApplicationParcelDto,
@@ -11,6 +11,7 @@ import {
 } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { StepComponent } from '../step.partial';
@@ -50,7 +51,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
         this.submissionUuid = applicationSubmission.uuid;
         this.loadParcels();
         const parcelOwners = applicationSubmission.owners.filter(
-          (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
         );
         this.$owners.next(parcelOwners);
       }
@@ -164,7 +165,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     const owners = await this.applicationOwnerService.fetchBySubmissionId(this.submissionUuid);
     if (owners) {
       const parcelOwners = owners.filter(
-        (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
       );
       this.$owners.next(parcelOwners);
     }

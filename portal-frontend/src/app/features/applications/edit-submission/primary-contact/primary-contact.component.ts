@@ -3,12 +3,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { APPLICATION_OWNER, ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -102,10 +104,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       ...owner,
       isSelected: owner.uuid === uuid,
     }));
-    this.selectedThirdPartyAgent =
-      (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.AGENT) || uuid == 'agent';
+    this.selectedThirdPartyAgent = (selectedOwner && selectedOwner.type.code === OWNER_TYPE.AGENT) || uuid == 'agent';
     this.selectedLocalGovernment =
-      (selectedOwner && selectedOwner.type.code === APPLICATION_OWNER.GOVERNMENT) || uuid == 'government';
+      (selectedOwner && selectedOwner.type.code === OWNER_TYPE.GOVERNMENT) || uuid == 'government';
     this.form.reset();
 
     if (this.selectedLocalGovernment) {
@@ -136,7 +137,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           phoneNumber: selectedOwner.phoneNumber,
           email: selectedOwner.email,
         });
-        this.isCrownOwner = selectedOwner.type.code === APPLICATION_OWNER.CROWN;
+        this.isCrownOwner = selectedOwner.type.code === OWNER_TYPE.CROWN;
       }
     }
     this.calculateLetterRequired();
@@ -146,14 +147,14 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (this.selectedLocalGovernment) {
       this.needsAuthorizationLetter = false;
     } else {
-      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === APPLICATION_OWNER.INDIVIDUAL;
+      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
       this.needsAuthorizationLetter =
         this.selectedThirdPartyAgent ||
         !(
           isSelfApplicant &&
           (this.owners.length === 1 ||
             (this.owners.length === 2 &&
-              this.owners[1].type.code === APPLICATION_OWNER.AGENT &&
+              this.owners[1].type.code === OWNER_TYPE.AGENT &&
               !this.selectedThirdPartyAgent))
         );
     }
@@ -181,7 +182,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           email: this.email.getRawValue() ?? '',
           phoneNumber: this.phoneNumber.getRawValue() ?? '',
           ownerUuid: selectedOwner?.uuid,
-          type: this.selectedThirdPartyAgent ? APPLICATION_OWNER.AGENT : APPLICATION_OWNER.GOVERNMENT,
+          type: this.selectedThirdPartyAgent ? OWNER_TYPE.AGENT : OWNER_TYPE.GOVERNMENT,
         });
       } else if (selectedOwner) {
         await this.applicationOwnerService.setPrimaryContact({
@@ -203,13 +204,13 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (owners) {
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.parcelOwners = owners.filter(
-        (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
       );
       this.owners = owners;
 
       if (selectedOwner) {
-        this.selectedThirdPartyAgent = selectedOwner.type.code === APPLICATION_OWNER.AGENT;
-        this.selectedLocalGovernment = selectedOwner.type.code === APPLICATION_OWNER.GOVERNMENT;
+        this.selectedThirdPartyAgent = selectedOwner.type.code === OWNER_TYPE.AGENT;
+        this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
       }
 
       if (this.selectedLocalGovernment) {

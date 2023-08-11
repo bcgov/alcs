@@ -11,8 +11,10 @@ import { ApplicationDocument } from '../../alcs/application/application-document
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
-import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
@@ -174,8 +176,8 @@ describe('ApplicationSubmissionValidatorService', () => {
     const applicationSubmission = new ApplicationSubmission({
       owners: [
         new ApplicationOwner({
-          type: new ApplicationOwnerType({
-            code: APPLICATION_OWNER.CROWN,
+          type: new OwnerType({
+            code: OWNER_TYPE.CROWN,
           }),
         }),
       ],
@@ -255,8 +257,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should return errors for an invalid third party agent', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.AGENT,
+      type: new OwnerType({
+        code: OWNER_TYPE.AGENT,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -279,8 +281,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should require an authorization letter for more than one owner', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.AGENT,
+      type: new OwnerType({
+        code: OWNER_TYPE.AGENT,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -303,8 +305,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not require an authorization letter for a single owner', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.INDIVIDUAL,
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -327,8 +329,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not require an authorization letter when contact is goverment', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.INDIVIDUAL,
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -336,8 +338,8 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     const governmentOwner = new ApplicationOwner({
       uuid: 'government-owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.GOVERNMENT,
+      type: new OwnerType({
+        code: OWNER_TYPE.GOVERNMENT,
       }),
       firstName: 'Govern',
       lastName: 'Ment',
@@ -361,8 +363,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not have an authorization letter error when one is provided', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.INDIVIDUAL,
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',

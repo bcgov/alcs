@@ -12,10 +12,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
+import { OWNER_TYPE } from '../../../common/owner-type/owner-type.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -23,7 +24,6 @@ import {
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
@@ -133,7 +133,7 @@ export class ApplicationOwnerController {
     dto: ApplicationOwnerUpdateDto | ApplicationOwnerCreateDto,
   ) {
     if (
-      dto.typeCode === APPLICATION_OWNER.INDIVIDUAL &&
+      dto.typeCode === OWNER_TYPE.INDIVIDUAL &&
       (!dto.firstName || !dto.lastName)
     ) {
       throw new BadRequestException(
@@ -141,10 +141,7 @@ export class ApplicationOwnerController {
       );
     }
 
-    if (
-      dto.typeCode === APPLICATION_OWNER.ORGANIZATION &&
-      !dto.organizationName
-    ) {
+    if (dto.typeCode === OWNER_TYPE.ORGANIZATION && !dto.organizationName) {
       throw new BadRequestException(
         'Organizations must have an organizationName',
       );
@@ -184,8 +181,8 @@ export class ApplicationOwnerController {
       );
 
       if (
-        primaryContactOwner.type.code === APPLICATION_OWNER.AGENT ||
-        primaryContactOwner.type.code === APPLICATION_OWNER.GOVERNMENT
+        primaryContactOwner.type.code === OWNER_TYPE.AGENT ||
+        primaryContactOwner.type.code === OWNER_TYPE.GOVERNMENT
       ) {
         //Update Fields for non parcel owners
         await this.ownerService.update(primaryContactOwner.uuid, {

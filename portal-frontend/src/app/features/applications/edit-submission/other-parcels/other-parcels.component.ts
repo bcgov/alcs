@@ -1,11 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerDetailedDto,
   ApplicationOwnerDto,
 } from '../../../../services/application-owner/application-owner.dto';
@@ -18,6 +16,7 @@ import { ApplicationParcelService } from '../../../../services/application-parce
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { getLetterCombinations } from '../../../../shared/utils/number-to-letter-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -71,7 +70,7 @@ export class OtherParcelsComponent extends StepComponent implements OnInit, OnDe
         this.fileId = application.fileNumber;
         this.submissionUuid = application.uuid;
         const nonAgentOwners = application.owners.filter(
-          (owner) => ![APPLICATION_OWNER.AGENT, APPLICATION_OWNER.GOVERNMENT].includes(owner.type.code)
+          (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
         );
         this.owners = nonAgentOwners.map((o) => ({
           ...o,

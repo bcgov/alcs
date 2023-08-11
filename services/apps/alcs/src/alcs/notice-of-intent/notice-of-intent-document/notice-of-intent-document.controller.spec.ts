@@ -9,9 +9,7 @@ import { NoticeOfIntentProfile } from '../../../common/automapper/notice-of-inte
 import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../../document/document.dto';
 import { Document } from '../../../document/document.entity';
-import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
-import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import { User } from '../../../user/user.entity';
 import { CodeService } from '../../code/code.service';

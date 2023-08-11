@@ -2,13 +2,14 @@ import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../../services/application-submission/application-submission.dto';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom-stepper.component';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
 

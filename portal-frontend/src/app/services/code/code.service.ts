@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
+import { DocumentTypeDto } from '../../shared/dto/document.dto';
 import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
 import { ApplicationTypeDto, LocalGovernmentDto, NoticeOfIntentTypeDto, SubmissionTypeDto } from './code.dto';
 
@@ -20,7 +20,7 @@ export class CodeService {
         localGovernments: LocalGovernmentDto[];
         applicationTypes: ApplicationTypeDto[];
         noticeOfIntentTypes: NoticeOfIntentTypeDto[];
-        applicationDocumentTypes: ApplicationDocumentTypeDto[];
+        documentTypes: DocumentTypeDto[];
         submissionTypes: SubmissionTypeDto[];
         naruSubtypes: NaruSubtypeDto[];
       }>(`${this.baseUrl}`)

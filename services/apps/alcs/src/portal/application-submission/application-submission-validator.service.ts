@@ -1,10 +1,10 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
@@ -260,11 +260,10 @@ export class ApplicationSubmissionValidatorService {
 
     const onlyHasIndividualOwner =
       applicationSubmission.owners.length === 1 &&
-      applicationSubmission.owners[0].type.code ===
-        APPLICATION_OWNER.INDIVIDUAL;
+      applicationSubmission.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
 
     const isGovernmentContact =
-      primaryOwner.type.code === APPLICATION_OWNER.GOVERNMENT;
+      primaryOwner.type.code === OWNER_TYPE.GOVERNMENT;
 
     if (!onlyHasIndividualOwner && !isGovernmentContact) {
       const authorizationLetters = documents.filter(
@@ -280,10 +279,7 @@ export class ApplicationSubmissionValidatorService {
       }
     }
 
-    if (
-      primaryOwner.type.code === APPLICATION_OWNER.AGENT ||
-      isGovernmentContact
-    ) {
+    if (primaryOwner.type.code === OWNER_TYPE.AGENT || isGovernmentContact) {
       if (
         !primaryOwner.firstName ||
         !primaryOwner.lastName ||
