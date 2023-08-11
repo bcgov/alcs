@@ -51,23 +51,23 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   southLandUseTypeDescription: string;
   westLandUseType: string;
   westLandUseTypeDescription: string;
-  primaryContactOwnerUuid?: string | null;
+  primaryContactOwnerUuid: string | null;
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
-  applicant?: string;
-  purpose?: string;
-  localGovernmentUuid?: string;
-  typeCode?: string;
-  parcelsAgricultureDescription?: string;
-  parcelsAgricultureImprovementDescription?: string;
-  parcelsNonAgricultureUseDescription?: string;
-  northLandUseType?: string;
-  northLandUseTypeDescription?: string;
-  eastLandUseType?: string;
-  eastLandUseTypeDescription?: string;
-  southLandUseType?: string;
-  southLandUseTypeDescription?: string;
-  westLandUseType?: string;
-  westLandUseTypeDescription?: string;
+  applicant?: string | null;
+  purpose?: string | null;
+  localGovernmentUuid?: string | null;
+  typeCode?: string | null;
+  parcelsAgricultureDescription?: string | null;
+  parcelsAgricultureImprovementDescription?: string | null;
+  parcelsNonAgricultureUseDescription?: string | null;
+  northLandUseType?: string | null;
+  northLandUseTypeDescription?: string | null;
+  eastLandUseType?: string | null;
+  eastLandUseTypeDescription?: string | null;
+  southLandUseType?: string | null;
+  southLandUseTypeDescription?: string | null;
+  westLandUseType?: string | null;
+  westLandUseTypeDescription?: string | null;
 }

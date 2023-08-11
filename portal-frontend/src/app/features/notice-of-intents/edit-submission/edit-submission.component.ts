@@ -3,14 +3,19 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
+import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
-import { EditApplicationSteps } from '../../applications/edit-submission/edit-submission.component';
+import { LandUseComponent } from './land-use/land-use.component';
+import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
+import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNoiSteps {
   Parcel = 0,
@@ -33,6 +38,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   $destroy = new Subject<void>();
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
+  $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   steps = EditNoiSteps;
@@ -42,9 +48,14 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
+  @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
+  @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
+  @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
+  @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -117,8 +128,20 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   async saveSubmission(step: number) {
     switch (step) {
-      case EditApplicationSteps.AppParcel:
+      case EditNoiSteps.Parcel:
         await this.parcelDetailsComponent.onSave();
+        break;
+      case EditNoiSteps.PrimaryContact:
+        await this.primaryContactComponent.onSave();
+        break;
+      case EditNoiSteps.Government:
+        await this.selectGovernmentComponent.onSave();
+        break;
+      case EditNoiSteps.LandUse:
+        await this.landUseComponent.onSave();
+        break;
+      case EditNoiSteps.Attachments:
+        await this.otherAttachmentsComponent.onSave();
         break;
       default:
         this.toastService.showErrorToast('Error updating notice of intent.');
@@ -140,6 +163,12 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       this.overlayService.showSpinner();
       this.noiSubmission = await this.noticeOfIntentSubmissionService.getByFileId(fileId);
       this.fileId = fileId;
+
+      const documents = await this.noticeOfIntentDocumentService.getByFileId(fileId);
+      if (documents) {
+        this.$noiDocuments.next(documents);
+      }
+
       this.$noiSubmission.next(this.noiSubmission);
       this.overlayService.hideSpinner();
     }

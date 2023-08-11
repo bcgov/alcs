@@ -11,9 +11,7 @@
         Download PDF
       </button>
       <div class="change-app-type-btn-wrapper">
-        <button mat-flat-button color="accent" (click)="onChangeSubmissionType()">
-          Change NOI Type
-        </button>
+        <button mat-flat-button color="accent" (click)="onChangeSubmissionType()">Change NOI Type</button>
         <mat-icon
           color="accent"
           matTooltip="Changing application type will remove some inputs from your saved progress"
@@ -35,7 +33,7 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === steps.Parcel">
       <app-noi-parcel-details
-        [$noiSubmission]='$noiSubmission'
+        [$noiSubmission]="$noiSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
@@ -45,23 +43,57 @@
   </cdk-step>
   <cdk-step label="Primary Contact">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.PrimaryContact">Primary Contact</div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.PrimaryContact">
+      <app-primary-contact
+        [showErrors]="showValidationErrors"
+        [$noiSubmission]="$noiSubmission"
+        [$noiDocuments]="$noiDocuments"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-primary-contact>
+    </div>
   </cdk-step>
   <cdk-step label="Government">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.Government">Select Government</div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Government">
+      <app-select-government
+        [showErrors]="showValidationErrors"
+        [$noiSubmission]="$noiSubmission"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-select-government>
+    </div>
   </cdk-step>
   <cdk-step label="Land Use">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.LandUse">Land Use</div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.LandUse">
+      <app-land-use
+        [$noiSubmission]="$noiSubmission"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-land-use>
+    </div>
   </cdk-step>
   <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.Proposal">Proposal</div>
   </cdk-step>
+  <cdk-step label="Additional Information">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.ExtraInfo">Additional Information</div>
+  </cdk-step>
   <cdk-step label="Upload Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.Attachments">Other attachments</div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Attachments">
+      <app-other-attachments
+        [$noiSubmission]="$noiSubmission"
+        [$noiDocuments]="$noiDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-other-attachments>
+    </div>
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>

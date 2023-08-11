@@ -22,6 +22,8 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
+import { ApplicationSubmissionUpdateDto } from '../application-submission/application-submission.dto';
+import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   NoticeOfIntentSubmissionDetailedDto,
   NoticeOfIntentSubmissionDto,
@@ -128,6 +130,8 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission.localGovernmentUuid =
       updateDto.localGovernmentUuid;
 
+    this.setLandUseFields(noticeOfIntentSubmission, updateDto);
+
     await this.noticeOfIntentSubmissionRepository.save(
       noticeOfIntentSubmission,
     );
@@ -142,6 +146,32 @@ export class NoticeOfIntentSubmissionService {
     }
 
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
+  }
+
+  private setLandUseFields(
+    noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    updateDto: NoticeOfIntentSubmissionUpdateDto,
+  ) {
+    noticeOfIntentSubmission.parcelsAgricultureDescription =
+      updateDto.parcelsAgricultureDescription;
+    noticeOfIntentSubmission.parcelsAgricultureImprovementDescription =
+      updateDto.parcelsAgricultureImprovementDescription;
+    noticeOfIntentSubmission.parcelsNonAgricultureUseDescription =
+      updateDto.parcelsNonAgricultureUseDescription;
+    noticeOfIntentSubmission.northLandUseType = updateDto.northLandUseType;
+    noticeOfIntentSubmission.northLandUseTypeDescription =
+      updateDto.northLandUseTypeDescription;
+    noticeOfIntentSubmission.eastLandUseType = updateDto.eastLandUseType;
+    noticeOfIntentSubmission.eastLandUseTypeDescription =
+      updateDto.eastLandUseTypeDescription;
+    noticeOfIntentSubmission.southLandUseType = updateDto.southLandUseType;
+    noticeOfIntentSubmission.southLandUseTypeDescription =
+      updateDto.southLandUseTypeDescription;
+    noticeOfIntentSubmission.westLandUseType = updateDto.westLandUseType;
+    noticeOfIntentSubmission.westLandUseTypeDescription =
+      updateDto.westLandUseTypeDescription;
+
+    return noticeOfIntentSubmission;
   }
 
   //TODO: Uncomment when adding submitting
@@ -415,7 +445,11 @@ export class NoticeOfIntentSubmissionService {
     });
   }
 
-  async setPrimaryContact(submissionUuid: string, uuid: any) {
-    //TODO:? ??
+  async setPrimaryContact(submissionUuid: string, primaryContactUuid: any) {
+    const noticeOfIntentSubmission = await this.getOrFailByUuid(submissionUuid);
+    noticeOfIntentSubmission.primaryContactOwnerUuid = primaryContactUuid;
+    await this.noticeOfIntentSubmissionRepository.save(
+      noticeOfIntentSubmission,
+    );
   }
 }

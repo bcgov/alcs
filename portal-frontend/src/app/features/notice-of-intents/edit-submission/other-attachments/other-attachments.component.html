@@ -1,0 +1,107 @@
+<h2>Optional Attachments</h2>
+<p>
+  Please upload any optional supporting documents. Where possible, provide KML/KMZ Google Earth files or GIS shapefiles
+  and geodatabases.
+</p>
+<p>
+  NOTE: All documents submitted as part of your notice of intent will be viewable to the public on the ALC website. Do
+  not include confidential material within your notice of intent.
+</p>
+<section>
+  <h4>Optional Attachments (Max. 100 MB per attachment)</h4>
+  <form [formGroup]="form">
+    <div class="scrollable">
+      <table mat-table [dataSource]="otherFiles">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field appearance="outline">
+              <mat-select
+                [formControlName]="element.uuid + '-type'"
+                (valueChange)="onChangeType(element.uuid, $event)"
+                placeholder="Select a type"
+              >
+                <mat-option *ngFor="let type of selectableTypes" [value]="type.code">{{ type.label }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                form.controls[element.uuid + '-type']!.invalid &&
+                (form.controls[element.uuid + '-type']!.dirty || form.controls[element.uuid + '-type']!.touched)
+              "
+              class="field-error"
+            >
+              <mat-icon>warning</mat-icon>
+              <div *ngIf="form.controls[element.uuid + '-type']!.errors?.['required']">This field is required</div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field appearance="outline">
+              <input
+                [formControlName]="element.uuid + '-description'"
+                (change)="onChangeDescription(element.uuid, $event)"
+                id="fileType"
+                type="text"
+                matInput
+                placeholder="Type description"
+              />
+            </mat-form-field>
+            <div
+              *ngIf="
+                form.controls[element.uuid + '-description']!.invalid &&
+                (form.controls[element.uuid + '-description']!.dirty ||
+                  form.controls[element.uuid + '-description']!.touched)
+              "
+              class="field-error"
+            >
+              <mat-icon>warning</mat-icon>
+              <div *ngIf="form.controls[element.uuid + '-description']!.errors?.['required']">
+                This field is required
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef>File Name</th>
+          <td mat-cell *matCellDef="let element">
+            <a (click)="openFile(element.uuid)">{{ element.fileName }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell class="actions" *matCellDef="let element">
+            <button (click)="onDeleteFile(element)" mat-stroked-button color="accent">Remove</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="no-data-text" colspan="6">No attachments</td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <div class="uploader">
+    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
+  </div>
+</section>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>
