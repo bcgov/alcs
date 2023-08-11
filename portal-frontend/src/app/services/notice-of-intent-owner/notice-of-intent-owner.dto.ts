@@ -1,6 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
-import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
+import { NoticeOfIntentDocumentDto } from '../notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentParcelDto } from '../notice-of-intent-parcel/notice-of-intent-parcel.dto';
 
 export enum OWNER_TYPE {
   INDIVIDUAL = 'INDV',
@@ -24,11 +24,11 @@ export interface NoticeOfIntentOwnerDto {
   phoneNumber: string | null;
   email: string | null;
   type: OwnerTypeDto;
-  corporateSummary?: ApplicationDocumentDto;
+  corporateSummary?: NoticeOfIntentDocumentDto;
 }
 
 export interface NoticeOfIntentOwnerDetailedDto extends NoticeOfIntentOwnerDto {
-  parcels: ApplicationParcelDto[];
+  parcels: NoticeOfIntentParcelDto[];
 }
 
 export interface NoticeOfIntentOwnerUpdateDto {

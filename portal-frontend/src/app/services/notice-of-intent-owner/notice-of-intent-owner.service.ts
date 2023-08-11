@@ -67,11 +67,11 @@ export class NoticeOfIntentOwnerService {
       const res = await firstValueFrom(
         this.httpClient.post<NoticeOfIntentOwnerDto>(`${this.serviceUrl}/setPrimaryContact`, updateDto)
       );
-      this.toastService.showSuccessToast('Application saved');
+      this.toastService.showSuccessToast('Notice of Intent saved');
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to update Application, please try again later');
+      this.toastService.showErrorToast('Failed to update Notice of Intent, please try again later');
       return undefined;
     }
   }
@@ -126,10 +126,10 @@ export class NoticeOfIntentOwnerService {
     return 0;
   }
 
-  async uploadCorporateSummary(applicationFileId: string, file: File) {
+  async uploadCorporateSummary(noticeOfIntentFileId: string, file: File) {
     try {
       return await this.documentService.uploadFile<{ uuid: string }>(
-        applicationFileId,
+        noticeOfIntentFileId,
         file,
         DOCUMENT_TYPE.CORPORATE_SUMMARY,
         DOCUMENT_SOURCE.APPLICANT,

@@ -39,7 +39,7 @@ export class NoticeOfIntentDocumentService {
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      this.toastService.showErrorToast('Failed to attach document, please try again');
     }
     return undefined;
   }

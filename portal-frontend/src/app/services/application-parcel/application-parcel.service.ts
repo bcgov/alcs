@@ -7,7 +7,7 @@ import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spin
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationParcelDto, ApplicationParcelUpdateDto } from './application-parcel.dto';
+import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,11 +34,12 @@ export class ApplicationParcelService {
     return undefined;
   }
 
-  async create(applicationSubmissionUuid: string, ownerUuid?: string) {
+  async create(applicationSubmissionUuid: string, parcelType?: PARCEL_TYPE, ownerUuid?: string) {
     try {
       return await firstValueFrom(
         this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, {
           applicationSubmissionUuid,
+          parcelType,
           ownerUuid,
         })
       );

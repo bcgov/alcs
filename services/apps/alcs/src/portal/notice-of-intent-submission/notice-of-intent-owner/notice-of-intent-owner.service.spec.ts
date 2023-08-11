@@ -214,7 +214,7 @@ describe('NoticeOfIntentOwnerService', () => {
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
   });
 
-  it('should call update for the application with the first parcels last name', async () => {
+  it('should call update with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new NoticeOfIntentOwner()]);
     const owners = [
       new NoticeOfIntentOwner({
@@ -236,7 +236,7 @@ describe('NoticeOfIntentOwnerService', () => {
     );
   });
 
-  it('should call update for the application with the first parcels last name', async () => {
+  it('should call update with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new NoticeOfIntentOwner()]);
     const owners = [
       new NoticeOfIntentOwner({
@@ -270,7 +270,7 @@ describe('NoticeOfIntentOwnerService', () => {
     );
   });
 
-  it('should call update for the application with the number owners last name', async () => {
+  it('should call update with the number owners last name', async () => {
     mockRepo.find.mockResolvedValue([new NoticeOfIntentOwner()]);
     const owners = [
       new NoticeOfIntentOwner({
@@ -296,7 +296,7 @@ describe('NoticeOfIntentOwnerService', () => {
     );
   });
 
-  it('should use the first created parcel to set the application applicants name', async () => {
+  it('should use the first created parcel to set the applicants name', async () => {
     mockRepo.find.mockResolvedValue([new NoticeOfIntentOwner()]);
     const owners1 = [
       new NoticeOfIntentOwner({
