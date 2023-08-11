@@ -143,6 +143,7 @@ export class ApplicationSubmissionController {
       );
 
     if (
+      !submission.status ||
       ![
         SUBMISSION_STATUS.INCOMPLETE.toString(),
         SUBMISSION_STATUS.WRONG_GOV.toString(),
