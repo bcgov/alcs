@@ -334,16 +334,18 @@
         Add new government contact
       </button>
       <div>
-        <!--        <app-parcel-owners-->
-        <!--          [fileId]="fileId"-->
-        <!--          [submissionUuid]="submissionUuid"-->
-        <!--          [parcelUuid]="parcel.uuid"-->
-        <!--          [owners]="parcel.owners"-->
-        <!--          (onOwnersUpdated)="onOwnersUpdated.emit()"-->
-        <!--          (onOwnerRemoved)="onOwnerRemoved($event)"-->
-        <!--          [disabled]="_disabled"-->
-        <!--          [isCrown]="true"-->
-        <!--        ></app-parcel-owners>-->
+        <app-parcel-owners
+          [fileId]="fileId"
+          [submissionUuid]="submissionUuid"
+          [parcelUuid]="parcel.uuid"
+          [owners]="parcel.owners"
+          (onOwnersUpdated)="onOwnersUpdated.emit()"
+          (onOwnerRemoved)="onOwnerRemoved($event)"
+          [disabled]="_disabled"
+          [isCrown]="true"
+          [ownerService]="noticeOfIntentOwnerService"
+          [documentService]="noticeOfIntentDocumentService"
+        ></app-parcel-owners>
       </div>
     </ng-container>
   </section>
