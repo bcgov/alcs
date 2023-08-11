@@ -15,7 +15,7 @@ export class ApplicationSubmissionStatusService {
 
   async fetchSubmissionStatusesByFileNumber(
     fileNumber: string,
-    isErrorToast = true
+    showErrorToast = true
   ): Promise<ApplicationSubmissionToSubmissionStatusDto[]> {
     try {
       const result = await firstValueFrom(
@@ -23,7 +23,7 @@ export class ApplicationSubmissionStatusService {
       );
       return result;
     } catch (e) {
-      if (isErrorToast) {
+      if (showErrorToast) {
         this.toastService.showErrorToast('Failed to fetch Application Submission Statuses');
       }
       throw e;
@@ -32,7 +32,7 @@ export class ApplicationSubmissionStatusService {
 
   async fetchCurrentStatusByFileNumber(
     fileNumber: string,
-    isErrorToast = true
+    showErrorToast = true
   ): Promise<ApplicationSubmissionToSubmissionStatusDto> {
     try {
       const result = await firstValueFrom(
@@ -40,7 +40,7 @@ export class ApplicationSubmissionStatusService {
       );
       return result;
     } catch (e) {
-      if (isErrorToast) {
+      if (showErrorToast) {
         this.toastService.showErrorToast('Failed to fetch Application Submission Status');
       }
       throw e;
