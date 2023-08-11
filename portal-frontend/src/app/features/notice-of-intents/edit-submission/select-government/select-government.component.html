@@ -1,0 +1,68 @@
+<div class="step-description">
+  <h2>Government</h2>
+  <p>
+    Please indicate the local government in which the parcel(s) under the notice of intent are located. If the property
+    is located within the Islands Trust, please select 'Islands Trust' and not a specific island.
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="government">Local or First Nation Government</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input
+          (blur)="onBlur()"
+          id="government"
+          type="text"
+          matInput
+          formControlName="localGovernment"
+          placeholder="Type government"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete (optionSelected)="onChange($event)" #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <div
+        *ngIf="
+          localGovernment.errors &&
+          localGovernment.errors['required'] &&
+          (localGovernment.dirty || localGovernment.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="localGovernment.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+  </div>
+</form>
+<app-warning-banner *ngIf="showWarning" class="full-row">
+  This Local/First Nation Government has not yet been set up with the ALC Portal to receive notice of intents. To
+  submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a
+  >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+</app-warning-banner>
+<app-warning-banner *ngIf="selectedOwnGovernment" class="full-row">
+  You're logged in with a Business BCeID that is associated with the government selected above. You will have the
+  opportunity to complete the local or first nation government review form immediately after this notice of intent is
+  submitted.
+</app-warning-banner>
+<p>
+  Please Note: If your Local or First Nation Government is not listed, please contact the ALC directly.
+  <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a> / <a href="tel:236-468-3342">236-468-3342</a>
+</p>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

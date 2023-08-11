@@ -9,10 +9,14 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { EditSubmissionComponent } from './edit-submission.component';
+import { LandUseComponent } from './land-use/land-use.component';
+import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { DeleteParcelDialogComponent } from './parcels/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
+import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +25,10 @@ import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.compon
     ParcelEntryComponent,
     ParcelEntryConfirmationDialogComponent,
     DeleteParcelDialogComponent,
+    PrimaryContactComponent,
+    SelectGovernmentComponent,
+    LandUseComponent,
+    OtherAttachmentsComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +48,10 @@ import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.compon
     ParcelEntryComponent,
     ParcelEntryConfirmationDialogComponent,
     DeleteParcelDialogComponent,
+    PrimaryContactComponent,
+    SelectGovernmentComponent,
+    LandUseComponent,
+    OtherAttachmentsComponent,
   ],
 })
 export class EditSubmissionBaseModule {}
