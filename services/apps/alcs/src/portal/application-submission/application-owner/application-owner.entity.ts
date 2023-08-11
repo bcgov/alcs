@@ -5,7 +5,7 @@ import { ApplicationDocument } from '../../../alcs/application/application-docum
 import { Base } from '../../../common/entities/base.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
+import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 
 @Entity()
 export class ApplicationOwner extends Base {
@@ -62,8 +62,8 @@ export class ApplicationOwner extends Base {
   corporateSummaryUuid: string | null;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationOwnerType, { nullable: false })
-  type: ApplicationOwnerType;
+  @ManyToOne(() => OwnerType, { nullable: false })
+  type: OwnerType;
 
   @ManyToOne(() => ApplicationSubmission, { nullable: false })
   applicationSubmission: ApplicationSubmission;

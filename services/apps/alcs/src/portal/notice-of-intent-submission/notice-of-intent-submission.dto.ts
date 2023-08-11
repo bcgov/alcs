@@ -1,14 +1,14 @@
 import { AutoMap } from '@automapper/classes';
 import {
-  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { ApplicationStatusDto } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { ApplicationOwnerDto } from '../application-submission/application-owner/application-owner.dto';
+import { NoticeOfIntentOwnerDto } from './notice-of-intent-owner/notice-of-intent-owner.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -35,6 +35,7 @@ export class NoticeOfIntentSubmissionDto {
   type: string;
 
   status: NoticeOfIntentStatusDto;
+  owners: NoticeOfIntentOwnerDto[];
 
   canEdit: boolean;
   canView: boolean;

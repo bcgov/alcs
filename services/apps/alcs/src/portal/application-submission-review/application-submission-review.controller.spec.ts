@@ -21,7 +21,7 @@ import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
-import { ApplicationOwnerType } from '../application-submission/application-owner/application-owner-type/application-owner-type.entity';
+import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import {
   ApplicationSubmissionValidatorService,
@@ -253,7 +253,7 @@ describe('ApplicationSubmissionReviewController', () => {
           new ApplicationOwner({
             uuid: 'uuid',
             email: 'fake-email',
-            type: new ApplicationOwnerType(),
+            type: new OwnerType(),
           }),
         ],
         primaryContactOwnerUuid: 'uuid',

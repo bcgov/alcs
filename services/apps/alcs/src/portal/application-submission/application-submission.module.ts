@@ -11,7 +11,7 @@ import { ApplicationSubmissionProfile } from '../../common/automapper/applicatio
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
-import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
+import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationOwnerService } from './application-owner/application-owner.service';
@@ -33,7 +33,7 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
       ApplicationParcel,
       ApplicationParcelOwnershipType,
       ApplicationOwner,
-      ApplicationOwnerType,
+      OwnerType,
       NaruSubtype,
       ApplicationSubmissionToSubmissionStatus,
     ]),

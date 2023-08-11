@@ -39,14 +39,13 @@ export class CodeController {
     const localGovernments = await this.localGovernmentService.listActive();
     const applicationTypes =
       await this.applicationService.fetchApplicationTypes();
-    const applicationDocumentTypes =
-      await this.applicationDocumentService.fetchTypes();
+    const documentTypes = await this.applicationDocumentService.fetchTypes();
     const submissionTypes = await this.cardService.getPortalCardTypes();
     const noticeOfIntentTypes = await this.noticeOfIntentService.listTypes();
     const naruSubtypes =
       await this.applicationSubmissionService.listNaruSubtypes();
 
-    const mappedDocTypes = applicationDocumentTypes.map((docType) => {
+    const mappedDocTypes = documentTypes.map((docType) => {
       if (docType.portalLabel) {
         docType.label = docType.portalLabel;
       }
@@ -60,7 +59,7 @@ export class CodeController {
       applicationTypes,
       noticeOfIntentTypes,
       submissionTypes,
-      applicationDocumentTypes: mappedDocTypes,
+      documentTypes: mappedDocTypes,
       naruSubtypes,
     };
   }

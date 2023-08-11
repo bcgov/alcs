@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 
 @Component({
   selector: 'app-excl-details',

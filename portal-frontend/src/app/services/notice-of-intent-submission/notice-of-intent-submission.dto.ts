@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
 
 export enum NOI_SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -32,6 +33,7 @@ export interface NoticeOfIntentSubmissionDto {
   type: string;
   status: NoticeOfIntentSubmissionStatusDto;
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
+  owners: NoticeOfIntentOwnerDto[];
   canEdit: boolean;
   canView: boolean;
 }

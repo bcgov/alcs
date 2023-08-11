@@ -42,7 +42,7 @@ export class ApplicationDocumentService {
     @InjectRepository(ApplicationDocument)
     private applicationDocumentRepository: Repository<ApplicationDocument>,
     @InjectRepository(DocumentCode)
-    private applicationDocumentCodeRepository: Repository<DocumentCode>,
+    private documentCodeRepository: Repository<DocumentCode>,
   ) {}
 
   async attachDocument({
@@ -253,7 +253,7 @@ export class ApplicationDocumentService {
   }
 
   async fetchTypes() {
-    return await this.applicationDocumentCodeRepository.find();
+    return await this.documentCodeRepository.find();
   }
 
   async update({

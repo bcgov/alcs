@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationDocumentDto, DOCUMENT_TYPE } from '../../../services/application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { StepComponent } from './step.partial';
@@ -18,6 +19,7 @@ export abstract class FilesStepComponent extends StepComponent {
   DOCUMENT_TYPE = DOCUMENT_TYPE;
 
   protected fileId = '';
+
   protected abstract save(): Promise<void>;
 
   protected constructor(protected applicationDocumentService: ApplicationDocumentService, protected dialog: MatDialog) {
