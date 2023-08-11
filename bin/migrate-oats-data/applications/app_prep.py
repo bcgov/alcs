@@ -216,10 +216,10 @@ def prepare_app_prep_data(app_prep_raw_data_list):
         elif data["alr_change_code"] == ALRChangeCode.NAR.value:
             nar_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.EXC.value:
-            data = mapOatsToAlcsLeg(data)
+            data = mapOatsToAlcsLegislationCode(data)
             exc_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.INC.value:
-            data = mapOatsToAlcsLeg(data)
+            data = mapOatsToAlcsLegislationCode(data)
             inc_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -242,7 +242,7 @@ def mapOatsToAlcsAppPrep(data):
 
     return data
 
-def mapOatsToAlcsLeg(data):
+def mapOatsToAlcsLegislationCode(data):
 
     if data["legislation_code"]:
         data["legislation_code"] = str(
