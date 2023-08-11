@@ -7,7 +7,7 @@ import { ApplicationSubmissionService } from '../../../../../services/applicatio
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { StepComponent } from '../../step.partial';
-import { SoilTableData } from '../soil-table/soil-table.component';
+import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 
 @Component({
   selector: 'app-nfu-proposal',

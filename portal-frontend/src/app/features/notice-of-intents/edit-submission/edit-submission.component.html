@@ -27,7 +27,7 @@
   class="edit-application"
   #cdkStepper
   (selectionChange)="onStepChange($event)"
-  (beforeSwitchStep)="onBeforeSwitchStep($event)"
+  (beforeSwitchStep)="switchStep($event)"
 >
   <cdk-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -35,7 +35,7 @@
       <app-noi-parcel-details
         [$noiSubmission]="$noiSubmission"
         [showErrors]="showValidationErrors"
-        (navigateToStep)="onBeforeSwitchStep($event)"
+        (navigateToStep)="switchStep($event)"
         (componentInitialized)="onParcelDetailsInitialized()"
         (exit)="onExit()"
       ></app-noi-parcel-details>
@@ -48,7 +48,7 @@
         [showErrors]="showValidationErrors"
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
-        (navigateToStep)="onBeforeSwitchStep($event)"
+        (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-primary-contact>
     </div>
@@ -59,7 +59,7 @@
       <app-select-government
         [showErrors]="showValidationErrors"
         [$noiSubmission]="$noiSubmission"
-        (navigateToStep)="onBeforeSwitchStep($event)"
+        (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-select-government>
     </div>
@@ -70,14 +70,25 @@
       <app-land-use
         [$noiSubmission]="$noiSubmission"
         [showErrors]="showValidationErrors"
-        (navigateToStep)="onBeforeSwitchStep($event)"
+        (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-land-use>
     </div>
   </cdk-step>
   <cdk-step label="Proposal">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.Proposal">Proposal</div>
+    <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.Proposal">
+      <app-roso-proposal
+        *ngIf="noiSubmission.typeCode === 'ROSO'"
+        [$noiSubmission]="$noiSubmission"
+        [$noiDocuments]="$noiDocuments"
+        [showErrors]="showValidationErrors"
+        [draftMode]="true"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      >
+      </app-roso-proposal>
+    </div>
   </cdk-step>
   <cdk-step label="Additional Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -90,7 +101,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
-        (navigateToStep)="onBeforeSwitchStep($event)"
+        (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-other-attachments>
     </div>
