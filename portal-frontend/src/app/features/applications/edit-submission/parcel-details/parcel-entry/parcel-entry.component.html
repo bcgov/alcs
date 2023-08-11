@@ -103,6 +103,7 @@
 
     <div>
       <label for="pid">PID <span *ngIf="isCrownLand">(optional)</span></label>
+      <div class="subtext">A unique nine-digit number found on the parcel's Certificate of Title</div>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength="11" mask="000-000-000" />
       </mat-form-field>
@@ -115,14 +116,16 @@
 
     <div class="full-row" *ngIf="isCrownLand">
       <label for="pin">PIN (optional)</label>
+      <div class="subtext">Unique numeric identifier for Crown land parcels</div>
       <mat-form-field class="full-width-input" appearance="outline">
         <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
       </mat-form-field>
     </div>
 
-    <div class="full-row" *ngIf="!isCrownLand">
+    <div *ngIf="!isCrownLand">
       <label for="purchase-date">Parcel Purchase Date</label>
-      <mat-form-field (click)="purchaseDatePicker.open()" class="full-width-input date-picker" appearance="outline">
+      <div class="subtext">Date of the original registered purchase of the parcel.</div>
+      <mat-form-field (click)="purchaseDatePicker.open()" class="date-picker" appearance="outline">
         <input
           id="purchase-date"
           matInput
@@ -143,7 +146,7 @@
       </div>
     </div>
 
-    <div class="full-row">
+    <div>
       <label for="isFarm">Farm Classification</label>
       <div class="subtext">
         As determined by
@@ -181,6 +184,10 @@
 
   <div class="section" *ngIf="enableCertificateOfTitleUpload">
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+    <div class="subtext">
+      Visit <a href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/">BC Land Title & Survey</a> to obtain
+      a recent copy (not older than 1 year) of the Certificate of Title
+    </div>
     <app-file-drag-drop
       id="certificate-of-title-upload"
       [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
