@@ -9,6 +9,8 @@ from common import (
     AlcsAgCapSource,
     log_end,
     log_start,
+    OatsLegislationCodes,
+    AlcsApplicantType,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
@@ -45,6 +47,11 @@ class OatsToAlcsAgCap(Enum):
     S = AlcsAgCap.Secondary.value
     U = AlcsAgCap.Unclassified.value
 
+class OatsLegislationCodes(Enum):
+    SEC_30_1 = AlcsApplicantType.Land_owner.value
+    SEC_29_1 = AlcsApplicantType.LFNG.value
+    SEC_17_3 = AlcsApplicantType.Land_owner.value
+    SEC_17_1 = AlcsApplicantType.LFNG.value
 
 @inject_conn_pool
 def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
@@ -165,7 +172,7 @@ def update_app_prep_records(conn, batch_size, cursor, rows):
         execute_batch(
             cursor,
             get_update_query_for_inc(),
-            exc_data_list,
+            inc_data_list, # sneaky bug
             page_size=batch_size,
         )
 
@@ -209,8 +216,10 @@ def prepare_app_prep_data(app_prep_raw_data_list):
         elif data["alr_change_code"] == ALRChangeCode.NAR.value:
             nar_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.EXC.value:
+            data = mapOatsToAlcsLeg(data)
             exc_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.INC.value:
+            data = mapOatsToAlcsLeg(data)
             inc_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -233,6 +242,14 @@ def mapOatsToAlcsAppPrep(data):
 
     return data
 
+def mapOatsToAlcsLeg(data):
+
+    if data["legislation_code"]:
+        data["legislation_code"] = str(
+            OatsLegislationCodes[data["legislation_code"]].value
+        )
+
+    return data
 
 def get_update_query_for_nfu():
     query = """
@@ -280,7 +297,8 @@ def get_update_query_for_exc():
                     ag_cap_consultant = %(agri_cap_consultant)s,
                     alr_area = %(component_area)s,
                     ag_cap_source = %(capability_source_code)s,
-                    staff_observations = %(staff_comment_observations)s
+                    staff_observations = %(staff_comment_observations)s,
+                    incl_excl_applicant_type = %(legislation_code)s
                     
                 WHERE
                 alcs.application.file_number = %(alr_application_id)s::text;
@@ -297,7 +315,8 @@ def get_update_query_for_inc():
                     ag_cap_consultant = %(agri_cap_consultant)s,
                     alr_area = %(component_area)s,
                     ag_cap_source = %(capability_source_code)s,
-                    staff_observations = %(staff_comment_observations)s
+                    staff_observations = %(staff_comment_observations)s,
+                    incl_excl_applicant_type = %(legislation_code)s
                     
                 WHERE
                 alcs.application.file_number = %(alr_application_id)s::text;
@@ -333,7 +352,7 @@ def map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
 
 def map_basic_field(data):
     if data["capability_source_code"]:
-        data["capability_source_code"] = data["capability_source_code"] = str(
+        data["capability_source_code"] = str(
             OatsToAlcsAgCapSource[data["capability_source_code"]].value
         )
     if data["agri_capability_code"]:
