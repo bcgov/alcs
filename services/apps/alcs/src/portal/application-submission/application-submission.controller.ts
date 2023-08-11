@@ -10,9 +10,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
@@ -140,6 +141,17 @@ export class ApplicationSubmissionController {
         uuid,
         req.user.entity,
       );
+
+    if (
+      !submission.status ||
+      ![
+        SUBMISSION_STATUS.INCOMPLETE.toString(),
+        SUBMISSION_STATUS.WRONG_GOV.toString(),
+        SUBMISSION_STATUS.IN_PROGRESS.toString(),
+      ].includes(submission.status.statusTypeCode)
+    ) {
+      throw new ServiceValidationException('Not allowed to update submission');
+    }
 
     const updatedSubmission = await this.applicationSubmissionService.update(
       submission.uuid,

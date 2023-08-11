@@ -29,6 +29,7 @@ import { ApplicationOwner } from '../application-submission/application-owner/ap
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,
@@ -111,15 +112,8 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    if (
-      ![
-        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-        SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
-      ].includes(
-        applicationSubmission.status.statusTypeCode as SUBMISSION_STATUS,
-      )
-    ) {
-      throw new NotFoundException('Failed to load review');
+    if (applicationSubmission.typeCode === APPLICATION_SUBMISSION_TYPES.TURP) {
+      throw new NotFoundException('Not subject to review');
     }
 
     const localGovernments = await this.localGovernmentService.list();

@@ -6,7 +6,10 @@ import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } fr
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
+import {
+  ApplicationSubmissionDetailedDto,
+  SUBMISSION_STATUS,
+} from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../services/code/code.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
@@ -98,6 +101,15 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
     this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
       this.applicationSubmission = submission;
+      if (
+        submission?.status.code &&
+        ![SUBMISSION_STATUS.IN_PROGRESS, SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(
+          submission?.status.code
+        )
+      ) {
+        this.toastService.showErrorToast('Editing is not allowed. Please contact ALC for more details');
+        this.router.navigate(['/home']);
+      }
     });
   }
 

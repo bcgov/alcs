@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { DEFAULT_NO_STATUS } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
@@ -55,14 +56,20 @@ export class DetailsHeaderComponent {
       }
 
       if (this.showStatus) {
-        this.submissionStatusService.fetchCurrentStatusByFileNumber(application.fileNumber).then(
-          (status) =>
-            (this.currentStatus = {
-              label: status.status.label,
-              backgroundColor: status.status.alcsBackgroundColor,
-              textColor: status.status.alcsColor,
-            })
-        );
+        this.submissionStatusService
+          .fetchCurrentStatusByFileNumber(application.fileNumber, false)
+          .then(
+            (status) =>
+              (this.currentStatus = {
+                label: status.status.label,
+                backgroundColor: status.status.alcsBackgroundColor,
+                textColor: status.status.alcsColor,
+              })
+          )
+          .catch((e) => {
+            console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
+            this.currentStatus = DEFAULT_NO_STATUS;
+          });
       }
     }
   }

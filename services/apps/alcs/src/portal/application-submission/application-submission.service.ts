@@ -7,16 +7,16 @@ import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
@@ -33,10 +33,16 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 const LG_VISIBLE_STATUSES = [
+  SUBMISSION_STATUS.INCOMPLETE,
   SUBMISSION_STATUS.SUBMITTED_TO_LG,
   SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+  SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+  SUBMISSION_STATUS.RECEIVED_BY_ALC,
+  SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+  SUBMISSION_STATUS.ALC_DECISION,
+  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+  SUBMISSION_STATUS.CANCELLED,
 ];
 
 @Injectable()

@@ -4,14 +4,15 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { Application } from '../../alcs/application/application.entity';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { User } from '../../user/user.entity';
 import {
@@ -276,6 +277,14 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationSubmissionDetailedDto,
     );
 
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      new ApplicationSubmission({
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.INCOMPLETE,
+        }),
+      }),
+    );
+
     await controller.update(
       'file-id',
       {
@@ -293,6 +302,33 @@ describe('ApplicationSubmissionController', () => {
       1,
     );
     expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw exception on update if submission is not it in "In Progress" status ', async () => {
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationSubmissionDetailedDto,
+    );
+
+    const promise = controller.update(
+      'file-id',
+      {
+        localGovernmentUuid,
+        applicant,
+      },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceValidationException('Not allowed to update submission'),
+    );
+
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call out to service on submitAlcs if application type is TURP', async () => {
