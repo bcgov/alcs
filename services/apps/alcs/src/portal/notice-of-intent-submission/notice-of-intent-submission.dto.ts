@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
@@ -10,6 +11,7 @@ import {
 } from 'class-validator';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentOwnerDto } from './notice-of-intent-owner/notice-of-intent-owner.dto';
+import { ProposedStructure } from './notice-of-intent-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -151,6 +153,24 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
 
   @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
+
+  @AutoMap(() => Boolean)
+  soilIsRemovingSoilForNewStructure?: boolean;
+
+  @AutoMap(() => String)
+  soilStructureFarmUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialUseReason?: string | null;
+
+  @AutoMap(() => String)
+  soilAgriParcelActivity?: string | null;
+
+  @AutoMap(() => String)
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @AutoMap(() => [ProposedStructure])
+  soilProposedStructures: ProposedStructure[];
 }
 
 export class NoticeOfIntentSubmissionCreateDto {
@@ -335,4 +355,28 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilHasSubmittedNotice?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  soilIsRemovingSoilForNewStructure?: boolean;
+
+  @IsString()
+  @IsOptional()
+  soilStructureFarmUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilAgriParcelActivity?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @IsArray()
+  @IsOptional()
+  soilProposedStructures?: ProposedStructure[];
 }

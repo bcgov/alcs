@@ -198,6 +198,8 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
       this.isSoilStructureResidentialUseReasonVisible = true;
       this.soilStructureResidentialUseReason.setValidators([Validators.required]);
     }
+
+    this.form.markAsDirty()
   }
 
   onStructureRemove(index: number) {
@@ -214,6 +216,8 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
         this.isSoilStructureFarmUseReasonVisible = false;
         this.soilAgriParcelActivity.removeValidators([Validators.required]);
         this.soilStructureFarmUseReason.removeValidators([Validators.required]);
+        this.soilAgriParcelActivity.setValue(null);
+        this.soilStructureFarmUseReason.setValue(null);
       }
     }
 
@@ -225,6 +229,7 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
       if (!isAnyStructureWithTypeExists) {
         this.isSoilStructureResidentialAccessoryUseReasonVisible = false;
         this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
+        this.soilStructureResidentialAccessoryUseReason.setValue(null);
       }
     }
 
@@ -249,12 +254,20 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
       if (!isAnyStructureWithTypeExists) {
         this.isSoilStructureResidentialUseReasonVisible = false;
         this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
+        this.soilStructureResidentialUseReason.setValue(null);
       }
     }
+
+    this.form.markAsDirty()
   }
 
   onStructureAdd() {
     this.proposedStructures.push({ type: null, area: '' });
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
+    this.form.markAsDirty()
+  }
+
+  onAreaChange(){
+    this.form.markAsDirty()
   }
 }
