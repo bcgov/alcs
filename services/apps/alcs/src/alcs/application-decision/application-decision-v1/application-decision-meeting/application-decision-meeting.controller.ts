@@ -112,32 +112,36 @@ export class ApplicationDecisionMeetingController {
       applicationUuid: application.uuid,
     });
 
-    // TODO: Only send email for first discussion create/update:
-    debugger;
-
-    const applicationSubmission =
-      await this.applicationSubmissionService.getOrFailByFileNumber(
-        meeting.applicationFileNumber,
-      );
-
-    const primaryContact = applicationSubmission.owners.find(
-      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
+      meeting.applicationFileNumber,
     );
 
-    const submissionGovernment =
-      await this.emailService.getSubmissionGovernmentOrFail(
-        applicationSubmission,
+    // Send status email for first review discussion
+    if (meetings.length === 1) {
+      const applicationSubmission =
+        await this.applicationSubmissionService.getOrFailByFileNumber(
+          meeting.applicationFileNumber,
+        );
+
+      const primaryContact = applicationSubmission.owners.find(
+        (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
       );
 
-    if (primaryContact) {
-      await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateREVAHtml,
-        status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-        applicationSubmission,
-        government: submissionGovernment,
-        primaryContact,
-        ccGovernment: true,
-      });
+      const submissionGovernment =
+        await this.emailService.getSubmissionGovernmentOrFail(
+          applicationSubmission,
+        );
+
+      if (primaryContact) {
+        await this.emailService.sendStatusEmail({
+          generateStatusHtml: generateREVAHtml,
+          status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+          applicationSubmission,
+          government: submissionGovernment,
+          primaryContact,
+          ccGovernment: true,
+        });
+      }
     }
 
     return this.mapper.map(
