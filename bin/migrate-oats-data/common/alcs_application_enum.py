@@ -48,3 +48,7 @@ class AlcsAgCapSource(Enum):
     BCLI = "BCLI"
     CLI = "CLI"
     On_site = "On-site"
+
+class AlcsApplicantType(Enum):
+    Land_owner = "Land Owner"
+    LFNG = "L/FNG Initiated"
