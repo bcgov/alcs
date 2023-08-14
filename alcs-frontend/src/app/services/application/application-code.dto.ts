@@ -16,5 +16,5 @@ export interface ApplicationMasterCodesDto {
   status: CardStatusDto[];
   region: ApplicationRegionDto[];
   reconsiderationType: ReconsiderationTypeDto[];
-  applicationStatuses: ApplicationStatusDto[];
+  applicationStatusType: ApplicationStatusDto[];
 }
