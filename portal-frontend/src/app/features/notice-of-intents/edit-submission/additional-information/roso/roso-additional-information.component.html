@@ -74,6 +74,105 @@
       </div>
 
       <div class="full-row">
+        <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureFarmUseReason"
+            #soilStructureFarmUseReasonText
+            maxlength="4000"
+            id="soilStructureFarmUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureFarmUseReason.invalid &&
+            (soilStructureFarmUseReason.dirty || soilStructureFarmUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureFarmUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureFarmUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="soilStructureResidentialUseReason"
+          >Describe how the structure is necessary for residential use</label
+        >
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialUseReason"
+            #soilStructureResidentialUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureResidentialUseReason.invalid &&
+            (soilStructureResidentialUseReason.dirty || soilStructureResidentialUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureResidentialUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="soilAgriParcelActivity">Describe the current agricultural activity on the parcel(s)</label>
+        <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilAgriParcelActivity"
+            #soilAgriParcelActivityText
+            maxlength="4000"
+            id="soilAgriParcelActivity"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div *ngIf="soilAgriParcelActivity.invalid && (soilAgriParcelActivity.dirty || soilAgriParcelActivity.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilAgriParcelActivity.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilAgriParcelActivityText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label for="soilStructureResidentialAccessoryUseReason"
+          >Describe the intended use of the residential accessory structure</label
+        >
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialAccessoryUseReason"
+            #structureResidentialAccessoryUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialAccessoryUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+          soilStructureResidentialAccessoryUseReason.invalid &&
+            (soilStructureResidentialAccessoryUseReason.dirty || soilStructureResidentialAccessoryUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialAccessoryUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
         <label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</label>
         <div class="subtext">
           Building plans must be the most up to date, current version and should include (1) the total floor area of all

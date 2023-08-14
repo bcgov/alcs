@@ -82,6 +82,10 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;
   soilIsRemovingSoilForNewStructure: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
@@ -128,4 +132,9 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+  soilIsRemovingSoilForNewStructure?: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
 }

@@ -11,6 +11,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
+import { RosoAdditionalInformationComponent } from './additional-information/roso/roso-additional-information.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
@@ -54,6 +55,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
   @ViewChild(RosoProposalComponent) rosoProposalComponent!: RosoProposalComponent;
+  @ViewChild(RosoAdditionalInformationComponent) rosoAdditionalInfoComponent!: RosoAdditionalInformationComponent;
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
@@ -148,6 +150,11 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       case EditNoiSteps.Proposal:
         if (this.rosoProposalComponent) {
           await this.rosoProposalComponent.onSave();
+        }
+        break;
+      case EditNoiSteps.ExtraInfo:
+        if (this.rosoAdditionalInfoComponent) {
+          await this.rosoAdditionalInfoComponent.onSave();
         }
         break;
       default:

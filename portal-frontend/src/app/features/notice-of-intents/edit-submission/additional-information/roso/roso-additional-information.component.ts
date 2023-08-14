@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionUpdateDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
@@ -28,9 +29,17 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
   buildingPlans: NoticeOfIntentDocumentDto[] = [];
 
   isRemovingSoilForNewStructure = new FormControl<string | null>(null, [Validators.required]);
+  soilStructureFarmUseReason = new FormControl<string | null>(null);
+  soilStructureResidentialUseReason = new FormControl<string | null>(null);
+  soilAgriParcelActivity = new FormControl<string | null>(null);
+  soilStructureResidentialAccessoryUseReason = new FormControl<string | null>(null);
 
   form = new FormGroup({
     isRemovingSoilForNewStructure: this.isRemovingSoilForNewStructure,
+    soilStructureFarmUseReason: this.soilStructureFarmUseReason,
+    soilStructureResidentialUseReason: this.soilStructureResidentialUseReason,
+    soilAgriParcelActivity: this.soilAgriParcelActivity,
+    soilStructureResidentialAccessoryUseReason: this.soilStructureResidentialAccessoryUseReason,
   });
 
   constructor(
@@ -55,16 +64,16 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
           this.confirmRemovalOfSoil = true;
         }
 
+        // TODO check the structures and set corresponding validators on soil fields
+
         this.form.patchValue({
           isRemovingSoilForNewStructure: formatBooleanToString(noiSubmission.soilIsRemovingSoilForNewStructure),
-          // followUpIds: noiSubmission.soilFollowUpIDs,
-          // purpose: noiSubmission.purpose,
-          // soilTypeRemoved: noiSubmission.soilTypeRemoved,
-          // projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
-          // projectDurationUnit: noiSubmission.soilProjectDurationUnit,
-          // isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
-          // hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
+          soilStructureFarmUseReason: noiSubmission.soilStructureFarmUseReason,
+          soilStructureResidentialUseReason: noiSubmission.soilStructureResidentialUseReason,
+          soilAgriParcelActivity: noiSubmission.soilAgriParcelActivity,
+          soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
         });
+
         if (this.showErrors) {
           this.form.markAllAsTouched();
         }
@@ -80,8 +89,26 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
     await this.save();
   }
 
-  protected save(): Promise<void> {
-    throw new Error('Method not implemented.');
+  protected async save(): Promise<void> {
+    console.log('here')
+    if (this.fileId && this.form.dirty) {
+      const isRemovingSoilForNewStructure = this.isRemovingSoilForNewStructure.getRawValue();
+      const soilStructureFarmUseReason = this.soilStructureFarmUseReason.getRawValue();
+      const soilStructureResidentialUseReason = this.soilStructureResidentialUseReason.getRawValue();
+      const soilAgriParcelActivity = this.soilAgriParcelActivity.getRawValue();
+      const soilStructureResidentialAccessoryUseReason = this.soilStructureResidentialAccessoryUseReason.getRawValue();
+
+      const updateDto: NoticeOfIntentSubmissionUpdateDto = {
+        soilStructureFarmUseReason,
+        soilStructureResidentialUseReason,
+        soilIsRemovingSoilForNewStructure: parseStringToBoolean(isRemovingSoilForNewStructure),
+        soilAgriParcelActivity,
+        soilStructureResidentialAccessoryUseReason,
+      };
+
+      const updatedApp = await this.noticeOfIntentSubmissionService.updatePending(this.submissionUuid, updateDto);
+      this.$noiSubmission.next(updatedApp);
+    }
   }
 
   onChangeIsRemovingSoilForNewStructure(selectedValue: string) {
