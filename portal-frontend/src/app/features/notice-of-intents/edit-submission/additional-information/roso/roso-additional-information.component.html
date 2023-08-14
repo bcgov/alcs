@@ -1,0 +1,108 @@
+<div class="step-description">
+  <h2>Additional Proposal Information</h2>
+  <p>
+    Considerations are subject to
+    <a>FIXME: Section 6 of the ALC Act. </a>
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a href="TODO" target="_blank">FIXME: Removal of Soil</a>
+    </li>
+  </ul>
+</app-warning-banner>
+
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="is-new-structure"> Are you removing soil in order to build a structure? </label>
+      <div class="subtext">Structures include farm buildings, residences, or accessory buildings</div>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeIsRemovingSoilForNewStructure($event)"
+          id="is-new-structure"
+          [formControl]="isRemovingSoilForNewStructure"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isRemovingSoilForNewStructure.invalid &&
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isRemovingSoilForNewStructure.invalid &&
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-hint class="subtext"
+        >Note: The form will be updated with additional required questions if you are building a structure</mat-hint
+      >
+    </div>
+
+    <ng-container *ngIf="confirmRemovalOfSoil">
+      <div class="full-row">
+        <label for=""> Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
+      </div>
+
+      <div class="full-row">
+        <app-warning-banner>
+          Selected proposed structure type(s) will determine the proposal questions below
+        </app-warning-banner>
+      </div>
+
+      <div class="full-row">
+        <label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</label>
+        <div class="subtext">
+          Building plans must be the most up to date, current version and should include (1) the total floor area of all
+          levels and the intended use; and (2) interior and exterior views
+        </div>
+        <app-file-drag-drop
+          id="detailed-building-plans"
+          [uploadedFiles]="buildingPlans"
+          (uploadFiles)="attachFile($event, DOCUMENT.BUILDING_PLAN)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="confirmRemovalOfSoil"
+          [allowMultiple]="true"
+          [disabled]="!confirmRemovalOfSoil"
+        ></app-file-drag-drop>
+      </div>
+    </ng-container>
+  </div>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

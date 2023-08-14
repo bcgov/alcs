@@ -81,6 +81,7 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;
+  soilIsRemovingSoilForNewStructure: boolean | null;
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
