@@ -31,6 +31,7 @@ export interface NoticeOfIntentSubmissionDto {
   applicant: string;
   localGovernmentUuid: string;
   type: string;
+  typeCode: string;
   status: NoticeOfIntentSubmissionStatusDto;
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
   owners: NoticeOfIntentOwnerDto[];
@@ -52,6 +53,34 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   westLandUseType: string;
   westLandUseTypeDescription: string;
   primaryContactOwnerUuid: string | null;
+
+  //Soil Fields
+  soilIsFollowUp: boolean | null;
+  soilFollowUpIDs: string | null;
+  soilTypeRemoved: string | null;
+  soilReduceNegativeImpacts: string | null;
+  soilToRemoveVolume: number | null;
+  soilToRemoveArea: number | null;
+  soilToRemoveMaximumDepth: number | null;
+  soilToRemoveAverageDepth: number | null;
+  soilAlreadyRemovedVolume: number | null;
+  soilAlreadyRemovedArea: number | null;
+  soilAlreadyRemovedMaximumDepth: number | null;
+  soilAlreadyRemovedAverageDepth: number | null;
+  soilToPlaceVolume: number | null;
+  soilToPlaceArea: number | null;
+  soilToPlaceMaximumDepth: number | null;
+  soilToPlaceAverageDepth: number | null;
+  soilAlreadyPlacedVolume: number | null;
+  soilAlreadyPlacedArea: number | null;
+  soilAlreadyPlacedMaximumDepth: number | null;
+  soilAlreadyPlacedAverageDepth: number | null;
+  soilProjectDurationAmount: number | null;
+  soilProjectDurationUnit?: string | null;
+  soilFillTypeToPlace?: string | null;
+  soilAlternativeMeasures?: string | null;
+  soilIsExtractionOrMining?: boolean;
+  soilHasSubmittedNotice?: boolean;
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
@@ -70,4 +99,32 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   southLandUseTypeDescription?: string | null;
   westLandUseType?: string | null;
   westLandUseTypeDescription?: string | null;
+
+  //Soil Fields
+  soilIsFollowUp?: boolean | null;
+  soilFollowUpIDs?: string | null;
+  soilTypeRemoved?: string | null;
+  soilReduceNegativeImpacts?: string | null;
+  soilToRemoveVolume?: number | null;
+  soilToRemoveArea?: number | null;
+  soilToRemoveMaximumDepth?: number | null;
+  soilToRemoveAverageDepth?: number | null;
+  soilAlreadyRemovedVolume?: number | null;
+  soilAlreadyRemovedArea?: number | null;
+  soilAlreadyRemovedMaximumDepth?: number | null;
+  soilAlreadyRemovedAverageDepth?: number | null;
+  soilToPlaceVolume?: number | null;
+  soilToPlaceArea?: number | null;
+  soilToPlaceMaximumDepth?: number | null;
+  soilToPlaceAverageDepth?: number | null;
+  soilAlreadyPlacedVolume?: number | null;
+  soilAlreadyPlacedArea?: number | null;
+  soilAlreadyPlacedMaximumDepth?: number | null;
+  soilAlreadyPlacedAverageDepth?: number | null;
+  soilProjectDurationAmount?: number | null;
+  soilProjectDurationUnit?: string | null;
+  soilFillTypeToPlace?: string | null;
+  soilAlternativeMeasures?: string | null;
+  soilIsExtractionOrMining?: boolean | null;
+  soilHasSubmittedNotice?: boolean | null;
 }

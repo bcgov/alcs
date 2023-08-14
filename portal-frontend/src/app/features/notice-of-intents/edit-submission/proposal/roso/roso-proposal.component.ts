@@ -3,16 +3,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionUpdateDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { NoticeOfIntentSubmissionService } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
-import { EditApplicationSteps } from '../../edit-submission.component';
-import { FilesStepComponent } from '../../files-step.partial';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
+import { EditNoiSteps } from '../../edit-submission.component';
+import { FilesStepComponent } from '../../files-step.partial';
 
 @Component({
   selector: 'app-roso-proposal',
@@ -20,31 +20,37 @@ import { SoilTableData } from '../../../../../shared/soil-table/soil-table.compo
   styleUrls: ['./roso-proposal.component.scss'],
 })
 export class RosoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
-  currentStep = EditApplicationSteps.Proposal;
+  currentStep = EditNoiSteps.Proposal;
 
   DOCUMENT = DOCUMENT_TYPE;
 
-  proposalMap: ApplicationDocumentDto[] = [];
-  crossSections: ApplicationDocumentDto[] = [];
-  reclamationPlan: ApplicationDocumentDto[] = [];
+  allowMiningUploads = false;
+  requiresNoticeOfWork = false;
+
+  proposalMap: NoticeOfIntentDocumentDto[] = [];
+  crossSections: NoticeOfIntentDocumentDto[] = [];
+  reclamationPlan: NoticeOfIntentDocumentDto[] = [];
+  noticeOfWork: NoticeOfIntentDocumentDto[] = [];
 
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
   followUpIds = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
   areComponentsDirty = false;
+  isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
+  hasSubmittedNotice = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
     isFollowUp: this.isFollowUp,
     followUpIds: this.followUpIds,
     purpose: this.purpose,
     soilTypeRemoved: this.soilTypeRemoved,
-    reduceNegativeImpacts: this.reduceNegativeImpacts,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
+    isExtractionOrMining: this.isExtractionOrMining,
+    hasSubmittedNotice: this.hasSubmittedNotice,
   });
 
   private submissionUuid = '';
@@ -53,45 +59,50 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
   constructor(
     private router: Router,
-    private applicationService: ApplicationSubmissionService,
-    applicationDocumentService: ApplicationDocumentService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     dialog: MatDialog
   ) {
-    super(applicationDocumentService, dialog);
+    super(noticeOfIntentDocumentService, dialog);
   }
 
   ngOnInit(): void {
-    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((applicationSubmission) => {
-      if (applicationSubmission) {
-        this.fileId = applicationSubmission.fileNumber;
-        this.submissionUuid = applicationSubmission.uuid;
+    this.$noiSubmission.pipe(takeUntil(this.$destroy)).subscribe((noiSubmission) => {
+      if (noiSubmission) {
+        this.fileId = noiSubmission.fileNumber;
+        this.submissionUuid = noiSubmission.uuid;
 
         this.alreadyRemovedTableData = {
-          volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
-          area: applicationSubmission.soilAlreadyRemovedArea ?? 0,
-          averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0,
-          maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
+          volume: noiSubmission.soilAlreadyRemovedVolume ?? 0,
+          area: noiSubmission.soilAlreadyRemovedArea ?? 0,
+          averageDepth: noiSubmission.soilAlreadyRemovedAverageDepth ?? 0,
+          maximumDepth: noiSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
         };
 
         this.removalTableData = {
-          volume: applicationSubmission.soilToRemoveVolume ?? undefined,
-          area: applicationSubmission.soilToRemoveArea ?? undefined,
-          averageDepth: applicationSubmission.soilToRemoveAverageDepth ?? undefined,
-          maximumDepth: applicationSubmission.soilToRemoveMaximumDepth ?? undefined,
+          volume: noiSubmission.soilToRemoveVolume ?? undefined,
+          area: noiSubmission.soilToRemoveArea ?? undefined,
+          averageDepth: noiSubmission.soilToRemoveAverageDepth ?? undefined,
+          maximumDepth: noiSubmission.soilToRemoveMaximumDepth ?? undefined,
         };
 
-        if (applicationSubmission.soilIsFollowUp) {
+        if (noiSubmission.soilIsFollowUp) {
           this.followUpIds.enable();
         }
 
+        if (noiSubmission.soilIsExtractionOrMining) {
+          this.allowMiningUploads = true;
+        }
+
         this.form.patchValue({
-          isFollowUp: formatBooleanToString(applicationSubmission.soilIsFollowUp),
-          followUpIds: applicationSubmission.soilFollowUpIDs,
-          purpose: applicationSubmission.purpose,
-          soilTypeRemoved: applicationSubmission.soilTypeRemoved,
-          reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
-          projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
-          projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
+          isFollowUp: formatBooleanToString(noiSubmission.soilIsFollowUp),
+          followUpIds: noiSubmission.soilFollowUpIDs,
+          purpose: noiSubmission.purpose,
+          soilTypeRemoved: noiSubmission.soilTypeRemoved,
+          projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
+          projectDurationUnit: noiSubmission.soilProjectDurationUnit,
+          isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
+          hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -99,10 +110,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       }
     });
 
-    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+    this.$noiDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
       this.reclamationPlan = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
+      this.noticeOfWork = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK);
     });
   }
 
@@ -116,12 +128,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
-      const soilReduceNegativeImpacts = this.reduceNegativeImpacts.getRawValue();
+      const isExtractionOrMining = this.isExtractionOrMining.getRawValue();
+      const hasSubmittedNotice = this.hasSubmittedNotice.getRawValue();
 
-      const updateDto: ApplicationSubmissionUpdateDto = {
+      const updateDto: NoticeOfIntentSubmissionUpdateDto = {
         purpose,
         soilTypeRemoved,
-        soilReduceNegativeImpacts,
         soilIsFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilFollowUpIDs,
         soilToRemoveVolume: this.removalTableData?.volume ?? null,
@@ -136,10 +148,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           ? parseFloat(this.projectDurationAmount.value)
           : null,
         soilProjectDurationUnit: this.projectDurationUnit.value,
+        soilIsExtractionOrMining: parseStringToBoolean(isExtractionOrMining),
+        soilHasSubmittedNotice: parseStringToBoolean(hasSubmittedNotice),
       };
 
-      const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
-      this.$applicationSubmission.next(updatedApp);
+      const updatedApp = await this.noticeOfIntentSubmissionService.updatePending(this.submissionUuid, updateDto);
+      this.$noiSubmission.next(updatedApp);
     }
   }
 
@@ -152,7 +166,15 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
+  onChangeIsExtractionOrMining(selectedValue: string) {
+    this.allowMiningUploads = selectedValue === 'true';
+  }
+
   markDirty() {
     this.areComponentsDirty = true;
+  }
+
+  onChangeNoticeOfWork(selectedValue: string) {
+    this.requiresNoticeOfWork = selectedValue === 'true';
   }
 }

@@ -16,7 +16,7 @@ import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { formatBooleanToYesNoString } from '../../../../../shared/utils/boolean-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
-import { SoilTableData } from '../soil-table/soil-table.component';
+import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
 
 @Component({
