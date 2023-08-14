@@ -12,7 +12,7 @@ export enum SUBMISSION_STATUS {
   RECEIVED_BY_ALC = 'RECA', //Received By ALC
   IN_REVIEW_BY_ALC = 'REVA', //Under Review by ALC
   ALC_DECISION = 'ALCD', // Decision Released
-  REFUSED_TO_FORWARD_LG = 'RFFG', //new L/FNG Refused to Forward
+  REFUSED_TO_FORWARD_LG = 'RFFG', //L/FNG Refused to Forward
   CANCELLED = 'CANC',
 }
 
