@@ -251,6 +251,19 @@ def mapOatsToAlcsLegislationCode(data):
 
     return data
 
+def get_update_query(unique_fields):
+    query = """
+                UPDATE alcs.application
+                SET ag_cap = %(agri_capability_code)s,
+                    ag_cap_map = %(agri_cap_map)s,
+                    ag_cap_consultant = %(agri_cap_consultant)s,
+                    alr_area = %(component_area)s,
+                    ag_cap_source = %(capability_source_code)s,
+                    staff_observations = %(staff_comment_observations)s
+                    {unique_fields}
+                WHERE
+                alcs.application.file_number = %(alr_application_id)s::TEXT;
+"""
 def get_update_query_for_nfu():
     query = """
                 UPDATE alcs.application
