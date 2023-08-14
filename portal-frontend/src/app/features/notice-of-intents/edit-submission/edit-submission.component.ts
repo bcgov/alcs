@@ -15,6 +15,7 @@ import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNoiSteps {
@@ -52,6 +53,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
+  @ViewChild(RosoProposalComponent) rosoProposalComponent!: RosoProposalComponent;
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
@@ -119,7 +121,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
   }
 
-  async onBeforeSwitchStep(index: number) {
+  async switchStep(index: number) {
     // navigation to url will cause step change based on the index (index starts from 0)
     // The save will be triggered using canDeactivate guard
     this.showValidationErrors = this.customStepper.selectedIndex === EditNoiSteps.ReviewAndSubmit;
@@ -142,6 +144,11 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         break;
       case EditNoiSteps.Attachments:
         await this.otherAttachmentsComponent.onSave();
+        break;
+      case EditNoiSteps.Proposal:
+        if (this.rosoProposalComponent) {
+          await this.rosoProposalComponent.onSave();
+        }
         break;
       default:
         this.toastService.showErrorToast('Error updating notice of intent.');

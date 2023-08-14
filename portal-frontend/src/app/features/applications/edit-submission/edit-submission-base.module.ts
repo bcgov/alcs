@@ -28,7 +28,6 @@ import { NfuProposalComponent } from './proposal/nfu-proposal/nfu-proposal.compo
 import { PfrsProposalComponent } from './proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from './proposal/pofo-proposal/pofo-proposal.component';
 import { RosoProposalComponent } from './proposal/roso-proposal/roso-proposal.component';
-import { SoilTableComponent } from './proposal/soil-table/soil-table.component';
 import { SubdProposalComponent } from './proposal/subd-proposal/subd-proposal.component';
 import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
@@ -59,7 +58,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     PfrsProposalComponent,
     NaruProposalComponent,
     ChangeSubtypeConfirmationDialogComponent,
-    SoilTableComponent,
     ExclProposalComponent,
     InclProposalComponent,
   ],
@@ -97,7 +95,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     PofoProposalComponent,
     PfrsProposalComponent,
     NaruProposalComponent,
-    SoilTableComponent,
     ExclProposalComponent,
     InclProposalComponent,
   ],

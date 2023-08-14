@@ -13,7 +13,7 @@ import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
-import { SoilTableData } from '../soil-table/soil-table.component';
+import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 
 @Component({
   selector: 'app-pfrs-proposal',

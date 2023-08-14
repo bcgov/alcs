@@ -19,11 +19,10 @@ import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-int
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
-import { ApplicationSubmissionUpdateDto } from '../application-submission/application-submission.dto';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   NoticeOfIntentSubmissionDetailedDto,
   NoticeOfIntentSubmissionDto,
@@ -131,6 +130,7 @@ export class NoticeOfIntentSubmissionService {
       updateDto.localGovernmentUuid;
 
     this.setLandUseFields(noticeOfIntentSubmission, updateDto);
+    await this.setSoilFields(noticeOfIntentSubmission, updateDto);
 
     await this.noticeOfIntentSubmissionRepository.save(
       noticeOfIntentSubmission,
@@ -172,6 +172,131 @@ export class NoticeOfIntentSubmissionService {
       updateDto.westLandUseTypeDescription;
 
     return noticeOfIntentSubmission;
+  }
+
+  private async setSoilFields(
+    noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    updateDto: NoticeOfIntentSubmissionUpdateDto,
+  ) {
+    noticeOfIntentSubmission.soilIsFollowUp = filterUndefined(
+      updateDto.soilIsFollowUp,
+      noticeOfIntentSubmission.soilIsFollowUp,
+    );
+    noticeOfIntentSubmission.soilFollowUpIDs = filterUndefined(
+      updateDto.soilFollowUpIDs,
+      noticeOfIntentSubmission.soilFollowUpIDs,
+    );
+    noticeOfIntentSubmission.soilTypeRemoved = filterUndefined(
+      updateDto.soilTypeRemoved,
+      noticeOfIntentSubmission.soilTypeRemoved,
+    );
+    noticeOfIntentSubmission.soilReduceNegativeImpacts = filterUndefined(
+      updateDto.soilReduceNegativeImpacts,
+      noticeOfIntentSubmission.soilReduceNegativeImpacts,
+    );
+    noticeOfIntentSubmission.soilToRemoveVolume = filterUndefined(
+      updateDto.soilToRemoveVolume,
+      noticeOfIntentSubmission.soilToRemoveVolume,
+    );
+    noticeOfIntentSubmission.soilToRemoveArea = filterUndefined(
+      updateDto.soilToRemoveArea,
+      noticeOfIntentSubmission.soilToRemoveArea,
+    );
+    noticeOfIntentSubmission.soilToRemoveMaximumDepth = filterUndefined(
+      updateDto.soilToRemoveMaximumDepth,
+      noticeOfIntentSubmission.soilToRemoveMaximumDepth,
+    );
+    noticeOfIntentSubmission.soilToRemoveAverageDepth = filterUndefined(
+      updateDto.soilToRemoveAverageDepth,
+      noticeOfIntentSubmission.soilToRemoveAverageDepth,
+    );
+    noticeOfIntentSubmission.soilAlreadyRemovedVolume = filterUndefined(
+      updateDto.soilAlreadyRemovedVolume,
+      noticeOfIntentSubmission.soilAlreadyRemovedVolume,
+    );
+    noticeOfIntentSubmission.soilAlreadyRemovedArea = filterUndefined(
+      updateDto.soilAlreadyRemovedArea,
+      noticeOfIntentSubmission.soilAlreadyRemovedArea,
+    );
+    noticeOfIntentSubmission.soilAlreadyRemovedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedMaximumDepth,
+      noticeOfIntentSubmission.soilAlreadyRemovedMaximumDepth,
+    );
+    noticeOfIntentSubmission.soilAlreadyRemovedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyRemovedAverageDepth,
+      noticeOfIntentSubmission.soilAlreadyRemovedAverageDepth,
+    );
+    noticeOfIntentSubmission.soilToPlaceVolume = filterUndefined(
+      updateDto.soilToPlaceVolume,
+      noticeOfIntentSubmission.soilToPlaceVolume,
+    );
+    noticeOfIntentSubmission.soilToPlaceArea = filterUndefined(
+      updateDto.soilToPlaceArea,
+      noticeOfIntentSubmission.soilToPlaceArea,
+    );
+    noticeOfIntentSubmission.soilToPlaceMaximumDepth = filterUndefined(
+      updateDto.soilToPlaceMaximumDepth,
+      noticeOfIntentSubmission.soilToPlaceMaximumDepth,
+    );
+    noticeOfIntentSubmission.soilToPlaceAverageDepth = filterUndefined(
+      updateDto.soilToPlaceAverageDepth,
+      noticeOfIntentSubmission.soilToPlaceAverageDepth,
+    );
+    noticeOfIntentSubmission.soilAlreadyPlacedVolume = filterUndefined(
+      updateDto.soilAlreadyPlacedVolume,
+      noticeOfIntentSubmission.soilAlreadyPlacedVolume,
+    );
+    noticeOfIntentSubmission.soilAlreadyPlacedArea = filterUndefined(
+      updateDto.soilAlreadyPlacedArea,
+      noticeOfIntentSubmission.soilAlreadyPlacedArea,
+    );
+    noticeOfIntentSubmission.soilAlreadyPlacedMaximumDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedMaximumDepth,
+      noticeOfIntentSubmission.soilAlreadyPlacedMaximumDepth,
+    );
+    noticeOfIntentSubmission.soilAlreadyPlacedAverageDepth = filterUndefined(
+      updateDto.soilAlreadyPlacedAverageDepth,
+      noticeOfIntentSubmission.soilAlreadyPlacedAverageDepth,
+    );
+    noticeOfIntentSubmission.soilProjectDurationAmount = filterUndefined(
+      updateDto.soilProjectDurationAmount,
+      noticeOfIntentSubmission.soilProjectDurationAmount,
+    );
+    noticeOfIntentSubmission.soilProjectDurationUnit = filterUndefined(
+      updateDto.soilProjectDurationUnit,
+      noticeOfIntentSubmission.soilProjectDurationUnit,
+    );
+    noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
+      updateDto.soilFillTypeToPlace,
+      noticeOfIntentSubmission.soilFillTypeToPlace,
+    );
+    noticeOfIntentSubmission.soilAlternativeMeasures = filterUndefined(
+      updateDto.soilAlternativeMeasures,
+      noticeOfIntentSubmission.soilAlternativeMeasures,
+    );
+
+    noticeOfIntentSubmission.soilIsExtractionOrMining = filterUndefined(
+      updateDto.soilIsExtractionOrMining,
+      noticeOfIntentSubmission.soilIsExtractionOrMining,
+    );
+
+    noticeOfIntentSubmission.soilHasSubmittedNotice = filterUndefined(
+      updateDto.soilHasSubmittedNotice,
+      noticeOfIntentSubmission.soilHasSubmittedNotice,
+    );
+
+    if (
+      updateDto.soilHasSubmittedNotice === false ||
+      updateDto.soilIsExtractionOrMining === false
+    ) {
+      const noiUuid = await this.noticeOfIntentService.getUuid(
+        noticeOfIntentSubmission.fileNumber,
+      );
+      await this.noticeOfIntentDocumentService.deleteByType(
+        DOCUMENT_TYPE.NOTICE_OF_WORK,
+        noiUuid,
+      );
+    }
   }
 
   //TODO: Uncomment when adding submitting

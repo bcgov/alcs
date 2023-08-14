@@ -40,6 +40,7 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
+import { SoilTableComponent } from './soil-table/soil-table.component';
 import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
@@ -91,6 +92,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CrownOwnerDialogComponent,
     AllOwnersDialogComponent,
     ParcelOwnersComponent,
+    SoilTableComponent,
   ],
   exports: [
     CommonModule,
@@ -137,6 +139,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CrownOwnerDialogComponent,
     AllOwnersDialogComponent,
     ParcelOwnersComponent,
+    SoilTableComponent,
   ],
 })
 export class SharedModule {

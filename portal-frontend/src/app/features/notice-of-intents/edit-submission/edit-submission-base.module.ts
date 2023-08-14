@@ -16,20 +16,10 @@ import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 @NgModule({
-  declarations: [
-    EditSubmissionComponent,
-    ParcelDetailsComponent,
-    ParcelEntryComponent,
-    ParcelEntryConfirmationDialogComponent,
-    DeleteParcelDialogComponent,
-    PrimaryContactComponent,
-    SelectGovernmentComponent,
-    LandUseComponent,
-    OtherAttachmentsComponent,
-  ],
   imports: [
     CommonModule,
     SharedModule,
@@ -42,6 +32,18 @@ import { SelectGovernmentComponent } from './select-government/select-government
     MatSelectModule,
     MatTableModule,
   ],
+  declarations: [
+    EditSubmissionComponent,
+    ParcelDetailsComponent,
+    ParcelEntryComponent,
+    ParcelEntryConfirmationDialogComponent,
+    DeleteParcelDialogComponent,
+    PrimaryContactComponent,
+    SelectGovernmentComponent,
+    LandUseComponent,
+    OtherAttachmentsComponent,
+    RosoProposalComponent,
+  ],
   exports: [
     EditSubmissionComponent,
     ParcelDetailsComponent,
@@ -52,6 +54,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     SelectGovernmentComponent,
     LandUseComponent,
     OtherAttachmentsComponent,
+    RosoProposalComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

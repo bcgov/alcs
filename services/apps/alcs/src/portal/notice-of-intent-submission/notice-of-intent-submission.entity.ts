@@ -12,6 +12,7 @@ import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 
 @Entity()
@@ -179,6 +180,213 @@ export class NoticeOfIntentSubmission extends Base {
     comment: 'Notice of Intent Type Code',
   })
   typeCode: string;
+
+  //Soil & Fill
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilIsFollowUp: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true, name: 'soil_follow_up_ids' })
+  soilFollowUpIDs: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilTypeRemoved: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilReduceNegativeImpacts: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToRemoveAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyRemovedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyPlacedVolume: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyPlacedArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyPlacedMaximumDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilAlreadyPlacedAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  soilProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilProjectDurationUnit: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilFillTypeToPlace: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilAlternativeMeasures: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilIsExtractionOrMining: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilHasSubmittedNotice: boolean | null;
 
   @AutoMap(() => NoticeOfIntent)
   @ManyToOne(() => NoticeOfIntent)
