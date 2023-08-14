@@ -57,7 +57,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
         this.populateLocalGovernment(noiSubmission.localGovernmentUuid);
 
         this.needsAuthorizationLetter =
-          !(this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT) &&
+          this.primaryContact?.type.code !== OWNER_TYPE.GOVERNMENT &&
           !(
             noiSubmission.owners.length === 1 &&
             (noiSubmission.owners[0].type.code === OWNER_TYPE.INDIVIDUAL ||
