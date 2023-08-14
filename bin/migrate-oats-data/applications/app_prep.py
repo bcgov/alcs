@@ -252,6 +252,7 @@ def mapOatsToAlcsLegislationCode(data):
     return data
 
 def get_update_query(unique_fields):
+    # unique_fields takes input from called function and appends to query
     query = """
                 UPDATE alcs.application
                 SET ag_cap = %(agri_capability_code)s,
@@ -271,100 +272,37 @@ def get_update_query(unique_fields):
     return query.format(unique_fields=unique_fields)
 
 def get_update_query_for_nfu():
-    # query = """
-    #             UPDATE alcs.application
-    #             SET ag_cap = %(agri_capability_code)s,
-    #                 ag_cap_map = %(agri_cap_map)s,
-    #                 ag_cap_consultant = %(agri_cap_consultant)s,
-    #                 alr_area = %(component_area)s,
-    #                 ag_cap_source = %(capability_source_code)s,
-    #                 nfu_use_type = %(nonfarm_use_type_code)s,
-    #                 nfu_use_sub_type = %(nonfarm_use_subtype_code)s,
-    #                 proposal_end_date = %(nonfarm_use_end_date)s,
-    #                 staff_observations = %(staff_comment_observations)s
-    #             WHERE
-    #             alcs.application.file_number = %(alr_application_id)s::text;
-    # """
-    # return query
-    unique_fields =",\n                    nfu_use_type = %(nonfarm_use_type_code)s,\n                    nfu_use_sub_type = %(nonfarm_use_subtype_code)s,\n                    proposal_end_date = %(nonfarm_use_end_date)s"
+    unique_fields = """,
+            nfu_use_type = %(nonfarm_use_type_code)s,
+            nfu_use_sub_type = %(nonfarm_use_subtype_code)s,
+            proposal_end_date = %(nonfarm_use_end_date)s"""
     return get_update_query(unique_fields)
-
 
 def get_update_query_for_nar():
     # naruSubtype is a part of submission, import there
-    # query = """
-    #             UPDATE alcs.application
-    #             SET ag_cap = %(agri_capability_code)s,
-    #                 ag_cap_map = %(agri_cap_map)s,
-    #                 ag_cap_consultant = %(agri_cap_consultant)s,
-    #                 alr_area = %(component_area)s,
-    #                 ag_cap_source = %(capability_source_code)s,
-    #                 proposal_end_date = %(rsdntl_use_end_date)s,
-    #                 staff_observations = %(staff_comment_observations)s
-    #             WHERE
-    #             alcs.application.file_number = %(alr_application_id)s::text;
-    # """
-    # return query
-    unique_fields = ",\n                    proposal_end_date = %(rsdntl_use_end_date)s"
+    unique_fields = """,
+            proposal_end_date = %(rsdntl_use_end_date)s"""
     return get_update_query(unique_fields)
 
 
 def get_update_query_for_exc():
     # TODO Will be finalized in ALCS-834.
     # exclsn_app_type_code is out of scope. It is a part of submission
-
-    # query = """
-    #             UPDATE alcs.application
-    #             SET ag_cap = %(agri_capability_code)s,
-    #                 ag_cap_map = %(agri_cap_map)s,
-    #                 ag_cap_consultant = %(agri_cap_consultant)s,
-    #                 alr_area = %(component_area)s,
-    #                 ag_cap_source = %(capability_source_code)s,
-    #                 staff_observations = %(staff_comment_observations)s,
-    #                 incl_excl_applicant_type = %(legislation_code)s
-                    
-    #             WHERE
-    #             alcs.application.file_number = %(alr_application_id)s::text;
-    # """
-    # return query
-    unique_fields = ",\n                    incl_excl_applicant_type = %(legislation_code)s"
+    unique_fields = """,
+            incl_excl_applicant_type = %(legislation_code)s"""
     return get_update_query(unique_fields)
 
 
 def get_update_query_for_inc():
     # TODO Will be finalized in ALCS-834.
-    # query = """
-    #             UPDATE alcs.application
-    #             SET ag_cap = %(agri_capability_code)s,
-    #                 ag_cap_map = %(agri_cap_map)s,
-    #                 ag_cap_consultant = %(agri_cap_consultant)s,
-    #                 alr_area = %(component_area)s,
-    #                 ag_cap_source = %(capability_source_code)s,
-    #                 staff_observations = %(staff_comment_observations)s,
-    #                 incl_excl_applicant_type = %(legislation_code)s
-                    
-    #             WHERE
-    #             alcs.application.file_number = %(alr_application_id)s::text;
-    # """
-    # return query
-    unique_fields = ",\n                    incl_excl_applicant_type = %(legislation_code)s"
+    unique_fields = """,
+            incl_excl_applicant_type = %(legislation_code)s"""
     return get_update_query(unique_fields)
 
 
 def get_update_query_for_other():
-    # query = """
-    #             UPDATE alcs.application
-    #             SET ag_cap = %(agri_capability_code)s,
-    #                 ag_cap_map = %(agri_cap_map)s,
-    #                 ag_cap_consultant = %(agri_cap_consultant)s,
-    #                 alr_area = %(component_area)s,
-    #                 ag_cap_source = %(capability_source_code)s,
-    #                 staff_observations = %(staff_comment_observations)s
-    #             WHERE
-    #             alcs.application.file_number = %(alr_application_id)s::text;
-    # """
-    # return query
-    unique_fields = ""
+    # leaving blank insert for now
+    unique_fields = """"""
     return get_update_query(unique_fields)
 
 def map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
