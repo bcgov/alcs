@@ -17,6 +17,7 @@ import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting/notice-of-
 import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
 import { NoticeOfIntentMeeting } from './notice-of-intent-meeting/notice-of-intent-meeting.entity';
 import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
+import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
@@ -41,6 +42,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     DocumentModule,
     CodeModule,
     LocalGovernmentModule,
+    NoticeOfIntentSubmissionStatusModule,
   ],
   providers: [
     NoticeOfIntentService,

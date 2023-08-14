@@ -11,10 +11,10 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 
@@ -83,6 +83,30 @@ export class NoticeOfIntent extends Base {
     nullable: true,
   })
   feePaidDate: Date | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  feeAmount?: number | null;
 
   @AutoMap()
   @Column({

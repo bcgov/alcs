@@ -9,9 +9,9 @@ import {
   IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
-import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { LocalGovernmentDto } from '../local-government/local-government.dto';
 
 export class NoticeOfIntentSubtypeDto extends BaseCodeDto {
   @AutoMap()
@@ -68,6 +68,16 @@ export class NoticeOfIntentDto {
   region: ApplicationRegionDto;
 
   feePaidDate?: number;
+
+  @AutoMap(() => Boolean)
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  feeAmount?: number | null;
+
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -95,6 +105,18 @@ export class UpdateNoticeOfIntentDto {
   @IsOptional()
   @IsNumber()
   feePaidDate?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  feeWaived?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  feeSplitWithLg?: boolean | null;
+
+  @IsOptional()
+  @IsNumber()
+  feeAmount?: number | null;
 
   @IsOptional()
   @IsNumber()

@@ -26,6 +26,9 @@ export interface NoticeOfIntentDto {
 
   dateSubmittedToAlc?: number;
   feePaidDate?: number;
+  feeWaived?: boolean | null;
+  feeSplitWithLg?: boolean | null;
+  feeAmount?: string;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -42,6 +45,9 @@ export interface NoticeOfIntentDto {
 export interface UpdateNoticeOfIntentDto {
   dateSubmittedToAlc?: number;
   feePaidDate?: number;
+  feeWaived?: boolean | null;
+  feeSplitWithLg?: boolean | null;
+  feeAmount?: number | null;
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
