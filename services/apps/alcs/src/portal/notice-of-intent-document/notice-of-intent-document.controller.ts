@@ -111,6 +111,17 @@ export class NoticeOfIntentDocumentController {
     return {};
   }
 
+  @Post('/delete-files')
+  async deleteMany(@Body() fileUuids: string[]) {
+    //TODO: How do we know which documents applicant can delete?
+    // await this.applicationSubmissionService.verifyAccess(
+    //   document.applicationUuid,
+    //   req.user.entity,
+    // );
+    await this.noticeOfIntentDocumentService.deleteMany(fileUuids);
+    return {};
+  }
+
   @Post('/application/:uuid/attachExternal')
   async attachExternalDocument(
     @Param('uuid') fileNumber: string,

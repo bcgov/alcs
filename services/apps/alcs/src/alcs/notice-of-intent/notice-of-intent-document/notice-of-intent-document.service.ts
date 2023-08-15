@@ -9,11 +9,12 @@ import {
   ArrayOverlap,
   FindOptionsRelations,
   FindOptionsWhere,
+  In,
   Repository,
 } from 'typeorm';
 import {
-  DOCUMENT_TYPE,
   DocumentCode,
+  DOCUMENT_TYPE,
 } from '../../../document/document-code.entity';
 import {
   DOCUMENT_SOURCE,
@@ -147,6 +148,21 @@ export class NoticeOfIntentDocumentService {
     await this.noticeOfIntentDocumentRepository.remove(document);
     await this.documentService.softRemove(document.document);
     return document;
+  }
+
+  async deleteMany(noiDocumentUuids: string[]) {
+    const noiDocuments = await this.noticeOfIntentDocumentRepository.find({
+      where: {
+        uuid: In(noiDocumentUuids),
+      },
+      relations: {
+        document: true,
+      },
+    });
+    await this.noticeOfIntentDocumentRepository.remove(noiDocuments);
+    await this.documentService.softRemoveMany(
+      noiDocuments.map((doc) => doc.document),
+    );
   }
 
   async list(fileNumber: string, visibilityFlags?: VISIBILITY_FLAG[]) {

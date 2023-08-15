@@ -285,6 +285,39 @@ export class NoticeOfIntentSubmissionService {
       noticeOfIntentSubmission.soilHasSubmittedNotice,
     );
 
+    noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure =
+      filterUndefined(
+        updateDto.soilIsRemovingSoilForNewStructure,
+        noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure,
+      );
+
+    noticeOfIntentSubmission.soilStructureFarmUseReason = filterUndefined(
+      updateDto.soilStructureFarmUseReason,
+      noticeOfIntentSubmission.soilStructureFarmUseReason,
+    );
+
+    noticeOfIntentSubmission.soilStructureResidentialUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialUseReason,
+        noticeOfIntentSubmission.soilStructureResidentialUseReason,
+      );
+
+    noticeOfIntentSubmission.soilAgriParcelActivity = filterUndefined(
+      updateDto.soilAgriParcelActivity,
+      noticeOfIntentSubmission.soilAgriParcelActivity,
+    );
+
+    noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialAccessoryUseReason,
+        noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason,
+      );
+
+    noticeOfIntentSubmission.soilProposedStructures = filterUndefined(
+      updateDto.soilProposedStructures,
+      noticeOfIntentSubmission.soilProposedStructures,
+    );
+
     if (
       updateDto.soilHasSubmittedNotice === false ||
       updateDto.soilIsExtractionOrMining === false

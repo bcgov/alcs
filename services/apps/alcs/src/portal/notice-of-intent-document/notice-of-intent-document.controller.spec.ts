@@ -85,7 +85,7 @@ describe('NoticeOfIntentDocumentController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call through to delete documents', async () => {
+  it('should call through to delete document', async () => {
     noiDocumentService.delete.mockResolvedValue(mockDocument);
     noiDocumentService.get.mockResolvedValue(mockDocument);
 
@@ -175,5 +175,13 @@ describe('NoticeOfIntentDocumentController', () => {
     });
     expect(res.uploadedBy).toEqual(user.user.entity);
     expect(res.uuid).toEqual(fakeUuid);
+  });
+
+  it('should call through to delete multiple documents', async () => {
+    noiDocumentService.deleteMany.mockResolvedValue();
+
+    await controller.deleteMany(['fake-uuid']);
+
+    expect(noiDocumentService.deleteMany).toHaveBeenCalledTimes(1);
   });
 });

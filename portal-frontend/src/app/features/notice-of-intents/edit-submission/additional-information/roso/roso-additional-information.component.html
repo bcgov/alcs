@@ -1,0 +1,288 @@
+<div class="step-description">
+  <h2>Additional Proposal Information</h2>
+  <p>
+    Considerations are subject to
+    <a>FIXME: Section 6 of the ALC Act. </a>
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a href="TODO" target="_blank">FIXME: Removal of Soil</a>
+    </li>
+  </ul>
+</app-warning-banner>
+
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="is-new-structure"> Are you removing soil in order to build a structure? </label>
+      <div class="subtext">Structures include farm buildings, residences, or accessory buildings</div>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (change)="onChangeIsRemovingSoilForNewStructure($event)"
+          id="is-new-structure"
+          [formControl]="isRemovingSoilForNewStructure"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isRemovingSoilForNewStructure.invalid &&
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isRemovingSoilForNewStructure.invalid &&
+                (isRemovingSoilForNewStructure.dirty || isRemovingSoilForNewStructure.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <mat-hint class="subtext"
+        >Note: The form will be updated with additional required questions if you are building a structure</mat-hint
+      >
+    </div>
+  </div>
+
+  <ng-container *ngIf="confirmRemovalOfSoil">
+    <div class="form-row">
+      <div class="full-row">
+        <label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
+        <table mat-table [dataSource]="structuresSource">
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  [value]="element.type"
+                  placeholder="Please select"
+                  (valueChange)="onChangeStructureType(i, $event)"
+                >
+                  <mat-option *ngFor="let type of STRUCTURE_TYPES" [value]="type">
+                    {{ type }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="area">
+            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <mat-form-field appearance="outline">
+                <input
+                  [(ngModel)]="element.area"
+                  type="text"
+                  matInput
+                  thousandSeparator=","
+                  mask="separator.2"
+                  separatorLimit="9999999999"
+                  min="0.01"
+                  placeholder="Type area"
+                  [ngModelOptions]="{ standalone: true }"
+                  (ngModelChange)="onAreaChange()"
+                />
+                <span matTextSuffix>m<sup>2</sup></span>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <button mat-stroked-button color="accent" (click)="onStructureRemove(i)">Remove</button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <tr class="mat-row no-data" *matNoDataRow>
+            <td class="text-center" colspan="7">
+              No Proposed Structures Entered. Use the button below to add your first structure.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="full-row">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onStructureAdd()"
+          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+        >
+          + Add Structure
+        </button>
+        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
+          At least one structure is required
+        </app-validation-error>
+      </div>
+
+      <div class="full-row">
+        <app-warning-banner>
+          Selected proposed structure type(s) will determine the proposal questions below
+        </app-warning-banner>
+      </div>
+
+      <div class="full-row" *ngIf="isSoilStructureFarmUseReasonVisible">
+        <label for="soilStructureFarmUseReason">Describe how the structure is necessary for farm use</label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureFarmUseReason"
+            #soilStructureFarmUseReasonText
+            maxlength="4000"
+            id="soilStructureFarmUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureFarmUseReason.invalid &&
+            (soilStructureFarmUseReason.dirty || soilStructureFarmUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureFarmUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureFarmUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row" *ngIf="isSoilStructureResidentialUseReasonVisible">
+        <label for="soilStructureResidentialUseReason"
+          >Describe how the structure is necessary for residential use</label
+        >
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialUseReason"
+            #soilStructureResidentialUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureResidentialUseReason.invalid &&
+            (soilStructureResidentialUseReason.dirty || soilStructureResidentialUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureResidentialUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row" *ngIf="isSoilAgriParcelActivityVisible">
+        <label for="soilAgriParcelActivity">Describe the current agricultural activity on the parcel(s)</label>
+        <div class="subtext">Include the area, yields, crop types, and farm equipment size and attachments</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilAgriParcelActivity"
+            #soilAgriParcelActivityText
+            maxlength="4000"
+            id="soilAgriParcelActivity"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="soilAgriParcelActivity.invalid && (soilAgriParcelActivity.dirty || soilAgriParcelActivity.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilAgriParcelActivity.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilAgriParcelActivityText.textLength }}</div>
+      </div>
+
+      <div class="full-row" *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
+        <label for="soilStructureResidentialAccessoryUseReason"
+          >Describe the intended use of the residential accessory structure</label
+        >
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureResidentialAccessoryUseReason"
+            #structureResidentialAccessoryUseReasonText
+            maxlength="4000"
+            id="soilStructureResidentialAccessoryUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureResidentialAccessoryUseReason.invalid &&
+            (soilStructureResidentialAccessoryUseReason.dirty || soilStructureResidentialAccessoryUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureResidentialAccessoryUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row">
+        <label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</label>
+        <div class="subtext">
+          Building plans must be the most up to date, current version and should include (1) the total floor area of all
+          levels and the intended use; and (2) interior and exterior views
+        </div>
+        <app-file-drag-drop
+          id="detailed-building-plans"
+          [uploadedFiles]="buildingPlans"
+          (uploadFiles)="attachFile($event, DOCUMENT.BUILDING_PLAN)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="confirmRemovalOfSoil"
+          [allowMultiple]="true"
+          [disabled]="!confirmRemovalOfSoil"
+        ></app-file-drag-drop>
+      </div>
+    </div>
+  </ng-container>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

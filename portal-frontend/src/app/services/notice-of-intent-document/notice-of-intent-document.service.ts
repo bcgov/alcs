@@ -67,6 +67,18 @@ export class NoticeOfIntentDocumentService {
     }
   }
 
+  async deleteExternalFiles(fileUuids: string[]) {
+    try {
+      this.overlayService.showSpinner();
+      await firstValueFrom(this.httpClient.post(`${this.serviceUrl}/delete-files`, fileUuids));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to delete documents');
+    } finally {
+      this.overlayService.hideSpinner();
+    }
+  }
+
   async update(fileNumber: string | undefined, updateDtos: NoticeOfIntentDocumentUpdateDto[]) {
     try {
       await firstValueFrom(this.httpClient.patch<void>(`${this.serviceUrl}/application/${fileNumber}`, updateDtos));

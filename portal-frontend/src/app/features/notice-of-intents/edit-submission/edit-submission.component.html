@@ -91,7 +91,17 @@
   </cdk-step>
   <cdk-step label="Additional Information">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.ExtraInfo">Additional Information</div>
+    <div *ngIf="noiSubmission && cdkStepper.selectedIndex === steps.ExtraInfo">
+      <app-roso-additional-information
+        *ngIf="noiSubmission.typeCode === 'ROSO'"
+        [$noiSubmission]="$noiSubmission"
+        [$noiDocuments]="$noiDocuments"
+        [showErrors]="showValidationErrors"
+        [draftMode]="true"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      ></app-roso-additional-information>
+    </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>

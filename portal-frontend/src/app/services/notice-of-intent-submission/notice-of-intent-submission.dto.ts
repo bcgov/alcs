@@ -1,3 +1,4 @@
+import { STRUCTURE_TYPES } from '../../features/notice-of-intents/edit-submission/additional-information/roso/roso-additional-information.component';
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
 
@@ -81,6 +82,12 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;
+  soilIsRemovingSoilForNewStructure: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilProposedStructures: ProposedStructure[];
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
@@ -127,4 +134,15 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+  soilIsRemovingSoilForNewStructure?: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilProposedStructures?: ProposedStructure[];
+}
+
+export interface ProposedStructure {
+  type: STRUCTURE_TYPES | null;
+  area: number | null;
 }
