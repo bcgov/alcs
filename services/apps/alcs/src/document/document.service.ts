@@ -2,7 +2,6 @@ import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import {
   GetObjectCommand,
   PutObjectCommand,
-  PutObjectTaggingCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -115,6 +114,10 @@ export class DocumentService {
 
   async softRemove(document: Document) {
     await this.documentRepository.softRemove(document);
+  }
+
+  async softRemoveMany(documents: Document[]) {
+    await this.documentRepository.softRemove(documents);
   }
 
   async getUploadUrl(filePath: string) {

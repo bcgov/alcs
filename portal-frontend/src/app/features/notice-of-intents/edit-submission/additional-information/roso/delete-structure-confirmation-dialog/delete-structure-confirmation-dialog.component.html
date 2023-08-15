@@ -1,0 +1,14 @@
+<div mat-dialog-title>
+  <h4>Delete Structure Type</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <app-warning-banner>
+    <b>Warning:</b> Deleting the structure type can remove some content already saved to this page. <br />
+    Do you want to continue?
+  </app-warning-banner>
+  <div class="controls">
+    <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+    <button mat-flat-button color="primary" (click)="onConfirm()">confirm</button>
+  </div>
+</div>

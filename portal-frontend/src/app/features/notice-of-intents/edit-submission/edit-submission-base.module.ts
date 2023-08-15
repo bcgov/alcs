@@ -19,6 +19,8 @@ import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.compon
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { DeleteStructureConfirmationDialogComponent } from './additional-information/roso/delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
+import { SoilRemovalConfirmationDialogComponent } from './additional-information/roso/soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
 
 @NgModule({
   imports: [
@@ -45,6 +47,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     OtherAttachmentsComponent,
     RosoProposalComponent,
     RosoAdditionalInformationComponent,
+    DeleteStructureConfirmationDialogComponent,
+    SoilRemovalConfirmationDialogComponent,
   ],
   exports: [
     EditSubmissionComponent,
