@@ -26,7 +26,7 @@ export class NaruDetailsComponent {
 
   proposalMap: ApplicationDocumentDto[] = [];
 
-  constructor(private router: Router, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(private applicationDocumentService: ApplicationDocumentService) {}
 
   async openFile(file: ApplicationDocumentDto) {
     await this.applicationDocumentService.download(file.uuid, file.fileName);

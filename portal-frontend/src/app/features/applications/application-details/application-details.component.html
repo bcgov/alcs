@@ -41,10 +41,7 @@
     </div>
     <div class="subheading2 grid-1">
       <span
-        *ngIf="
-          primaryContact?.type?.code !== OWNER_TYPE.CROWN &&
-          primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT
-        "
+        *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
         >Organization (optional)</span
       >
       <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
@@ -242,6 +239,7 @@
     [showEdit]="showEdit"
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-nfu-details>
   <app-tur-details

@@ -102,9 +102,11 @@
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
-    <a *ngFor="let file of proposalMap" (click)="openFile(file)">
-      {{ file.fileName }}
-    </a>
+    <div *ngFor="let file of proposalMap">
+      <a (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
   </div>
 
   <div class="subheading2 grid-1">

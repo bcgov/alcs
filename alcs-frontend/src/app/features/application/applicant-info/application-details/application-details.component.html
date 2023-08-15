@@ -149,6 +149,7 @@
   <app-nfu-details
     *ngIf="submission && applicationType === 'NFUP'"
     [applicationSubmission]="submission"
+    [files]="files"
   ></app-nfu-details>
   <app-tur-details
     *ngIf="submission && applicationType === 'TURP'"
