@@ -429,6 +429,7 @@ export class NoticeOfIntentService {
     existingNoticeOfIntent.typeCode = createDto.typeCode;
     existingNoticeOfIntent.region = region;
     existingNoticeOfIntent.card = new Card();
+    existingNoticeOfIntent.card.typeCode = CARD_TYPE.NOI;
 
     await this.repository.save(existingNoticeOfIntent);
     return this.getByFileNumber(createDto.fileNumber);

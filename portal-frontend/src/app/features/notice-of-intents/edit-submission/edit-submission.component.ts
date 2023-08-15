@@ -62,7 +62,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    private codeService: CodeService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -180,13 +179,8 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   async onSubmit() {
     if (this.noiSubmission) {
-      const government = await this.loadGovernment(this.noiSubmission.localGovernmentUuid);
       this.dialog
-        .open(SubmitConfirmationDialogComponent, {
-          data: {
-            governmentName: government?.name ?? 'selected local / first nation government',
-          },
-        })
+        .open(SubmitConfirmationDialogComponent)
         .beforeClosed()
         .subscribe((didConfirm) => {
           if (didConfirm) {
@@ -204,15 +198,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         await this.router.navigateByUrl(`/notice-of-intent/${submission?.fileNumber}`);
       }
     }
-  }
-
-  private async loadGovernment(uuid: string) {
-    const codes = await this.codeService.loadCodes();
-    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
-    if (localGovernment) {
-      return localGovernment;
-    }
-    return;
   }
 
   private async loadSubmission(fileId: string, reload = false) {

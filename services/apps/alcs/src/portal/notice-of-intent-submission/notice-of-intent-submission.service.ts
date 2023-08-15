@@ -23,6 +23,7 @@ import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
+import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmissionDetailedDto,
   NoticeOfIntentSubmissionDto,
@@ -549,18 +550,20 @@ export class NoticeOfIntentSubmissionService {
     };
   }
 
-  async submitToAlcs(noticeOfIntent: NoticeOfIntentSubmission) {
+  async submitToAlcs(
+    noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
+  ) {
     try {
       const submittedNoi = await this.noticeOfIntentService.submit({
-        fileNumber: noticeOfIntent.fileNumber,
-        applicant: noticeOfIntent.applicant!, //TODO: Remove ! once validation is implemented
-        localGovernmentUuid: noticeOfIntent.localGovernmentUuid!,
-        typeCode: noticeOfIntent.typeCode,
+        fileNumber: noticeOfIntentSubmission.fileNumber,
+        applicant: noticeOfIntentSubmission.applicant,
+        localGovernmentUuid: noticeOfIntentSubmission.localGovernmentUuid,
+        typeCode: noticeOfIntentSubmission.typeCode,
         dateSubmittedToAlc: new Date(),
       });
 
       await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-        submittedNoi.uuid,
+        noticeOfIntentSubmission.uuid,
         NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         submittedNoi.dateSubmittedToAlc,
       );
@@ -569,7 +572,7 @@ export class NoticeOfIntentSubmissionService {
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(
-        `Failed to submit notice of intent: ${noticeOfIntent.fileNumber}`,
+        `Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`,
       );
     }
   }

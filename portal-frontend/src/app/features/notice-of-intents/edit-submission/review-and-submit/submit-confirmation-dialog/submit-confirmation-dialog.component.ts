@@ -9,8 +9,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class SubmitConfirmationDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    protected data: {
-      governmentName: string;
-    }
+    protected data: {}
   ) {}
 }
