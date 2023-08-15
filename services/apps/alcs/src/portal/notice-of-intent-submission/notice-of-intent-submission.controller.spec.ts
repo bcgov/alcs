@@ -12,6 +12,10 @@ import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
 import { User } from '../../user/user.entity';
+import {
+  NoticeOfIntentSubmissionValidatorService,
+  ValidatedNoticeOfIntentSubmission,
+} from './notice-of-intent-submission-validator.service';
 import { NoticeOfIntentSubmissionController } from './notice-of-intent-submission.controller';
 import {
   NoticeOfIntentSubmissionDetailedDto,
@@ -25,6 +29,7 @@ describe('NoticeOfIntentSubmissionController', () => {
   let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
+  let mockNoiValidatorService: DeepMocked<NoticeOfIntentSubmissionValidatorService>;
 
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
@@ -34,6 +39,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockNoiSubmissionService = createMock();
     mockDocumentService = createMock();
     mockLgService = createMock();
+    mockNoiValidatorService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NoticeOfIntentSubmissionController],
@@ -50,6 +56,10 @@ describe('NoticeOfIntentSubmissionController', () => {
         {
           provide: LocalGovernmentService,
           useValue: mockLgService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionValidatorService,
+          useValue: mockNoiValidatorService,
         },
         {
           provide: ClsService,
@@ -272,8 +282,14 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockNoiSubmissionService.getIfCreatorByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
-
-    mockNoiSubmissionService.updateStatus.mockResolvedValue();
+    mockNoiValidatorService.validateSubmission.mockResolvedValue({
+      noticeOfIntentSubmission:
+        new NoticeOfIntentSubmission() as ValidatedNoticeOfIntentSubmission,
+      errors: [],
+    });
+    mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as NoticeOfIntentSubmissionDetailedDto,
+    );
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -282,13 +298,10 @@ describe('NoticeOfIntentSubmissionController', () => {
     });
 
     expect(mockNoiSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
+      2,
     );
     expect(mockNoiSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
-    expect(mockNoiSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockNoiSubmissionService.updateStatus).toHaveBeenCalledWith(
-      undefined,
-      NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-    );
+    expect(mockNoiValidatorService.validateSubmission).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
   });
 });

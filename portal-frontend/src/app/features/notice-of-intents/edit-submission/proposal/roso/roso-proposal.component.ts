@@ -92,6 +92,9 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
         if (noiSubmission.soilIsExtractionOrMining) {
           this.allowMiningUploads = true;
+          this.hasSubmittedNotice.enable();
+        } else {
+          this.hasSubmittedNotice.disable();
         }
 
         this.form.patchValue({
@@ -168,6 +171,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeIsExtractionOrMining(selectedValue: string) {
     this.allowMiningUploads = selectedValue === 'true';
+    if (selectedValue === 'true') {
+      this.hasSubmittedNotice.enable();
+    } else {
+      this.hasSubmittedNotice.disable();
+    }
   }
 
   markDirty() {
