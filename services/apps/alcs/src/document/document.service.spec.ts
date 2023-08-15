@@ -70,7 +70,7 @@ describe('DocumentService', () => {
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 
-  it('should delete from s3 and repo on delete', async () => {
+  it('should delete file from repo on delete', async () => {
     mockRepository.softRemove.mockResolvedValue({} as any);
 
     const documentUuid = 'fake-uuid';
@@ -78,6 +78,20 @@ describe('DocumentService', () => {
     await service.softRemove({
       uuid: documentUuid,
     } as Document);
+
+    expect(mockRepository.softRemove).toHaveBeenCalledTimes(1);
+  });
+
+  it('should delete multiple files from repo on delete', async () => {
+    mockRepository.softRemove.mockResolvedValue({} as any);
+
+    const documentUuid = 'fake-uuid';
+
+    await service.softRemoveMany([
+      {
+        uuid: documentUuid,
+      } as Document,
+    ]);
 
     expect(mockRepository.softRemove).toHaveBeenCalledTimes(1);
   });
