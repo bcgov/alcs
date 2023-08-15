@@ -16,7 +16,12 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 
 export class ProposedStructure {
-  type: 'Lot' | 'Road Dedication' | null;
+  type:
+    | 'Farm Structure'
+    | 'Residential - Principal Residence'
+    | 'Residential - Additional Residence'
+    | 'Residential - Accessory Structure'
+    | null;
   area?: number | null;
 }
 

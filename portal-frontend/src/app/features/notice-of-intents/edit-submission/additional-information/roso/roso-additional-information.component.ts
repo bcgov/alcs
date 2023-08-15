@@ -220,6 +220,8 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
             this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
             await this.save();
+          } else {
+            this.form.controls.isRemovingSoilForNewStructure.setValue('true');
           }
         });
     } else {
