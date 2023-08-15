@@ -29,6 +29,7 @@ type StatusEmailData = {
   government: ApplicationLocalGovernment | null;
   primaryContact?: ApplicationOwner;
   ccGovernment?: boolean;
+  decisionReleaseMaskedDate?: string;
 };
 
 export const appFees = [
@@ -209,6 +210,7 @@ export class EmailService {
         matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
       governmentName: data.government?.name,
       status: status.label,
+      decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
     });
 
     if (data.primaryContact && data.primaryContact.email) {
