@@ -32,6 +32,13 @@
     {{ applicationSubmission.nfuAgricultureSupport }}
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuAgricultureSupport"></app-no-data>
   </div>
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought onto
     the property, including gravel for construction.
