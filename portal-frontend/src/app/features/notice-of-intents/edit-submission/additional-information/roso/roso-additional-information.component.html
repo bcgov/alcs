@@ -61,73 +61,86 @@
         >Note: The form will be updated with additional required questions if you are building a structure</mat-hint
       >
     </div>
+  </div>
 
-    <ng-container *ngIf="confirmRemovalOfSoil">
+  <ng-container *ngIf="confirmRemovalOfSoil">
+    <div class="full-row">
+      <label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
+      <table mat-table [dataSource]="structuresSource">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-form-field appearance="outline">
+              <mat-select
+                [value]="element.type"
+                placeholder="Please select"
+                (valueChange)="onChangeStructureType(i, $event)"
+              >
+                <mat-option *ngFor="let type of STRUCTURE_TYPES" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="area">
+          <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <mat-form-field appearance="outline">
+              <input
+                [(ngModel)]="element.area"
+                type="text"
+                matInput
+                thousandSeparator=","
+                mask="separator.2"
+                separatorLimit="9999999999"
+                min="0.01"
+                placeholder="Type area in square meters"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="onAreaChange()"
+              />
+              <span *ngIf="element.area" matTextSuffix>m<sup>2</sup></span>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-stroked-button color="accent" (click)="onStructureRemove(i)">Remove</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row no-data" *matNoDataRow>
+          <td class="text-center" colspan="7">
+            No Proposed Structures Entered. Use the button below to add your first structure.
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <div class="form-row">
       <div class="full-row">
-        <label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
-        <table mat-table [dataSource]="structuresSource">
-          <ng-container matColumnDef="index">
-            <th mat-header-cell *matHeaderCellDef>#</th>
-            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let element; let i = index">
-              <mat-form-field appearance="outline">
-                <mat-select
-                  [value]="element.type"
-                  placeholder="Please select"
-                  (valueChange)="onChangeStructureType(i, $event)"
-                >
-                  <mat-option *ngFor="let type of STRUCTURE_TYPES" [value]="type">
-                    {{ type }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="area">
-            <th mat-header-cell *matHeaderCellDef>Total Floor Area</th>
-            <td mat-cell *matCellDef="let element; let i = index">
-              <mat-form-field appearance="outline">
-                <input
-                  [(ngModel)]="element.area"
-                  type="text"
-                  matInput
-                  thousandSeparator=","
-                  mask="separator.2"
-                  separatorLimit="9999999999"
-                  min="0.01"
-                  placeholder="Type area in m2"
-                  [ngModelOptions]="{ standalone: true }"
-                  (ngModelChange)="onAreaChange()"
-                />
-                <span *ngIf="element.area" matTextSuffix>m<sup>2</sup></span>
-              </mat-form-field>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef>Action</th>
-            <td mat-cell *matCellDef="let element; let i = index">
-              <button mat-stroked-button color="error" (click)="onStructureRemove(i)">Remove</button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-          <tr class="mat-row no-data" *matNoDataRow>
-            <td class="text-center" colspan="7">
-              No Proposed Structures Entered. Use the button below to add your first structure.
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="full-row">
-        <button mat-stroked-button color="primary" (click)="onStructureAdd()">+ Add Structure</button>
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onStructureAdd()"
+          [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+        >
+          + Add Structure
+        </button>
+        <app-validation-error *ngIf="proposedStructures.length < 1 && showErrors">
+          At least one structure is required
+        </app-validation-error>
       </div>
 
       <div class="full-row">
@@ -256,8 +269,8 @@
           [disabled]="!confirmRemovalOfSoil"
         ></app-file-drag-drop>
       </div>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </form>
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
