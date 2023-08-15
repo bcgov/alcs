@@ -25,7 +25,7 @@ export enum STRUCTURE_TYPES {
 
 type ProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null };
 
-const RESIDENTIAL_STRUCTURE_TYPES = [
+export const RESIDENTIAL_STRUCTURE_TYPES = [
   STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
   STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
   STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
@@ -215,6 +215,7 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
 
             this.confirmRemovalOfSoil = false;
             this.form.reset();
+            this.form.markAsDirty();
             this.form.controls.isRemovingSoilForNewStructure.setValue('false');
             this.proposedStructures = [];
             this.structuresSource = new MatTableDataSource(this.proposedStructures);
