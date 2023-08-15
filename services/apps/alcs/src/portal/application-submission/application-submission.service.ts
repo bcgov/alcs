@@ -7,16 +7,17 @@ import { InjectMapper } from '@automapper/nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
@@ -32,10 +33,16 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 const LG_VISIBLE_STATUSES = [
+  SUBMISSION_STATUS.INCOMPLETE,
   SUBMISSION_STATUS.SUBMITTED_TO_LG,
   SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
   SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+  SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+  SUBMISSION_STATUS.RECEIVED_BY_ALC,
+  SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+  SUBMISSION_STATUS.ALC_DECISION,
+  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+  SUBMISSION_STATUS.CANCELLED,
 ];
 
 @Injectable()
@@ -61,7 +68,8 @@ export class ApplicationSubmissionService {
     @InjectRepository(NaruSubtype)
     private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private fileNumberService: FileNumberService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
     @Inject(forwardRef(() => GenerateSubmissionDocumentService))
     private submissionDocumentGenerationService: GenerateSubmissionDocumentService,
@@ -105,7 +113,7 @@ export class ApplicationSubmissionService {
   }
 
   async create(type: string, createdBy: User, prescribedBody?: string) {
-    const fileNumber = await this.applicationService.generateNextFileNumber();
+    const fileNumber = await this.fileNumberService.generateNextFileNumber();
 
     await this.applicationService.create(
       {
@@ -303,7 +311,7 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async getForGovernment(localGovernment: ApplicationLocalGovernment) {
+  async getForGovernment(localGovernment: LocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
@@ -340,10 +348,7 @@ export class ApplicationSubmissionService {
     );
   }
 
-  async getForGovernmentByUuid(
-    uuid: string,
-    localGovernment: ApplicationLocalGovernment,
-  ) {
+  async getForGovernmentByUuid(uuid: string, localGovernment: LocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
@@ -396,7 +401,7 @@ export class ApplicationSubmissionService {
 
   async getForGovernmentByFileId(
     fileNumber: string,
-    localGovernment: ApplicationLocalGovernment,
+    localGovernment: LocalGovernment,
   ) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
@@ -554,7 +559,7 @@ export class ApplicationSubmissionService {
   async mapToDTOs(
     apps: ApplicationSubmission[],
     user: User,
-    userGovernment?: ApplicationLocalGovernment,
+    userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationService.fetchApplicationTypes();
 
@@ -585,7 +590,7 @@ export class ApplicationSubmissionService {
 
   async mapToDetailedDTO(
     application: ApplicationSubmission,
-    userGovernment?: ApplicationLocalGovernment,
+    userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationService.fetchApplicationTypes();
     const mappedApp = this.mapper.map(

@@ -5,13 +5,6 @@
     </ng-template>
     <ng-container *ngTemplateOutlet="decisionsList"></ng-container>
   </mat-tab>
-  <!-- TODO will be enabled in scope of another ticket -->
-  <!-- <mat-tab>
-    <ng-template mat-tab-label>
-      <h3>Condition Compliance</h3>
-    </ng-template>
-    This is conditions
-  </mat-tab> -->
 </mat-tab-group>
 
 <ng-template #decisionsList>
@@ -156,21 +149,17 @@
                 (save)="onStatsRequiredUpdate(decision.uuid, $event)"
               ></app-inline-boolean>
             </div>
-            <div *ngIf="decision.outcome?.code === 'RESC'">
-              <div class="subheading2">Rescinded Date</div>
-              <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
-              <app-no-data
-                *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"
-              ></app-no-data>
-            </div>
           </div>
 
           <div class="decision-content" *ngIf="decision.outcome?.code === 'RESC'">
+            <div class="subheading2">Rescinded Date</div>
+            <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+            <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+          </div>
+          <div class="decision-content" *ngIf="decision.outcome?.code === 'RESC'">
             <div class="subheading2">Rescinded Comment</div>
             {{ decision.rescindedComment }}
-            <app-no-data
-              *ngIf="decision.rescindedComment === null || decision.rescindedComment === undefined"
-            ></app-no-data>
+            <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
           </div>
 
           <div class="decision-documents decision-content">

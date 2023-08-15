@@ -1,10 +1,10 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-outcome.entity';
 import {
@@ -126,8 +126,8 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((a) =>
             this.mapper.map(
               a.localGovernment,
-              ApplicationLocalGovernment,
-              ApplicationLocalGovernmentDto,
+              LocalGovernment,
+              LocalGovernmentDto,
             ),
           ),
         ),

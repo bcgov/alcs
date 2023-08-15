@@ -29,7 +29,8 @@ export class RevertToDraftDialogComponent {
           status.statusTypeCode !== SUBMISSION_STATUS.ALC_DECISION &&
           status.effectiveDate < Date.now()
       )
-      .sort((a, b) => a.effectiveDate! - b.effectiveDate!);
+      .sort((a, b) => b.status.weight! - a.status.weight!);
+
     if (validStatuses && validStatuses.length > 0) {
       const newStatus = validStatuses[0].status;
       this.mappedType = {

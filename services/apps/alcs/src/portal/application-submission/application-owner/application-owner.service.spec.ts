@@ -9,7 +9,7 @@ import { ApplicationParcel } from '../application-parcel/application-parcel.enti
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
+import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
@@ -17,7 +17,7 @@ describe('ApplicationOwnerService', () => {
   let service: ApplicationOwnerService;
   let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockRepo: DeepMocked<Repository<ApplicationOwner>>;
-  let mockTypeRepo: DeepMocked<Repository<ApplicationOwnerType>>;
+  let mockTypeRepo: DeepMocked<Repository<OwnerType>>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockApplicationservice: DeepMocked<ApplicationSubmissionService>;
 
@@ -40,7 +40,7 @@ describe('ApplicationOwnerService', () => {
           useValue: mockRepo,
         },
         {
-          provide: getRepositoryToken(ApplicationOwnerType),
+          provide: getRepositoryToken(OwnerType),
           useValue: mockTypeRepo,
         },
         {
@@ -80,7 +80,7 @@ describe('ApplicationOwnerService', () => {
 
   it('should load the type and then call save for create', async () => {
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
-    mockTypeRepo.findOneOrFail.mockResolvedValue(new ApplicationOwnerType());
+    mockTypeRepo.findOneOrFail.mockResolvedValue(new OwnerType());
 
     await service.create(
       {

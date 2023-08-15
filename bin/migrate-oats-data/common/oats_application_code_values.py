@@ -28,6 +28,12 @@ class OatsAgriCapabilityCodes(Enum):
     S = "S"
     U = "U"
 
+class OatsLegislationCodes(Enum):
+    SEC_30_1 = "SEC_30_1"
+    SEC_29_1 = "SEC_29_1"
+    SEC_17_3 = "SEC_17_3"
+    SEC_17_1 = "SEC_17_1"
+
 OATS_NFU_SUBTYPES = [
         {"type_key": "AGR", "subtype_key": "1", "value": "Accessory Buildings"},
         {"type_key": "RES", "subtype_key": "2", "value": "Additional Dwelling(s)"},

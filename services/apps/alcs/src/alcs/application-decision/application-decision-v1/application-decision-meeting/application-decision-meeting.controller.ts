@@ -32,7 +32,7 @@ import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 
 import { EmailService } from '../../../../providers/email/email.service';
 import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
-import { SUBMISSION_STATUS } from '../../../../application-submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionService } from '../../../../portal/application-submission/application-submission.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))

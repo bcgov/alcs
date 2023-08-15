@@ -6,6 +6,9 @@ import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
+import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { CodeModule } from '../code/code.module';
+import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { NoticeOfIntentDocumentController } from './notice-of-intent-document/notice-of-intent-document.controller';
 import { NoticeOfIntentDocument } from './notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from './notice-of-intent-document/notice-of-intent-document.service';
@@ -14,6 +17,7 @@ import { NoticeOfIntentMeetingType } from './notice-of-intent-meeting/notice-of-
 import { NoticeOfIntentMeetingController } from './notice-of-intent-meeting/notice-of-intent-meeting.controller';
 import { NoticeOfIntentMeeting } from './notice-of-intent-meeting/notice-of-intent-meeting.entity';
 import { NoticeOfIntentMeetingService } from './notice-of-intent-meeting/notice-of-intent-meeting.service';
+import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
@@ -27,6 +31,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
       NoticeOfIntent,
       NoticeOfIntentMeeting,
       NoticeOfIntentMeetingType,
+      NoticeOfIntentType,
       NoticeOfIntentSubtype,
       NoticeOfIntentDocument,
       DocumentCode,
@@ -35,6 +40,9 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     CardModule,
     FileNumberModule,
     DocumentModule,
+    CodeModule,
+    LocalGovernmentModule,
+    NoticeOfIntentSubmissionStatusModule,
   ],
   providers: [
     NoticeOfIntentService,
@@ -47,6 +55,10 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     NoticeOfIntentMeetingController,
     NoticeOfIntentDocumentController,
   ],
-  exports: [NoticeOfIntentService, NoticeOfIntentMeetingService],
+  exports: [
+    NoticeOfIntentService,
+    NoticeOfIntentMeetingService,
+    NoticeOfIntentDocumentService,
+  ],
 })
 export class NoticeOfIntentModule {}

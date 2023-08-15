@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationLocalGovernmentService } from '../../application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../local-government/local-government.service';
 import { AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
@@ -23,9 +23,7 @@ import {
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
 export class LocalGovernmentController {
-  constructor(
-    private localGovernmentService: ApplicationLocalGovernmentService,
-  ) {}
+  constructor(private localGovernmentService: LocalGovernmentService) {}
 
   @Get('/:pageIndex/:itemsPerPage')
   @UserRoles(AUTH_ROLE.ADMIN)

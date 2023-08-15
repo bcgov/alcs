@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../application-document/application-document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../shared/dto/document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -114,16 +114,6 @@ export class ApplicationOwnerService {
       this.toastService.showErrorToast('Failed to link Owner, please try again');
     }
     return undefined;
-  }
-
-  sortOwners(a: ApplicationOwnerDto, b: ApplicationOwnerDto) {
-    if (a.displayName < b.displayName) {
-      return -1;
-    }
-    if (a.displayName > b.displayName) {
-      return 1;
-    }
-    return 0;
   }
 
   async uploadCorporateSummary(applicationFileId: string, file: File) {

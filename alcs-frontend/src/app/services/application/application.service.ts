@@ -97,7 +97,7 @@ export class ApplicationService {
     this.regions = codes.region;
     this.$applicationRegions.next(this.regions);
 
-    this.applicationStatuses = codes.applicationStatuses;
+    this.applicationStatuses = codes.applicationStatusType;
     this.$applicationStatuses.next(this.applicationStatuses);
   }
 

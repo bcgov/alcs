@@ -6,11 +6,12 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
-import { ApplicationLocalGovernmentDto } from '../application/application-code/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { LocalGovernmentDto } from '../local-government/local-government.dto';
 
 export class NoticeOfIntentSubtypeDto extends BaseCodeDto {
   @AutoMap()
@@ -41,6 +42,10 @@ export class CreateNoticeOfIntentDto {
   @IsString()
   @IsNotEmpty()
   boardCode: string;
+
+  @IsString()
+  @IsOptional()
+  typeCode: string;
 }
 
 export class NoticeOfIntentDto {
@@ -57,12 +62,22 @@ export class NoticeOfIntentDto {
   card: CardDto;
 
   @AutoMap()
-  localGovernment: ApplicationLocalGovernmentDto;
+  localGovernment: LocalGovernmentDto;
 
   @AutoMap()
   region: ApplicationRegionDto;
 
   feePaidDate?: number;
+
+  @AutoMap(() => Boolean)
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  feeAmount?: number | null;
+
   dateAcknowledgedIncomplete?: number;
   dateReceivedAllItems?: number;
   dateAcknowledgedComplete?: number;
@@ -91,6 +106,18 @@ export class UpdateNoticeOfIntentDto {
   @IsNumber()
   feePaidDate?: number;
 
+  @IsBoolean()
+  @IsOptional()
+  feeWaived?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  feeSplitWithLg?: boolean | null;
+
+  @IsOptional()
+  @IsNumber()
+  feeAmount?: number | null;
+
   @IsOptional()
   @IsNumber()
   dateAcknowledgedIncomplete?: number;
@@ -103,6 +130,10 @@ export class UpdateNoticeOfIntentDto {
   @IsNumber()
   dateAcknowledgedComplete?: number;
 
+  @IsOptional()
+  @IsUUID()
+  localGovernmentUuid?: string;
+
   @IsString()
   @IsOptional()
   summary?: string;
@@ -114,4 +145,14 @@ export class UpdateNoticeOfIntentDto {
   @IsBoolean()
   @IsOptional()
   retroactive?: boolean;
+}
+
+export class CreateNoticeOfIntentServiceDto {
+  fileNumber: string;
+  applicant: string;
+  typeCode: string;
+  dateSubmittedToAlc?: Date | null | undefined;
+  regionCode?: string;
+  localGovernmentUuid?: string;
+  source?: 'ALCS' | 'APPLICANT';
 }

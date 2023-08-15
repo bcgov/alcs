@@ -44,7 +44,6 @@ h6 {
   @include typography-style(rem(13), 700);
 }
 
-a,
 p,
 .body-text {
   @include typography-style(rem(16), 400);
@@ -119,7 +118,6 @@ button {
     @include typography-style(rem(15), 700);
   }
 
-  a,
   p,
   .body-text {
     @include typography-style(rem(16), 400);

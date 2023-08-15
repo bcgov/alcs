@@ -12,7 +12,7 @@ import {
 import {
   ApplicationStatusDto,
   ApplicationSubmissionToSubmissionStatusDto,
-} from '../../application-submission-status/submission-status.dto';
+} from '../../alcs/application/application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';

@@ -1,0 +1,20 @@
+@use '../../../../../../styles/functions' as *;
+@use '../../../../../../styles/colors';
+
+.decision-table {
+  padding: rem(8);
+  margin: rem(12) 0 rem(20) 0;
+  background-color: colors.$grey-light;
+  display: grid;
+  grid-row-gap: rem(24);
+  grid-column-gap: rem(16);
+  grid-template-columns: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(16);
+    margin: rem(24) 0 rem(40) 0;
+    grid-template-columns: 50% 50%;
+  }
+}

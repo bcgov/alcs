@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { SUBMISSION_STATUS } from '../../../application-submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';

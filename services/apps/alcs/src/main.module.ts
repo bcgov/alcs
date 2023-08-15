@@ -23,6 +23,7 @@ import { MainService } from './main.service';
 import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { UserModule } from './user/user.module';
+import { NoticeOfIntentSubmissionModule } from './portal/notice-of-intent-submission/notice-of-intent-submission.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { UserModule } from './user/user.module';
     PortalModule,
     UserModule,
     FileNumberModule,
+    NoticeOfIntentSubmissionModule,
   ],
   controllers: [MainController, LogoutController],
   providers: [

@@ -4,7 +4,7 @@
     <div
       class="uploaded-file"
       [ngClass]="{
-        error: !!file.errorMessage
+        error: !!file.errorMessage && !disabled
       }"
     >
       <a class="file-name" (click)="fileOpened(file.uuid)">{{ file.fileName }}</a>
@@ -27,7 +27,7 @@
   *ngIf="!uploadedFiles.length || allowMultiple"
   [ngClass]="{
     'desktop-file-drag-drop': true,
-    'error-outline': isRequired && showErrors && !uploadedFiles.length,
+    'error-outline': isRequired && !disabled && showErrors && !uploadedFiles.length,
     disabled: disabled
   }"
   dragDropFile
@@ -52,6 +52,6 @@
 >
   Upload File
 </button>
-<app-validation-error *ngIf="isRequired && showErrors && !uploadedFiles.length" errorClass="field-error"
+<app-validation-error *ngIf="isRequired && !disabled && showErrors && !uploadedFiles.length" errorClass="field-error"
   >This file upload is required</app-validation-error
 >

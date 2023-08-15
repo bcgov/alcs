@@ -4,23 +4,25 @@ import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
 import { CardService } from '../../alcs/card/card.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { CodeController } from './code.controller';
 
 describe('CodeController', () => {
   let portalController: CodeController;
-  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockCardService: DeepMocked<CardService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
+  let mockNoiService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
@@ -28,6 +30,7 @@ describe('CodeController', () => {
     mockCardService = createMock();
     mockAppDocService = createMock();
     mockAppSubmissionService = createMock();
+    mockNoiService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -39,7 +42,7 @@ describe('CodeController', () => {
       providers: [
         CodeController,
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLgService,
         },
         {
@@ -59,6 +62,10 @@ describe('CodeController', () => {
           useValue: mockAppSubmissionService,
         },
         {
+          provide: NoticeOfIntentService,
+          useValue: mockNoiService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -69,7 +76,7 @@ describe('CodeController', () => {
     portalController = app.get<CodeController>(CodeController);
 
     mockLgService.listActive.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,
@@ -87,6 +94,7 @@ describe('CodeController', () => {
 
     mockAppDocService.fetchTypes.mockResolvedValue([]);
     mockAppSubmissionService.listNaruSubtypes.mockResolvedValue([]);
+    mockNoiService.listTypes.mockResolvedValue([]);
   });
 
   it('should call out to local government service for fetching codes', async () => {
@@ -105,7 +113,7 @@ describe('CodeController', () => {
   it('should set the matches flag correctly when users guid matches government', async () => {
     const matchingGuid = 'guid';
     mockLgService.listActive.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: 'fake-uuid',
         name: 'fake-name',
         isFirstNation: false,

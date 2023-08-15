@@ -11,9 +11,11 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 
 @Entity()
@@ -40,25 +42,26 @@ export class NoticeOfIntent extends Base {
   @Type(() => Card)
   card: Card | null;
 
-  @ManyToOne(() => ApplicationLocalGovernment)
-  localGovernment: ApplicationLocalGovernment;
+  @ManyToOne(() => LocalGovernment, { nullable: true })
+  localGovernment?: LocalGovernment;
 
   @Index()
   @Column({
     type: 'uuid',
+    nullable: true,
   })
-  localGovernmentUuid: string;
+  localGovernmentUuid?: string;
 
-  @ManyToOne(() => ApplicationRegion)
-  region: ApplicationRegion;
+  @ManyToOne(() => ApplicationRegion, { nullable: true })
+  region?: ApplicationRegion;
+
+  @Column({ nullable: true })
+  regionCode?: string;
 
   @ManyToMany(() => NoticeOfIntentSubtype)
   @JoinTable()
   @AutoMap(() => [NoticeOfIntentSubtype])
   subtype: NoticeOfIntentSubtype[];
-
-  @Column()
-  regionCode: string;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -80,6 +83,30 @@ export class NoticeOfIntent extends Base {
     nullable: true,
   })
   feePaidDate: Date | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeWaived?: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  feeSplitWithLg?: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  feeAmount?: number | null;
 
   @AutoMap()
   @Column({
@@ -108,4 +135,12 @@ export class NoticeOfIntent extends Base {
     nullable: true,
   })
   decisionDate: Date | null;
+
+  @ManyToOne(() => NoticeOfIntentType, {
+    nullable: false,
+  })
+  type: NoticeOfIntentType;
+
+  @Column()
+  typeCode: string;
 }

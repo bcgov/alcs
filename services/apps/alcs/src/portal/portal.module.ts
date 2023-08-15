@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
+import { NoticeOfIntentModule } from '../alcs/notice-of-intent/notice-of-intent.module';
 import { DocumentModule } from '../document/document.module';
 import { PortalApplicationDecisionModule } from './application-decision/application-decision.module';
 import { PortalApplicationDocumentModule } from './application-document/application-document.module';
@@ -11,6 +12,8 @@ import { ApplicationSubmissionReviewModule } from './application-submission-revi
 import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { CodeController } from './code/code.controller';
 import { PortalDocumentModule } from './document/document.module';
+import { PortalNoticeOfIntentDocumentModule } from './notice-of-intent-document/notice-of-intent-document.module';
+import { NoticeOfIntentSubmissionModule } from './notice-of-intent-submission/notice-of-intent-submission.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 
@@ -28,8 +31,12 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
     ApplicationSubmissionDraftModule,
     PdfGenerationModule,
     PortalApplicationDecisionModule,
+    NoticeOfIntentModule,
+    NoticeOfIntentSubmissionModule,
+    PortalNoticeOfIntentDocumentModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
+      { path: 'portal', module: NoticeOfIntentSubmissionModule },
       { path: 'portal', module: ParcelModule },
       { path: 'portal', module: ApplicationSubmissionReviewModule },
       { path: 'portal', module: PortalDocumentModule },
@@ -37,6 +44,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
       { path: 'portal', module: ApplicationSubmissionDraftModule },
       { path: 'portal', module: PdfGenerationModule },
       { path: 'portal', module: PortalApplicationDecisionModule },
+      { path: 'portal', module: PortalNoticeOfIntentDocumentModule },
     ]),
   ],
   controllers: [CodeController],

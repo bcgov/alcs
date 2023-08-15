@@ -16,13 +16,13 @@ import {
   Not,
   Repository,
 } from 'typeorm';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from './application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
-import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -32,10 +32,7 @@ import {
   ApplicationUpdateServiceDto,
   CreateApplicationServiceDto,
 } from './application.dto';
-import {
-  Application,
-  APPLICATION_FILE_NUMBER_SEQUENCE,
-} from './application.entity';
+import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
   ACTIVE_DAYS_START: 55,
@@ -84,7 +81,7 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private fileNumberService: FileNumberService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private applicationMapper: Mapper,
@@ -422,26 +419,6 @@ export class ApplicationService {
         label: true,
       },
     });
-  }
-
-  private async getNextFileNumber() {
-    const fileNumberArr = await this.applicationRepository.query(
-      `select nextval('${APPLICATION_FILE_NUMBER_SEQUENCE}') limit 1`,
-    );
-    return fileNumberArr[0].nextval;
-  }
-
-  async generateNextFileNumber(): Promise<string> {
-    let fileNumber: string;
-    let application: Application | null = null;
-    do {
-      fileNumber = await this.getNextFileNumber();
-      application = await this.applicationRepository.findOne({
-        where: { fileNumber },
-      });
-    } while (application);
-
-    return fileNumber;
   }
 
   async getUuid(fileNumber: string) {

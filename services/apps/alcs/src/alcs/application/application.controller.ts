@@ -32,7 +32,7 @@ import { ApplicationService } from './application.service';
 import { ApplicationSubmissionService } from './application-submission/application-submission.service';
 import { EmailService } from '../../providers/email/email.service';
 import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')

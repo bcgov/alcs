@@ -7,7 +7,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -243,7 +243,7 @@ export class ApplicationSubmissionReviewService {
 
   async mapToDto(
     review: ApplicationSubmissionReview,
-    localGovernment: ApplicationLocalGovernment,
+    localGovernment: LocalGovernment,
   ): Promise<ApplicationSubmissionReviewDto> {
     const mappedReview = await this.mapper.mapAsync(
       review,

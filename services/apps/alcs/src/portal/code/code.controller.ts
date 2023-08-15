@@ -1,8 +1,9 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -11,6 +12,7 @@ import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.se
 import { DocumentTypeDto } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 
 export interface LocalGovernmentDto {
   uuid: string;
@@ -24,11 +26,12 @@ export interface LocalGovernmentDto {
 export class CodeController {
   constructor(
     @InjectMapper() private mapper: Mapper,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private cardService: CardService,
     private applicationSubmissionService: ApplicationSubmissionService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
   @Get()
@@ -36,13 +39,13 @@ export class CodeController {
     const localGovernments = await this.localGovernmentService.listActive();
     const applicationTypes =
       await this.applicationService.fetchApplicationTypes();
-    const applicationDocumentTypes =
-      await this.applicationDocumentService.fetchTypes();
+    const documentTypes = await this.applicationDocumentService.fetchTypes();
     const submissionTypes = await this.cardService.getPortalCardTypes();
+    const noticeOfIntentTypes = await this.noticeOfIntentService.listTypes();
     const naruSubtypes =
       await this.applicationSubmissionService.listNaruSubtypes();
 
-    const mappedDocTypes = applicationDocumentTypes.map((docType) => {
+    const mappedDocTypes = documentTypes.map((docType) => {
       if (docType.portalLabel) {
         docType.label = docType.portalLabel;
       }
@@ -54,14 +57,15 @@ export class CodeController {
         req.user.entity,
       ),
       applicationTypes,
+      noticeOfIntentTypes,
       submissionTypes,
-      applicationDocumentTypes: mappedDocTypes,
+      documentTypes: mappedDocTypes,
       naruSubtypes,
     };
   }
 
   private mapLocalGovernments(
-    governments: ApplicationLocalGovernment[],
+    governments: LocalGovernment[],
     user: User,
   ): LocalGovernmentDto[] {
     return governments.map((government) => ({

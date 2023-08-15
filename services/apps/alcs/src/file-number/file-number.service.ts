@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Application } from '../alcs/application/application.entity';
 import { Covenant } from '../alcs/covenant/covenant.entity';
 import { NoticeOfIntent } from '../alcs/notice-of-intent/notice-of-intent.entity';
+import { FILE_NUMBER_SEQUENCE } from './file-number.constants';
 
 @Injectable()
 export class FileNumberService {
@@ -41,5 +42,12 @@ export class FileNumberService {
       );
     }
     return true;
+  }
+
+  async generateNextFileNumber() {
+    const fileNumberArr = await this.applicationRepo.query(
+      `select nextval('${FILE_NUMBER_SEQUENCE}') limit 1`,
+    );
+    return fileNumberArr[0].nextval;
   }
 }

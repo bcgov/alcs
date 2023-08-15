@@ -4,14 +4,17 @@
   }
 }
 
-h5 {
-  margin-bottom: 4px !important;
+.label-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
 .payment-section {
   display: grid;
-  grid-template-columns: 1fr;
-  margin-top: 16px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 16px !important;
   row-gap: 32px;
   column-gap: 24px;
 }

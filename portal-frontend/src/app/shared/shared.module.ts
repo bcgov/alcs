@@ -31,11 +31,16 @@ import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { CrownOwnerDialogComponent } from './owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { OwnerDialogComponent } from './owner-dialogs/owner-dialog/owner-dialog.component';
+import { AllOwnersDialogComponent } from './owner-dialogs/owners-dialog/all-owners-dialog.component';
+import { ParcelOwnersComponent } from './owner-dialogs/parcel-owners/parcel-owners.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
+import { SoilTableComponent } from './soil-table/soil-table.component';
 import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
@@ -59,6 +64,15 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NgxMaskDirective,
     NgxMaskPipe,
     MatRadioModule,
+    MatDialogModule,
+    MatTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
+    MatIconModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -74,6 +88,11 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CustomStepperComponent,
     MomentPipe,
     PresribedBodyComponent,
+    OwnerDialogComponent,
+    CrownOwnerDialogComponent,
+    AllOwnersDialogComponent,
+    ParcelOwnersComponent,
+    SoilTableComponent,
   ],
   exports: [
     CommonModule,
@@ -116,6 +135,11 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NgxMaskPipe,
     MomentPipe,
     PresribedBodyComponent,
+    OwnerDialogComponent,
+    CrownOwnerDialogComponent,
+    AllOwnersDialogComponent,
+    ParcelOwnersComponent,
+    SoilTableComponent,
   ],
 })
 export class SharedModule {

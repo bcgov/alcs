@@ -6,10 +6,10 @@ import { MJMLParseResults } from 'mjml-core';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { EmailStatus } from './email-status.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -26,7 +26,7 @@ type StatusEmailData = {
   generateStatusHtml: MJMLParseResults;
   status: SUBMISSION_STATUS;
   applicationSubmission: ApplicationSubmission;
-  government: ApplicationLocalGovernment | null;
+  government: LocalGovernment | null;
   primaryContact?: ApplicationOwner;
   ccGovernment?: boolean;
   decisionReleaseMaskedDate?: string;
@@ -50,7 +50,7 @@ export class EmailService {
     private httpService: HttpService,
     @InjectRepository(EmailStatus)
     private repository: Repository<EmailStatus>,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationService: ApplicationService,
   ) {}

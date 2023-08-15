@@ -3,25 +3,25 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import {
   DocumentCode,
   DOCUMENT_TYPE,
 } from '../../document/document-code.entity';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { ApplicationSubmissionStatusType } from '../../application-submission-status/submission-status-type.entity';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
-import { ApplicationOwnerType } from '../application-submission/application-owner/application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import {
   ApplicationSubmissionValidatorService,
@@ -38,14 +38,14 @@ describe('ApplicationSubmissionReviewController', () => {
   let controller: ApplicationSubmissionReviewController;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockAppService: DeepMocked<ApplicationService>;
   let mockEmailService: DeepMocked<EmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
-  const mockLG = new ApplicationLocalGovernment({
+  const mockLG = new LocalGovernment({
     isFirstNation: false,
     isActive: true,
     bceidBusinessGuid: '',
@@ -86,7 +86,7 @@ describe('ApplicationSubmissionReviewController', () => {
           useValue: mockAppSubmissionService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLGService,
         },
         {
@@ -177,35 +177,6 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(res).toBeDefined();
   });
 
-  it('should throw an exception when user loads review that is not complete', async () => {
-    mockLGService.getByGuid.mockResolvedValue(mockLG);
-
-    const reviewWithApp = new ApplicationSubmissionReview({
-      ...applicationReview,
-    });
-
-    mockAppReviewService.getByFileNumber.mockResolvedValue(reviewWithApp);
-    mockAppSubmissionService.getByFileNumber.mockResolvedValue(
-      new ApplicationSubmission({
-        localGovernmentUuid: mockLG.uuid,
-        status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
-          effectiveDate: new Date(1, 1, 1),
-          submissionUuid: 'fake',
-        }),
-      }),
-    );
-
-    const promise = controller.get(fileNumber, {
-      user: {
-        entity: new User({}),
-      },
-    });
-    await expect(promise).rejects.toMatchObject(
-      new Error('Failed to load review'),
-    );
-  });
-
   it('should update the applications status when calling create', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
@@ -253,7 +224,7 @@ describe('ApplicationSubmissionReviewController', () => {
           new ApplicationOwner({
             uuid: 'uuid',
             email: 'fake-email',
-            type: new ApplicationOwnerType(),
+            type: new OwnerType(),
           }),
         ],
         primaryContactOwnerUuid: 'uuid',

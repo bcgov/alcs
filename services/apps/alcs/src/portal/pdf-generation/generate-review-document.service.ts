@@ -6,7 +6,7 @@ import * as config from 'config';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import {
   ApplicationDocument,
@@ -41,7 +41,7 @@ export class GenerateReviewDocumentService {
     @Inject(forwardRef(() => ApplicationSubmissionReviewService))
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 

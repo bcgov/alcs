@@ -24,3 +24,9 @@ export interface ApplicationSubmissionToSubmissionStatusDto {
 
   status: ApplicationStatusDto;
 }
+
+export const DEFAULT_NO_STATUS = {
+  backgroundColor: '#929292',
+  textColor: '#EFEFEF',
+  label: 'No Status',
+};

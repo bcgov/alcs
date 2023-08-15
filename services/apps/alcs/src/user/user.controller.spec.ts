@@ -3,7 +3,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { ApplicationLocalGovernment } from '../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../alcs/local-government/local-government.entity';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
   initMockUserDto,
@@ -147,7 +147,7 @@ describe('UserController', () => {
     const governmentName = 'Government';
 
     mockUserService.getUserLocalGovernment.mockResolvedValue(
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         name: governmentName,
       }),
     );

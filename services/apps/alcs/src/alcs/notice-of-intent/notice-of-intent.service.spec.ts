@@ -9,6 +9,13 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { CodeService } from '../code/code.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
+import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-submission-status/notice-of-intent-status.entity';
+import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -17,14 +24,22 @@ describe('NoticeOfIntentService', () => {
   let service: NoticeOfIntentService;
   let mockCardService: DeepMocked<CardService>;
   let mockRepository: DeepMocked<Repository<NoticeOfIntent>>;
+  let mockTypeRepository: DeepMocked<Repository<NoticeOfIntentType>>;
   let mockSubtypeRepository: DeepMocked<Repository<NoticeOfIntentSubtype>>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
+  let mockCodeService: DeepMocked<CodeService>;
+  let mockSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
     mockRepository = createMock();
     mockFileNumberService = createMock();
     mockSubtypeRepository = createMock();
+    mockTypeRepository = createMock();
+    mockLocalGovernmentService = createMock();
+    mockCodeService = createMock();
+    mockSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -40,6 +55,10 @@ describe('NoticeOfIntentService', () => {
           useValue: mockRepository,
         },
         {
+          provide: getRepositoryToken(NoticeOfIntentType),
+          useValue: mockTypeRepository,
+        },
+        {
           provide: getRepositoryToken(NoticeOfIntentSubtype),
           useValue: mockSubtypeRepository,
         },
@@ -50,6 +69,18 @@ describe('NoticeOfIntentService', () => {
         {
           provide: FileNumberService,
           useValue: mockFileNumberService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLocalGovernmentService,
+        },
+        {
+          provide: CodeService,
+          useValue: mockCodeService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockSubmissionStatusService,
         },
       ],
     }).compile();
@@ -69,6 +100,10 @@ describe('NoticeOfIntentService', () => {
     mockRepository.save.mockResolvedValue(new NoticeOfIntent());
     mockCardService.create.mockResolvedValue(mockCard);
     mockFileNumberService.checkValidFileNumber.mockResolvedValue(true);
+    mockCodeService.fetchRegion.mockResolvedValue(new ApplicationRegion());
+    mockTypeRepository.findOneOrFail.mockResolvedValue(
+      new NoticeOfIntentType(),
+    );
 
     const res = await service.create(
       {
@@ -76,8 +111,8 @@ describe('NoticeOfIntentService', () => {
         fileNumber: '1512311',
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
-        boardCode: 'fake',
-        dateSubmittedToAlc: 0,
+        typeCode: '',
+        dateSubmittedToAlc: new Date(0),
       },
       fakeBoard,
     );
@@ -87,6 +122,7 @@ describe('NoticeOfIntentService', () => {
     expect(mockCardService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockRepository.save.mock.calls[0][0].card).toBe(mockCard);
+    expect(mockTypeRepository.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to the repo for get by card', async () => {
@@ -147,6 +183,37 @@ describe('NoticeOfIntentService', () => {
     expect(res).toBeDefined();
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(notice.summary).toEqual('new-summary');
+  });
+
+  it('should set the X status when setting Acknowledge Complete', async () => {
+    const notice = new NoticeOfIntent({
+      summary: 'old-summary',
+    });
+    mockRepository.findOneOrFail.mockResolvedValue(notice);
+    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      new NoticeOfIntentSubmissionToSubmissionStatus(),
+    );
+
+    const res = await service.update('file', {
+      summary: 'new-summary',
+      dateAcknowledgedIncomplete: 5,
+    });
+
+    expect(res).toBeDefined();
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith(
+      undefined,
+      NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+      new Date(5),
+    );
     expect(notice.summary).toEqual('new-summary');
   });
 

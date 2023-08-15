@@ -30,7 +30,18 @@ oats_app_prep_data AS (
             WHEN onusc.description = 'Tourist Accomodations' THEN 'Tourist Accommodations'
             WHEN onusc.description = 'Office Buiding (Primary Use)' THEN 'Office Building (Primary Use)'
             ELSE onusc.description
-        END AS mapped_nonfarm_use_subtype_description
+        END AS mapped_nonfarm_use_subtype_description,
+        CASE
+        	WHEN oaac.legislation_code = 'SEC_30_1' THEN 'Land Owner'
+        	WHEN oaac.legislation_code = 'SEC_29_1' THEN 'L/FNG Initiated'
+        	WHEN oaac.legislation_code = 'SEC_17_3' THEN 'Land Owner'
+        	WHEN oaac.legislation_code = 'SEC_17_1' THEN 'L/FNG Initiated'
+        	ELSE oaac.legislation_code
+        END AS mapped_legislation,
+        split_fee_with_local_gov_ind AS fee_lg,
+        fee_received_date AS fee_date,
+        fee_waived_ind AS fee_waived,
+        applied_fee_amt AS fee_amount
     FROM appl_components_grouped acg
         JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = acg.alr_application_id
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = acg.alr_application_id
@@ -54,7 +65,14 @@ SELECT oapd.alr_application_id,
     oapd.agri_cap_consultant,
     oapd.staff_comment_observations,
     oapd.nonfarm_use_type_description,
-    oapd.mapped_nonfarm_use_subtype_description
+    oapd.mapped_nonfarm_use_subtype_description,
+    oapd.mapped_legislation,
+    oapd.fee_date,
+    oapd.fee_amount,
+    a.fee_split_with_lg,
+    oapd.fee_lg,
+    oapd.fee_waived,
+    a.fee_waived
 FROM alcs.application a
     LEFT JOIN oats_app_prep_data AS oapd ON a.file_number = oapd.alr_application_id::TEXT
 WHERE a.alr_area != oapd.component_area
@@ -62,3 +80,5 @@ WHERE a.alr_area != oapd.component_area
     OR a.ag_cap_consultant != oapd.agri_cap_consultant
     OR a.staff_observations != oapd.staff_comment_observations
     OR a.nfu_use_sub_type != oapd.mapped_nonfarm_use_subtype_description
+    OR a.incl_excl_applicant_type != oapd.mapped_legislation
+    OR a.fee_amount != oapd.fee_amount

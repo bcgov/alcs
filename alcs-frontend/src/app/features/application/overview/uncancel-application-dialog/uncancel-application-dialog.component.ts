@@ -1,5 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  ApplicationSubmissionToSubmissionStatusDto,
+  DEFAULT_NO_STATUS,
+} from '../../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../../../services/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../../../services/application/application.dto';
 import { ApplicationSubmissionStatusPill } from '../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
@@ -21,7 +25,17 @@ export class UncancelApplicationDialogComponent {
   }
 
   async calculateStatusChange(fileNumber: string) {
-    const statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(fileNumber);
+    let statusHistory: ApplicationSubmissionToSubmissionStatusDto[] = [];
+
+    try {
+      statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
+        fileNumber,
+        false
+      );
+    } catch (e) {
+      console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
+    }
+
     const validStatuses = statusHistory
       .filter(
         (status) =>
@@ -37,6 +51,8 @@ export class UncancelApplicationDialogComponent {
         textColor: validStatus.alcsColor,
         label: validStatus.label,
       };
+    } else {
+      this.status = DEFAULT_NO_STATUS;
     }
   }
 

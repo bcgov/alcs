@@ -359,7 +359,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   private async loadStatusHistory(fileNumber: string) {
-    const statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(fileNumber);
+    let statusHistory: ApplicationSubmissionToSubmissionStatusDto[] = [];
+    try {
+      statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
+        fileNumber,
+        false
+      );
+    } catch (e) {
+      console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
+    }
+
     this.isCancelled =
       statusHistory.filter((status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.CANCELLED)
         .length > 0;

@@ -6,7 +6,6 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   NotFoundException,
   Param,
   Post,
@@ -15,18 +14,19 @@ import {
 } from '@nestjs/common';
 import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
 import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationSubmissionStatusService } from '../../application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
-import { APPLICATION_OWNER } from '../application-submission/application-owner/application-owner.dto';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,
@@ -39,15 +39,11 @@ import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submi
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionReviewController {
-  private logger: Logger = new Logger(
-    ApplicationSubmissionReviewController.name,
-  );
-
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
     private emailService: EmailService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
@@ -74,9 +70,12 @@ export class ApplicationSubmissionReviewController {
           fileNumber,
         );
 
-      if (applicationReview.createdBy) {
+      if (
+        applicationReview.createdBy &&
+        applicationReview.createdBy.bceidBusinessGuid
+      ) {
         const reviewGovernment = await this.localGovernmentService.getByGuid(
-          applicationReview.createdBy?.bceidBusinessGuid,
+          applicationReview.createdBy.bceidBusinessGuid,
         );
 
         if (reviewGovernment) {
@@ -108,15 +107,8 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    if (
-      ![
-        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-        SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
-      ].includes(
-        applicationSubmission.status.statusTypeCode as SUBMISSION_STATUS,
-      )
-    ) {
-      throw new NotFoundException('Failed to load review');
+    if (applicationSubmission.typeCode === APPLICATION_SUBMISSION_TYPES.TURP) {
+      throw new NotFoundException('Not subject to review');
     }
 
     const localGovernments = await this.localGovernmentService.list();
@@ -207,13 +199,13 @@ export class ApplicationSubmissionReviewController {
 
     const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
     const creatingGovernment = await this.localGovernmentService.getByGuid(
-      creatingGuid,
+      creatingGuid!,
     );
 
     if (
       creatingGovernment?.uuid === applicationSubmission.localGovernmentUuid &&
       primaryContact &&
-      primaryContact.type.code === APPLICATION_OWNER.GOVERNMENT
+      primaryContact.type.code === OWNER_TYPE.GOVERNMENT
     ) {
       //Copy contact details over to government form when applying to self
       await this.applicationSubmissionReviewService.update(

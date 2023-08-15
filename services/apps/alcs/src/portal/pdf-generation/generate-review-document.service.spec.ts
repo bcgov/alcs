@@ -3,12 +3,12 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { SUBMISSION_STATUS } from '../../application-submission-status/submission-status.dto';
-import { ApplicationSubmissionToSubmissionStatus } from '../../application-submission-status/submission-status.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
@@ -21,7 +21,7 @@ describe('GenerateReviewDocumentService', () => {
   let service: GenerateReviewDocumentService;
   let mockCdogsService: DeepMocked<CdogsService>;
   let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockSubmissionReviewService: DeepMocked<ApplicationSubmissionReviewService>;
@@ -49,7 +49,7 @@ describe('GenerateReviewDocumentService', () => {
           useValue: mockApplicationSubmissionService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockApplicationLocalGovernmentService,
         },
         { provide: ApplicationService, useValue: mockApplicationService },
