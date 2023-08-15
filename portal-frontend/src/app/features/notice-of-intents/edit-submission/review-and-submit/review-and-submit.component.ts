@@ -1,15 +1,12 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { CodeService } from '../../../../services/code/code.service';
+import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
-import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/submit-confirmation-dialog.component';
 
 @Component({
   selector: 'app-review-and-submit',
@@ -17,40 +14,38 @@ import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/
   styleUrls: ['./review-and-submit.component.scss'],
 })
 export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
-  @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
+  @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;
   @Input() updatedFields: string[] = [];
   @Input() originalSubmissionUuid = '';
   @Output() submit = new EventEmitter<void>();
 
-  applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
+  noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private applicationService: ApplicationSubmissionService,
+    private applicationService: NoticeOfIntentSubmissionService,
     private pdfGenerationService: PdfGenerationService
   ) {
     super();
   }
 
   ngOnInit(): void {
-    this.$applicationSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
-      this.applicationSubmission = submission;
+    this.$noiSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
+      this.noiSubmission = submission;
     });
   }
 
   override async onNavigateToStep(step: number) {
     if (this.draftMode) {
-      await this.router.navigateByUrl(
-        `alcs/application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`
-      );
+      await this.router.navigateByUrl(`alcs/application/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
     } else {
-      await this.router.navigateByUrl(`application/${this.applicationSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(`application/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 
   async onSubmitToAlcs() {
-    if (this.applicationSubmission) {
+    if (this.noiSubmission) {
       const el = document.getElementsByClassName('error');
       if (el && el.length > 0) {
         el[0].scrollIntoView({

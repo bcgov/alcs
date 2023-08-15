@@ -54,6 +54,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   minDate = new Date(0);
   isFirstDecision = false;
   showComponents = false;
+  requireComponents = false;
   showConditions = false;
   conditionsValid = true;
   componentsValid = true;
@@ -98,8 +99,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     daysHideFromPublic: new FormControl<string>('2', [Validators.required]),
-    rescindedDate: new FormControl<Date | null>({ disabled: true, value: null }),
-    rescindedComment: new FormControl<string | null>({ disabled: true, value: null }),
+    rescindedDate: new FormControl<Date | null>(null),
+    rescindedComment: new FormControl<string | null>(null),
   });
 
   constructor(
@@ -329,15 +330,16 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.components = existingDecision.components;
     }
 
+    this.requireComponents = ['APPR', 'APPA'].includes(existingDecision.outcome.code);
+
     if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
       this.showComponents = true;
     } else {
+      this.showComponents = false;
       this.form.controls.isSubjectToConditions.disable();
     }
 
     if (existingDecision.outcome.code === 'RESC') {
-      this.form.controls.rescindedComment.enable();
-      this.form.controls.rescindedDate.enable();
       this.form.controls.rescindedComment.setValidators([Validators.required]);
       this.form.controls.rescindedDate.setValidators([Validators.required]);
     }
@@ -529,7 +531,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private runValidation() {
     this.form.markAllAsTouched();
     const requiresConditions = this.showConditions;
-    const requiresComponents = this.showComponents;
+    const requiresComponents = this.showComponents && this.requireComponents;
 
     if (this.decisionComponentsComponent) {
       this.decisionComponentsComponent.onValidate();
@@ -618,16 +620,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       });
     }
 
-    if (selectedOutcome.code === 'RESC' && this.form.controls.rescindedComment.disabled) {
-      this.form.controls.rescindedComment.enable();
-      this.form.controls.rescindedDate.enable();
+    if (selectedOutcome.code === 'RESC') {
       this.form.controls.rescindedComment.setValidators([Validators.required]);
       this.form.controls.rescindedDate.setValidators([Validators.required]);
       this.form.controls.rescindedComment.updateValueAndValidity();
       this.form.controls.rescindedDate.updateValueAndValidity();
     } else if (this.form.controls.rescindedComment.enabled) {
-      this.form.controls.rescindedComment.disable();
-      this.form.controls.rescindedDate.disable();
       this.form.controls.rescindedComment.setValue(null);
       this.form.controls.rescindedDate.setValue(null);
       this.form.controls.rescindedComment.setValidators([]);

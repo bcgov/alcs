@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
+import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
@@ -17,6 +18,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
+import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNoiSteps {
@@ -60,6 +62,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private codeService: CodeService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -157,6 +160,9 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
           await this.rosoAdditionalInfoComponent.onSave();
         }
         break;
+      case EditNoiSteps.ReviewAndSubmit:
+        //DO NOTHING
+        break;
       default:
         this.toastService.showErrorToast('Error updating notice of intent.');
     }
@@ -170,6 +176,43 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   onChangeSubmissionType() {
     //TODO: Hook this up later
+  }
+
+  async onSubmit() {
+    if (this.noiSubmission) {
+      const government = await this.loadGovernment(this.noiSubmission.localGovernmentUuid);
+      this.dialog
+        .open(SubmitConfirmationDialogComponent, {
+          data: {
+            governmentName: government?.name ?? 'selected local / first nation government',
+          },
+        })
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
+            this.submit();
+          }
+        });
+    }
+  }
+
+  private async submit() {
+    const submission = this.noiSubmission;
+    if (submission) {
+      const didSubmit = await this.noticeOfIntentSubmissionService.submitToAlcs(submission.uuid);
+      if (didSubmit) {
+        await this.router.navigateByUrl(`/notice-of-intent/${submission?.fileNumber}`);
+      }
+    }
+  }
+
+  private async loadGovernment(uuid: string) {
+    const codes = await this.codeService.loadCodes();
+    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
+    if (localGovernment) {
+      return localGovernment;
+    }
+    return;
   }
 
   private async loadSubmission(fileId: string, reload = false) {

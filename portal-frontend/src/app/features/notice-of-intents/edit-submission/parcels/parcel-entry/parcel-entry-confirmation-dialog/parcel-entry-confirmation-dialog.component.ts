@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ApplicationParcelDeleteStepsEnum } from '../../delete-parcel/delete-parcel-dialog.component';
+import { NoticeOfIntentParcelDeleteStepsEnum } from '../../delete-parcel/delete-parcel-dialog.component';
 
 @Component({
   selector: 'app-parcel-entry-confirmation-dialog',
@@ -10,8 +10,8 @@ import { ApplicationParcelDeleteStepsEnum } from '../../delete-parcel/delete-par
 export class ParcelEntryConfirmationDialogComponent {
   stepIdx = 0;
 
-  warningStep = ApplicationParcelDeleteStepsEnum.warning;
-  confirmationStep = ApplicationParcelDeleteStepsEnum.confirmation;
+  warningStep = NoticeOfIntentParcelDeleteStepsEnum.warning;
+  confirmationStep = NoticeOfIntentParcelDeleteStepsEnum.confirmation;
 
   constructor(private dialogRef: MatDialogRef<ParcelEntryConfirmationDialogComponent>) {}
 

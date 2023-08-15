@@ -9,6 +9,9 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { RosoAdditionalInformationComponent } from './additional-information/roso/roso-additional-information.component';
+import { NoticeOfIntentDetailsModule } from '../notice-of-intent-details/notice-of-intent-details.module';
+import { DeleteStructureConfirmationDialogComponent } from './additional-information/roso/delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
+import { SoilRemovalConfirmationDialogComponent } from './additional-information/roso/soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
 import { EditSubmissionComponent } from './edit-submission.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
@@ -18,9 +21,9 @@ import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/p
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
+import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
+import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
-import { DeleteStructureConfirmationDialogComponent } from './additional-information/roso/delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
-import { SoilRemovalConfirmationDialogComponent } from './additional-information/roso/soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
 
 @NgModule({
   imports: [
@@ -34,6 +37,7 @@ import { SoilRemovalConfirmationDialogComponent } from './additional-information
     MatOptionModule,
     MatSelectModule,
     MatTableModule,
+    NoticeOfIntentDetailsModule,
   ],
   declarations: [
     EditSubmissionComponent,
@@ -49,6 +53,8 @@ import { SoilRemovalConfirmationDialogComponent } from './additional-information
     RosoAdditionalInformationComponent,
     DeleteStructureConfirmationDialogComponent,
     SoilRemovalConfirmationDialogComponent,
+    ReviewAndSubmitComponent,
+    SubmitConfirmationDialogComponent,
   ],
   exports: [
     EditSubmissionComponent,
@@ -62,6 +68,8 @@ import { SoilRemovalConfirmationDialogComponent } from './additional-information
     OtherAttachmentsComponent,
     RosoProposalComponent,
     RosoAdditionalInformationComponent,
+    ReviewAndSubmitComponent,
+    SubmitConfirmationDialogComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

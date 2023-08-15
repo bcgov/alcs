@@ -83,7 +83,6 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
-        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       >
@@ -118,6 +117,13 @@
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit">Review and Submit</div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit">
+      <app-review-and-submit
+        [$noiSubmission]="$noiSubmission"
+        [$noiDocuments]="$noiDocuments"
+        (exit)="onExit()"
+        (submit)="onSubmit()"
+      ></app-review-and-submit>
+    </div>
   </cdk-step>
 </app-custom-stepper>

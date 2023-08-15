@@ -27,7 +27,11 @@ SELECT
     oaac.exclsn_app_type_code,
     oaa.staff_comment_observations,
     oaac.alr_change_code,
-    oaac.legislation_code
+    oaac.legislation_code,
+    oaa.applied_fee_amt,
+    oaa.split_fee_with_local_gov_ind,
+    oaa.fee_waived_ind,
+    oaa.fee_received_date
 FROM
     appl_components_grouped acg
     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = acg.alr_application_id

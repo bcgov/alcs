@@ -1,12 +1,10 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { CodeService } from '../../../../services/code/code.service';
+import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
@@ -17,12 +15,12 @@ describe('ReviewAndSubmitComponent', () => {
   let fixture: ComponentFixture<ReviewAndSubmitComponent>;
   let mockToastService: DeepMocked<ToastService>;
   let mockRouter: DeepMocked<Router>;
-  let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
+  let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
 
   beforeEach(async () => {
     mockToastService = createMock();
     mockRouter = createMock();
-    mockApplicationService = createMock();
+    mockNoiSubmissionService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [ReviewAndSubmitComponent],
@@ -37,8 +35,8 @@ describe('ReviewAndSubmitComponent', () => {
           useValue: mockRouter,
         },
         {
-          provide: ApplicationSubmissionService,
-          useValue: mockApplicationService,
+          provide: NoticeOfIntentSubmissionService,
+          useValue: mockNoiSubmissionService,
         },
         {
           provide: PdfGenerationService,
@@ -49,7 +47,7 @@ describe('ReviewAndSubmitComponent', () => {
 
     fixture = TestBed.createComponent(ReviewAndSubmitComponent);
     component = fixture.componentInstance;
-    component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    component.$noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
     fixture.detectChanges();
   });
 

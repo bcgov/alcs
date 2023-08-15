@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
+import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 
-export enum ApplicationParcelDeleteStepsEnum {
+export enum NoticeOfIntentParcelDeleteStepsEnum {
   warning = 0,
   confirmation = 1,
 }
@@ -18,11 +18,11 @@ export class DeleteParcelDialogComponent {
 
   stepIdx = 0;
 
-  warningStep = ApplicationParcelDeleteStepsEnum.warning;
-  confirmationStep = ApplicationParcelDeleteStepsEnum.confirmation;
+  warningStep = NoticeOfIntentParcelDeleteStepsEnum.warning;
+  confirmationStep = NoticeOfIntentParcelDeleteStepsEnum.confirmation;
 
   constructor(
-    private applicationParcelService: ApplicationParcelService,
+    private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     private dialogRef: MatDialogRef<DeleteParcelDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DeleteParcelDialogComponent
   ) {
@@ -43,7 +43,7 @@ export class DeleteParcelDialogComponent {
   }
 
   async onDelete() {
-    const result = await this.applicationParcelService.deleteMany([this.parcelUuid]);
+    const result = await this.noticeOfIntentParcelService.deleteMany([this.parcelUuid]);
 
     if (result) {
       this.onCancel(true);
