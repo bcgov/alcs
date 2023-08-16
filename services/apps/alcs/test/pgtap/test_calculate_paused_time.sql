@@ -33,9 +33,9 @@ prepare insert_application_region_in_test_calculate_paused AS
 SELECT lives_ok('insert_application_region_in_test_calculate_paused', 'should insert application_region');
 
 prepare insert_application_local_government_in_test_calculate_paused as 
-	INSERT INTO alcs.application_local_government (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,"name",preferred_region_code) VALUES
+	INSERT INTO alcs.local_government (uuid,audit_deleted_date_at,audit_created_at,audit_updated_at,audit_created_by,audit_updated_by,"name",preferred_region_code) VALUES
 		('11111111-1111-1111-1111-111111111111',NULL,'2022-09-29 16:28:39.371', NULL,'unit_test',NULL,'Village of Mock','TEST');
-SELECT lives_ok('insert_application_local_government_in_test_calculate_paused', 'should insert application_local_government');
+SELECT lives_ok('insert_local_government_in_test_calculate_paused', 'should insert local_government');
 
 -- create application status
 prepare insert_card_status_in_test_calculate_paused AS 
