@@ -20,6 +20,7 @@ import { AlcReviewComponent } from './features/applications/view-submission/alc-
 import { SubmissionDocumentsComponent } from './features/applications/view-submission/alc-review/submission-documents/submission-documents.component';
 import { LfngReviewComponent } from './features/applications/view-submission/lfng-review/lfng-review.component';
 import { ViewApplicationSubmissionComponent } from './features/applications/view-submission/view-application-submission.component';
+import { NoticeOfIntentDetailsModule } from './features/notice-of-intents/notice-of-intent-details/notice-of-intent-details.module';
 import { ViewNoticeOfIntentSubmissionComponent } from './features/notice-of-intents/view-submission/view-notice-of-intent-submission.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
@@ -59,6 +60,7 @@ import { DecisionsComponent } from './features/applications/view-submission/alc-
     MatPaginatorModule,
     MatToolbarModule,
     ApplicationDetailsModule,
+    NoticeOfIntentDetailsModule,
   ],
   providers: [
     ConfirmationDialogService,

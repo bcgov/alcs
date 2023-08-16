@@ -1,6 +1,3 @@
-<button *ngIf="isMobile" (click)="onNavigateHome()" mat-button color="accent">
-  <mat-icon>chevron_left</mat-icon>Return to Inbox
-</button>
 <div aria-hidden="true" class="banner absolute">
   <div>
     <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
@@ -31,11 +28,11 @@
     </div>
   </div>
 </div>
-<button *ngIf="!isMobile" (click)="onNavigateHome()" mat-button color="accent">
+<button (click)="onNavigateHome()" mat-button color="accent">
   <mat-icon>chevron_left</mat-icon>Return to Inbox
 </button>
-<div *ngIf="!isMobile">
-  <div class="navigation-wrapper">
+<div>
+  <div class="navigation">
     <mat-tab-group>
       <mat-tab label="Applicant Submission">
         <div *ngIf="application" class="content">
@@ -131,114 +128,6 @@
     </mat-tab-group>
   </div>
 </div>
-<div *ngIf="isMobile">
-  <h6>Section:</h6>
-  <mat-form-field class="page-selector" appearance="outline">
-    <mat-select placeholder="Select one" [(ngModel)]="selectedStep">
-      <mat-option [value]="MOBILE_STEP.APPLICATION">Applicant Submission</mat-option>
-      <mat-option [value]="MOBILE_STEP.LFNG_INFO">Local/First Nation Gov Review</mat-option>
-      <mat-option [value]="MOBILE_STEP.ALC_INFO">ALC Review and Decision</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button class="change-step" mat-flat-button color="primary" (click)="onChangeMobileStep()">View</button>
-  <div *ngIf="application && mobileStep === MOBILE_STEP.INTRODUCTION" class="content">
-    <img class="tractor" src="/assets/tractor.png" alt="Tractor" />
-    <span class="center">Select section to view more</span>
-  </div>
-  <div *ngIf="application && mobileStep === MOBILE_STEP.APPLICATION" class="content">
-    <section>
-      <div class="header">
-        <h3>Application</h3>
-      </div>
-      <div class="buttons" *ngIf="application">
-        <div>
-          <button
-            [routerLink]="'/application/' + application.fileNumber + '/edit'"
-            *ngIf="application.canEdit"
-            mat-flat-button
-            color="primary"
-          >
-            Edit Application
-          </button>
-          <button
-            *ngIf="application.canReview"
-            (click)="onReview(application.fileNumber)"
-            mat-flat-button
-            color="primary"
-          >
-            Review Application
-          </button>
-          <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
-            Download PDF
-          </button>
-        </div>
-      </div>
-      <app-application-details
-        [showEdit]="false"
-        [showErrors]="false"
-        [$application]="$application"
-        [$applicationDocuments]="$applicationDocuments"
-      ></app-application-details>
-      <div class="buttons" *ngIf="application">
-        <div>
-          <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.uuid)">
-            Cancel Application
-          </button>
-        </div>
-        <div>
-          <button
-            [routerLink]="'/application/' + application.uuid + '/edit'"
-            *ngIf="application.canEdit"
-            mat-flat-button
-            color="primary"
-          >
-            Edit Application
-          </button>
-          <button
-            *ngIf="application.canReview"
-            (click)="onReview(application.fileNumber)"
-            mat-flat-button
-            color="primary"
-          >
-            Review Application
-          </button>
-        </div>
-      </div>
-    </section>
-  </div>
-  <div *ngIf="application && mobileStep === MOBILE_STEP.LFNG_INFO" class="content">
-    <app-lfng-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-lfng-review>
-    <div class="buttons" *ngIf="application">
-      <div>
-        <button *ngIf="application.canEdit" mat-stroked-button color="warn" (click)="onCancel(application.uuid)">
-          Cancel Application
-        </button>
-      </div>
-      <div>
-        <button
-          [routerLink]="'/application/' + application.fileNumber + '/edit'"
-          *ngIf="application.canEdit"
-          mat-flat-button
-          color="primary"
-        >
-          Edit Application
-        </button>
-        <button
-          *ngIf="application.canReview"
-          (click)="onReview(application.fileNumber)"
-          mat-flat-button
-          color="primary"
-        >
-          Review Application
-        </button>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="application && mobileStep === MOBILE_STEP.ALC_INFO" class="content">
-    <app-alc-review [$applicationDocuments]="$applicationDocuments" [$application]="$application"></app-alc-review>
-  </div>
-</div>
-
 <div *ngIf="application && application.canReview" class="action-bar">
   <button (click)="onReview(application.fileNumber)" mat-button>
     <div>
