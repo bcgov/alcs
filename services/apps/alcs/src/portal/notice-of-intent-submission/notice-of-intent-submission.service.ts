@@ -95,6 +95,7 @@ export class NoticeOfIntentSubmissionService {
       fileNumber,
       applicant: 'Unknown',
       typeCode: type,
+      source: 'APPLICANT',
     });
 
     const noiSubmission = new NoticeOfIntentSubmission({
