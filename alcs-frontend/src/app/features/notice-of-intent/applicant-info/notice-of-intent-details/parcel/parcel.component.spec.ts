@@ -28,14 +28,13 @@ describe('ParcelComponent', () => {
           provide: NoticeOfIntentParcelService,
           useValue: mockNoiParcelService,
         },
-
         {
           provide: NoiDocumentService,
           useValue: mockNoiDocService,
         },
         {
-          provides: Router,
-          useValue: {},
+          provide: ActivatedRoute,
+          useValue: mockRoute,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
@@ -43,6 +42,9 @@ describe('ParcelComponent', () => {
 
     fixture = TestBed.createComponent(ParcelComponent);
     component = fixture.componentInstance;
+    component.noticeOfIntent = {
+      parcels: [],
+    } as any;
     fixture.detectChanges();
   });
 
