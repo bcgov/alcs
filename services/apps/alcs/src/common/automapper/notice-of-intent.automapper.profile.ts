@@ -3,6 +3,8 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import { NoticeOfIntentTypeDto } from '../../alcs/code/application-code/notice-of-intent-type/notice-of-intent-type.dto';
+import { NoticeOfIntentType } from '../../alcs/code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntentDocumentDto } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 
@@ -30,6 +32,7 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, NoticeOfIntentSubtype, NoticeOfIntentSubtypeDto);
+      createMap(mapper, NoticeOfIntentType, NoticeOfIntentTypeDto);
 
       createMap(
         mapper,

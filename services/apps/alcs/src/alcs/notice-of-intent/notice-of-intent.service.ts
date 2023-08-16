@@ -52,6 +52,7 @@ export class NoticeOfIntentService {
     localGovernment: true,
     region: true,
     subtype: true,
+    type: true,
   };
 
   constructor(

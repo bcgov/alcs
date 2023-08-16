@@ -24,6 +24,14 @@ import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentSubmissionController } from './notice-of-intent-submission/notice-of-intent-submission.controller';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-submission-status/notice-of-intent-status-type.entity';
+import { NoticeOfIntentParcelController } from './notice-of-intent-parcel/notice-of-intent-parcel.controller';
+import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
+import { NoticeOfIntentParcel } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
+import { NoticeOfIntentParcelProfile } from '../../common/automapper/notice-of-intent-parcel.automapper.profile';
 
 @Module({
   imports: [
@@ -34,6 +42,8 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
       NoticeOfIntentType,
       NoticeOfIntentSubtype,
       NoticeOfIntentDocument,
+      NoticeOfIntentSubmission,
+      NoticeOfIntentSubmissionStatusType,
       DocumentCode,
     ]),
     forwardRef(() => BoardModule),
@@ -43,17 +53,22 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
     CodeModule,
     LocalGovernmentModule,
     NoticeOfIntentSubmissionStatusModule,
+    forwardRef(() => NoticeOfIntentSubmissionModule),
   ],
   providers: [
     NoticeOfIntentService,
     NoticeOfIntentProfile,
     NoticeOfIntentMeetingService,
     NoticeOfIntentDocumentService,
+    NoticeOfIntentSubmissionService,
+    NoticeOfIntentParcelProfile,
   ],
   controllers: [
     NoticeOfIntentController,
     NoticeOfIntentMeetingController,
     NoticeOfIntentDocumentController,
+    NoticeOfIntentSubmissionController,
+    NoticeOfIntentParcelController,
   ],
   exports: [
     NoticeOfIntentService,
