@@ -123,12 +123,14 @@ describe('CardStatusController', () => {
     expect(mockBoardService.getBoardsWithStatus).toHaveBeenCalledTimes(1);
   });
 
-  it('should call the service for delete', async () => {
+  it('should unlink statuses and then call the service for delete', async () => {
     mockCardStatusService.delete.mockResolvedValue({} as any);
+    mockBoardService.unlinkStatus.mockResolvedValue();
 
     const res = await controller.delete('FAKE-CODE');
 
     expect(res).toBeDefined();
     expect(mockCardStatusService.delete).toHaveBeenCalledTimes(1);
+    expect(mockBoardService.unlinkStatus).toHaveBeenCalledTimes(1);
   });
 });

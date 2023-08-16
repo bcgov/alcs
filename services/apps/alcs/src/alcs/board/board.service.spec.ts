@@ -7,7 +7,6 @@ import { ApplicationService } from '../application/application.service';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardStatus } from './board-status.entity';
-import { BoardStatusDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -113,5 +112,13 @@ describe('BoardsService', () => {
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Failed to find Board with code board-code`),
     );
+  });
+
+  it('should call through for unlink status', async () => {
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+
+    await service.unlinkStatus('code');
+
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
   });
 });
