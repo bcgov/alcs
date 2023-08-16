@@ -91,6 +91,7 @@ describe('EmailService', () => {
       body: 'body',
       subject: 'subject',
       to: ['email'],
+      cc: ['carbon', 'copy'],
     };
     await service.sendEmail(mockEmail);
 
@@ -103,6 +104,7 @@ describe('EmailService', () => {
     expect(servicePostBody.subject).toEqual(mockEmail.subject);
     expect(servicePostBody.body).toEqual(mockEmail.body);
     expect(servicePostBody.from).toEqual(config.get('CHES.FROM'));
+    expect(servicePostBody.cc).toEqual(mockEmail.cc);
   });
 
   it('should re-use the token if its not expired', async () => {
@@ -136,17 +138,24 @@ describe('EmailService', () => {
   });
 
   it('should throw an exception if no submission government is found', async () => {
-    mockApplicationSubmissionService.getByUuid.mockResolvedValue(null);
+    mockLocalGovernmentService.getByUuid.mockResolvedValue(null);
 
+    const mockApplicationSubmission = new ApplicationSubmission({
+      localGovernmentUuid: 'fake-uuid',
+    });
     const promise = service.getSubmissionGovernmentOrFail(
-      new ApplicationSubmission(),
+      mockApplicationSubmission,
+    );
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
+      mockApplicationSubmission.localGovernmentUuid,
     );
     await expect(promise).rejects.toMatchObject(
       new Error('Submission local government not found'),
     );
   });
 
-  it('should set email template', async () => {
+  it('should call through services to set email template', async () => {
     const mockData = {
       generateStatusHtml: () => ({} as MJMLParseResults),
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
@@ -158,7 +167,6 @@ describe('EmailService', () => {
     mockApplicationSubmissionService.getStatus.mockResolvedValue(
       new ApplicationSubmissionStatusType(),
     );
-
     mockApplicationService.fetchApplicationTypes.mockResolvedValue([]);
 
     await service.sendStatusEmail(mockData);
@@ -168,10 +176,5 @@ describe('EmailService', () => {
       mockData.status,
     );
     expect(mockApplicationService.fetchApplicationTypes).toBeCalledTimes(1);
-
-    // TODO: More unit tests here
   });
-  it('should send status email to owner', async () => {});
-  it('should send status email to government', async () => {});
-  it('should cc status email to government', async () => {});
 });
