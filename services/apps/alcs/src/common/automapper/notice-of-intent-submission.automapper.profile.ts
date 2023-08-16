@@ -19,7 +19,6 @@ import {
 } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 
-// services/apps/alcs/src/portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto.ts
 @Injectable()
 export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
