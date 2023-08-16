@@ -1,20 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
+import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
+import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
-import { StepComponent } from '../../step.partial';
-import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
+import { FilesStepComponent } from '../../files-step.partial';
 
 @Component({
   selector: 'app-nfu-proposal',
   templateUrl: './nfu-proposal.component.html',
   styleUrls: ['./nfu-proposal.component.scss'],
 })
-export class NfuProposalComponent extends StepComponent implements OnInit, OnDestroy {
+export class NfuProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Proposal;
 
   fillTableData: SoilTableData = {};
@@ -40,11 +44,16 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
     fillTypeDescription: this.fillTypeDescription,
     fillOriginDescription: this.fillOriginDescription,
   });
-  private fileId = '';
   private submissionUuid = '';
+  proposalMap: ApplicationDocumentDto[] = [];
 
-  constructor(private router: Router, private applicationSubmissionService: ApplicationSubmissionService) {
-    super();
+  constructor(
+    private router: Router,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog
+  ) {
+    super(applicationDocumentService, dialog);
   }
 
   ngOnInit(): void {
@@ -81,13 +90,17 @@ export class NfuProposalComponent extends StepComponent implements OnInit, OnDes
         }
       }
     });
+
+    this.$applicationDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
+      this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
+    });
   }
 
   async onSave() {
     await this.save();
   }
 
-  private async save() {
+  protected async save() {
     if (this.fileId && this.form.dirty) {
       const nfuHectares = this.hectares.getRawValue();
       const purpose = this.purpose.getRawValue();

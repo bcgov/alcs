@@ -85,6 +85,8 @@ export class CardStatusController {
   @Delete('/:code')
   @UserRoles(AUTH_ROLE.ADMIN)
   async delete(@Param('code') code: string) {
+    //Delete from boards first
+    await this.boardService.unlinkStatus(code);
     return await this.cardStatusService.delete(code);
   }
 

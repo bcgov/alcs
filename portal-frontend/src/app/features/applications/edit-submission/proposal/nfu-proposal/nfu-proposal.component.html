@@ -101,6 +101,19 @@
       <div class="subtext">Characters left: {{ 4000 - agricultureSupportText.textLength }}</div>
     </div>
     <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+    <div class="full-row">
       <label for="will-import-fill">
         Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
         onto the property, including gravel for construction.

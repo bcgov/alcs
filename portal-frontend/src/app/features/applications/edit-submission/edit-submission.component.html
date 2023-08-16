@@ -96,6 +96,7 @@
       <app-nfu-proposal
         *ngIf="applicationSubmission.typeCode === 'NFUP'"
         [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
