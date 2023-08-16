@@ -137,6 +137,26 @@ describe('EmailService', () => {
     expect(mockHttpService.post).toHaveBeenCalledTimes(3);
   });
 
+  it('should return submission government if found', async () => {
+    const localGovernmentUuid = 'fake-uuid';
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      localGovernmentUuid,
+    });
+
+    mockLocalGovernmentService.getByUuid.mockResolvedValue(mockGovernment);
+
+    const res = await service.getSubmissionGovernmentOrFail(
+      mockApplicationSubmission,
+    );
+
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
+      mockApplicationSubmission.localGovernmentUuid,
+    );
+    expect(res).toStrictEqual(mockGovernment);
+  });
+
   it('should throw an exception if no submission government is found', async () => {
     mockLocalGovernmentService.getByUuid.mockResolvedValue(null);
 
