@@ -149,6 +149,20 @@ export class NoticeOfIntentSubmissionService {
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
+  async getFileNumber(submissionUuid: string, includeDraft = false) {
+    const submission = await this.noticeOfIntentSubmissionRepository.findOne({
+      where: {
+        uuid: submissionUuid,
+        isDraft: includeDraft,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.fileNumber;
+  }
+
   private setLandUseFields(
     noticeOfIntentSubmission: NoticeOfIntentSubmission,
     updateDto: NoticeOfIntentSubmissionUpdateDto,

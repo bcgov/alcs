@@ -990,4 +990,18 @@ export class ApplicationSubmissionService {
       },
     });
   }
+
+  async getFileNumber(submissionUuid: string, includeDraft = false) {
+    const submission = await this.applicationSubmissionRepository.findOne({
+      where: {
+        uuid: submissionUuid,
+        isDraft: includeDraft,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.fileNumber;
+  }
 }

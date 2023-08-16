@@ -434,4 +434,15 @@ export class NoticeOfIntentService {
     await this.repository.save(existingNoticeOfIntent);
     return this.getByFileNumber(createDto.fileNumber);
   }
+
+  async updateApplicant(fileNumber: string, applicant: string) {
+    await this.repository.update(
+      {
+        fileNumber,
+      },
+      {
+        applicant,
+      },
+    );
+  }
 }
