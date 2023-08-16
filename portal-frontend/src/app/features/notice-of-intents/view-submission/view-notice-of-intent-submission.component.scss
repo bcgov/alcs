@@ -1,0 +1,183 @@
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/colors';
+
+.navigation {
+  ::ng-deep .mdc-tab__text-label {
+    font-weight: bold;
+  }
+}
+
+.content {
+  margin: rem(24) 0;
+}
+
+:host::ng-deep {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: rem(24);
+    flex-direction: column;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      flex-direction: row;
+    }
+
+    h3 {
+      margin-top: rem(8) !important;
+    }
+
+    .btns-wrapper {
+      display: flex;
+      flex-direction: column-reverse;
+      width: 100%;
+
+      button {
+        margin-top: rem(16) !important;
+      }
+
+      @media screen and (min-width: $tabletBreakpoint) {
+        display: inline-block;
+        width: unset;
+
+        button {
+          margin-right: rem(16) !important;
+          margin-top: rem(8) !important;
+        }
+
+        button:last-child {
+          margin-right: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+.absolute {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+.banner {
+  background-color: colors.$secondary-color;
+  width: 100%;
+  color: #fff;
+  padding: rem(16) rem(24);
+  margin-bottom: rem(32);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(12) rem(36) !important;
+  }
+
+  // TODO: this is just a placeholder and will be addressed later
+  @media screen and (min-width: $desktopBreakpoint) {
+    padding: rem(18) rem(80) !important;
+  }
+
+  .banner-status {
+    margin: rem(16) 0;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    div {
+      margin-top: rem(16);
+    }
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+
+  button {
+    width: 100%;
+    margin-bottom: rem(16) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: row;
+
+    div {
+      margin-right: rem(16);
+    }
+
+    div:last-child {
+      margin-right: 0 !important;
+    }
+  }
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: colors.$primary-color-light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: rem(56);
+  z-index: 2;
+
+  button {
+    width: 100%;
+    height: 100%;
+    text-align: right !important;
+    display: flex;
+    justify-content: flex-end;
+    padding: rem(8) rem(24);
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      padding: rem(12) rem(36);
+    }
+
+    @media screen and (min-width: $desktopBreakpoint) {
+      padding: rem(18) rem(80);
+    }
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mat-icon {
+      margin-left: rem(6);
+    }
+  }
+}
+
+.page-selector {
+  width: 100%;
+  margin-bottom: rem(24);
+}
+
+.change-step {
+  width: 100%;
+}
+
+.no-comment {
+  color: colors.$grey-dark;
+  font-style: italic;
+}
+
+.tractor {
+  width: 100%;
+  margin-bottom: rem(16);
+}
+
+section {
+  margin-bottom: rem(24);
+}
+
+.document {
+  margin-bottom: rem(8);
+}

@@ -38,43 +38,6 @@
   cursor: pointer;
 }
 
-.header {
-  flex-direction: column;
-  align-items: start;
-
-  h3 {
-    margin-bottom: rem(24) !important;
-  }
-
-  .btns-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    button {
-      width: 100%;
-      margin-bottom: rem(8) !important;
-    }
-  }
-
-  @media screen and (min-width: $desktopBreakpoint) {
-    flex-direction: row;
-
-    h3 {
-      max-width: 50%;
-    }
-
-    .btns-wrapper {
-      flex-direction: row;
-      width: unset;
-
-      button {
-        width: unset;
-      }
-    }
-  }
-}
-
 .review-table {
   padding: rem(8);
   margin: rem(12) 0 rem(20) 0;
