@@ -9,10 +9,16 @@ import {
   IsUUID,
 } from 'class-validator';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
+import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
+import { NoticeOfIntentSubmissionDetailedDto } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
+import { NoticeOfIntentTypeDto } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.dto';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 
+export class AlcsNoticeOfIntentSubmissionDto extends NoticeOfIntentSubmissionDetailedDto {
+  primaryContact?: NoticeOfIntentOwnerDto;
+}
 export class NoticeOfIntentSubtypeDto extends BaseCodeDto {
   @AutoMap()
   @IsBoolean()
@@ -95,6 +101,12 @@ export class NoticeOfIntentDto {
 
   @AutoMap(() => [NoticeOfIntentSubtypeDto])
   subtype: NoticeOfIntentSubtypeDto[];
+
+  @AutoMap(() => NoticeOfIntentTypeDto)
+  type: NoticeOfIntentTypeDto;
+
+  @AutoMap()
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export class UpdateNoticeOfIntentDto {

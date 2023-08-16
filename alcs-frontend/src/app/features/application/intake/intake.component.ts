@@ -3,8 +3,8 @@ import moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
-  APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
+  SYSTEM_SOURCE_TYPES,
   UpdateApplicationDto,
 } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -17,7 +17,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 export class IntakeComponent implements OnInit {
   dateSubmittedToAlc?: string;
   application?: ApplicationDto;
-  APPLICATION_SYSTEM_SOURCE_TYPES = APPLICATION_SYSTEM_SOURCE_TYPES;
+  APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 

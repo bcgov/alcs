@@ -8,8 +8,8 @@ import {
 } from 'class-validator';
 import { NoticeOfIntentDocumentDto } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
 import {
-  OWNER_TYPE,
   OwnerTypeDto,
+  OWNER_TYPE,
 } from '../../../common/owner-type/owner-type.entity';
 import { emailRegex } from '../../../utils/email.helper';
 import { NoticeOfIntentParcelDto } from '../notice-of-intent-parcel/notice-of-intent-parcel.dto';

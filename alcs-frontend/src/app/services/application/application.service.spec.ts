@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
-import { APPLICATION_SYSTEM_SOURCE_TYPES, ApplicationDto } from './application.dto';
+import { ApplicationDto, SYSTEM_SOURCE_TYPES } from './application.dto';
 
 import { ApplicationService } from './application.service';
 
@@ -40,7 +40,7 @@ describe('ApplicationService', () => {
       backgroundColor: '',
       textColor: '',
     },
-    source: APPLICATION_SYSTEM_SOURCE_TYPES.ALCS,
+    source: SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(() => {

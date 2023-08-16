@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { of } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationParcelService } from './application-parcel.service';
+import { of } from 'rxjs';
 
-describe('ApplicationParcelService', () => {
-  let service: ApplicationParcelService;
+import { NoticeOfIntentParcelService } from './notice-of-intent-parcel.service';
+
+describe('NoticeOfIntentParcelService', () => {
+  let service: NoticeOfIntentParcelService;
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
 
@@ -23,7 +24,7 @@ describe('ApplicationParcelService', () => {
         },
       ],
     });
-    service = TestBed.inject(ApplicationParcelService);
+    service = TestBed.inject(NoticeOfIntentParcelService);
   });
 
   it('should be created', () => {

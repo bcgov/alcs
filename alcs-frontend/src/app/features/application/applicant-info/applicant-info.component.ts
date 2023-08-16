@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 import {
-  APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
   ApplicationSubmissionDto,
   SUBMISSION_STATUS,
+  SYSTEM_SOURCE_TYPES,
 } from '../../../services/application/application.dto';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-applicant-info',
@@ -37,7 +37,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = application.fileNumber;
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
-        const isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+        const isApplicantSubmission = application.source === SYSTEM_SOURCE_TYPES.APPLICANT;
 
         this.isSubmittedToAlc = isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
 

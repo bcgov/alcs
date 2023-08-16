@@ -5,7 +5,7 @@ import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 import { ApplicationSubmissionToSubmissionStatusDto } from './application-submission-status/application-submission-status.dto';
 
-export enum APPLICATION_SYSTEM_SOURCE_TYPES {
+export enum SYSTEM_SOURCE_TYPES {
   APPLICANT = 'APPLICANT',
   ALCS = 'ALCS',
 }
@@ -249,7 +249,7 @@ export interface ApplicationDto {
   decisionMeetings: ApplicationDecisionMeetingDto[];
   card?: CardDto;
   submittedApplication?: ApplicationSubmissionDto;
-  source: APPLICATION_SYSTEM_SOURCE_TYPES;
+  source: SYSTEM_SOURCE_TYPES;
   alrArea?: number;
   agCap?: string;
   agCapSource?: string;
