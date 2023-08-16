@@ -384,8 +384,8 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBMApplicantHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
@@ -454,8 +454,8 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateRFFGHtml,
       status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       applicationSubmission: mockSubmission,
@@ -550,9 +550,9 @@ describe('ApplicationSubmissionReviewController', () => {
     });
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
-    ).toBeCalledTimes(2);
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    ).toHaveBeenCalledTimes(2);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateINCMHtml,
       status: SUBMISSION_STATUS.INCOMPLETE,
       applicationSubmission: mockSubmission,
@@ -624,8 +624,8 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     );
 
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateWRNGHtml,
       status: SUBMISSION_STATUS.WRONG_GOV,
       applicationSubmission: mockSubmission,
