@@ -33,6 +33,10 @@ import { ApplicationSubmissionReviewController } from './application-submission-
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
+import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 
 describe('ApplicationSubmissionReviewController', () => {
   let controller: ApplicationSubmissionReviewController;
@@ -213,6 +217,7 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should send an email through the service when creating with a valid primary contact', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
+    mockEmailService.sendStatusEmail.mockResolvedValue();
 
     const user = new User({
       bceidBusinessGuid: 'id',
@@ -246,7 +251,7 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     });
 
-    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(2);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
@@ -319,17 +324,23 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should load review and call submitToAlcs when in correct status for finish', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-          effectiveDate: new Date(1, 1, 1),
-          submissionUuid: 'fake',
-        }),
+
+    const mockOwner = new ApplicationOwner({ uuid: '1234' });
+    const mockSubmission = new ApplicationSubmission({
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+        effectiveDate: new Date(1, 1, 1),
+        submissionUuid: 'fake',
       }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid: '1234',
+    });
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      mockSubmission,
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
+    mockEmailService.sendStatusEmail.mockResolvedValue();
 
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
@@ -373,18 +384,32 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateSUBMApplicantHtml,
+      status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      applicationSubmission: mockSubmission,
+      government: mockLG,
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
   });
 
   it('should load review and call submitToAlcs and set to refused to forward when not authorized', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-          effectiveDate: new Date(1, 1, 1),
-          submissionUuid: 'fake',
-        }),
+
+    const mockOwner = new ApplicationOwner({ uuid: '1234' });
+    const mockSubmission = new ApplicationSubmission({
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+        effectiveDate: new Date(1, 1, 1),
+        submissionUuid: 'fake',
       }),
+      owners: [new ApplicationOwner({ uuid: '1234' })],
+      primaryContactOwnerUuid: '1234',
+    });
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      mockSubmission,
     );
     mockAppSubmissionService.submitToAlcs.mockResolvedValue(
       new Application({
@@ -407,6 +432,7 @@ describe('ApplicationSubmissionReviewController', () => {
       errors: [],
     });
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
+    mockEmailService.sendStatusEmail.mockResolvedValue();
     mockAppDocService.list.mockResolvedValue([]);
 
     await controller.finish(fileNumber, {
@@ -428,19 +454,34 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateRFFGHtml,
+      status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+      applicationSubmission: mockSubmission,
+      government: mockLG,
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
   });
 
   it('should update the status, delete documents, and update the application for return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
-      new ApplicationSubmission({
-        uuid: 'submission-uuid',
-        status: new ApplicationSubmissionToSubmissionStatus({
-          statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-          effectiveDate: new Date(1, 1, 1),
-          submissionUuid: 'fake',
-        }),
+
+    const mockOwner = new ApplicationOwner({ uuid: '1234' });
+    const mockSubmission = new ApplicationSubmission({
+      uuid: 'submission-uuid',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+        effectiveDate: new Date(1, 1, 1),
+        submissionUuid: 'fake',
       }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid: '1234',
+    });
+
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      mockSubmission,
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
@@ -449,6 +490,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission(),
     );
+    mockEmailService.sendStatusEmail.mockResolvedValue();
 
     const documents = [
       new ApplicationDocument({
@@ -509,6 +551,87 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
     ).toBeCalledTimes(2);
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateINCMHtml,
+      status: SUBMISSION_STATUS.INCOMPLETE,
+      applicationSubmission: mockSubmission,
+      government: mockLG,
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
+  });
+
+  it('should send the correct email template for wrong government return', async () => {
+    mockLGService.getByGuid.mockResolvedValue(mockLG);
+
+    const mockOwner = new ApplicationOwner({ uuid: '1234' });
+    const mockSubmission = new ApplicationSubmission({
+      uuid: 'submission-uuid',
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+        effectiveDate: new Date(1, 1, 1),
+        submissionUuid: 'fake',
+      }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid: '1234',
+    });
+
+    mockAppSubmissionService.getForGovernmentByFileId.mockResolvedValue(
+      mockSubmission,
+    );
+    mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
+    mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
+    mockAppReviewService.delete.mockResolvedValue();
+    mockAppDocService.delete.mockResolvedValue({} as any);
+    mockAppSubmissionService.update.mockResolvedValue(
+      new ApplicationSubmission(),
+    );
+    mockEmailService.sendStatusEmail.mockResolvedValue();
+
+    const documents = [
+      new ApplicationDocument({
+        type: new DocumentCode({
+          code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+        }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.LFNG,
+        }),
+      }),
+      new ApplicationDocument({
+        type: new DocumentCode({
+          code: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
+        }),
+        document: new Document({
+          source: DOCUMENT_SOURCE.APPLICANT,
+        }),
+      }),
+    ];
+    mockAppDocService.list.mockResolvedValue(documents);
+
+    await controller.return(
+      fileNumber,
+      {
+        user: {
+          entity: new User({
+            bceidBusinessGuid: 'id',
+          }),
+        },
+      },
+      {
+        reasonForReturn: 'wrongGovernment',
+        applicantComment: 'test-comment',
+      },
+    );
+
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateWRNGHtml,
+      status: SUBMISSION_STATUS.WRONG_GOV,
+      applicationSubmission: mockSubmission,
+      government: mockLG,
+      primaryContact: mockOwner,
+    });
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {
