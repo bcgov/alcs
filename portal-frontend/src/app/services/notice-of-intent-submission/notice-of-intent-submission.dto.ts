@@ -34,6 +34,7 @@ export interface NoticeOfIntentSubmissionDto {
   type: string;
   typeCode: string;
   status: NoticeOfIntentSubmissionStatusDto;
+  lastStatusUpdate: number;
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
   owners: NoticeOfIntentOwnerDto[];
   canEdit: boolean;

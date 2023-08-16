@@ -41,6 +41,7 @@ export class NoticeOfIntentSubmissionDto {
   typeCode: string;
 
   status: NoticeOfIntentStatusDto;
+  lastStatusUpdate: number;
   owners: NoticeOfIntentOwnerDto[];
 
   canEdit: boolean;

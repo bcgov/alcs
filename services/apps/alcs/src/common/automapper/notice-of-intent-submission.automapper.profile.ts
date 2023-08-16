@@ -50,6 +50,12 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
           }),
         ),
         forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
           (a) => a.owners,
           mapFrom((ad) => {
             if (ad.owners) {
@@ -85,6 +91,12 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
           (a) => a.status,
           mapFrom((ad) => {
             return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
           }),
         ),
       );

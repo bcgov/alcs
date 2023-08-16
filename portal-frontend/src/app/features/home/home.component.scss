@@ -1,6 +1,11 @@
 @use '../../../styles/functions' as *;
 @use '../../../styles/colors';
-@use '../../../styles/navigation-wrapper';
+
+.navigation {
+  ::ng-deep .mdc-tab__text-label {
+    font-weight: bold;
+  }
+}
 
 .header-row {
   .learn-more-wrapper {
