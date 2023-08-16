@@ -1,18 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { takeUntil } from 'rxjs';
-import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionUpdateDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
-import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
-import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
-import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
-import { EditNoiSteps } from '../../edit-submission.component';
-import { FilesStepComponent } from '../../files-step.partial';
+import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionUpdateDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
+import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
+import { EditNoiSteps } from '../edit-submission.component';
+import { FilesStepComponent } from '../files-step.partial';
 import { DeleteStructureConfirmationDialogComponent } from './delete-structure-confirmation-dialog/delete-structure-confirmation-dialog.component';
 import { SoilRemovalConfirmationDialogComponent } from './soil-removal-confirmation-dialog/soil-removal-confirmation-dialog.component';
 
@@ -32,11 +32,11 @@ export const RESIDENTIAL_STRUCTURE_TYPES = [
 ];
 
 @Component({
-  selector: 'app-roso-additional-information',
-  templateUrl: './roso-additional-information.component.html',
-  styleUrls: ['./roso-additional-information.component.scss'],
+  selector: 'app-additional-information',
+  templateUrl: './additional-information.component.html',
+  styleUrls: ['./additional-information.component.scss'],
 })
-export class RosoAdditionalInformationComponent extends FilesStepComponent implements OnInit, OnDestroy {
+export class AdditionalInformationComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.ExtraInfo;
 
   DOCUMENT = DOCUMENT_TYPE;
@@ -75,6 +75,8 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
     soilStructureResidentialAccessoryUseReason: this.soilStructureResidentialAccessoryUseReason,
   });
 
+  firstQuestion: string = 'FIX THIS';
+
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
@@ -88,6 +90,18 @@ export class RosoAdditionalInformationComponent extends FilesStepComponent imple
       if (noiSubmission) {
         this.fileId = noiSubmission.fileNumber;
         this.submissionUuid = noiSubmission.uuid;
+
+        switch (noiSubmission.typeCode) {
+          case 'ROSO':
+            this.firstQuestion = 'Are you placing fill in order to build a structure?';
+            break;
+          case 'POFO':
+            this.firstQuestion = 'Are you placing fill in order to build a structure?';
+            break;
+          case 'PFRS':
+            this.firstQuestion = 'Are you removing soil and placing fill in order to build a structure?';
+            break;
+        }
 
         if (noiSubmission.soilIsRemovingSoilForNewStructure) {
           this.confirmRemovalOfSoil = true;

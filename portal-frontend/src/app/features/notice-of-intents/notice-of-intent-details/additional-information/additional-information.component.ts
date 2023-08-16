@@ -1,24 +1,26 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionDetailedDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import {
   RESIDENTIAL_STRUCTURE_TYPES,
   STRUCTURE_TYPES,
-} from '../../../edit-submission/additional-information/roso/roso-additional-information.component';
+} from '../../edit-submission/additional-information/additional-information.component';
 
 @Component({
-  selector: 'app-roso-additional-information',
-  templateUrl: './roso-additional-information.component.html',
-  styleUrls: ['./roso-additional-information.component.scss'],
+  selector: 'app-additional-information',
+  templateUrl: './additional-information.component.html',
+  styleUrls: ['./additional-information.component.scss'],
 })
-export class RosoAdditionalInformationComponent {
+export class AdditionalInformationComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
   @Input() updatedFields: string[] = [];
+
+  firstQuestion = 'FIX THIS';
 
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
@@ -28,6 +30,18 @@ export class RosoAdditionalInformationComponent {
       this.setVisibilityAndValidatorsForResidentialFields();
       this.setVisibilityAndValidatorsForAccessoryFields();
       this.setVisibilityAndValidatorsForFarmFields();
+
+      switch (noiSubmission.typeCode) {
+        case 'ROSO':
+          this.firstQuestion = 'Are you placing fill in order to build a structure?';
+          break;
+        case 'POFO':
+          this.firstQuestion = 'Are you placing fill in order to build a structure?';
+          break;
+        case 'PFRS':
+          this.firstQuestion = 'Are you removing soil and placing fill in order to build a structure?';
+          break;
+      }
     }
   }
 

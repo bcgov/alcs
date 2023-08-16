@@ -1,0 +1,430 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a>FIXME: Section 6 of the ALC Act. </a>
+  </p>
+  <p>All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a href="TODO" target="_blank">FIXME: Placement of Fill</a>
+    </li>
+  </ul>
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="noi-follow-up">
+        Has the ALC previously received an application or Notice of Intent for this proposal?
+      </label>
+      <div class="subtext">If yes, provide the ALC Application or Notice of Intent ID in the field below</div>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeIsFollowUp($event)"
+          id="noi-follow-up"
+          [formControl]="isFollowUp"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isFollowUp.invalid && (isFollowUp.dirty || isFollowUp.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="followUpIds">Application or NOI ID</label>
+      <div class="subtext">If you have multiple IDs, please separate with a comma.</div>
+      <mat-form-field appearance="outline">
+        <input type="text" [formControl]="followUpIds" id="followUpIds" matInput />
+      </mat-form-field>
+
+      <div *ngIf="followUpIds.invalid && (followUpIds.dirty || followUpIds.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="followUpIds.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Include why you are applying for placement of fill, what the proposal will achieve, and any benefits to
+        agriculture that the proposal provides.
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          [formControl]="purpose"
+          #purposeText
+          maxlength="4000"
+          id="purpose"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <label for="soilTypeRemoved">Describe the type of soil proposed to be removed.</label>
+      <div class="subtext">List all proposed soil types to be removed.</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          [formControl]="soilTypeRemoved"
+          #soilTypeRemovedText
+          maxlength="4000"
+          id="soilTypeRemoved"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
+      </div>
+      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <label for="fillTypeToPlace">Describe the type, origin and quality of fill proposed to be placed.</label>
+      <div class="subtext">
+        List all proposed types of fill. Soil must be of good agricultural quality and free of construction and
+        demolition waste, treated wood, contaminants etc. Prohibited fill cannot be placed within the Agricultural Land
+        Reserve.
+      </div>
+      <app-info-banner
+        >Please refer to
+        <a
+          rel="noreferrer"
+          target="_blank"
+          href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/30_2019#section36"
+          >Prohibited Fill (section 36)</a
+        >
+        of the ALR Use Regulation for more detail.</app-info-banner
+      >
+      <mat-form-field appearance="outline">
+        <textarea
+          [formControl]="fillTypeToPlace"
+          #fillTypeToPlaceText
+          maxlength="4000"
+          id="fillTypeToPlace"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="fillTypeToPlace.invalid && (fillTypeToPlace.dirty || fillTypeToPlace.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="fillTypeToPlace.errors?.['required']">This field is required</div>
+      </div>
+      <mat-hint class="subtext">Example: Aggregate, Extraction, Placer Mining, Peat Extraction, Soil etc.</mat-hint>
+      <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
+    </div>
+
+    <div class="full-row">
+      <label>Proposal Dimensions</label>
+      <div class="subtext">
+        Please provide accurate numbers that align with your cross sections, reclamation plan, and site plan. The
+        Commission will consider your proposal dimensions when determining the potential impact it will have on the
+        agricultural capability of the land.
+      </div>
+      <app-info-banner> Please refer to <a>FIXME: Contact Us</a> on the ALC website for more detail. </app-info-banner>
+      <app-soil-table
+        *ngIf="!isMobile"
+        tableHeader="Soil to be Removed"
+        tableHeader2="Fill to be Placed"
+        [(data)]="removalTableData"
+        [(data2)]="fillToPlaceTableData"
+        (dataChange)="markDirty()"
+        (data2Change)="markDirty()"
+      ></app-soil-table>
+      <app-soil-table
+        *ngIf="isMobile"
+        tableHeader="Soil to be Removed"
+        [(data)]="removalTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
+      <app-soil-table
+        *ngIf="isMobile"
+        tableHeader="Fill to be Placed"
+        [(data)]="fillToPlaceTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
+    </div>
+    <div class="full-row">
+      <label
+        >Of the proposed totals provided above, please input the dimensions of soil that has already been
+        removed.</label
+      >
+      <div class="subtext">If no proposed soil has already been removed, please leave 0 in the fields below</div>
+      <app-soil-table
+        *ngIf="!isMobile"
+        tableHeader="Soil already Removed"
+        tableHeader2="Fill already Placed"
+        [(data)]="alreadyRemovedTableData"
+        [(data2)]="fillAlreadyPlacedTableData"
+        (dataChange)="markDirty()"
+        (data2Change)="markDirty()"
+      ></app-soil-table>
+      <app-soil-table
+        *ngIf="isMobile"
+        tableHeader="Soil already Removed"
+        [(data)]="alreadyRemovedTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
+      <app-soil-table
+        *ngIf="isMobile"
+        tableHeader="Fill already Placed"
+        [(data)]="fillAlreadyPlacedTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
+    </div>
+
+    <section>
+      <h4>Project Duration</h4>
+      <div class="subtext">Estimated duration of the project</div>
+      <div class="form-row">
+        <div>
+          <label for="projectDurationUnit">Duration</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Select one" id="projectDurationUnit" [formControl]="projectDurationUnit">
+              <mat-option value="days">Days</mat-option>
+              <mat-option value="months">Months</mat-option>
+              <mat-option value="years">Years</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="projectDurationAmount">Length</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="projectDurationAmount"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              min="0.01"
+              matInput
+              [formControl]="projectDurationAmount"
+              placeholder="Type length as a decimal number"
+            />
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="full-row">
+      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+      ></app-file-drag-drop>
+    </div>
+
+    <div class="full-row">
+      <label for="noi-area-wide-filling"> Is your proposal for area-wide filling? </label>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeIsAreaWideFilling($event)"
+          id="noi-area-wide-filling"
+          [formControl]="isAreaWideFilling"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': isAreaWideFilling.invalid && (isAreaWideFilling.dirty || isAreaWideFilling.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="noi-extraction-or-mining"> Is your proposal for aggregate extraction or placer mining? </label>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeIsExtractionOrMining($event)"
+          id="noi-extraction-or-mining"
+          [formControl]="isExtractionOrMining"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline':
+                isExtractionOrMining.invalid && (isExtractionOrMining.dirty || isExtractionOrMining.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label class="subheading2" for="cross-section">Cross Sections</label>
+      <div class="subtext">Include North-South and East-West cross sections</div>
+      <app-info-banner>
+        Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
+      </app-info-banner>
+      <app-file-drag-drop
+        id="cross-section"
+        [uploadedFiles]="crossSections"
+        (uploadFiles)="attachFile($event, DOCUMENT.CROSS_SECTIONS)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [allowMultiple]="true"
+        [disabled]="!allowMiningUploads"
+      ></app-file-drag-drop>
+    </div>
+    <div class="full-row">
+      <label class="subheading2" for="reclamation-plan">Reclamation Plan</label>
+      <div class="subtext">
+        The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
+        agricultural capability assessment.
+      </div>
+      <app-info-banner>
+        Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
+      </app-info-banner>
+      <app-file-drag-drop
+        id="reclamation-plan"
+        [uploadedFiles]="reclamationPlan"
+        (uploadFiles)="attachFile($event, DOCUMENT.RECLAMATION_PLAN)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [allowMultiple]="true"
+        [disabled]="!allowMiningUploads"
+      ></app-file-drag-drop>
+    </div>
+
+    <div class="full-row">
+      <label for="hasSubmittedNotice">
+        Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
+      </label>
+      <div class="subtext">If yes, please attach the Notice of Work in the section below.</div>
+      <div>
+        <mat-button-toggle-group
+          class="input"
+          (valueChange)="onChangeNoticeOfWork($event)"
+          id="hasSubmittedNotice"
+          formControlName="hasSubmittedNotice"
+        >
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
+            }"
+            value="true"
+            >Yes
+          </mat-button-toggle>
+          <mat-button-toggle
+            class="toggle-button"
+            [ngClass]="{
+              'error-outline': hasSubmittedNotice.invalid && (hasSubmittedNotice.dirty || hasSubmittedNotice.touched)
+            }"
+            value="false"
+            >No
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label class="subheading2" for="noticeOfWork">Notice of Work</label>
+      <app-info-banner>
+        Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
+      </app-info-banner>
+      <app-file-drag-drop
+        id="noticeOfWork"
+        [uploadedFiles]="noticeOfWork"
+        (uploadFiles)="attachFile($event, DOCUMENT.NOTICE_OF_WORK)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [disabled]="!requiresNoticeOfWork"
+        [allowMultiple]="true"
+      ></app-file-drag-drop>
+    </div>
+  </div>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

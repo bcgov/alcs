@@ -1,4 +1,4 @@
-import { STRUCTURE_TYPES } from '../../features/notice-of-intents/edit-submission/additional-information/roso/roso-additional-information.component';
+import { STRUCTURE_TYPES } from '../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
 
@@ -77,16 +77,17 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit?: string | null;
-  soilFillTypeToPlace?: string | null;
-  soilAlternativeMeasures?: string | null;
-  soilIsExtractionOrMining?: boolean;
-  soilHasSubmittedNotice?: boolean;
+  soilProjectDurationUnit: string | null;
+  soilFillTypeToPlace: string | null;
+  soilAlternativeMeasures: string | null;
+  soilIsExtractionOrMining: boolean | null;
+  soilIsAreaWideFilling: boolean | null;
+  soilHasSubmittedNotice: boolean | null;
   soilIsRemovingSoilForNewStructure: boolean | null;
-  soilStructureFarmUseReason?: string | null;
-  soilStructureResidentialUseReason?: string | null;
-  soilAgriParcelActivity?: string | null;
-  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilStructureFarmUseReason: string | null;
+  soilStructureResidentialUseReason: string | null;
+  soilAgriParcelActivity: string | null;
+  soilStructureResidentialAccessoryUseReason: string | null;
   soilProposedStructures: ProposedStructure[];
 }
 
@@ -133,6 +134,7 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
+  soilIsAreaWideFilling?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
   soilIsRemovingSoilForNewStructure?: boolean | null;
   soilStructureFarmUseReason?: string | null;

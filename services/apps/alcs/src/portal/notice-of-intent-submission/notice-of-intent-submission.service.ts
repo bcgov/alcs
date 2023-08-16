@@ -282,6 +282,11 @@ export class NoticeOfIntentSubmissionService {
       noticeOfIntentSubmission.soilIsExtractionOrMining,
     );
 
+    noticeOfIntentSubmission.soilIsAreaWideFilling = filterUndefined(
+      updateDto.soilIsAreaWideFilling,
+      noticeOfIntentSubmission.soilIsAreaWideFilling,
+    );
+
     noticeOfIntentSubmission.soilHasSubmittedNotice = filterUndefined(
       updateDto.soilHasSubmittedNotice,
       noticeOfIntentSubmission.soilHasSubmittedNotice,
