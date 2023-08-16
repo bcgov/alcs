@@ -30,6 +30,7 @@ export interface NoticeOfIntentDto {
   region: ApplicationRegionDto;
   applicant: string;
   type: NoticeOFIntentTypeDto;
+  source: 'ALCS' | 'APPLICANT';
 
   dateSubmittedToAlc?: number;
   feePaidDate?: number;

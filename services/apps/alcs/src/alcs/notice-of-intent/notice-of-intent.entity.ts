@@ -133,6 +133,14 @@ export class NoticeOfIntent extends Base {
 
   @AutoMap()
   @Column({
+    default: 'ALCS',
+    type: 'text',
+    comment: 'Determines where the NOI came from',
+  })
+  source: 'ALCS' | 'APPLICANT';
+
+  @AutoMap()
+  @Column({
     type: 'timestamptz',
     nullable: true,
   })

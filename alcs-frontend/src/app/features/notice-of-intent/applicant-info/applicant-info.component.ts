@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { SYSTEM_SOURCE_TYPES } from '../../../services/application/application.dto';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {
@@ -34,11 +35,8 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = noi.fileNumber;
 
         this.submission = await this.noiSubmissionService.fetchSubmission(this.fileNumber);
-        // TODO is this a thing for noi?
-        // const isApplicantSubmission = noi.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
-
-        // this.isSubmittedToAlc = isApplicantSubmission ? !!noi.dateSubmittedToAlc : true;
-        this.isSubmittedToAlc = !!noi.dateSubmittedToAlc;
+        const isApplicantSubmission = noi.source === SYSTEM_SOURCE_TYPES.APPLICANT;
+        this.isSubmittedToAlc = isApplicantSubmission ? !!noi.dateSubmittedToAlc : true;
       }
     });
   }

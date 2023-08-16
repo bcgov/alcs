@@ -12,8 +12,8 @@ import { ApplicationSubmissionService } from '../../services/application/applica
 import {
   ApplicationDto,
   ApplicationSubmissionDto,
-  APPLICATION_SYSTEM_SOURCE_TYPES,
   SUBMISSION_STATUS,
+  SYSTEM_SOURCE_TYPES,
 } from '../../services/application/application.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
@@ -200,7 +200,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
 
-        this.isApplicantSubmission = application.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT;
+        this.isApplicantSubmission = application.source === SYSTEM_SOURCE_TYPES.APPLICANT;
         let wasSubmittedToLfng = false;
 
         if (this.isApplicantSubmission) {

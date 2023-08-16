@@ -104,6 +104,9 @@ export class NoticeOfIntentDto {
 
   @AutoMap(() => NoticeOfIntentTypeDto)
   type: NoticeOfIntentTypeDto;
+
+  @AutoMap()
+  source: 'ALCS' | 'APPLICANT';
 }
 
 export class UpdateNoticeOfIntentDto {
