@@ -14,6 +14,7 @@ import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 
 export const childRoutes = [
   {
@@ -21,6 +22,13 @@ export const childRoutes = [
     menuTitle: 'Overview',
     icon: 'summarize',
     component: OverviewComponent,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'Applicant Info',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
   },
   {
     path: 'intake',

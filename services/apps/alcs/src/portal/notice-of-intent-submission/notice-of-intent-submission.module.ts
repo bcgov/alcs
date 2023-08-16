@@ -54,6 +54,10 @@ import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.s
     NoticeOfIntentOwnerProfile,
     NoticeOfIntentParcelProfile,
   ],
-  exports: [NoticeOfIntentSubmissionService],
+  exports: [
+    NoticeOfIntentSubmissionService,
+    NoticeOfIntentParcelService,
+    NoticeOfIntentParcelProfile,
+  ],
 })
 export class NoticeOfIntentSubmissionModule {}

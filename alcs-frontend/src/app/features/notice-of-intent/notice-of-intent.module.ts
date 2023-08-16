@@ -15,6 +15,8 @@ import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
+import { NoticeOfIntentDetailsModule } from './applicant-info/notice-of-intent-details/notice-of-intent-details.module';
 
 const routes: Routes = [
   {
@@ -40,7 +42,8 @@ const routes: Routes = [
     EditModificationDialogComponent,
     NoiDocumentsComponent,
     DocumentUploadDialogComponent,
+    ApplicantInfoComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(routes)],
+  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NoticeOfIntentDetailsModule],
 })
 export class NoticeOfIntentModule {}
