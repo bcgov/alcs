@@ -192,10 +192,6 @@ export class NoticeOfIntentSubmissionService {
       updateDto.soilTypeRemoved,
       noticeOfIntentSubmission.soilTypeRemoved,
     );
-    noticeOfIntentSubmission.soilReduceNegativeImpacts = filterUndefined(
-      updateDto.soilReduceNegativeImpacts,
-      noticeOfIntentSubmission.soilReduceNegativeImpacts,
-    );
     noticeOfIntentSubmission.soilToRemoveVolume = filterUndefined(
       updateDto.soilToRemoveVolume,
       noticeOfIntentSubmission.soilToRemoveVolume,
@@ -271,10 +267,6 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
       noticeOfIntentSubmission.soilFillTypeToPlace,
-    );
-    noticeOfIntentSubmission.soilAlternativeMeasures = filterUndefined(
-      updateDto.soilAlternativeMeasures,
-      noticeOfIntentSubmission.soilAlternativeMeasures,
     );
 
     noticeOfIntentSubmission.soilIsExtractionOrMining = filterUndefined(

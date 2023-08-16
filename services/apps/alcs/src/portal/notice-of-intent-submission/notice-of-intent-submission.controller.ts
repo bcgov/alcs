@@ -150,6 +150,7 @@ export class NoticeOfIntentSubmissionController {
         finalSubmission,
       );
     } else {
+      console.log('validationResult.errors', validationResult.errors);
       this.logger.debug(validationResult.errors);
       throw new BadRequestException('Invalid Notice of Intent');
     }

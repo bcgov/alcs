@@ -3,7 +3,6 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
-import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
@@ -202,6 +201,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   private async submit() {
     const submission = this.noiSubmission;
+    debugger;
     if (submission) {
       const didSubmit = await this.noticeOfIntentSubmissionService.submitToAlcs(submission.uuid);
       if (didSubmit) {

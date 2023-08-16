@@ -392,11 +392,7 @@ export class NoticeOfIntentSubmissionValidatorService {
     applicantDocuments: NoticeOfIntentDocument[],
     errors: Error[],
   ) {
-    if (
-      noticeOfIntentSubmission.soilFillTypeToPlace === null ||
-      noticeOfIntentSubmission.soilAlternativeMeasures === null ||
-      noticeOfIntentSubmission.soilReduceNegativeImpacts === null
-    ) {
+    if (noticeOfIntentSubmission.soilFillTypeToPlace === null) {
       errors.push(
         new ServiceValidationException(
           `${noticeOfIntentSubmission.typeCode} proposal incomplete`,

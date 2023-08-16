@@ -85,9 +85,6 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
   @AutoMap(() => String)
   soilTypeRemoved: string | null;
 
-  @AutoMap(() => String)
-  soilReduceNegativeImpacts: string | null;
-
   @AutoMap(() => Number)
   soilToRemoveVolume: number | null;
 
@@ -144,9 +141,6 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
-
-  @AutoMap(() => String)
-  soilAlternativeMeasures?: string | null;
 
   @AutoMap(() => Boolean)
   soilIsExtractionOrMining?: boolean;
@@ -266,11 +260,6 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsOptional()
   soilTypeRemoved?: string | null;
 
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  soilReduceNegativeImpacts?: string | null;
-
   @IsNumber()
   @IsOptional()
   soilToRemoveVolume?: number | null;
@@ -346,10 +335,6 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilFillTypeToPlace?: string | null;
-
-  @IsString()
-  @IsOptional()
-  soilAlternativeMeasures?: string | null;
 
   @IsBoolean()
   @IsOptional()

@@ -59,7 +59,6 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilIsFollowUp: boolean | null;
   soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;
-  soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;
   soilToRemoveArea: number | null;
   soilToRemoveMaximumDepth: number | null;
@@ -79,7 +78,6 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilProjectDurationAmount: number | null;
   soilProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
-  soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean | null;
   soilIsAreaWideFilling: boolean | null;
   soilHasSubmittedNotice: boolean | null;
@@ -112,7 +110,6 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilIsFollowUp?: boolean | null;
   soilFollowUpIDs?: string | null;
   soilTypeRemoved?: string | null;
-  soilReduceNegativeImpacts?: string | null;
   soilToRemoveVolume?: number | null;
   soilToRemoveArea?: number | null;
   soilToRemoveMaximumDepth?: number | null;
@@ -132,7 +129,6 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilProjectDurationAmount?: number | null;
   soilProjectDurationUnit?: string | null;
   soilFillTypeToPlace?: string | null;
-  soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilIsAreaWideFilling?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
