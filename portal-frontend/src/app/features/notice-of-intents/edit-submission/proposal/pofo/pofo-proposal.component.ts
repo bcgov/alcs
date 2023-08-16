@@ -15,47 +15,43 @@ import { EditNoiSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 
 @Component({
-  selector: 'app-roso-proposal',
-  templateUrl: './roso-proposal.component.html',
-  styleUrls: ['./roso-proposal.component.scss'],
+  selector: 'app-pofo-proposal',
+  templateUrl: './pofo-proposal.component.html',
+  styleUrls: ['./pofo-proposal.component.scss'],
 })
-export class RosoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
+export class PofoProposalComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditNoiSteps.Proposal;
 
   DOCUMENT = DOCUMENT_TYPE;
 
   allowMiningUploads = false;
-  requiresNoticeOfWork = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
   reclamationPlan: NoticeOfIntentDocumentDto[] = [];
-  noticeOfWork: NoticeOfIntentDocumentDto[] = [];
 
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
   followUpIds = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
-  soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
+  soilFillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
   projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
   projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
   areComponentsDirty = false;
-  isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
-  hasSubmittedNotice = new FormControl<string | null>(null, [Validators.required]);
+  isAreaWideFilling = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
     isFollowUp: this.isFollowUp,
     followUpIds: this.followUpIds,
     purpose: this.purpose,
-    soilTypeRemoved: this.soilTypeRemoved,
+    soilFillTypeToPlace: this.soilFillTypeToPlace,
     projectDurationAmount: this.projectDurationAmount,
     projectDurationUnit: this.projectDurationUnit,
-    isExtractionOrMining: this.isExtractionOrMining,
-    hasSubmittedNotice: this.hasSubmittedNotice,
+    isAreaWideFilling: this.isAreaWideFilling,
   });
 
   private submissionUuid = '';
-  removalTableData: SoilTableData = {};
-  alreadyRemovedTableData: SoilTableData = {};
+  fillToPlaceTableData: SoilTableData = {};
+  fillAlreadyPlacedTableData: SoilTableData = {};
 
   constructor(
     private router: Router,
@@ -72,40 +68,33 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
         this.fileId = noiSubmission.fileNumber;
         this.submissionUuid = noiSubmission.uuid;
 
-        this.alreadyRemovedTableData = {
-          volume: noiSubmission.soilAlreadyRemovedVolume ?? 0,
-          area: noiSubmission.soilAlreadyRemovedArea ?? 0,
-          averageDepth: noiSubmission.soilAlreadyRemovedAverageDepth ?? 0,
-          maximumDepth: noiSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
+        this.fillAlreadyPlacedTableData = {
+          volume: noiSubmission.soilAlreadyPlacedVolume ?? 0,
+          area: noiSubmission.soilAlreadyPlacedArea ?? 0,
+          averageDepth: noiSubmission.soilAlreadyPlacedAverageDepth ?? 0,
+          maximumDepth: noiSubmission.soilAlreadyPlacedMaximumDepth ?? 0,
         };
 
-        this.removalTableData = {
-          volume: noiSubmission.soilToRemoveVolume ?? undefined,
-          area: noiSubmission.soilToRemoveArea ?? undefined,
-          averageDepth: noiSubmission.soilToRemoveAverageDepth ?? undefined,
-          maximumDepth: noiSubmission.soilToRemoveMaximumDepth ?? undefined,
+        this.fillToPlaceTableData = {
+          volume: noiSubmission.soilToPlaceVolume ?? undefined,
+          area: noiSubmission.soilToPlaceArea ?? undefined,
+          averageDepth: noiSubmission.soilToPlaceAverageDepth ?? undefined,
+          maximumDepth: noiSubmission.soilToPlaceMaximumDepth ?? undefined,
         };
 
         if (noiSubmission.soilIsFollowUp) {
           this.followUpIds.enable();
         }
-
-        if (noiSubmission.soilIsExtractionOrMining) {
-          this.allowMiningUploads = true;
-          this.hasSubmittedNotice.enable();
-        } else {
-          this.hasSubmittedNotice.disable();
-        }
+        this.allowMiningUploads = !!noiSubmission.soilIsAreaWideFilling;
 
         this.form.patchValue({
           isFollowUp: formatBooleanToString(noiSubmission.soilIsFollowUp),
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
-          soilTypeRemoved: noiSubmission.soilTypeRemoved,
+          soilFillTypeToPlace: noiSubmission.soilFillTypeToPlace,
           projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
           projectDurationUnit: noiSubmission.soilProjectDurationUnit,
-          isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
-          hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
+          isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -117,7 +106,6 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
       this.crossSections = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.CROSS_SECTIONS);
       this.reclamationPlan = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.RECLAMATION_PLAN);
-      this.noticeOfWork = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.NOTICE_OF_WORK);
     });
   }
 
@@ -130,29 +118,27 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
       const isNOIFollowUp = this.isFollowUp.getRawValue();
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
-      const soilTypeRemoved = this.soilTypeRemoved.getRawValue();
-      const isExtractionOrMining = this.isExtractionOrMining.getRawValue();
-      const hasSubmittedNotice = this.hasSubmittedNotice.getRawValue();
+      const soilFillTypeToPlace = this.soilFillTypeToPlace.getRawValue();
+      const isAreaWideFilling = this.isAreaWideFilling.getRawValue();
 
       const updateDto: NoticeOfIntentSubmissionUpdateDto = {
         purpose,
-        soilTypeRemoved,
+        soilFillTypeToPlace,
         soilIsFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilFollowUpIDs,
-        soilToRemoveVolume: this.removalTableData?.volume ?? null,
-        soilToRemoveArea: this.removalTableData?.area ?? null,
-        soilToRemoveMaximumDepth: this.removalTableData?.maximumDepth ?? null,
-        soilToRemoveAverageDepth: this.removalTableData?.averageDepth ?? null,
-        soilAlreadyRemovedVolume: this.alreadyRemovedTableData?.volume ?? null,
-        soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
-        soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
-        soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
+        soilToPlaceVolume: this.fillToPlaceTableData?.volume ?? null,
+        soilToPlaceArea: this.fillToPlaceTableData?.area ?? null,
+        soilToPlaceMaximumDepth: this.fillToPlaceTableData?.maximumDepth ?? null,
+        soilToPlaceAverageDepth: this.fillToPlaceTableData?.averageDepth ?? null,
+        soilAlreadyPlacedVolume: this.fillAlreadyPlacedTableData?.volume ?? null,
+        soilAlreadyPlacedArea: this.fillAlreadyPlacedTableData?.area ?? null,
+        soilAlreadyPlacedMaximumDepth: this.fillAlreadyPlacedTableData?.maximumDepth ?? null,
+        soilAlreadyPlacedAverageDepth: this.fillAlreadyPlacedTableData?.averageDepth ?? null,
         soilProjectDurationAmount: this.projectDurationAmount.value
           ? parseFloat(this.projectDurationAmount.value)
           : null,
         soilProjectDurationUnit: this.projectDurationUnit.value,
-        soilIsExtractionOrMining: parseStringToBoolean(isExtractionOrMining),
-        soilHasSubmittedNotice: parseStringToBoolean(hasSubmittedNotice),
+        soilIsAreaWideFilling: parseStringToBoolean(isAreaWideFilling),
       };
 
       const updatedApp = await this.noticeOfIntentSubmissionService.updatePending(this.submissionUuid, updateDto);
@@ -169,21 +155,11 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     }
   }
 
-  onChangeIsExtractionOrMining(selectedValue: string) {
+  onChangeIsAreaWideFilling(selectedValue: string) {
     this.allowMiningUploads = selectedValue === 'true';
-    if (selectedValue === 'true') {
-      this.hasSubmittedNotice.enable();
-    } else {
-      this.hasSubmittedNotice.disable();
-      this.hasSubmittedNotice.setValue(null);
-    }
   }
 
   markDirty() {
     this.areComponentsDirty = true;
-  }
-
-  onChangeNoticeOfWork(selectedValue: string) {
-    this.requiresNoticeOfWork = selectedValue === 'true';
   }
 }

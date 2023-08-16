@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked } from '@golevelup/ts-jest';
-import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 
-import { RosoAdditionalInformationComponent } from './roso-additional-information.component';
+import { AdditionalInformationComponent } from './additional-information.component';
 
 describe('RosoAdditionalInformationComponent', () => {
-  let component: RosoAdditionalInformationComponent;
-  let fixture: ComponentFixture<RosoAdditionalInformationComponent>;
+  let component: AdditionalInformationComponent;
+  let fixture: ComponentFixture<AdditionalInformationComponent>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RosoAdditionalInformationComponent],
+      declarations: [AdditionalInformationComponent],
       providers: [
         {
           provide: NoticeOfIntentDocumentService,
@@ -20,7 +20,7 @@ describe('RosoAdditionalInformationComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RosoAdditionalInformationComponent);
+    fixture = TestBed.createComponent(AdditionalInformationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

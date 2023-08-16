@@ -26,8 +26,8 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="is-new-structure"> Are you removing soil in order to build a structure? </label>
-      <div class="subtext">Structures include farm buildings, residences, or accessory buildings</div>
+      <label for="is-new-structure"> {{ firstQuestion }}</label>
+      <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
       <div>
         <mat-button-toggle-group
           class="input"

@@ -12,11 +12,13 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
-import { RosoAdditionalInformationComponent } from './additional-information/roso/roso-additional-information.component';
+import { AdditionalInformationComponent } from './additional-information/additional-information.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { PfrsProposalComponent } from './proposal/pfrs/pfrs-proposal.component';
+import { PofoProposalComponent } from './proposal/pofo/pofo-proposal.component';
 import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
@@ -57,7 +59,9 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
   @ViewChild(RosoProposalComponent) rosoProposalComponent!: RosoProposalComponent;
-  @ViewChild(RosoAdditionalInformationComponent) rosoAdditionalInfoComponent!: RosoAdditionalInformationComponent;
+  @ViewChild(PofoProposalComponent) pofoProposalComponent!: PofoProposalComponent;
+  @ViewChild(PfrsProposalComponent) pfrsProposalComponent!: PfrsProposalComponent;
+  @ViewChild(AdditionalInformationComponent) rosoAdditionalInfoComponent!: AdditionalInformationComponent;
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
@@ -152,6 +156,12 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       case EditNoiSteps.Proposal:
         if (this.rosoProposalComponent) {
           await this.rosoProposalComponent.onSave();
+        }
+        if (this.pofoProposalComponent) {
+          await this.pofoProposalComponent.onSave();
+        }
+        if (this.pfrsProposalComponent) {
+          await this.pfrsProposalComponent.onSave();
         }
         break;
       case EditNoiSteps.ExtraInfo:
