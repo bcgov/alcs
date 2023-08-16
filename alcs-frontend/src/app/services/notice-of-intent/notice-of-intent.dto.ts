@@ -16,7 +16,7 @@ export interface CreateNoticeOfIntentDto {
   dateSubmittedToAlc: number;
 }
 
-export interface NoticeOFIntentTypeDto extends BaseCodeDto {
+export interface NoticeOfIntentTypeDto extends BaseCodeDto {
   shortLabel: string;
   backgroundColor: string;
   textColor: string;
@@ -29,7 +29,7 @@ export interface NoticeOfIntentDto {
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   applicant: string;
-  type: NoticeOFIntentTypeDto;
+  type: NoticeOfIntentTypeDto;
   source: 'ALCS' | 'APPLICANT';
 
   dateSubmittedToAlc?: number;
