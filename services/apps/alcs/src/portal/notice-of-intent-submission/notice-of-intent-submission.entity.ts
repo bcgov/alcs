@@ -396,6 +396,10 @@ export class NoticeOfIntentSubmission extends Base {
 
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
+  soilIsAreaWideFilling: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
 
   @AutoMap(() => Boolean)

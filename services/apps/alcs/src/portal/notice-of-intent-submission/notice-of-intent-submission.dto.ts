@@ -152,6 +152,9 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
   soilIsExtractionOrMining?: boolean;
 
   @AutoMap(() => Boolean)
+  soilIsAreaWideFilling?: boolean;
+
+  @AutoMap(() => Boolean)
   soilHasSubmittedNotice?: boolean;
 
   @AutoMap(() => Boolean)
@@ -351,6 +354,10 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   soilIsExtractionOrMining?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  soilIsAreaWideFilling?: boolean;
 
   @IsBoolean()
   @IsOptional()

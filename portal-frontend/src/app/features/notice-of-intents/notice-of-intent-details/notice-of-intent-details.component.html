@@ -209,11 +209,28 @@
     [noiDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-roso-details>
+  <app-pofo-details
+    *ngIf="noiSubmission.typeCode === 'POFO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="noiSubmission.typeCode === 'PFRS'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pfrs-details>
 </section>
 <section *ngIf="noiSubmission">
   <h3>6. Additional Proposal Information</h3>
-  <app-roso-additional-information
-    *ngIf="noiSubmission.typeCode === 'ROSO'"
+  <app-additional-information
     [showErrors]="showErrors"
     [showEdit]="showEdit"
     [draftMode]="draftMode"
@@ -221,7 +238,7 @@
     [noiDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   >
-  </app-roso-additional-information>
+  </app-additional-information>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

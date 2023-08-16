@@ -1,6 +1,6 @@
 <div *ngIf="_noiSubmission" class="review-table">
   <div class="subheading2 grid-1">
-    Are you removing soil in order to build a structure?
+    {{ firstQuestion }}
     <app-updated-banner *ngIf="updatedFields.includes('soilIsRemovingSoilForNewStructure')"></app-updated-banner>
   </div>
   <div class="grid-double">
