@@ -2,9 +2,9 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { NoticeOfIntentDocument } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentService } from '../../../alcs/notice-of-intent/notice-of-intent.service';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { NoticeOfIntentParcel } from '../notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-parcel/notice-of-intent-parcel.service';
@@ -18,15 +18,17 @@ describe('NoticeOfIntentOwnerService', () => {
   let mockParcelService: DeepMocked<NoticeOfIntentParcelService>;
   let mockRepo: DeepMocked<Repository<NoticeOfIntentOwner>>;
   let mockTypeRepo: DeepMocked<Repository<OwnerType>>;
-  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockApplicationservice: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockAppDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockNoiService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockRepo = createMock();
     mockTypeRepo = createMock();
     mockAppDocumentService = createMock();
-    mockApplicationservice = createMock();
+    mockNoiSubmissionService = createMock();
+    mockNoiService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -49,7 +51,11 @@ describe('NoticeOfIntentOwnerService', () => {
         },
         {
           provide: NoticeOfIntentSubmissionService,
-          useValue: mockApplicationservice,
+          useValue: mockNoiSubmissionService,
+        },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNoiService,
         },
       ],
     }).compile();
@@ -63,9 +69,11 @@ describe('NoticeOfIntentOwnerService', () => {
         owners: [new NoticeOfIntentOwner()],
       }),
     ]);
-    mockApplicationservice.update.mockResolvedValue(
+    mockNoiSubmissionService.update.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
+    mockNoiService.updateApplicant.mockResolvedValue();
+    mockNoiSubmissionService.getFileNumber.mockResolvedValue('file-number');
   });
 
   it('should be defined', () => {
@@ -230,10 +238,12 @@ describe('NoticeOfIntentOwnerService', () => {
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+    expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
       'A',
     );
+    expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call update with the first parcels last name', async () => {
@@ -264,10 +274,12 @@ describe('NoticeOfIntentOwnerService', () => {
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+    expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
       'A et al.',
     );
+    expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call update with the number owners last name', async () => {
@@ -290,8 +302,8 @@ describe('NoticeOfIntentOwnerService', () => {
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+    expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
       '1 et al.',
     );
   });
@@ -323,10 +335,12 @@ describe('NoticeOfIntentOwnerService', () => {
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
+    expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
       'A et al.',
     );
+    expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should load then delete non application owners', async () => {

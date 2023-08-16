@@ -439,6 +439,7 @@ export class ApplicationService {
         uuid,
       },
       select: {
+        uuid: true,
         fileNumber: true,
       },
     });
@@ -451,5 +452,16 @@ export class ApplicationService {
         uuid,
       },
     });
+  }
+
+  async updateApplicant(fileNumber: string, applicantName: string) {
+    await this.applicationRepository.update(
+      {
+        fileNumber,
+      },
+      {
+        applicant: applicantName,
+      },
+    );
   }
 }

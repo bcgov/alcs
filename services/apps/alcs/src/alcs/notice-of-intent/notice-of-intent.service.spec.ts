@@ -234,6 +234,14 @@ describe('NoticeOfIntentService', () => {
     expect(mockSubtypeRepository.find).toHaveBeenCalledTimes(1);
   });
 
+  it('should call the repo for get update applicant', async () => {
+    mockRepository.update.mockResolvedValue({} as any);
+
+    await service.updateApplicant('file-number', 'applicant');
+
+    expect(mockRepository.update).toHaveBeenCalledTimes(1);
+  });
+
   it('should call map active and paused times for mapToDtos', async () => {
     const noi = new NoticeOfIntent({
       uuid: '5',
