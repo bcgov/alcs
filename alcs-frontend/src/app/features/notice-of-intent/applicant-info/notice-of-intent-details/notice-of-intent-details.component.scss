@@ -54,6 +54,7 @@
     grid-row-gap: 12px;
     overflow: unset;
   }
+
   .scrollable {
     overflow-x: auto;
   }
@@ -62,6 +63,7 @@
     display: grid;
     grid-template-columns: max-content max-content max-content;
     overflow-x: auto;
+    overflow-y: hidden;
     grid-column-gap: 36px;
     grid-row-gap: 12px;
 

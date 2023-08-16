@@ -3,8 +3,7 @@ import { Subject } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
-import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentSubmissionDetailedDto, NoticeOfIntentSubmissionDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/document/document.dto';
 
 @Component({
@@ -35,8 +34,8 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDest
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.disableEdit = this.wasSubmittedToLfng || !this.isSubmittedToAlc;
-    this.showFullApp = this.wasSubmittedToLfng || this.isSubmittedToAlc;
+    this.disableEdit = !this.isSubmittedToAlc;
+    this.showFullApp = this.isSubmittedToAlc;
   }
 
   ngOnDestroy(): void {
@@ -45,7 +44,7 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnChanges, OnDest
   }
 
   onEdit(step: number) {
-    window.location.href = `${environment.portalUrl}/alcs/application/${this.fileNumber}/edit/${step}`;
+    window.location.href = `${environment.portalUrl}/alcs/notice-of-intent/${this.fileNumber}/edit/${step}`;
   }
 
   async openFile(uuid: string) {
