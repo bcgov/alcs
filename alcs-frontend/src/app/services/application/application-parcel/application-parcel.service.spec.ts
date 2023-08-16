@@ -3,8 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of } from 'rxjs';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationSubmissionDto, SubmittedApplicationOwnerDto } from '../application.dto';
-
 import { ApplicationParcelService } from './application-parcel.service';
 
 describe('ApplicationParcelService', () => {

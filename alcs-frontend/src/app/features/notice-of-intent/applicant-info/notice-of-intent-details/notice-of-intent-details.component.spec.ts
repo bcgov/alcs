@@ -1,30 +1,27 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { CodeService } from '../../../services/code/code.service';
-import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
-import { ToastService } from '../../../services/toast/toast.service';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
+import {
+  NOI_SUBMISSION_STATUS,
+  NoticeOfIntentSubmissionStatusDto,
+} from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { NoticeOfIntentDetailsComponent } from './notice-of-intent-details.component';
 
 describe('NoticeOfIntentDetailsComponent', () => {
   let component: NoticeOfIntentDetailsComponent;
   let fixture: ComponentFixture<NoticeOfIntentDetailsComponent>;
-  let mockCodeService: DeepMocked<CodeService>;
-  let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+
+  let mockNoiDocumentService: DeepMocked<NoiDocumentService>;
   let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
   let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
 
-  let noiDocumentPipe = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
-
   beforeEach(async () => {
-    mockCodeService = createMock();
     mockNoiDocumentService = createMock();
     mockRouter = createMock();
     mockNoiSubmissionService = createMock();
@@ -32,11 +29,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: CodeService,
-          useValue: mockCodeService,
-        },
-        {
-          provide: NoticeOfIntentDocumentService,
+          provide: NoiDocumentService,
           useValue: mockNoiDocumentService,
         },
         {
@@ -58,10 +51,70 @@ describe('NoticeOfIntentDetailsComponent', () => {
 
     fixture = TestBed.createComponent(NoticeOfIntentDetailsComponent);
     component = fixture.componentInstance;
-    component.$noticeOfIntentSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(
-      undefined
-    );
-    component.$noiDocuments = noiDocumentPipe;
+    component.submission = {
+      fileNumber: '',
+      uuid: '',
+      createdAt: 1,
+      updatedAt: 1,
+      applicant: '',
+      localGovernmentUuid: '',
+      type: '',
+      typeCode: '',
+      status: {
+        code: NOI_SUBMISSION_STATUS.IN_PROGRESS,
+        portalBackgroundColor: '',
+        portalColor: '',
+      } as NoticeOfIntentSubmissionStatusDto,
+      submissionStatuses: [],
+      owners: [],
+      canEdit: false,
+      canView: false,
+
+      purpose: '',
+      parcelsAgricultureDescription: '',
+      parcelsAgricultureImprovementDescription: '',
+      parcelsNonAgricultureUseDescription: '',
+      northLandUseType: '',
+      northLandUseTypeDescription: '',
+      eastLandUseType: '',
+      eastLandUseTypeDescription: '',
+      southLandUseType: '',
+      southLandUseTypeDescription: '',
+      westLandUseType: '',
+      westLandUseTypeDescription: '',
+
+      primaryContactOwnerUuid: null,
+      primaryContact: undefined,
+
+      //Soil Fields
+      soilIsRemovingSoilForNewStructure: null,
+      soilIsFollowUp: null,
+      soilFollowUpIDs: '',
+      soilTypeRemoved: '',
+      soilReduceNegativeImpacts: '',
+      soilToRemoveVolume: null,
+      soilToRemoveArea: null,
+      soilToRemoveMaximumDepth: null,
+      soilToRemoveAverageDepth: null,
+      soilAlreadyRemovedVolume: null,
+      soilAlreadyRemovedArea: null,
+      soilAlreadyRemovedMaximumDepth: null,
+      soilAlreadyRemovedAverageDepth: null,
+      soilToPlaceVolume: null,
+      soilToPlaceArea: null,
+      soilToPlaceMaximumDepth: null,
+      soilToPlaceAverageDepth: null,
+      soilAlreadyPlacedVolume: null,
+      soilAlreadyPlacedArea: null,
+      soilAlreadyPlacedMaximumDepth: null,
+      soilAlreadyPlacedAverageDepth: null,
+      soilProjectDurationAmount: null,
+      soilProjectDurationUnit: null,
+      soilFillTypeToPlace: null,
+      soilProposedStructures: [],
+    };
+    component.noiType = 'ROSO';
+    component.fileNumber = 'fake';
     fixture.detectChanges();
   });
 

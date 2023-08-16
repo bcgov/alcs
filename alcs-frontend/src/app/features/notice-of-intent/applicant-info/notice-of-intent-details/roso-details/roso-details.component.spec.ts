@@ -1,32 +1,27 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
 
 import { RosoDetailsComponent } from './roso-details.component';
 
 describe('RosoDetailsComponent', () => {
   let component: RosoDetailsComponent;
   let fixture: ComponentFixture<RosoDetailsComponent>;
-  let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
-  let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
+  let mockNoiDocumentService: DeepMocked<NoiDocumentService>;
 
   beforeEach(async () => {
-    mockNoiParcelService = createMock();
     mockNoiDocumentService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [RosoDetailsComponent],
       providers: [
         {
-          provide: NoticeOfIntentDocumentService,
+          provide: NoiDocumentService,
           useValue: mockNoiDocumentService,
         },
-        {
-          provide: NoticeOfIntentParcelService,
-          useValue: mockNoiParcelService,
-        },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RosoDetailsComponent);
