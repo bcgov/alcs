@@ -41,7 +41,7 @@ export class NoticeOfIntentDocumentController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('/application/:fileNumber')
+  @Get('/notice-of-intent/:fileNumber')
   async listApplicantDocuments(
     @Param('fileNumber') fileNumber: string,
     @Param('documentType') documentType: DOCUMENT_TYPE | null,
@@ -73,7 +73,7 @@ export class NoticeOfIntentDocumentController {
     return { url };
   }
 
-  @Patch('/application/:fileNumber')
+  @Patch('/notice-of-intent/:fileNumber')
   async update(
     @Param('fileNumber') fileNumber: string,
     @Req() req,
@@ -122,7 +122,7 @@ export class NoticeOfIntentDocumentController {
     return {};
   }
 
-  @Post('/application/:uuid/attachExternal')
+  @Post('/notice-of-intent/:uuid/attachExternal')
   async attachExternalDocument(
     @Param('uuid') fileNumber: string,
     @Body() data: AttachExternalDocumentDto,
