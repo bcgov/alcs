@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ViewApplicationSubmissionModule } from './features/applications/view-submission/view-application-submission.module';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
@@ -34,8 +35,11 @@ const routes: Routes = [
   {
     title: 'View Application',
     path: 'application/:fileId',
-    component: ViewApplicationSubmissionComponent,
     canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/applications/view-submission/view-application-submission.module').then(
+        (m) => m.ViewApplicationSubmissionModule
+      ),
   },
   {
     title: 'Edit Application',
@@ -65,8 +69,11 @@ const routes: Routes = [
   {
     title: 'View Notice of Intent',
     path: 'notice-of-intent/:fileId',
-    component: ViewNoticeOfIntentSubmissionComponent,
     canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/notice-of-intents/view-submission/view-notice-of-intent-submission.module').then(
+        (m) => m.ViewNoticeOfIntentSubmissionModule
+      ),
   },
   {
     title: 'Edit Notice of Intent',
