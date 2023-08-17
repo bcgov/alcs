@@ -400,12 +400,6 @@ export class NoticeOfIntentSubmissionValidatorService {
       );
     }
 
-    this.runSharedSoilValidation(
-      noticeOfIntentSubmission,
-      errors,
-      applicantDocuments,
-    );
-
     if (
       noticeOfIntentSubmission.soilToPlaceVolume === null ||
       noticeOfIntentSubmission.soilToPlaceArea === null ||
@@ -422,6 +416,7 @@ export class NoticeOfIntentSubmissionValidatorService {
         ),
       );
     }
+
     this.runSharedSoilValidation(
       noticeOfIntentSubmission,
       errors,
@@ -451,6 +446,12 @@ export class NoticeOfIntentSubmissionValidatorService {
         );
       }
     }
+
+    this.runSharedSoilValidation(
+      noticeOfIntentSubmission,
+      errors,
+      applicantDocuments,
+    );
 
     const noticeOfWork = applicantDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
