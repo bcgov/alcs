@@ -6,15 +6,15 @@ import { LocalGovernmentService } from '../../alcs/local-government/local-govern
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import {
+  OwnerType,
+  OWNER_TYPE,
+} from '../../common/owner-type/owner-type.entity';
+import {
   DocumentCode,
   DOCUMENT_TYPE,
 } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import {
-  OWNER_TYPE,
-  OwnerType,
-} from '../../common/owner-type/owner-type.entity';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from './notice-of-intent-parcel/notice-of-intent-parcel.service';
@@ -719,7 +719,6 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
       const noticeOfIntentSubmission = new NoticeOfIntentSubmission({
         owners: [],
         soilProposedStructures: [],
-        soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilIsFollowUp: false,
         soilAlreadyRemovedVolume: 5,
         soilAlreadyRemovedMaximumDepth: 5,
@@ -813,224 +812,230 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
     });
   });
 
-  // describe('POFO Applications', () => {
-  //   it('should not have errors when base information is filled correctly', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-  //       soilIsFollowUp: false,
-  //       soilAlreadyPlacedVolume: 5,
-  //       soilAlreadyPlacedMaximumDepth: 5,
-  //       soilToPlaceMaximumDepth: 5,
-  //       soilAlreadyPlacedAverageDepth: 5,
-  //       soilAlreadyPlacedArea: 5,
-  //       soilToPlaceAverageDepth: 5,
-  //       soilToPlaceVolume: 5,
-  //       soilToPlaceArea: 5,
-  //       soilAlternativeMeasures: 'soilAlternativeMeasures',
-  //       soilFillTypeToPlace: 'soilFillTypeToPlace',
-  //       typeCode: 'POFO',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`POFO Proposal incomplete`)),
-  //     ).toBe(false);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
-  //     ).toBe(false);
-  //   });
-  //
-  //   it('should report errors when information is missing', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilFillTypeToPlace: null,
-  //       soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-  //       soilToPlaceArea: null,
-  //       typeCode: 'POFO',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`POFO Proposal incomplete`)),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
-  //     ).toBe(true);
-  //   });
-  //
-  //   it('should require NOI IDs or ApplicationIDs', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilIsFollowUp: true,
-  //       typeCode: 'POFO',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`POFO Proposal missing Application or NOI IDs`),
-  //       ),
-  //     ).toBe(true);
-  //   });
-  //
-  //   it('should complain about missing files', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilIsFollowUp: true,
-  //       typeCode: 'POFO',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`POFO proposal missing Proposal Map / Site Plan`),
-  //       ),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`POFO proposal missing Cross Section Diagrams`),
-  //       ),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`POFO proposal missing Reclamation Plans`),
-  //       ),
-  //     ).toBe(true);
-  //   });
-  // });
-  //
-  // describe('PFRS Applications', () => {
-  //   it('should not have errors when base information is filled correctly', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       purpose: 'purpose',
-  //       soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-  //       soilIsFollowUp: false,
-  //       soilAlreadyPlacedVolume: 5,
-  //       soilAlreadyPlacedMaximumDepth: 5,
-  //       soilToPlaceMaximumDepth: 5,
-  //       soilAlreadyPlacedAverageDepth: 5,
-  //       soilAlreadyPlacedArea: 5,
-  //       soilToPlaceAverageDepth: 5,
-  //       soilToPlaceVolume: 5,
-  //       soilToPlaceArea: 5,
-  //       soilAlternativeMeasures: 'soilAlternativeMeasures',
-  //       soilFillTypeToPlace: 'soilFillTypeToPlace',
-  //       typeCode: 'PFRS',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
-  //     ).toBe(false);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
-  //     ).toBe(false);
-  //   });
-  //
-  //   it('should report errors when information is missing', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       purpose: 'purpose',
-  //       soilFillTypeToPlace: null,
-  //       soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-  //       soilToPlaceArea: null,
-  //       typeCode: 'PFRS',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`PFRS Proposal incomplete`)),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
-  //     ).toBe(true);
-  //   });
-  //
-  //   it('should require NOI IDs or ApplicationIDs', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilIsFollowUp: true,
-  //       typeCode: 'PFRS',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`PFRS Proposal missing Application or NOI IDs`),
-  //       ),
-  //     ).toBe(true);
-  //   });
-  //
-  //   it('should complain about missing files', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilIsFollowUp: true,
-  //       typeCode: 'PFRS',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`PFRS proposal missing Proposal Map / Site Plan`),
-  //       ),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`PFRS proposal missing Cross Section Diagrams`),
-  //       ),
-  //     ).toBe(true);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(`PFRS proposal missing Reclamation Plans`),
-  //       ),
-  //     ).toBe(true);
-  //   });
-  //
-  //   it('should require a notice of work for both mining and notice true', async () => {
-  //     const application = new NoticeOfIntentSubmission({
-  //       owners: [],
-  //       soilIsFollowUp: true,
-  //       soilIsExtractionOrMining: true,
-  //       soilHasSubmittedNotice: true,
-  //       typeCode: 'PFRS',
-  //     });
-  //
-  //     const res = await service.validateSubmission(application);
-  //
-  //     expect(
-  //       includesError(
-  //         res.errors,
-  //         new Error(
-  //           `PFRS proposal has yes to notice of work but is not attached`,
-  //         ),
-  //       ),
-  //     ).toBe(true);
-  //   });
-  // });
+  describe('POFO Notice of Intents', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const noticeOfIntentSubmission = new NoticeOfIntentSubmission({
+        owners: [],
+        soilProposedStructures: [],
+        soilIsFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'POFO',
+      });
+
+      const res = await service.validateSubmission(noticeOfIntentSubmission);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        soilFillTypeToPlace: null,
+        soilToPlaceArea: null,
+        typeCode: 'POFO',
+        soilProposedStructures: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`POFO proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`POFO Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOI IDs or ApplicationIDs', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        typeCode: 'POFO',
+        soilProposedStructures: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Application or NOI IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        typeCode: 'POFO',
+        soilProposedStructures: [],
+        soilIsExtractionOrMining: true,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`POFO proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+  });
+
+  describe('PFRS Applications', () => {
+    it('should not have errors when base information is filled correctly', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilProposedStructures: [],
+        purpose: 'purpose',
+        soilIsFollowUp: false,
+        soilAlreadyPlacedVolume: 5,
+        soilAlreadyPlacedMaximumDepth: 5,
+        soilToPlaceMaximumDepth: 5,
+        soilAlreadyPlacedAverageDepth: 5,
+        soilAlreadyPlacedArea: 5,
+        soilToPlaceAverageDepth: 5,
+        soilToPlaceVolume: 5,
+        soilToPlaceArea: 5,
+        soilFillTypeToPlace: 'soilFillTypeToPlace',
+        typeCode: 'PFRS',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS proposal incomplete`)),
+      ).toBe(false);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(false);
+    });
+
+    it('should report errors when information is missing', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        purpose: 'purpose',
+        soilFillTypeToPlace: null,
+        soilToPlaceArea: null,
+        typeCode: 'PFRS',
+        soilProposedStructures: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS proposal incomplete`)),
+      ).toBe(true);
+
+      expect(
+        includesError(res.errors, new Error(`PFRS Soil Table Incomplete`)),
+      ).toBe(true);
+    });
+
+    it('should require NOI IDs or ApplicationIDs', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        typeCode: 'PFRS',
+        soilProposedStructures: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Application or NOI IDs`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should complain about missing files', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        typeCode: 'PFRS',
+        soilProposedStructures: [],
+        soilIsExtractionOrMining: true,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Proposal Map / Site Plan`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Cross Section Diagrams`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`PFRS proposal missing Reclamation Plans`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should require a notice of work for both mining and notice true', async () => {
+      const application = new NoticeOfIntentSubmission({
+        owners: [],
+        soilIsFollowUp: true,
+        soilIsExtractionOrMining: true,
+        soilHasSubmittedNotice: true,
+        typeCode: 'PFRS',
+        soilProposedStructures: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `PFRS proposal has yes to notice of work but is not attached`,
+          ),
+        ),
+      ).toBe(true);
+    });
+  });
 });
