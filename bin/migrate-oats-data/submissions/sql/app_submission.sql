@@ -21,7 +21,8 @@ SELECT
     aps.file_number,
     aps.type_code,
     aps.local_government_uuid,
-    oc.alr_change_code
+    oc.alr_change_code,
+    oc.alr_application_id
     -- ospi.subdiv_parcel_intent_id
 FROM
     alcs_apps aps

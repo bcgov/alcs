@@ -45,7 +45,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE aps.file_number > {last_application_id} ORDER BY aps.file_number;"
+                    f"{application_sql} WHERE oc.alr_application_id > {last_application_id} ORDER BY oc.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -60,7 +60,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_updates_count = (
                         successful_updates_count + applications_to_be_updated_count
                     )
-                    last_application_id = dict(rows[-1])["file_number"]
+                    last_application_id = dict(rows[-1])["alr_application_id"]
 
                     print(
                         f"retrieved/updated items count: {applications_to_be_updated_count}; total successfully updated submissions so far {successful_updates_count}; last updated application_id: {last_application_id}"
@@ -183,54 +183,66 @@ def prepare_app_sub_data(app_sub_raw_data_list):
     return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
 
 
-def get_update_query(unique_fields):
+def get_update_query(unique_fields,unique_values):
     # unique_fields takes input from called function and appends to query
     query = """
-                INSERT INTO alcs.application_submission
-                VALUES file_number = %(file_number)s,
-                    local_government_uuid = %(local_government_uuid)s,
-                    type_code = %(type_code)s,
-                    subd_proposed_lots = jsonb_build_array(empty,1),
-                    is_draft = false
+                INSERT INTO alcs.application_submission (
+                    file_number,
+                    local_government_uuid,
+                    type_code,
+                    is_draft,
+                    audit_created_by
                     {unique_fields}
+                )
+                VALUES (
+                    %(file_number)s,
+                    %(local_government_uuid)s,
+                    %(type_code)s,
+                    false,
+                    'oats_etl'
+                    {unique_values}
+                )
     """
-    return query.format(unique_fields=unique_fields)
+    return query.format(unique_fields=unique_fields, unique_values=unique_values)
 
 def get_update_query_for_nfu():
     unique_fields = """"""
-    return get_update_query(unique_fields)
+    unique_values = """"""
+    return get_update_query(unique_fields,unique_values)
 
 def get_update_query_for_nar():
     # naruSubtype is a part of submission, import there
     unique_fields = """"""
-    return get_update_query(unique_fields)
+    unique_values = """"""
+    return get_update_query(unique_fields,unique_values)
 
 
 def get_update_query_for_exc():
     unique_fields = """"""
-    return get_update_query(unique_fields)
+    unique_values = """"""
+    return get_update_query(unique_fields,unique_values)
 
 
 def get_update_query_for_inc():
     unique_fields = """"""
-    return get_update_query(unique_fields)
+    unique_values = """"""
+    return get_update_query(unique_fields,unique_values)
 
 
 def get_update_query_for_other():
     # leaving blank insert for now
     unique_fields = """"""
-    return get_update_query(unique_fields)
+    unique_values = """"""
+    return get_update_query(unique_fields,unique_values)
 
 
 
-# def map_basic_field(data):
-#     if data["capability_source_code"]:
-#         data["capability_source_code"] = str(
-#             OatsToAlcsAgCapSource[data["capability_source_code"]].value
-#         )
-#     if data["agri_capability_code"]:
-#         data["agri_capability_code"] = str(
-#             OatsToAlcsAgCap[data["agri_capability_code"]].value
-#         )
 
-#     return data
+@inject_conn_pool
+def clean_application_submission(conn=None):
+    print("Start application_submission cleaning")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM alcs.application_submission a WHERE a.audit_created_by = 'oats_etl'"
+        )
+        print(f"Deleted items count = {cursor.rowcount}")
