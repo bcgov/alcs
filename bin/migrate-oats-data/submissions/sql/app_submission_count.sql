@@ -1,13 +1,18 @@
 WITH
-    apps AS (
+    appl_components_grouped AS (
         SELECT
-            file_number
+            oaac.alr_application_id
         FROM
-            alcs.application aa
+            oats.oats_alr_appl_components oaac
+            JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
         WHERE
-            audit_created_by = 'oats_etl'
+            oaa.application_class_code IN ('LOA', 'BLK')
+        GROUP BY
+            oaac.alr_application_id
+        HAVING
+            count(oaac.alr_application_id) < 2 -- ignore all applications wit multiple components
     )
 SELECT
     count(*)
 FROM
-    apps
+    appl_components_grouped acg
