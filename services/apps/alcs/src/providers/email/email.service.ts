@@ -1,10 +1,46 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MJMLParseResults } from 'mjml-core';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
 import { EmailStatus } from './email-status.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
+
+export interface StatusUpdateEmail {
+  fileNumber: string;
+  applicantName: string;
+  status: string;
+  applicationType: string;
+  governmentName: string;
+}
+
+type StatusEmailData = {
+  generateStatusHtml: MJMLParseResults;
+  status: SUBMISSION_STATUS;
+  applicationSubmission: ApplicationSubmission;
+  government: LocalGovernment | null;
+  primaryContact?: ApplicationOwner;
+  ccGovernment?: boolean;
+  decisionReleaseMaskedDate?: string;
+};
+
+export const appFees = [
+  { type: 'Exclusion', fee: 750 },
+  { type: 'Subdivision', fee: 750 },
+  { type: 'Non-Farm Use', fee: 750 },
+  { type: 'Non-Adhering Residential Use', fee: 450 },
+  { type: 'Soil or Fill Use', fee: 750 },
+  { type: 'Inclusion', fee: 0 },
+];
 
 @Injectable()
 export class EmailService {
@@ -15,6 +51,9 @@ export class EmailService {
     private httpService: HttpService,
     @InjectRepository(EmailStatus)
     private repository: Repository<EmailStatus>,
+    private localGovernmentService: LocalGovernmentService,
+    private applicationSubmissionService: ApplicationSubmissionService,
+    private applicationService: ApplicationService,
   ) {}
 
   private token = '';
@@ -127,6 +166,99 @@ export class EmailService {
           status: 'failed',
           errors: errorMessage,
         }),
+      );
+    }
+  }
+
+  async getSubmissionGovernmentOrFail(submission: ApplicationSubmission) {
+    const submissionGovernment = await this.getSubmissionGovernment(submission);
+    if (!submissionGovernment) {
+      throw new NotFoundException('Submission local government not found');
+    }
+    return submissionGovernment;
+  }
+
+  private async getSubmissionGovernment(submission: ApplicationSubmission) {
+    if (submission.localGovernmentUuid) {
+      const localGovernment = await this.localGovernmentService.getByUuid(
+        submission.localGovernmentUuid,
+      );
+      if (localGovernment) {
+        return localGovernment;
+      }
+    }
+    return undefined;
+  }
+
+  async getSubmissionStatusEmailData(
+    fileNumber: string,
+    submissionData?: ApplicationSubmission,
+  ) {
+    const applicationSubmission =
+      submissionData ||
+      (await this.applicationSubmissionService.getOrFailByFileNumber(
+        fileNumber,
+      ));
+
+    const primaryContact = applicationSubmission.owners?.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = applicationSubmission.localGovernmentUuid
+      ? await this.getSubmissionGovernmentOrFail(applicationSubmission)
+      : null;
+
+    return { applicationSubmission, primaryContact, submissionGovernment };
+  }
+
+  async sendStatusEmail(data: StatusEmailData) {
+    const status = await this.applicationSubmissionService.getStatus(
+      data.status,
+    );
+
+    const types = await this.applicationService.fetchApplicationTypes();
+
+    const matchingType = types.find(
+      (type) => type.code === data.applicationSubmission.typeCode,
+    );
+
+    const fileNumber = data.applicationSubmission.fileNumber;
+    const applicantName =
+      data.applicationSubmission.applicant || FALLBACK_APPLICANT_NAME;
+
+    const emailTemplate = data.generateStatusHtml({
+      fileNumber,
+      applicantName,
+      applicationType:
+        matchingType?.portalLabel ??
+        matchingType?.label ??
+        FALLBACK_APPLICANT_NAME,
+      governmentName: data.government?.name,
+      status: status.label,
+      decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
+    });
+
+    const email = {
+      body: emailTemplate.html,
+      subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+    };
+
+    if (data.primaryContact && data.primaryContact.email) {
+      this.sendEmail({
+        ...email,
+        to: [data.primaryContact.email],
+        cc: data.ccGovernment ? data.government?.emails : [],
+      });
+    } else if (data.government && data.government.emails.length > 0) {
+      this.sendEmail({
+        ...email,
+        to: data.government.emails,
+      });
+    } else {
+      this.logger.warn(
+        `Cannot send status email, ${
+          data.primaryContact?.email ? 'primary contact' : 'local government'
+        } has no email`,
       );
     }
   }

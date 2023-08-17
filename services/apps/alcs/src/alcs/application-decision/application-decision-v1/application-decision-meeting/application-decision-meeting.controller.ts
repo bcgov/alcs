@@ -30,6 +30,10 @@ import { ApplicationDecisionMeeting } from './application-decision-meeting.entit
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 
+import { EmailService } from '../../../../providers/email/email.service';
+import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
 @UseGuards(RolesGuard)
@@ -37,6 +41,7 @@ export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
     private applicationService: ApplicationService,
+    private emailService: EmailService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -104,6 +109,29 @@ export class ApplicationDecisionMeetingController {
       date: formatIncomingDate(meeting.date) ?? new Date(),
       applicationUuid: application.uuid,
     });
+
+    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
+      meeting.applicationFileNumber,
+    );
+
+    // Send status email for first review discussion
+    if (meetings.length === 1) {
+      const { applicationSubmission, primaryContact, submissionGovernment } =
+        await this.emailService.getSubmissionStatusEmailData(
+          meeting.applicationFileNumber,
+        );
+
+      if (primaryContact) {
+        await this.emailService.sendStatusEmail({
+          generateStatusHtml: generateREVAHtml,
+          status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+          applicationSubmission,
+          government: submissionGovernment,
+          primaryContact,
+          ccGovernment: true,
+        });
+      }
+    }
 
     return this.mapper.map(
       newMeeting,

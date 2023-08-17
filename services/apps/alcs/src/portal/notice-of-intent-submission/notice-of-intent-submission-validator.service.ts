@@ -392,23 +392,13 @@ export class NoticeOfIntentSubmissionValidatorService {
     applicantDocuments: NoticeOfIntentDocument[],
     errors: Error[],
   ) {
-    if (
-      noticeOfIntentSubmission.soilFillTypeToPlace === null ||
-      noticeOfIntentSubmission.soilAlternativeMeasures === null ||
-      noticeOfIntentSubmission.soilReduceNegativeImpacts === null
-    ) {
+    if (noticeOfIntentSubmission.soilFillTypeToPlace === null) {
       errors.push(
         new ServiceValidationException(
           `${noticeOfIntentSubmission.typeCode} proposal incomplete`,
         ),
       );
     }
-
-    this.runSharedSoilValidation(
-      noticeOfIntentSubmission,
-      errors,
-      applicantDocuments,
-    );
 
     if (
       noticeOfIntentSubmission.soilToPlaceVolume === null ||
@@ -426,6 +416,7 @@ export class NoticeOfIntentSubmissionValidatorService {
         ),
       );
     }
+
     this.runSharedSoilValidation(
       noticeOfIntentSubmission,
       errors,
@@ -455,6 +446,12 @@ export class NoticeOfIntentSubmissionValidatorService {
         );
       }
     }
+
+    this.runSharedSoilValidation(
+      noticeOfIntentSubmission,
+      errors,
+      applicantDocuments,
+    );
 
     const noticeOfWork = applicantDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,

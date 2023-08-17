@@ -1,5 +1,5 @@
 <div *ngIf="_noiSubmission" class="review-table">
-  <div class="subheading2 grid-1">Are you removing soil in order to build a structure?</div>
+  <div class="subheading2 grid-1">{{ firstQuestion }}</div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure !== null">
       {{ _noiSubmission.soilIsRemovingSoilForNewStructure ? 'Yes' : 'No' }}

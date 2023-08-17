@@ -91,7 +91,6 @@ describe('NoticeOfIntentDetailsComponent', () => {
       soilIsFollowUp: null,
       soilFollowUpIDs: '',
       soilTypeRemoved: '',
-      soilReduceNegativeImpacts: '',
       soilToRemoveVolume: null,
       soilToRemoveArea: null,
       soilToRemoveMaximumDepth: null,

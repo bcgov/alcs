@@ -22,6 +22,16 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
+import {
+  generateSUBGApplicantHtml,
+  generateSUBGGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-lfng';
+import { EmailService } from '../../providers/email/email.service';
+import {
+  generateSUBGTurApplicantHtml,
+  generateSUBGTurGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -32,6 +42,7 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
+    private emailService: EmailService,
   ) {}
 
   @Get()
@@ -188,6 +199,23 @@ export class ApplicationSubmissionController {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
 
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(
+        application.fileNumber,
+        application,
+      );
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateCANCHtml,
+        status: SUBMISSION_STATUS.CANCELLED,
+        applicationSubmission: application,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
+
     await this.applicationSubmissionService.cancel(application);
 
     return {
@@ -208,6 +236,12 @@ export class ApplicationSubmissionController {
         applicationSubmission,
       );
 
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(
+        applicationSubmission.fileNumber,
+        applicationSubmission,
+      );
+
     if (validationResult.application) {
       const validatedApplicationSubmission = validationResult.application;
       if (validatedApplicationSubmission.typeCode === 'TURP') {
@@ -215,11 +249,65 @@ export class ApplicationSubmissionController {
           validatedApplicationSubmission,
           req.user.entity,
         );
+
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBGTurApplicantHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission,
+            government: submissionGovernment,
+            primaryContact,
+          });
+        }
+
+        if (submissionGovernment) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBGTurGovernmentHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission,
+            government: submissionGovernment,
+          });
+        }
+
         return await this.applicationSubmissionService.updateStatus(
           applicationSubmission,
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
       } else {
+        const wasSubmittedToLfng =
+          applicationSubmission.submissionStatuses.find(
+            (s) =>
+              [
+                SUBMISSION_STATUS.SUBMITTED_TO_LG,
+                SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+                SUBMISSION_STATUS.WRONG_GOV,
+                SUBMISSION_STATUS.INCOMPLETE,
+              ].includes(s.statusTypeCode as SUBMISSION_STATUS) &&
+              !!s.effectiveDate,
+          );
+
+        // Send status emails for first time submissions
+        if (!wasSubmittedToLfng) {
+          if (primaryContact) {
+            await this.emailService.sendStatusEmail({
+              generateStatusHtml: generateSUBGApplicantHtml,
+              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+              applicationSubmission,
+              government: submissionGovernment,
+              primaryContact,
+            });
+          }
+
+          if (submissionGovernment) {
+            await this.emailService.sendStatusEmail({
+              generateStatusHtml: generateSUBGGovernmentHtml,
+              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+              applicationSubmission,
+              government: submissionGovernment,
+            });
+          }
+        }
+
         return await this.applicationSubmissionService.submitToLg(
           validatedApplicationSubmission,
         );

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
@@ -24,7 +23,6 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private applicationService: NoticeOfIntentSubmissionService,
     private pdfGenerationService: PdfGenerationService
   ) {
     super();

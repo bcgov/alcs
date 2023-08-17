@@ -22,6 +22,13 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
+import { EmailService } from '../../../../providers/email/email.service';
+import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
+import { LocalGovernment } from '../../../local-government/local-government.entity';
+import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
+import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+import { ApplicationDecision } from '../../application-decision.entity';
 
 describe('ApplicationDecisionV2Controller', () => {
   let controller: ApplicationDecisionV2Controller;
@@ -30,6 +37,7 @@ describe('ApplicationDecisionV2Controller', () => {
   let mockCodeService: DeepMocked<CodeService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockReconService: DeepMocked<ApplicationReconsiderationService>;
+  let mockEmailService: DeepMocked<EmailService>;
 
   let mockApplication;
   let mockDecision;
@@ -40,6 +48,7 @@ describe('ApplicationDecisionV2Controller', () => {
     mockCodeService = createMock();
     mockModificationService = createMock();
     mockReconService = createMock();
+    mockEmailService = createMock();
 
     mockApplication = initApplicationMockEntity();
     mockDecision = initApplicationDecisionMock(mockApplication);
@@ -74,6 +83,10 @@ describe('ApplicationDecisionV2Controller', () => {
         {
           provide: ApplicationReconsiderationService,
           useValue: mockReconService,
+        },
+        {
+          provide: EmailService,
+          useValue: mockEmailService,
         },
         {
           provide: ClsService,
@@ -161,7 +174,13 @@ describe('ApplicationDecisionV2Controller', () => {
   });
 
   it('should update the decision', async () => {
+    mockApplicationService.getFileNumber.mockResolvedValue('file-number');
+    mockDecisionService.get.mockResolvedValue(new ApplicationDecision());
+    mockDecisionService.getByAppFileNumber.mockResolvedValue([
+      new ApplicationDecision(),
+    ]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
+
     const updates = {
       outcome: 'New Outcome',
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -244,5 +263,96 @@ describe('ApplicationDecisionV2Controller', () => {
 
     expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
     expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
+  });
+
+  it('should send status email after the first release of any decisions', async () => {
+    const fileNumber = 'fake-file-number';
+    const primaryContactOwnerUuid = 'primary-contact';
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const localGovernmentUuid = 'fake-government';
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      fileNumber,
+      primaryContactOwnerUuid,
+      owners: [mockOwner],
+      localGovernmentUuid,
+    });
+
+    mockApplicationService.getFileNumber.mockResolvedValue(fileNumber);
+    mockDecisionService.get.mockResolvedValue(
+      new ApplicationDecision({ wasReleased: false }),
+    );
+    mockDecisionService.update.mockResolvedValue(mockDecision);
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    mockEmailService.sendStatusEmail.mockResolvedValue();
+
+    const updates = {
+      outcome: 'New Outcome',
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      isDraft: false,
+    } as UpdateApplicationDecisionDto;
+
+    await controller.update('fake-uuid', updates);
+
+    expect(mockDecisionService.update).toBeCalledTimes(1);
+    expect(mockDecisionService.update).toBeCalledWith(
+      'fake-uuid',
+      {
+        outcome: 'New Outcome',
+        date: updates.date,
+        isDraft: false,
+      },
+      undefined,
+      undefined,
+    );
+
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateALCDHtml,
+      status: SUBMISSION_STATUS.ALC_DECISION,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      primaryContact: mockOwner,
+      ccGovernment: true,
+      decisionReleaseMaskedDate: new Date().toLocaleDateString('en-CA', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
+    });
+  });
+
+  it('should not send status email on subsequent decision releases', async () => {
+    mockDecisionService.get.mockResolvedValue(
+      new ApplicationDecision({ wasReleased: true }),
+    );
+    mockDecisionService.update.mockResolvedValue(mockDecision);
+    mockEmailService.sendStatusEmail.mockResolvedValue();
+
+    const updates = {
+      outcome: 'New Outcome',
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      isDraft: false,
+    } as UpdateApplicationDecisionDto;
+
+    await controller.update('fake-uuid', updates);
+
+    expect(mockDecisionService.update).toBeCalledTimes(1);
+    expect(mockDecisionService.update).toBeCalledWith(
+      'fake-uuid',
+      {
+        outcome: 'New Outcome',
+        date: updates.date,
+        isDraft: false,
+      },
+      undefined,
+      undefined,
+    );
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(0);
   });
 });
