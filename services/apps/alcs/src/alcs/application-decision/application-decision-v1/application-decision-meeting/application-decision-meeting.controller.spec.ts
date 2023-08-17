@@ -21,7 +21,6 @@ import {
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 import { EmailService } from '../../../../providers/email/email.service';
-import { ApplicationSubmissionService } from '../../../../portal/application-submission/application-submission.service';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
@@ -35,7 +34,6 @@ describe('ApplicationDecisionMeetingController', () => {
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
   let mockEmailService: DeepMocked<EmailService>;
-  let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockApplication;
   let mockMeeting;
 
@@ -44,8 +42,6 @@ describe('ApplicationDecisionMeetingController', () => {
     mockApplicationService = createMock();
     mockReconsiderationService = createMock();
     mockEmailService = createMock<EmailService>();
-    mockApplicationSubmissionService =
-      createMock<ApplicationSubmissionService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -72,10 +68,6 @@ describe('ApplicationDecisionMeetingController', () => {
         {
           provide: EmailService,
           useValue: mockEmailService,
-        },
-        {
-          provide: ApplicationSubmissionService,
-          useValue: mockApplicationSubmissionService,
         },
         {
           provide: ClsService,
@@ -144,26 +136,29 @@ describe('ApplicationDecisionMeetingController', () => {
   });
 
   it('should send status email for first review discussion', async () => {
+    const primaryContactOwnerUuid = 'fake-owner';
+    const localGovernmentUuid = 'local-government';
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
+      mockGovernment,
+    );
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockSubmission = new ApplicationSubmission({
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
     mockMeetingService.getByAppFileNumber.mockResolvedValue([
       new ApplicationDecisionMeeting(),
     ]);
-
-    const mockGovernment = new LocalGovernment({ uuid: '9999' });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
-
-    const mockOwner = new ApplicationOwner({ uuid: '1234' });
-    const mockSubmission = new ApplicationSubmission({
-      owners: [mockOwner],
-      primaryContactOwnerUuid: '1234',
-      localGovernmentUuid: '9999',
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
     });
-    mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(
-      mockSubmission,
-    );
-
     mockEmailService.sendStatusEmail.mockResolvedValue();
 
     const meetingToUpdate = {
@@ -173,16 +168,6 @@ describe('ApplicationDecisionMeetingController', () => {
 
     await controller.create(meetingToUpdate);
 
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledWith(meetingToUpdate.applicationFileNumber);
-    expect(mockEmailService.getSubmissionGovernmentOrFail).toBeCalledTimes(1);
-    expect(mockEmailService.getSubmissionGovernmentOrFail).toBeCalledWith(
-      mockSubmission,
-    );
     expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
     expect(mockEmailService.sendStatusEmail).toBeCalledWith({
       generateStatusHtml: generateREVAHtml,

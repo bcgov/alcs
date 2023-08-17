@@ -44,7 +44,6 @@ import { ApplicationDecisionComponentController } from './application-decision/c
 import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
 import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
-import { ApplicationSubmissionModule } from '../../../portal/application-submission/application-submission.module';
 
 @Module({
   imports: [
@@ -79,7 +78,6 @@ import { ApplicationSubmissionModule } from '../../../portal/application-submiss
     DocumentModule,
     ApplicationDecisionV2Module,
     ApplicationSubmissionStatusModule,
-    ApplicationSubmissionModule,
   ],
   providers: [
     ApplicationModificationService,

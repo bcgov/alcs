@@ -41,7 +41,6 @@ import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
-import { ApplicationSubmissionService } from '../../../../portal/application-submission/application-submission.service';
 import { EmailService } from '../../../../providers/email/email.service';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
@@ -53,7 +52,6 @@ export class ApplicationDecisionV2Controller {
   constructor(
     private appDecisionService: ApplicationDecisionV2Service,
     private applicationService: ApplicationService,
-    private applicationSubmissionService: ApplicationSubmissionService,
     private emailService: EmailService,
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
@@ -294,17 +292,8 @@ export class ApplicationDecisionV2Controller {
       decision.applicationUuid,
     );
 
-    const applicationSubmission =
-      await this.applicationSubmissionService.getOrFailByFileNumber(fileNumber);
-
-    const primaryContact = applicationSubmission.owners.find(
-      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-    );
-
-    const submissionGovernment =
-      await this.emailService.getSubmissionGovernmentOrFail(
-        applicationSubmission,
-      );
+    const { applicationSubmission, primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(fileNumber);
 
     const date = decision.date ? new Date(decision.date) : new Date();
 
