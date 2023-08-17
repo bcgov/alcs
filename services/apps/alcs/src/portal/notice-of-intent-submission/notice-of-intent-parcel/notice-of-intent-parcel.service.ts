@@ -3,6 +3,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { NoticeOfIntentDocument } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
+import { User } from '../../../user/user.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../../utils/undefined';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-owner/notice-of-intent-owner.service';
@@ -76,7 +77,7 @@ export class NoticeOfIntentParcelService {
     return await this.parcelRepository.save(parcel);
   }
 
-  async update(updateDtos: NoticeOfIntentParcelUpdateDto[]) {
+  async update(updateDtos: NoticeOfIntentParcelUpdateDto[], user: User) {
     const updatedParcels: NoticeOfIntentParcel[] = [];
 
     let hasOwnerUpdate = false;
@@ -114,12 +115,13 @@ export class NoticeOfIntentParcelService {
       const firstParcel = updatedParcels[0];
       await this.noticeOfIntentOwnerService.updateSubmissionApplicant(
         firstParcel.noticeOfIntentSubmissionUuid,
+        user,
       );
     }
     return res;
   }
 
-  async deleteMany(uuids: string[]) {
+  async deleteMany(uuids: string[], user: User) {
     const parcels = await this.parcelRepository.find({
       where: { uuid: In(uuids) },
     });
@@ -133,6 +135,7 @@ export class NoticeOfIntentParcelService {
     const result = await this.parcelRepository.remove(parcels);
     await this.noticeOfIntentOwnerService.updateSubmissionApplicant(
       parcels[0].noticeOfIntentSubmissionUuid,
+      user,
     );
 
     return result;

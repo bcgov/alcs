@@ -27,6 +27,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoiSubmission;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -75,6 +76,16 @@ describe('NoticeOfIntentSubmissionService', () => {
     service = module.get<NoticeOfIntentSubmissionService>(
       NoticeOfIntentSubmissionService,
     );
+
+    mockNoiSubmission = new NoticeOfIntentSubmission({
+      fileNumber: 'file-number',
+      applicant: 'incognito',
+      typeCode: 'fake',
+      localGovernmentUuid: 'uuid',
+      createdBy: new User({
+        clientRoles: [],
+      }),
+    });
   });
 
   it('should be defined', () => {
@@ -83,38 +94,28 @@ describe('NoticeOfIntentSubmissionService', () => {
 
   it('should return the fetched notice of intent', async () => {
     const noiSubmission = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(noiSubmission);
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const app = await service.getOrFailByFileNumber('');
+    const app = await service.getByFileNumber(
+      '',
+      new User({
+        clientRoles: [],
+      }),
+    );
     expect(app).toBe(noiSubmission);
   });
 
   it('should return the fetched notice of intent when fetching with user', async () => {
     const noiSubmission = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(noiSubmission);
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const app = await service.getIfCreatorByFileNumber('', new User());
+    const app = await service.getByFileNumber(
+      '',
+      new User({
+        clientRoles: [],
+      }),
+    );
     expect(app).toBe(noiSubmission);
-  });
-
-  it('should throw an exception if the notice of intent is not found', async () => {
-    mockRepository.findOne.mockResolvedValue(null);
-
-    const promise = service.getIfCreatorByFileNumber('file-number', new User());
-    await expect(promise).rejects.toMatchObject(
-      new Error(
-        `Failed to load notice of intent submission with File ID file-number`,
-      ),
-    );
-  });
-
-  it("should throw an error if notice of intent doesn't exist", async () => {
-    mockRepository.findOne.mockResolvedValue(null);
-
-    const promise = service.getOrFailByFileNumber('');
-    await expect(promise).rejects.toMatchObject(
-      new Error('Failed to find notice of intent submission'),
-    );
   });
 
   it('save a new noi for create', async () => {
@@ -125,7 +126,12 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.create.mockResolvedValue(new NoticeOfIntent());
     mockNoiStatusService.setInitialStatuses.mockResolvedValue([]);
 
-    const fileNumber = await service.create('type', new User());
+    const fileNumber = await service.create(
+      'type',
+      new User({
+        clientRoles: [],
+      }),
+    );
 
     expect(fileNumber).toEqual(fileId);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -137,7 +143,11 @@ describe('NoticeOfIntentSubmissionService', () => {
     const noiSubmission = new NoticeOfIntentSubmission();
     mockRepository.find.mockResolvedValue([noiSubmission]);
 
-    const res = await service.getByUser(new User());
+    const res = await service.getAllByUser(
+      new User({
+        clientRoles: [],
+      }),
+    );
     expect(mockRepository.find).toHaveBeenCalledTimes(1);
     expect(res.length).toEqual(1);
     expect(res[0]).toBe(noiSubmission);
@@ -145,10 +155,15 @@ describe('NoticeOfIntentSubmissionService', () => {
 
   it('should call through for getByFileId', async () => {
     const noiSubmission = new NoticeOfIntentSubmission();
-    mockRepository.findOne.mockResolvedValue(noiSubmission);
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
 
-    const res = await service.getByFileNumber('', new User());
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    const res = await service.getByFileNumber(
+      '',
+      new User({
+        clientRoles: [],
+      }),
+    );
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(res).toBe(noiSubmission);
   });
 
@@ -173,10 +188,16 @@ describe('NoticeOfIntentSubmissionService', () => {
         statusTypeCode: 'status-code',
         submissionUuid: 'fake',
       }),
+      createdBy: new User(),
     });
     mockRepository.findOne.mockResolvedValue(noiSubmission);
 
-    const res = await service.mapToDTOs([noiSubmission]);
+    const res = await service.mapToDTOs(
+      [noiSubmission],
+      new User({
+        clientRoles: [],
+      }),
+    );
     expect(mockNoiService.listTypes).toHaveBeenCalledTimes(1);
     expect(res[0].type).toEqual('label');
     expect(res[0].applicant).toEqual(applicant);
@@ -208,16 +229,6 @@ describe('NoticeOfIntentSubmissionService', () => {
   });
 
   it('should call out to service on submitToAlcs', async () => {
-    const applicant = 'Bruce Wayne';
-    const typeCode = 'fake-code';
-    const fileNumber = 'fake';
-    const localGovernmentUuid = 'fake-uuid';
-    const mockNoiSubmission = new NoticeOfIntentSubmission({
-      fileNumber,
-      applicant,
-      typeCode,
-      localGovernmentUuid,
-    });
     const mockNoticeOfIntent = new NoticeOfIntent({
       dateSubmittedToAlc: new Date(),
     });
@@ -240,32 +251,23 @@ describe('NoticeOfIntentSubmissionService', () => {
     const fileNumber = 'fake';
     const localGovernmentUuid = 'fake-uuid';
 
-    const mockNoiSubmission = new NoticeOfIntentSubmission({
-      fileNumber,
-      applicant: 'incognito',
-      typeCode: 'fake',
-      localGovernmentUuid: 'uuid',
-    });
-
-    mockRepository.findOne.mockResolvedValue(mockNoiSubmission);
+    mockRepository.findOneOrFail.mockResolvedValue(mockNoiSubmission);
     mockRepository.save.mockResolvedValue(mockNoiSubmission);
     mockNoiService.update.mockResolvedValue(new NoticeOfIntent());
 
-    const result = await service.update(fileNumber, {
-      applicant,
-      typeCode,
-      localGovernmentUuid,
-    });
-
-    expect(mockRepository.save).toBeCalledTimes(1);
-    expect(mockRepository.findOne).toBeCalledTimes(2);
-    expect(result).toEqual(
-      new NoticeOfIntentSubmission({
-        fileNumber,
+    const result = await service.update(
+      fileNumber,
+      {
         applicant,
         typeCode,
         localGovernmentUuid,
+      },
+      new User({
+        clientRoles: [],
       }),
     );
+
+    expect(mockRepository.save).toBeCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toBeCalledTimes(2);
   });
 });
