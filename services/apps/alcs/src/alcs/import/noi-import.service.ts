@@ -5,6 +5,7 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { BoardService } from '../board/board.service';
 import { CardService } from '../card/card.service';
@@ -166,7 +167,7 @@ export class NoticeOfIntentImportService {
         {
           typeCode: '',
           fileNumber: mappedRow.fileNumber,
-          applicant: mappedRow.applicant || 'Unknown',
+          applicant: mappedRow.applicant || FALLBACK_APPLICANT_NAME,
           dateSubmittedToAlc: mappedRow.submittedToAlc,
           localGovernmentUuid: localGovernment.uuid,
           regionCode: regionCode,

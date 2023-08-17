@@ -2,10 +2,12 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../../alcs/application/application.service';
 import {
   OWNER_TYPE,
   OwnerType,
 } from '../../../common/owner-type/owner-type.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
@@ -28,6 +30,7 @@ export class ApplicationOwnerService {
     @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationService: ApplicationService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -290,6 +293,17 @@ export class ApplicationOwnerService {
           await this.applicationSubmissionService.update(submissionUuid, {
             applicant: applicantName || '',
           });
+
+          const fileNumber =
+            await this.applicationSubmissionService.getFileNumber(
+              submissionUuid,
+            );
+          if (fileNumber) {
+            await this.applicationService.updateApplicant(
+              fileNumber,
+              applicantName || FALLBACK_APPLICANT_NAME,
+            );
+          }
         }
       }
     }

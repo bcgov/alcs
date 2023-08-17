@@ -19,6 +19,7 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -118,7 +119,7 @@ export class ApplicationSubmissionService {
     await this.applicationService.create(
       {
         fileNumber,
-        applicant: 'Unknown',
+        applicant: FALLBACK_APPLICANT_NAME,
         typeCode: type,
         source: 'APPLICANT',
       },
@@ -989,5 +990,19 @@ export class ApplicationSubmissionService {
         code: true,
       },
     });
+  }
+
+  async getFileNumber(submissionUuid: string, includeDraft = false) {
+    const submission = await this.applicationSubmissionRepository.findOne({
+      where: {
+        uuid: submissionUuid,
+        isDraft: includeDraft,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.fileNumber;
   }
 }

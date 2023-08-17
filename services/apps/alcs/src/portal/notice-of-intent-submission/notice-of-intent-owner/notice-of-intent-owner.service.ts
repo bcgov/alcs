@@ -2,10 +2,12 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { NoticeOfIntentDocumentService } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentService } from '../../../alcs/notice-of-intent/notice-of-intent.service';
 import {
   OWNER_TYPE,
   OwnerType,
 } from '../../../common/owner-type/owner-type.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission.service';
@@ -27,6 +29,7 @@ export class NoticeOfIntentOwnerService {
     @Inject(forwardRef(() => NoticeOfIntentSubmissionService))
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
   async fetchByApplicationFileId(fileId: string) {
@@ -287,6 +290,17 @@ export class NoticeOfIntentOwnerService {
           await this.noticeOfIntentSubmissionService.update(submissionUuid, {
             applicant: applicantName || '',
           });
+
+          const fileNumber =
+            await this.noticeOfIntentSubmissionService.getFileNumber(
+              submissionUuid,
+            );
+          if (fileNumber) {
+            await this.noticeOfIntentService.updateApplicant(
+              fileNumber,
+              applicantName || FALLBACK_APPLICANT_NAME,
+            );
+          }
         }
       }
     }
