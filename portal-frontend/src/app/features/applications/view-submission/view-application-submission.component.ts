@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -12,14 +12,6 @@ import {
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
 import { PdfGenerationService } from '../../../services/pdf-generation/pdf-generation.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
-
-enum MOBILE_STEP {
-  INTRODUCTION = 0,
-  APPLICATION = 1,
-  LFNG_INFO = 2,
-  ALC_INFO = 3,
-}
 
 @Component({
   selector: 'app-view-application-submission',
@@ -35,15 +27,6 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   SUBMISSION_STATUS = SUBMISSION_STATUS;
-  isMobile = false;
-  mobileStep = MOBILE_STEP.INTRODUCTION;
-  selectedStep: MOBILE_STEP | undefined;
-  MOBILE_STEP = MOBILE_STEP;
-
-  @HostListener('window:resize', ['$event'])
-  onWindowResize() {
-    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
-  }
 
   constructor(
     private applicationService: ApplicationSubmissionService,
@@ -55,14 +38,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
     private pdfGenerationService: PdfGenerationService
   ) {}
 
-  onChangeMobileStep() {
-    if (this.selectedStep) {
-      this.mobileStep = this.selectedStep;
-    }
-  }
-
   ngOnInit(): void {
-    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
     this.route.paramMap.pipe(takeUntil(this.$destroy)).subscribe((routeParams) => {
       const fileId = routeParams.get('fileId');
       if (fileId) {

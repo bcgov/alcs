@@ -18,7 +18,7 @@ export class NoticeOfIntentParcelService {
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
   ) {}
 
-  async fetchByApplicationFileId(fileId: string) {
+  async fetchByFileId(fileId: string) {
     return this.parcelRepository.find({
       where: {
         noticeOfIntentSubmission: { fileNumber: fileId, isDraft: false },

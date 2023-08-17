@@ -37,10 +37,6 @@ describe('EditSubmissionComponent', () => {
           provide: MatDialog,
           useValue: {},
         },
-        {
-          provide: CodeService,
-          useValue: {},
-        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

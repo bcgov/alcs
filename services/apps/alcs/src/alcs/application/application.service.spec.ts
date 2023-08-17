@@ -238,6 +238,14 @@ describe('ApplicationService', () => {
     expect(applicationRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
   });
 
+  it('should call the repo for get update applicant', async () => {
+    applicationRepositoryMock.update.mockResolvedValue({} as any);
+
+    await applicationService.updateApplicant('file-number', 'applicant');
+
+    expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
+  });
+
   it('should fail to update if application does not exist', async () => {
     applicationRepositoryMock.exist.mockResolvedValue(false);
 

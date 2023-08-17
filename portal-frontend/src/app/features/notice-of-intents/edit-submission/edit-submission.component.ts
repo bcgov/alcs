@@ -12,10 +12,13 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
+import { AdditionalInformationComponent } from './additional-information/additional-information.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { PfrsProposalComponent } from './proposal/pfrs/pfrs-proposal.component';
+import { PofoProposalComponent } from './proposal/pofo/pofo-proposal.component';
 import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
@@ -56,11 +59,13 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(LandUseComponent) landUseComponent!: LandUseComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
   @ViewChild(RosoProposalComponent) rosoProposalComponent!: RosoProposalComponent;
+  @ViewChild(PofoProposalComponent) pofoProposalComponent!: PofoProposalComponent;
+  @ViewChild(PfrsProposalComponent) pfrsProposalComponent!: PfrsProposalComponent;
+  @ViewChild(AdditionalInformationComponent) rosoAdditionalInfoComponent!: AdditionalInformationComponent;
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    private codeService: CodeService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -152,6 +157,17 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         if (this.rosoProposalComponent) {
           await this.rosoProposalComponent.onSave();
         }
+        if (this.pofoProposalComponent) {
+          await this.pofoProposalComponent.onSave();
+        }
+        if (this.pfrsProposalComponent) {
+          await this.pfrsProposalComponent.onSave();
+        }
+        break;
+      case EditNoiSteps.ExtraInfo:
+        if (this.rosoAdditionalInfoComponent) {
+          await this.rosoAdditionalInfoComponent.onSave();
+        }
         break;
       case EditNoiSteps.ReviewAndSubmit:
         //DO NOTHING
@@ -173,13 +189,8 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   async onSubmit() {
     if (this.noiSubmission) {
-      const government = await this.loadGovernment(this.noiSubmission.localGovernmentUuid);
       this.dialog
-        .open(SubmitConfirmationDialogComponent, {
-          data: {
-            governmentName: government?.name ?? 'selected local / first nation government',
-          },
-        })
+        .open(SubmitConfirmationDialogComponent)
         .beforeClosed()
         .subscribe((didConfirm) => {
           if (didConfirm) {
@@ -197,15 +208,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         await this.router.navigateByUrl(`/notice-of-intent/${submission?.fileNumber}`);
       }
     }
-  }
-
-  private async loadGovernment(uuid: string) {
-    const codes = await this.codeService.loadCodes();
-    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
-    if (localGovernment) {
-      return localGovernment;
-    }
-    return;
   }
 
   private async loadSubmission(fileId: string, reload = false) {

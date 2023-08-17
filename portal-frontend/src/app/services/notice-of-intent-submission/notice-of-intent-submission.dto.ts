@@ -1,3 +1,4 @@
+import { STRUCTURE_TYPES } from '../../features/notice-of-intents/edit-submission/additional-information/additional-information.component';
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
 
@@ -33,6 +34,7 @@ export interface NoticeOfIntentSubmissionDto {
   type: string;
   typeCode: string;
   status: NoticeOfIntentSubmissionStatusDto;
+  lastStatusUpdate: number;
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
   owners: NoticeOfIntentOwnerDto[];
   canEdit: boolean;
@@ -76,11 +78,18 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit?: string | null;
-  soilFillTypeToPlace?: string | null;
-  soilAlternativeMeasures?: string | null;
-  soilIsExtractionOrMining?: boolean;
-  soilHasSubmittedNotice?: boolean;
+  soilProjectDurationUnit: string | null;
+  soilFillTypeToPlace: string | null;
+  soilAlternativeMeasures: string | null;
+  soilIsExtractionOrMining: boolean | null;
+  soilIsAreaWideFilling: boolean | null;
+  soilHasSubmittedNotice: boolean | null;
+  soilIsRemovingSoilForNewStructure: boolean | null;
+  soilStructureFarmUseReason: string | null;
+  soilStructureResidentialUseReason: string | null;
+  soilAgriParcelActivity: string | null;
+  soilStructureResidentialAccessoryUseReason: string | null;
+  soilProposedStructures: ProposedStructure[];
 }
 
 export interface NoticeOfIntentSubmissionUpdateDto {
@@ -126,5 +135,17 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
+  soilIsAreaWideFilling?: boolean | null;
   soilHasSubmittedNotice?: boolean | null;
+  soilIsRemovingSoilForNewStructure?: boolean | null;
+  soilStructureFarmUseReason?: string | null;
+  soilStructureResidentialUseReason?: string | null;
+  soilAgriParcelActivity?: string | null;
+  soilStructureResidentialAccessoryUseReason?: string | null;
+  soilProposedStructures?: ProposedStructure[];
+}
+
+export interface ProposedStructure {
+  type: STRUCTURE_TYPES | null;
+  area: number | null;
 }

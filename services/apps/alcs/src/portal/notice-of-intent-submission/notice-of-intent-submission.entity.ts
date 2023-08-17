@@ -15,6 +15,16 @@ import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 
+export class ProposedStructure {
+  type:
+    | 'Farm Structure'
+    | 'Residential - Principal Residence'
+    | 'Residential - Additional Residence'
+    | 'Residential - Accessory Structure'
+    | null;
+  area?: number | null;
+}
+
 @Entity()
 export class NoticeOfIntentSubmission extends Base {
   constructor(data?: Partial<NoticeOfIntentSubmission>) {
@@ -386,7 +396,40 @@ export class NoticeOfIntentSubmission extends Base {
 
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
+  soilIsAreaWideFilling: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
   soilHasSubmittedNotice: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  soilIsRemovingSoilForNewStructure: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureFarmUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureResidentialUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilAgriParcelActivity: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureResidentialAccessoryUseReason: string | null;
+
+  @AutoMap(() => ProposedStructure)
+  @Column({
+    comment: 'JSONB Column containing the proposed structures',
+    type: 'jsonb',
+    array: false,
+    default: () => `'[]'`,
+  })
+  soilProposedStructures: ProposedStructure[];
 
   @AutoMap(() => NoticeOfIntent)
   @ManyToOne(() => NoticeOfIntent)

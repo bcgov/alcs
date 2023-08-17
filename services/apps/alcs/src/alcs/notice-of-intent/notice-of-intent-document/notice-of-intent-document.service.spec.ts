@@ -3,11 +3,11 @@ import { MultipartFile } from '@fastify/multipart';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../../test/mocks/mockEntities';
 import {
-  DOCUMENT_TYPE,
   DocumentCode,
+  DOCUMENT_TYPE,
 } from '../../../document/document-code.entity';
 import {
   DOCUMENT_SOURCE,
@@ -112,7 +112,7 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(res).toBe(mockSavedDocument);
   });
 
-  it('should delete document and application document when deleting', async () => {
+  it('should delete document and noi document when deleting', async () => {
     const mockDocument = {};
     const mockAppDocument = {
       uuid: '1',
@@ -339,5 +339,39 @@ describe('NoticeOfIntentDocumentService', () => {
     expect(mockNOIService.getFileNumber).toHaveBeenCalledTimes(1);
     expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should delete multiple documents and noi documents linked to it when deleting', async () => {
+    const mockDocuments = [new Document(), new Document()];
+    const mockNoiDocuments = [
+      new NoticeOfIntentDocument({
+        document: new Document(),
+      }),
+      new NoticeOfIntentDocument({
+        document: new Document(),
+      }),
+    ];
+
+    mockDocumentService.softRemoveMany.mockResolvedValue();
+    mockRepository.remove.mockResolvedValue({} as any);
+    mockRepository.find.mockResolvedValue(mockNoiDocuments);
+
+    await service.deleteMany(['fileId_1', 'fileId_2']);
+
+    expect(mockDocumentService.softRemoveMany.mock.calls[0][0]).toEqual(
+      mockDocuments,
+    );
+    expect(mockDocumentService.softRemoveMany).toHaveBeenCalledTimes(1);
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockRepository.find).toHaveBeenCalledWith({
+      where: {
+        uuid: In(['fileId_1', 'fileId_2']),
+      },
+      relations: {
+        document: true,
+      },
+    });
+    expect(mockRepository.remove).toHaveBeenCalledTimes(1);
+    expect(mockRepository.remove.mock.calls[0][0]).toBe(mockNoiDocuments);
   });
 });

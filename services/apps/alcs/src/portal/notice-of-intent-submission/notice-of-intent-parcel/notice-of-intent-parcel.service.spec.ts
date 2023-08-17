@@ -58,7 +58,7 @@ describe('NoticeOfIntentParcelService', () => {
   it('should fetch parcels by fileNumber', async () => {
     mockParcelRepo.find.mockResolvedValue([mockNOIParcel]);
 
-    const result = await service.fetchByApplicationFileId(mockFileNumber);
+    const result = await service.fetchByFileId(mockFileNumber);
 
     expect(result).toEqual([mockNOIParcel]);
     expect(mockParcelRepo.find).toBeCalledTimes(1);

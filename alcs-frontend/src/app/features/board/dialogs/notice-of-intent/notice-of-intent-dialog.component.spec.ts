@@ -12,7 +12,7 @@ import { AuthenticationService, ICurrentUser } from '../../../../services/authen
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
-import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
@@ -54,6 +54,8 @@ describe('NoticeOfIntentDialogComponent', () => {
     uuid: '',
     retroactive: null,
     subtype: [],
+    type: {} as NoticeOfIntentTypeDto,
+    source: 'ALCS',
   };
 
   beforeEach(async () => {

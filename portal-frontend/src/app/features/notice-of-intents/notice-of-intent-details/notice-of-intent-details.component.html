@@ -112,10 +112,7 @@
     </div>
     <div class="grid-double">
       {{ noiSubmission.parcelsAgricultureDescription }}
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="!noiSubmission.parcelsAgricultureDescription"
-      ></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsAgricultureDescription"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
       Quantify and describe in detail all agricultural improvements made to the parcel(s).
@@ -136,10 +133,7 @@
     </div>
     <div class="grid-double">
       {{ noiSubmission.parcelsNonAgricultureUseDescription }}
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="!noiSubmission.parcelsNonAgricultureUseDescription"
-      ></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsNonAgricultureUseDescription"></app-no-data>
     </div>
     <div class="full-width">
       <h4>
@@ -169,10 +163,7 @@
       </div>
       <div class="grid-3">
         {{ noiSubmission.northLandUseTypeDescription }}
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="!noiSubmission.northLandUseTypeDescription"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.northLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">East</div>
       <div class="grid-2">
@@ -181,10 +172,7 @@
       </div>
       <div class="grid-3">
         {{ noiSubmission.eastLandUseTypeDescription }}
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="!noiSubmission.eastLandUseTypeDescription"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.eastLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">South</div>
       <div class="grid-2">
@@ -193,10 +181,7 @@
       </div>
       <div class="grid-3">
         {{ noiSubmission.southLandUseTypeDescription }}
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="!noiSubmission.southLandUseTypeDescription"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.southLandUseTypeDescription"></app-no-data>
       </div>
       <div class="grid-1 subheading2">West</div>
       <div class="grid-2">
@@ -205,10 +190,7 @@
       </div>
       <div class="grid-3">
         {{ noiSubmission.westLandUseTypeDescription }}
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="!noiSubmission.westLandUseTypeDescription"
-        ></app-no-data>
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.westLandUseTypeDescription"></app-no-data>
       </div>
     </div>
     <div *ngIf="showEdit" class="edit-button">
@@ -227,10 +209,36 @@
     [noiDocuments]="appDocuments"
     [updatedFields]="updatedFields"
   ></app-roso-details>
+  <app-pofo-details
+    *ngIf="noiSubmission.typeCode === 'POFO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="noiSubmission.typeCode === 'PFRS'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pfrs-details>
 </section>
 <section *ngIf="noiSubmission">
-  <h3>6. Additional Information</h3>
-  TODO
+  <h3>6. Additional Proposal Information</h3>
+  <app-additional-information
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  >
+  </app-additional-information>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

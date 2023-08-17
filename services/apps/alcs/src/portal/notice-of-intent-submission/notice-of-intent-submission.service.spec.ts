@@ -15,6 +15,7 @@ import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-int
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 
@@ -196,7 +197,9 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiService.submit.mockRejectedValue(new Error());
 
     await expect(
-      service.submitToAlcs(noticeOfIntentSubmission),
+      service.submitToAlcs(
+        noticeOfIntentSubmission as ValidatedNoticeOfIntentSubmission,
+      ),
     ).rejects.toMatchObject(
       new BaseServiceException(
         `Failed to submit notice of intent: ${fileNumber}`,
@@ -223,7 +226,9 @@ describe('NoticeOfIntentSubmissionService', () => {
     );
 
     mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
-    await service.submitToAlcs(mockNoiSubmission);
+    await service.submitToAlcs(
+      mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
+    );
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);

@@ -57,7 +57,7 @@ WITH
             alg.uuid AS gov_uuid
         FROM
             oats_gov
-            JOIN alcs.application_local_government alg on (
+            JOIN alcs.local_government alg on (
                 CASE
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Gabriola Island' THEN 'Islands Trust Gabriola Island (Historical)'
                     WHEN oats_gov.oats_gov_name LIKE 'Islands Trust Galiano Island' THEN 'Islands Trust Galiano Island (Historical)'

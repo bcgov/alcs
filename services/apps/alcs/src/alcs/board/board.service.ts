@@ -87,6 +87,14 @@ export class BoardService {
     });
   }
 
+  async unlinkStatus(code: string) {
+    await this.boardStatusRepository.delete({
+      status: {
+        code,
+      },
+    });
+  }
+
   async delete(code: string) {
     const board = await this.getOneOrFail({
       code,

@@ -12,7 +12,7 @@ with oats_documents_to_map as (
 		join alcs."document" d 
 		on  d.oats_document_id = od.document_id::text  
 		
-		join alcs.application_document_code adc 
+		join alcs.document_code adc 
 		on adc.oats_code = od.document_code
 		
 		join alcs.application a 

@@ -7,7 +7,11 @@ import {
   NoticeOfIntentSubmissionToSubmissionStatusDto,
 } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
-import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
+import { AlcsNoticeOfIntentSubmissionDto } from '../../alcs/notice-of-intent/notice-of-intent.dto';
+import {
+  NoticeOfIntentOwnerDetailedDto,
+  NoticeOfIntentOwnerDto,
+} from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import {
   NoticeOfIntentSubmissionDetailedDto,
@@ -43,6 +47,12 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
           (a) => a.status,
           mapFrom((ad) => {
             return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
           }),
         ),
         forMember(
@@ -83,6 +93,12 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
             return ad.status.statusType;
           }),
         ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
       );
 
       createMap(
@@ -103,6 +119,39 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
               NoticeOfIntentSubmissionStatusType,
               NoticeOfIntentStatusDto,
             );
+          }),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentSubmission,
+        AlcsNoticeOfIntentSubmissionDto,
+        // TODO uncomment when working on statuses
+        // forMember(
+        //   (a) => a.lastStatusUpdate,
+        //   mapFrom((ad) => {
+        //     return ad.status?.effectiveDate?.getTime();
+        //   }),
+        // ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.owners,
+          mapFrom((ad) => {
+            if (ad.owners) {
+              return this.mapper.mapArray(
+                ad.owners,
+                NoticeOfIntentOwner,
+                NoticeOfIntentOwnerDetailedDto,
+              );
+            } else {
+              return [];
+            }
           }),
         ),
       );

@@ -22,7 +22,9 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
+import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmissionDetailedDto,
   NoticeOfIntentSubmissionDto,
@@ -92,8 +94,9 @@ export class NoticeOfIntentSubmissionService {
 
     await this.noticeOfIntentService.create({
       fileNumber,
-      applicant: 'Unknown',
+      applicant: FALLBACK_APPLICANT_NAME,
       typeCode: type,
+      source: 'APPLICANT',
     });
 
     const noiSubmission = new NoticeOfIntentSubmission({
@@ -146,6 +149,20 @@ export class NoticeOfIntentSubmissionService {
     }
 
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
+  }
+
+  async getFileNumber(submissionUuid: string, includeDraft = false) {
+    const submission = await this.noticeOfIntentSubmissionRepository.findOne({
+      where: {
+        uuid: submissionUuid,
+        isDraft: includeDraft,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.fileNumber;
   }
 
   private setLandUseFields(
@@ -280,9 +297,47 @@ export class NoticeOfIntentSubmissionService {
       noticeOfIntentSubmission.soilIsExtractionOrMining,
     );
 
+    noticeOfIntentSubmission.soilIsAreaWideFilling = filterUndefined(
+      updateDto.soilIsAreaWideFilling,
+      noticeOfIntentSubmission.soilIsAreaWideFilling,
+    );
+
     noticeOfIntentSubmission.soilHasSubmittedNotice = filterUndefined(
       updateDto.soilHasSubmittedNotice,
       noticeOfIntentSubmission.soilHasSubmittedNotice,
+    );
+
+    noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure =
+      filterUndefined(
+        updateDto.soilIsRemovingSoilForNewStructure,
+        noticeOfIntentSubmission.soilIsRemovingSoilForNewStructure,
+      );
+
+    noticeOfIntentSubmission.soilStructureFarmUseReason = filterUndefined(
+      updateDto.soilStructureFarmUseReason,
+      noticeOfIntentSubmission.soilStructureFarmUseReason,
+    );
+
+    noticeOfIntentSubmission.soilStructureResidentialUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialUseReason,
+        noticeOfIntentSubmission.soilStructureResidentialUseReason,
+      );
+
+    noticeOfIntentSubmission.soilAgriParcelActivity = filterUndefined(
+      updateDto.soilAgriParcelActivity,
+      noticeOfIntentSubmission.soilAgriParcelActivity,
+    );
+
+    noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason =
+      filterUndefined(
+        updateDto.soilStructureResidentialAccessoryUseReason,
+        noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason,
+      );
+
+    noticeOfIntentSubmission.soilProposedStructures = filterUndefined(
+      updateDto.soilProposedStructures,
+      noticeOfIntentSubmission.soilProposedStructures,
     );
 
     if (
@@ -516,18 +571,20 @@ export class NoticeOfIntentSubmissionService {
     };
   }
 
-  async submitToAlcs(noticeOfIntent: NoticeOfIntentSubmission) {
+  async submitToAlcs(
+    noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
+  ) {
     try {
       const submittedNoi = await this.noticeOfIntentService.submit({
-        fileNumber: noticeOfIntent.fileNumber,
-        applicant: noticeOfIntent.applicant!, //TODO: Remove ! once validation is implemented
-        localGovernmentUuid: noticeOfIntent.localGovernmentUuid!,
-        typeCode: noticeOfIntent.typeCode,
+        fileNumber: noticeOfIntentSubmission.fileNumber,
+        applicant: noticeOfIntentSubmission.applicant,
+        localGovernmentUuid: noticeOfIntentSubmission.localGovernmentUuid,
+        typeCode: noticeOfIntentSubmission.typeCode,
         dateSubmittedToAlc: new Date(),
       });
 
       await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-        submittedNoi.uuid,
+        noticeOfIntentSubmission.uuid,
         NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         submittedNoi.dateSubmittedToAlc,
       );
@@ -536,7 +593,7 @@ export class NoticeOfIntentSubmissionService {
     } catch (ex) {
       this.logger.error(ex);
       throw new BaseServiceException(
-        `Failed to submit notice of intent: ${noticeOfIntent.fileNumber}`,
+        `Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`,
       );
     }
   }

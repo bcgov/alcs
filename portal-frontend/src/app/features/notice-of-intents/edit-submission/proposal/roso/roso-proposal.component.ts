@@ -92,6 +92,9 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
         if (noiSubmission.soilIsExtractionOrMining) {
           this.allowMiningUploads = true;
+          this.hasSubmittedNotice.enable();
+        } else {
+          this.hasSubmittedNotice.disable();
         }
 
         this.form.patchValue({
@@ -123,7 +126,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
       const isNOIFollowUp = this.isFollowUp.getRawValue();
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
@@ -168,6 +171,12 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeIsExtractionOrMining(selectedValue: string) {
     this.allowMiningUploads = selectedValue === 'true';
+    if (selectedValue === 'true') {
+      this.hasSubmittedNotice.enable();
+    } else {
+      this.hasSubmittedNotice.disable();
+      this.hasSubmittedNotice.setValue(null);
+    }
   }
 
   markDirty() {

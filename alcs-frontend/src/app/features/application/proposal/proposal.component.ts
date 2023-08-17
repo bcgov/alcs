@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
-  APPLICATION_SYSTEM_SOURCE_TYPES,
   ApplicationDto,
+  SYSTEM_SOURCE_TYPES,
   UpdateApplicationDto,
 } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -58,7 +58,7 @@ export class ProposalComponent implements OnInit {
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
   alrArea: string | undefined;
   staffObservations: string = '';
-  APPLICATION_SYSTEM_SOURCE_TYPES = APPLICATION_SYSTEM_SOURCE_TYPES;
+  APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 

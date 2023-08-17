@@ -1,30 +1,53 @@
 @use '../../../../styles/functions' as *;
 @use '../../../../styles/colors';
-@use '../../../../styles/navigation-wrapper';
+
+.navigation {
+  ::ng-deep .mdc-tab__text-label {
+    font-weight: bold;
+  }
+}
+
+.content {
+  margin: rem(24) 0;
+}
 
 :host::ng-deep {
-  .content {
-    margin: rem(24) 0;
-  }
-
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: rem(24);
+    flex-direction: column;
+
+    @media screen and (min-width: $tabletBreakpoint) {
+      flex-direction: row;
+    }
 
     h3 {
       margin-top: rem(8) !important;
     }
 
     .btns-wrapper {
+      display: flex;
+      flex-direction: column-reverse;
+      width: 100%;
+
       button {
-        margin-right: rem(16) !important;
-        margin-top: rem(8) !important;
+        margin-top: rem(16) !important;
       }
 
-      button:last-child {
-        margin-right: 0 !important;
+      @media screen and (min-width: $tabletBreakpoint) {
+        display: inline-block;
+        width: unset;
+
+        button {
+          margin-right: rem(16) !important;
+          margin-top: rem(8) !important;
+        }
+
+        button:last-child {
+          margin-right: 0 !important;
+        }
       }
     }
   }
@@ -132,15 +155,6 @@
   }
 }
 
-.page-selector {
-  width: 100%;
-  margin-bottom: rem(24);
-}
-
-.change-step {
-  width: 100%;
-}
-
 .no-comment {
   color: colors.$grey-dark;
   font-style: italic;
@@ -155,35 +169,6 @@ section {
   margin-bottom: rem(24);
 }
 
-.mat-expansion-panel {
-  margin-bottom: rem(24);
-}
-
 .document {
   margin-bottom: rem(8);
-}
-
-:host::ng-deep {
-  .mat-expansion-panel {
-    box-shadow: none;
-  }
-
-  .mat-expansion-panel.mat-expanded {
-    background-color: colors.$grey-light;
-    border: 1px solid colors.$black;
-  }
-
-  .mat-expansion-panel-header {
-    border: 1px solid colors.$black;
-  }
-
-  .mat-expansion-panel-header.mat-expanded,
-  .mat-expansion-panel-header.mat-expanded:focus,
-  .mat-expansion-panel-header.mat-expanded:hover {
-    background-color: colors.$grey-light;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    height: 48px; //Overriding Angular style that is in PX
-  }
 }

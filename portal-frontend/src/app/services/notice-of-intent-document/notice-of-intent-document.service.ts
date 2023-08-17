@@ -33,7 +33,7 @@ export class NoticeOfIntentDocumentService {
         file,
         documentType,
         source,
-        `${this.serviceUrl}/application/${fileNumber}/attachExternal`
+        `${this.serviceUrl}/notice-of-intent/${fileNumber}/attachExternal`
       );
       this.toastService.showSuccessToast('Document uploaded');
       return res;
@@ -67,9 +67,23 @@ export class NoticeOfIntentDocumentService {
     }
   }
 
+  async deleteExternalFiles(fileUuids: string[]) {
+    try {
+      this.overlayService.showSpinner();
+      await firstValueFrom(this.httpClient.post(`${this.serviceUrl}/delete-files`, fileUuids));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to delete documents');
+    } finally {
+      this.overlayService.hideSpinner();
+    }
+  }
+
   async update(fileNumber: string | undefined, updateDtos: NoticeOfIntentDocumentUpdateDto[]) {
     try {
-      await firstValueFrom(this.httpClient.patch<void>(`${this.serviceUrl}/application/${fileNumber}`, updateDtos));
+      await firstValueFrom(
+        this.httpClient.patch<void>(`${this.serviceUrl}/notice-of-intent/${fileNumber}`, updateDtos)
+      );
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to update documents, please try again');
@@ -80,7 +94,7 @@ export class NoticeOfIntentDocumentService {
   async getByFileId(fileNumber: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<NoticeOfIntentDocumentDto[]>(`${this.serviceUrl}/application/${fileNumber}`)
+        this.httpClient.get<NoticeOfIntentDocumentDto[]>(`${this.serviceUrl}/notice-of-intent/${fileNumber}`)
       );
     } catch (e) {
       console.error(e);

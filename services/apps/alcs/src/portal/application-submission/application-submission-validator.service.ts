@@ -73,7 +73,11 @@ export class ApplicationSubmissionValidatorService {
     await this.validateOptionalDocuments(applicantDocuments, errors);
 
     if (applicationSubmission.typeCode === 'NFUP') {
-      await this.validateNfuProposal(applicationSubmission, errors);
+      await this.validateNfuProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
     }
     if (applicationSubmission.typeCode === 'TURP') {
       await this.validateTurProposal(applicationSubmission, errors);
@@ -393,6 +397,7 @@ export class ApplicationSubmissionValidatorService {
 
   private async validateNfuProposal(
     applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
     if (
@@ -419,6 +424,17 @@ export class ApplicationSubmissionValidatorService {
           new ServiceValidationException(`NFU Fill Section incomplete`),
         );
       }
+    }
+
+    const proposalMaps = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMaps.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing Proposal Map / Site Plan`,
+        ),
+      );
     }
   }
 

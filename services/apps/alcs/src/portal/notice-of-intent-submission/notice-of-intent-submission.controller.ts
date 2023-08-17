@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,10 +10,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
+import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmissionCreateDto,
   NoticeOfIntentSubmissionUpdateDto,
@@ -26,6 +26,7 @@ export class NoticeOfIntentSubmissionController {
 
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    private noticeOfIntentValidatorService: NoticeOfIntentSubmissionValidatorService,
   ) {}
 
   @Get()
@@ -127,25 +128,30 @@ export class NoticeOfIntentSubmissionController {
         req.user.entity,
       );
 
-    const validationResult = {
-      noticeOfIntentSubmission,
-      errors: [],
-    };
+    const validationResult =
+      await this.noticeOfIntentValidatorService.validateSubmission(
+        noticeOfIntentSubmission,
+      );
 
-    if (validationResult) {
+    if (validationResult.noticeOfIntentSubmission) {
       const validatedApplicationSubmission =
         validationResult.noticeOfIntentSubmission;
+
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
       );
-      return await this.noticeOfIntentSubmissionService.updateStatus(
-        noticeOfIntentSubmission.uuid,
-        NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+
+      const finalSubmission =
+        await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+          uuid,
+          req.user.entity,
+        );
+      return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
+        finalSubmission,
       );
     } else {
-      //TODO: Uncomment when we add validation
-      //this.logger.debug(validationResult.errors);
-      //throw new BadRequestException('Invalid Application');
+      this.logger.debug(validationResult.errors);
+      throw new BadRequestException('Invalid Notice of Intent');
     }
   }
 }

@@ -18,6 +18,7 @@ import { NoticeOfIntentParcelOwnershipType } from './notice-of-intent-parcel/not
 import { NoticeOfIntentParcelController } from './notice-of-intent-parcel/notice-of-intent-parcel.controller';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from './notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
 import { NoticeOfIntentSubmissionController } from './notice-of-intent-submission.controller';
 import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
@@ -48,10 +49,15 @@ import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.s
     NoticeOfIntentSubmissionService,
     NoticeOfIntentParcelService,
     NoticeOfIntentOwnerService,
+    NoticeOfIntentSubmissionValidatorService,
     NoticeOfIntentSubmissionProfile,
     NoticeOfIntentOwnerProfile,
     NoticeOfIntentParcelProfile,
   ],
-  exports: [NoticeOfIntentSubmissionService],
+  exports: [
+    NoticeOfIntentSubmissionService,
+    NoticeOfIntentParcelService,
+    NoticeOfIntentParcelProfile,
+  ],
 })
 export class NoticeOfIntentSubmissionModule {}

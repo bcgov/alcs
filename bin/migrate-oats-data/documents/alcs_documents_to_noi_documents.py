@@ -23,7 +23,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
             )
         VALUES {documents_to_insert} 
         ON CONFLICT (oats_document_id, oats_application_id) DO UPDATE SET 
-            notice_of_intent_uuid = EXCLUDED.notice_of_intnent_uuid, 
+            notice_of_intent_uuid = EXCLUDED.notice_of_intent_uuid, 
             document_uuid = EXCLUDED.document_uuid, 
             type_code = EXCLUDED.type_code,
             visibility_flags = EXCLUDED.visibility_flags,
