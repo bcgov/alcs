@@ -6,27 +6,23 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   NotFoundException,
   Param,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateStatusHtml } from '../../../../../templates/emails/submission-status.template';
+import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
+import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
-import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
-import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
@@ -36,21 +32,19 @@ import {
   UpdateApplicationSubmissionReviewDto,
 } from './application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionReviewController {
-  private logger: Logger = new Logger(
-    ApplicationSubmissionReviewController.name,
-  );
-
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
-    private applicationService: ApplicationService,
     private emailService: EmailService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
@@ -189,17 +183,18 @@ export class ApplicationSubmissionReviewController {
       SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
 
-    const primaryContact = applicationSubmission.owners.find(
+    const primaryContact = applicationSubmission.owners?.find(
       (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
-    if (primaryContact && primaryContact.email) {
-      await this.sendStatusEmail(
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateREVGHtml,
+        status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
-        fileNumber,
-        userLocalGovernment,
+        government: userLocalGovernment,
         primaryContact,
-      );
+      });
     }
 
     const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
@@ -229,48 +224,6 @@ export class ApplicationSubmissionReviewController {
       applicationReview,
       userLocalGovernment,
     );
-  }
-
-  private async sendStatusEmail(
-    applicationSubmission: ApplicationSubmission,
-    fileNumber: string,
-    userLocalGovernment: LocalGovernment,
-    primaryContact: ApplicationOwner,
-  ) {
-    if (primaryContact.email) {
-      const status = await this.applicationSubmissionService.getStatus(
-        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-      );
-
-      const types = await this.applicationService.fetchApplicationTypes();
-      const matchingType = types.find(
-        (type) => type.code === applicationSubmission.typeCode,
-      );
-
-      const emailTemplate = generateStatusHtml({
-        fileNumber,
-        applicantName:
-          applicationSubmission.applicant || FALLBACK_APPLICANT_NAME,
-        applicationType:
-          matchingType?.portalLabel ??
-          matchingType?.label ??
-          FALLBACK_APPLICANT_NAME,
-        governmentName: userLocalGovernment.name,
-        status: status.label,
-      });
-
-      this.emailService.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-          applicationSubmission.applicant || FALLBACK_APPLICANT_NAME
-        })`,
-        to: [primaryContact.email],
-      });
-    } else {
-      this.logger.warn(
-        'Cannot send status email, primary contact has no email',
-      );
-    }
   }
 
   @Post('/:fileNumber/finish')
@@ -322,16 +275,43 @@ export class ApplicationSubmissionReviewController {
         req.user.entity,
         completedReview,
       );
+
+      const primaryContact = application.owners?.find(
+        (owner) => owner.uuid === application.primaryContactOwnerUuid,
+      );
+
       if (completedReview.isAuthorized !== false) {
         await this.applicationSubmissionService.updateStatus(
           application,
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
+
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateSUBMApplicantHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       } else {
         await this.applicationSubmissionService.updateStatus(
           application,
           SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
+
+        if (primaryContact) {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateRFFGHtml,
+            status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       }
     } else {
       throw new BaseServiceException('Application not in correct status');
@@ -401,6 +381,33 @@ export class ApplicationSubmissionReviewController {
       }
 
       await this.setReturnedStatus(returnDto, applicationSubmission);
+
+      const primaryContact = applicationSubmission.owners?.find(
+        (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+      );
+
+      if (primaryContact) {
+        if (returnDto.reasonForReturn === 'wrongGovernment') {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateWRNGHtml,
+            status: SUBMISSION_STATUS.WRONG_GOV,
+            applicationSubmission,
+            government: userLocalGovernment,
+            primaryContact,
+          });
+        }
+
+        if (returnDto.reasonForReturn === 'incomplete') {
+          await this.emailService.sendStatusEmail({
+            generateStatusHtml: generateINCMHtml,
+            status: SUBMISSION_STATUS.INCOMPLETE,
+            applicationSubmission,
+            government: userLocalGovernment,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
+      }
     } else {
       throw new BaseServiceException('Application not in correct status');
     }
