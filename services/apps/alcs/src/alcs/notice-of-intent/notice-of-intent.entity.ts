@@ -146,6 +146,57 @@ export class NoticeOfIntent extends Base {
   })
   decisionDate: Date | null;
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+    comment: 'Area in hectares of ALR impacted by the proposal',
+  })
+  alrArea?: number | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural cap classification',
+    nullable: true,
+  })
+  agCap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability classification system used',
+    nullable: true,
+  })
+  agCapSource?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Agricultural capability map sheet reference',
+    nullable: true,
+  })
+  agCapMap?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Consultant who determined the agricultural capability',
+    nullable: true,
+  })
+  agCapConsultant?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'ALC Staff Observations and Comments',
+    nullable: true,
+  })
+  staffObservations?: string | null;
+
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,
   })

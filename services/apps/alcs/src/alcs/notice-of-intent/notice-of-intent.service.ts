@@ -17,7 +17,6 @@ import {
 import { FileNumberService } from '../../file-number/file-number.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
-import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
@@ -279,9 +278,47 @@ export class NoticeOfIntentService {
         ? updateDto.retroactive
         : noticeOfIntent.retroactive;
 
+    noticeOfIntent.alrArea = filterUndefined(
+      updateDto.alrArea,
+      noticeOfIntent.alrArea,
+    );
+
+    noticeOfIntent.agCap = filterUndefined(
+      updateDto.agCap,
+      noticeOfIntent.agCap,
+    );
+
+    noticeOfIntent.agCapConsultant = filterUndefined(
+      updateDto.agCapConsultant,
+      noticeOfIntent.agCapConsultant,
+    );
+
+    noticeOfIntent.agCapMap = filterUndefined(
+      updateDto.agCapMap,
+      noticeOfIntent.agCapMap,
+    );
+
+    noticeOfIntent.agCapSource = filterUndefined(
+      updateDto.agCapSource,
+      noticeOfIntent.agCapSource,
+    );
+
+    noticeOfIntent.staffObservations = filterUndefined(
+      updateDto.staffObservations,
+      noticeOfIntent.staffObservations,
+    );
+
     await this.repository.save(noticeOfIntent);
 
-    //Statuses
+    await this.updateStatus(updateDto, noticeOfIntent);
+
+    return this.getByFileNumber(noticeOfIntent.fileNumber);
+  }
+
+  private async updateStatus(
+    updateDto: UpdateNoticeOfIntentDto,
+    noticeOfIntent: NoticeOfIntent,
+  ) {
     try {
       if (updateDto.dateAcknowledgedIncomplete !== undefined) {
         await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
@@ -305,8 +342,6 @@ export class NoticeOfIntentService {
         throw error;
       }
     }
-
-    return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 
   async listTypes() {

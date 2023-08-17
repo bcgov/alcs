@@ -107,6 +107,24 @@ export class NoticeOfIntentDto {
 
   @AutoMap()
   source: 'ALCS' | 'APPLICANT';
+
+  @AutoMap(() => String)
+  alrArea?: number;
+
+  @AutoMap(() => String)
+  agCap?: string;
+
+  @AutoMap(() => String)
+  agCapSource?: string;
+
+  @AutoMap(() => String)
+  agCapMap?: string;
+
+  @AutoMap(() => String)
+  agCapConsultant?: string;
+
+  @AutoMap(() => String)
+  staffObservations?: string;
 }
 
 export class UpdateNoticeOfIntentDto {
@@ -157,6 +175,30 @@ export class UpdateNoticeOfIntentDto {
   @IsBoolean()
   @IsOptional()
   retroactive?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  alrArea?: number;
+
+  @IsOptional()
+  @IsString()
+  agCap?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapSource?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapMap?: string;
+
+  @IsOptional()
+  @IsString()
+  agCapConsultant?: string;
+
+  @IsOptional()
+  @IsString()
+  staffObservations?: string;
 }
 
 export class CreateNoticeOfIntentServiceDto {
