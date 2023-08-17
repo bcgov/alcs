@@ -7,6 +7,7 @@ import {
   OWNER_TYPE,
   OwnerType,
 } from '../../../common/owner-type/owner-type.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
 import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
@@ -300,7 +301,7 @@ export class ApplicationOwnerService {
           if (fileNumber) {
             await this.applicationService.updateApplicant(
               fileNumber,
-              applicantName || 'Unknown',
+              applicantName || FALLBACK_APPLICANT_NAME,
             );
           }
         }
