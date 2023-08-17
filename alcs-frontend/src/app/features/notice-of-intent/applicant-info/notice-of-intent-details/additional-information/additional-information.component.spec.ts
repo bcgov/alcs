@@ -1,17 +1,17 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked } from '@golevelup/ts-jest';
-import { NoiDocumentService } from '../../../../../../services/notice-of-intent/noi-document/noi-document.service';
-import { RosoAdditionalInformationComponent } from './roso-additional-information.component';
+import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
+import { AdditionalInformationComponent } from './additional-information.component';
 
 describe('RosoAdditionalInformationComponent', () => {
-  let component: RosoAdditionalInformationComponent;
-  let fixture: ComponentFixture<RosoAdditionalInformationComponent>;
+  let component: AdditionalInformationComponent;
+  let fixture: ComponentFixture<AdditionalInformationComponent>;
   let mockNoiDocumentService: DeepMocked<NoiDocumentService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RosoAdditionalInformationComponent],
+      declarations: [AdditionalInformationComponent],
       providers: [
         {
           provide: NoiDocumentService,
@@ -21,7 +21,7 @@ describe('RosoAdditionalInformationComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(RosoAdditionalInformationComponent);
+    fixture = TestBed.createComponent(AdditionalInformationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

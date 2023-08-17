@@ -156,11 +156,21 @@
 </section>
 <section *ngIf="showFullApp">
   <h3>Additional Proposal Information</h3>
-  <app-roso-additional-information
+  <app-additional-information
     *ngIf="submission && noiType === 'ROSO'"
     [noiSubmission]="submission"
     [files]="files"
-  ></app-roso-additional-information>
+  ></app-additional-information>
+  <app-additional-information
+    *ngIf="submission && noiType === 'POFO'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-additional-information>
+  <app-additional-information
+    *ngIf="submission && noiType === 'PFRS'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-additional-information>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">
