@@ -48,7 +48,6 @@ describe('NoticeOfIntentSubmissionService', () => {
     soilIsFollowUp: null,
     soilFollowUpIDs: null,
     soilTypeRemoved: null,
-    soilReduceNegativeImpacts: null,
     soilToRemoveVolume: null,
     soilToRemoveArea: null,
     soilToRemoveMaximumDepth: null,

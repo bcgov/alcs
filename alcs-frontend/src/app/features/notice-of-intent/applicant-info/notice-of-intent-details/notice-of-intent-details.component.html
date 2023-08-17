@@ -1,9 +1,5 @@
 <section>
-  <app-parcel
-    *ngIf="files && submission"
-    [files]="files"
-    [noticeOfIntent]="submission"
-  ></app-parcel>
+  <app-parcel *ngIf="files && submission" [files]="files" [noticeOfIntent]="submission"></app-parcel>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(0)" mat-flat-button color="accent">
@@ -140,6 +136,16 @@
     [noiSubmission]="submission"
     [files]="files"
   ></app-roso-details>
+  <app-pofo-details
+    *ngIf="submission && noiType === 'POFO'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="submission && noiType === 'PFRS'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-pfrs-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">

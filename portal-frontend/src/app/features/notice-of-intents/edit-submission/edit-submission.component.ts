@@ -201,7 +201,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   private async submit() {
     const submission = this.noiSubmission;
-    debugger;
     if (submission) {
       const didSubmit = await this.noticeOfIntentSubmissionService.submitToAlcs(submission.uuid);
       if (didSubmit) {
