@@ -15,6 +15,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
+import { ProposalComponent } from './proposal/proposal.component';
 
 export const childRoutes = [
   {
@@ -40,7 +41,7 @@ export const childRoutes = [
     path: 'prep',
     menuTitle: 'NOI Prep',
     icon: 'task',
-    component: PreparationComponent,
+    component: ProposalComponent,
   },
   {
     path: 'info-request',

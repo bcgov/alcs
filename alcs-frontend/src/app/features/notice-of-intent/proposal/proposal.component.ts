@@ -22,33 +22,33 @@ export class ProposalComponent implements OnInit {
   constructor(private noiDetailService: NoticeOfIntentDetailService, private toastService: ToastService) {}
 
   ngOnInit(): void {
-    this.noiDetailService.$noticeOfIntent.subscribe((application) => {
-      if (application) {
-        this.noticeOfIntent = application;
-        this.alrArea = application.alrArea?.toString();
-        this.staffObservations = application.staffObservations ?? '';
+    this.noiDetailService.$noticeOfIntent.subscribe((noticeOfIntent) => {
+      if (noticeOfIntent) {
+        this.noticeOfIntent = noticeOfIntent;
+        this.alrArea = noticeOfIntent.alrArea?.toString();
+        this.staffObservations = noticeOfIntent.staffObservations ?? '';
       }
     });
   }
 
   async onSaveAlrArea(value: string | null) {
     const parsedValue = value ? parseFloat(value) : null;
-    await this.updateApplicationValue('alrArea', parsedValue);
+    await this.updateNoiValue('alrArea', parsedValue);
   }
 
-  async updateApplicationValue(field: keyof UpdateNoticeOfIntentDto, value: string[] | string | number | null) {
-    const application = this.noticeOfIntent;
-    if (application) {
-      const update = await this.noiDetailService.update(application.fileNumber, {
+  async updateNoiValue(field: keyof UpdateNoticeOfIntentDto, value: string[] | string | number | null) {
+    const noticeOfIntent = this.noticeOfIntent;
+    if (noticeOfIntent) {
+      const update = await this.noiDetailService.update(noticeOfIntent.fileNumber, {
         [field]: value,
       });
       if (update) {
-        this.toastService.showSuccessToast('Application updated');
+        this.toastService.showSuccessToast('Notice of Intent updated');
       }
     }
   }
 
   async onSaveStaffObservations($event: string) {
-    await this.updateApplicationValue('staffObservations', $event);
+    await this.updateNoiValue('staffObservations', $event);
   }
 }

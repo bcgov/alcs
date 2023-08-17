@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
@@ -17,10 +17,19 @@ import { ToastService } from '../../../services/toast/toast.service';
 })
 export class PreparationComponent implements OnInit {
   dateSubmittedToAlc?: string;
-  noticeOfIntent?: NoticeOfIntentDto;
   selectableTypes: { label: string; value: string }[] = [];
   selectedSubtypes: string[] = [];
   private subtypes: NoticeOfIntentSubtypeDto[] = [];
+
+  _noticeOfIntent: NoticeOfIntentDto | undefined;
+
+  @Input() set noticeOfIntent(noticeOfIntent: NoticeOfIntentDto | undefined) {
+    if (noticeOfIntent) {
+      this._noticeOfIntent = noticeOfIntent;
+      this.dateSubmittedToAlc = moment(noticeOfIntent.dateSubmittedToAlc).format(environment.dateFormat);
+      this.selectedSubtypes = noticeOfIntent.subtype.map((subtype) => subtype.label);
+    }
+  }
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
@@ -29,19 +38,11 @@ export class PreparationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.noticeOfIntentDetailService.$noticeOfIntent.subscribe((noticeOfIntent) => {
-      if (noticeOfIntent) {
-        this.dateSubmittedToAlc = moment(noticeOfIntent.dateSubmittedToAlc).format(environment.dateFormat);
-        this.noticeOfIntent = noticeOfIntent;
-        this.selectedSubtypes = noticeOfIntent.subtype.map((subtype) => subtype.label);
-      }
-    });
-
     this.loadSubtypes();
   }
 
   async updateBoolean(field: keyof UpdateNoticeOfIntentDto, value: boolean) {
-    const application = this.noticeOfIntent;
+    const application = this._noticeOfIntent;
     if (application) {
       const update = await this.noticeOfIntentDetailService.update(application.fileNumber, {
         [field]: value,
@@ -62,9 +63,9 @@ export class PreparationComponent implements OnInit {
   }
 
   async saveSubtypes($event: string | string[] | null) {
-    if (this.noticeOfIntent && $event instanceof Array) {
+    if (this._noticeOfIntent && $event instanceof Array) {
       const selectedCodes = $event.map((label) => this.subtypes.find((subtype) => subtype.label === label)!.code);
-      await this.noticeOfIntentDetailService.update(this.noticeOfIntent?.fileNumber, {
+      await this.noticeOfIntentDetailService.update(this._noticeOfIntent?.fileNumber, {
         subtype: selectedCodes,
       });
     }

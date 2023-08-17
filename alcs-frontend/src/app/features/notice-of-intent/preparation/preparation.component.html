@@ -1,19 +1,18 @@
-<div *ngIf="noticeOfIntent" class="preparation">
-  <h3>Notice of Intent Prep</h3>
+<div *ngIf="_noticeOfIntent" class="preparation">
   <div>
-    <h5>NOI Subtype</h5>
+    <div class="subheading2">NOI Subtype</div>
     <app-inline-dropdown
       [options]="selectableTypes"
       [value]="selectedSubtypes"
       (save)="saveSubtypes($event)"
-      [multiple]='true'
-      class='dropdown'
+      [multiple]="true"
+      class="dropdown"
     ></app-inline-dropdown>
   </div>
   <div>
-    <h5>Retroactive</h5>
+    <div class="subheading2">Retroactive</div>
     <app-inline-boolean
-      [selectedValue]="noticeOfIntent.retroactive"
+      [selectedValue]="_noticeOfIntent.retroactive"
       (save)="updateBoolean('retroactive', $event)"
     ></app-inline-boolean>
   </div>
