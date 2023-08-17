@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
@@ -28,6 +29,7 @@ describe('RosoAdditionalInformationComponent', () => {
         },
         { provide: NoticeOfIntentDocumentService, useValue: mockNoticeOfIntentDocumentService },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdditionalInformationComponent);
