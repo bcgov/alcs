@@ -6,9 +6,9 @@ import {
   ApplicationDto,
   ApplicationSubmissionDto,
   SUBMISSION_STATUS,
-  SYSTEM_SOURCE_TYPES,
 } from '../../../services/application/application.dto';
 import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
   selector: 'app-applicant-info',

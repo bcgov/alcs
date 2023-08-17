@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDto, SYSTEM_SOURCE_TYPES } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 import { decisionChildRoutes } from './decision.module';
 
 @Component({

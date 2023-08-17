@@ -1,4 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
@@ -30,7 +31,7 @@ export interface NoticeOfIntentDto {
   region: ApplicationRegionDto;
   applicant: string;
   type: NoticeOfIntentTypeDto;
-  source: 'ALCS' | 'APPLICANT';
+  source: SYSTEM_SOURCE_TYPES;
 
   dateSubmittedToAlc?: number;
   feePaidDate?: number;
@@ -48,6 +49,13 @@ export interface NoticeOfIntentDto {
   activeDays: number | null;
   pausedDays: number | null;
   paused: boolean;
+
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  staffObservations?: string;
 }
 
 export interface UpdateNoticeOfIntentDto {
@@ -62,6 +70,13 @@ export interface UpdateNoticeOfIntentDto {
   summary?: string;
   retroactive?: boolean;
   subtype?: string[];
+
+  alrArea?: number;
+  agCap?: string;
+  agCapSource?: string;
+  agCapMap?: string;
+  agCapConsultant?: string;
+  staffObservations?: string;
 }
 
 export enum NOI_SUBMISSION_STATUS {

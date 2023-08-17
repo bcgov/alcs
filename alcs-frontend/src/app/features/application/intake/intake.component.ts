@@ -4,10 +4,10 @@ import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import {
   ApplicationDto,
-  SYSTEM_SOURCE_TYPES,
   UpdateApplicationDto,
 } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
   selector: 'app-overview',

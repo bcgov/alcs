@@ -4,7 +4,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../../services/application/application-parcel/application-parcel.service';
-import { ApplicationSubmissionDto, PARCEL_OWNERSHIP_TYPE } from '../../../../../services/application/application.dto';
+import { ApplicationSubmissionDto } from '../../../../../services/application/application.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../../../shared/dto/parcel-ownership.type.dto';
 
 @Component({
   selector: 'app-parcel',

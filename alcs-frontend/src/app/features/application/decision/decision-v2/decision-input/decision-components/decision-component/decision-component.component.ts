@@ -14,8 +14,8 @@ import {
   TurpDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
+import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
-import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
 import { SubdInputComponent } from './subd-input/subd-input.component';
 
 @Component({
