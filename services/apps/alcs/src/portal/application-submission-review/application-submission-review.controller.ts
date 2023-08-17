@@ -183,7 +183,7 @@ export class ApplicationSubmissionReviewController {
       SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
 
-    const primaryContact = applicationSubmission.owners.find(
+    const primaryContact = applicationSubmission.owners?.find(
       (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
@@ -276,7 +276,7 @@ export class ApplicationSubmissionReviewController {
         completedReview,
       );
 
-      const primaryContact = application.owners.find(
+      const primaryContact = application.owners?.find(
         (owner) => owner.uuid === application.primaryContactOwnerUuid,
       );
 
@@ -382,7 +382,7 @@ export class ApplicationSubmissionReviewController {
 
       await this.setReturnedStatus(returnDto, applicationSubmission);
 
-      const primaryContact = applicationSubmission.owners.find(
+      const primaryContact = applicationSubmission.owners?.find(
         (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
       );
 

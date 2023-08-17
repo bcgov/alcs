@@ -140,9 +140,6 @@ describe('ApplicationDecisionMeetingController', () => {
     const localGovernmentUuid = 'local-government';
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
     const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
     const mockSubmission = new ApplicationSubmission({
       owners: [mockOwner],

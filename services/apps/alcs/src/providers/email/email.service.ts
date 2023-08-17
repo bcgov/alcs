@@ -190,11 +190,17 @@ export class EmailService {
     return undefined;
   }
 
-  async getSubmissionStatusEmailData(fileNumber: string) {
+  async getSubmissionStatusEmailData(
+    fileNumber: string,
+    submissionData?: ApplicationSubmission,
+  ) {
     const applicationSubmission =
-      await this.applicationSubmissionService.getOrFailByFileNumber(fileNumber);
+      submissionData ||
+      (await this.applicationSubmissionService.getOrFailByFileNumber(
+        fileNumber,
+      ));
 
-    const primaryContact = applicationSubmission.owners.find(
+    const primaryContact = applicationSubmission.owners?.find(
       (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
@@ -232,19 +238,20 @@ export class EmailService {
       decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
     });
 
+    const email = {
+      body: emailTemplate.html,
+      subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+    };
+
     if (data.primaryContact && data.primaryContact.email) {
-      // Send to owner
       this.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+        ...email,
         to: [data.primaryContact.email],
         cc: data.ccGovernment ? data.government?.emails : [],
       });
     } else if (data.government && data.government.emails.length > 0) {
-      // Send to government
       this.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+        ...email,
         to: data.government.emails,
       });
     } else {

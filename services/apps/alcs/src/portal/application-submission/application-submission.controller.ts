@@ -199,13 +199,11 @@ export class ApplicationSubmissionController {
       throw new BadRequestException('Can only cancel in progress Applications');
     }
 
-    const primaryContact = application.owners.find(
-      (owner) => owner.uuid === application.primaryContactOwnerUuid,
-    );
-
-    const submissionGovernment = application.localGovernmentUuid
-      ? await this.emailService.getSubmissionGovernmentOrFail(application)
-      : null;
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(
+        application.fileNumber,
+        application,
+      );
 
     if (primaryContact) {
       await this.emailService.sendStatusEmail({
@@ -238,14 +236,11 @@ export class ApplicationSubmissionController {
         applicationSubmission,
       );
 
-    const submissionGovernment =
-      await this.emailService.getSubmissionGovernmentOrFail(
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(
+        applicationSubmission.fileNumber,
         applicationSubmission,
       );
-
-    const primaryContact = applicationSubmission.owners.find(
-      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-    );
 
     if (validationResult.application) {
       const validatedApplicationSubmission = validationResult.application;

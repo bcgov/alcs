@@ -182,9 +182,11 @@ describe('ApplicationSubmissionController', () => {
     mockAppSubmissionService.cancel.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplication,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
 
     mockEmailService.sendStatusEmail.mockResolvedValue();
 
@@ -392,9 +394,11 @@ describe('ApplicationSubmissionController', () => {
     });
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
 
     mockEmailService.sendStatusEmail.mockResolvedValue();
 
@@ -448,9 +452,11 @@ describe('ApplicationSubmissionController', () => {
     mockEmailService.sendStatusEmail.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -508,9 +514,11 @@ describe('ApplicationSubmissionController', () => {
     mockEmailService.sendStatusEmail.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -527,15 +535,18 @@ describe('ApplicationSubmissionController', () => {
 
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
+    const mockApplicationSubmission = new ApplicationSubmission({
+      typeCode: 'NOT-TURP',
+      owners: [],
+    });
     mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        typeCode: 'NOT-TURP',
-        owners: [],
-      }),
+      mockApplicationSubmission,
     );
-    mockEmailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      new LocalGovernment(),
-    );
+    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: new ApplicationOwner(),
+      submissionGovernment: new LocalGovernment(),
+    });
     mockAppValidationService.validateSubmission.mockResolvedValue({
       application: undefined,
       errors: [new Error('Failed to validate')],

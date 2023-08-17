@@ -21,7 +21,6 @@ import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { ApplicationSubmissionService } from './application-submission/application-submission.service';
 import { EmailService } from '../../providers/email/email.service';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
@@ -34,7 +33,6 @@ describe('ApplicationController', () => {
   let applicationService: DeepMocked<ApplicationService>;
   let notificationService: DeepMocked<NotificationService>;
   let cardService: DeepMocked<CardService>;
-  let applicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let emailService: DeepMocked<EmailService>;
 
   const mockApplicationEntity = initApplicationMockEntity();
@@ -76,7 +74,6 @@ describe('ApplicationController', () => {
     applicationService = createMock<ApplicationService>();
     notificationService = createMock<NotificationService>();
     cardService = createMock<CardService>();
-    applicationSubmissionService = createMock<ApplicationSubmissionService>();
     emailService = createMock<EmailService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -95,10 +92,6 @@ describe('ApplicationController', () => {
         {
           provide: CardService,
           useValue: cardService,
-        },
-        {
-          provide: ApplicationSubmissionService,
-          useValue: applicationSubmissionService,
         },
         {
           provide: EmailService,
@@ -398,9 +391,6 @@ describe('ApplicationController', () => {
       localGovernmentUuid,
     });
 
-    applicationSubmissionService.get.mockResolvedValue(
-      mockApplicationSubmission,
-    );
     emailService.getSubmissionStatusEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,

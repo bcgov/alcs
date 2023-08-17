@@ -175,6 +175,27 @@ describe('EmailService', () => {
     );
   });
 
+  it('should call through services and return submission data', async () => {
+    const mockSubmission = new ApplicationSubmission({});
+    mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(
+      mockSubmission,
+    );
+
+    const res = await service.getSubmissionStatusEmailData('file-number');
+
+    expect(
+      mockApplicationSubmissionService.getOrFailByFileNumber,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionService.getOrFailByFileNumber,
+    ).toBeCalledWith('file-number');
+    expect(res).toStrictEqual({
+      applicationSubmission: mockSubmission,
+      primaryContact: undefined,
+      submissionGovernment: null,
+    });
+  });
+
   it('should call through services to set email template', async () => {
     const mockData = {
       generateStatusHtml: () => ({} as MJMLParseResults),
