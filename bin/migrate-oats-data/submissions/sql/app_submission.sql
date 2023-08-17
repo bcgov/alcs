@@ -12,14 +12,16 @@ WITH
     oats_components AS (
         SELECT
             oac.alr_application_id,
-            oac.alr_appl_component_id
+            oac.alr_appl_component_id,
+            oac.alr_change_code
         FROM
             oats.oats_alr_appl_components oac
     )
 SELECT
     aps.file_number,
     aps.type_code,
-    aps.local_government_uuid
+    aps.local_government_uuid,
+    oc.alr_change_code
     -- ospi.subdiv_parcel_intent_id
 FROM
     alcs_apps aps

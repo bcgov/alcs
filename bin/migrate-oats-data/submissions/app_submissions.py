@@ -80,7 +80,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed updates:", failed_inserts)
     log_end(etl_name)
 
-def update_app_prep_records(conn, batch_size, cursor, rows):
+def update_app_sub_records(conn, batch_size, cursor, rows):
     """
     Function to update submission records in batches.
 
@@ -99,7 +99,7 @@ def update_app_prep_records(conn, batch_size, cursor, rows):
         other_data_list,
         exc_data_list,
         inc_data_list,
-    ) = prepare_app_prep_data(rows)
+    ) = prepare_app_sub_data(rows)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -143,7 +143,7 @@ def update_app_prep_records(conn, batch_size, cursor, rows):
 
     conn.commit()
 
-def prepare_app_prep_data(app_prep_raw_data_list):
+def prepare_app_sub_data(app_sub_raw_data_list):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_prep_raw_data_list'.
 
@@ -164,17 +164,17 @@ def prepare_app_prep_data(app_prep_raw_data_list):
 
     for row in app_sub_raw_data_list:
         data = dict(row)
-        data = map_basic_field(data)
+        # data = map_basic_field(data)
 
-        if data["type_code"] == ALRChangeCode.NFU.value:
-            data = mapOatsToAlcsAppPrep(data)
+        if data["alr_change_code"] == ALRChangeCode.NFU.value:
+            # data = mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
-        elif data["type_code"] == ALRChangeCode.NAR.value:
+        elif data["alr_change_code"] == ALRChangeCode.NAR.value:
             nar_data_list.append(data)
-        elif data["type_code"] == ALRChangeCode.EXC.value:
+        elif data["alr_change_code"] == ALRChangeCode.EXC.value:
             # data = mapOatsToAlcsLegislationCode(data)
             exc_data_list.append(data)
-        elif data["type_code"] == ALRChangeCode.INC.value:
+        elif data["alr_change_code"] == ALRChangeCode.INC.value:
             # data = mapOatsToAlcsLegislationCode(data)
             inc_data_list.append(data)
         else:
@@ -190,43 +190,29 @@ def get_update_query(unique_fields):
                 VALUES file_number = %(file_number)s,
                     local_government_uuid = %(local_government_uuid)s,
                     type_code = %(type_code)s,
-                    alr_area = %(component_area)s,
-                    ag_cap_source = %(capability_source_code)s,
-                    staff_observations = %(staff_comment_observations)s,
-                    fee_paid_date = %(fee_received_date)s,
-                    fee_waived = %(fee_waived_ind)s,
-                    fee_amount = %(applied_fee_amt)s,
-                    fee_split_with_lg = %(split_fee_with_local_gov_ind)s
+                    subd_proposed_lots = jsonb_build_array(empty,1),
+                    is_draft = false
                     {unique_fields}
     """
     return query.format(unique_fields=unique_fields)
 
 def get_update_query_for_nfu():
-    unique_fields = """,
-            nfu_use_type = %(nonfarm_use_type_code)s,
-            nfu_use_sub_type = %(nonfarm_use_subtype_code)s,
-            proposal_end_date = %(nonfarm_use_end_date)s"""
+    unique_fields = """"""
     return get_update_query(unique_fields)
 
 def get_update_query_for_nar():
     # naruSubtype is a part of submission, import there
-    unique_fields = """,
-            proposal_end_date = %(rsdntl_use_end_date)s"""
+    unique_fields = """"""
     return get_update_query(unique_fields)
 
 
 def get_update_query_for_exc():
-    # TODO Will be finalized in ALCS-834.
-    # exclsn_app_type_code is out of scope. It is a part of submission
-    unique_fields = """,
-            incl_excl_applicant_type = %(legislation_code)s"""
+    unique_fields = """"""
     return get_update_query(unique_fields)
 
 
 def get_update_query_for_inc():
-    # TODO Will be finalized in ALCS-834.
-    unique_fields = """,
-            incl_excl_applicant_type = %(legislation_code)s"""
+    unique_fields = """"""
     return get_update_query(unique_fields)
 
 
@@ -237,14 +223,14 @@ def get_update_query_for_other():
 
 
 
-def map_basic_field(data):
-    if data["capability_source_code"]:
-        data["capability_source_code"] = str(
-            OatsToAlcsAgCapSource[data["capability_source_code"]].value
-        )
-    if data["agri_capability_code"]:
-        data["agri_capability_code"] = str(
-            OatsToAlcsAgCap[data["agri_capability_code"]].value
-        )
+# def map_basic_field(data):
+#     if data["capability_source_code"]:
+#         data["capability_source_code"] = str(
+#             OatsToAlcsAgCapSource[data["capability_source_code"]].value
+#         )
+#     if data["agri_capability_code"]:
+#         data["agri_capability_code"] = str(
+#             OatsToAlcsAgCap[data["agri_capability_code"]].value
+#         )
 
-    return data
+#     return data
