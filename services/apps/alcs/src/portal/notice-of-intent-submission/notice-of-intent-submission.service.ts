@@ -22,6 +22,7 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
@@ -93,7 +94,7 @@ export class NoticeOfIntentSubmissionService {
 
     await this.noticeOfIntentService.create({
       fileNumber,
-      applicant: 'Unknown',
+      applicant: FALLBACK_APPLICANT_NAME,
       typeCode: type,
     });
 

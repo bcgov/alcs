@@ -25,6 +25,7 @@ import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -248,9 +249,12 @@ export class ApplicationSubmissionReviewController {
 
       const emailTemplate = generateStatusHtml({
         fileNumber,
-        applicantName: applicationSubmission.applicant || 'Unknown',
+        applicantName:
+          applicationSubmission.applicant || FALLBACK_APPLICANT_NAME,
         applicationType:
-          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
+          matchingType?.portalLabel ??
+          matchingType?.label ??
+          FALLBACK_APPLICANT_NAME,
         governmentName: userLocalGovernment.name,
         status: status.label,
       });
@@ -258,7 +262,7 @@ export class ApplicationSubmissionReviewController {
       this.emailService.sendEmail({
         body: emailTemplate.html,
         subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-          applicationSubmission.applicant || 'Unknown'
+          applicationSubmission.applicant || FALLBACK_APPLICANT_NAME
         })`,
         to: [primaryContact.email],
       });
