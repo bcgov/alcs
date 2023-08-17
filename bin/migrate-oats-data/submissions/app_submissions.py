@@ -45,7 +45,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE oc.alr_application_id > {last_application_id} ORDER BY oc.alr_application_id;"
+                    f"{application_sql} WHERE acg.alr_application_id > {last_application_id} ORDER BY acg.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
