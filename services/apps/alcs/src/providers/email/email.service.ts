@@ -13,6 +13,7 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -216,13 +217,16 @@ export class EmailService {
     );
 
     const fileNumber = data.applicationSubmission.fileNumber;
-    const applicantName = data.applicationSubmission.applicant || 'Unknown';
+    const applicantName =
+      data.applicationSubmission.applicant || FALLBACK_APPLICANT_NAME;
 
     const emailTemplate = data.generateStatusHtml({
       fileNumber,
       applicantName,
       applicationType:
-        matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
+        matchingType?.portalLabel ??
+        matchingType?.label ??
+        FALLBACK_APPLICANT_NAME,
       governmentName: data.government?.name,
       status: status.label,
       decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
