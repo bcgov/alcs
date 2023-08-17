@@ -3,7 +3,6 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
-import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
@@ -13,6 +12,7 @@ import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-st
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
 import { AdditionalInformationComponent } from './additional-information/additional-information.component';
+import { ChangeNoiTypeDialogComponent } from './change-noi-type-dialog/change-noi-type-dialog.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
@@ -184,7 +184,24 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   }
 
   onChangeSubmissionType() {
-    //TODO: Hook this up later
+    if (this.noiSubmission) {
+      this.dialog
+        .open(ChangeNoiTypeDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+          autoFocus: false,
+          data: {
+            submissionUuid: this.noiSubmission.uuid,
+            submissionTypeCode: this.noiSubmission.typeCode,
+          },
+        })
+        .beforeClosed()
+        .subscribe((result) => {
+          if (result) {
+            this.loadSubmission(this.fileId, true);
+          }
+        });
+    }
   }
 
   async onSubmit() {
