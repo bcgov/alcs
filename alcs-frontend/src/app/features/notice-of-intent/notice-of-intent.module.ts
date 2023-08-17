@@ -17,6 +17,7 @@ import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { PreparationComponent } from './preparation/preparation.component';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { NoticeOfIntentDetailsModule } from './applicant-info/notice-of-intent-details/notice-of-intent-details.module';
+import { ProposalComponent } from './proposal/proposal.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
     NoiDocumentsComponent,
     DocumentUploadDialogComponent,
     ApplicantInfoComponent,
+    ProposalComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NoticeOfIntentDetailsModule],
 })
