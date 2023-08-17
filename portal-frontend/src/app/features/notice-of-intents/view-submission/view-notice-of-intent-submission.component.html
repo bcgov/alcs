@@ -28,9 +28,7 @@
     </div>
   </div>
 </div>
-<button (click)="onNavigateHome()" mat-button color="accent">
-  <mat-icon>chevron_left</mat-icon>Return to Inbox
-</button>
+<button (click)="onNavigateHome()" mat-button color="accent"><mat-icon>chevron_left</mat-icon>Return to Inbox</button>
 <div>
   <div class="navigation">
     <mat-tab-group>
@@ -91,7 +89,9 @@
         </div>
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
-        <div class="content">ALC GOES HERE</div>
+        <div class="content">
+          <app-alc-review [$noiDocuments]="$noiDocuments" [$noiSubmission]="$noiSubmission"></app-alc-review>
+        </div>
       </mat-tab>
     </mat-tab-group>
   </div>

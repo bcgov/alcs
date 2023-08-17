@@ -1,0 +1,26 @@
+<div *ngIf="noiSubmission">
+  <div class="header">
+    <h3>ALC Review and Decision</h3>
+    <div>
+      <button
+        [routerLink]="'/notice-of-intent/' + noiSubmission.fileNumber + '/edit'"
+        *ngIf="noiSubmission.canEdit"
+        mat-flat-button
+        color="primary"
+      >
+        Edit NOI
+      </button>
+    </div>
+  </div>
+  <div *ngIf="noiSubmission.status.code === NOI_SUBMISSION_STATUS.IN_PROGRESS" class="warning">
+    This section will update after the Notice of Intent is submitted to the ALC.
+  </div>
+  <div
+    *ngIf="
+      noiSubmission.status.code === NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC ||
+      noiSubmission.status.code === NOI_SUBMISSION_STATUS.ALC_DECISION
+    "
+  >
+    <app-submission-documents [$noiDocuments]="$noiDocuments"></app-submission-documents>
+  </div>
+</div>
