@@ -29,6 +29,7 @@ import { LocalGovernment } from '../../../local-government/local-government.enti
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
 import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+import { ApplicationDecision } from '../../application-decision.entity';
 
 describe('ApplicationDecisionV2Controller', () => {
   let controller: ApplicationDecisionV2Controller;
@@ -180,7 +181,13 @@ describe('ApplicationDecisionV2Controller', () => {
   });
 
   it('should update the decision', async () => {
+    mockApplicationService.getFileNumber.mockResolvedValue('file-number');
+    mockDecisionService.get.mockResolvedValue(new ApplicationDecision());
+    mockDecisionService.getByAppFileNumber.mockResolvedValue([
+      new ApplicationDecision(),
+    ]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
+
     const updates = {
       outcome: 'New Outcome',
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -265,7 +272,7 @@ describe('ApplicationDecisionV2Controller', () => {
     expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
   });
 
-  it('should send an email after releasing a decision from draft', async () => {
+  it('should send status email after the first release of any decisions from draft', async () => {
     const fileNumber = 'fake-file-number';
     const primaryContactOwnerUuid = 'primary-contact';
     const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
@@ -278,8 +285,11 @@ describe('ApplicationDecisionV2Controller', () => {
       localGovernmentUuid,
     });
 
-    mockDecisionService.update.mockResolvedValue(mockDecision);
     mockApplicationService.getFileNumber.mockResolvedValue(fileNumber);
+    mockDecisionService.get.mockResolvedValue(
+      new ApplicationDecision({ wasReleased: false }),
+    );
+    mockDecisionService.update.mockResolvedValue(mockDecision);
     mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(
       mockApplicationSubmission,
     );
@@ -326,5 +336,35 @@ describe('ApplicationDecisionV2Controller', () => {
         day: 'numeric',
       }),
     });
+  });
+
+  it('should not send status email on subsequent decision releases', async () => {
+    mockApplicationService.getFileNumber.mockResolvedValue('fake-file-number');
+    mockDecisionService.get.mockResolvedValue(
+      new ApplicationDecision({ wasReleased: true }),
+    );
+    mockDecisionService.update.mockResolvedValue(mockDecision);
+    mockEmailService.sendStatusEmail.mockResolvedValue();
+
+    const updates = {
+      outcome: 'New Outcome',
+      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
+      isDraft: false,
+    } as UpdateApplicationDecisionDto;
+
+    await controller.update('fake-uuid', updates);
+
+    expect(mockDecisionService.update).toBeCalledTimes(1);
+    expect(mockDecisionService.update).toBeCalledWith(
+      'fake-uuid',
+      {
+        outcome: 'New Outcome',
+        date: updates.date,
+        isDraft: false,
+      },
+      undefined,
+      undefined,
+    );
+    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(0);
   });
 });

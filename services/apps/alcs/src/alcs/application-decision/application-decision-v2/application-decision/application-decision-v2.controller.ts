@@ -198,6 +198,8 @@ export class ApplicationDecisionV2Controller {
       reconsiders = null;
     }
 
+    const decision = await this.appDecisionService.get(uuid);
+
     const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
@@ -205,52 +207,8 @@ export class ApplicationDecisionV2Controller {
       reconsiders,
     );
 
-    // Send email after releasing draft
-    if (updateDto.isDraft === false) {
-      const fileNumber = await this.applicationService.getFileNumber(
-        updatedDecision.applicationUuid,
-      );
-
-      const applicationSubmission =
-        await this.applicationSubmissionService.getOrFailByFileNumber(
-          fileNumber,
-        );
-
-      const primaryContact = applicationSubmission.owners.find(
-        (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-      );
-
-      const submissionGovernment =
-        await this.emailService.getSubmissionGovernmentOrFail(
-          applicationSubmission,
-        );
-
-      const date = updatedDecision.date
-        ? new Date(updatedDecision.date)
-        : new Date();
-
-      if (updatedDecision.daysHideFromPublic) {
-        date.setDate(date.getDate() + updatedDecision.daysHideFromPublic);
-      }
-
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      };
-
-      if (primaryContact) {
-        await this.emailService.sendStatusEmail({
-          generateStatusHtml: generateALCDHtml,
-          status: SUBMISSION_STATUS.ALC_DECISION,
-          applicationSubmission,
-          government: submissionGovernment,
-          primaryContact,
-          ccGovernment: true,
-          decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
-        });
-      }
+    if (!decision.wasReleased && updateDto.isDraft === false) {
+      this.sendDecisionReleasedEmail(updatedDecision);
     }
 
     return this.mapper.mapAsync(
@@ -329,5 +287,48 @@ export class ApplicationDecisionV2Controller {
     @Param('resolutionYear') resolutionYear: number,
   ) {
     return this.appDecisionService.generateResolutionNumber(resolutionYear);
+  }
+
+  private async sendDecisionReleasedEmail(decision: ApplicationDecision) {
+    const fileNumber = await this.applicationService.getFileNumber(
+      decision.applicationUuid,
+    );
+
+    const applicationSubmission =
+      await this.applicationSubmissionService.getOrFailByFileNumber(fileNumber);
+
+    const primaryContact = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment =
+      await this.emailService.getSubmissionGovernmentOrFail(
+        applicationSubmission,
+      );
+
+    const date = decision.date ? new Date(decision.date) : new Date();
+
+    if (decision.daysHideFromPublic) {
+      date.setDate(date.getDate() + decision.daysHideFromPublic);
+    }
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateALCDHtml,
+        status: SUBMISSION_STATUS.ALC_DECISION,
+        applicationSubmission,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: true,
+        decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
+      });
+    }
   }
 }
