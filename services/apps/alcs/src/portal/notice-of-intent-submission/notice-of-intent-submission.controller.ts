@@ -10,6 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
@@ -33,28 +34,21 @@ export class NoticeOfIntentSubmissionController {
   async getSubmissions(@Req() req) {
     const user = req.user.entity as User;
 
-    if (user.bceidBusinessGuid) {
-      //TODO: Business accounts?
-    }
-
-    const applications = await this.noticeOfIntentSubmissionService.getByUser(
-      user,
-    );
-    return this.noticeOfIntentSubmissionService.mapToDTOs(applications);
+    const applications =
+      await this.noticeOfIntentSubmissionService.getAllByUser(user);
+    return this.noticeOfIntentSubmissionService.mapToDTOs(applications, user);
   }
 
-  @Get('/application/:fileId')
+  @Get('/notice-of-intent/:fileId')
   async getSubmissionByFileId(@Req() req, @Param('fileId') fileId: string) {
     const user = req.user.entity as User;
 
     const submission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByFileId(
-        fileId,
-        user,
-      );
+      await this.noticeOfIntentSubmissionService.getByFileNumber(fileId, user);
 
     return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
       submission,
+      user,
     );
   }
 
@@ -62,11 +56,14 @@ export class NoticeOfIntentSubmissionController {
   async getSubmission(@Req() req, @Param('uuid') uuid: string) {
     const user = req.user.entity as User;
 
-    const submission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(uuid, user);
+    const submission = await this.noticeOfIntentSubmissionService.getByUuid(
+      uuid,
+      user,
+    );
 
     return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
       submission,
+      user,
     );
   }
 
@@ -89,29 +86,49 @@ export class NoticeOfIntentSubmissionController {
     @Body() updateDto: NoticeOfIntentSubmissionUpdateDto,
     @Req() req,
   ) {
-    const submission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.getByUuid(
         uuid,
         req.user.entity,
       );
 
+    if (
+      noticeOfIntentSubmission.status.statusTypeCode !==
+      NOI_SUBMISSION_STATUS.IN_PROGRESS
+    ) {
+      throw new BadRequestException(
+        'Can only edit in progress Notice of Intents',
+      );
+    }
+
     const updatedSubmission = await this.noticeOfIntentSubmissionService.update(
-      submission.uuid,
+      uuid,
       updateDto,
+      req.user.entity,
     );
 
     return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
       updatedSubmission,
+      req.user.entity,
     );
   }
 
   @Post('/:uuid/cancel')
   async cancel(@Param('uuid') uuid: string, @Req() req) {
     const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         uuid,
         req.user.entity,
       );
+
+    if (
+      noticeOfIntentSubmission.status.statusTypeCode !==
+      NOI_SUBMISSION_STATUS.IN_PROGRESS
+    ) {
+      throw new BadRequestException(
+        'Can only cancel in progress Notice of Intents',
+      );
+    }
 
     await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
 
@@ -123,7 +140,7 @@ export class NoticeOfIntentSubmissionController {
   @Post('/alcs/submit/:uuid')
   async submitAsApplicant(@Param('uuid') uuid: string, @Req() req) {
     const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         uuid,
         req.user.entity,
       );
@@ -142,12 +159,14 @@ export class NoticeOfIntentSubmissionController {
       );
 
       const finalSubmission =
-        await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+        await this.noticeOfIntentSubmissionService.getByUuid(
           uuid,
           req.user.entity,
         );
+
       return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
         finalSubmission,
+        req.user.entity,
       );
     } else {
       this.logger.debug(validationResult.errors);

@@ -6,6 +6,7 @@ import { NoticeOfIntentDocument } from '../../../alcs/notice-of-intent/notice-of
 import { NoticeOfIntentDocumentService } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentService } from '../../../alcs/notice-of-intent/notice-of-intent.service';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
+import { User } from '../../../user/user.entity';
 import { NoticeOfIntentParcel } from '../notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
@@ -116,7 +117,7 @@ describe('NoticeOfIntentOwnerService', () => {
       new NoticeOfIntentParcel(),
     );
 
-    await service.attachToParcel('', '');
+    await service.attachToParcel('', '', new User());
 
     expect(owner.parcels.length).toEqual(1);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
@@ -136,7 +137,7 @@ describe('NoticeOfIntentOwnerService', () => {
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new NoticeOfIntentOwner());
 
-    await service.removeFromParcel('', parcelUuid);
+    await service.removeFromParcel('', parcelUuid, new User());
 
     expect(owner.parcels.length).toEqual(0);
     expect(mockRepo.findOneOrFail).toHaveBeenCalledTimes(1);
@@ -151,13 +152,17 @@ describe('NoticeOfIntentOwnerService', () => {
     mockRepo.findOneOrFail.mockResolvedValue(owner);
     mockRepo.save.mockResolvedValue(new NoticeOfIntentOwner());
 
-    await service.update('', {
-      firstName: 'I Am',
-      lastName: 'Batman',
-      email: '',
-      phoneNumber: '',
-      typeCode: '',
-    });
+    await service.update(
+      '',
+      {
+        firstName: 'I Am',
+        lastName: 'Batman',
+        email: '',
+        phoneNumber: '',
+        typeCode: '',
+      },
+      new User(),
+    );
 
     expect(owner.firstName).toEqual('I Am');
     expect(owner.lastName).toEqual('Batman');
@@ -176,13 +181,17 @@ describe('NoticeOfIntentOwnerService', () => {
     mockRepo.save.mockResolvedValue(new NoticeOfIntentOwner());
     mockAppDocumentService.delete.mockResolvedValue({} as any);
 
-    await service.update('', {
-      organizationName: '',
-      email: '',
-      phoneNumber: '',
-      typeCode: '',
-      corporateSummaryUuid: 'newUuid',
-    });
+    await service.update(
+      '',
+      {
+        organizationName: '',
+        email: '',
+        phoneNumber: '',
+        typeCode: '',
+        corporateSummaryUuid: 'newUuid',
+      },
+      new User(),
+    );
 
     expect(owner.corporateSummaryUuid).toEqual('newUuid');
     expect(mockAppDocumentService.delete).toHaveBeenCalledTimes(1);
@@ -193,7 +202,7 @@ describe('NoticeOfIntentOwnerService', () => {
   it('should call through for delete', async () => {
     mockRepo.remove.mockResolvedValue({} as any);
 
-    await service.delete(new NoticeOfIntentOwner());
+    await service.delete(new NoticeOfIntentOwner(), new User());
 
     expect(mockRepo.remove).toHaveBeenCalledTimes(1);
   });
@@ -236,7 +245,7 @@ describe('NoticeOfIntentOwnerService', () => {
       }),
     ]);
 
-    await service.updateSubmissionApplicant('');
+    await service.updateSubmissionApplicant('', new User());
 
     expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
@@ -272,7 +281,7 @@ describe('NoticeOfIntentOwnerService', () => {
       }),
     ]);
 
-    await service.updateSubmissionApplicant('');
+    await service.updateSubmissionApplicant('', new User());
 
     expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
@@ -300,7 +309,7 @@ describe('NoticeOfIntentOwnerService', () => {
       }),
     ]);
 
-    await service.updateSubmissionApplicant('');
+    await service.updateSubmissionApplicant('', new User());
 
     expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
@@ -333,7 +342,7 @@ describe('NoticeOfIntentOwnerService', () => {
       }),
     ]);
 
-    await service.updateSubmissionApplicant('');
+    await service.updateSubmissionApplicant('', new User());
 
     expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(

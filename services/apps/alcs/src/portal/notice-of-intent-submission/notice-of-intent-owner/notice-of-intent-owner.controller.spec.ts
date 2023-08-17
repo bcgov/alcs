@@ -78,7 +78,7 @@ describe('NoticeOfIntentOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission({
         owners: [owner],
       }),
@@ -92,9 +92,7 @@ describe('NoticeOfIntentOwnerController', () => {
 
     expect(owners.length).toEqual(1);
     expect(owners[0].displayName).toBe('Bruce Wayne');
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should verify the dto and file access then create', async () => {
@@ -102,7 +100,7 @@ describe('NoticeOfIntentOwnerController', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
     mockOwnerService.create.mockResolvedValue(owner);
@@ -124,9 +122,7 @@ describe('NoticeOfIntentOwnerController', () => {
     );
 
     expect(createdOwner).toBeDefined();
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.create).toHaveBeenCalledTimes(1);
   });
 
@@ -171,10 +167,6 @@ describe('NoticeOfIntentOwnerController', () => {
 
   it('should call through for update', async () => {
     mockOwnerService.update.mockResolvedValue(new NoticeOfIntentOwner());
-    mockOwnerService.getOwner.mockResolvedValue(new NoticeOfIntentOwner());
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
-      new NoticeOfIntentSubmission(),
-    );
 
     const res = await controller.update(
       '',
@@ -192,16 +184,12 @@ describe('NoticeOfIntentOwnerController', () => {
     );
 
     expect(mockOwnerService.update).toHaveBeenCalledTimes(1);
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for delete', async () => {
     mockOwnerService.delete.mockResolvedValue({} as any);
     mockOwnerService.getOwner.mockResolvedValue(new NoticeOfIntentOwner());
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
 
@@ -211,19 +199,13 @@ describe('NoticeOfIntentOwnerController', () => {
       },
     });
 
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.delete).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for attachToParcel', async () => {
     mockOwnerService.attachToParcel.mockResolvedValue({} as any);
-    mockOwnerService.getOwner.mockResolvedValue(new NoticeOfIntentOwner());
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
-      new NoticeOfIntentSubmission(),
-    );
 
     await controller.linkToParcel('', '', {
       user: {
@@ -231,19 +213,11 @@ describe('NoticeOfIntentOwnerController', () => {
       },
     });
 
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
     expect(mockOwnerService.attachToParcel).toHaveBeenCalledTimes(1);
-    expect(mockOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for removeFromParcel', async () => {
     mockOwnerService.removeFromParcel.mockResolvedValue({} as any);
-    mockOwnerService.getOwner.mockResolvedValue(new NoticeOfIntentOwner());
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
-      new NoticeOfIntentSubmission(),
-    );
 
     await controller.removeFromParcel('', '', {
       user: {
@@ -251,18 +225,14 @@ describe('NoticeOfIntentOwnerController', () => {
       },
     });
 
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
     expect(mockOwnerService.removeFromParcel).toHaveBeenCalledTimes(1);
-    expect(mockOwnerService.getOwner).toHaveBeenCalledTimes(1);
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
     mockOwnerService.deleteNonParcelOwners.mockResolvedValue([]);
     mockOwnerService.create.mockResolvedValue(new NoticeOfIntentOwner());
     mockOwnerService.setPrimaryContact.mockResolvedValue();
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
 
@@ -278,9 +248,7 @@ describe('NoticeOfIntentOwnerController', () => {
     expect(mockOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.create).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
   });
 
   it('should set the owner and delete agents when using a non-agent owner', async () => {
@@ -293,7 +261,7 @@ describe('NoticeOfIntentOwnerController', () => {
     );
     mockOwnerService.setPrimaryContact.mockResolvedValue();
     mockOwnerService.deleteNonParcelOwners.mockResolvedValue({} as any);
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
 
@@ -307,9 +275,7 @@ describe('NoticeOfIntentOwnerController', () => {
     );
 
     expect(mockOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
   });
 
@@ -323,7 +289,7 @@ describe('NoticeOfIntentOwnerController', () => {
     );
     mockOwnerService.update.mockResolvedValue(new NoticeOfIntentOwner());
     mockOwnerService.setPrimaryContact.mockResolvedValue();
-    mockNOISubmissionService.verifyAccessByUuid.mockResolvedValue(
+    mockNOISubmissionService.getByUuid.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
 
@@ -337,9 +303,7 @@ describe('NoticeOfIntentOwnerController', () => {
     );
 
     expect(mockOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
-    expect(mockNOISubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(mockNOISubmissionService.getByUuid).toHaveBeenCalledTimes(1);
     expect(mockOwnerService.update).toHaveBeenCalledTimes(1);
   });
 });

@@ -5,7 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import {
+  NOI_SUBMISSION_STATUS,
+  NoticeOfIntentSubmissionDetailedDto,
+} from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
@@ -232,6 +235,11 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       this.overlayService.showSpinner();
       this.noiSubmission = await this.noticeOfIntentSubmissionService.getByFileId(fileId);
       this.fileId = fileId;
+
+      if (this.noiSubmission?.status.code !== NOI_SUBMISSION_STATUS.IN_PROGRESS) {
+        this.toastService.showErrorToast('Unable to edit Notice of Intent');
+        await this.router.navigateByUrl(`/home`);
+      }
 
       const documents = await this.noticeOfIntentDocumentService.getByFileId(fileId);
       if (documents) {

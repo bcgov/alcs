@@ -62,10 +62,13 @@ export class NoticeOfIntentParcelController {
   @Post()
   async create(
     @Body() createDto: NoticeOfIntentParcelCreateDto,
+    @Req() req,
   ): Promise<NoticeOfIntentParcelDto> {
+    const user = req.user.entity;
     const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.getOrFailByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         createDto.noticeOfIntentSubmissionUuid,
+        user,
       );
     const parcel = await this.parcelService.create(
       noticeOfIntentSubmission.uuid,
@@ -76,10 +79,11 @@ export class NoticeOfIntentParcelController {
         await this.ownerService.attachToParcel(
           createDto.ownerUuid,
           parcel.uuid,
+          user,
         );
       }
     } catch (e) {
-      await this.delete([parcel.uuid]);
+      await this.parcelService.deleteMany([parcel.uuid], user);
       throw e;
     }
 
@@ -93,8 +97,12 @@ export class NoticeOfIntentParcelController {
   @Put('/')
   async update(
     @Body() updateDtos: NoticeOfIntentParcelUpdateDto[],
+    @Req() req,
   ): Promise<NoticeOfIntentParcelDto[]> {
-    const updatedParcels = await this.parcelService.update(updateDtos);
+    const updatedParcels = await this.parcelService.update(
+      updateDtos,
+      req.user.entity,
+    );
 
     return this.mapper.mapArrayAsync(
       updatedParcels,
@@ -104,8 +112,11 @@ export class NoticeOfIntentParcelController {
   }
 
   @Delete()
-  async delete(@Body() uuids: string[]) {
-    const deletedParcels = await this.parcelService.deleteMany(uuids);
+  async delete(@Body() uuids: string[], @Req() req) {
+    const deletedParcels = await this.parcelService.deleteMany(
+      uuids,
+      req.user.entity,
+    );
     return this.mapper.mapArrayAsync(
       deletedParcels,
       NoticeOfIntentParcel,
@@ -128,14 +139,14 @@ export class NoticeOfIntentParcelController {
     });
 
     const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         parcel.noticeOfIntentSubmissionUuid,
         req.user.entity,
       );
 
     const certificateOfTitle =
       await this.noticeOfIntentDocumentService.attachExternalDocument(
-        noticeOfIntentSubmission!.fileNumber,
+        noticeOfIntentSubmission.fileNumber,
         {
           documentUuid: document.uuid,
           type: DOCUMENT_TYPE.CERTIFICATE_OF_TITLE,
