@@ -272,7 +272,7 @@ describe('ApplicationDecisionV2Controller', () => {
     expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
   });
 
-  it('should send status email after the first release of any decisions from draft', async () => {
+  it('should send status email after the first release of any decisions', async () => {
     const fileNumber = 'fake-file-number';
     const primaryContactOwnerUuid = 'primary-contact';
     const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });

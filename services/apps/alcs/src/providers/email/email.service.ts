@@ -189,6 +189,21 @@ export class EmailService {
     return undefined;
   }
 
+  async getSubmissionStatusEmailData(fileNumber: string) {
+    const applicationSubmission =
+      await this.applicationSubmissionService.getOrFailByFileNumber(fileNumber);
+
+    const primaryContact = applicationSubmission.owners.find(
+      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = applicationSubmission.localGovernmentUuid
+      ? await this.getSubmissionGovernmentOrFail(applicationSubmission)
+      : null;
+
+    return { applicationSubmission, primaryContact, submissionGovernment };
+  }
+
   async sendStatusEmail(data: StatusEmailData) {
     const status = await this.applicationSubmissionService.getStatus(
       data.status,

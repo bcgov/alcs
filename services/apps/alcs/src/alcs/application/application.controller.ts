@@ -29,7 +29,6 @@ import {
   UpdateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
-import { ApplicationSubmissionService } from './application-submission/application-submission.service';
 import { EmailService } from '../../providers/email/email.service';
 import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
@@ -40,7 +39,6 @@ import { SUBMISSION_STATUS } from '../application/application-submission-status/
 export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
-    private applicationSubmissionService: ApplicationSubmissionService,
     private cardService: CardService,
     private emailService: EmailService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
@@ -128,19 +126,8 @@ export class ApplicationController {
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
-    const applicationSubmission = await this.applicationSubmissionService.get(
-      fileNumber,
-    );
-
-    const primaryContact = applicationSubmission.owners.find(
-      (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
-    );
-
-    const submissionGovernment = applicationSubmission.localGovernmentUuid
-      ? await this.emailService.getSubmissionGovernmentOrFail(
-          applicationSubmission,
-        )
-      : null;
+    const { applicationSubmission, primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(fileNumber);
 
     if (primaryContact) {
       await this.emailService.sendStatusEmail({

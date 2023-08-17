@@ -401,9 +401,11 @@ describe('ApplicationController', () => {
     applicationSubmissionService.get.mockResolvedValue(
       mockApplicationSubmission,
     );
-    emailService.getSubmissionGovernmentOrFail.mockResolvedValue(
-      mockGovernment,
-    );
+    emailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
     emailService.sendStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
