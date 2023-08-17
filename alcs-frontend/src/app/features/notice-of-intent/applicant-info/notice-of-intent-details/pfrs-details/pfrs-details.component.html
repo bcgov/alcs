@@ -129,13 +129,13 @@
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
-  <div class="grid-double">
+  <div class="grid-double multiple-documents">
     <a *ngFor="let file of proposalMap" (click)="openFile(file)">
       {{ file.fileName }}
     </a>
   </div>
   <div class="subheading2 grid-1">Cross Sections</div>
-  <div class="grid-double">
+  <div class="grid-double multiple-documents">
     <div>
       <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
@@ -143,12 +143,10 @@
     </div>
   </div>
   <div class="subheading2 grid-1">Reclamation Plan</div>
-  <div class="grid-double">
-    <div *ngFor="let file of reclamationPlans">
-      <a (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
-    </div>
+  <div class="grid-double multiple-documents">
+    <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
@@ -168,11 +166,9 @@
   </div>
 
   <div *ngIf="_noiSubmission.soilHasSubmittedNotice" class="subheading2 grid-1">Notice of Work</div>
-  <div *ngIf="_noiSubmission.soilHasSubmittedNotice" class="grid-double">
-    <div *ngFor="let file of noticeOfWork">
-      <a (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
-    </div>
+  <div *ngIf="_noiSubmission.soilHasSubmittedNotice" class="grid-double multiple-documents">
+    <a *ngFor="let file of noticeOfWork" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
   </div>
 </div>

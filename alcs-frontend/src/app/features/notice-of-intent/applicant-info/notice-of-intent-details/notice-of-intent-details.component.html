@@ -157,17 +157,7 @@
 <section *ngIf="showFullApp">
   <h3>Additional Proposal Information</h3>
   <app-additional-information
-    *ngIf="submission && noiType === 'ROSO'"
-    [noiSubmission]="submission"
-    [files]="files"
-  ></app-additional-information>
-  <app-additional-information
-    *ngIf="submission && noiType === 'POFO'"
-    [noiSubmission]="submission"
-    [files]="files"
-  ></app-additional-information>
-  <app-additional-information
-    *ngIf="submission && noiType === 'PFRS'"
+    *ngIf="submission"
     [noiSubmission]="submission"
     [files]="files"
   ></app-additional-information>

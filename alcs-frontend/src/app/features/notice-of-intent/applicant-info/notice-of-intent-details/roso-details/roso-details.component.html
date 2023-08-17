@@ -91,7 +91,7 @@
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
-  <div class="grid-double">
+  <div class="grid-double multiple-documents">
     <a *ngFor="let map of proposalMap" (click)="openFile(map)">
       {{ map.fileName }}
     </a>
@@ -106,14 +106,14 @@
 
   <ng-container *ngIf="_noiSubmission?.soilIsExtractionOrMining">
     <div class="subheading2 grid-1">Cross Sections</div>
-    <div class="grid-double">
+    <div class="grid-double multiple-documents">
       <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
       </a>
     </div>
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
-    <div class="grid-double">
+    <div class="grid-double multiple-documents">
       <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
       </a>
@@ -130,7 +130,7 @@
 
     <ng-container *ngIf="_noiSubmission.soilHasSubmittedNotice">
       <div class="subheading2 grid-1">Notice of Work</div>
-      <div class="grid-double">
+      <div class="grid-double multiple-documents">
         <a *ngFor="let file of noticeOfWorks" (click)="openFile(file)">
           {{ file.fileName }}
         </a>
