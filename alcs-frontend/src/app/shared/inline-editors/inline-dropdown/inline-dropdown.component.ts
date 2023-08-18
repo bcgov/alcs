@@ -8,7 +8,7 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
 export class InlineDropdownComponent implements AfterContentChecked {
   @Input() value?: string | string[] | undefined;
   @Input() placeholder: string = 'Enter a value';
-  @Input() options: { label: string; value: string }[] = [];
+  @Input() options: { label: string; value: string; disabled?: boolean | null }[] = [];
   @Input() multiple = false;
 
   @Output() save = new EventEmitter<string | string[] | null>();
