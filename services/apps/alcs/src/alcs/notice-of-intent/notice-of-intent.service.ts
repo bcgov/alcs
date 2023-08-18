@@ -15,6 +15,7 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
@@ -27,6 +28,7 @@ import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentServiceDto,
@@ -67,6 +69,7 @@ export class NoticeOfIntentService {
     private codeService: CodeService,
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
   ) {}
 
   async create(
@@ -231,6 +234,12 @@ export class NoticeOfIntentService {
       const selectedSubtypes = updateDto.subtype.map(
         (code) => subtypes.find((subtype) => subtype.code === code)!,
       );
+
+      await this.validatePrepopulatedSubtypes(
+        noticeOfIntent,
+        updateDto.subtype,
+      );
+
       noticeOfIntent.subtype = selectedSubtypes;
     }
 
@@ -319,6 +328,79 @@ export class NoticeOfIntentService {
     await this.updateStatus(updateDto, noticeOfIntent);
 
     return this.getByFileNumber(noticeOfIntent.fileNumber);
+  }
+
+  private async validatePrepopulatedSubtypes(
+    noticeOfIntent: NoticeOfIntent,
+    subtypes: string[],
+  ) {
+    const errors: string[] = [];
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.loadBarebonesSubmission(
+        noticeOfIntent.fileNumber,
+      );
+
+    const isResidentialAccessory =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+            .portalValue,
+      );
+    if (
+      isResidentialAccessory &&
+      !subtypes.some(
+        (subtype) =>
+          subtype ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+            .alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Accessory Structures" must be selected');
+    }
+
+    const isResidentialAdditionalResidence =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
+            .RESIDENTIAL_ADDITIONAL_RESIDENCE.portalValue,
+      );
+
+    if (
+      isResidentialAdditionalResidence &&
+      !subtypes.some(
+        (subtype) =>
+          subtype ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
+            .RESIDENTIAL_ADDITIONAL_RESIDENCE.alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Additional Residence" must be selected');
+    }
+
+    const isResidentialPrincipalResidence =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+            .portalValue,
+      );
+    if (
+      isResidentialPrincipalResidence &&
+      !subtypes.some(
+        (subtype) =>
+          subtype ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+            .alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Principal Residence" must be selected');
+    }
+
+    if (errors.length > 0) {
+      throw new ServiceValidationException(errors.join('; '));
+    }
   }
 
   private async updateStatus(

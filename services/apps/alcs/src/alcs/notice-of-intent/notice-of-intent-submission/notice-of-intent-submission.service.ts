@@ -74,7 +74,7 @@ export class NoticeOfIntentSubmissionService {
     );
   }
 
-  private loadBarebonesSubmission(fileNumber: string) {
+  public loadBarebonesSubmission(fileNumber: string) {
     //Load submission without relations to prevent save from crazy cascading
     return this.noiSubmissionRepository.findOneOrFail({
       where: {
