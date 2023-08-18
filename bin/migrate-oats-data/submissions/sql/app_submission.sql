@@ -47,7 +47,9 @@ SELECT
     aa.type_code,
     aa.local_government_uuid,
     oc.alr_change_code,
-    acg.alr_application_id
+    acg.alr_application_id,
+    aa.applicant,
+    aa.alr_area
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
