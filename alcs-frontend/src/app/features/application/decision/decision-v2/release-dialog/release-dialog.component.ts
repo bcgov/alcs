@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { SUBMISSION_STATUS } from '../../../../../services/application/application.dto';
 import { ApplicationService } from '../../../../../services/application/application.service';
 import { ApplicationPill } from '../../../../../shared/application-type-pill/application-type-pill.component';
+import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 
 @Component({
   selector: 'app-release-dialog',
@@ -13,9 +14,11 @@ import { ApplicationPill } from '../../../../../shared/application-type-pill/app
 export class ReleaseDialogComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   mappedType?: ApplicationPill;
+  wasReleased = false;
 
   constructor(
     private applicationService: ApplicationService,
+    private decisionService: ApplicationDecisionV2Service,
     public matDialogRef: MatDialogRef<ReleaseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {}
@@ -34,6 +37,10 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
           };
         }
       }
+    });
+
+    this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
+      this.wasReleased = decision?.wasReleased || false;
     });
   }
 

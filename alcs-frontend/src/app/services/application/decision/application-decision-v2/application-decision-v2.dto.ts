@@ -76,6 +76,7 @@ export interface ApplicationDecisionDto {
   modifiedBy?: LinkedResolutionDto[];
   components: DecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
+  wasReleased: boolean;
 }
 
 export interface LinkedResolutionDto {
