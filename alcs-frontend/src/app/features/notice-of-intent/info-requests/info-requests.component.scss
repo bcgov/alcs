@@ -1,0 +1,42 @@
+@use '../../../../styles/colors';
+
+.action-btn.edit {
+  color: colors.$error-color;
+}
+
+.action-btn.delete {
+  color: colors.$error-color;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 32px;
+
+  .col-40 {
+    width: 40%;
+  }
+
+  .pull-right {
+    float: right;
+  }
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.mat-column-action {
+  width: 16%;
+  text-align: center;
+}
+
+.section {
+  margin: 24px 0;
+}
+
+:host::ng-deep .date-picker a {
+  font-size: 14px !important;
+}

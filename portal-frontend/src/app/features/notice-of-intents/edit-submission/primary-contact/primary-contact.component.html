@@ -1,0 +1,179 @@
+<div class="step-description">
+  <h2>Primary Contact</h2>
+  <p *ngIf="!isGovernmentUser">Select from the listed parcel owners or identify a third party agent</p>
+  <p *ngIf="isGovernmentUser">
+    Identify staff from the local or first nation government listed below or a third-party agent to act as the primary
+    contact.
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+  <div class="step-documents">
+    <h6>Documents needed for this step:</h6>
+    <ul>
+      <li>Authorization Letters (if applicable)</li>
+    </ul>
+  </div>
+</div>
+<section>
+  <div class="contacts">
+    <ng-container *ngFor="let owner of parcelOwners">
+      <h5>{{ owner.displayName }}</h5>
+      <button
+        (click)="onSelectOwner(owner.uuid)"
+        *ngIf="owner.uuid !== selectedOwnerUuid"
+        color="primary"
+        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
+        mat-stroked-button
+      >
+        Make Primary Contact
+      </button>
+      <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
+    </ng-container>
+    <ng-container *ngIf="isGovernmentUser || selectedLocalGovernment">
+      <h5>{{ governmentName ?? 'Local / First Nation Government' }} Staff</h5>
+      <button
+        (click)="onSelectGovernment()"
+        *ngIf="!selectedLocalGovernment"
+        color="primary"
+        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
+        mat-stroked-button
+      >
+        Make Primary Contact
+      </button>
+      <div class="selected" *ngIf="selectedLocalGovernment"><mat-icon>check</mat-icon>Primary Contact</div>
+    </ng-container>
+    <h5>Third-Party Agent</h5>
+    <button
+      *ngIf="!selectedThirdPartyAgent"
+      color="primary"
+      (click)="onSelectAgent()"
+      [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
+      mat-stroked-button
+    >
+      Make Primary Contact
+    </button>
+    <div class="selected" *ngIf="selectedThirdPartyAgent"><mat-icon>check</mat-icon>Primary Contact</div>
+    <div><!--this is required for correct responsive view --></div>
+    <app-validation-error *ngIf="!selectedOwnerUuid && showErrors">
+      Please select a primary contact
+    </app-validation-error>
+  </div>
+
+  <div class="agent-form">
+    <h4>Primary Contact Information</h4>
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div>
+          <label for="firstName">First Name</label>
+          <mat-form-field appearance="outline">
+            <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+          </mat-form-field>
+          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="firstName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <mat-form-field appearance="outline">
+            <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+          </mat-form-field>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="lastName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div class="full-row">
+          <label *ngIf="!isCrownOwner && !selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
+          <label *ngIf="isCrownOwner" for="orgName">Ministry or Department</label>
+          <label *ngIf="selectedLocalGovernment" for="orgName">Department</label>
+          <mat-form-field appearance="outline">
+            <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+          </mat-form-field>
+          <div
+            *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="organizationName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="phoneNumber"
+              mask="(000) 000-0000"
+              matInput
+              maxlength="14"
+              placeholder="(555) 555-5555"
+              formControlName="phoneNumber"
+            />
+          </mat-form-field>
+          <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
+            <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
+          </div>
+        </div>
+        <div>
+          <label for="firstName">Email</label>
+          <mat-form-field appearance="outline">
+            <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+          </mat-form-field>
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="email.errors?.['required']">This field is required</div>
+            <div *ngIf="email.errors?.['email']">Invalid format</div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+<section>
+  <h4>Primary Contact Authorization Letters</h4>
+  <div>
+    <ng-container *ngIf="!isGovernmentUser">
+      An authorization letter must be provided if:
+      <ol>
+        <li>the parcel under notice of intent is owned by more than one person;</li>
+        <li>the parcel(s) is owned by an organization; or</li>
+        <li>the parcel(s) is owned by a corporation (private, Crown, local government, First Nations); or</li>
+        <li>the notice of intent is being submitted by a third-party agent on behalf of the land owner(s)</li>
+      </ol>
+      <p>
+        The authorization letter must be signed by all individual land owners and the majority of directors in
+        organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
+        further instruction and an Authorization Letter template.
+      </p>
+    </ng-container>
+    <ng-container *ngIf="isGovernmentUser">
+      An authorization letter must be provided only if the notice of intent is being submitted by a third-party agent. Please
+      consult the Supporting Documentation page of the <a>TODO: FIX THIS: ALC website</a> for further instruction.
+    </ng-container>
+  </div>
+  <h6>Authorization Letters (if applicable)</h6>
+  <div class="uploader">
+    <app-file-drag-drop
+      [allowMultiple]="true"
+      [uploadedFiles]="files"
+      (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
+      (deleteFile)="onDeleteFile($event)"
+      (openFile)="openFile($event)"
+      [showErrors]="showErrors"
+      [isRequired]="needsAuthorizationLetter"
+    ></app-file-drag-drop>
+  </div>
+</section>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

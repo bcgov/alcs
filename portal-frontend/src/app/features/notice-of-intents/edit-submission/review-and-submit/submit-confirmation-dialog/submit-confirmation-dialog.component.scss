@@ -1,0 +1,18 @@
+@use '../../../../../../styles/functions' as *;
+
+.checkbox {
+  margin: rem(10) 0;
+}
+
+p {
+  margin: rem(28) 0 !important;
+}
+
+.step-controls {
+  display: flex;
+  justify-content: flex-end;
+
+  button:not(:last-child) {
+    margin-right: rem(16) !important;
+  }
+}

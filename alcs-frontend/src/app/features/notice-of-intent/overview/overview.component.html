@@ -1,0 +1,18 @@
+<h3>Overview</h3>
+<section>
+  <h5>Proposal Summary</h5>
+  <app-inline-edit
+    [value]="summary"
+    placeholder="Add Proposal Summary"
+    (save)="onSaveSummary($event)"
+  ></app-inline-edit>
+</section>
+<section>
+  <section>
+    <app-staff-journal *ngIf="noticeOfIntent" parentType="NOI" [parentUuid]="noticeOfIntent.uuid" />
+  </section>
+</section>
+<section>
+  <h5>Notice of Intent Event Timeline</h5>
+  <app-timeline [events]="events"></app-timeline>
+</section>

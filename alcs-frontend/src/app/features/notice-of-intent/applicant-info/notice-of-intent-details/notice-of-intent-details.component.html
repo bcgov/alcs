@@ -1,0 +1,198 @@
+<section>
+  <app-parcel *ngIf="files && submission" [files]="files" [noticeOfIntent]="submission"></app-parcel>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(0)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Primary Contact Information</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.type?.label }}
+      <app-no-data *ngIf="!submission.primaryContact?.type?.label"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.firstName }}
+      <app-no-data *ngIf="!submission.primaryContact?.firstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.lastName }}
+      <app-no-data *ngIf="!submission.primaryContact?.lastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      <span *ngIf="submission.primaryContact?.type?.code !== 'CRWN' && submission.primaryContact?.type?.code !== 'GOVR'"
+        >Organization</span
+      >
+      <span *ngIf="submission.primaryContact?.type?.code === 'CRWN'">Ministry/Department Responsible</span>
+      <span *ngIf="submission.primaryContact?.type?.code === 'GOVR'">Department</span>
+    </div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.organizationName }}
+      <app-no-data *ngIf="!submission.primaryContact?.organizationName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.phoneNumber }}
+      <app-no-data *ngIf="!submission.primaryContact?.phoneNumber"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ submission.primaryContact?.email }}
+      <app-no-data *ngIf="!submission.primaryContact?.email"></app-no-data>
+    </div>
+    <ng-container *ngIf="authorizationLetters.length > 0">
+      <div class="subheading2 grid-1">Authorization Letter(s)</div>
+      <div class="grid-double">
+        <div *ngFor="let file of authorizationLetters">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </div>
+    </ng-container>
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(2)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Land Use</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="full-width">
+      <h4>Land Use of Parcel(s) under Application</h4>
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submission.parcelsAgricultureDescription }}
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agricultural improvements made to the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submission.parcelsAgricultureImprovementDescription }}
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
+    </div>
+    <div class="grid-double">
+      {{ submission.parcelsNonAgricultureUseDescription }}
+    </div>
+    <div class="full-width">
+      <h4>Land Use of Adjacent Parcels</h4>
+    </div>
+    <div class="adjacent-parcels full-width">
+      <div class="grid-1 subheading2"></div>
+      <div class="grid-2 subheading2">Main Land Use Type</div>
+      <div class="grid-3 subheading2">Specific Activity</div>
+      <div class="grid-1 subheading2">North</div>
+      <div class="grid-2">
+        {{ submission.northLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submission.northLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">East</div>
+      <div class="grid-2">
+        {{ submission.eastLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submission.eastLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">South</div>
+      <div class="grid-2">
+        {{ submission.southLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submission.southLandUseTypeDescription }}
+      </div>
+      <div class="grid-1 subheading2">West</div>
+      <div class="grid-2">
+        {{ submission.westLandUseType }}
+      </div>
+      <div class="grid-3">
+        {{ submission.westLandUseTypeDescription }}
+      </div>
+    </div>
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(4)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Proposal</h3>
+  <app-roso-details
+    *ngIf="submission && noiType === 'ROSO'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-roso-details>
+  <app-pofo-details
+    *ngIf="submission && noiType === 'POFO'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="submission && noiType === 'PFRS'"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-pfrs-details>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Additional Proposal Information</h3>
+  <app-additional-information
+    *ngIf="submission"
+    [noiSubmission]="submission"
+    [files]="files"
+  ></app-additional-information>
+  <div class="review-table edit-section">
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Optional Documents</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">
+          {{ file.type?.label }}
+        </div>
+        <div class="grid-2">
+          {{ file.description }}
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
+    </div>
+    <div class="full-width center">
+      <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(6)" mat-flat-button color="accent">
+        Edit Section
+      </button>
+    </div>
+  </div>
+</section>

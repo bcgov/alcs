@@ -1,0 +1,80 @@
+<div class="intake">
+  <h3>ALC Intake</h3>
+  <div>
+    <h5>Submitted to ALC</h5>
+    <app-inline-datepicker
+      [value]="noticeOfIntent?.dateSubmittedToAlc"
+      (save)="updateDate('dateSubmittedToAlc', $event)"
+    ></app-inline-datepicker>
+  </div>
+  <h5>Payment</h5>
+  <div class="payment-section">
+    <div>
+      <div class="subheading2">Payment Date</div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.feePaidDate"
+        (save)="updateDate('feePaidDate', $event)"
+      ></app-inline-datepicker>
+    </div>
+    <div>
+      <div class="subheading2">Payment Amount</div>
+      <app-inline-number
+        [value]="noticeOfIntent?.feeAmount"
+        (save)="updateNumber('feeAmount', $event)"
+      ></app-inline-number>
+    </div>
+    <div>
+      <div class="subheading2">Split with L/FNG</div>
+      <app-inline-boolean
+        [selectedValue]="noticeOfIntent?.feeSplitWithLg ?? null"
+        (save)="updateBoolean('feeSplitWithLg', $event)"
+      ></app-inline-boolean>
+    </div>
+    <div>
+      <div class="subheading2">Fee Waived</div>
+      <app-inline-boolean
+        [selectedValue]="noticeOfIntent?.feeWaived ?? null"
+        (save)="updateBoolean('feeWaived', $event)"
+      ></app-inline-boolean>
+    </div>
+  </div>
+  <div>
+    <div class="label-wrapper">
+      <h5>Acknowledged Incomplete</h5>
+      <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
+        >info_outline
+      </mat-icon>
+    </div>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateAcknowledgedIncomplete"
+        (save)="updateDate('dateAcknowledgedIncomplete', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+  <div>
+    <div class="label-wrapper">
+      <h5>Received All Items</h5>
+      <mat-icon
+        class="icon"
+        matTooltip='Creates / deletes "Received by ALC" portal status and controls public release. Tracking starts the following calendar day.'
+        >info_outline
+      </mat-icon>
+    </div>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateReceivedAllItems"
+        (save)="updateDate('dateReceivedAllItems', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+  <div>
+    <h5>Acknowledged Complete</h5>
+    <div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.dateAcknowledgedComplete"
+        (save)="updateDate('dateAcknowledgedComplete', $event)"
+      ></app-inline-datepicker>
+    </div>
+  </div>
+</div>

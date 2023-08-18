@@ -1,0 +1,271 @@
+<section>
+  <app-parcel
+    [draftMode]="draftMode"
+    [$noticeOfIntentSubmission]="$noticeOfIntentSubmission"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [originalSubmissionUuid]="originalSubmissionUuid"
+  ></app-parcel>
+</section>
+<section>
+  <h3>2. Primary Contact</h3>
+  <app-warning-banner *ngIf="draftMode" class="full-row">
+    Changes made to this section will not be flagged as
+    <app-updated-banner></app-updated-banner> - ensure accuracy before saving.
+  </app-warning-banner>
+  <div *ngIf="noiSubmission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ primaryContact?.type?.label }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.type?.label"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.firstName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.firstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.lastName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.lastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      <span
+        *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
+        >Organization (optional)</span
+      >
+      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
+      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
+    </div>
+    <div class="grid-double">
+      {{ primaryContact?.organizationName }}
+      <app-no-data
+        [showRequired]="showErrors && primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT"
+        *ngIf="!primaryContact?.organizationName"
+      ></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ primaryContact?.phoneNumber }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.phoneNumber"></app-no-data>
+      <app-validation-error *ngIf="!(primaryContact?.phoneNumber || '' | phoneValid)"
+        >Invalid Format</app-validation-error
+      >
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ primaryContact?.email }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!primaryContact?.email"></app-no-data>
+      <app-validation-error *ngIf="!(primaryContact?.email || '' | emailValid)">Invalid Format</app-validation-error>
+    </div>
+    <ng-container *ngIf="needsAuthorizationLetter || authorizationLetters.length > 0">
+      <div class="subheading2 grid-1">Authorization Letter(s)</div>
+      <div class="grid-double">
+        <app-no-data
+          [showRequired]="showErrors && needsAuthorizationLetter"
+          *ngIf="authorizationLetters.length === 0"
+        ></app-no-data>
+        <div *ngFor="let file of authorizationLetters">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+        <app-validation-error *ngIf="!needsAuthorizationLetter && authorizationLetters.length > 0">
+          Authorization letters are not required, please remove them
+        </app-validation-error>
+      </div>
+    </ng-container>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>3. Government</h3>
+  <div *ngIf="noiSubmission" class="review-table">
+    <div class="subheading2 grid-1">
+      Local or First Nation Government
+      <app-updated-banner *ngIf="updatedFields.includes('localGovernmentUuid')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ localGovernment?.name }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
+      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
+        This Local/First Nation Government has not yet been set up with the ALC Portal to receive notice of intents. To
+        submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca"
+          >ALC.Portal@gov.bc.ca</a
+        >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+      </app-warning-banner>
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>4. Land Use</h3>
+  <div *ngIf="noiSubmission" class="review-table">
+    <div class="full-width">
+      <h4>Land Use of Parcel(s) under Notice of Intent</h4>
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agriculture that currently takes place on the parcel(s).
+      <app-updated-banner *ngIf="updatedFields.includes('parcelsAgricultureDescription')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ noiSubmission.parcelsAgricultureDescription }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsAgricultureDescription"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe in detail all agricultural improvements made to the parcel(s).
+      <app-updated-banner
+        *ngIf="updatedFields.includes('parcelsAgricultureImprovementDescription')"
+      ></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ noiSubmission.parcelsAgricultureImprovementDescription }}
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!noiSubmission.parcelsAgricultureImprovementDescription"
+      ></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      Quantify and describe all non-agricultural uses that currently take place on the parcel(s).
+      <app-updated-banner *ngIf="updatedFields.includes('parcelsNonAgricultureUseDescription')"></app-updated-banner>
+    </div>
+    <div class="grid-double">
+      {{ noiSubmission.parcelsNonAgricultureUseDescription }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsNonAgricultureUseDescription"></app-no-data>
+    </div>
+    <div class="full-width">
+      <h4>
+        Land Use of Adjacent Parcels
+        <app-updated-banner
+          *ngIf="
+            updatedFields.includes('northLandUseType') ||
+            updatedFields.includes('northLandUseTypeDescription') ||
+            updatedFields.includes('eastLandUseType') ||
+            updatedFields.includes('eastLandUseTypeDescription') ||
+            updatedFields.includes('southLandUseType') ||
+            updatedFields.includes('southLandUseTypeDescription') ||
+            updatedFields.includes('westLandUseType') ||
+            updatedFields.includes('westLandUseTypeDescription')
+          "
+        ></app-updated-banner>
+      </h4>
+    </div>
+    <div class="adjacent-parcels full-width">
+      <div class="grid-1 subheading2"></div>
+      <div class="grid-2 subheading2">Main Land Use Type</div>
+      <div class="grid-3 subheading2">Specific Activity</div>
+      <div class="grid-1 subheading2">North</div>
+      <div class="grid-2">
+        {{ noiSubmission.northLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.northLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ noiSubmission.northLandUseTypeDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.northLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">East</div>
+      <div class="grid-2">
+        {{ noiSubmission.eastLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.eastLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ noiSubmission.eastLandUseTypeDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.eastLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">South</div>
+      <div class="grid-2">
+        {{ noiSubmission.southLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.southLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ noiSubmission.southLandUseTypeDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.southLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">West</div>
+      <div class="grid-2">
+        {{ noiSubmission.westLandUseType }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.westLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ noiSubmission.westLandUseTypeDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.westLandUseTypeDescription"></app-no-data>
+      </div>
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
+<section *ngIf="noiSubmission">
+  <h3>5. Proposal</h3>
+  <app-roso-details
+    *ngIf="noiSubmission.typeCode === 'ROSO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-roso-details>
+  <app-pofo-details
+    *ngIf="noiSubmission.typeCode === 'POFO'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="noiSubmission.typeCode === 'PFRS'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  ></app-pfrs-details>
+</section>
+<section *ngIf="noiSubmission">
+  <h3>6. Additional Proposal Information</h3>
+  <app-additional-information
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [noiSubmission]="noiSubmission"
+    [noiDocuments]="appDocuments"
+    [updatedFields]="updatedFields"
+  >
+  </app-additional-information>
+</section>
+<section>
+  <h3>7. Optional Documents</h3>
+  <div *ngIf="noiSubmission" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">
+          {{ file.type?.label }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
+        </div>
+        <div class="grid-2">
+          {{ file.description }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!file.description"></app-no-data>
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div class="full-width">
+        <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
+      </div>
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(6)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>

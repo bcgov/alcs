@@ -1,0 +1,140 @@
+<div *ngIf="_noiSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    Has the ALC previously received an application or Notice of Intent for this proposal?
+  </div>
+  <div class="grid-double">
+    <span *ngIf="_noiSubmission.soilIsFollowUp !== null">
+      {{ _noiSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
+    </span>
+  </div>
+
+  <div *ngIf="_noiSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
+  <div *ngIf="_noiSubmission.soilIsFollowUp" class="grid-double">
+    {{ _noiSubmission.soilFollowUpIDs }}
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ _noiSubmission.purpose }}
+  </div>
+
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+  <div class="grid-double">
+    {{ _noiSubmission.soilTypeRemoved }}
+  </div>
+
+  <div class="subheading1 full-width"></div>
+  <div class="full-width soil-table">
+    <div class="grid-1"></div>
+    <div class="grid-2">
+      <strong>Soil to be Removed</strong>
+    </div>
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilToRemoveVolume }}
+      <span *ngIf="_noiSubmission.soilToRemoveVolume">m<sup>3</sup></span>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilToRemoveArea }} <span *ngIf="_noiSubmission.soilToRemoveArea">ha</span>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilToRemoveMaximumDepth }}
+      <span *ngIf="_noiSubmission.soilToRemoveMaximumDepth">m</span>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilToRemoveAverageDepth }}
+      <span *ngIf="_noiSubmission.soilToRemoveAverageDepth">m</span>
+    </div>
+  </div>
+
+  <div class="subheading1 full-width"></div>
+  <div class="full-width soil-table">
+    <div class="grid-1"></div>
+    <div class="grid-2">
+      <strong>Soil already Removed</strong>
+    </div>
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilAlreadyRemovedVolume }}
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilAlreadyRemovedArea }}
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">ha</span>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilAlreadyRemovedMaximumDepth }}
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ _noiSubmission.soilAlreadyRemovedAverageDepth }}
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
+    </div>
+  </div>
+
+  <div class="full-width">
+    <h4>Project Duration</h4>
+  </div>
+  <div class="subheading2 grid-1">Duration</div>
+  <div class="grid-double">
+    {{ _noiSubmission.soilProjectDurationUnit }}
+  </div>
+  <div class="subheading2 grid-1">Length</div>
+  <div class="grid-double">
+    {{ _noiSubmission.soilProjectDurationAmount }}
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double multiple-documents">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+      {{ map.fileName }}
+    </a>
+  </div>
+
+  <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
+  <div class="grid-double">
+    <span *ngIf="_noiSubmission.soilIsExtractionOrMining !== null">
+      {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
+    </span>
+  </div>
+
+  <ng-container *ngIf="_noiSubmission?.soilIsExtractionOrMining">
+    <div class="subheading2 grid-1">Cross Sections</div>
+    <div class="grid-double multiple-documents">
+      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
+
+    <div class="subheading2 grid-1">Reclamation Plan</div>
+    <div class="grid-double multiple-documents">
+      <a *ngFor="let file of crossSections" (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
+    </div>
+    <div class="grid-double">
+      <span *ngIf="_noiSubmission.soilHasSubmittedNotice !== null">
+        {{ _noiSubmission.soilHasSubmittedNotice ? 'Yes' : 'No' }}
+      </span>
+    </div>
+
+    <ng-container *ngIf="_noiSubmission.soilHasSubmittedNotice">
+      <div class="subheading2 grid-1">Notice of Work</div>
+      <div class="grid-double multiple-documents">
+        <a *ngFor="let file of noticeOfWorks" (click)="openFile(file)">
+          {{ file.fileName }}
+        </a>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
