@@ -215,4 +215,5 @@ export class CreateNoticeOfIntentServiceDto {
   regionCode?: string;
   localGovernmentUuid?: string;
   source?: 'ALCS' | 'APPLICANT';
+  subtypes?: string[];
 }

@@ -473,6 +473,15 @@ export class NoticeOfIntentService {
     existingNoticeOfIntent.card = new Card();
     existingNoticeOfIntent.card.typeCode = CARD_TYPE.NOI;
 
+    if (createDto.subtypes && createDto.subtypes.length > 0) {
+      const subtypes = await this.listSubtypes();
+      const selectedSubtypes = subtypes.filter((subtype) =>
+        createDto.subtypes!.includes(subtype.code),
+      );
+
+      existingNoticeOfIntent.subtype = selectedSubtypes;
+    }
+
     await this.repository.save(existingNoticeOfIntent);
     return this.getByFileNumber(createDto.fileNumber);
   }

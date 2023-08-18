@@ -30,7 +30,10 @@ import {
   NoticeOfIntentSubmissionDto,
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
+} from './notice-of-intent-submission.entity';
 
 @Injectable()
 export class NoticeOfIntentSubmissionService {
@@ -567,12 +570,15 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
   ) {
     try {
+      const subtypes = this.populateNoiSubtype(noticeOfIntentSubmission);
+
       const submittedNoi = await this.noticeOfIntentService.submit({
         fileNumber: noticeOfIntentSubmission.fileNumber,
         applicant: noticeOfIntentSubmission.applicant,
         localGovernmentUuid: noticeOfIntentSubmission.localGovernmentUuid,
         typeCode: noticeOfIntentSubmission.typeCode,
         dateSubmittedToAlc: new Date(),
+        subtypes,
       });
 
       await this.noticeOfIntentSubmissionStatusService.setStatusDate(
@@ -588,6 +594,55 @@ export class NoticeOfIntentSubmissionService {
         `Failed to submit notice of intent: ${noticeOfIntentSubmission.fileNumber}`,
       );
     }
+  }
+
+  private populateNoiSubtype(
+    noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
+  ) {
+    const subtypes: string[] = [];
+    const isResidentialAccessory =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+            .portalValue,
+      );
+    if (isResidentialAccessory) {
+      subtypes.push(
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+          .alcsValueCode,
+      );
+    }
+
+    const isResidentialAdditionalResidence =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
+            .RESIDENTIAL_ADDITIONAL_RESIDENCE.portalValue,
+      );
+    if (isResidentialAdditionalResidence) {
+      subtypes.push(
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+          .alcsValueCode,
+      );
+    }
+
+    const isResidentialPrincipalResidence =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+            .portalValue,
+      );
+    if (isResidentialPrincipalResidence) {
+      subtypes.push(
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+          .alcsValueCode,
+      );
+    }
+
+    return subtypes;
   }
 
   async updateStatus(

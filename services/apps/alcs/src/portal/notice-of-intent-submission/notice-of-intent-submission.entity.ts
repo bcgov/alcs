@@ -15,6 +15,21 @@ import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 
+export const PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING = {
+  RESIDENTIAL_PRINCIPAL_RESIDENCE: {
+    portalValue: 'Residential - Principal Residence',
+    alcsValueCode: 'RPRI',
+  },
+  RESIDENTIAL_ADDITIONAL_RESIDENCE: {
+    portalValue: 'Residential - Additional Residence',
+    alcsValueCode: 'RADD',
+  },
+  RESIDENTIAL_ACCESSORY_STRUCTURE: {
+    portalValue: 'Residential - Accessory Structure',
+    alcsValueCode: 'RACS',
+  },
+};
+
 export class ProposedStructure {
   type:
     | 'Farm Structure'
