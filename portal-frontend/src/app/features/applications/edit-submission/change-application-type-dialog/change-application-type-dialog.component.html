@@ -63,12 +63,12 @@
 <div mat-dialog-action class="dialog-action-container">
   <div *ngIf="stepIdx === warningStep" class="dialog-controls-wrapper">
     <button mat-stroked-button color="primary" (click)="closeDialog()">cancel</button>
-    <button mat-flat-button color="primary" (click)="next()">continue</button>
+    <button mat-flat-button color="primary" (click)="next()">next</button>
   </div>
 
   <div *ngIf="stepIdx === applicationTypeStep" class="dialog-controls-wrapper">
     <button mat-stroked-button color="primary" (click)="back()">back</button>
-    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">update</button>
+    <button mat-flat-button color="primary" [disabled]="!selectedAppType" (click)="next()">next</button>
   </div>
 
   <div *ngIf="stepIdx === confirmationStep" class="dialog-controls-wrapper">

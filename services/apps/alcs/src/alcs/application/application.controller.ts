@@ -29,6 +29,9 @@ import {
   UpdateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
+import { EmailService } from '../../providers/email/email.service';
+import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -37,6 +40,7 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private cardService: CardService,
+    private emailService: EmailService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
@@ -122,6 +126,20 @@ export class ApplicationController {
   @Post('/:fileNumber/cancel')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
+    const { applicationSubmission, primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateCANCHtml,
+        status: SUBMISSION_STATUS.CANCELLED,
+        applicationSubmission,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
+
     await this.applicationService.cancel(fileNumber);
   }
 

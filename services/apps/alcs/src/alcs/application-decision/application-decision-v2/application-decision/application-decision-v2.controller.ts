@@ -41,6 +41,9 @@ import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
+import { EmailService } from '../../../../providers/email/email.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -49,6 +52,7 @@ export class ApplicationDecisionV2Controller {
   constructor(
     private appDecisionService: ApplicationDecisionV2Service,
     private applicationService: ApplicationService,
+    private emailService: EmailService,
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
@@ -192,12 +196,19 @@ export class ApplicationDecisionV2Controller {
       reconsiders = null;
     }
 
+    const decision = await this.appDecisionService.get(uuid);
+
     const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
       modifies,
       reconsiders,
     );
+
+    if (!decision.wasReleased && updateDto.isDraft === false) {
+      this.sendDecisionReleasedEmail(updatedDecision);
+    }
+
     return this.mapper.mapAsync(
       updatedDecision,
       ApplicationDecision,
@@ -274,5 +285,39 @@ export class ApplicationDecisionV2Controller {
     @Param('resolutionYear') resolutionYear: number,
   ) {
     return this.appDecisionService.generateResolutionNumber(resolutionYear);
+  }
+
+  private async sendDecisionReleasedEmail(decision: ApplicationDecision) {
+    const fileNumber = await this.applicationService.getFileNumber(
+      decision.applicationUuid,
+    );
+
+    const { applicationSubmission, primaryContact, submissionGovernment } =
+      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+
+    const date = decision.date ? new Date(decision.date) : new Date();
+
+    if (decision.daysHideFromPublic) {
+      date.setDate(date.getDate() + decision.daysHideFromPublic);
+    }
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+
+    if (primaryContact) {
+      await this.emailService.sendStatusEmail({
+        generateStatusHtml: generateALCDHtml,
+        status: SUBMISSION_STATUS.ALC_DECISION,
+        applicationSubmission,
+        government: submissionGovernment,
+        primaryContact,
+        ccGovernment: true,
+        decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
+      });
+    }
   }
 }

@@ -21,12 +21,20 @@ import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
+import { EmailService } from '../../providers/email/email.service';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
   let notificationService: DeepMocked<NotificationService>;
   let cardService: DeepMocked<CardService>;
+  let emailService: DeepMocked<EmailService>;
+
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
@@ -66,6 +74,7 @@ describe('ApplicationController', () => {
     applicationService = createMock<ApplicationService>();
     notificationService = createMock<NotificationService>();
     cardService = createMock<CardService>();
+    emailService = createMock<EmailService>();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -83,6 +92,10 @@ describe('ApplicationController', () => {
         {
           provide: CardService,
           useValue: cardService,
+        },
+        {
+          provide: EmailService,
+          useValue: emailService,
         },
         {
           provide: ClsService,
@@ -368,10 +381,36 @@ describe('ApplicationController', () => {
   });
 
   it('should call through for cancel', async () => {
+    const primaryContactOwnerUuid = 'primary-contact';
+    const localGovernmentUuid = 'local-government';
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+
+    emailService.getSubmissionStatusEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    emailService.sendStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
+
     await controller.cancel(mockApplicationEntity.uuid);
 
     expect(applicationService.cancel).toBeCalledTimes(1);
+    expect(emailService.sendStatusEmail).toBeCalledTimes(1);
+    expect(emailService.sendStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateCANCHtml,
+      status: SUBMISSION_STATUS.CANCELLED,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
   });
 
   it('should call through for uncancel', async () => {
