@@ -266,7 +266,9 @@ describe('NoticeOfIntentSubmissionController', () => {
       },
       {
         user: {
-          entity: new User(),
+          entity: new User({
+            clientRoles: [],
+          }),
         },
       },
     );
@@ -295,7 +297,9 @@ describe('NoticeOfIntentSubmissionController', () => {
       },
       {
         user: {
-          entity: new User(),
+          entity: new User({
+            clientRoles: [],
+          }),
         },
       },
     );
