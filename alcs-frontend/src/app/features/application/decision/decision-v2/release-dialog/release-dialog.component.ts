@@ -40,7 +40,9 @@ export class ReleaseDialogComponent implements OnInit, OnDestroy {
     });
 
     this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
-      this.wasReleased = decision?.wasReleased || false;
+      if (decision) {
+        this.wasReleased = decision.wasReleased;
+      }
     });
   }
 
