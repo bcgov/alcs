@@ -191,7 +191,8 @@ def get_update_query(unique_fields,unique_values):
                     local_government_uuid,
                     type_code,
                     is_draft,
-                    audit_created_by
+                    audit_created_by,
+                    applicant
                     {unique_fields}
                 )
                 VALUES (
@@ -199,15 +200,20 @@ def get_update_query(unique_fields,unique_values):
                     %(local_government_uuid)s,
                     %(type_code)s,
                     false,
-                    'oats_etl'
+                    'oats_etl',
+                    %(applicant)s
                     {unique_values}
                 )
     """
     return query.format(unique_fields=unique_fields, unique_values=unique_values)
 
 def get_update_query_for_nfu():
-    unique_fields = """"""
-    unique_values = """"""
+    unique_fields = """, 
+                    nfu_hectares
+    """
+    unique_values = """,
+                    %(alr_area)s
+    """
     return get_update_query(unique_fields,unique_values)
 
 def get_update_query_for_nar():
@@ -218,14 +224,22 @@ def get_update_query_for_nar():
 
 
 def get_update_query_for_exc():
-    unique_fields = """"""
-    unique_values = """"""
+    unique_fields = """,
+                    incl_excl_hectares
+    """
+    unique_values = """,
+                    %(alr_area)s
+    """
     return get_update_query(unique_fields,unique_values)
 
 
 def get_update_query_for_inc():
-    unique_fields = """"""
-    unique_values = """"""
+    unique_fields = """,
+                    incl_excl_hectares
+    """
+    unique_values = """,
+                    %(alr_area)s
+    """
     return get_update_query(unique_fields,unique_values)
 
 
