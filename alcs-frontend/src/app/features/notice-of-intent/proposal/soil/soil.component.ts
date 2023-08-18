@@ -16,16 +16,16 @@ export class SoilProposalComponent implements OnDestroy, OnInit {
   submission: NoticeOfIntentSubmissionDto | undefined;
 
   constructor(
-    private applicationDetailService: NoticeOfIntentDetailService,
-    private applicationSubmissionService: NoticeOfIntentSubmissionService,
+    private noiDetailService: NoticeOfIntentDetailService,
+    private noiSubmissionService: NoticeOfIntentSubmissionService,
     private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.applicationDetailService.$noticeOfIntent.pipe(takeUntil(this.$destroy)).subscribe(async (application) => {
-      if (application) {
-        this.noticeOfIntent = application;
-        this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+    this.noiDetailService.$noticeOfIntent.pipe(takeUntil(this.$destroy)).subscribe(async (noi) => {
+      if (noi) {
+        this.noticeOfIntent = noi;
+        this.submission = await this.noiSubmissionService.fetchSubmission(noi.fileNumber);
       }
     });
   }
@@ -33,7 +33,7 @@ export class SoilProposalComponent implements OnDestroy, OnInit {
   async updateValue(field: keyof UpdateNoticeOfIntentDto, value: string[] | string | number | null) {
     const application = this.noticeOfIntent;
     if (application) {
-      const update = await this.applicationDetailService.update(application.fileNumber, {
+      const update = await this.noiDetailService.update(application.fileNumber, {
         [field]: value,
       });
       if (update) {
