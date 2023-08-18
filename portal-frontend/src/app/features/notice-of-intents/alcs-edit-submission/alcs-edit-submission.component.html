@@ -10,15 +10,6 @@
       >
         Download PDF
       </button>
-      <div class="change-app-type-btn-wrapper">
-        <button mat-flat-button color="accent" (click)="onChangeSubmissionType()">Change NOI Type</button>
-        <mat-icon
-          color="accent"
-          matTooltip="Changing application type will remove some inputs from your saved progress"
-        >
-          help_outline
-        </mat-icon>
-      </div>
     </div>
   </div>
 </ng-template>
@@ -36,6 +27,7 @@
         [$noiSubmission]="$noiSubmission"
         [showErrors]="showValidationErrors"
         (navigateToStep)="switchStep($event)"
+        [draftMode]="true"
         (componentInitialized)="onParcelDetailsInitialized()"
         (exit)="onExit()"
       ></app-noi-parcel-details>
@@ -48,6 +40,7 @@
         [showErrors]="showValidationErrors"
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-primary-contact>
@@ -59,6 +52,7 @@
       <app-select-government
         [showErrors]="showValidationErrors"
         [$noiSubmission]="$noiSubmission"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-select-government>
@@ -70,6 +64,7 @@
       <app-land-use
         [$noiSubmission]="$noiSubmission"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-land-use>
@@ -83,6 +78,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       >
@@ -92,6 +88,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       >
@@ -101,6 +98,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       >
@@ -114,6 +112,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-additional-information>
@@ -126,6 +125,7 @@
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [showErrors]="showValidationErrors"
+        [draftMode]="true"
         (navigateToStep)="switchStep($event)"
         (exit)="onExit()"
       ></app-other-attachments>
@@ -137,6 +137,8 @@
       <app-review-and-submit
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
+        [draftMode]="true"
+        [updatedFields]="updatedFields"
         (exit)="onExit()"
         (submit)="onSubmit()"
       ></app-review-and-submit>

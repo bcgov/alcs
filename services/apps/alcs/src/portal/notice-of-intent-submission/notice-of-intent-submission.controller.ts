@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
 import {
@@ -92,9 +93,14 @@ export class NoticeOfIntentSubmissionController {
         req.user.entity,
       );
 
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      req.user.entity.clientRoles!.includes(value),
+    );
+
     if (
       noticeOfIntentSubmission.status.statusTypeCode !==
-      NOI_SUBMISSION_STATUS.IN_PROGRESS
+        NOI_SUBMISSION_STATUS.IN_PROGRESS &&
+      overlappingRoles.length === 0
     ) {
       throw new BadRequestException(
         'Can only edit in progress Notice of Intents',
