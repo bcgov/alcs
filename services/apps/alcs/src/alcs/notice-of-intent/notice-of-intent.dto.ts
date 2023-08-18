@@ -125,6 +125,8 @@ export class NoticeOfIntentDto {
 
   @AutoMap(() => String)
   staffObservations?: string;
+
+  proposalEndDate?: number;
 }
 
 export class UpdateNoticeOfIntentDto {
@@ -199,6 +201,10 @@ export class UpdateNoticeOfIntentDto {
   @IsOptional()
   @IsString()
   staffObservations?: string;
+
+  @IsOptional()
+  @IsNumber()
+  proposalEndDate?: number;
 }
 
 export class CreateNoticeOfIntentServiceDto {

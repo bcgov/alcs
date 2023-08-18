@@ -16,8 +16,10 @@ import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.compone
 import { OverviewComponent } from './overview/overview.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
-import { PreparationComponent } from './preparation/preparation.component';
+import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.component';
+import { PreparationComponent } from './proposal/preparation/preparation.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { SoilProposalComponent } from './proposal/soil/soil.component';
 
 const routes: Routes = [
   {
@@ -45,6 +47,8 @@ const routes: Routes = [
     DocumentUploadDialogComponent,
     ApplicantInfoComponent,
     ProposalComponent,
+    ParcelPrepComponent,
+    SoilProposalComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NoticeOfIntentDetailsModule],
 })

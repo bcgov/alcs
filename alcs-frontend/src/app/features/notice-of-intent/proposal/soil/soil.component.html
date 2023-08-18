@@ -1,0 +1,49 @@
+<div>
+  <div class="subheading2">Use End Date</div>
+  <app-inline-datepicker
+    [value]="noticeOfIntent?.proposalEndDate"
+    (save)="updateValue('proposalEndDate', $event)"
+  ></app-inline-datepicker>
+</div>
+
+<div *ngIf="submission?.soilFillTypeToPlace">
+  <div class="subheading2 header">Type, origin and quality of fill proposed to be placed.</div>
+  {{ submission?.soilFillTypeToPlace }}
+</div>
+
+<div *ngIf="submission?.soilTypeRemoved">
+  <div class="subheading2 header">Type of soil to be removed.</div>
+  {{ submission?.soilTypeRemoved }}
+</div>
+
+<div *ngIf="submission">
+  <table>
+    <thead>
+      <th></th>
+      <th *ngIf="submission.soilToPlaceVolume !== null">Fill to be Placed</th>
+      <th *ngIf="submission.soilToRemoveVolume !== null">Fill to be Removed</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="soil-table-label">Volume</td>
+        <td *ngIf="submission.soilToPlaceVolume !== null">{{ submission.soilToPlaceVolume }} m<sup>3</sup></td>
+        <td *ngIf="submission.soilToRemoveVolume !== null">{{ submission.soilToRemoveVolume }} m<sup>3</sup></td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Area</td>
+        <td *ngIf="submission.soilToPlaceArea !== null">{{ submission.soilToPlaceArea }} ha</td>
+        <td *ngIf="submission.soilToRemoveArea !== null">{{ submission.soilToRemoveArea }} ha</td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Maximum Depth</td>
+        <td *ngIf="submission.soilToPlaceMaximumDepth !== null">{{ submission.soilToPlaceMaximumDepth }} m</td>
+        <td *ngIf="submission.soilToRemoveMaximumDepth !== null">{{ submission.soilToRemoveMaximumDepth }} m</td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Average Depth</td>
+        <td *ngIf="submission.soilToPlaceAverageDepth !== null">{{ submission.soilToPlaceAverageDepth }} m</td>
+        <td *ngIf="submission.soilToRemoveAverageDepth !== null">{{ submission.soilToRemoveAverageDepth }} m</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

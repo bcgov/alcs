@@ -7,14 +7,13 @@ import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/not
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
+import { DecisionComponent } from './decision/decision.component';
 import { NoiDocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
-import { DecisionComponent } from './decision/decision.component';
 import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
-import { PreparationComponent } from './preparation/preparation.component';
-import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ProposalComponent } from './proposal/proposal.component';
 
 export const childRoutes = [

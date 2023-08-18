@@ -197,6 +197,13 @@ export class NoticeOfIntent extends Base {
   })
   staffObservations?: string | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the proposal use ends',
+    nullable: true,
+  })
+  proposalEndDate?: Date | null;
+
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,
   })

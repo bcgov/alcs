@@ -3,10 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationService } from '../../../services/application/application.service';
-import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { NoticeOfIntentService } from '../../../services/notice-of-intent/notice-of-intent.service';
+import { ApplicationService } from '../../../../services/application/application.service';
+import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { PreparationComponent } from './preparation.component';
 
 describe('IntakeComponent', () => {

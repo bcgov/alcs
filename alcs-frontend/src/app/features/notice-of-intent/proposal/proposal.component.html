@@ -41,14 +41,15 @@
   </div>
   <!-- <app-proposal-nfu *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'NFUP'"></app-proposal-nfu>
   <app-proposal-subd *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'SUBD'"></app-proposal-subd>
+   -->
   <app-proposal-soil
     *ngIf="noticeOfIntent && ['POFO', 'ROSO', 'PFRS'].includes(noticeOfIntent.type.code)"
-  ></app-proposal-soil> -->
+  ></app-proposal-soil>
   <!-- <app-proposal-naru *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'NARU'"></app-proposal-naru> -->
 </section>
 <section>
-  <h5>Application Parcels</h5>
-  <!-- <app-parcel-prep *ngIf="noticeOfIntent" [fileNumber]="noticeOfIntent.fileNumber"></app-parcel-prep> -->
+  <h5>Parcels</h5>
+  <app-parcel-prep *ngIf="noticeOfIntent" [fileNumber]="noticeOfIntent.fileNumber"></app-parcel-prep>
 </section>
 <section>
   <h5>Staff Comments and Observations</h5>

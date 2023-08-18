@@ -89,6 +89,7 @@ export class NoticeOfIntentService {
       applicant: createDto.applicant,
       dateSubmittedToAlc: createDto.dateSubmittedToAlc,
       type,
+      source: createDto.source,
     });
 
     if (board) {
@@ -306,6 +307,11 @@ export class NoticeOfIntentService {
     noticeOfIntent.staffObservations = filterUndefined(
       updateDto.staffObservations,
       noticeOfIntent.staffObservations,
+    );
+
+    noticeOfIntent.proposalEndDate = filterUndefined(
+      formatIncomingDate(updateDto.proposalEndDate),
+      noticeOfIntent.proposalEndDate,
     );
 
     await this.repository.save(noticeOfIntent);

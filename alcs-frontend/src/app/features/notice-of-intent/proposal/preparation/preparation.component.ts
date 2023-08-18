@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
-import { environment } from '../../../../environments/environment';
-import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
+import { environment } from '../../../../../environments/environment';
+import { NoticeOfIntentDetailService } from '../../../../services/notice-of-intent/notice-of-intent-detail.service';
 import {
   NoticeOfIntentDto,
   NoticeOfIntentSubtypeDto,
   UpdateNoticeOfIntentDto,
-} from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { NoticeOfIntentService } from '../../../services/notice-of-intent/notice-of-intent.service';
-import { ToastService } from '../../../services/toast/toast.service';
+} from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-preparation',
