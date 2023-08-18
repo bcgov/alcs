@@ -145,14 +145,14 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
 
 def prepare_app_sub_data(app_sub_raw_data_list):
     """
-    This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_prep_raw_data_list'.
+    This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
-    :param app_prep_raw_data_list: A list of raw data dictionaries.
-    :return: Five lists, each containing dictionaries from 'app_prep_raw_data_list' grouped based on the 'alr_change_code' field
+    :param app_sub_raw_data_list: A list of raw data dictionaries.
+    :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
     - Initializes empty lists
-    - Iterates over 'app_prep_raw_data_list'
+    - Iterates over 'app_sub_raw_data_list'
         - Maps the basic fields of the data dictionary based on the alr_change_code
     - Returns the mapped lists
     """
