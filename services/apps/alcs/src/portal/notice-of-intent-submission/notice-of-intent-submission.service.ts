@@ -642,6 +642,26 @@ export class NoticeOfIntentSubmissionService {
       );
     }
 
+    const isFarmStructure =
+      noticeOfIntentSubmission.soilProposedStructures?.some(
+        (struct) =>
+          struct.type ===
+          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.portalValue,
+      );
+    if (isFarmStructure) {
+      subtypes.push(
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
+      );
+    }
+
+    if (noticeOfIntentSubmission.soilIsAreaWideFilling) {
+      subtypes.push('ARWF');
+    }
+
+    if (noticeOfIntentSubmission.soilIsExtractionOrMining) {
+      subtypes.push('AEPM');
+    }
+
     return subtypes;
   }
 

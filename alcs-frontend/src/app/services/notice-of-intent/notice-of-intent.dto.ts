@@ -164,6 +164,7 @@ export interface NoticeOfIntentSubmissionDto {
   soilStructureResidentialUseReason?: string | null;
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
+  soilIsAreaWideFilling?: boolean | null;
   soilProposedStructures: ProposedStructure[];
 }
 

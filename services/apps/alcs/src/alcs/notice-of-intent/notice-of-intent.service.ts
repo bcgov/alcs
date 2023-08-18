@@ -15,7 +15,10 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
-import { PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
+} from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
@@ -340,67 +343,101 @@ export class NoticeOfIntentService {
         noticeOfIntent.fileNumber,
       );
 
-    const isResidentialAccessory =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
-            .portalValue,
-      );
+    const isResidentialAccessory = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+        .portalValue,
+    );
     if (
       isResidentialAccessory &&
-      !subtypes.some(
-        (subtype) =>
-          subtype ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
-            .alcsValueCode,
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+          .alcsValueCode,
       )
     ) {
       errors.push('"Residential - Accessory Structures" must be selected');
     }
 
-    const isResidentialAdditionalResidence =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
-            .RESIDENTIAL_ADDITIONAL_RESIDENCE.portalValue,
-      );
-
+    const isResidentialAdditionalResidence = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+        .portalValue,
+    );
     if (
       isResidentialAdditionalResidence &&
-      !subtypes.some(
-        (subtype) =>
-          subtype ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
-            .RESIDENTIAL_ADDITIONAL_RESIDENCE.alcsValueCode,
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+          .alcsValueCode,
       )
     ) {
       errors.push('"Residential - Additional Residence" must be selected');
     }
 
-    const isResidentialPrincipalResidence =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
-            .portalValue,
-      );
+    const isResidentialPrincipalResidence = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+        .portalValue,
+    );
     if (
       isResidentialPrincipalResidence &&
-      !subtypes.some(
-        (subtype) =>
-          subtype ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
-            .alcsValueCode,
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+          .alcsValueCode,
       )
     ) {
       errors.push('"Residential - Principal Residence" must be selected');
     }
 
+    const isFarmStructure = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.portalValue,
+    );
+    if (
+      isFarmStructure &&
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
+      )
+    ) {
+      errors.push('"Farm Structure" must be selected');
+    }
+
+    if (
+      noticeOfIntentSubmission.soilIsAreaWideFilling &&
+      !subtypes.some((subtype) => subtype === 'ARWF')
+    ) {
+      errors.push('"Area-Wide Filling" must be selected');
+    }
+
+    if (
+      noticeOfIntentSubmission.soilIsExtractionOrMining &&
+      !subtypes.some((subtype) => subtype === 'AEPM')
+    ) {
+      errors.push('"Aggregate Extraction or Placer Mining" must be selected');
+    }
+
     if (errors.length > 0) {
       throw new ServiceValidationException(errors.join('; '));
     }
+  }
+
+  private checkIfStructureExists(
+    noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    searchType: string,
+  ) {
+    return noticeOfIntentSubmission.soilProposedStructures?.some(
+      (struct) => struct.type === searchType,
+    );
+  }
+
+  private checkIfCodePresentInNoiSubtypes(
+    subtypes: string[],
+    searchCode: string,
+  ) {
+    return subtypes.some((subtype) => subtype === searchCode);
   }
 
   private async updateStatus(

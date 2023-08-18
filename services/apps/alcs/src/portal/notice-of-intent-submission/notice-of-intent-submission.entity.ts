@@ -28,6 +28,10 @@ export const PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING = {
     portalValue: 'Residential - Accessory Structure',
     alcsValueCode: 'RACS',
   },
+  FARM_STRUCTURE: {
+    portalValue: 'Farm Structure',
+    alcsValueCode: 'FRST',
+  },
 };
 
 export class ProposedStructure {

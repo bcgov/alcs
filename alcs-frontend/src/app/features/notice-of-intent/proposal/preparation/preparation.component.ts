@@ -99,6 +99,22 @@ export class PreparationComponent implements OnInit {
     if (isAdditionalResidence) {
       return true;
     }
+
+    const isFarmStructure =
+      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.FARM_STRUCTURE) &&
+      subtype.code === 'FRST';
+    if (isFarmStructure) {
+      return true;
+    }
+
+    if (submission.soilIsAreaWideFilling && subtype.code === 'ARWF') {
+      return true;
+    }
+
+    if (submission.soilIsExtractionOrMining && subtype.code === 'AEPM') {
+      return true;
+    }
+
     return false;
   }
 
