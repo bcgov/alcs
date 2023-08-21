@@ -1,5 +1,18 @@
 <form [formGroup]="form" class="nfu-component-form">
-  <div class="grid-3">
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <mat-label>ALR Area Impacted (ha)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="alrArea"
+        required
+      />
+    </mat-form-field>
+
     <div>
       <ng-select
         appearance="outline"

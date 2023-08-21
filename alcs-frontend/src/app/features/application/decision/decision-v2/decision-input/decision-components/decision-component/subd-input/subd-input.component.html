@@ -1,3 +1,18 @@
 <form [formGroup]="form" class="subd-component-form">
+  <div class="row-no-flex">
+    <mat-form-field appearance="outline">
+      <mat-label>ALR Area Impacted (ha)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="alrArea"
+        required
+      />
+    </mat-form-field>
+  </div>
+
   <app-lots-table formControlName="subdApprovedLots"></app-lots-table>
 </form>

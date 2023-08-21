@@ -1,23 +1,15 @@
-<div
-  class="full-width"
-  [ngClass]="{
-    'grid-uneven': component.agCapMap && component.agCapConsultant,
-    'grid-3': !component.agCapMap || !component.agCapConsultant
-  }"
->
-  <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
-  <div>
-    <div class="subheading2">Total Number of Lots Approved</div>
-    {{ component.lots?.length }}
-    <app-no-data *ngIf="component.lots === null || component.lots === undefined"></app-no-data>
-  </div>
+<app-basic [component]="component" (saveAlrArea)="onSaveAlrArea($event)"></app-basic>
+<div>
+  <div class="subheading2">Total Number of Lots Approved</div>
+  {{ component.lots?.length }}
+  <app-no-data *ngIf="component.lots === null || component.lots === undefined"></app-no-data>
 </div>
 <div *ngIf="component.lots" class="full-width">
   <div class="lot-table">
     <div class="subheading2">#</div>
     <div class="subheading2">Type</div>
     <div class="subheading2">Size (ha)</div>
-    <div class="subheading2">ALR Area (ha)</div>
+    <div class="subheading2">ALR Area Impacted (ha)</div>
     <ng-container *ngFor="let lot of component.lots; let i = index">
       <div>
         {{ lot.index }}
@@ -32,7 +24,10 @@
         <app-no-data *ngIf="lot.size === null || lot.size === undefined"></app-no-data>
       </div>
       <div>
-        <app-inline-number (save)="onSaveAlrArea(lot, $event)" [value]="lot.alrArea?.toString()"></app-inline-number>
+        <app-inline-number
+          (save)="onSaveAlrParcelArea(lot, $event)"
+          [value]="lot.alrArea?.toString()"
+        ></app-inline-number>
       </div>
     </ng-container>
   </div>

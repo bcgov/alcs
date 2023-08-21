@@ -1,11 +1,5 @@
-<div
-  class="full-width"
-  [ngClass]="{
-    'grid-uneven': component.agCapMap && component.agCapConsultant,
-    'grid-3': !component.agCapMap || !component.agCapConsultant
-  }"
->
-  <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
+<div class="full-width grid-2">
+  <app-basic [component]="component" (saveAlrArea)="onSaveAlrArea($event)"></app-basic>
   <div>
     <div class="subheading2">Use End Date</div>
     {{ component.endDate | date }}
@@ -13,12 +7,12 @@
   </div>
 </div>
 <div class="full-width">
-  <div class="subheading2">Type of soil approved to be removed.</div>
+  <div class="subheading2">Type of soil approved to be removed</div>
   <div class="pre-wrapped-text">{{ component.soilTypeRemoved }}</div>
   <app-no-data *ngIf="component.soilTypeRemoved === null || component.soilTypeRemoved === undefined"></app-no-data>
 </div>
 <div class="full-width">
-  <div class="subheading2">Type, origin and quality of fill proposed to be placed.</div>
+  <div class="subheading2">Type, origin and quality of fill proposed to be placed</div>
   <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
   <app-no-data
     *ngIf="component.soilFillTypeToPlace === null || component.soilFillTypeToPlace === undefined"

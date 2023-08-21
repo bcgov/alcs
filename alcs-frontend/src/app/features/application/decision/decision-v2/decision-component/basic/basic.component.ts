@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
@@ -9,6 +9,11 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
 export class BasicComponent {
   @Input() component!: DecisionComponentDto;
   @Input() fillRow = false;
+  @Output() saveAlrArea = new EventEmitter<string | null>();
 
   constructor() {}
+
+  async onSaveAlrArea(alrArea: string | null) {
+    this.saveAlrArea.emit(alrArea);
+  }
 }

@@ -1,11 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-roso',
   templateUrl: './roso.component.html',
-  styleUrls: ['./roso.component.scss']
+  styleUrls: ['./roso.component.scss'],
 })
 export class RosoComponent {
   @Input() component!: DecisionComponentDto;
+  @Output() saveAlrArea = new EventEmitter<string | null>();
+
+  onSaveAlrArea($event: string | null) {
+    this.saveAlrArea.emit($event);
+  }
 }
