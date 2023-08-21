@@ -1,0 +1,55 @@
+<h3>Notice of Intent Prep</h3>
+<section *ngIf="noticeOfIntent?.source === APPLICATION_SYSTEM_SOURCE_TYPES.APPLICANT">
+  <h5>Proposal Components - {{ noticeOfIntent?.type?.label }}</h5>
+  <div class="input-table">
+    <div>
+      <div class="subheading2">Proposal ALR Area (ha)</div>
+      <app-inline-number [value]="alrArea" (save)="onSaveAlrArea($event)"></app-inline-number>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap</div>
+      <app-inline-dropdown
+        [options]="agCapOptions"
+        [value]="noticeOfIntent?.agCap"
+        (save)="updateNoiValue('agCap', $event)"
+      ></app-inline-dropdown>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Source</div>
+      <app-inline-dropdown
+        [options]="agCapSourceOptions"
+        [value]="noticeOfIntent?.agCapSource"
+        (save)="updateNoiValue('agCapSource', $event)"
+      ></app-inline-dropdown>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Map</div>
+      <app-inline-text [value]="noticeOfIntent?.agCapMap" (save)="updateNoiValue('agCapMap', $event)"></app-inline-text>
+    </div>
+    <div>
+      <div class="subheading2">Ag Cap Consultant</div>
+      <app-inline-text
+        [value]="noticeOfIntent?.agCapConsultant"
+        (save)="updateNoiValue('agCapConsultant', $event)"
+      ></app-inline-text>
+    </div>
+  </div>
+  <div>
+    <app-preparation *ngIf="noticeOfIntent" [noticeOfIntent]="noticeOfIntent"></app-preparation>
+  </div>
+  <app-proposal-soil
+    *ngIf="noticeOfIntent && ['POFO', 'ROSO', 'PFRS'].includes(noticeOfIntent.type.code)"
+  ></app-proposal-soil>
+</section>
+<section>
+  <h5>Parcels</h5>
+  <app-parcel-prep *ngIf="noticeOfIntent" [fileNumber]="noticeOfIntent.fileNumber"></app-parcel-prep>
+</section>
+<section>
+  <h5>Staff Comments and Observations</h5>
+  <app-inline-edit
+    [value]="staffObservations"
+    placeholder="Add Staff Comments and Observations"
+    (save)="onSaveStaffObservations($event)"
+  ></app-inline-edit>
+</section>

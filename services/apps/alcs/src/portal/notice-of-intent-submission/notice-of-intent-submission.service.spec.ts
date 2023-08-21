@@ -16,7 +16,10 @@ import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
-import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
+import {
+  NoticeOfIntentSubmission,
+  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
+} from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 
 describe('NoticeOfIntentSubmissionService', () => {
@@ -243,6 +246,71 @@ describe('NoticeOfIntentSubmissionService', () => {
 
     expect(mockNoiService.submit).toBeCalledTimes(1);
     expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+  });
+
+  it('should populate noi subtypes', async () => {
+    const applicant = 'Bruce Wayne';
+    const typeCode = 'fake-code';
+    const fileNumber = 'fake';
+    const localGovernmentUuid = 'fake-uuid';
+
+    const mockDate = new Date('2022-01-01');
+    jest.useFakeTimers().setSystemTime(mockDate);
+
+    const mockNoiSubmission = new NoticeOfIntentSubmission({
+      fileNumber,
+      applicant,
+      typeCode,
+      localGovernmentUuid,
+      soilProposedStructures: [
+        {
+          type: 'Farm Structure',
+        },
+        {
+          type: 'Residential - Principal Residence',
+        },
+        {
+          type: 'Residential - Additional Residence',
+        },
+        {
+          type: 'Residential - Accessory Structure',
+        },
+      ],
+      soilIsAreaWideFilling: true,
+      soilIsExtractionOrMining: true,
+    });
+    const mockNoticeOfIntent = new NoticeOfIntent({
+      dateSubmittedToAlc: new Date(),
+    });
+    mockNoiStatusService.setStatusDate.mockResolvedValue(
+      new NoticeOfIntentSubmissionToSubmissionStatus(),
+    );
+
+    mockNoiService.submit.mockResolvedValue(mockNoticeOfIntent);
+    await service.submitToAlcs(
+      mockNoiSubmission as ValidatedNoticeOfIntentSubmission,
+    );
+
+    expect(mockNoiService.submit).toHaveBeenCalledTimes(1);
+    expect(mockNoiStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockNoiService.submit).toHaveBeenCalledWith({
+      applicant,
+      fileNumber,
+      localGovernmentUuid,
+      dateSubmittedToAlc: mockDate,
+      typeCode,
+      subtypes: [
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+          .alcsValueCode,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+          .alcsValueCode,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+          .alcsValueCode,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
+        'ARWF',
+        'AEPM',
+      ],
+    });
   });
 
   it('should update fields if notice of intent exists', async () => {

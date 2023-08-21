@@ -20,7 +20,11 @@
   >
     <mat-form-field appearance="outline">
       <mat-select [multiple]="multiple" placeholder="Select a value" [(ngModel)]="pendingValue">
-        <mat-option *ngFor="let option of options" [value]="option.value">
+        <mat-option
+          *ngFor="let option of options"
+          [value]="option.value"
+          [disabled]="option.disabled !== null && option.disabled !== undefined ? option.disabled : false"
+        >
           {{ option.label }}
         </mat-option>
       </mat-select>

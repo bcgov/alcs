@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { SYSTEM_SOURCE_TYPES } from '../../../services/application/application.dto';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {
@@ -8,6 +7,7 @@ import {
   NoticeOfIntentSubmissionDto,
 } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
   selector: 'app-applicant-info',

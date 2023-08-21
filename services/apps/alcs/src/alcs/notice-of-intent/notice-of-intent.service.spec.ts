@@ -4,8 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -16,6 +18,7 @@ import { LocalGovernmentService } from '../local-government/local-government.ser
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -30,6 +33,7 @@ describe('NoticeOfIntentService', () => {
   let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
@@ -40,6 +44,7 @@ describe('NoticeOfIntentService', () => {
     mockLocalGovernmentService = createMock();
     mockCodeService = createMock();
     mockSubmissionStatusService = createMock();
+    mockNoticeOfIntentSubmissionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -81,6 +86,10 @@ describe('NoticeOfIntentService', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockSubmissionStatusService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionService,
+          useValue: mockNoticeOfIntentSubmissionService,
         },
       ],
     }).compile();
@@ -184,6 +193,57 @@ describe('NoticeOfIntentService', () => {
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(2);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(notice.summary).toEqual('new-summary');
+  });
+
+  it('should fail update if the preselected subtypes missing', async () => {
+    const notice = new NoticeOfIntent({
+      summary: 'old-summary',
+    });
+
+    const errors = [
+      '"Residential - Accessory Structures" must be selected',
+      '"Residential - Additional Residence" must be selected',
+      '"Residential - Principal Residence" must be selected',
+      '"Farm Structure" must be selected',
+      '"Area-Wide Filling" must be selected',
+      '"Aggregate Extraction or Placer Mining" must be selected',
+    ];
+
+    mockSubtypeRepository.find.mockResolvedValue([]);
+    mockNoticeOfIntentSubmissionService.loadBarebonesSubmission.mockResolvedValue(
+      new NoticeOfIntentSubmission({
+        soilProposedStructures: [
+          {
+            type: 'Farm Structure',
+          },
+          {
+            type: 'Residential - Principal Residence',
+          },
+          {
+            type: 'Residential - Additional Residence',
+          },
+          {
+            type: 'Residential - Accessory Structure',
+          },
+        ],
+        soilIsAreaWideFilling: true,
+        soilIsExtractionOrMining: true,
+      }),
+    );
+
+    mockRepository.findOneOrFail.mockResolvedValue(notice);
+    mockRepository.save.mockResolvedValue(new NoticeOfIntent());
+    const promise = service.update('file', {
+      summary: 'new-summary',
+      subtype: [],
+    });
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceValidationException(errors.join('; ')),
+    );
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(0);
   });
 
   it('should set the X status when setting Acknowledge Complete', async () => {

@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of, throwError } from 'rxjs';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationDto, SYSTEM_SOURCE_TYPES } from './application.dto';
+import { ApplicationDto } from './application.dto';
 
 import { ApplicationService } from './application.service';
 

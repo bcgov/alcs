@@ -13,8 +13,8 @@ import {
   ApplicationDto,
   ApplicationSubmissionDto,
   SUBMISSION_STATUS,
-  SYSTEM_SOURCE_TYPES,
 } from '../../services/application/application.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';

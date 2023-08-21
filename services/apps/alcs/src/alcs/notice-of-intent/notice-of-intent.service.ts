@@ -15,9 +15,12 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import {
+  NoticeOfIntentSubmission,
+  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
+} from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
-import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 import { ApplicationTimeData } from '../application/application-time-tracking.service';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
@@ -28,6 +31,7 @@ import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentServiceDto,
@@ -68,6 +72,7 @@ export class NoticeOfIntentService {
     private codeService: CodeService,
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
   ) {}
 
   async create(
@@ -90,6 +95,7 @@ export class NoticeOfIntentService {
       applicant: createDto.applicant,
       dateSubmittedToAlc: createDto.dateSubmittedToAlc,
       type,
+      source: createDto.source,
     });
 
     if (board) {
@@ -231,6 +237,12 @@ export class NoticeOfIntentService {
       const selectedSubtypes = updateDto.subtype.map(
         (code) => subtypes.find((subtype) => subtype.code === code)!,
       );
+
+      await this.validatePrepopulatedSubtypes(
+        noticeOfIntent,
+        updateDto.subtype,
+      );
+
       noticeOfIntent.subtype = selectedSubtypes;
     }
 
@@ -279,9 +291,159 @@ export class NoticeOfIntentService {
         ? updateDto.retroactive
         : noticeOfIntent.retroactive;
 
+    noticeOfIntent.alrArea = filterUndefined(
+      updateDto.alrArea,
+      noticeOfIntent.alrArea,
+    );
+
+    noticeOfIntent.agCap = filterUndefined(
+      updateDto.agCap,
+      noticeOfIntent.agCap,
+    );
+
+    noticeOfIntent.agCapConsultant = filterUndefined(
+      updateDto.agCapConsultant,
+      noticeOfIntent.agCapConsultant,
+    );
+
+    noticeOfIntent.agCapMap = filterUndefined(
+      updateDto.agCapMap,
+      noticeOfIntent.agCapMap,
+    );
+
+    noticeOfIntent.agCapSource = filterUndefined(
+      updateDto.agCapSource,
+      noticeOfIntent.agCapSource,
+    );
+
+    noticeOfIntent.staffObservations = filterUndefined(
+      updateDto.staffObservations,
+      noticeOfIntent.staffObservations,
+    );
+
+    noticeOfIntent.proposalEndDate = filterUndefined(
+      formatIncomingDate(updateDto.proposalEndDate),
+      noticeOfIntent.proposalEndDate,
+    );
+
     await this.repository.save(noticeOfIntent);
 
-    //Statuses
+    await this.updateStatus(updateDto, noticeOfIntent);
+
+    return this.getByFileNumber(noticeOfIntent.fileNumber);
+  }
+
+  private async validatePrepopulatedSubtypes(
+    noticeOfIntent: NoticeOfIntent,
+    subtypes: string[],
+  ) {
+    const errors: string[] = [];
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.loadBarebonesSubmission(
+        noticeOfIntent.fileNumber,
+      );
+
+    const isResidentialAccessory = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+        .portalValue,
+    );
+    if (
+      isResidentialAccessory &&
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
+          .alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Accessory Structures" must be selected');
+    }
+
+    const isResidentialAdditionalResidence = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+        .portalValue,
+    );
+    if (
+      isResidentialAdditionalResidence &&
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
+          .alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Additional Residence" must be selected');
+    }
+
+    const isResidentialPrincipalResidence = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+        .portalValue,
+    );
+    if (
+      isResidentialPrincipalResidence &&
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
+          .alcsValueCode,
+      )
+    ) {
+      errors.push('"Residential - Principal Residence" must be selected');
+    }
+
+    const isFarmStructure = this.checkIfStructureExists(
+      noticeOfIntentSubmission,
+      PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.portalValue,
+    );
+    if (
+      isFarmStructure &&
+      !this.checkIfCodePresentInNoiSubtypes(
+        subtypes,
+        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
+      )
+    ) {
+      errors.push('"Farm Structure" must be selected');
+    }
+
+    if (
+      noticeOfIntentSubmission.soilIsAreaWideFilling &&
+      !subtypes.some((subtype) => subtype === 'ARWF')
+    ) {
+      errors.push('"Area-Wide Filling" must be selected');
+    }
+
+    if (
+      noticeOfIntentSubmission.soilIsExtractionOrMining &&
+      !subtypes.some((subtype) => subtype === 'AEPM')
+    ) {
+      errors.push('"Aggregate Extraction or Placer Mining" must be selected');
+    }
+
+    if (errors.length > 0) {
+      throw new ServiceValidationException(errors.join('; '));
+    }
+  }
+
+  private checkIfStructureExists(
+    noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    searchType: string,
+  ) {
+    return noticeOfIntentSubmission.soilProposedStructures?.some(
+      (struct) => struct.type === searchType,
+    );
+  }
+
+  private checkIfCodePresentInNoiSubtypes(
+    subtypes: string[],
+    searchCode: string,
+  ) {
+    return subtypes.some((subtype) => subtype === searchCode);
+  }
+
+  private async updateStatus(
+    updateDto: UpdateNoticeOfIntentDto,
+    noticeOfIntent: NoticeOfIntent,
+  ) {
     try {
       if (updateDto.dateAcknowledgedIncomplete !== undefined) {
         await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
@@ -305,8 +467,6 @@ export class NoticeOfIntentService {
         throw error;
       }
     }
-
-    return this.getByFileNumber(noticeOfIntent.fileNumber);
   }
 
   async listTypes() {
@@ -431,6 +591,15 @@ export class NoticeOfIntentService {
     existingNoticeOfIntent.region = region;
     existingNoticeOfIntent.card = new Card();
     existingNoticeOfIntent.card.typeCode = CARD_TYPE.NOI;
+
+    if (createDto.subtypes && createDto.subtypes.length > 0) {
+      const subtypes = await this.listSubtypes();
+      const selectedSubtypes = subtypes.filter((subtype) =>
+        createDto.subtypes!.includes(subtype.code),
+      );
+
+      existingNoticeOfIntent.subtype = selectedSubtypes;
+    }
 
     await this.repository.save(existingNoticeOfIntent);
     return this.getByFileNumber(createDto.fileNumber);

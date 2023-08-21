@@ -1,8 +1,6 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { NoticeOfIntentTypeDto } from '../../alcs/code/application-code/notice-of-intent-type/notice-of-intent-type.dto';
 import { NoticeOfIntentType } from '../../alcs/code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntentDocumentDto } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
@@ -61,6 +59,10 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
         forMember(
           (a) => a.decisionDate,
           mapFrom((ad) => ad.decisionDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalEndDate,
+          mapFrom((ad) => ad.proposalEndDate?.getTime()),
         ),
         forMember(
           (a) => a.activeDays,

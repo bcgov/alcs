@@ -1,11 +1,11 @@
 import { AfterContentChecked, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { PARCEL_OWNERSHIP_TYPE } from '../../../../../services/application/application.dto';
 import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NoiDocumentService } from '../../../../../services/notice-of-intent/noi-document/noi-document.service';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDto } from '../../../../../services/notice-of-intent/notice-of-intent.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../../../shared/dto/parcel-ownership.type.dto';
 
 @Component({
   selector: 'app-parcel',

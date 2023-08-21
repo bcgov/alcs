@@ -1,19 +1,10 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { CardDto } from '../card/card.dto';
 import { UserDto } from '../user/user.dto';
 import { ApplicationRegionDto, ApplicationTypeDto } from './application-code.dto';
 import { ApplicationLocalGovernmentDto } from './application-local-government/application-local-government.dto';
 import { ApplicationSubmissionToSubmissionStatusDto } from './application-submission-status/application-submission-status.dto';
-
-export enum SYSTEM_SOURCE_TYPES {
-  APPLICANT = 'APPLICANT',
-  ALCS = 'ALCS',
-}
-
-export enum PARCEL_OWNERSHIP_TYPE {
-  FEE_SIMPLE = 'SMPL',
-  CROWN = 'CRWN',
-}
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',

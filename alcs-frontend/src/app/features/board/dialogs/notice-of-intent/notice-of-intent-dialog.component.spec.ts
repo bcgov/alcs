@@ -18,6 +18,7 @@ import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SYSTEM_SOURCE_TYPES } from '../../../../shared/dto/system-source.types.dto';
 import { NoticeOfIntentDialogComponent } from './notice-of-intent-dialog.component';
 
 describe('NoticeOfIntentDialogComponent', () => {
@@ -55,7 +56,7 @@ describe('NoticeOfIntentDialogComponent', () => {
     retroactive: null,
     subtype: [],
     type: {} as NoticeOfIntentTypeDto,
-    source: 'ALCS',
+    source: SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(async () => {
