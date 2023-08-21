@@ -66,7 +66,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                         f"retrieved/updated items count: {applications_to_be_updated_count}; total successfully updated submissions so far {successful_updates_count}; last updated application_id: {last_application_id}"
                     )
                 except Exception as e:
-                    # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
+                    # this is NOT going to be caused by actual data insert failure. This code is only executed when the code error appears or connection to DB is lost
                     conn.rollback()
                     str_err = str(e)
                     trace_err = traceback.format_exc()
@@ -82,7 +82,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
 def update_app_sub_records(conn, batch_size, cursor, rows):
     """
-    Function to update submission records in batches.
+    Function to insert submission records in batches.
 
     Args:
     conn (obj): Connection to the database.
@@ -104,7 +104,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     if len(nfu_data_list) > 0:
         execute_batch(
             cursor,
-            get_update_query_for_nfu(),
+            get_insert_query_for_nfu(),
             nfu_data_list,
             page_size=batch_size,
         )
@@ -112,7 +112,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     if len(nar_data_list) > 0:
         execute_batch(
             cursor,
-            get_update_query_for_nar(),
+            get_insert_query_for_nar(),
             nar_data_list,
             page_size=batch_size,
         )
@@ -120,7 +120,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     if len(exc_data_list) > 0:
         execute_batch(
             cursor,
-            get_update_query_for_exc(),
+            get_insert_query_for_exc(),
             exc_data_list,
             page_size=batch_size,
         )
@@ -128,7 +128,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     if len(inc_data_list) > 0:
         execute_batch(
             cursor,
-            get_update_query_for_inc(),
+            get_insert_query_for_inc(),
             inc_data_list,
             page_size=batch_size,
         )
@@ -136,7 +136,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     if len(other_data_list) > 0:
         execute_batch(
             cursor,
-            get_update_query_for_other(),
+            get_insert_query_for_other(),
             other_data_list,
             page_size=batch_size,
         )
@@ -183,7 +183,7 @@ def prepare_app_sub_data(app_sub_raw_data_list):
     return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
 
 
-def get_update_query(unique_fields,unique_values):
+def get_insert_query(unique_fields,unique_values):
     # unique_fields takes input from called function and appends to query
     query = """
                 INSERT INTO alcs.application_submission (
@@ -207,47 +207,47 @@ def get_update_query(unique_fields,unique_values):
     """
     return query.format(unique_fields=unique_fields, unique_values=unique_values)
 
-def get_update_query_for_nfu():
+def get_insert_query_for_nfu():
     unique_fields = """, 
                     nfu_hectares
     """
     unique_values = """,
                     %(alr_area)s
     """
-    return get_update_query(unique_fields,unique_values)
+    return get_insert_query(unique_fields,unique_values)
 
-def get_update_query_for_nar():
+def get_insert_query_for_nar():
     # naruSubtype is a part of submission, import there
     unique_fields = """"""
     unique_values = """"""
-    return get_update_query(unique_fields,unique_values)
+    return get_insert_query(unique_fields,unique_values)
 
 
-def get_update_query_for_exc():
+def get_insert_query_for_exc():
     unique_fields = """,
                     incl_excl_hectares
     """
     unique_values = """,
                     %(alr_area)s
     """
-    return get_update_query(unique_fields,unique_values)
+    return get_insert_query(unique_fields,unique_values)
 
 
-def get_update_query_for_inc():
+def get_insert_query_for_inc():
     unique_fields = """,
                     incl_excl_hectares
     """
     unique_values = """,
                     %(alr_area)s
     """
-    return get_update_query(unique_fields,unique_values)
+    return get_insert_query(unique_fields,unique_values)
 
 
-def get_update_query_for_other():
+def get_insert_query_for_other():
     # leaving blank insert for now
     unique_fields = """"""
     unique_values = """"""
-    return get_update_query(unique_fields,unique_values)
+    return get_insert_query(unique_fields,unique_values)
 
 
 
