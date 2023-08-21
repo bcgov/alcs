@@ -80,6 +80,7 @@
       <app-nfu-proposal
         *ngIf="applicationSubmission.typeCode === 'NFUP'"
         [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
         [showErrors]="showValidationErrors"
         [draftMode]="true"
         (navigateToStep)="switchStep($event)"

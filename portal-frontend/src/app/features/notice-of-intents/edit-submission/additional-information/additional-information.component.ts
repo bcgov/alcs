@@ -135,9 +135,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   prepareStructureSpecificTextInputs() {
     this.setVisibilityAndValidatorsForFarmFields();
-
     this.setVisibilityAndValidatorsForAccessoryFields();
-
     this.setVisibilityAndValidatorsForResidentialFields();
   }
 
@@ -148,7 +146,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       )
     ) {
       this.isSoilStructureResidentialUseReasonVisible = true;
-      this.soilStructureResidentialUseReason.setValidators([Validators.required]);
+      this.setRequiredAsync(this.soilStructureResidentialUseReason);
     } else {
       this.isSoilStructureResidentialUseReasonVisible = false;
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
@@ -159,7 +157,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   private setVisibilityAndValidatorsForAccessoryFields() {
     if (this.proposedStructures.some((structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE)) {
       this.isSoilStructureResidentialAccessoryUseReasonVisible = true;
-      this.soilStructureResidentialAccessoryUseReason.setValidators([Validators.required]);
+      this.setRequiredAsync(this.soilStructureResidentialAccessoryUseReason);
     } else {
       this.isSoilStructureResidentialAccessoryUseReasonVisible = false;
       this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
@@ -171,8 +169,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     if (this.proposedStructures.some((structure) => structure.type === STRUCTURE_TYPES.FARM_STRUCTURE)) {
       this.isSoilAgriParcelActivityVisible = true;
       this.isSoilStructureFarmUseReasonVisible = true;
-      this.soilAgriParcelActivity.setValidators([Validators.required]);
-      this.soilStructureFarmUseReason.setValidators([Validators.required]);
+      this.setRequiredAsync(this.soilAgriParcelActivity);
+      this.setRequiredAsync(this.soilStructureFarmUseReason);
     } else {
       this.isSoilAgriParcelActivityVisible = false;
       this.isSoilStructureFarmUseReasonVisible = false;
@@ -215,7 +213,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   onChangeIsRemovingSoilForNewStructure($event: MatButtonToggleChange) {
     const parsedSelectedValue = parseStringToBoolean($event.value);
 
-    if (this.confirmRemovalOfSoil === true && parsedSelectedValue === false) {
+    if (this.confirmRemovalOfSoil && parsedSelectedValue === false) {
       this.dialog
         .open(SoilRemovalConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -293,5 +291,12 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
 
   onAreaChange() {
     this.form.markAsDirty();
+  }
+
+  private setRequiredAsync(formControl: FormControl<any>) {
+    //We set these asynchronously so they don't run immediately
+    setTimeout(() => {
+      formControl.setValidators([Validators.required]);
+    });
   }
 }
