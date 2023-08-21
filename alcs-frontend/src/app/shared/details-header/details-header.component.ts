@@ -31,6 +31,8 @@ export class DetailsHeaderComponent {
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
 
+  legacyId?: string;
+
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
 
   @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
@@ -53,6 +55,10 @@ export class DetailsHeaderComponent {
       }
       if ('retroactive' in application) {
         this.showRetroLabel = !!application.retroactive;
+      }
+
+      if ('legacyId' in application) {
+        this.legacyId = application.legacyId;
       }
 
       if (this.showStatus) {

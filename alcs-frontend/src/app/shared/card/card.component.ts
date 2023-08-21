@@ -24,6 +24,7 @@ export interface CardData {
   verticalOutBound?: boolean;
   dueDate?: Date;
   maxActiveDays?: number;
+  legacyId?: string;
 }
 
 export interface CardSelectedEvent {
