@@ -33,19 +33,13 @@
         (save)="updateNoiValue('agCapConsultant', $event)"
       ></app-inline-text>
     </div>
-    <!-- <app-proposal-excl *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'EXCL'"></app-proposal-excl>
-    <app-proposal-incl *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'INCL'"></app-proposal-incl> -->
   </div>
   <div>
     <app-preparation *ngIf="noticeOfIntent" [noticeOfIntent]="noticeOfIntent"></app-preparation>
   </div>
-  <!-- <app-proposal-nfu *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'NFUP'"></app-proposal-nfu>
-  <app-proposal-subd *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'SUBD'"></app-proposal-subd>
-   -->
   <app-proposal-soil
     *ngIf="noticeOfIntent && ['POFO', 'ROSO', 'PFRS'].includes(noticeOfIntent.type.code)"
   ></app-proposal-soil>
-  <!-- <app-proposal-naru *ngIf="noticeOfIntent && noticeOfIntent.type.code === 'NARU'"></app-proposal-naru> -->
 </section>
 <section>
   <h5>Parcels</h5>
