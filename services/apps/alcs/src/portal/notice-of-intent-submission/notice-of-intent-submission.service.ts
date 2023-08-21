@@ -201,6 +201,9 @@ export class NoticeOfIntentSubmissionService {
 
     return this.noticeOfIntentSubmissionRepository.findOneOrFail({
       where: findOptions,
+      relations: {
+        ...this.DEFAULT_RELATIONS,
+      },
       order: {
         auditUpdatedAt: 'DESC',
       },

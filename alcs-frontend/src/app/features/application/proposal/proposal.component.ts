@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import {
-  ApplicationDto,
-  UpdateApplicationDto,
-} from '../../../services/application/application.dto';
+import { ApplicationDto, UpdateApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../shared/dto/ag-cap.types.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
@@ -19,7 +16,7 @@ export class ProposalComponent implements OnInit {
   agCapOptions = AG_CAP_OPTIONS;
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
   alrArea: string | undefined;
-  staffObservations: string = '';
+  staffObservations = '';
   APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}

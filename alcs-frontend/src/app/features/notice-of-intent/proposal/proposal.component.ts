@@ -16,7 +16,7 @@ export class ProposalComponent implements OnInit {
   agCapOptions = AG_CAP_OPTIONS;
   agCapSourceOptions = AG_CAP_SOURCE_OPTIONS;
   alrArea: string | undefined;
-  staffObservations: string = '';
+  staffObservations = '';
   APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
 
   constructor(private noiDetailService: NoticeOfIntentDetailService, private toastService: ToastService) {}
