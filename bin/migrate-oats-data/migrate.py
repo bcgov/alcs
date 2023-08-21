@@ -324,7 +324,7 @@ if __name__ == "__main__":
 
                     process_noi_documents(batch_size=import_batch_size)
             case "app-sub-import":
-                console.log("Beginning OATS -> ALCS app-prep import process")
+                console.log("Beginning OATS -> ALCS app-sub import process")
                 with console.status(
                     "[bold green]App submission import (application_submission table update in ALCS)..."
                 ) as status:
