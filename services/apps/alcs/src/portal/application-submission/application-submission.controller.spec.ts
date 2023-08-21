@@ -211,6 +211,7 @@ describe('ApplicationSubmissionController', () => {
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplication,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -419,6 +420,7 @@ describe('ApplicationSubmissionController', () => {
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
     });
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
@@ -426,6 +428,7 @@ describe('ApplicationSubmissionController', () => {
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
     });
   });
 
@@ -474,6 +477,7 @@ describe('ApplicationSubmissionController', () => {
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
     });
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
@@ -481,6 +485,7 @@ describe('ApplicationSubmissionController', () => {
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
     });
   });
 

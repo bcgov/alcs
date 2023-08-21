@@ -33,6 +33,7 @@ import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { EmailService } from '../../../../providers/email/email.service';
 import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+import { ParentType } from '../../../../common/dtos/base.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
@@ -127,6 +128,7 @@ export class ApplicationDecisionMeetingController {
           status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
           applicationSubmission,
           government: submissionGovernment,
+          parentType: ParentType.Application,
           primaryContact,
           ccGovernment: true,
         });

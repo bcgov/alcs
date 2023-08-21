@@ -17,6 +17,7 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { ParentType } from '../../common/dtos/base.dto';
 
 describe('EmailService', () => {
   let service: EmailService;
@@ -201,6 +202,7 @@ describe('EmailService', () => {
       generateStatusHtml: () => ({} as MJMLParseResults),
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
+      parentType: 'application' as ParentType,
       government: new LocalGovernment({ emails: [] }),
       primaryContact: new ApplicationOwner(),
     };

@@ -316,6 +316,7 @@ describe('ApplicationDecisionV2Controller', () => {
       status: SUBMISSION_STATUS.ALC_DECISION,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
       decisionReleaseMaskedDate: new Date().toLocaleDateString('en-CA', {

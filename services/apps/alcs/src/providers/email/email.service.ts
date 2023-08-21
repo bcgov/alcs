@@ -14,6 +14,7 @@ import { ApplicationOwner } from '../../portal/application-submission/applicatio
 import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
+import { ParentType } from '../../common/dtos/base.dto';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -21,6 +22,7 @@ export interface StatusUpdateEmail {
   status: string;
   applicationType: string;
   governmentName: string;
+  parentType: ParentType;
 }
 
 type StatusEmailData = {
@@ -28,6 +30,7 @@ type StatusEmailData = {
   status: SUBMISSION_STATUS;
   applicationSubmission: ApplicationSubmission;
   government: LocalGovernment | null;
+  parentType: ParentType;
   primaryContact?: ApplicationOwner;
   ccGovernment?: boolean;
   decisionReleaseMaskedDate?: string;
@@ -41,6 +44,13 @@ export const appFees = [
   { type: 'Soil or Fill Use', fee: 750 },
   { type: 'Inclusion', fee: 0 },
 ];
+
+const parentTypeLabel: {
+  [key in ParentType.Application | ParentType.NoticeOfIntent]: string;
+} = {
+  application: 'Application',
+  'notice-of-intent': 'NOI',
+};
 
 @Injectable()
 export class EmailService {
@@ -247,6 +257,7 @@ export class EmailService {
         FALLBACK_APPLICANT_NAME,
       governmentName: data.government?.name,
       status: status.label,
+      parentTypeLabel: parentTypeLabel[data.parentType],
       decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
     });
 
@@ -255,7 +266,7 @@ export class EmailService {
     const email = {
       body: emailTemplate.html,
       subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
-      parentType: 'application',
+      parentType: data.parentType,
       parentId,
       triggerStatus: status.code,
     };

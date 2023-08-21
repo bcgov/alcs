@@ -408,6 +408,7 @@ describe('ApplicationController', () => {
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });

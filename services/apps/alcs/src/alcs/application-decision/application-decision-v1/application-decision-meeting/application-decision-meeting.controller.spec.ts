@@ -171,6 +171,7 @@ describe('ApplicationDecisionMeetingController', () => {
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       applicationSubmission: mockSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });

@@ -390,6 +390,7 @@ describe('ApplicationSubmissionReviewController', () => {
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -460,6 +461,7 @@ describe('ApplicationSubmissionReviewController', () => {
       status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -557,6 +559,7 @@ describe('ApplicationSubmissionReviewController', () => {
       status: SUBMISSION_STATUS.INCOMPLETE,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -630,6 +633,7 @@ describe('ApplicationSubmissionReviewController', () => {
       status: SUBMISSION_STATUS.WRONG_GOV,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
     });
   });

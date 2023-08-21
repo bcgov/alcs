@@ -3,6 +3,7 @@ import { IsOptional, IsUUID } from 'class-validator';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { AssigneeDto } from '../../../user/user.dto';
 import { CardDto } from '../card.dto';
+import { ParentType } from '../../../common/dtos/base.dto';
 
 export class UpdateCardSubtaskDto {
   @AutoMap()
@@ -50,13 +51,7 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   card: CardDto;
   title: string;
   appType?: ApplicationTypeDto;
-  parentType:
-    | 'application'
-    | 'reconsideration'
-    | 'covenant'
-    | 'modification'
-    | 'planning-review'
-    | 'notice-of-intent';
+  parentType: ParentType;
   activeDays?: number;
   paused: boolean;
 }

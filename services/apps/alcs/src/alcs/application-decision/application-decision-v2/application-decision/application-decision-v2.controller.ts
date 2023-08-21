@@ -44,6 +44,7 @@ import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.en
 import { EmailService } from '../../../../providers/email/email.service';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
+import { ParentType } from '../../../../common/dtos/base.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -314,6 +315,7 @@ export class ApplicationDecisionV2Controller {
         status: SUBMISSION_STATUS.ALC_DECISION,
         applicationSubmission,
         government: submissionGovernment,
+        parentType: ParentType.Application,
         primaryContact,
         ccGovernment: true,
         decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
