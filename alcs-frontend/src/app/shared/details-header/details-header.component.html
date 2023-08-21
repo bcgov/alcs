@@ -5,6 +5,7 @@
   <div *ngIf="_application" class="first-row">
     <div class="title">
       <h5>{{ _application.fileNumber }} ({{ _application.applicant }})</h5>
+      <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>
         <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
