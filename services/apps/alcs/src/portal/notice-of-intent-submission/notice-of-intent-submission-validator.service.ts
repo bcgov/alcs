@@ -456,7 +456,10 @@ export class NoticeOfIntentSubmissionValidatorService {
     const noticeOfWork = applicantDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
     );
-    if (noticeOfIntentSubmission.soilIsFollowUp && noticeOfWork.length === 0) {
+    if (
+      noticeOfIntentSubmission.soilHasSubmittedNotice &&
+      noticeOfWork.length === 0
+    ) {
       errors.push(
         new ServiceValidationException(
           `${noticeOfIntentSubmission.typeCode} proposal has yes to notice of work but is not attached`,

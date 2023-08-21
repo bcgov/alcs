@@ -47,7 +47,7 @@ export class NoticeOfIntentDocumentController {
     @Param('documentType') documentType: DOCUMENT_TYPE | null,
     @Req() req,
   ): Promise<NoticeOfIntentDocumentDto[]> {
-    await this.noticeOfIntentSubmissionService.verifyAccessByFileId(
+    await this.noticeOfIntentSubmissionService.getByFileNumber(
       fileNumber,
       req.user.entity,
     );
@@ -79,7 +79,7 @@ export class NoticeOfIntentDocumentController {
     @Req() req,
     @Body() body: PortalNoticeOfIntentDocumentUpdateDto[],
   ) {
-    await this.noticeOfIntentSubmissionService.verifyAccessByFileId(
+    await this.noticeOfIntentSubmissionService.getByFileNumber(
       fileNumber,
       req.user.entity,
     );
@@ -129,7 +129,7 @@ export class NoticeOfIntentDocumentController {
     @Req() req,
   ): Promise<ApplicationDocumentDto> {
     const submission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByFileId(
+      await this.noticeOfIntentSubmissionService.getByFileNumber(
         fileNumber,
         req.user.entity,
       );

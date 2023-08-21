@@ -7,6 +7,7 @@ import {
   OWNER_TYPE,
   OwnerType,
 } from '../../../common/owner-type/owner-type.entity';
+import { User } from '../../../user/user.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
@@ -72,7 +73,7 @@ export class NoticeOfIntentOwnerService {
     return await this.repository.save(newOwner);
   }
 
-  async attachToParcel(uuid: string, parcelUuid: string) {
+  async attachToParcel(uuid: string, parcelUuid: string, user: User) {
     const existingOwner = await this.repository.findOneOrFail({
       where: {
         uuid,
@@ -89,6 +90,7 @@ export class NoticeOfIntentOwnerService {
 
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
+      user,
     );
 
     await this.repository.save(existingOwner);
@@ -98,7 +100,7 @@ export class NoticeOfIntentOwnerService {
     await this.repository.save(owner);
   }
 
-  async removeFromParcel(uuid: string, parcelUuid: string) {
+  async removeFromParcel(uuid: string, parcelUuid: string, user: User) {
     const existingOwner = await this.repository.findOneOrFail({
       where: {
         uuid,
@@ -114,12 +116,17 @@ export class NoticeOfIntentOwnerService {
 
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
+      user,
     );
 
     await this.repository.save(existingOwner);
   }
 
-  async update(uuid: string, updateDto: NoticeOfIntentOwnerUpdateDto) {
+  async update(
+    uuid: string,
+    updateDto: NoticeOfIntentOwnerUpdateDto,
+    user: User,
+  ) {
     const existingOwner = await this.repository.findOneOrFail({
       where: {
         uuid,
@@ -180,21 +187,30 @@ export class NoticeOfIntentOwnerService {
 
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
+      user,
     );
 
     return await this.repository.save(existingOwner);
   }
 
-  async delete(owner: NoticeOfIntentOwner) {
+  async delete(owner: NoticeOfIntentOwner, user: User) {
     const res = await this.repository.remove(owner);
-    await this.updateSubmissionApplicant(owner.noticeOfIntentSubmissionUuid);
+    await this.updateSubmissionApplicant(
+      owner.noticeOfIntentSubmissionUuid,
+      user,
+    );
     return res;
   }
 
-  async setPrimaryContact(submissionUuid: string, owner: NoticeOfIntentOwner) {
+  async setPrimaryContact(
+    submissionUuid: string,
+    owner: NoticeOfIntentOwner,
+    user: User,
+  ) {
     await this.noticeOfIntentSubmissionService.setPrimaryContact(
       submissionUuid,
       owner.uuid,
+      user,
     );
   }
 
@@ -244,7 +260,7 @@ export class NoticeOfIntentOwnerService {
     return await this.repository.remove(agentOwners);
   }
 
-  async updateSubmissionApplicant(submissionUuid: string) {
+  async updateSubmissionApplicant(submissionUuid: string, user: User) {
     const parcels =
       await this.noticeOfIntentParcelService.fetchByApplicationSubmissionUuid(
         submissionUuid,
@@ -287,9 +303,13 @@ export class NoticeOfIntentOwnerService {
             applicantName += ' et al.';
           }
 
-          await this.noticeOfIntentSubmissionService.update(submissionUuid, {
-            applicant: applicantName || '',
-          });
+          await this.noticeOfIntentSubmissionService.update(
+            submissionUuid,
+            {
+              applicant: applicantName || '',
+            },
+            user,
+          );
 
           const fileNumber =
             await this.noticeOfIntentSubmissionService.getFileNumber(

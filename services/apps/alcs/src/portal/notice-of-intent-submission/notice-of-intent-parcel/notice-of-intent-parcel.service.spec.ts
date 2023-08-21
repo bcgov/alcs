@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
+import { User } from '../../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelUpdateDto } from './notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel.entity';
@@ -125,7 +126,7 @@ describe('NoticeOfIntentParcelService', () => {
     mockParcelRepo.findOneOrFail.mockResolvedValue(mockNOIParcel);
     mockParcelRepo.save.mockResolvedValue({} as NoticeOfIntentParcel);
 
-    await service.update(updateParcelDto);
+    await service.update(updateParcelDto, new User());
 
     expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
     expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
@@ -155,7 +156,7 @@ describe('NoticeOfIntentParcelService', () => {
     mockOwnerService.updateSubmissionApplicant.mockResolvedValue();
     mockOwnerService.getMany.mockResolvedValue([]);
 
-    await service.update(updateParcelDto);
+    await service.update(updateParcelDto, new User());
 
     expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
     expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
@@ -184,9 +185,9 @@ describe('NoticeOfIntentParcelService', () => {
     mockParcelRepo.findOneOrFail.mockRejectedValue(mockError);
     mockParcelRepo.save.mockResolvedValue(new NoticeOfIntentParcel());
 
-    await expect(service.update(updateParcelDto)).rejects.toMatchObject(
-      mockError,
-    );
+    await expect(
+      service.update(updateParcelDto, new User()),
+    ).rejects.toMatchObject(mockError);
     expect(mockParcelRepo.findOneOrFail).toBeCalledTimes(1);
     expect(mockParcelRepo.findOneOrFail).toBeCalledWith({
       where: { uuid: mockUuid },
@@ -199,7 +200,7 @@ describe('NoticeOfIntentParcelService', () => {
     mockParcelRepo.remove.mockResolvedValue(new NoticeOfIntentParcel());
     mockOwnerService.updateSubmissionApplicant.mockResolvedValue();
 
-    const result = await service.deleteMany([mockUuid]);
+    const result = await service.deleteMany([mockUuid], new User());
 
     expect(result).toBeDefined();
     expect(mockParcelRepo.find).toBeCalledTimes(1);
@@ -219,9 +220,9 @@ describe('NoticeOfIntentParcelService', () => {
     mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue(new NoticeOfIntentParcel());
 
-    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(
-      exception,
-    );
+    await expect(
+      service.deleteMany([mockUuid], new User()),
+    ).rejects.toMatchObject(exception);
     expect(mockParcelRepo.find).toBeCalledTimes(1);
     expect(mockParcelRepo.find).toBeCalledWith({
       where: { uuid: In([mockUuid]) },

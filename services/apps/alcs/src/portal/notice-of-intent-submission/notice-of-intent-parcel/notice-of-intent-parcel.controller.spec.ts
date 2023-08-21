@@ -7,6 +7,7 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentDocumentService } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentParcelProfile } from '../../../common/automapper/notice-of-intent-parcel.automapper.profile';
 import { DocumentService } from '../../../document/document.service';
+import { User } from '../../../user/user.entity';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission.service';
@@ -22,6 +23,7 @@ describe('NoticeOfIntentParcelController', () => {
   let mockNOIOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockNOIDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
+  let mockNoticeOfIntentSubmission;
 
   beforeEach(async () => {
     mockNOIParcelService = createMock();
@@ -29,6 +31,10 @@ describe('NoticeOfIntentParcelController', () => {
     mockNOIOwnerService = createMock();
     mockDocumentService = createMock();
     mockNOIDocumentService = createMock();
+
+    mockNoticeOfIntentSubmission = new NoticeOfIntentSubmission({
+      createdBy: new User(),
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -88,40 +94,52 @@ describe('NoticeOfIntentParcelController', () => {
   });
 
   it('should call out to service when creating parcels', async () => {
-    mockNOIService.getOrFailByUuid.mockResolvedValue(
-      {} as NoticeOfIntentSubmission,
-    );
+    mockNOIService.getByUuid.mockResolvedValue(mockNoticeOfIntentSubmission);
     mockNOIParcelService.create.mockResolvedValue({} as NoticeOfIntentParcel);
     mockNOIOwnerService.attachToParcel.mockResolvedValue();
 
-    const parcel = await controller.create({
-      noticeOfIntentSubmissionUuid: 'fake',
-    });
+    const parcel = await controller.create(
+      {
+        noticeOfIntentSubmissionUuid: 'fake',
+      },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
 
-    expect(mockNOIService.getOrFailByUuid).toBeCalledTimes(1);
+    expect(mockNOIService.getByUuid).toBeCalledTimes(1);
     expect(mockNOIParcelService.create).toBeCalledTimes(1);
     expect(mockNOIOwnerService.attachToParcel).toBeCalledTimes(0);
     expect(parcel).toBeDefined();
   });
 
-  it('should call out to service and revert newly created "other" parcel if failed to link it to and owner during creation process', async () => {
+  it('should revert newly created "other" parcel if failed to link', async () => {
     const mockError = new Error('mock error');
-    mockNOIService.getOrFailByUuid.mockResolvedValue(
-      {} as NoticeOfIntentSubmission,
-    );
+    mockNOIService.getByUuid.mockResolvedValue(mockNoticeOfIntentSubmission);
     mockNOIParcelService.create.mockResolvedValue({} as NoticeOfIntentParcel);
     mockNOIOwnerService.attachToParcel.mockRejectedValue(mockError);
     mockNOIParcelService.deleteMany.mockResolvedValue([]);
 
     await expect(
-      controller.create({
-        noticeOfIntentSubmissionUuid: 'fake',
-        ownerUuid: 'fake_uuid',
-        parcelType: 'other',
-      }),
+      controller.create(
+        {
+          noticeOfIntentSubmissionUuid: 'fake',
+          ownerUuid: 'fake_uuid',
+          parcelType: 'other',
+        },
+        {
+          user: {
+            entity: new User({
+              clientRoles: [],
+            }),
+          },
+        },
+      ),
     ).rejects.toMatchObject(mockError);
 
-    expect(mockNOIService.getOrFailByUuid).toBeCalledTimes(1);
+    expect(mockNOIService.getByUuid).toBeCalledTimes(1);
     expect(mockNOIParcelService.create).toBeCalledTimes(1);
     expect(mockNOIParcelService.deleteMany).toBeCalledTimes(1);
     expect(mockNOIOwnerService.attachToParcel).toBeCalledTimes(1);
@@ -147,7 +165,11 @@ describe('NoticeOfIntentParcelController', () => {
       {},
     ] as NoticeOfIntentParcel[]);
 
-    const parcel = await controller.update(mockUpdateDto);
+    const parcel = await controller.update(mockUpdateDto, {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(mockNOIParcelService.update).toBeCalledTimes(1);
     expect(parcel).toBeDefined();
@@ -157,7 +179,11 @@ describe('NoticeOfIntentParcelController', () => {
     const fakeUuid = 'fake_uuid';
     mockNOIParcelService.deleteMany.mockResolvedValue([]);
 
-    const result = await controller.delete([fakeUuid]);
+    const result = await controller.delete([fakeUuid], {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(mockNOIParcelService.deleteMany).toBeCalledTimes(1);
     expect(result).toBeDefined();

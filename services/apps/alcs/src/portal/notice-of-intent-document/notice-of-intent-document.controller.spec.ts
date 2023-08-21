@@ -75,7 +75,7 @@ describe('NoticeOfIntentDocumentController', () => {
       NoticeOfIntentDocumentController,
     );
 
-    mockNoiSubmissionService.verifyAccessByFileId.mockResolvedValue(
+    mockNoiSubmissionService.getByFileNumber.mockResolvedValue(
       new NoticeOfIntentSubmission(),
     );
     mockNoticeOfIntentService.getUuid.mockResolvedValue('uuid');

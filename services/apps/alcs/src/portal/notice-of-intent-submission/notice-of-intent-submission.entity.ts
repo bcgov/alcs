@@ -14,6 +14,7 @@ import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
+import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 
 export const PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING = {
   RESIDENTIAL_PRINCIPAL_RESIDENCE: {
@@ -455,6 +456,12 @@ export class NoticeOfIntentSubmission extends Base {
     (owner) => owner.noticeOfIntentSubmission,
   )
   owners: NoticeOfIntentOwner[];
+
+  @OneToMany(
+    () => NoticeOfIntentParcel,
+    (parcel) => parcel.noticeOfIntentSubmission,
+  )
+  parcels: NoticeOfIntentParcel[];
 
   @OneToMany(
     () => NoticeOfIntentSubmissionToSubmissionStatus,

@@ -35,7 +35,7 @@ export class NoticeOfIntentSubmissionService {
   async getByFileId(fileId: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<NoticeOfIntentSubmissionDetailedDto>(`${this.serviceUrl}/application/${fileId}`)
+        this.httpClient.get<NoticeOfIntentSubmissionDetailedDto>(`${this.serviceUrl}/notice-of-intent/${fileId}`)
       );
     } catch (e) {
       console.error(e);

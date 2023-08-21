@@ -37,4 +37,22 @@ export class EmailStatus extends BaseEntity {
 
   @Column({ nullable: true, type: 'text' })
   errors?: string;
+
+  @Column({
+    nullable: true,
+    comment: 'Type of parent entity',
+  })
+  parentType: string;
+
+  @Column({
+    nullable: true,
+    comment: 'Uuid of parent entity',
+  })
+  parentId: string;
+
+  @Column({
+    nullable: true,
+    comment: 'Status that triggered the email',
+  })
+  triggerStatus: string;
 }

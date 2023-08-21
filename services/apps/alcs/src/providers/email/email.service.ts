@@ -99,12 +99,18 @@ export class EmailService {
     subject,
     cc = [],
     bcc = [],
+    parentType,
+    parentId,
+    triggerStatus,
   }: {
     to: string[];
     body: string;
     subject: string;
     cc?: string[];
     bcc?: string[];
+    parentType?: string;
+    parentId?: string;
+    triggerStatus?: string;
   }) {
     const serviceUrl = this.config.get<string>('CHES.URL');
     const from = this.config.get<string>('CHES.FROM');
@@ -150,6 +156,9 @@ export class EmailService {
           recipients: [...to, ...cc, ...bcc].join(', '),
           status: 'success',
           transactionId: res.data.txId,
+          parentType,
+          parentId,
+          triggerStatus,
         }),
       );
     } catch (e) {
@@ -165,6 +174,9 @@ export class EmailService {
           recipients: [...to, ...cc, ...bcc].join(', '),
           status: 'failed',
           errors: errorMessage,
+          parentType,
+          parentId,
+          triggerStatus,
         }),
       );
     }
@@ -238,9 +250,14 @@ export class EmailService {
       decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
     });
 
+    const parentId = await this.applicationService.getUuid(fileNumber);
+
     const email = {
       body: emailTemplate.html,
       subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
+      parentType: 'application',
+      parentId,
+      triggerStatus: status.code,
     };
 
     if (data.primaryContact && data.primaryContact.email) {

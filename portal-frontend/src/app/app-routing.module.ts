@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ViewApplicationSubmissionModule } from './features/applications/view-submission/view-application-submission.module';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
-import { ViewApplicationSubmissionComponent } from './features/applications/view-submission/view-application-submission.component';
-import { ViewNoticeOfIntentSubmissionComponent } from './features/notice-of-intents/view-submission/view-notice-of-intent-submission.component';
 import { AlcsAuthGuard } from './services/authentication/alcs-auth.guard';
 import { AuthGuard } from './services/authentication/auth.guard';
 
@@ -54,6 +51,15 @@ const routes: Routes = [
     canActivate: [AlcsAuthGuard],
     loadChildren: () =>
       import('./features/applications/alcs-edit-submission/alcs-edit-submission.module').then(
+        (m) => m.AlcsEditSubmissionModule
+      ),
+  },
+  {
+    title: 'ALCS Edit Notice of Intent',
+    path: 'alcs/notice-of-intent/:fileId/edit',
+    canActivate: [AlcsAuthGuard],
+    loadChildren: () =>
+      import('./features/notice-of-intents/alcs-edit-submission/alcs-edit-submission.module').then(
         (m) => m.AlcsEditSubmissionModule
       ),
   },

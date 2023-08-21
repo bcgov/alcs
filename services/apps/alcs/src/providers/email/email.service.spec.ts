@@ -209,6 +209,7 @@ describe('EmailService', () => {
       new ApplicationSubmissionStatusType(),
     );
     mockApplicationService.fetchApplicationTypes.mockResolvedValue([]);
+    mockApplicationService.getUuid.mockResolvedValue('fake-uuid');
 
     await service.sendStatusEmail(mockData);
 

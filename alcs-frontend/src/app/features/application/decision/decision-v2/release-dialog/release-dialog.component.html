@@ -12,10 +12,11 @@
       <app-application-type-pill *ngIf="mappedType" [type]="mappedType"></app-application-type-pill>
     </p>
     <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
-    <p>
+    <p *ngIf="wasReleased">
       The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
       notification manually.
     </p>
+    <p *ngIf="!wasReleased">The Applicant and Local/First Nation Government will receive an auto-email notification.</p>
   </div>
 </mat-dialog-content>
 

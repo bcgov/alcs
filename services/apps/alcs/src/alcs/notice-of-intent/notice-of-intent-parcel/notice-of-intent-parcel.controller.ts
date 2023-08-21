@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { NoticeOfIntentParcelDto } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.dto';
@@ -30,13 +30,20 @@ export class NoticeOfIntentParcelController {
 
   @UserRoles(...ANY_AUTH_ROLE)
   @Post('/:uuid')
-  async update(@Param('uuid') uuid: string, @Body() body: { alrArea: number }) {
-    const parcels = await this.applicationParcelService.update([
-      {
-        uuid,
-        alrArea: body.alrArea,
-      },
-    ]);
+  async update(
+    @Param('uuid') uuid: string,
+    @Req() req,
+    @Body() body: { alrArea: number },
+  ) {
+    const parcels = await this.applicationParcelService.update(
+      [
+        {
+          uuid,
+          alrArea: body.alrArea,
+        },
+      ],
+      req.user.entity,
+    );
 
     return this.mapper.mapArray(
       parcels,

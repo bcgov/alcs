@@ -50,7 +50,7 @@ export class NoticeOfIntentOwnerController {
     @Req() req,
   ): Promise<NoticeOfIntentOwnerDto[]> {
     const noticeOfIntentSubmission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         submissionUuid,
         req.user.entity,
       );
@@ -69,12 +69,15 @@ export class NoticeOfIntentOwnerController {
   ): Promise<NoticeOfIntentOwnerDto> {
     this.verifyDto(createDto);
 
-    const application =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.getByUuid(
         createDto.noticeOfIntentSubmissionUuid,
         req.user.entity,
       );
-    const owner = await this.ownerService.create(createDto, application);
+    const owner = await this.ownerService.create(
+      createDto,
+      noticeOfIntentSubmission,
+    );
 
     return this.mapper.mapAsync(
       owner,
@@ -89,10 +92,13 @@ export class NoticeOfIntentOwnerController {
     @Body() updateDto: NoticeOfIntentOwnerUpdateDto,
     @Req() req,
   ) {
-    await this.verifyAccessAndGetOwner(req, uuid);
     this.verifyDto(updateDto);
 
-    const newParcel = await this.ownerService.update(uuid, updateDto);
+    const newParcel = await this.ownerService.update(
+      uuid,
+      updateDto,
+      req.user.entity,
+    );
 
     return this.mapper.mapAsync(
       newParcel,
@@ -107,7 +113,7 @@ export class NoticeOfIntentOwnerController {
     if (owner.corporateSummary) {
       await this.noticeOfIntentDocumentService.delete(owner.corporateSummary);
     }
-    await this.ownerService.delete(owner);
+    await this.ownerService.delete(owner, req.user.entity);
     return { uuid };
   }
 
@@ -117,9 +123,13 @@ export class NoticeOfIntentOwnerController {
     @Param('parcelUuid') parcelUuid: string,
     @Req() req,
   ) {
-    await this.verifyAccessAndGetOwner(req, uuid);
-
-    return { uuid: await this.ownerService.attachToParcel(uuid, parcelUuid) };
+    return {
+      uuid: await this.ownerService.attachToParcel(
+        uuid,
+        parcelUuid,
+        req.user.entity,
+      ),
+    };
   }
 
   @Post('/:uuid/unlink/:parcelUuid')
@@ -128,9 +138,13 @@ export class NoticeOfIntentOwnerController {
     @Param('parcelUuid') parcelUuid: string,
     @Req() req,
   ) {
-    await this.verifyAccessAndGetOwner(req, uuid);
-
-    return { uuid: await this.ownerService.removeFromParcel(uuid, parcelUuid) };
+    return {
+      uuid: await this.ownerService.removeFromParcel(
+        uuid,
+        parcelUuid,
+        req.user.entity,
+      ),
+    };
   }
 
   private verifyDto(
@@ -154,10 +168,11 @@ export class NoticeOfIntentOwnerController {
 
   @Post('setPrimaryContact')
   async setPrimaryContact(@Body() data: SetPrimaryContactDto, @Req() req) {
+    const user = req.user.entity;
     const applicationSubmission =
-      await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+      await this.noticeOfIntentSubmissionService.getByUuid(
         data.noticeOfIntentSubmissionUuid,
-        req.user.entity,
+        user,
       );
 
     //Create Owner
@@ -178,6 +193,7 @@ export class NoticeOfIntentOwnerController {
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,
         newOwner,
+        user,
       );
     } else if (data.ownerUuid) {
       const primaryContactOwner = await this.ownerService.getOwner(
@@ -189,14 +205,18 @@ export class NoticeOfIntentOwnerController {
         primaryContactOwner.type.code === OWNER_TYPE.GOVERNMENT
       ) {
         //Update Fields for non parcel owners
-        await this.ownerService.update(primaryContactOwner.uuid, {
-          email: data.email,
-          typeCode: primaryContactOwner.type.code,
-          lastName: data.lastName,
-          firstName: data.firstName,
-          phoneNumber: data.phoneNumber,
-          organizationName: data.organization,
-        });
+        await this.ownerService.update(
+          primaryContactOwner.uuid,
+          {
+            email: data.email,
+            typeCode: primaryContactOwner.type.code,
+            lastName: data.lastName,
+            firstName: data.firstName,
+            phoneNumber: data.phoneNumber,
+            organizationName: data.organization,
+          },
+          user,
+        );
       } else {
         //Delete Non parcel owners if we aren't using one
         await this.ownerService.deleteNonParcelOwners(
@@ -207,13 +227,14 @@ export class NoticeOfIntentOwnerController {
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,
         primaryContactOwner,
+        user,
       );
     }
   }
 
   private async verifyAccessAndGetOwner(@Req() req, ownerUuid: string) {
     const owner = await this.ownerService.getOwner(ownerUuid);
-    await this.noticeOfIntentSubmissionService.verifyAccessByUuid(
+    await this.noticeOfIntentSubmissionService.getByUuid(
       owner.noticeOfIntentSubmissionUuid,
       req.user.entity,
     );
@@ -226,7 +247,7 @@ export class NoticeOfIntentOwnerController {
     @Req() req,
     @Body() data: AttachCorporateSummaryDto,
   ) {
-    await this.noticeOfIntentSubmissionService.verifyAccessByFileId(
+    await this.noticeOfIntentSubmissionService.getByFileNumber(
       data.fileNumber,
       req.user.entity,
     );
