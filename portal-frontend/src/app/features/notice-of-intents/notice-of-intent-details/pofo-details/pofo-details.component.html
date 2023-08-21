@@ -41,7 +41,14 @@
     <div class="grid-1"></div>
     <div class="grid-2">
       <strong> Fill to be Placed</strong>
-      <app-updated-banner *ngIf="updatedFields.includes('soilToPlaceVolume')"></app-updated-banner>
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilToPlaceVolume') ||
+          updatedFields.includes('soilToPlaceArea') ||
+          updatedFields.includes('soilToPlaceMaximumDepth') ||
+          updatedFields.includes('soilToPlaceAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
@@ -72,7 +79,14 @@
     <div class="grid-1"></div>
     <div class="grid-2">
       <strong> Fill already Placed</strong>
-      <app-updated-banner *ngIf="updatedFields.includes('soilToRemoveVolume')"></app-updated-banner>
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilAlreadyPlacedVolume') ||
+          updatedFields.includes('soilAlreadyPlacedArea') ||
+          updatedFields.includes('soilAlreadyPlacedMaximumDepth') ||
+          updatedFields.includes('soilAlreadyPlacedAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
@@ -134,7 +148,10 @@
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">Is your proposal for area-wide filling?</div>
+  <div class="subheading2 grid-1">
+    Is your proposal for area-wide filling?
+    <app-updated-banner *ngIf="updatedFields.includes('soilIsAreaWideFilling')"></app-updated-banner>
+  </div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsAreaWideFilling !== null">
       {{ _noiSubmission.soilIsAreaWideFilling ? 'Yes' : 'No' }}
