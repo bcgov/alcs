@@ -1,4 +1,10 @@
-<div class="subheading1">{{ data.applicationDecisionComponentType?.label }} Component</div>
+<div class='split'>
+  <h5>{{ data.applicationDecisionComponentType?.label }}</h5>
+  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">
+    Remove
+  </button>
+</div>
+
 <form [formGroup]="form" class="decision-component-form">
   <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP" class="row-no-flex">
     <app-nfu-input [form]="form"></app-nfu-input>

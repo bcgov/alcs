@@ -115,7 +115,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   async onCreate() {
     const newDecision = await this.decisionService.create({
       resolutionYear: new Date().getFullYear(),
-      chairReviewRequired: false,
+      chairReviewRequired: true,
       isDraft: true,
       date: Date.now(),
       applicationFileNumber: this.fileNumber,
@@ -123,14 +123,23 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       reconsidersUuid: null,
     });
 
-    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit`]);
+    const index = this.decisions.length;
+    await this.router.navigate([
+      `/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit/${index + 1}`,
+    ]);
   }
 
-  async onEdit(decision: ApplicationDecisionWithLinkedResolutionDto) {
-    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
+  async onEdit(selectedDecision: ApplicationDecisionWithLinkedResolutionDto) {
+    const position = this.decisions.findIndex((decision) => decision.uuid === selectedDecision.uuid);
+    const index = this.decisions.length - position;
+    await this.router.navigate([
+      `/application/${this.fileNumber}/decision/draft/${selectedDecision.uuid}/edit/${index}`,
+    ]);
   }
 
   async onRevertToDraft(uuid: string) {
+    const position = this.decisions.findIndex((decision) => decision.uuid === uuid);
+    const index = this.decisions.length - position;
     this.dialog
       .open(RevertToDraftDialogComponent, {
         data: { fileNumber: this.fileNumber },
@@ -143,7 +152,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
           });
           await this.applicationDetailService.loadApplication(this.fileNumber);
 
-          await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit`]);
+          await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit/${index}`]);
         }
       });
   }

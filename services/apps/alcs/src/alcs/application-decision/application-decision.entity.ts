@@ -133,15 +133,6 @@ export class ApplicationDecision extends Base {
   })
   isStatsRequired?: boolean | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    comment:
-      'Indicates how long the decision should stay hidden from public in days from decision date',
-    nullable: true,
-    type: 'integer',
-  })
-  daysHideFromPublic?: number | null;
-
   @AutoMap(() => Date)
   @Column({
     type: 'timestamptz',

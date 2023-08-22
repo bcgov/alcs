@@ -155,7 +155,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           this.patchInclExclFields(component);
         }
 
-        this.components.push(component);
+        this.components.unshift(component);
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
@@ -166,7 +166,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
       case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
       case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
-        this.components.push({
+        this.components.unshift({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
             (e) => e.code === typeCode && e.uiCode !== 'COPY'

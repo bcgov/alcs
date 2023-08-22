@@ -1,12 +1,8 @@
 @use '../../../../../../styles/colors';
 
-.header {
-  display: flex;
-  justify-content: space-between;
-}
-
 .documents {
   margin-top: 12px;
+  border-collapse: collapse;
 }
 
 .upload-button {
