@@ -208,45 +208,33 @@ def get_insert_query(unique_fields,unique_values):
     return query.format(unique_fields=unique_fields, unique_values=unique_values)
 
 def get_insert_query_for_nfu():
-    unique_fields = """, 
-                    nfu_hectares
-    """
-    unique_values = """,
-                    %(alr_area)s
-    """
+    unique_fields = ", nfu_hectares"
+    unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
 def get_insert_query_for_nar():
     # naruSubtype is a part of submission, import there
-    unique_fields = """"""
-    unique_values = """"""
+    unique_fields = ""
+    unique_values = ""
     return get_insert_query(unique_fields,unique_values)
 
 
 def get_insert_query_for_exc():
-    unique_fields = """,
-                    incl_excl_hectares
-    """
-    unique_values = """,
-                    %(alr_area)s
-    """
+    unique_fields = ", incl_excl_hectares"
+    unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
 
 def get_insert_query_for_inc():
-    unique_fields = """,
-                    incl_excl_hectares
-    """
-    unique_values = """,
-                    %(alr_area)s
-    """
+    unique_fields = ", incl_excl_hectares"
+    unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
 
 def get_insert_query_for_other():
     # leaving blank insert for now
-    unique_fields = """"""
-    unique_values = """"""
+    unique_fields = ""
+    unique_values = ""
     return get_insert_query(unique_fields,unique_values)
 
 
