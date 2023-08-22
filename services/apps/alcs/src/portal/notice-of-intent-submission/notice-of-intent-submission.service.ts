@@ -31,6 +31,7 @@ import {
   NoticeOfIntentSubmission,
   PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
 } from './notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
 @Injectable()
 export class NoticeOfIntentSubmissionService {
@@ -50,6 +51,8 @@ export class NoticeOfIntentSubmissionService {
   constructor(
     @InjectRepository(NoticeOfIntentSubmission)
     private noticeOfIntentSubmissionRepository: Repository<NoticeOfIntentSubmission>,
+    @InjectRepository(NoticeOfIntentSubmissionStatusType)
+    private noticeOfIntentStatusRepository: Repository<NoticeOfIntentSubmissionStatusType>,
     private noticeOfIntentService: NoticeOfIntentService,
     private localGovernmentService: LocalGovernmentService,
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
@@ -411,6 +414,15 @@ export class NoticeOfIntentSubmissionService {
       statusCode,
       effectiveDate,
     );
+  }
+
+  // TODO: Create unit test for new method
+  async getStatus(code: NOI_SUBMISSION_STATUS) {
+    return await this.noticeOfIntentStatusRepository.findOneOrFail({
+      where: {
+        code,
+      },
+    });
   }
 
   async cancel(noticeOfIntentSubmission: NoticeOfIntentSubmission) {

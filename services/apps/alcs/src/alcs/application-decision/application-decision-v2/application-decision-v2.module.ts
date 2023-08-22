@@ -73,7 +73,7 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
       ApplicationDecisionConditionComponentPlanNumber,
     ]),
     forwardRef(() => BoardModule),
-    ApplicationModule,
+    forwardRef(() => ApplicationModule),
     CardModule,
     DocumentModule,
     ApplicationDecisionV2Module,

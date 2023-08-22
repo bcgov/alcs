@@ -15,6 +15,11 @@ import { ApplicationSubmissionService } from '../../portal/application-submissio
 import { ApplicationService } from '../../alcs/application/application.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { ParentType } from '../../common/dtos/base.dto';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
+import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -25,15 +30,23 @@ export interface StatusUpdateEmail {
   parentType: ParentType;
 }
 
-type StatusEmailData = {
+type BaseStatusEmailData = {
   generateStatusHtml: MJMLParseResults;
-  status: SUBMISSION_STATUS;
-  applicationSubmission: ApplicationSubmission;
   government: LocalGovernment | null;
   parentType: ParentType;
-  primaryContact?: ApplicationOwner;
   ccGovernment?: boolean;
   decisionReleaseMaskedDate?: string;
+};
+type ApplicationEmailData = BaseStatusEmailData & {
+  applicationSubmission: ApplicationSubmission;
+  status: SUBMISSION_STATUS;
+  primaryContact?: ApplicationOwner;
+};
+
+type NoticeOfIntentEmailData = BaseStatusEmailData & {
+  noticeOfIntentSubmission: NoticeOfIntentSubmission;
+  status: NOI_SUBMISSION_STATUS;
+  primaryContact?: NoticeOfIntentOwner;
 };
 
 export const appFees = [
@@ -70,6 +83,8 @@ export class EmailService {
     private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationService: ApplicationService,
+    private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfInterntSubmissionService: NoticeOfIntentSubmissionService,
   ) {}
 
   private token = '';
@@ -198,7 +213,9 @@ export class EmailService {
     }
   }
 
-  async getSubmissionGovernmentOrFail(submission: ApplicationSubmission) {
+  async getSubmissionGovernmentOrFail(
+    submission: ApplicationSubmission | NoticeOfIntentSubmission,
+  ) {
     const submissionGovernment = await this.getSubmissionGovernment(submission);
     if (!submissionGovernment) {
       throw new NotFoundException('Submission local government not found');
@@ -206,7 +223,9 @@ export class EmailService {
     return submissionGovernment;
   }
 
-  private async getSubmissionGovernment(submission: ApplicationSubmission) {
+  private async getSubmissionGovernment(
+    submission: ApplicationSubmission | NoticeOfIntentSubmission,
+  ) {
     if (submission.localGovernmentUuid) {
       const localGovernment = await this.localGovernmentService.getByUuid(
         submission.localGovernmentUuid,
@@ -239,7 +258,7 @@ export class EmailService {
     return { applicationSubmission, primaryContact, submissionGovernment };
   }
 
-  async sendStatusEmail(data: StatusEmailData) {
+  private async setApplicationEmailTemplate(data: ApplicationEmailData) {
     const status = await this.applicationSubmissionService.getStatus(
       data.status,
     );
@@ -269,14 +288,71 @@ export class EmailService {
 
     const parentId = await this.applicationService.getUuid(fileNumber);
 
-    const email = {
+    return {
       body: emailTemplate.html,
       subject: `Agricultural Land Commission Application ID: ${fileNumber} (${applicantName})`,
       parentType: data.parentType,
       parentId,
       triggerStatus: status.code,
     };
+  }
 
+  private async setNoticeOfIntentEmailTemplate(data: NoticeOfIntentEmailData) {
+    const status = await this.noticeOfInterntSubmissionService.getStatus(
+      data.status,
+    );
+
+    const types = await this.noticeOfIntentService.listTypes();
+
+    const matchingType = types.find(
+      (type) => type.code === data.noticeOfIntentSubmission.typeCode,
+    );
+
+    const fileNumber = data.noticeOfIntentSubmission.fileNumber;
+
+    const applicantName =
+      data.noticeOfIntentSubmission.applicant || FALLBACK_APPLICANT_NAME;
+
+    const emailTemplate = data.generateStatusHtml({
+      fileNumber,
+      applicantName,
+      childType:
+        matchingType?.portalLabel ??
+        matchingType?.label ??
+        FALLBACK_APPLICANT_NAME,
+      governmentName: data.government?.name,
+      status: status.label,
+      parentTypeLabel: parentTypeLabel[data.parentType],
+    });
+
+    const parentId = await this.noticeOfIntentService.getUuid(fileNumber);
+
+    return {
+      body: emailTemplate.html,
+      subject: `Agricultural Land Commission NOI ID: ${fileNumber} (${applicantName})`,
+      parentType: data.parentType,
+      parentId,
+      triggerStatus: status.code,
+    };
+  }
+
+  // TODO: Rename with Application
+  async sendStatusEmail(data: ApplicationEmailData) {
+    const email = await this.setApplicationEmailTemplate(data);
+
+    this.sendSubmissionStatusEmail(data, email);
+  }
+
+  async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
+    const email = await this.setNoticeOfIntentEmailTemplate(data);
+
+    this.sendSubmissionStatusEmail(data, email);
+  }
+
+  private sendSubmissionStatusEmail(
+    data: ApplicationEmailData | NoticeOfIntentEmailData,
+    email,
+  ) {
     if (data.primaryContact && data.primaryContact.email) {
       this.sendEmail({
         ...email,

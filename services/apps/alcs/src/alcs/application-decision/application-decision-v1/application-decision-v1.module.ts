@@ -52,7 +52,7 @@ import { ApplicationDecisionV1Service } from './application-decision/application
       ApplicationSubmissionStatusType,
     ]),
     forwardRef(() => BoardModule),
-    ApplicationModule,
+    forwardRef(() => ApplicationModule),
     CardModule,
     DocumentModule,
     ApplicationSubmissionStatusModule,

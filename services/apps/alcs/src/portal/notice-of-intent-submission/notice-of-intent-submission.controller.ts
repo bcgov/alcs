@@ -20,6 +20,9 @@ import {
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { EmailService } from '../../providers/email/email.service';
+import { generateSUBMNoticeOfIntentHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { ParentType } from '../../common/dtos/base.dto';
 
 @Controller('notice-of-intent-submission')
 @UseGuards(PortalAuthGuard)
@@ -29,6 +32,7 @@ export class NoticeOfIntentSubmissionController {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentValidatorService: NoticeOfIntentSubmissionValidatorService,
+    private emailService: EmailService,
   ) {}
 
   @Get()
@@ -163,6 +167,32 @@ export class NoticeOfIntentSubmissionController {
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
       );
+
+      // TODO: Refactor and add unit test
+      const primaryContact = noticeOfIntentSubmission.owners?.find(
+        (owner) =>
+          owner.uuid === noticeOfIntentSubmission.primaryContactOwnerUuid,
+      );
+
+      const submissionGovernment = noticeOfIntentSubmission.localGovernmentUuid
+        ? await this.emailService.getSubmissionGovernmentOrFail(
+            noticeOfIntentSubmission,
+          )
+        : null;
+
+      if (primaryContact) {
+        await this.emailService.sendNoticeOfIntentStatusEmail({
+          generateStatusHtml: generateSUBMNoticeOfIntentHtml,
+          status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          noticeOfIntentSubmission,
+          government: submissionGovernment,
+          parentType: ParentType.NoticeOfIntent,
+          primaryContact,
+          ccGovernment: true,
+        });
+      }
+
+      debugger;
 
       const finalSubmission =
         await this.noticeOfIntentSubmissionService.getByUuid(
