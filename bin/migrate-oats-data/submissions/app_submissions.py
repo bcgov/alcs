@@ -35,17 +35,17 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts = 0
         successful_inserts_count = 0
-        last_application_id = 0
+        last_submission_id = 0
 
         with open(
             "submissions/sql/app_submission.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
-            application_sql = sql_file.read()
+            submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE acg.alr_application_id > {last_application_id} ORDER BY acg.alr_application_id;"
+                    f"{submission_sql} WHERE acg.alr_application_id > {last_submission_id} ORDER BY acg.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -53,20 +53,19 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    applications_to_be_inserted_count = len(rows)
+                    submissions_to_be_inserted_count = len(rows)
 
                     insert_app_sub_records(conn, batch_size, cursor, rows)
 
                     successful_inserts_count = (
-                        successful_inserts_count + applications_to_be_inserted_count
+                        successful_inserts_count + submissions_to_be_inserted_count
                     )
-                    last_application_id = dict(rows[-1])["alr_application_id"]
+                    last_submission_id = dict(rows[-1])["alr_application_id"]
 
                     print(
-                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_application_id}"
+                        f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_submission_id}"
                     )
                 except Exception as e:
-                    # this is NOT going to be caused by actual data insert failure. This code is only executed when the code error appears or connection to DB is lost
                     conn.rollback()
                     str_err = str(e)
                     trace_err = traceback.format_exc()
@@ -74,7 +73,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     print(trace_err)
                     log_end(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_inserts_count
-                    last_application_id = last_application_id + 1
+                    last_submission_id = last_submission_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
@@ -136,7 +135,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
     if len(other_data_list) > 0:
         execute_batch(
             cursor,
-            get_insert_query_for_other(),
+            get_insert_query("",""),
             other_data_list,
             page_size=batch_size,
         )
@@ -229,16 +228,6 @@ def get_insert_query_for_inc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
-
-
-def get_insert_query_for_other():
-    # leaving blank insert for now
-    unique_fields = ""
-    unique_values = ""
-    return get_insert_query(unique_fields,unique_values)
-
-
-
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
