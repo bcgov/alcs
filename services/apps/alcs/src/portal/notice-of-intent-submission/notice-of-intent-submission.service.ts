@@ -240,9 +240,8 @@ export class NoticeOfIntentSubmissionService {
           ...searchOptions,
           localGovernmentUuid: matchingLocalGovernment.uuid,
           isDraft: false,
-          submissionStatuses: {
-            effectiveDate: Not(IsNull()),
-            statusTypeCode: Not(NOI_SUBMISSION_STATUS.IN_PROGRESS),
+          noticeOfIntent: {
+            dateSubmittedToAlc: Not(IsNull()),
           },
         });
       }
