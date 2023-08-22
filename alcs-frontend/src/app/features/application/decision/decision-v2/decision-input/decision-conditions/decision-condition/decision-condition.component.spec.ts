@@ -15,6 +15,13 @@ describe('DecisionConditionComponent', () => {
 
     fixture = TestBed.createComponent(DecisionConditionComponent);
     component = fixture.componentInstance;
+    component.data = {
+      type: {
+        code: '',
+        label: '',
+        description: '',
+      },
+    };
     fixture.detectChanges();
   });
 

@@ -58,6 +58,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   showConditions = false;
   conditionsValid = true;
   componentsValid = true;
+  index = 1;
 
   fileNumber: string = '';
   uuid: string = '';
@@ -98,7 +99,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     isSubjectToConditions: new FormControl<string | undefined>(undefined, [Validators.required]),
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
     isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
-    daysHideFromPublic: new FormControl<string>('2', [Validators.required]),
     rescindedDate: new FormControl<Date | null>(null),
     rescindedComment: new FormControl<string | null>(null),
   });
@@ -128,6 +128,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private extractAndPopulateQueryParams() {
     const fileNumber = this.route.parent?.parent?.snapshot.paramMap.get('fileNumber');
     const uuid = this.route.snapshot.paramMap.get('uuid');
+    const index = this.route.snapshot.paramMap.get('index');
+    this.index = index ? parseInt(index) : 1;
 
     if (uuid) {
       this.uuid = uuid;
@@ -283,7 +285,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
       decisionDescription: existingDecision.decisionDescription,
       isStatsRequired: parseBooleanToString(existingDecision.isStatsRequired),
-      daysHideFromPublic: existingDecision.daysHideFromPublic?.toString() ?? '2',
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
       linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
@@ -417,7 +418,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isSubjectToConditions,
       decisionDescription,
       isStatsRequired,
-      daysHideFromPublic,
       rescindedDate,
       rescindedComment,
       linkedResolutionOutcome,
@@ -445,7 +445,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
       decisionDescription: decisionDescription,
       isStatsRequired: parseStringToBoolean(isStatsRequired),
-      daysHideFromPublic: daysHideFromPublic ? parseInt(daysHideFromPublic) : 2,
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
       decisionComponents: this.components,

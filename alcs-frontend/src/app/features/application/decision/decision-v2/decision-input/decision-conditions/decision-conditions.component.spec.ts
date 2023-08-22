@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatMenuModule } from '@angular/material/menu';
 import { createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -21,6 +22,7 @@ describe('DecisionConditionComponent', () => {
     mockDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     await TestBed.configureTestingModule({
+      imports: [MatMenuModule],
       providers: [
         {
           provide: ApplicationDecisionV2Service,
@@ -33,6 +35,15 @@ describe('DecisionConditionComponent', () => {
 
     fixture = TestBed.createComponent(DecisionConditionsComponent);
     component = fixture.componentInstance;
+    component.codes = {
+      ceoCriterion: [],
+      decisionComponentTypes: [],
+      decisionMakers: [],
+      linkedResolutionOutcomeTypes: [],
+      naruSubtypes: [],
+      outcomes: [],
+      decisionConditionTypes: [],
+    };
     fixture.detectChanges();
   });
 

@@ -1,26 +1,38 @@
 <section>
-  <h5>Decision Conditions</h5>
+  <div class="split">
+    <h3>Conditions</h3>
+    <div>
+      <button
+        [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
+        type="button"
+        [matMenuTriggerFor]="decisionComponentMenu"
+        mat-flat-button
+        color="primary"
+      >
+        Add Condition ▾
+      </button>
+      <app-error-message *ngIf="showError"></app-error-message>
+    </div>
+  </div>
+
+  <mat-menu xPosition="before" #decisionComponentMenu="matMenu">
+    <button
+      *ngFor="let conditionType of codes.decisionConditionTypes"
+      mat-menu-item
+      (click)="onAddNewCondition(conditionType.code)"
+    >
+      <div class="board-menu-item">
+        <span>{{ conditionType.label }}</span>
+      </div>
+    </button>
+  </mat-menu>
+
   <div class="condition" *ngFor="let condition of mappedConditions; let index = index; trackBy: trackByFn">
     <app-decision-condition
       [(data)]="mappedConditions[index]"
       (dataChange)="onChanges()"
-      [codes]="codes.decisionConditionTypes"
+      (remove)="onRemoveCondition(index)"
       [selectableComponents]="selectableComponents"
     ></app-decision-condition>
-    <button class="remove-button" type="button" (click)="onRemoveCondition(index)" mat-stroked-button color="warn">
-      Remove Condition
-    </button>
-  </div>
-  <div class="buttons">
-    <button
-      [ngClass]="{ 'error-field-outlined ng-invalid': showError }"
-      type="button"
-      (click)="onAddNewCondition()"
-      mat-stroked-button
-      color="primary"
-    >
-      Add New Condition
-    </button>
-    <app-error-message *ngIf="showError"></app-error-message>
   </div>
 </section>

@@ -86,8 +86,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       });
   }
 
-  onAddNewCondition() {
-    this.mappedConditions.push({
+  onAddNewCondition(typeCode: string) {
+    const matchingType = this.codes.decisionConditionTypes.find((code) => code.code === typeCode);
+    this.mappedConditions.unshift({
+      type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
     });
     this.conditionsChange.emit({

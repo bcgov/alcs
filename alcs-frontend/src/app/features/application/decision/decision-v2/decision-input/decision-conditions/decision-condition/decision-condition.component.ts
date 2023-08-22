@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApplicationDecisionConditionTypeDto } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { parseStringToBoolean } from '../../../../../../../shared/utils/boolean-helper';
 import { SelectableComponent, TempApplicationDecisionConditionDto } from '../decision-conditions.component';
 
@@ -12,11 +11,10 @@ import { SelectableComponent, TempApplicationDecisionConditionDto } from '../dec
 export class DecisionConditionComponent implements OnInit, OnChanges {
   @Input() data!: TempApplicationDecisionConditionDto;
   @Output() dataChange = new EventEmitter<TempApplicationDecisionConditionDto>();
+  @Output() remove = new EventEmitter<void>();
 
-  @Input() codes!: ApplicationDecisionConditionTypeDto[];
   @Input() selectableComponents: SelectableComponent[] = [];
 
-  type = new FormControl<string | null>(null, [Validators.required]);
   componentsToCondition = new FormControl<string[] | null>(null, [Validators.required]);
   approvalDependant = new FormControl<string | null>(null, [Validators.required]);
 
@@ -25,7 +23,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
   description = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
-    type: this.type,
     approvalDependant: this.approvalDependant,
     securityAmount: this.securityAmount,
     administrativeFee: this.administrativeFee,
@@ -51,7 +48,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
       this.componentsToCondition.setValue(selectedOptions.map((e) => e.tempId) ?? null);
 
       this.form.patchValue({
-        type: this.data.type?.code ?? null,
         approvalDependant,
         securityAmount: this.data.securityAmount?.toString() ?? null,
         administrativeFee: this.data.administrativeFee?.toString() ?? null,
@@ -60,8 +56,6 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
     }
 
     this.form.valueChanges.subscribe((changes) => {
-      const matchingType = this.codes.find((code) => code.code === this.type.value);
-
       const selectedOptions = this.selectableComponents
         .filter((component) => this.componentsToCondition.value?.includes(component.tempId))
         .map((e) => ({
@@ -71,9 +65,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         }));
 
       this.dataChange.emit({
+        type: this.data.type,
         tempUuid: this.data.tempUuid,
         uuid: this.data.uuid,
-        type: matchingType ?? null,
         approvalDependant: parseStringToBoolean(this.approvalDependant.value),
         securityAmount: this.securityAmount.value !== null ? parseFloat(this.securityAmount.value) : undefined,
         administrativeFee: this.administrativeFee.value !== null ? parseFloat(this.administrativeFee.value) : undefined,
@@ -96,5 +90,9 @@ export class DecisionConditionComponent implements OnInit, OnChanges {
         this.componentsToCondition.setValue(null);
       }
     }
+  }
+
+  onRemove() {
+    this.remove.emit();
   }
 }
