@@ -145,7 +145,7 @@ form {
   }
 
   .error-field-outlined.ng-invalid {
-    border-color: colors.$error-color !important;
+    border: 1px solid colors.$error-color !important;
 
     .mat-button-toggle {
       border-color: colors.$error-color;
@@ -154,7 +154,7 @@ form {
 
     &.upload-button {
       border: 2px solid colors.$error-color;
-      margin-bottom: 0px !important;
+      margin-bottom: 0 !important;
     }
   }
 

@@ -8,6 +8,7 @@ import {
   ApplicationDecisionWithLinkedResolutionDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionsComponent } from './decision-conditions.component';
 
@@ -27,6 +28,10 @@ describe('DecisionConditionComponent', () => {
         {
           provide: ApplicationDecisionV2Service,
           useValue: mockDecisionService,
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
       ],
       declarations: [DecisionConditionsComponent],

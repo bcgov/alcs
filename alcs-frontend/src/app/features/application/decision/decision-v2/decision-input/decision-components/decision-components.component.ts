@@ -20,6 +20,7 @@ import {
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionComponentComponent } from './decision-component/decision-component.component';
 
 export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisabled: boolean; uiCode: string };
@@ -49,7 +50,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   constructor(
     private toastService: ToastService,
     private applicationDetailService: ApplicationDetailService,
-    private submissionService: ApplicationSubmissionService
+    private submissionService: ApplicationSubmissionService,
+    private confirmationDialogService: ConfirmationDialogService
   ) {}
 
   ngOnInit(): void {
@@ -77,30 +79,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  private async prepareDecisionComponentTypes(codes: DecisionCodesDto) {
-    const decisionComponentTypes: DecisionComponentTypeMenuItem[] = codes.decisionComponentTypes.map((e) => ({
-      ...e,
-      isDisabled: false,
-      uiCode: e.code,
-    }));
-
-    const mappedProposalType = decisionComponentTypes.find((e) => e.code === this.application.type.code);
-
-    if (mappedProposalType) {
-      const proposalDecisionType: DecisionComponentTypeMenuItem = {
-        isDisabled: false,
-        uiCode: 'COPY',
-        code: mappedProposalType!.code,
-        label: `Copy Proposal - ${mappedProposalType?.label}`,
-        description: mappedProposalType?.description ?? '',
-      };
-      decisionComponentTypes.unshift(proposalDecisionType);
-    }
-    this.decisionComponentTypes = decisionComponentTypes;
-
-    this.updateComponentsMenuItems();
   }
 
   onAddNewComponent(uiCode: string, typeCode: string) {
@@ -180,6 +158,68 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     this.updateComponentsMenuItems();
   }
 
+  onRemove(index: number) {
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to remove this component?',
+      })
+      .subscribe((didConfirm) => {
+        if (didConfirm) {
+          this.components.splice(index, 1);
+          this.updateComponentsMenuItems();
+        }
+      });
+  }
+
+  trackByFn(index: any, item: DecisionComponentDto) {
+    return item.applicationDecisionComponentTypeCode;
+  }
+
+  onChange() {
+    const isValid =
+      this.components.length > 0 && (!this.childComponents || this.childComponents?.length < 1)
+        ? false
+        : this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true);
+
+    this.componentsChange.emit({
+      components: this.components,
+      isValid,
+    });
+  }
+
+  onValidate() {
+    this.childComponents.forEach((component) => {
+      component.form.markAllAsTouched();
+      if ('markTouched' in component) {
+        component.markTouched();
+      }
+    });
+  }
+
+  private async prepareDecisionComponentTypes(codes: DecisionCodesDto) {
+    const decisionComponentTypes: DecisionComponentTypeMenuItem[] = codes.decisionComponentTypes.map((e) => ({
+      ...e,
+      isDisabled: false,
+      uiCode: e.code,
+    }));
+
+    const mappedProposalType = decisionComponentTypes.find((e) => e.code === this.application.type.code);
+
+    if (mappedProposalType) {
+      const proposalDecisionType: DecisionComponentTypeMenuItem = {
+        isDisabled: false,
+        uiCode: 'COPY',
+        code: mappedProposalType!.code,
+        label: `Copy Proposal - ${mappedProposalType?.label}`,
+        description: mappedProposalType?.description ?? '',
+      };
+      decisionComponentTypes.unshift(proposalDecisionType);
+    }
+    this.decisionComponentTypes = decisionComponentTypes;
+
+    this.updateComponentsMenuItems();
+  }
+
   private patchNfuFields(component: DecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
@@ -230,35 +270,5 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       ...e,
       isDisabled: this.components.some((c) => c.applicationDecisionComponentTypeCode === e.code),
     }));
-  }
-
-  onRemove(index: number) {
-    this.components.splice(index, 1);
-    this.updateComponentsMenuItems();
-  }
-
-  trackByFn(index: any, item: DecisionComponentDto) {
-    return item.applicationDecisionComponentTypeCode;
-  }
-
-  onChange() {
-    const isValid =
-      this.components.length > 0 && (!this.childComponents || this.childComponents?.length < 1)
-        ? false
-        : this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true);
-
-    this.componentsChange.emit({
-      components: this.components,
-      isValid,
-    });
-  }
-
-  onValidate() {
-    this.childComponents.forEach((component) => {
-      component.form.markAllAsTouched();
-      if ('markTouched' in component) {
-        component.markTouched();
-      }
-    });
   }
 }
