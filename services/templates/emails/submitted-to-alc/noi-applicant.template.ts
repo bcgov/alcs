@@ -98,7 +98,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBMNoticeOfIntentHtml = (
+export const generateSUBMNoiApplicantHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

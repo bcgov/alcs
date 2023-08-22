@@ -21,7 +21,10 @@ import {
 } from './notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 import { EmailService } from '../../providers/email/email.service';
-import { generateSUBMNoticeOfIntentHtml } from '../../../../../templates/emails/submitted-to-alc';
+import {
+  generateSUBMNoiApplicantHtml,
+  generateSUBMNoiGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
 import { ParentType } from '../../common/dtos/base.dto';
 
 @Controller('notice-of-intent-submission')
@@ -182,13 +185,22 @@ export class NoticeOfIntentSubmissionController {
 
       if (primaryContact) {
         await this.emailService.sendNoticeOfIntentStatusEmail({
-          generateStatusHtml: generateSUBMNoticeOfIntentHtml,
+          generateStatusHtml: generateSUBMNoiApplicantHtml,
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
           government: submissionGovernment,
           parentType: ParentType.NoticeOfIntent,
           primaryContact,
-          ccGovernment: true,
+        });
+      }
+
+      if (submissionGovernment) {
+        await this.emailService.sendNoticeOfIntentStatusEmail({
+          generateStatusHtml: generateSUBMNoiGovernmentHtml,
+          status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          noticeOfIntentSubmission,
+          government: submissionGovernment,
+          parentType: ParentType.NoticeOfIntent,
         });
       }
 
