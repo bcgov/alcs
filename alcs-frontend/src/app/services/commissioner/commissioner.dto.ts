@@ -12,4 +12,5 @@ export interface CommissionerApplicationDto {
   localGovernment: ApplicationLocalGovernmentDto;
   hasRecons: boolean;
   hasModifications: boolean;
+  legacyId?: string;
 }
