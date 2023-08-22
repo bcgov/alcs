@@ -343,30 +343,6 @@ export class ApplicationSubmissionService {
       },
     });
 
-    // const newSubmQuery = await this.applicationSubmissionStatusRepository
-    //   .createQueryBuilder('apsst')
-    //   .select('apsst.submission_uuid')
-    //   // .distinctOn(['apsst.submission_uuid'])
-    //   .where('apsst.status_type_code IN (:...statuses)', {
-    //     statuses: ['SUBG', 'SUBM'],
-    //   })
-    //   .andWhere('apsst.effective_date IS NOT NULL')
-    //   // .groupBy('apsst.submission_uuid')
-    //   // .addFrom(ApplicationSubmission, 'aps')
-    //   // .leftJoin(User, 'us', 'us.uuid = aps.uuid')
-    //   // .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
-    //   // .where('aps.isDraft=False')
-    //   // .andWhere('(us.bceid_business_guid = :bceidUuid or lg.uuid=:bceidUuid)', {
-    //   //   bceidUuid: localGovernment.bceidBusinessGuid,
-    //   // })
-    //   // .select('*')
-    //   .getQuery();
-
-    // const resQuery = await this.applicationSubmissionRepository
-    //   .createQueryBuilder('aps')
-    //   .subQuery();
-    // // console.log('query', newSubmQuery);
-
     const submissionsQuery = await this.applicationSubmissionRepository
       .createQueryBuilder('aps')
       .innerJoinAndSelect(
@@ -396,17 +372,16 @@ export class ApplicationSubmissionService {
           lgUuid: localGovernment.uuid,
         },
       )
-      .relation(ApplicationSubmissionToSubmissionStatus, 'submissionStatuses')
-      .loadMany();
-    // .relation(User, 'createdBy')
+      .loadAllRelationIds({
+        relations: ['application_submission_to_submission_status'],
+      })
+      .getMany();
 
-    // .getMany();
-
-    // .execute();
     console.log('submissionsQuery', submissionsQuery);
 
     return submissionsQuery;
 
+    // working without typeorm
     // return submissions.filter(
     //   (s) =>
     //     s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
