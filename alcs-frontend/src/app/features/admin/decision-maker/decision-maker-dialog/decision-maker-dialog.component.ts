@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DecisionMakerDto } from '../../../../services/application/decision/application-decision-v1/application-decision.dto';
-import { DecisionMakerService } from '../../../../services/decision-maker/decision-maker.service';
+import { ApplicationDecisionMakerService } from '../../../../services/application/application-decision-maker/application-decision-maker.service';
 
 @Component({
   selector: 'app-decision-maker-dialog',
@@ -20,7 +20,7 @@ export class DecisionMakerDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DecisionMakerDto | undefined,
     private dialogRef: MatDialogRef<DecisionMakerDialogComponent>,
-    private decisionMakerService: DecisionMakerService
+    private decisionMakerService: ApplicationDecisionMakerService
   ) {
     if (data) {
       this.description = data.description;

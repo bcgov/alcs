@@ -1,0 +1,242 @@
+<div class="split">
+  <div><h1>Decisions</h1></div>
+  <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
+    <button [disabled]="isPaused || isDraftExists" mat-flat-button color="primary" (click)="onCreate()">
+      + Decision Draft
+    </button>
+  </div>
+</div>
+<section class="no-decisions" *ngIf="!decisions.length">
+  <div>No Decisions</div>
+</section>
+<section class="decision-container" *ngFor="let decision of decisions; let i = index">
+  <div class="loading-overlay" *ngIf="decision.loading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div
+    class="decision"
+    [ngClass]="{
+      draft: decision.isDraft
+    }"
+    [id]="decision.uuid"
+  >
+    <div *ngIf="decision.modifiedBy?.length" class="post-decisions body-text">
+      <div>
+        <strong>Modified&nbsp;By:&nbsp;</strong>
+        {{ decision.modifiedBy?.join(', ') }}
+        <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+      </div>
+    </div>
+
+    <div class="decision-padding">
+      <div class="header">
+        <div class="title">
+          <h3>Decision #{{ i }}</h3>
+          <div *ngIf="i === decisions.length - 1 && noticeOfIntent">
+            <span class="days" matTooltip="Active Days">
+              <mat-icon class="icon">calendar_month</mat-icon>
+              {{ noticeOfIntent.activeDays }}
+            </span>
+            <span class="days" matTooltip="Paused Days">
+              <mat-icon class="icon">pause</mat-icon>
+              {{ noticeOfIntent.pausedDays }}
+            </span>
+          </div>
+
+          <ng-container *ngIf="!!decision.modifies">
+            <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
+          </ng-container>
+          <h5>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</h5>
+          <ng-container *ngIf="decision.isDraft">
+            <app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
+          </ng-container>
+          <ng-container *ngIf="!decision.isDraft">
+            <app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
+          </ng-container>
+        </div>
+        <ng-container *ngIf="decision.isDraft">
+          <button mat-flat-button color="primary" (click)="onEdit(decision)">Edit Draft</button>
+        </ng-container>
+
+        <div
+          *ngIf="!decision.isDraft"
+          matTooltip="{{ disabledCreateBtnTooltip }}"
+          [matTooltipDisabled]="!isPaused && !isDraftExists"
+        >
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="onRevertToDraft(decision.uuid)"
+            [disabled]="isDraftExists"
+          >
+            Revert to draft
+          </button>
+        </div>
+      </div>
+
+      <h4>Resolution</h4>
+      <section class="decision-section-no-title">
+        <div class="grid-2">
+          <div>
+            <div class="subheading2">Decision Date</div>
+            {{ decision.date | momentFormat }}
+            <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
+          </div>
+          <div>
+            <div class="subheading2">Decision Maker</div>
+            {{ decision.decisionMaker }}
+            <app-no-data *ngIf="decision.decisionMaker === null || decision.decisionMaker === undefined"></app-no-data>
+          </div>
+
+          <div>
+            <div class="subheading2">Decision Outcome</div>
+            {{ decision.outcome.label }} {{ decision.isSubjectToConditions ? '- Subject to Conditions' : '' }}
+          </div>
+
+          <div class="full-width">
+            <div class="subheading2">Decision Description</div>
+            {{ decision.decisionDescription }}
+            <app-no-data
+              *ngIf="decision.decisionDescription === null || decision.decisionDescription === undefined"
+            ></app-no-data>
+          </div>
+
+          <div>
+            <div class="subheading2">Stats Required</div>
+            <app-inline-boolean
+              [selectedValue]="decision.isStatsRequired ?? null"
+              (save)="onStatsRequiredUpdate(decision.uuid, $event)"
+            ></app-inline-boolean>
+          </div>
+
+          <div *ngIf="decision.outcome?.code === 'RESC'">
+            <div class="subheading2">Rescinded Date</div>
+            <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>
+            <app-no-data *ngIf="decision.rescindedDate === null || decision.rescindedDate === undefined"></app-no-data>
+          </div>
+
+          <div *ngIf="decision.outcome?.code === 'RESC'">
+            <div class="subheading2">Rescinded Comment</div>
+            {{ decision.rescindedComment }}
+            <app-no-data *ngIf="!decision.rescindedComment"></app-no-data>
+          </div>
+        </div>
+      </section>
+
+      <h4>Documents</h4>
+      <!--      <section class="decision-section">-->
+      <!--        <noi-decision-documents [editable]="false" [loadData]="false" [decision]="decision"></noi-decision-documents>-->
+      <!--      </section>-->
+
+      <!-- Components -->
+      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
+        <h4>Components</h4>
+        <section class="decision-section">
+          <app-no-data
+            *ngIf="decision.components.length < 1"
+            text="No decision components are added. Edit draft to add decision components."
+          ></app-no-data>
+
+          <ng-container *ngFor="let component of decision.components; let index = index">
+            <h5>{{ component.noticeOfIntentDecisionComponentType?.label }}</h5>
+            <div>
+              <app-pofo
+                class="grid-2"
+                *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
+                [component]="component"
+              >
+                <app-basic
+                  [component]="component"
+                  [fillRow]="true"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                ></app-basic
+              ></app-pofo>
+
+              <app-roso
+                class="grid-2"
+                *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
+                [component]="component"
+              >
+                <app-basic
+                  [component]="component"
+                  [fillRow]="true"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                ></app-basic
+              ></app-roso>
+
+              <app-pfrs
+                class="grid-2"
+                *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
+                [component]="component"
+              >
+                <app-basic
+                  [component]="component"
+                  [fillRow]="true"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
+                ></app-basic
+              ></app-pfrs>
+
+              <div class="grid-2">
+                <div>
+                  <div class="subheading2">Agricultural Capability</div>
+                  {{ component.agCap }}
+                  <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
+                </div>
+                <div>
+                  <div class="subheading2">Agricultural Capability Source</div>
+                  {{ component.agCapSource }}
+                  <app-no-data
+                    *ngIf="component.agCapSource === null || component.agCapSource === undefined"
+                  ></app-no-data>
+                </div>
+
+                <div *ngIf="component.agCapMap">
+                  <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
+                  {{ component.agCapMap }}
+                  <app-no-data *ngIf="component.agCapMap === null || component.agCapMap === undefined"></app-no-data>
+                </div>
+                <div *ngIf="component.agCapConsultant">
+                  <div class="subheading2">Agricultural Capability Consultant</div>
+                  {{ component.agCapConsultant }}
+                  <app-no-data
+                    *ngIf="component.agCapConsultant === null || component.agCapConsultant === undefined"
+                  ></app-no-data>
+                </div>
+              </div>
+            </div>
+            <hr *ngIf="index !== decision.components.length - 1" />
+          </ng-container>
+        </section>
+      </ng-container>
+
+      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
+        <h4>Conditions</h4>
+        <section class="decision-section">
+          <div>
+            <a [routerLink]="['/notice-of-intent/' + fileNumber + '/decision/conditions/' + decision.uuid]"
+              >View Conditions
+              <mat-icon class="conditions-link-icon">open_in_new</mat-icon>
+            </a>
+          </div>
+        </section>
+      </ng-container>
+
+      <h4>Audit</h4>
+      <section class="decision-section-no-title">
+        <div class="grid-2">
+          <div>
+            <div class="subheading2">Audit Date</div>
+            <span *ngIf="decision.auditDate">{{ decision.auditDate | momentFormat }}</span>
+            <span *ngIf="!decision.auditDate">
+              <app-inline-datepicker (save)="onSaveAuditDate(decision.uuid, $event)"></app-inline-datepicker>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <div class="right" *ngIf="decision.isDraft">
+        <button mat-stroked-button color="warn" (click)="deleteDecision(decision.uuid)">Delete draft</button>
+      </div>
+    </div>
+  </div>
+</section>

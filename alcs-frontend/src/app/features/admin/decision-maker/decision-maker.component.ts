@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { DecisionMakerDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
-import { DecisionMakerService } from '../../../services/decision-maker/decision-maker.service';
+import { ApplicationDecisionMakerService } from '../../../services/application/application-decision-maker/application-decision-maker.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionMakerDialogComponent } from './decision-maker-dialog/decision-maker-dialog.component';
 
@@ -18,7 +18,7 @@ export class DecisionMakerComponent implements OnInit {
   displayedColumns: string[] = ['label', 'description', 'code', 'isActive', 'actions'];
 
   constructor(
-    private decisionMakerService: DecisionMakerService,
+    private decisionMakerService: ApplicationDecisionMakerService,
     public dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService
   ) {}

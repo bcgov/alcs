@@ -1,0 +1,14 @@
+form {
+  margin-top: 12px;
+}
+
+.condition {
+  display: grid;
+  grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+
+  .condition-full-width {
+    grid-column: 1/3;
+  }
+}

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDecisionComponentLotService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component-lot/application-decision-component-lot.service';
 import { ApplicationDecisionComponentService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 import { SubdComponent } from './subd.component';
 
@@ -20,15 +20,15 @@ describe('PfrsComponent', () => {
       providers: [
         {
           provide: ApplicationDecisionComponentLotService,
-          useValue: mockComponentLotService
-        }
+          useValue: mockComponentLotService,
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SubdComponent);
     component = fixture.componentInstance;
-    component.component = {} as DecisionComponentDto;
+    component.component = {} as ApplicationDecisionComponentDto;
     fixture.detectChanges();
   });
 

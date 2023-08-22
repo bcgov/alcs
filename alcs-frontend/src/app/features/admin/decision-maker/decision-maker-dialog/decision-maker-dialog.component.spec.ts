@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DecisionMakerService } from '../../../../services/decision-maker/decision-maker.service';
+import { ApplicationDecisionMakerService } from '../../../../services/application/application-decision-maker/application-decision-maker.service';
 
 import { DecisionMakerDialogComponent } from './decision-maker-dialog.component';
 
@@ -18,7 +18,7 @@ describe('DecisionMakerDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: undefined },
         { provide: MatDialogRef, useValue: {} },
         {
-          provide: DecisionMakerService,
+          provide: ApplicationDecisionMakerService,
           useValue: {},
         },
       ],

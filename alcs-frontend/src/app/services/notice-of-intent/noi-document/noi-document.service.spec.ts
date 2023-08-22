@@ -7,7 +7,7 @@ import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../shared/document/documen
 import { ToastService } from '../../toast/toast.service';
 import { NoiDocumentService } from './noi-document.service';
 
-describe('ApplicationDocumentService', () => {
+describe('NoiDocumentService', () => {
   let service: NoiDocumentService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;

@@ -13,8 +13,8 @@ import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
@@ -32,8 +32,8 @@ export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid:
 export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() codes!: DecisionCodesDto;
-  @Input() components: DecisionComponentDto[] = [];
+  @Input() codes!: ApplicationDecisionCodesDto;
+  @Input() components: ApplicationDecisionComponentDto[] = [];
   @Input() conditions: ApplicationDecisionConditionDto[] = [];
   @Input() showError = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
@@ -172,7 +172,7 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
 
   mapComponents(
     decisionUuid: string,
-    components: DecisionComponentDto[],
+    components: ApplicationDecisionComponentDto[],
     decisionNumber: number | null,
     decisionYear: number | null
   ) {

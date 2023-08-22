@@ -5,7 +5,7 @@ import { ApplicationDecisionConditionService } from '../../../../../services/app
 import {
   ApplicationDecisionConditionToComponentPlanNumberDto,
   APPLICATION_DECISION_COMPONENT_TYPE,
-  DecisionComponentDto,
+  ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import {
@@ -44,7 +44,7 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   isReadMoreVisible = false;
   conditionStatus: string = '';
   isRequireSurveyPlan = false;
-  subdComponent?: DecisionComponentDto;
+  subdComponent?: ApplicationDecisionComponentDto;
   planNumbers: ApplicationDecisionConditionToComponentPlanNumberDto[] = [];
 
   constructor(

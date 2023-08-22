@@ -63,16 +63,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           ),
         ),
         forMember(
-          (ad) => ad.documents,
-          mapFrom((a) =>
-            this.mapper.mapArray(
-              a.documents || [],
-              ApplicationDecisionDocument,
-              DecisionDocumentDto,
-            ),
-          ),
-        ),
-        forMember(
           (a) => a.reconsiders,
           mapFrom((dec) =>
             dec.reconsiders
@@ -167,6 +157,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionOutcomeCode,
         ApplicationDecisionOutcomeCodeDto,
       );
+
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
       createMap(
         mapper,

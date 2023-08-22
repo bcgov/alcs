@@ -16,8 +16,8 @@ import {
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -70,12 +70,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
-  codes?: DecisionCodesDto;
+  codes?: ApplicationDecisionCodesDto;
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
-  components: DecisionComponentDto[] = [];
+  components: ApplicationDecisionComponentDto[] = [];
   conditions: ApplicationDecisionConditionDto[] = [];
   conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
 
@@ -589,7 +589,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {
+  onComponentChange($event: { components: ApplicationDecisionComponentDto[]; isValid: boolean }) {
     this.components = Array.from($event.components);
     this.componentsValid = $event.isValid;
   }

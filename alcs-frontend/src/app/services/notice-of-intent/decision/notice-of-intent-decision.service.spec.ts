@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
 import { NoticeOfIntentDecisionService } from './notice-of-intent-decision.service';
 
-describe('ApplicationMeetingService', () => {
+describe('NoticeOfIntentDecisionService', () => {
   let service: NoticeOfIntentDecisionService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
@@ -38,7 +38,7 @@ describe('ApplicationMeetingService', () => {
     httpClient.get.mockReturnValue(
       of([
         {
-          noticeOfIntentFileNumber: '1',
+          fileNumber: '1',
         },
       ])
     );
@@ -46,7 +46,7 @@ describe('ApplicationMeetingService', () => {
     const res = await service.fetchByFileNumber('1');
 
     expect(res.length).toEqual(1);
-    expect(res[0].noticeOfIntentFileNumber).toEqual('1');
+    expect(res[0].fileNumber).toEqual('1');
   });
 
   it('should show a toast message if fetch fails', async () => {
@@ -65,11 +65,13 @@ describe('ApplicationMeetingService', () => {
   it('should make an http patch and show a success toast when updating', async () => {
     httpClient.patch.mockReturnValue(
       of({
-        applicationFileNumber: '1',
+        fileNumber: '1',
       })
     );
 
-    await service.update('1', {});
+    await service.update('1', {
+      isDraft: false,
+    });
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
     expect(toastService.showSuccessToast).toHaveBeenCalledTimes(1);
@@ -95,12 +97,12 @@ describe('ApplicationMeetingService', () => {
   it('should make an http post and show a success toast when creating', async () => {
     httpClient.post.mockReturnValue(
       of({
-        applicationFileNumber: '1',
+        fileNumber: '1',
       })
     );
 
     await service.create({
-      applicationFileNumber: '',
+      fileNumber: '',
       date: 0,
       outcomeCode: '',
       resolutionNumber: 0,
@@ -121,7 +123,7 @@ describe('ApplicationMeetingService', () => {
 
     try {
       await service.create({
-        applicationFileNumber: '',
+        fileNumber: '',
         date: 0,
         outcomeCode: '',
         resolutionNumber: 0,
@@ -139,7 +141,7 @@ describe('ApplicationMeetingService', () => {
   it('should make an http delete and show a success toast', async () => {
     httpClient.delete.mockReturnValue(
       of({
-        applicationFileNumber: '1',
+        fileNumber: '1',
       })
     );
 
@@ -179,7 +181,7 @@ describe('ApplicationMeetingService', () => {
   it('should make an http delete when deleting a file', async () => {
     httpClient.delete.mockReturnValue(
       of({
-        applicationFileNumber: '1',
+        fileNumber: '1',
       })
     );
 

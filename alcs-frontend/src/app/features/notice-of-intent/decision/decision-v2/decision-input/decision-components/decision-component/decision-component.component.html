@@ -1,0 +1,57 @@
+<div class="split">
+  <h5>{{ data.noticeOfIntentDecisionComponentType?.label }}</h5>
+  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+</div>
+
+<form [formGroup]="form" class="decision-component-form">
+  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
+    <app-pofo-input [form]="form"></app-pofo-input>
+  </div>
+
+  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">
+    <app-roso-input [form]="form"></app-roso-input>
+  </div>
+  <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS" class="row-no-flex">
+    <app-pfrs-input [form]="form"></app-pfrs-input>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="agCapOptions"
+        formControlName="agCap"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="Ag Cap*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <div>
+      <ng-select
+        appearance="outline"
+        [items]="agCapSourceOptions"
+        formControlName="agCapSource"
+        appendTo="body"
+        bindLabel="label"
+        bindValue="value"
+        required
+        placeholder="Ag Cap Source*"
+        [clearable]="false"
+      ></ng-select>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ag Cap Map</mat-label>
+      <input matInput formControlName="agCapMap" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ag Cap Consultant</mat-label>
+      <input matInput formControlName="agCapConsultant" />
+    </mat-form-field>
+  </div>
+</form>
