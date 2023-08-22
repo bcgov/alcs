@@ -11,6 +11,7 @@ import { ApplicationDocumentService } from '../../alcs/application/application-d
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
@@ -64,6 +65,8 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
+    @InjectRepository(ApplicationSubmissionToSubmissionStatus)
+    private applicationSubmissionStatusRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
     @InjectRepository(ApplicationSubmissionStatusType)
     private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectRepository(NaruSubtype)
@@ -340,13 +343,85 @@ export class ApplicationSubmissionService {
       },
     });
 
-    return submissions.filter(
-      (s) =>
-        s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
-        LG_VISIBLE_STATUSES.includes(
-          s.status?.statusTypeCode as SUBMISSION_STATUS,
-        ),
-    );
+    // const newSubmQuery = await this.applicationSubmissionStatusRepository
+    //   .createQueryBuilder('apsst')
+    //   .select('apsst.submission_uuid')
+    //   // .distinctOn(['apsst.submission_uuid'])
+    //   .where('apsst.status_type_code IN (:...statuses)', {
+    //     statuses: ['SUBG', 'SUBM'],
+    //   })
+    //   .andWhere('apsst.effective_date IS NOT NULL')
+    //   // .groupBy('apsst.submission_uuid')
+    //   // .addFrom(ApplicationSubmission, 'aps')
+    //   // .leftJoin(User, 'us', 'us.uuid = aps.uuid')
+    //   // .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
+    //   // .where('aps.isDraft=False')
+    //   // .andWhere('(us.bceid_business_guid = :bceidUuid or lg.uuid=:bceidUuid)', {
+    //   //   bceidUuid: localGovernment.bceidBusinessGuid,
+    //   // })
+    //   // .select('*')
+    //   .getQuery();
+
+    // const resQuery = await this.applicationSubmissionRepository
+    //   .createQueryBuilder('aps')
+    //   .subQuery();
+    // // console.log('query', newSubmQuery);
+
+    const submissionsQuery = await this.applicationSubmissionRepository
+      .createQueryBuilder('aps')
+      .innerJoinAndSelect(
+        (sq) =>
+          sq
+            .select('apsst.submission_uuid')
+            .from(ApplicationSubmissionToSubmissionStatus, 'apsst')
+            .where('apsst.status_type_code IN (:...statuses)', {
+              statuses: ['SUBG', 'SUBM'],
+            })
+            .andWhere('apsst.effective_date IS NOT NULL')
+            .groupBy('apsst.submission_uuid'),
+        'fapsst',
+        'aps.uuid = fapsst.submission_uuid',
+      )
+      .leftJoinAndSelect(
+        User,
+        'createdBy',
+        'createdBy.uuid = aps.created_by_uuid',
+      )
+      .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
+      .where('aps.isDraft=False')
+      .andWhere(
+        '(createdBy.bceid_business_guid = :bceidGuid or lg.uuid=:lgUuid)',
+        {
+          bceidGuid: localGovernment.bceidBusinessGuid,
+          lgUuid: localGovernment.uuid,
+        },
+      )
+      .relation(ApplicationSubmissionToSubmissionStatus, 'submissionStatuses')
+      .loadMany();
+    // .relation(User, 'createdBy')
+
+    // .getMany();
+
+    // .execute();
+    console.log('submissionsQuery', submissionsQuery);
+
+    return submissionsQuery;
+
+    // return submissions.filter(
+    //   (s) =>
+    //     s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
+    //     (LG_VISIBLE_STATUSES.includes(
+    //       s.status?.statusTypeCode as SUBMISSION_STATUS,
+    //     ) &&
+    //       s.submissionStatuses.some(
+    //         (status) =>
+    //           [
+    //             SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+    //             SUBMISSION_STATUS.SUBMITTED_TO_LG,
+    //           ].includes(status.statusTypeCode as SUBMISSION_STATUS) &&
+    //           status.effectiveDate !== null,
+    //       )),
+    // );
   }
 
   async getForGovernmentByUuid(uuid: string, localGovernment: LocalGovernment) {
