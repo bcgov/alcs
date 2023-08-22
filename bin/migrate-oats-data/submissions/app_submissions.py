@@ -34,7 +34,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         print("- Total Application Submission data to insert: ", count_total)
 
         failed_inserts = 0
-        successful_updates_count = 0
+        successful_inserts_count = 0
         last_application_id = 0
 
         with open(
@@ -53,17 +53,17 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    applications_to_be_updated_count = len(rows)
+                    applications_to_be_inserted_count = len(rows)
 
-                    update_app_sub_records(conn, batch_size, cursor, rows)
+                    insert_app_sub_records(conn, batch_size, cursor, rows)
 
-                    successful_updates_count = (
-                        successful_updates_count + applications_to_be_updated_count
+                    successful_inserts_count = (
+                        successful_inserts_count + applications_to_be_inserted_count
                     )
                     last_application_id = dict(rows[-1])["alr_application_id"]
 
                     print(
-                        f"retrieved/updated items count: {applications_to_be_updated_count}; total successfully updated submissions so far {successful_updates_count}; last updated application_id: {last_application_id}"
+                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_application_id}"
                     )
                 except Exception as e:
                     # this is NOT going to be caused by actual data insert failure. This code is only executed when the code error appears or connection to DB is lost
@@ -73,14 +73,14 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     print(str_err)
                     print(trace_err)
                     log_end(etl_name, str_err, trace_err)
-                    failed_inserts = count_total - successful_updates_count
+                    failed_inserts = count_total - successful_inserts_count
                     last_application_id = last_application_id + 1
 
-    print("Total amount of successful updates:", successful_updates_count)
-    print("Total failed updates:", failed_inserts)
+    print("Total amount of successful inserts:", successful_inserts_count)
+    print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def update_app_sub_records(conn, batch_size, cursor, rows):
+def insert_app_sub_records(conn, batch_size, cursor, rows):
     """
     Function to insert submission records in batches.
 
@@ -88,7 +88,7 @@ def update_app_sub_records(conn, batch_size, cursor, rows):
     conn (obj): Connection to the database.
     batch_size (int): Number of rows to execute at one time.
     cursor (obj): Cursor object to execute queries.
-    rows (list): Rows of data to update in the database.
+    rows (list): Rows of data to insert in the database.
 
     Returns:
     None: Commits the changes to the database.
