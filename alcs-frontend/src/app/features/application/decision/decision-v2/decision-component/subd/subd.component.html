@@ -1,10 +1,11 @@
-<app-basic [component]="component" (saveAlrArea)="onSaveAlrArea($event)"></app-basic>
+<ng-content></ng-content>
 <div>
   <div class="subheading2">Total Number of Lots Approved</div>
   {{ component.lots?.length }}
   <app-no-data *ngIf="component.lots === null || component.lots === undefined"></app-no-data>
 </div>
 <div *ngIf="component.lots" class="full-width">
+  <span class="subheading2">Proposed Lot Areas</span>
   <div class="lot-table">
     <div class="subheading2">#</div>
     <div class="subheading2">Type</div>

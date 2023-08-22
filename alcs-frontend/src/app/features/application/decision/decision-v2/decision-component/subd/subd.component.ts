@@ -14,14 +14,9 @@ export class SubdComponent implements OnInit {
   constructor(private componentLotService: ApplicationDecisionComponentLotService) {}
 
   @Input() component!: DecisionComponentDto;
-  @Output() saveAlrArea = new EventEmitter<string | null>();
 
   ngOnInit(): void {
     this.component.lots = this.component.lots?.sort((a, b) => a.index - b.index) ?? undefined;
-  }
-
-  onSaveAlrArea($event: string | null) {
-    this.saveAlrArea.emit($event);
   }
 
   async onSaveAlrParcelArea(lot: ProposedDecisionLotDto, alrArea: string | null) {

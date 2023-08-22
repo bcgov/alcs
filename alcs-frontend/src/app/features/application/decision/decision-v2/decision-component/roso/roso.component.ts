@@ -8,9 +8,4 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
 })
 export class RosoComponent {
   @Input() component!: DecisionComponentDto;
-  @Output() saveAlrArea = new EventEmitter<string | null>();
-
-  onSaveAlrArea($event: string | null) {
-    this.saveAlrArea.emit($event);
-  }
 }
