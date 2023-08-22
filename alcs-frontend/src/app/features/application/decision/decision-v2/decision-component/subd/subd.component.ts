@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApplicationDecisionComponentLotService } from '../../../../../../services/application/decision/application-decision-v2/application-decision-component-lot/application-decision-component-lot.service';
 import {
   DecisionComponentDto,
@@ -19,7 +19,7 @@ export class SubdComponent implements OnInit {
     this.component.lots = this.component.lots?.sort((a, b) => a.index - b.index) ?? undefined;
   }
 
-  async onSaveAlrArea(lot: ProposedDecisionLotDto, alrArea: string | null) {
+  async onSaveAlrParcelArea(lot: ProposedDecisionLotDto, alrArea: string | null) {
     if (lot.uuid) {
       lot.alrArea = alrArea ? parseFloat(alrArea) : null;
       await this.componentLotService.update(lot.uuid, lot);

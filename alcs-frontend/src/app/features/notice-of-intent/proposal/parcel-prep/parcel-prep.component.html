@@ -34,7 +34,7 @@
     <td mat-cell *matCellDef="let row">{{ row.mapAreaHectares }}</td>
   </ng-container>
   <ng-container matColumnDef="alrArea">
-    <th mat-header-cell *matHeaderCellDef>ALR Area (ha)</th>
+    <th mat-header-cell *matHeaderCellDef>ALR Area Impacted (ha)</th>
     <td mat-cell *matCellDef="let row">
       <app-inline-number [value]="row.alrArea" (save)="saveParcel(row.uuid, $event)"></app-inline-number>
     </td>

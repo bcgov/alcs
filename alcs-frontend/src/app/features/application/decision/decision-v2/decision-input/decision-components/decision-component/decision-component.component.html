@@ -1,20 +1,39 @@
 <div class="subheading1">{{ data.applicationDecisionComponentType?.label }} Component</div>
 <form [formGroup]="form" class="decision-component-form">
-  <div class="grid-3">
-    <mat-form-field appearance="outline">
-      <mat-label>ALR Area (hectares)</mat-label>
-      <input
-        matInput
-        min="0.01"
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="9999999999"
-        matInput
-        formControlName="alrArea"
-        required
-      />
-    </mat-form-field>
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP" class="row-no-flex">
+    <app-nfu-input [form]="form"></app-nfu-input>
+  </div>
 
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP" class="row-no-flex">
+    <app-turp-input [form]="form"></app-turp-input>
+  </div>
+
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
+    <app-pofo-input [form]="form"></app-pofo-input>
+  </div>
+
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">
+    <app-roso-input [form]="form"></app-roso-input>
+  </div>
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS" class="row-no-flex">
+    <app-pfrs-input [form]="form"></app-pfrs-input>
+  </div>
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU" class="row-no-flex">
+    <app-naru-input [form]="form" [codes]="codes"></app-naru-input>
+  </div>
+  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD" class="row-no-flex">
+    <app-subd-input [form]="form"></app-subd-input>
+  </div>
+  <div
+    *ngIf="
+      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
+      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
+    "
+    class="row-no-flex"
+  >
+    <app-incl-excl-input [form]="form"></app-incl-excl-input>
+  </div>
+  <div class="grid-2">
     <div>
       <ng-select
         appearance="outline"
@@ -42,9 +61,7 @@
         [clearable]="false"
       ></ng-select>
     </div>
-  </div>
 
-  <div class="grid">
     <mat-form-field appearance="outline">
       <mat-label>Ag Cap Map</mat-label>
       <input matInput matInput formControlName="agCapMap" />
@@ -54,61 +71,5 @@
       <mat-label>Ag Cap Consultant</mat-label>
       <input matInput matInput formControlName="agCapConsultant" />
     </mat-form-field>
-  </div>
-
-  <div class="row-no-flex">
-    <app-nfu-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
-      [form]="form"
-    ></app-nfu-input>
-  </div>
-
-  <div class="row-no-flex">
-    <app-turp-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
-      [form]="form"
-    ></app-turp-input>
-  </div>
-
-  <div class="row-no-flex">
-    <app-pofo-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
-      [form]="form"
-    ></app-pofo-input>
-  </div>
-
-  <div class="row-no-flex">
-    <app-roso-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
-      [form]="form"
-    ></app-roso-input>
-  </div>
-  <div class="row-no-flex">
-    <app-pfrs-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
-      [form]="form"
-    ></app-pfrs-input>
-  </div>
-  <div class="row-no-flex">
-    <app-naru-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
-      [form]="form"
-      [codes]="codes"
-    ></app-naru-input>
-  </div>
-  <div class="row-no-flex">
-    <app-subd-input
-      *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
-      [form]="form"
-    ></app-subd-input>
-  </div>
-  <div class="row-no-flex">
-    <app-incl-excl-input
-      *ngIf="
-        data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL ||
-        data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL
-      "
-      [form]="form"
-    ></app-incl-excl-input>
   </div>
 </form>

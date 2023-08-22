@@ -203,7 +203,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  async onSaveAlrArea(decisionUuid: string, componentUuid: string, value?: any) {
+  async onSaveAlrArea(decisionUuid: string, componentUuid: string | undefined, value?: any) {
     const decision = this.decisions.find((e) => e.uuid === decisionUuid);
     const component = decision?.components.find((e) => e.uuid === componentUuid);
     if (componentUuid && component) {

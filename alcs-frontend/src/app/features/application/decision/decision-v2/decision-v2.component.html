@@ -60,11 +60,11 @@
                 <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
               </ng-container>
               <span>Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
-              <ng-container *ngIf="decision.isDraft"
-                ><app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
+              <ng-container *ngIf="decision.isDraft">
+                <app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
               </ng-container>
-              <ng-container *ngIf="!decision.isDraft"
-                ><app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
+              <ng-container *ngIf="!decision.isDraft">
+                <app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
               </ng-container>
             </div>
             <ng-container *ngIf="decision.isDraft">
@@ -187,78 +187,92 @@
                 {{ component.applicationDecisionComponentType?.label }} Component
               </div>
               <div class="decision-content">
-                <div class="grid-3 decision-content">
-                  <div>
-                    <div class="subheading2">ALR Area Impacted (ha)</div>
-                    <app-inline-number
-                      [value]="component?.alrArea?.toString()"
-                      (save)="onSaveAlrArea(decision.uuid, component.uuid!, $event)"
-                    ></app-inline-number>
-                  </div>
-                  <div>
-                    <div class="subheading2">Agri Cap</div>
-                    {{ component.agCap }}
-                    <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
-                  </div>
-                  <div>
-                    <div class="subheading2">Agri Cap Source</div>
-                    {{ component.agCapSource }}
-                    <app-no-data
-                      *ngIf="component.agCapSource === null || component.agCapSource === undefined"
-                    ></app-no-data>
-                  </div>
-                </div>
-
                 <app-nfup
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-nfup>
 
                 <app-turp
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-turp>
 
                 <app-pofo
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-pofo>
 
                 <app-roso
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-roso>
 
                 <app-pfrs
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-pfrs>
 
                 <app-naru
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-naru>
 
                 <app-subd
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-subd>
 
                 <app-incl-excl
-                  class="grid-3"
+                  class="grid-2"
                   *ngIf="
                     component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.INCL ||
                     component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.EXCL
                   "
                   [component]="component"
+                  (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-incl-excl>
+
+                <div class="grid-2">
+                  <div>
+                    <div class="subheading2">Agricultural Capability</div>
+                    {{ component.agCap }}
+                    <app-no-data *ngIf="component.agCap === null || component.agCap === undefined"></app-no-data>
+                  </div>
+                  <div>
+                    <div class="subheading2">Agricultural Capability Source</div>
+                    {{ component.agCapSource }}
+                    <app-no-data
+                      *ngIf="component.agCapSource === null || component.agCapSource === undefined"
+                    ></app-no-data>
+                  </div>
+
+                  <div *ngIf="component.agCapMap">
+                    <div class="subheading2">Agricultural Capability Mapsheet Reference</div>
+                    {{ component.agCapMap }}
+                    <app-no-data *ngIf="component.agCapMap === null || component.agCapMap === undefined"></app-no-data>
+                  </div>
+                  <div *ngIf="component.agCapConsultant">
+                    <div class="subheading2">Agricultural Capability Consultant</div>
+                    {{ component.agCapConsultant }}
+                    <app-no-data
+                      *ngIf="component.agCapConsultant === null || component.agCapConsultant === undefined"
+                    ></app-no-data>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -270,8 +284,9 @@
             <h1 class="subheading1">Conditions</h1>
             <div>
               <a [routerLink]="['/application/' + fileNumber + '/decision/conditions/' + decision.uuid]"
-                >View Conditions<mat-icon class="conditions-link-icon">open_in_new</mat-icon></a
-              >
+                >View Conditions
+                <mat-icon class="conditions-link-icon">open_in_new</mat-icon>
+              </a>
             </div>
           </div>
 
