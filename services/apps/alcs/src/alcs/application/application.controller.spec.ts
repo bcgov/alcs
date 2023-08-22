@@ -25,7 +25,7 @@ import { EmailService } from '../../providers/email/email.service';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 
 describe('ApplicationController', () => {
@@ -404,7 +404,7 @@ describe('ApplicationController', () => {
     expect(applicationService.cancel).toBeCalledTimes(1);
     expect(emailService.sendStatusEmail).toBeCalledTimes(1);
     expect(emailService.sendStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateCANCHtml,
+      generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,

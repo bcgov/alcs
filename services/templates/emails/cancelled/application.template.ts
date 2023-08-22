@@ -1,7 +1,7 @@
 import { MJMLParseResults } from 'mjml-core';
-import { EmailTemplateService } from '../../libs/common/src/email-template-service/email-template.service';
-import { header, footer, notificationOnly, portalButton } from './partials';
-import { StatusUpdateEmail } from '../../apps/alcs/src/providers/email/email.service';
+import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
+import { header, footer, notificationOnly, portalButton } from '../partials';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -37,6 +37,8 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateCANCHtml = (data: StatusUpdateEmail): MJMLParseResults => {
+export const generateCANCApplicationHtml = (
+  data: StatusUpdateEmail,
+): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);
 };

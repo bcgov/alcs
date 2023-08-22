@@ -30,7 +30,7 @@ import {
 } from './application.dto';
 import { ApplicationService } from './application.service';
 import { EmailService } from '../../providers/email/email.service';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
 import { ParentType } from '../../common/dtos/base.dto';
 
@@ -132,7 +132,7 @@ export class ApplicationController {
 
     if (primaryContact) {
       await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateCANCHtml,
+        generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,
         government: submissionGovernment,

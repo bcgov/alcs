@@ -28,7 +28,7 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
 import { EmailService } from '../../providers/email/email.service';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBGTurApplicantHtml,
   generateSUBGTurGovernmentHtml,
@@ -207,7 +207,7 @@ describe('ApplicationSubmissionController', () => {
     );
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
-      generateStatusHtml: generateCANCHtml,
+      generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplication,
       government: mockGovernment,

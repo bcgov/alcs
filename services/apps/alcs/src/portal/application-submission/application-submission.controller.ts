@@ -31,7 +31,7 @@ import {
   generateSUBGTurApplicantHtml,
   generateSUBGTurGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { ParentType } from '../../common/dtos/base.dto';
 
 @Controller('application-submission')
@@ -208,7 +208,7 @@ export class ApplicationSubmissionController {
 
     if (primaryContact) {
       await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateCANCHtml,
+        generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
         government: submissionGovernment,
