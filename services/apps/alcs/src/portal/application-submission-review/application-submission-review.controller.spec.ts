@@ -33,7 +33,7 @@ import { ApplicationSubmissionReviewController } from './application-submission-
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
-import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
@@ -386,7 +386,7 @@ describe('ApplicationSubmissionReviewController', () => {
     );
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
     expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBMApplicantHtml,
+      generateStatusHtml: generateSUBMApplicationHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
       government: mockLG,

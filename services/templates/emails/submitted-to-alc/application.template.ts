@@ -1,7 +1,10 @@
 import { MJMLParseResults } from 'mjml-core';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from '../partials';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
+import {
+  StatusUpdateEmail,
+  appFees,
+} from '../../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -21,7 +24,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
+          Agricultural Land Commission <b>{{ applicationType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been reviewed by the <b>{{ governmentName }}</b> and submitted to the Agricultural Land Commission for further review.
         </mj-text>
         <mj-text font-size='16px'>
           APPLICATION FEES - Payable to the Minister of Finance c/o the ALC
@@ -29,12 +32,18 @@ const template = `<mjml>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
             <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
-            <th style="padding-left: 8px">{{ governmentName }} Portion of Fee</th>
+            <th style="padding-left: 8px">ALC Portion of Fee</th>
           </tr>
-          <tr style="font-size: 16px; border: 1px solid black;">
-            <td style="padding-left: 8px; border-right: 1px solid black;">Transportation, Utility, and Recreational Trail Uses</td>
-            <td style="padding-left: 8px">$1500</td>
-          </tr>
+          ${appFees
+            .map((a) => {
+              return `
+              <tr style="font-size: 16px; border: 1px solid black;">
+                <td style="padding-left: 8px; border-right: 1px solid black;">${a.type}</td>
+                <td style="padding-left: 8px">$${a.fee}</td>
+              </tr>
+              `;
+            })
+            .join('')}
         </mj-table>
         <mj-text font-size='16px'>
           This fee can be paid:
@@ -73,6 +82,12 @@ const template = `<mjml>
           <br />
         </mj-text>
         <mj-text font-size='16px'>
+          The length of processing time for each application varies depending on the type of application, statutory requirements within the Agricultural Land Commission Act, information provided, necessity for site visit or applicant meetings, etc.
+        </mj-text>
+        <mj-text font-size='16px'>
+          Please be advised that the Status of the application in the ALC Portal will update and a notification email will be sent out as the application moves through each stage of the application review process. Should the ALC Land Use Planner require any additional information or clarification regarding the application, they will contact you. Further information about the application process can be obtained from the ALC website.
+        </mj-text>
+        <mj-text font-size='16px'>
           If you are an agent acting on behalf of the applicant(s) / landowner(s), it is your responsibility to advise them of this, and any future, correspondence.
         </mj-text>
         <mj-text font-size='16px'>
@@ -89,7 +104,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBGTurApplicantHtml = (
+export const generateSUBMApplicationHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

@@ -34,7 +34,7 @@ import {
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
 import { ParentType } from '../../common/dtos/base.dto';
 
 @Controller('application-review')
@@ -290,7 +290,7 @@ export class ApplicationSubmissionReviewController {
 
         if (primaryContact) {
           await this.emailService.sendStatusEmail({
-            generateStatusHtml: generateSUBMApplicantHtml,
+            generateStatusHtml: generateSUBMApplicationHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: application,
             government: userLocalGovernment,

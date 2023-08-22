@@ -24,7 +24,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to acknowledge that you have submitted the above noted <b>{{ applicationType }}</b> application to the <b>{{ governmentName }}</b>.
+          This email is to acknowledge that you have submitted the above noted <b>{{ childType }}</b> application to the <b>{{ governmentName }}</b>.
         </mj-text>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">

@@ -20,7 +20,7 @@ export interface StatusUpdateEmail {
   fileNumber: string;
   applicantName: string;
   status: string;
-  applicationType: string;
+  childType: string;
   governmentName: string;
   parentType: ParentType;
 }
@@ -43,6 +43,12 @@ export const appFees = [
   { type: 'Non-Adhering Residential Use', fee: 450 },
   { type: 'Soil or Fill Use', fee: 750 },
   { type: 'Inclusion', fee: 0 },
+];
+
+export const noiFees = [
+  { type: 'Removal of Soil', fee: 150 },
+  { type: 'Placement of Fill', fee: 150 },
+  { type: 'Placement of Fill/Removal of Soil', fee: 150 },
 ];
 
 const parentTypeLabel: {
@@ -251,7 +257,7 @@ export class EmailService {
     const emailTemplate = data.generateStatusHtml({
       fileNumber,
       applicantName,
-      applicationType:
+      childType:
         matchingType?.portalLabel ??
         matchingType?.label ??
         FALLBACK_APPLICANT_NAME,
