@@ -21,24 +21,31 @@ import {
   PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
 describe('NoticeOfIntentSubmissionService', () => {
   let service: NoticeOfIntentSubmissionService;
   let mockRepository: DeepMocked<Repository<NoticeOfIntentSubmission>>;
+  let mockStatusRepository: DeepMocked<
+    Repository<NoticeOfIntentSubmissionStatusType>
+  >;
   let mockNoiService: DeepMocked<NoticeOfIntentService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
+  let mockNoiSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNoiSubmission;
 
   beforeEach(async () => {
     mockRepository = createMock();
+    mockStatusRepository = createMock();
     mockNoiService = createMock();
     mockLGService = createMock();
     mockNoiDocService = createMock();
     mockFileNumberService = createMock();
     mockNoiStatusService = createMock();
+    mockNoiSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -52,6 +59,10 @@ describe('NoticeOfIntentSubmissionService', () => {
         {
           provide: getRepositoryToken(NoticeOfIntentSubmission),
           useValue: mockRepository,
+        },
+        {
+          provide: getRepositoryToken(NoticeOfIntentSubmissionStatusType),
+          useValue: mockStatusRepository,
         },
         {
           provide: NoticeOfIntentService,
@@ -72,6 +83,10 @@ describe('NoticeOfIntentSubmissionService', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoiStatusService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNoiSubmissionStatusService,
         },
       ],
     }).compile();

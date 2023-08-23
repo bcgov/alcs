@@ -416,7 +416,6 @@ export class NoticeOfIntentSubmissionService {
     );
   }
 
-  // TODO: Create unit test for new method
   async getStatus(code: NOI_SUBMISSION_STATUS) {
     return await this.noticeOfIntentStatusRepository.findOneOrFail({
       where: {

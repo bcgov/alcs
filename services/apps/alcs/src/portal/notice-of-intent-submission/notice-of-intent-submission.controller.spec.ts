@@ -32,7 +32,6 @@ import {
   generateSUBMNoiApplicantHtml,
   generateSUBMNoiGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
-import { NoiSubtypeController } from '../../alcs/admin/noi-subtype/noi-subtype.controller';
 
 describe('NoticeOfIntentSubmissionController', () => {
   let controller: NoticeOfIntentSubmissionController;
