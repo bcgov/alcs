@@ -3,6 +3,10 @@ from common import (
     log_end,
     log_start,
 )
+from submap import (
+    add_direction_field,
+    map_direction_field,
+)
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -54,17 +58,14 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     break
                 try:
                     application_ids = [dict(item)["alr_application_id"] for item in rows]
-                    print(application_ids)
-                    application_ids_string = ', '.join(str(item) for item in application_ids)
-                    # print(application_ids_string)
-                    
-    
+                    application_ids_string = ', '.join(str(item) for item in application_ids)    
                     adj_rows_query = f"""SELECT * from 
                                         oats.oats_adjacent_land_uses oalu 
                                         WHERE oalu.alr_application_id in ({application_ids_string})
                                         """
                     cursor.execute(adj_rows_query)
                     adj_rows = cursor.fetchall()
+
                     submissions_to_be_inserted_count = len(rows)
 
                     insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows)
@@ -259,38 +260,6 @@ def get_insert_query_for_inc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
-
-def map_direction_field(data, dir_data):
-    if data['alr_application_id'] == dir_data['alr_application_id']:
-        if dir_data['cardinal_direction'] == 'EAST':
-            data['east_land_use_type_description'] = dir_data['description']
-            data['east_land_use_type'] = dir_data['nonfarm_use_type_code']
-        if dir_data['cardinal_direction'] == 'WEST':
-            data['west_land_use_type_description'] = dir_data['description']
-            data['west_land_use_type'] = dir_data['nonfarm_use_type_code']
-        if dir_data['cardinal_direction'] == 'NORTH':
-            data['north_land_use_type_description'] = dir_data['description']
-            data['north_land_use_type'] = dir_data['nonfarm_use_type_code']
-        if dir_data['cardinal_direction'] == 'SOUTH':
-            data['south_land_use_type_description'] = dir_data['description']
-            data['south_land_use_type'] = dir_data['nonfarm_use_type_code']
-    else:
-        return data
-    
-    print(data)
-    print("direction_found")
-    return data
-
-def add_direction_field(data):
-    data['east_land_use_type_description'] = None
-    data['east_land_use_type'] = None    
-    data['west_land_use_type_description'] = None
-    data['west_land_use_type'] = None   
-    data['north_land_use_type_description'] = None
-    data['north_land_use_type'] = None   
-    data['south_land_use_type_description'] = None
-    data['south_land_use_type'] = None   
-    return data
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
