@@ -34,7 +34,6 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockNoiDocService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
-  let mockNoiSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNoiSubmission;
 
   beforeEach(async () => {
@@ -45,7 +44,6 @@ describe('NoticeOfIntentSubmissionService', () => {
     mockNoiDocService = createMock();
     mockFileNumberService = createMock();
     mockNoiStatusService = createMock();
-    mockNoiSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -83,10 +81,6 @@ describe('NoticeOfIntentSubmissionService', () => {
         {
           provide: NoticeOfIntentSubmissionStatusService,
           useValue: mockNoiStatusService,
-        },
-        {
-          provide: NoticeOfIntentSubmissionStatusService,
-          useValue: mockNoiSubmissionStatusService,
         },
       ],
     }).compile();

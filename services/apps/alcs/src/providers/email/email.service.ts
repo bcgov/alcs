@@ -354,7 +354,6 @@ export class EmailService {
     this.sendStatusEmail(data, email);
   }
 
-  // TODO: Create unit test
   async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
     const email = await this.setNoticeOfIntentEmailTemplate(data);
 
