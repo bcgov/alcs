@@ -18,6 +18,8 @@ import { ApplicationOwner } from '../../portal/application-submission/applicatio
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { ParentType } from '../../common/dtos/base.dto';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 
 describe('EmailService', () => {
   let service: EmailService;
@@ -26,6 +28,8 @@ describe('EmailService', () => {
   let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
     mockHttpService = createMock();
@@ -34,6 +38,9 @@ describe('EmailService', () => {
     mockApplicationSubmissionService =
       createMock<ApplicationSubmissionService>();
     mockApplicationService = createMock<ApplicationService>();
+    mockNoticeOfIntentSubmissionService =
+      createMock<NoticeOfIntentSubmissionService>();
+    mockNoticeOfIntentService = createMock<NoticeOfIntentService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
@@ -54,6 +61,14 @@ describe('EmailService', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionService,
+          useValue: mockNoticeOfIntentSubmissionService,
+        },
+        {
+          provide: NoticeOfIntentService,
+          useValue: mockNoticeOfIntentService,
         },
         {
           provide: getRepositoryToken(EmailStatus),

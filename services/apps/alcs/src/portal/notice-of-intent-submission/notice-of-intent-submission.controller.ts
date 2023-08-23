@@ -144,17 +144,10 @@ export class NoticeOfIntentSubmissionController {
       );
     }
 
-    // TODO: Dry up code
-    const primaryContact = noticeOfIntentSubmission.owners?.find(
-      (owner) =>
-        owner.uuid === noticeOfIntentSubmission.primaryContactOwnerUuid,
-    );
-
-    const submissionGovernment = noticeOfIntentSubmission.localGovernmentUuid
-      ? await this.emailService.getSubmissionGovernmentOrFail(
-          noticeOfIntentSubmission,
-        )
-      : null;
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getNoticeOfIntentEmailData(
+        noticeOfIntentSubmission,
+      );
 
     if (primaryContact) {
       await this.emailService.sendNoticeOfIntentStatusEmail({
@@ -196,17 +189,10 @@ export class NoticeOfIntentSubmissionController {
         validatedApplicationSubmission,
       );
 
-      // TODO: Refactor and add unit test
-      const primaryContact = noticeOfIntentSubmission.owners?.find(
-        (owner) =>
-          owner.uuid === noticeOfIntentSubmission.primaryContactOwnerUuid,
-      );
-
-      const submissionGovernment = noticeOfIntentSubmission.localGovernmentUuid
-        ? await this.emailService.getSubmissionGovernmentOrFail(
-            noticeOfIntentSubmission,
-          )
-        : null;
+      const { primaryContact, submissionGovernment } =
+        await this.emailService.getNoticeOfIntentEmailData(
+          noticeOfIntentSubmission,
+        );
 
       if (primaryContact) {
         await this.emailService.sendNoticeOfIntentStatusEmail({
@@ -228,8 +214,6 @@ export class NoticeOfIntentSubmissionController {
           parentType: ParentType.NoticeOfIntent,
         });
       }
-
-      debugger;
 
       const finalSubmission =
         await this.noticeOfIntentSubmissionService.getByUuid(

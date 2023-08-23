@@ -239,10 +239,10 @@ export class EmailService {
 
   async getApplicationEmailData(
     fileNumber: string,
-    submissionData?: ApplicationSubmission,
+    submission?: ApplicationSubmission,
   ) {
     const applicationSubmission =
-      submissionData ||
+      submission ||
       (await this.applicationSubmissionService.getOrFailByFileNumber(
         fileNumber,
       ));
@@ -256,6 +256,18 @@ export class EmailService {
       : null;
 
     return { applicationSubmission, primaryContact, submissionGovernment };
+  }
+
+  async getNoticeOfIntentEmailData(submission: NoticeOfIntentSubmission) {
+    const primaryContact = submission.owners?.find(
+      (owner) => owner.uuid === submission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = submission.localGovernmentUuid
+      ? await this.getSubmissionGovernmentOrFail(submission)
+      : null;
+
+    return { primaryContact, submissionGovernment };
   }
 
   private async setApplicationEmailTemplate(data: ApplicationEmailData) {
@@ -342,6 +354,7 @@ export class EmailService {
     this.sendStatusEmail(data, email);
   }
 
+  // TODO: Create unit test
   async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
     const email = await this.setNoticeOfIntentEmailTemplate(data);
 

@@ -25,6 +25,14 @@ import {
 } from './notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { EmailService } from '../../providers/email/email.service';
+import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
+import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
+import {
+  generateSUBMNoiApplicantHtml,
+  generateSUBMNoiGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import { NoiSubtypeController } from '../../alcs/admin/noi-subtype/noi-subtype.controller';
 
 describe('NoticeOfIntentSubmissionController', () => {
   let controller: NoticeOfIntentSubmissionController;
@@ -32,7 +40,9 @@ describe('NoticeOfIntentSubmissionController', () => {
   let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockNoiValidatorService: DeepMocked<NoticeOfIntentSubmissionValidatorService>;
+  let mockEmailService: DeepMocked<EmailService>;
 
+  const primaryContactOwnerUuid = 'primary-contact';
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
   const bceidBusinessGuid = 'business-guid';
@@ -42,6 +52,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockDocumentService = createMock();
     mockLgService = createMock();
     mockNoiValidatorService = createMock();
+    mockEmailService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NoticeOfIntentSubmissionController],
@@ -62,6 +73,10 @@ describe('NoticeOfIntentSubmissionController', () => {
         {
           provide: NoticeOfIntentSubmissionValidatorService,
           useValue: mockNoiValidatorService,
+        },
+        {
+          provide: EmailService,
+          useValue: mockEmailService,
         },
         {
           provide: ClsService,
@@ -123,11 +138,19 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(mockNoiSubmissionService.getAllByUser).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out to service when cancelling an notice of intent', async () => {
+  it('should call out to service when cancelling a notice of intent', async () => {
+    const mockOwner = new NoticeOfIntentOwner({
+      uuid: primaryContactOwnerUuid,
+    });
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+
     const mockApplication = new NoticeOfIntentSubmission({
       status: new NoticeOfIntentSubmissionToSubmissionStatus({
         statusTypeCode: NOI_SUBMISSION_STATUS.IN_PROGRESS,
       }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
     });
 
     mockNoiSubmissionService.mapToDTOs.mockResolvedValue([
@@ -137,6 +160,11 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockNoiSubmissionService.cancel.mockResolvedValue(
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
+    mockEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     const noticeOfIntentSubmission = await controller.cancel('file-id', {
       user: {
@@ -150,6 +178,20 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(mockNoiSubmissionService.getByUuid).toHaveBeenCalledWith(
       'file-id',
       new User(),
+    );
+    expect(
+      mockEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledWith(
+      {
+        generateStatusHtml: generateCANCNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.CANCELLED,
+        noticeOfIntentSubmission: mockApplication,
+        government: mockGovernment,
+        parentType: 'application',
+        primaryContact: mockOwner,
+        ccGovernment: true,
+      },
     );
   });
 
@@ -313,20 +355,34 @@ describe('NoticeOfIntentSubmissionController', () => {
 
   it('should call out to service on submitAlcs', async () => {
     const mockFileId = 'file-id';
+    const mockOwner = new NoticeOfIntentOwner({
+      uuid: primaryContactOwnerUuid,
+    });
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockSubmission = new NoticeOfIntentSubmission({
+      fileNumber: mockFileId,
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+
     mockNoiSubmissionService.submitToAlcs.mockResolvedValue(
       new NoticeOfIntent(),
     );
-    mockNoiSubmissionService.getByUuid.mockResolvedValue(
-      new NoticeOfIntentSubmission(),
-    );
+    mockNoiSubmissionService.getByUuid.mockResolvedValue(mockSubmission);
     mockNoiValidatorService.validateSubmission.mockResolvedValue({
       noticeOfIntentSubmission:
-        new NoticeOfIntentSubmission() as ValidatedNoticeOfIntentSubmission,
+        mockSubmission as ValidatedNoticeOfIntentSubmission,
       errors: [],
     });
     mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NoticeOfIntentSubmissionDetailedDto,
     );
+    mockEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -338,5 +394,27 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(mockNoiSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockNoiValidatorService.validateSubmission).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(
+      mockEmailService.sendNoticeOfIntentStatusEmail,
+    ).toHaveBeenCalledTimes(2);
+    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledWith(
+      {
+        generateStatusHtml: generateSUBMNoiApplicantHtml,
+        status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        noticeOfIntentSubmission: mockSubmission,
+        government: mockGovernment,
+        parentType: 'notice-of-intent',
+        primaryContact: mockOwner,
+      },
+    );
+    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toHaveBeenCalledWith(
+      {
+        generateStatusHtml: generateSUBMNoiGovernmentHtml,
+        status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        noticeOfIntentSubmission: mockSubmission,
+        government: mockGovernment,
+        parentType: 'notice-of-intent',
+      },
+    );
   });
 });
