@@ -66,6 +66,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
+import { ApplicationLegacyIdComponent } from './application-legacy-id/application-legacy-id.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     ErrorMessageComponent,
     LotsTableFormComponent,
     InlineNgSelectComponent,
+    ApplicationLegacyIdComponent,
   ],
   imports: [
     CommonModule,
@@ -190,6 +192,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     ErrorMessageComponent,
     LotsTableFormComponent,
+    ApplicationLegacyIdComponent,
   ],
 })
 export class SharedModule {

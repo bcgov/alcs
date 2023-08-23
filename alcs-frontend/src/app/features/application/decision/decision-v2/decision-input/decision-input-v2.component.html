@@ -1,252 +1,246 @@
-<section>
-  <div class="row">
-    <h3>Decisions > Edit Decision Draft</h3>
-  </div>
+<div class="row">
+  <h1>Decision #{{ index }} Draft</h1>
+</div>
 
-  <form (ngSubmit)="onSubmit()" [formGroup]="form">
-    <div class="grid">
-      <div>
-        <ng-select
-          appearance="outline"
-          class="resolution-year"
-          [items]="resolutionYears"
-          formControlName="resolutionYear"
-          appendTo="body"
-          placeholder="Select Year for Resolution Number*"
-          [clearable]="false"
-        ></ng-select>
-      </div>
-
-      <div class="resolution-number-wrapper">
-        <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
-          <button
-            class="generate-number-btn"
-            [loading]="isLoading"
-            type="button"
-            mat-stroked-button
-            color="primary"
-            (click)="onGenerateResolutionNumber()"
-            [ngClass]="{
-              'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
-            }"
-          >
-            Generate Number
-          </button>
-          <app-error-message
-            *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
-          ></app-error-message>
-        </div>
-        <div *ngIf="resolutionNumberControl.getRawValue()">
-          <div class="resolution-number">
-            <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
-            <button
-              matTooltip="Delete resolution number"
-              class="delete-icon"
-              mat-icon-button
-              (click)="onDeleteResolutionNumber()"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <mat-form-field appearance="outline" class="date-picker">
-        <mat-label>Decision Date</mat-label>
-        <input
-          matInput
-          (click)="datePicker.open()"
-          [matDatepicker]="datePicker"
-          formControlName="date"
-          name="date"
-          [min]="minDate | startOfDay"
-        />
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker type="date"></mat-datepicker>
-      </mat-form-field>
-
-      <ng-select
-        *ngIf="!isFirstDecision"
-        appearance="outline"
-        class="card-post-decision"
-        [items]="postDecisions"
-        appendTo="body"
-        placeholder="Linked Recon or Modification Request *"
-        bindLabel="label"
-        bindValue="uuid"
-        [clearable]="false"
-        formControlName="postDecision"
-        (change)="onSelectPostDecision($event)"
-      >
-      </ng-select>
-
-      <ng-select
-        *ngIf="!isFirstDecision"
-        appearance="outline"
-        [items]="linkedResolutionOutcomes"
-        formControlName="linkedResolutionOutcome"
-        appendTo="body"
-        bindLabel="label"
-        bindValue="code"
-        placeholder="Linked Resolution Outcome *"
-      ></ng-select>
-
+<h3>Resolution</h3>
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <div class="grid">
+    <div>
       <ng-select
         appearance="outline"
-        [items]="decisionMakers"
-        formControlName="decisionMaker"
+        class="resolution-year"
+        [items]="resolutionYears"
+        formControlName="resolutionYear"
         appendTo="body"
-        bindLabel="label"
-        bindValue="code"
-        placeholder="Decision Maker *"
-        (change)="onSelectDecisionMaker($event)"
+        placeholder="Select Year for Resolution Number*"
         [clearable]="false"
       ></ng-select>
+    </div>
 
-      <ng-select
-        *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
-        appearance="outline"
-        class="full-width"
-        [items]="ceoCriterionItems"
-        formControlName="ceoCriterion"
-        appendTo="body"
-        bindLabel="label"
-        bindValue="code"
-        placeholder="CEO Criterion *"
-        [clearable]="false"
-        (change)="onSelectCeoCriterion($event)"
-      >
-        <ng-template ng-option-tmp let-item="item">
-          <span>{{ item.number }} - {{ item.label }} </span>
-        </ng-template>
-        <ng-template ng-label-tmp let-item="item">
-          <span>{{ item.number }} - {{ item.label }} </span>
-        </ng-template>
-      </ng-select>
-      <mat-form-field *ngIf="form.get('ceoCriterion')!.value === 'MODI'" appearance="outline" class="full-width">
-        <mat-label>Criterion 8 Modification</mat-label>
-        <mat-select formControlName="criterionModification" multiple>
-          <mat-option value="isTimeExtension">Time Extension</mat-option>
-          <mat-option value="isOther">Other</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <ng-select
-        appearance="outline"
-        class="decision-outcome"
-        [items]="outcomes"
-        formControlName="outcome"
-        appendTo="body"
-        bindLabel="label"
-        bindValue="code"
-        placeholder="Decision Outcome *"
-        [clearable]="false"
-        (change)="onChangeDecisionOutcome($event)"
-      ></ng-select>
-
-      <div>
-        <div>
-          <mat-label class="toggle-label">Subject to Conditions*</mat-label>
-          <mat-button-toggle-group
-            id="isSubjectToConditions"
-            formControlName="isSubjectToConditions"
-            name="isSubjectToConditions"
-            (change)="onChangeSubjectToConditions($event)"
-            [ngClass]="{
-              'error-field-outlined':
-                !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
-            }"
-          >
-            <mat-button-toggle value="true">Yes</mat-button-toggle>
-            <mat-button-toggle value="false">No</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-      </div>
-
-      <div class="full-width">
-        <mat-form-field style="width: 100%" appearance="outline">
-          <mat-label>Decision Description</mat-label>
-          <input matInput formControlName="decisionDescription" />
-        </mat-form-field>
-      </div>
-
-      <div>
-        <mat-label class="toggle-label">Stats required*</mat-label>
-        <mat-button-toggle-group
-          id="isStatsRequired"
-          formControlName="isStatsRequired"
-          name="isStatsRequired"
+    <div class="resolution-number-wrapper">
+      <div *ngIf="!resolutionNumberControl.getRawValue()" class="resolution-number-btn-wrapper">
+        <button
+          class="generate-number-btn"
+          [loading]="isLoading"
+          type="button"
+          mat-stroked-button
+          color="primary"
+          (click)="onGenerateResolutionNumber()"
           [ngClass]="{
-            'error-field-outlined ng-invalid':
-              !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
+            'error-field-outlined ng-invalid': !resolutionNumberControl.valid && resolutionNumberControl.touched
+          }"
+        >
+          Generate Number
+        </button>
+        <app-error-message
+          *ngIf="!resolutionNumberControl.valid && resolutionNumberControl.touched"
+        ></app-error-message>
+      </div>
+      <div *ngIf="resolutionNumberControl.getRawValue()">
+        <div class="resolution-number">
+          <span>Res #{{ resolutionNumberControl.getRawValue() }} / {{ resolutionYearControl.getRawValue() }}</span>
+          <button
+            matTooltip="Delete resolution number"
+            class="delete-icon"
+            mat-icon-button
+            (click)="onDeleteResolutionNumber()"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Decision Date</mat-label>
+      <input
+        matInput
+        (click)="datePicker.open()"
+        [matDatepicker]="datePicker"
+        formControlName="date"
+        name="date"
+        [min]="minDate | startOfDay"
+      />
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker type="date"></mat-datepicker>
+    </mat-form-field>
+
+    <ng-select
+      *ngIf="!isFirstDecision"
+      appearance="outline"
+      class="card-post-decision"
+      [items]="postDecisions"
+      appendTo="body"
+      placeholder="Linked Recon or Modification Request *"
+      bindLabel="label"
+      bindValue="uuid"
+      [clearable]="false"
+      formControlName="postDecision"
+      (change)="onSelectPostDecision($event)"
+    >
+    </ng-select>
+
+    <ng-select
+      *ngIf="!isFirstDecision"
+      appearance="outline"
+      [items]="linkedResolutionOutcomes"
+      formControlName="linkedResolutionOutcome"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="code"
+      placeholder="Linked Resolution Outcome *"
+    ></ng-select>
+
+    <ng-select
+      appearance="outline"
+      [items]="decisionMakers"
+      formControlName="decisionMaker"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="code"
+      placeholder="Decision Maker *"
+      (change)="onSelectDecisionMaker($event)"
+      [clearable]="false"
+    ></ng-select>
+
+    <ng-select
+      *ngIf="form.get('decisionMaker')!.value === 'CEOP'"
+      appearance="outline"
+      class="full-width"
+      [items]="ceoCriterionItems"
+      formControlName="ceoCriterion"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="code"
+      placeholder="CEO Criterion *"
+      [clearable]="false"
+      (change)="onSelectCeoCriterion($event)"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        <span>{{ item.number }} - {{ item.label }} </span>
+      </ng-template>
+      <ng-template ng-label-tmp let-item="item">
+        <span>{{ item.number }} - {{ item.label }} </span>
+      </ng-template>
+    </ng-select>
+    <mat-form-field *ngIf="form.get('ceoCriterion')!.value === 'MODI'" appearance="outline" class="full-width">
+      <mat-label>Criterion 8 Modification</mat-label>
+      <mat-select formControlName="criterionModification" multiple>
+        <mat-option value="isTimeExtension">Time Extension</mat-option>
+        <mat-option value="isOther">Other</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-select
+      appearance="outline"
+      class="decision-outcome"
+      [items]="outcomes"
+      formControlName="outcome"
+      appendTo="body"
+      bindLabel="label"
+      bindValue="code"
+      placeholder="Decision Outcome *"
+      [clearable]="false"
+      (change)="onChangeDecisionOutcome($event)"
+    ></ng-select>
+
+    <div>
+      <div>
+        <mat-label class="toggle-label">Subject to Conditions*</mat-label>
+        <mat-button-toggle-group
+          id="isSubjectToConditions"
+          formControlName="isSubjectToConditions"
+          name="isSubjectToConditions"
+          (change)="onChangeSubjectToConditions($event)"
+          [ngClass]="{
+            'error-field-outlined':
+              !form.controls.isSubjectToConditions.valid && form.controls.isSubjectToConditions.touched
           }"
         >
           <mat-button-toggle value="true">Yes</mat-button-toggle>
           <mat-button-toggle value="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
+    </div>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Days to Hide from Public</mat-label>
-        <input matInput mask="0*" formControlName="daysHideFromPublic" />
+    <div class="full-width">
+      <mat-form-field style="width: 100%" appearance="outline">
+        <mat-label>Decision Description</mat-label>
+        <input matInput formControlName="decisionDescription" />
       </mat-form-field>
+    </div>
 
-      <ng-container *ngIf="form.controls.outcome.value === 'RESC'">
-        <mat-form-field appearance="outline" class="date-picker">
-          <mat-label>Rescinded Date</mat-label>
-          <input
-            matInput
-            (click)="rescindedDatePicker.open()"
-            [matDatepicker]="rescindedDatePicker"
-            formControlName="rescindedDate"
-            name="date"
-            [min]="minDate | startOfDay"
-          />
-          <mat-datepicker-toggle matSuffix [for]="rescindedDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #rescindedDatePicker type="date"></mat-datepicker>
-        </mat-form-field>
-      </ng-container>
+    <div>
+      <mat-label class="toggle-label">Stats required*</mat-label>
+      <mat-button-toggle-group
+        id="isStatsRequired"
+        formControlName="isStatsRequired"
+        name="isStatsRequired"
+        [ngClass]="{
+          'error-field-outlined ng-invalid':
+            !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
+        }"
+      >
+        <mat-button-toggle value="true">Yes</mat-button-toggle>
+        <mat-button-toggle value="false">No</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
 
     <ng-container *ngIf="form.controls.outcome.value === 'RESC'">
-      <mat-form-field appearance="outline" class="row">
-        <mat-label>Rescinded Comment</mat-label>
-        <input matInput formControlName="rescindedComment" />
+      <mat-form-field appearance="outline" class="date-picker">
+        <mat-label>Rescinded Date</mat-label>
+        <input
+          matInput
+          (click)="rescindedDatePicker.open()"
+          [matDatepicker]="rescindedDatePicker"
+          formControlName="rescindedDate"
+          name="date"
+          [min]="minDate | startOfDay"
+        />
+        <mat-datepicker-toggle matSuffix [for]="rescindedDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #rescindedDatePicker type="date"></mat-datepicker>
       </mat-form-field>
     </ng-container>
+  </div>
 
-    <div>
-      <app-decision-documents
-        (beforeDocumentUpload)="onSubmit(true, true)"
-        [showError]="form.touched && !existingDecision?.documents?.length"
-      ></app-decision-documents>
-    </div>
+  <ng-container *ngIf="form.controls.outcome.value === 'RESC'">
+    <mat-form-field appearance="outline" class="row">
+      <mat-label>Rescinded Comment</mat-label>
+      <input matInput formControlName="rescindedComment" />
+    </mat-form-field>
+  </ng-container>
 
-    <app-decision-components
-      *ngIf="codes && showComponents"
+  <div>
+    <h3>Documents</h3>
+    <app-decision-documents
+      (beforeDocumentUpload)="onSubmit(true, true)"
+      [showError]="form.touched && !existingDecision?.documents?.length"
+    ></app-decision-documents>
+  </div>
+
+  <app-decision-components
+    *ngIf="codes && showComponents"
+    [codes]="codes"
+    [fileNumber]="fileNumber"
+    [components]="components"
+    (componentsChange)="onComponentChange($event)"
+    [showError]="form.touched && components.length < 1 && requireComponents"
+  >
+  </app-decision-components>
+
+  <div>
+    <app-decision-conditions
+      *ngIf="codes && showComponents && showConditions"
       [codes]="codes"
-      [fileNumber]="fileNumber"
       [components]="components"
-      (componentsChange)="onComponentChange($event)"
-      [showError]="form.touched && components.length < 1 && requireComponents"
-    >
-    </app-decision-components>
+      [conditions]="conditions"
+      (conditionsChange)="onConditionsChange($event)"
+      [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
+    ></app-decision-conditions>
+  </div>
 
-    <div>
-      <app-decision-conditions
-        *ngIf="codes && showComponents && showConditions"
-        [codes]="codes"
-        [components]="components"
-        [conditions]="conditions"
-        (conditionsChange)="onConditionsChange($event)"
-        [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
-      ></app-decision-conditions>
-    </div>
-
-    <div class="row">
-      <h4>Audit and Chair Review Info</h4>
-    </div>
-
+  <section>
+    <h3>Audit and Chair Review</h3>
     <div class="grid">
       <mat-form-field appearance="outline" class="date-picker">
         <mat-label>Audit Date</mat-label>
@@ -297,16 +291,19 @@
         </mat-button-toggle-group>
       </div>
     </div>
+  </section>
+</form>
 
-    <div class="btn-row">
-      <button mat-stroked-button color="primary" type="button" (click)="onCancel()">Cancel</button>
-      <button type="submit" mat-flat-button color="accent">Save Decision Draft</button>
-    </div>
-  </form>
-
-  <div class="row flex-right">
-    <button class="release-decision-btn" type="button" (click)="onRelease()" mat-flat-button color="primary">
+<div class="split bottom-scroller">
+  <div>
+    <button class="release-decision-btn" type="button" (click)="onRelease()" mat-flat-button color="accent">
       Release Decision
     </button>
   </div>
-</section>
+  <div>
+    <div class="center">
+      <button mat-stroked-button color="primary" type="button" (click)="onCancel()">Cancel</button>
+      <button (click)="onSubmit()" mat-flat-button color="primary">Save Changes</button>
+    </div>
+  </div>
+</div>

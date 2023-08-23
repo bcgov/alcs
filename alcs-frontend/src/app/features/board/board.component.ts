@@ -333,6 +333,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       cardType: CardType.APP,
       cardUuid: application.card!.uuid,
       dateReceived: application.dateSubmittedToAlc,
+      legacyId: application.legacyId,
     };
   }
 

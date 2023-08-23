@@ -1,26 +1,13 @@
-<div
-  class="full-width"
-  [ngClass]="{
-    'grid-uneven': component.agCapMap && component.agCapConsultant,
-    'grid-3': !component.agCapMap || !component.agCapConsultant
-  }"
->
-  <app-basic [component]="component" *ngIf="component.agCapMap || component.agCapConsultant"></app-basic>
-  <div>
-    <div class="subheading2">Applicant Type</div>
-    {{ component.inclExclApplicantType }}
-    <app-no-data
-      *ngIf="component.inclExclApplicantType === null || component.inclExclApplicantType === undefined"
-    ></app-no-data>
-  </div>
-  <div *ngIf="!component.agCapMap || !component.agCapConsultant">
-    <div class="subheading2">Expiry Date</div>
-    {{ component.expiryDate | date }}
-    <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>
-  </div>
+<ng-content> </ng-content>
+<div>
+  <div class="subheading2">Applicant Type</div>
+  {{ component.inclExclApplicantType }}
+  <app-no-data
+    *ngIf="component.inclExclApplicantType === null || component.inclExclApplicantType === undefined"
+  ></app-no-data>
 </div>
 
-<div *ngIf="component.agCapMap && component.agCapConsultant">
+<div>
   <div class="subheading2">Expiry Date</div>
   {{ component.expiryDate | date }}
   <app-no-data *ngIf="component.expiryDate === null || component.expiryDate === undefined"></app-no-data>

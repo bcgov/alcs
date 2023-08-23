@@ -24,7 +24,6 @@ export interface UpdateApplicationDecisionDto {
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
   isStatsRequired?: boolean | null;
-  daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
@@ -67,7 +66,6 @@ export interface ApplicationDecisionDto {
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
   isStatsRequired?: boolean | null;
-  daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   modifies?: LinkedResolutionDto;

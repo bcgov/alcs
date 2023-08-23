@@ -20,6 +20,10 @@ from noi import (
     process_nois,
     clean_nois,
 )
+from submissions import(
+    process_alcs_app_submissions,
+    clean_application_submission,
+)
 from constants import BATCH_UPLOAD_SIZE
 
 import_batch_size = BATCH_UPLOAD_SIZE
@@ -142,6 +146,20 @@ def import_command_parser(subparsers):
     )
     import_command.set_defaults(func=import_batch_size)
 
+def app_sub_import_command_parser(import_batch_size, subparsers):
+    app_sub_import_command = subparsers.add_parser(
+        "app-sub-import",
+        help=f"Import App submission into ALCS (update application_submission table) in specified batch size: (default: {import_batch_size})",
+    )
+    app_sub_import_command.add_argument(
+        "--batch-size",
+        type=int,
+        default=import_batch_size,
+        metavar="",
+        help=f"batch size (default: {import_batch_size})",
+    )
+    app_sub_import_command.set_defaults(func=import_batch_size)
+
 
 def setup_menu_args_parser(import_batch_size):
     parser = argparse.ArgumentParser(description="OATS ETL utility")
@@ -156,6 +174,7 @@ def setup_menu_args_parser(import_batch_size):
     document_noi_import_command_parser(import_batch_size, subparsers)
     noi_document_import_command_parser(import_batch_size, subparsers)
     import_command_parser(subparsers)
+    app_sub_import_command_parser(import_batch_size, subparsers)
 
     subparsers.add_parser("clean", help="Clean all imported data")
 
@@ -210,6 +229,9 @@ if __name__ == "__main__":
                     console.log("Processing application prep:")
                     process_alcs_application_prep_fields(batch_size=import_batch_size)
 
+                    console.log("Processing application submission:")
+                    process_alcs_app_submissions(batch_size=import_batch_size)
+
                     console.log("Done")
             case "clean":
                 with console.status("[bold green]Cleaning previous ETL...") as status:
@@ -219,6 +241,7 @@ if __name__ == "__main__":
                     clean_application_documents()
                     clean_noi_documents()
                     clean_documents()
+                    clean_application_submission()
                     clean_applications()
                     clean_nois()
 
@@ -300,6 +323,19 @@ if __name__ == "__main__":
                     )
 
                     process_noi_documents(batch_size=import_batch_size)
+            case "app-sub-import":
+                console.log("Beginning OATS -> ALCS app-sub import process")
+                with console.status(
+                    "[bold green]App submission import (application_submission table update in ALCS)..."
+                ) as status:
+                    if args.batch_size:
+                        import_batch_size = args.batch_size
+
+                    console.log(
+                        f"Processing app-sub import in batch size = {import_batch_size}"
+                    )
+
+                    process_alcs_app_submissions(batch_size=import_batch_size)
 
     finally:
         if connection_pool:

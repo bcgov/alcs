@@ -252,6 +252,9 @@ export class ApplicationDto {
   @AutoMap(() => String)
   inclExclApplicantType?: string;
 
+  @AutoMap(() => String)
+  legacyId?: string;
+
   proposalEndDate?: number;
   proposalExpiryDate?: number;
 }

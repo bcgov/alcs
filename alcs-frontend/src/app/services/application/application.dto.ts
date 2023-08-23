@@ -252,6 +252,7 @@ export interface ApplicationDto {
   inclExclApplicantType?: string;
   proposalEndDate?: number;
   proposalExpiryDate?: number;
+  legacyId?: string;
 }
 
 export interface UpdateApplicationDto {

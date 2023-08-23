@@ -1,10 +1,30 @@
 @use '../../../../../../styles/colors.scss';
 
+.bottom-scroller {
+  margin-top: 36px;
+  position: absolute;
+  bottom: 0;
+  left: 212px;
+  right: 0;
+  background-color: #fff;
+  padding: 16px;
+  z-index: 2;
+  border-top: 1px solid colors.$grey-light;
+
+  button:not(:last-child) {
+    margin-right: 16px !important;
+  }
+}
+
+form {
+  padding-bottom: 120px;
+}
+
 :host::ng-deep {
   .grid,
-  .grid-3 {
+  .grid-2 {
     display: grid;
-    grid-template-columns: calc(50% - 10px) calc(50%);
+    grid-template-columns: calc(50% - 12px) calc(50% - 12px);
     grid-column-gap: 24px;
     grid-row-gap: 32px;
 
@@ -13,14 +33,9 @@
     }
   }
 
-  .grid-3 {
-    grid-template-columns: calc(33% - 8px) calc(33% - 8px) calc(33% - 8px);
-    grid-column-gap: 24px;
-    grid-row-gap: 32px;
-
-    .full-width {
-      grid-column: 1/4;
-    }
+  h3 {
+    margin-top: 36px !important;
+    margin-bottom: 12px !important;
   }
 
   .resolution-number-wrapper {
@@ -98,14 +113,6 @@
   .container-wide {
     max-width: 700px;
   }
-  .btn-row {
-    justify-content: space-between;
-  }
-
-  .flex-right {
-    display: flex;
-    justify-content: right;
-  }
 
   .resolution-number-wrapper {
     display: flex;
@@ -128,7 +135,6 @@
   }
 
   .decision-component-form {
-    .grid-3,
     .grid {
       margin-bottom: 24px;
     }
@@ -138,17 +144,8 @@
     height: 100px !important;
   }
 
-  .subheading1 {
-    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif !important;
-    font-size: 19px !important;
-    font-weight: 400 !important;
-    line-height: 24px;
-    color: #565656 !important;
-    margin: 24px 0 !important;
-  }
-
   .error-field-outlined.ng-invalid {
-    border-color: colors.$error-color !important;
+    border: 1px solid colors.$error-color !important;
 
     .mat-button-toggle {
       border-color: colors.$error-color;
@@ -157,7 +154,7 @@
 
     &.upload-button {
       border: 2px solid colors.$error-color;
-      margin-bottom: 0px !important;
+      margin-bottom: 0 !important;
     }
   }
 

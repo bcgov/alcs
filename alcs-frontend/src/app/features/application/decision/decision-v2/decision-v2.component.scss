@@ -1,168 +1,144 @@
 @use '../../../../../styles/colors';
 
-:host ::ng-deep {
-  section {
-    margin-bottom: 64px;
-  }
+section {
+  margin-bottom: 64px;
+}
 
-  .decision-container {
-    position: relative;
-  }
+h4 {
+  margin-bottom: 12px !important;
+}
 
-  .decision {
-    margin: 24px 0;
-    box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
-  }
+hr {
+  margin: 36px 0;
+  stroke: colors.$grey;
+}
 
-  .loading-overlay {
-    position: absolute;
-    z-index: 2;
-    background-color: colors.$grey;
-    opacity: 0.4;
-    width: 100%;
-    height: 100%;
+.decision-container {
+  position: relative;
+}
+
+.decision {
+  margin: 24px 0;
+  box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.25);
+}
+
+.decision.draft {
+  border: 2px solid colors.$secondary-color-light;
+}
+
+.decision-section {
+  background: colors.$grey-light;
+  padding: 18px;
+}
+
+.decision-section-no-title {
+  background: colors.$grey-light;
+  padding: 1px 18px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36px;
+
+  .title {
     display: flex;
     align-items: center;
-    justify-content: center;
-  }
+    justify-content: space-between;
+    gap: 28px;
 
-  .post-decisions {
-    padding: 6px 32px;
-    background-color: colors.$grey-light;
-    grid-template-columns: 50% 50%;
-    display: grid;
-    min-height: 36px;
-    text-transform: uppercase;
-    border-radius: 4px 4px 0 0;
-  }
+    .days {
+      display: inline-block;
+      margin-right: 6px;
+      margin-top: 4px;
 
-  .decision-menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 36px;
-    background: colors.$accent-color;
-    box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 0 4px 0 10px;
+      .mat-icon {
+        font-size: 19px !important;
+        line-height: 21px !important;
+        width: 19px;
+        vertical-align: middle;
+      }
+    }
   }
+}
 
-  .decision-padding {
-    padding: 18px 32px 32px 32px;
-  }
+.loading-overlay {
+  position: absolute;
+  z-index: 2;
+  background-color: colors.$grey;
+  opacity: 0.4;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.post-decisions {
+  padding: 6px 32px;
+  background-color: colors.$grey-light;
+  grid-template-columns: 50% 50%;
+  display: grid;
+  min-height: 36px;
+  text-transform: uppercase;
+  border-radius: 4px 4px 0 0;
+}
+
+.decision-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 36px;
+  background: colors.$accent-color;
+  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0 4px 0 10px;
+}
+
+.decision-padding {
+  padding: 18px 32px;
+}
+
+.no-decisions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: colors.$grey-light;
+  height: 72px;
+}
+
+.conditions-link-icon {
+  position: absolute;
+}
+
+:host ::ng-deep {
   .grid-2 {
+    margin-top: 18px;
+    margin-bottom: 18px;
     display: grid;
     grid-template-columns: 50% 50%;
-    grid-row-gap: 24px;
-  }
+    grid-row-gap: 18px;
 
-  .grid-3 {
-    display: grid;
-    grid-template-columns: 33% 33% 33%;
-    grid-row-gap: 24px;
-
-    .grid-2 {
-      margin-top: unset;
+    .full-width {
+      grid-column: 1/3;
     }
   }
 
-  .grid-uneven {
-    display: grid;
-    grid-template-columns: 66% 33%;
-    grid-row-gap: 24px;
-
-    .grid-2 {
-      margin-top: unset;
-    }
-  }
-
-  .decision-content,
-  .grid-2 {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    font-size: 16px;
-  }
-
-  .components-wrapper,
-  .conditions-wrapper {
-    margin-bottom: 36px;
+  .mat-mdc-table {
+    background: colors.$grey-light;
   }
 
   .subheading2 {
     margin-bottom: 6px !important;
   }
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-
-    .title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-
-      .days {
-        display: inline-block;
-        margin-right: 6px;
-
-        .mat-icon {
-          font-size: 19px !important;
-          line-height: 21px !important;
-          width: 19px;
-          vertical-align: middle;
-        }
-      }
-    }
-  }
-
   .row {
     margin: 16px 0;
-  }
-
-  .conditions-link-icon {
-    position: absolute;
-  }
-
-  .no-decisions {
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: colors.$grey-light;
-    height: 72px;
-  }
-
-  .decision-documents .subheading1 {
-    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif !important;
-    font-size: 19px !important;
-    font-weight: 400 !important;
-    margin: 0 !important;
-    line-height: 24px;
-    color: #565656 !important;
-  }
-
-  .subheading1 {
-    color: colors.$grey-dark !important;
   }
 
   .application-pill-wrapper,
   .application-pill {
     margin-right: 0 !important;
-  }
-
-  .decision-tabs {
-    .mdc-tab__text-label {
-      color: colors.$black !important;
-    }
-
-    .mdc-tab {
-      margin-left: 8px;
-    }
-  }
-
-  .full-width {
-    grid-column: 1/4;
   }
 
   table {
@@ -176,14 +152,5 @@
 
   .pre-wrapped-text {
     white-space: pre-wrap;
-  }
-
-  .lot-table {
-    margin-top: 12px;
-    display: grid;
-    grid-template-columns: max-content max-content max-content 0.8fr;
-    grid-column-gap: 36px;
-    grid-row-gap: 12px;
-    align-items: center;
   }
 }

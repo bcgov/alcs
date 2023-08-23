@@ -27,6 +27,7 @@ export class DecisionComponentComponent implements OnInit {
   @Input() data!: DecisionComponentDto;
   @Input() codes!: DecisionCodesDto;
   @Output() dataChange = new EventEmitter<DecisionComponentDto>();
+  @Output() remove = new EventEmitter<void>();
 
   @ViewChild(SubdInputComponent) subdInputComponent?: SubdInputComponent;
 
@@ -342,5 +343,9 @@ export class DecisionComponentComponent implements OnInit {
       inclExclApplicantType: this.applicantType.value ?? undefined,
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
+  }
+
+  onRemove() {
+    this.remove.emit();
   }
 }

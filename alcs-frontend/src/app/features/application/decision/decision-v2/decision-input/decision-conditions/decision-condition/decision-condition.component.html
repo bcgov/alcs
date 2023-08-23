@@ -1,28 +1,20 @@
+<div class="split">
+  <h5>{{ data.type?.label }}</h5>
+  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
+</div>
+
 <form [formGroup]="form">
   <div class="condition">
-    <ng-select
-      appearance="outline"
-      class="condition-grid-half-1"
-      [items]="codes"
-      formControlName="type"
-      appendTo="body"
-      bindLabel="label"
-      bindValue="code"
-      required
-      placeholder="Condition Type*"
-      [clearable]="false"
-    ></ng-select>
-
-    <mat-form-field class="condition-grid-half-2" appearance="outline">
+    <mat-form-field appearance="outline">
       <mat-label>Component to Condition</mat-label>
-      <mat-select appearance="outline" [formControl]="componentsToCondition" multiple>
+      <mat-select [formControl]="componentsToCondition" multiple>
         <mat-option *ngFor="let component of selectableComponents" [value]="component.tempId">{{
           component.label
         }}</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="condition-grid-1">
+    <div>
       <mat-label>Approval Dependent*</mat-label>
       <mat-button-toggle-group required formControlName="approvalDependant">
         <mat-button-toggle value="true">Yes</mat-button-toggle>
@@ -30,7 +22,7 @@
       </mat-button-toggle-group>
     </div>
 
-    <mat-form-field appearance="outline" class="condition-grid-2">
+    <mat-form-field appearance="outline">
       <mat-label>Security Amount</mat-label>
       <input
         matInput
@@ -41,7 +33,7 @@
       />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="condition-grid-3">
+    <mat-form-field appearance="outline">
       <mat-label>Administrative Fee Amount</mat-label>
       <input
         matInput

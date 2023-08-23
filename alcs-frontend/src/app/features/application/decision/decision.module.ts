@@ -57,7 +57,7 @@ export const decisionChildRoutes = [
     portalOnly: false,
   },
   {
-    path: 'draft/:uuid/edit',
+    path: 'draft/:uuid/edit/:index',
     menuTitle: 'Decision',
     component: DecisionInputV2Component,
     portalOnly: false,

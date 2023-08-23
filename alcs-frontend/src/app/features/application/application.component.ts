@@ -134,7 +134,7 @@ export const appChildRoutes = [
   },
   {
     path: 'decision',
-    menuTitle: 'Decision',
+    menuTitle: 'Decisions',
     icon: 'gavel',
     module: DecisionModule,
     portalOnly: false,

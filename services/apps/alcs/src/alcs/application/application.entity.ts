@@ -247,6 +247,15 @@ export class Application extends Base {
   })
   proposalExpiryDate?: Date | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Application Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
+  legacyId?: string | null;
+
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
   pauses: ApplicationPaused[];

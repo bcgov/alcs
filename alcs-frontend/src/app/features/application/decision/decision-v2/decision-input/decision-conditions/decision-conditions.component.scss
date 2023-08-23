@@ -1,3 +1,5 @@
+@use '../../../../../../../styles/colors';
+
 section {
   width: 100%;
   margin: 24px 0 56px;
@@ -8,7 +10,10 @@ section {
 }
 
 .condition {
-  margin: 48px 0;
+  border-radius: 4px;
+  border: 1px solid colors.$grey;
+  padding: 16px;
+  margin-bottom: 48px;
 
   &:first-of-type {
     margin-top: 12px;

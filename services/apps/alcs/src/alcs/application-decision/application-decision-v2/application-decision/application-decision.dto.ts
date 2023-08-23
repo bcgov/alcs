@@ -94,10 +94,6 @@ export class UpdateApplicationDecisionDto {
 
   @IsNumber()
   @IsOptional()
-  daysHideFromPublic?: number | null;
-
-  @IsNumber()
-  @IsOptional()
   rescindedDate?: number | null;
 
   @IsString()
@@ -211,9 +207,6 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => Boolean)
   isStatsRequired?: boolean | null;
-
-  @AutoMap(() => Number)
-  daysHideFromPublic?: number | null;
 
   @AutoMap(() => Number)
   rescindedDate?: number | null;

@@ -298,10 +298,6 @@ export class ApplicationDecisionV2Controller {
 
     const date = decision.date ? new Date(decision.date) : new Date();
 
-    if (decision.daysHideFromPublic) {
-      date.setDate(date.getDate() + decision.daysHideFromPublic);
-    }
-
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
       year: 'numeric',

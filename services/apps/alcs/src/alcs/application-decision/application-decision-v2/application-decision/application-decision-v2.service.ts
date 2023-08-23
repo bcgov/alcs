@@ -6,8 +6,6 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '../../../../../../../libs/common/src/exceptions/base.exception';
-import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -16,6 +14,8 @@ import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { User } from '../../../../user/user.entity';
 import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
+import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { Application } from '../../../application/application.entity';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
@@ -277,7 +277,6 @@ export class ApplicationDecisionV2Service {
     existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
     existingDecision.decisionDescription = updateDto.decisionDescription;
     existingDecision.isStatsRequired = updateDto.isStatsRequired;
-    existingDecision.daysHideFromPublic = updateDto.daysHideFromPublic;
     existingDecision.isDraft = updateDto.isDraft;
     existingDecision.rescindedDate = formatIncomingDate(
       updateDto.rescindedDate,
@@ -380,7 +379,6 @@ export class ApplicationDecisionV2Service {
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
       isStatsRequired: createDto.isStatsRequired,
-      daysHideFromPublic: createDto.daysHideFromPublic,
       rescindedDate: createDto.rescindedDate
         ? new Date(createDto.rescindedDate)
         : null,
@@ -713,17 +711,10 @@ export class ApplicationDecisionV2Service {
     decisionDate: Date | null,
     applicationDecision: ApplicationDecision,
   ) {
-    const statusDate = decisionDate;
-    if (applicationDecision.daysHideFromPublic) {
-      statusDate?.setDate(
-        statusDate.getDate() + applicationDecision.daysHideFromPublic,
-      );
-    }
-
     await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
       applicationDecision.application.fileNumber,
       SUBMISSION_STATUS.ALC_DECISION,
-      statusDate,
+      decisionDate,
     );
   }
 

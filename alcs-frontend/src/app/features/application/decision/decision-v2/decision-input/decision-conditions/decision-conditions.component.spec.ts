@@ -1,5 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatMenuModule } from '@angular/material/menu';
 import { createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -7,6 +8,7 @@ import {
   ApplicationDecisionWithLinkedResolutionDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionsComponent } from './decision-conditions.component';
 
@@ -21,10 +23,15 @@ describe('DecisionConditionComponent', () => {
     mockDecisionService.$decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
     await TestBed.configureTestingModule({
+      imports: [MatMenuModule],
       providers: [
         {
           provide: ApplicationDecisionV2Service,
           useValue: mockDecisionService,
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
       ],
       declarations: [DecisionConditionsComponent],
@@ -33,6 +40,15 @@ describe('DecisionConditionComponent', () => {
 
     fixture = TestBed.createComponent(DecisionConditionsComponent);
     component = fixture.componentInstance;
+    component.codes = {
+      ceoCriterion: [],
+      decisionComponentTypes: [],
+      decisionMakers: [],
+      linkedResolutionOutcomeTypes: [],
+      naruSubtypes: [],
+      outcomes: [],
+      decisionConditionTypes: [],
+    };
     fixture.detectChanges();
   });
 

@@ -18,6 +18,7 @@ import {
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
 
 export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionConditionDto & { tempUuid?: string };
@@ -46,7 +47,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   mappedConditions: TempApplicationDecisionConditionDto[] = [];
   decision: ApplicationDecisionDto | undefined;
 
-  constructor(private decisionService: ApplicationDecisionV2Service) {}
+  constructor(
+    private decisionService: ApplicationDecisionV2Service,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {}
 
   ngOnInit(): void {
     this.decisionService.$decision
@@ -86,8 +90,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       });
   }
 
-  onAddNewCondition() {
-    this.mappedConditions.push({
+  onAddNewCondition(typeCode: string) {
+    const matchingType = this.codes.decisionConditionTypes.find((code) => code.code === typeCode);
+    this.mappedConditions.unshift({
+      type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
     });
     this.conditionsChange.emit({
@@ -104,8 +110,16 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onRemoveCondition(index: number) {
-    this.mappedConditions.splice(index, 1);
-    this.onChanges();
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to remove this condition?',
+      })
+      .subscribe((didConfirm) => {
+        if (didConfirm) {
+          this.mappedConditions.splice(index, 1);
+          this.onChanges();
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
