@@ -1,7 +1,7 @@
 import { MJMLParseResults } from 'mjml-core';
-import { EmailTemplateService } from '../../libs/common/src/email-template-service/email-template.service';
-import { header, footer, notificationOnly, portalButton } from './partials';
-import { StatusUpdateEmail } from '../../apps/alcs/src/providers/email/email.service';
+import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
+import { header, footer, notificationOnly, portalButton } from '../partials';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
 
 type DecisionReleasedStatusEmail = StatusUpdateEmail & {
   decisionReleaseMaskedDate: number;
@@ -47,7 +47,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateALCDHtml = (
+export const generateALCDApplicationHtml = (
   data: DecisionReleasedStatusEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

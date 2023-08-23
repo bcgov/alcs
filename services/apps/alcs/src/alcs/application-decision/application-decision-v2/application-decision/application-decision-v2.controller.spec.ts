@@ -26,7 +26,7 @@ import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
 import { LocalGovernment } from '../../../local-government/local-government.entity';
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
-import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
+import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
 
@@ -312,7 +312,7 @@ describe('ApplicationDecisionV2Controller', () => {
 
     expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
     expect(mockEmailService.sendStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateALCDHtml,
+      generateStatusHtml: generateALCDApplicationHtml,
       status: SUBMISSION_STATUS.ALC_DECISION,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
