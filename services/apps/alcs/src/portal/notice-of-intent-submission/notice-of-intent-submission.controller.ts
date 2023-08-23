@@ -26,6 +26,7 @@ import {
   generateSUBMNoiGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
 import { ParentType } from '../../common/dtos/base.dto';
+import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 
 @Controller('notice-of-intent-submission')
 @UseGuards(PortalAuthGuard)
@@ -141,6 +142,30 @@ export class NoticeOfIntentSubmissionController {
       throw new BadRequestException(
         'Can only cancel in progress Notice of Intents',
       );
+    }
+
+    // TODO: Dry up code
+    const primaryContact = noticeOfIntentSubmission.owners?.find(
+      (owner) =>
+        owner.uuid === noticeOfIntentSubmission.primaryContactOwnerUuid,
+    );
+
+    const submissionGovernment = noticeOfIntentSubmission.localGovernmentUuid
+      ? await this.emailService.getSubmissionGovernmentOrFail(
+          noticeOfIntentSubmission,
+        )
+      : null;
+
+    if (primaryContact) {
+      await this.emailService.sendNoticeOfIntentStatusEmail({
+        generateStatusHtml: generateCANCNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.CANCELLED,
+        noticeOfIntentSubmission,
+        government: submissionGovernment,
+        parentType: ParentType.Application,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
     }
 
     await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
