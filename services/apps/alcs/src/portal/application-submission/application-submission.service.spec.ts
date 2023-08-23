@@ -1,4 +1,7 @@
-import { BaseServiceException } from '@app/common/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceNotFoundException,
+} from '@app/common/exceptions/base.exception';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
@@ -219,6 +222,42 @@ describe('ApplicationSubmissionService', () => {
     );
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     expect(res).toBe(application);
+  });
+
+  it('should fail on getForGovernmentByFileId if application was not submitted previously', async () => {
+    const submission = new ApplicationSubmission({
+      uuid: 'fake-uuid',
+      submissionStatuses: [
+        new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          effectiveDate: null,
+        }),
+      ],
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.CANCELLED,
+        submissionUuid: 'fake',
+      }),
+      createdBy: new User(),
+    });
+    mockRepository.findOne.mockResolvedValue(submission);
+
+    const promise = service.getForGovernmentByFileId(
+      '',
+      new LocalGovernment({
+        uuid: '',
+        name: '',
+        isFirstNation: false,
+        bceidBusinessGuid: 'cats',
+      }),
+    );
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceNotFoundException(
+        `Failed to load application with uuid ${submission.uuid}`,
+      ),
+    );
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
   });
 
   it('should load the canceled status and save the application for cancel', async () => {
