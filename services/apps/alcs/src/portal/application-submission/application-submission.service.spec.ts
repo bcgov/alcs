@@ -207,7 +207,9 @@ describe('ApplicationSubmissionService', () => {
         statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_LG,
         submissionUuid: 'fake',
       }),
-      createdBy: new User(),
+      createdBy: new User({
+        bceidBusinessGuid: 'cats',
+      }),
     });
     mockRepository.findOne.mockResolvedValue(application);
 
@@ -227,6 +229,7 @@ describe('ApplicationSubmissionService', () => {
   it('should fail on getForGovernmentByFileId if application was not submitted previously', async () => {
     const submission = new ApplicationSubmission({
       uuid: 'fake-uuid',
+      fileNumber: 'fake-number',
       submissionStatuses: [
         new ApplicationSubmissionToSubmissionStatus({
           statusTypeCode: SUBMISSION_STATUS.SUBMITTED_TO_LG,
@@ -242,7 +245,7 @@ describe('ApplicationSubmissionService', () => {
     mockRepository.findOne.mockResolvedValue(submission);
 
     const promise = service.getForGovernmentByFileId(
-      '',
+      submission.fileNumber,
       new LocalGovernment({
         uuid: '',
         name: '',
@@ -253,7 +256,7 @@ describe('ApplicationSubmissionService', () => {
 
     await expect(promise).rejects.toMatchObject(
       new ServiceNotFoundException(
-        `Failed to load application with uuid ${submission.uuid}`,
+        `Failed to load application with File ID ${submission.fileNumber}`,
       ),
     );
 

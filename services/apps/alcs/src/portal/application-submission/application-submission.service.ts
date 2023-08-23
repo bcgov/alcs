@@ -410,7 +410,7 @@ export class ApplicationSubmissionService {
   ) {
     return (
       (existingApplication.createdBy &&
-        existingApplication.createdBy.bceidBusinessGuid !==
+        existingApplication.createdBy.bceidBusinessGuid ===
           localGovernment.bceidBusinessGuid) ||
       (LG_VISIBLE_STATUSES.includes(
         existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
