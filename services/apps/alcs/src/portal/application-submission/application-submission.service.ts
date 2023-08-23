@@ -65,8 +65,6 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationSubmissionToSubmissionStatus)
-    private applicationSubmissionStatusRepository: Repository<ApplicationSubmissionToSubmissionStatus>,
     @InjectRepository(ApplicationSubmissionStatusType)
     private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectRepository(NaruSubtype)
