@@ -294,7 +294,7 @@ export class ApplicationDecisionV2Controller {
     );
 
     const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+      await this.emailService.getApplicationEmailData(fileNumber);
 
     const date = decision.date ? new Date(decision.date) : new Date();
 
@@ -306,7 +306,7 @@ export class ApplicationDecisionV2Controller {
     };
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
+      await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateALCDApplicationHtml,
         status: SUBMISSION_STATUS.ALC_DECISION,
         applicationSubmission,

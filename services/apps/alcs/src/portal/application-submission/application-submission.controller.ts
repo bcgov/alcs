@@ -201,13 +201,13 @@ export class ApplicationSubmissionController {
     }
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(
+      await this.emailService.getApplicationEmailData(
         application.fileNumber,
         application,
       );
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
+      await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
@@ -239,7 +239,7 @@ export class ApplicationSubmissionController {
       );
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(
+      await this.emailService.getApplicationEmailData(
         applicationSubmission.fileNumber,
         applicationSubmission,
       );
@@ -253,7 +253,7 @@ export class ApplicationSubmissionController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurApplicantHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
@@ -264,7 +264,7 @@ export class ApplicationSubmissionController {
         }
 
         if (submissionGovernment) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurGovernmentHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
@@ -293,7 +293,7 @@ export class ApplicationSubmissionController {
         // Send status emails for first time submissions
         if (!wasSubmittedToLfng) {
           if (primaryContact) {
-            await this.emailService.sendStatusEmail({
+            await this.emailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGApplicantHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
@@ -304,7 +304,7 @@ export class ApplicationSubmissionController {
           }
 
           if (submissionGovernment) {
-            await this.emailService.sendStatusEmail({
+            await this.emailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGGovernmentHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,

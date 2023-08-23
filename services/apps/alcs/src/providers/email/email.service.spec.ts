@@ -182,7 +182,7 @@ describe('EmailService', () => {
       mockSubmission,
     );
 
-    const res = await service.getSubmissionStatusEmailData('file-number');
+    const res = await service.getApplicationEmailData('file-number');
 
     expect(
       mockApplicationSubmissionService.getOrFailByFileNumber,
@@ -213,7 +213,7 @@ describe('EmailService', () => {
     mockApplicationService.fetchApplicationTypes.mockResolvedValue([]);
     mockApplicationService.getUuid.mockResolvedValue('fake-uuid');
 
-    await service.sendStatusEmail(mockData);
+    await service.sendApplicationStatusEmail(mockData);
 
     expect(mockApplicationSubmissionService.getStatus).toBeCalledTimes(1);
     expect(mockApplicationSubmissionService.getStatus).toBeCalledWith(

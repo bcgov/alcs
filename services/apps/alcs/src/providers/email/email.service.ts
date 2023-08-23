@@ -237,7 +237,7 @@ export class EmailService {
     return undefined;
   }
 
-  async getSubmissionStatusEmailData(
+  async getApplicationEmailData(
     fileNumber: string,
     submissionData?: ApplicationSubmission,
   ) {
@@ -336,20 +336,19 @@ export class EmailService {
     };
   }
 
-  // TODO: Rename with Application
-  async sendStatusEmail(data: ApplicationEmailData) {
+  async sendApplicationStatusEmail(data: ApplicationEmailData) {
     const email = await this.setApplicationEmailTemplate(data);
 
-    this.sendSubmissionStatusEmail(data, email);
+    this.sendStatusEmail(data, email);
   }
 
   async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
     const email = await this.setNoticeOfIntentEmailTemplate(data);
 
-    this.sendSubmissionStatusEmail(data, email);
+    this.sendStatusEmail(data, email);
   }
 
-  private sendSubmissionStatusEmail(
+  private sendStatusEmail(
     data: ApplicationEmailData | NoticeOfIntentEmailData,
     email,
   ) {

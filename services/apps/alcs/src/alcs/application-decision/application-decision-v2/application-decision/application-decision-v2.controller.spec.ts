@@ -283,12 +283,12 @@ describe('ApplicationDecisionV2Controller', () => {
       new ApplicationDecision({ wasReleased: false }),
     );
     mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+    mockEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const updates = {
       outcome: 'New Outcome',
@@ -310,8 +310,8 @@ describe('ApplicationDecisionV2Controller', () => {
       undefined,
     );
 
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
       generateStatusHtml: generateALCDApplicationHtml,
       status: SUBMISSION_STATUS.ALC_DECISION,
       applicationSubmission: mockApplicationSubmission,
@@ -333,7 +333,7 @@ describe('ApplicationDecisionV2Controller', () => {
       new ApplicationDecision({ wasReleased: true }),
     );
     mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const updates = {
       outcome: 'New Outcome',
@@ -354,6 +354,6 @@ describe('ApplicationDecisionV2Controller', () => {
       undefined,
       undefined,
     );
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(0);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 });

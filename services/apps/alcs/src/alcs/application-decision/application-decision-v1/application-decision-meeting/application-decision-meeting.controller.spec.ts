@@ -151,12 +151,12 @@ describe('ApplicationDecisionMeetingController', () => {
     mockMeetingService.getByAppFileNumber.mockResolvedValue([
       new ApplicationDecisionMeeting(),
     ]);
-    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+    mockEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const meetingToUpdate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -165,8 +165,8 @@ describe('ApplicationDecisionMeetingController', () => {
 
     await controller.create(meetingToUpdate);
 
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
       generateStatusHtml: generateREVAHtml,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
       applicationSubmission: mockSubmission,
@@ -183,7 +183,7 @@ describe('ApplicationDecisionMeetingController', () => {
       new ApplicationDecisionMeeting(),
       new ApplicationDecisionMeeting(),
     ]);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const meetingToUpdate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -192,7 +192,7 @@ describe('ApplicationDecisionMeetingController', () => {
 
     await controller.create(meetingToUpdate);
 
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(0);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 
   it('should update meeting', async () => {

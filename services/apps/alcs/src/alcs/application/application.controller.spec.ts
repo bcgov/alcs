@@ -391,19 +391,19 @@ describe('ApplicationController', () => {
       localGovernmentUuid,
     });
 
-    emailService.getSubmissionStatusEmailData.mockResolvedValue({
+    emailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    emailService.sendStatusEmail.mockResolvedValue();
+    emailService.sendApplicationStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
     await controller.cancel(mockApplicationEntity.uuid);
 
     expect(applicationService.cancel).toBeCalledTimes(1);
-    expect(emailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(emailService.sendStatusEmail).toBeCalledWith({
+    expect(emailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(emailService.sendApplicationStatusEmail).toBeCalledWith({
       generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,

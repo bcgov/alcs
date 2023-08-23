@@ -189,7 +189,7 @@ export class ApplicationSubmissionReviewController {
     );
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
+      await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateREVGHtml,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
@@ -289,7 +289,7 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBMApplicationHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: application,
@@ -306,7 +306,7 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateRFFGHtml,
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
             applicationSubmission: application,
@@ -392,7 +392,7 @@ export class ApplicationSubmissionReviewController {
 
       if (primaryContact) {
         if (returnDto.reasonForReturn === 'wrongGovernment') {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateWRNGHtml,
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
@@ -403,7 +403,7 @@ export class ApplicationSubmissionReviewController {
         }
 
         if (returnDto.reasonForReturn === 'incomplete') {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateINCMHtml,
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,

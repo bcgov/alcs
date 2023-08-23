@@ -128,10 +128,10 @@ export class ApplicationController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
     const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+      await this.emailService.getApplicationEmailData(fileNumber);
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
+      await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,
