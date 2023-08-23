@@ -107,10 +107,8 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
     """
     (
         nfu_data_list,
-        nar_data_list,
         other_data_list,
-        exc_data_list,
-        inc_data_list,
+        inc_exc_data_list,
     ) = prepare_app_sub_data(rows, adj_rows)
 
     if len(nfu_data_list) > 0:
@@ -121,27 +119,11 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
             page_size=batch_size,
         )
 
-    if len(nar_data_list) > 0:
+    if len(inc_exc_data_list) > 0:
         execute_batch(
             cursor,
-            get_insert_query_for_nar(),
-            nar_data_list,
-            page_size=batch_size,
-        )
-
-    if len(exc_data_list) > 0:
-        execute_batch(
-            cursor,
-            get_insert_query_for_exc(),
-            exc_data_list,
-            page_size=batch_size,
-        )
-
-    if len(inc_data_list) > 0:
-        execute_batch(
-            cursor,
-            get_insert_query_for_inc(),
-            inc_data_list,
+            get_insert_query_for_inc_exc(),
+            inc_exc_data_list,
             page_size=batch_size,
         )
 
@@ -169,9 +151,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list):
     - Returns the mapped lists
     """
     nfu_data_list = []
-    nar_data_list = []
-    exc_data_list = []
-    inc_data_list = []
+    inc_exc_data_list = []
     other_data_list = []
 
     for row in app_sub_raw_data_list:
@@ -180,22 +160,17 @@ def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list):
         for adj_row in raw_dir_data_list:
             dir_data = dict(adj_row) 
             data = map_direction_field(data, dir_data)
+            # currently rather slow
+            # ToDo optimize, potentially give index for dir_data resume point
 
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
-            # data = mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.NAR.value:
-            nar_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.EXC.value:
-            # data = mapOatsToAlcsLegislationCode(data)
-            exc_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.INC.value:
-            # data = mapOatsToAlcsLegislationCode(data)
-            inc_data_list.append(data)
+        elif data["alr_change_code"] == ALRChangeCode.EXC.value or data["alr_change_code"] == ALRChangeCode.INC.value:
+            inc_exc_data_list.append(data)
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
+    return nfu_data_list, other_data_list, inc_exc_data_list
 
 
 def get_insert_query(unique_fields,unique_values):
@@ -243,23 +218,11 @@ def get_insert_query_for_nfu():
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
-def get_insert_query_for_nar():
-    # naruSubtype is a part of submission, import there
-    unique_fields = ""
-    unique_values = ""
-    return get_insert_query(unique_fields,unique_values)
-
-
-def get_insert_query_for_exc():
+def get_insert_query_for_inc_exc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
-
-def get_insert_query_for_inc():
-    unique_fields = ", incl_excl_hectares"
-    unique_values = ", %(alr_area)s"
-    return get_insert_query(unique_fields,unique_values)
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
