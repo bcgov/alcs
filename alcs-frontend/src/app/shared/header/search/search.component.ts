@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
-import { ApplicationTypeDto } from '../../../services/application/application-code.dto';
+import moment from 'moment';
+import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../../services/application/application.service';
 import { SearchResultDto } from '../../../services/search/search.dto';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -33,10 +39,30 @@ export class SearchComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private localGovernmentService: ApplicationLocalGovernmentService,
+    private applicationService: ApplicationService
   ) {}
 
   ngOnInit(): void {
+    const year = moment('1950');
+    const currentYear = moment().year();
+    while (year.year() <= currentYear) {
+      this.resolutionYears.push(year.year());
+      year.add(1, 'year');
+    }
+    this.resolutionYears.reverse();
+    this.loadGovernments();
+
+    this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
+      startWith(''),
+      map((value) => this.filter(value || ''))
+    );
+
+    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
+      this.regions = regions;
+    });
+
     this.activatedRoute.queryParamMap.pipe(takeUntil(this.$destroy)).subscribe((queryParamMap) => {
       const searchText = queryParamMap.get('searchText');
 
@@ -101,5 +127,88 @@ export class SearchComponent implements OnInit, OnDestroy {
       default:
         return { classType: 'Unknown' };
     }
+  }
+
+  // new search functionality
+
+  localGovernment = new FormControl<string | null>(null);
+  createForm = new FormGroup({
+    fileNumber: new FormControl(null),
+    name: new FormControl(null),
+    pid: new FormControl(null),
+    civicAddress: new FormControl(null),
+    isIncludeOtherParcels: new FormControl(false),
+    resolutionNumber: new FormControl(null),
+    resolutionYear: new FormControl(null),
+    legacyId: new FormControl(null),
+    portalStatus: new FormControl(null),
+    componentType: new FormControl(null),
+    government: this.localGovernment,
+    region: new FormControl(null),
+    dateSubmittedFrom: new FormControl(null),
+    dateSubmittedTo: new FormControl(null),
+    dateDecidedFrom: new FormControl(null),
+    dateDecidedTo: new FormControl(null),
+  });
+
+  isSearchExpanded = true;
+  resolutionYears: number[] = [];
+  localGovernments: ApplicationLocalGovernmentDto[] = [];
+  filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
+  regions: ApplicationRegionDto[] = [];
+
+  onSubmit() {
+    console.log('onSubmit');
+  }
+
+  expandSearchClicked() {
+    this.isSearchExpanded = !this.isSearchExpanded;
+  }
+
+  private async loadGovernments() {
+    const governments = await this.localGovernmentService.list();
+    this.localGovernments = governments.sort((a, b) => (a.name > b.name ? 1 : -1));
+  }
+
+  private filter(value: string): ApplicationLocalGovernmentDto[] {
+    if (this.localGovernments) {
+      const filterValue = value.toLowerCase();
+      return this.localGovernments.filter((localGovernment) =>
+        localGovernment.name.toLowerCase().includes(filterValue)
+      );
+    }
+    return [];
+  }
+
+  onGovernmentChange($event: MatAutocompleteSelectedEvent) {
+    const localGovernmentName = $event.option.value;
+    if (localGovernmentName) {
+      const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
+      if (localGovernment) {
+        this.localGovernment.setValue(localGovernment.name);
+      }
+    }
+  }
+
+  onBlur() {
+    //Blur will fire before onChange above, so use setTimeout to delay it
+    setTimeout(() => {
+      const localGovernmentName = this.localGovernment.getRawValue();
+      if (localGovernmentName) {
+        const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
+        if (!localGovernment) {
+          this.localGovernment.setValue(null);
+          console.log('Clearing Local Government field');
+        }
+      }
+    }, 500);
+  }
+
+  onReset() {
+    console.log('onReset');
+  }
+
+  onSearch() {
+    console.log('onSearch');
   }
 }

@@ -1,44 +1,274 @@
-<div class="layout">
-  <div class="search-title">
-    <h4>Search Results:</h4>
-    <h4>File ID: {{ searchText }}</h4>
+<div class="title">
+  <h1>Advanced Search</h1>
+</div>
+
+<div class="subtitle">
+  <h6 class="subheading">Provide one or more of the following criteria:</h6>
+</div>
+
+<form class="content" [formGroup]="createForm" (ngSubmit)="onSubmit()">
+  <div class="search-fields-wrapper">
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>File ID</mat-label>
+          <input id="fileNumber" matInput placeholder="File ID" formControlName="fileNumber" />
+        </mat-form-field>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input id="name" matInput placeholder="File ID" formControlName="name" />
+        </mat-form-field>
+        <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Ministry or Department</div>
+      </div>
+    </div>
   </div>
 
-  <table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table">
-    <ng-container matColumnDef="fileId">
-      <th mat-header-cell *matHeaderCellDef>File ID</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.title }}
-      </td>
-    </ng-container>
+  <div class="address-search-fields-wrapper">
+    <div class="row">
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>PID</mat-label>
+        <input id="pid" matInput placeholder="PID" formControlName="pid" />
+      </mat-form-field>
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>Civic Address</mat-label>
+        <input id="fileNumber" matInput placeholder="Civic Address" formControlName="civicAddress" />
+      </mat-form-field>
+    </div>
 
-    <ng-container matColumnDef="class">
-      <th mat-header-cell *matHeaderCellDef>Class</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.class }}
-      </td>
-    </ng-container>
+    <div class="info-banner">
+      <div class="icon">
+        <mat-icon>info</mat-icon>
+      </div>
+      <div class="info-description">
+        Property details change over time. Use both ALCS and <a href="#FIXME">iMap</a> to confirm ALC history on a
+        property
+      </div>
+    </div>
 
-    <ng-container matColumnDef="type">
-      <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell class="type-cell" *matCellDef="let element">
-        <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
-        </app-application-type-pill>
-      </td>
-    </ng-container>
+    <mat-checkbox formControlName="isIncludeOtherParcels"
+      >Expand search to include 'Other Parcels in the Community' from applicant submission</mat-checkbox
+    >
+  </div>
+  <div class="expand-search search-fields-wrapper">
+    <div
+      *ngIf="!isSearchExpanded"
+      class="expand-search-btn"
+      (click)="expandSearchClicked()"
+      (keyup)="expandSearchClicked()"
+    >
+      <span>More Criteria</span>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </div>
 
-    <ng-container matColumnDef="government">
-      <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.government }}
-      </td>
-    </ng-container>
+    <div
+      *ngIf="isSearchExpanded"
+      class="expand-search-btn"
+      (click)="expandSearchClicked()"
+      (keyup)="expandSearchClicked()"
+    >
+      <span>Less Criteria</span>
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </div>
+  </div>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr (click)="onSelectCard(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <div *ngIf="isSearchExpanded" class="search-fields-wrapper">
+    <div class="row">
+      <div class="column">
+        <div class="row resolution-wrapper">
+          <div class="column">
+            <mat-form-field appearance="outline">
+              <mat-label>Resolution Number</mat-label>
+              <input id="fileNumber" matInput formControlName="resolutionNumber" />
+            </mat-form-field>
+          </div>
+          <div class="center">/</div>
+          <div class="column">
+            <ng-select
+              appearance="outline"
+              class="resolution-year"
+              [items]="resolutionYears"
+              formControlName="resolutionYear"
+              appendTo="body"
+              placeholder="Resolution Year"
+            ></ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Legacy ID</mat-label>
+          <input id="legacyId" matInput formControlName="legacyId" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Portal Status</mat-label>
+          <input id="portalStatus" matInput formControlName="portalStatus" />
+        </mat-form-field>
+      </div>
 
-    <tr class="mat-row no-data" *matNoDataRow>
-      <td class="text-center" colspan="4">No Search Results</td>
-    </tr>
-  </table>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>File Type</mat-label>
+          <input id="componentType" matInput formControlName="componentType" />
+        </mat-form-field>
+        <div class="subtext">Note: This field searches both proposal and decision component type</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <input
+            (blur)="onBlur()"
+            id="government"
+            type="text"
+            matInput
+            formControlName="government"
+            placeholder="Type government"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <ng-select
+          appearance="outline"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region"
+          bindLabel="label"
+          bindValue="code"
+          formControlName="region"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.label }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row date-row-label">Date Submitted</div>
+    <div class="row date-row">
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>From</mat-label>
+          <input
+            matInput
+            (click)="dateSubmittedFromPicker.open()"
+            [matDatepicker]="dateSubmittedFromPicker"
+            formControlName="dateSubmittedFrom"
+            name="dateSubmittedFrom"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateSubmittedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateSubmittedFromPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>To</mat-label>
+          <input
+            matInput
+            (click)="dateSubmittedToPicker.open()"
+            [matDatepicker]="dateSubmittedToPicker"
+            formControlName="dateSubmittedTo"
+            name="dateSubmittedTo"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateSubmittedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateSubmittedToPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row date-row-label">Date Decided</div>
+    <div class="row date-row">
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>From</mat-label>
+          <input
+            matInput
+            (click)="dateDecidedFromPicker.open()"
+            [matDatepicker]="dateDecidedFromPicker"
+            formControlName="dateDecidedFrom"
+            name="dateDecidedFrom"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedFromPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>To</mat-label>
+          <input
+            matInput
+            (click)="dateDecidedToPicker.open()"
+            [matDatepicker]="dateDecidedToPicker"
+            formControlName="dateDecidedTo"
+            name="dateDecidedTo"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedToPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="btn-controls">
+  <button mat-stroked-button color="primary" (click)="onReset()">Reset</button>
+  <button mat-flat-button color="primary" (click)="onSearch()">Search</button>
 </div>
+
+<!-- 
+
+<div class="search-title">
+  <h4>Search Results:</h4>
+  <h4>File ID: {{ searchText }}</h4>
+</div>
+
+<table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table">
+  <ng-container matColumnDef="fileId">
+    <th mat-header-cell *matHeaderCellDef>File ID</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.title }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="class">
+    <th mat-header-cell *matHeaderCellDef>Class</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.class }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell class="type-cell" *matCellDef="let element">
+      <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
+      </app-application-type-pill>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="government">
+    <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.government }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr (click)="onSelectCard(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  <tr class="mat-row no-data" *matNoDataRow>
+    <td class="text-center" colspan="4">No Search Results</td>
+  </tr>
+</table>
+</div> -->
