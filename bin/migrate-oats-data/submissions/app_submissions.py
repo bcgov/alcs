@@ -53,9 +53,21 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
+                    application_ids = [dict(item)["alr_application_id"] for item in rows]
+                    print(application_ids)
+                    application_ids_string = ', '.join(str(item) for item in application_ids)
+                    # print(application_ids_string)
+                    
+    
+                    adj_rows_query = f"""SELECT * from 
+                                        oats.oats_adjacent_land_uses oalu 
+                                        WHERE oalu.alr_application_id in ({application_ids_string})
+                                        """
+                    cursor.execute(adj_rows_query)
+                    adj_rows = cursor.fetchall()
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -79,7 +91,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows):
+def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
     """
     Function to insert submission records in batches.
 
@@ -98,7 +110,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
         other_data_list,
         exc_data_list,
         inc_data_list,
-    ) = prepare_app_sub_data(rows)
+    ) = prepare_app_sub_data(rows, adj_rows)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -142,7 +154,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list):
+def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
@@ -163,7 +175,10 @@ def prepare_app_sub_data(app_sub_raw_data_list):
 
     for row in app_sub_raw_data_list:
         data = dict(row)
-        # data = map_basic_field(data)
+        data = add_direction_field(data)
+        for adj_row in raw_dir_data_list:
+            dir_data = dict(adj_row) 
+            data = map_direction_field(data, dir_data)
 
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
             # data = mapOatsToAlcsAppPrep(data)
@@ -191,7 +206,15 @@ def get_insert_query(unique_fields,unique_values):
                     type_code,
                     is_draft,
                     audit_created_by,
-                    applicant
+                    applicant,
+                    east_land_use_type_description,
+                    west_land_use_type_description,
+                    north_land_use_type_description,
+                    south_land_use_type_description,
+                    east_land_use_type,
+                    west_land_use_type,
+                    north_land_use_type,
+                    south_land_use_type
                     {unique_fields}
                 )
                 VALUES (
@@ -200,7 +223,15 @@ def get_insert_query(unique_fields,unique_values):
                     %(type_code)s,
                     false,
                     'oats_etl',
-                    %(applicant)s
+                    %(applicant)s,
+                    %(east_land_use_type_description)s,
+                    %(west_land_use_type_description)s,
+                    %(north_land_use_type_description)s,
+                    %(south_land_use_type_description)s,
+                    %(east_land_use_type)s,
+                    %(west_land_use_type)s,
+                    %(north_land_use_type)s,
+                    %(south_land_use_type)s
                     {unique_values}
                 )
     """
@@ -228,6 +259,38 @@ def get_insert_query_for_inc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
+
+def map_direction_field(data, dir_data):
+    if data['alr_application_id'] == dir_data['alr_application_id']:
+        if dir_data['cardinal_direction'] == 'EAST':
+            data['east_land_use_type_description'] = dir_data['description']
+            data['east_land_use_type'] = dir_data['nonfarm_use_type_code']
+        if dir_data['cardinal_direction'] == 'WEST':
+            data['west_land_use_type_description'] = dir_data['description']
+            data['west_land_use_type'] = dir_data['nonfarm_use_type_code']
+        if dir_data['cardinal_direction'] == 'NORTH':
+            data['north_land_use_type_description'] = dir_data['description']
+            data['north_land_use_type'] = dir_data['nonfarm_use_type_code']
+        if dir_data['cardinal_direction'] == 'SOUTH':
+            data['south_land_use_type_description'] = dir_data['description']
+            data['south_land_use_type'] = dir_data['nonfarm_use_type_code']
+    else:
+        return data
+    
+    print(data)
+    print("direction_found")
+    return data
+
+def add_direction_field(data):
+    data['east_land_use_type_description'] = None
+    data['east_land_use_type'] = None    
+    data['west_land_use_type_description'] = None
+    data['west_land_use_type'] = None   
+    data['north_land_use_type_description'] = None
+    data['north_land_use_type'] = None   
+    data['south_land_use_type_description'] = None
+    data['south_land_use_type'] = None   
+    return data
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
