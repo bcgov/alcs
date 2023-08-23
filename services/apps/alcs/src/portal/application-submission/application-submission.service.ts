@@ -320,32 +320,9 @@ export class ApplicationSubmissionService {
       throw new Error("Cannot load by governments that don't have guids");
     }
 
-    const submissions = await this.applicationSubmissionRepository.find({
-      where: [
-        //Owns
-        {
-          createdBy: {
-            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
-          },
-          isDraft: false,
-        },
-        //Local Government
-        {
-          localGovernmentUuid: localGovernment.uuid,
-          isDraft: false,
-        },
-      ],
-      order: {
-        auditUpdatedAt: 'DESC',
-      },
-      relations: {
-        createdBy: true,
-      },
-    });
-
-    const submissionsQuery = await this.applicationSubmissionRepository
+    const submissions = await this.applicationSubmissionRepository
       .createQueryBuilder('aps')
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         (sq) =>
           sq
             .select('apsst.submission_uuid')
@@ -366,37 +343,18 @@ export class ApplicationSubmissionService {
       .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
       .where('aps.isDraft=False')
       .andWhere(
-        '(createdBy.bceid_business_guid = :bceidGuid or lg.uuid=:lgUuid)',
+        '(createdBy.bceid_business_guid = :bceidGuid or (fapsst is not null and lg.uuid=:lgUuid))',
         {
           bceidGuid: localGovernment.bceidBusinessGuid,
           lgUuid: localGovernment.uuid,
         },
       )
-      .loadAllRelationIds({
-        relations: ['application_submission_to_submission_status'],
-      })
+      .leftJoinAndSelect('aps.submissionStatuses', 'submissionStatuses')
+      .leftJoinAndSelect('submissionStatuses.statusType', 'statusType')
+      .orderBy('aps.auditUpdatedAt', 'DESC')
       .getMany();
 
-    console.log('submissionsQuery', submissionsQuery);
-
-    return submissionsQuery;
-
-    // working without typeorm
-    // return submissions.filter(
-    //   (s) =>
-    //     s.createdBy?.bceidBusinessGuid === localGovernment.bceidBusinessGuid ||
-    //     (LG_VISIBLE_STATUSES.includes(
-    //       s.status?.statusTypeCode as SUBMISSION_STATUS,
-    //     ) &&
-    //       s.submissionStatuses.some(
-    //         (status) =>
-    //           [
-    //             SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-    //             SUBMISSION_STATUS.SUBMITTED_TO_LG,
-    //           ].includes(status.statusTypeCode as SUBMISSION_STATUS) &&
-    //           status.effectiveDate !== null,
-    //       )),
-    // );
+    return submissions;
   }
 
   async getForGovernmentByUuid(uuid: string, localGovernment: LocalGovernment) {
@@ -435,12 +393,10 @@ export class ApplicationSubmissionService {
 
     if (
       !existingApplication ||
-      (existingApplication &&
-        existingApplication.createdBy.bceidBusinessGuid !==
-          localGovernment.bceidBusinessGuid &&
-        !LG_VISIBLE_STATUSES.includes(
-          existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
-        ))
+      !this.isSubmissionVisibleToLocalGovernment(
+        existingApplication,
+        localGovernment,
+      )
     ) {
       throw new ServiceNotFoundException(
         `Failed to load application with uuid ${uuid}`,
@@ -448,6 +404,28 @@ export class ApplicationSubmissionService {
     }
 
     return existingApplication;
+  }
+
+  private isSubmissionVisibleToLocalGovernment(
+    existingApplication: ApplicationSubmission,
+    localGovernment: LocalGovernment,
+  ) {
+    return (
+      (existingApplication.createdBy &&
+        existingApplication.createdBy.bceidBusinessGuid !==
+          localGovernment.bceidBusinessGuid) ||
+      (LG_VISIBLE_STATUSES.includes(
+        existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
+      ) &&
+        existingApplication.submissionStatuses.some(
+          (status) =>
+            [
+              SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+              SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            ].includes(status.statusTypeCode as SUBMISSION_STATUS) &&
+            status.effectiveDate !== null,
+        ))
+    );
   }
 
   async getForGovernmentByFileId(
@@ -486,14 +464,13 @@ export class ApplicationSubmissionService {
         },
         relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
       });
+
     if (
       !existingApplication ||
-      (existingApplication &&
-        existingApplication.createdBy.bceidBusinessGuid !==
-          localGovernment.bceidBusinessGuid &&
-        !LG_VISIBLE_STATUSES.includes(
-          existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
-        ))
+      !this.isSubmissionVisibleToLocalGovernment(
+        existingApplication,
+        localGovernment,
+      )
     ) {
       throw new ServiceNotFoundException(
         `Failed to load application with File ID ${fileNumber}`,
