@@ -67,9 +67,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       .subscribe(async (noticeOfIntent) => {
         if (noticeOfIntent) {
           this.noticeOfIntent = noticeOfIntent;
-
-          //TODO:What?
-          //this.noticeOfIntent.submittedApplication = await this.submissionService.fetchSubmission(noticeOfIntent.fileNumber);
+          this.noticeOfIntentSubmission = await this.submissionService.fetchSubmission(noticeOfIntent.fileNumber);
         }
       });
 

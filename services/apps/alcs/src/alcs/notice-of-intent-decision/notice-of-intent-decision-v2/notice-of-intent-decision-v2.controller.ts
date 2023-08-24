@@ -52,7 +52,7 @@ export class NoticeOfIntentDecisionV2Controller {
     @Param('fileNumber') fileNumber,
   ): Promise<NoticeOfIntentDecisionDto[]> {
     const decisions =
-      await this.noticeOfIntentDecisionV2Service.getByAppFileNumber(fileNumber);
+      await this.noticeOfIntentDecisionV2Service.getByFileNumber(fileNumber);
 
     return await this.mapper.mapArrayAsync(
       decisions,
@@ -136,8 +136,6 @@ export class NoticeOfIntentDecisionV2Controller {
     } else if (updateDto.modifiesUuid === null) {
       modifies = null;
     }
-
-    const decision = await this.noticeOfIntentDecisionV2Service.get(uuid);
 
     const updatedDecision = await this.noticeOfIntentDecisionV2Service.update(
       uuid,

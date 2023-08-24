@@ -152,7 +152,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         htmlText: `Decision #${decisions.length - index} Made${
           decisions.length - 1 === index ? ` - Active Days: ${noticeOfIntent.activeDays}` : ''
         }`,
-        startDate: new Date(decision.date + SORTING_ORDER.DECISION_MADE),
+        startDate: new Date(decision.date! + SORTING_ORDER.DECISION_MADE),
         isFulfilled: true,
       });
     }

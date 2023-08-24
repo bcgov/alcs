@@ -104,11 +104,11 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   });
 
   it('should get all for notice of intent', async () => {
-    mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
+    mockDecisionService.getByFileNumber.mockResolvedValue([mockDecision]);
 
     const result = await controller.getByFileNumber('fake-number');
 
-    expect(mockDecisionService.getByAppFileNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.getByFileNumber).toBeCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -160,7 +160,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   it('should update the decision', async () => {
     mockNoticeOfIntentService.getFileNumber.mockResolvedValue('file-number');
     mockDecisionService.get.mockResolvedValue(new NoticeOfIntentDecision());
-    mockDecisionService.getByAppFileNumber.mockResolvedValue([
+    mockDecisionService.getByFileNumber.mockResolvedValue([
       new NoticeOfIntentDecision(),
     ]);
     mockDecisionService.update.mockResolvedValue(mockDecision);

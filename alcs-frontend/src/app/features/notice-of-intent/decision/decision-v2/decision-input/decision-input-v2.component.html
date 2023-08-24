@@ -65,26 +65,31 @@
       <mat-datepicker #datePicker type="date"></mat-datepicker>
     </mat-form-field>
 
+    <div>
+      <mat-label>Decision Maker*</mat-label>
+      <mat-button-toggle-group required id="decisionMaker" formControlName="decisionMaker">
+        <mat-button-toggle value="CEO Delegate">CEO Delegate</mat-button-toggle>
+        <mat-button-toggle value="CEO">CEO</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Decision Maker Name</mat-label>
+      <input matInput formControlName="decisionMakerName" />
+    </mat-form-field>
+
     <ng-select
-      *ngIf="!isFirstDecision"
       appearance="outline"
       class="card-post-decision"
       [items]="postDecisions"
       appendTo="body"
-      placeholder="Linked Recon or Modification Request *"
+      placeholder="Linked Modification Request *"
       bindLabel="label"
       bindValue="uuid"
       [clearable]="false"
       formControlName="postDecision"
     >
     </ng-select>
-
-    <div>
-      <mat-form-field style="width: 100%" appearance="outline">
-        <mat-label>Decision Maker</mat-label>
-        <input matInput formControlName="decisionMaker" />
-      </mat-form-field>
-    </div>
 
     <ng-select
       appearance="outline"

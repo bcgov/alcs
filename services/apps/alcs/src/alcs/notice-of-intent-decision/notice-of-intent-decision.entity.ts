@@ -40,30 +40,28 @@ export class NoticeOfIntentDecision extends Base {
   auditDate: Date | null;
 
   @AutoMap(() => NoticeOfIntentDecisionOutcome)
-  @ManyToOne(() => NoticeOfIntentDecisionOutcome, {
-    nullable: false,
-  })
+  @ManyToOne(() => NoticeOfIntentDecisionOutcome, { nullable: false })
   outcome: NoticeOfIntentDecisionOutcome;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column()
   outcomeCode: string;
 
-  @AutoMap()
+  @AutoMap(() => Number)
   @Column({ type: 'int4', nullable: true })
-  resolutionNumber: number;
+  resolutionNumber: number | null;
 
   @AutoMap()
   @Column({ type: 'smallint' })
   resolutionYear: number;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ type: 'varchar', nullable: true })
-  decisionMaker?: string;
+  decisionMaker?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  decisionMakerName?: string;
+  decisionMakerName?: string | null;
 
   @AutoMap()
   @Column({ type: 'boolean', default: false })

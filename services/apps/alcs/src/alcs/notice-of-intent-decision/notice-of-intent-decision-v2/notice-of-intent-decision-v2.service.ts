@@ -76,7 +76,7 @@ export class NoticeOfIntentDecisionV2Service {
     });
   }
 
-  async getByAppFileNumber(number: string) {
+  async getByFileNumber(number: string) {
     const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
       number,
     );
@@ -206,6 +206,8 @@ export class NoticeOfIntentDecisionV2Service {
 
     existingDecision.auditDate = formatIncomingDate(updateDto.auditDate);
     existingDecision.modifies = modifies;
+    existingDecision.decisionMaker = updateDto.decisionMaker;
+    existingDecision.decisionMakerName = updateDto.decisionMakerName;
     existingDecision.resolutionNumber = updateDto.resolutionNumber;
     existingDecision.resolutionYear = updateDto.resolutionYear;
     existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
@@ -281,10 +283,12 @@ export class NoticeOfIntentDecisionV2Service {
     }
 
     const decision = new NoticeOfIntentDecision({
-      outcome: await this.getOutcomeByCode(createDto.outcomeCode),
-      date: new Date(createDto.date),
+      outcome: await this.getOutcomeByCode(createDto.outcomeCode ?? 'APPR'),
+      date: createDto.date ? new Date(createDto.date) : null,
       resolutionNumber: createDto.resolutionNumber,
       resolutionYear: createDto.resolutionYear,
+      decisionMaker: createDto.decisionMaker,
+      decisionMakerName: createDto.decisionMakerName,
       auditDate: createDto.auditDate
         ? new Date(createDto.auditDate)
         : undefined,
@@ -550,7 +554,7 @@ export class NoticeOfIntentDecisionV2Service {
   private async updateDecisionDates(
     noticeOfIntentDecision: NoticeOfIntentDecision,
   ) {
-    const existingDecisions = await this.getByAppFileNumber(
+    const existingDecisions = await this.getByFileNumber(
       noticeOfIntentDecision.noticeOfIntent.fileNumber,
     );
     const releasedDecisions = existingDecisions.filter(

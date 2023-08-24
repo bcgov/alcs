@@ -71,6 +71,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     outcome: new FormControl<string | null>(null, [Validators.required]),
     date: new FormControl<Date | undefined>(undefined, [Validators.required]),
     decisionMaker: new FormControl<string | null>(null, [Validators.required]),
+    decisionMakerName: new FormControl<string | null>(null),
     postDecision: new FormControl<string | null>(null),
     resolutionNumber: this.resolutionNumberControl,
     resolutionYear: this.resolutionYearControl,
@@ -94,11 +95,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.resolutionYearControl.disable();
-    this.setYear();
+    this.populateResolutionYears();
 
     this.extractAndPopulateQueryParams();
 
     if (this.fileNumber) {
+      this.setupSubscribers();
       this.loadData();
     }
   }
@@ -118,7 +120,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  private setYear() {
+  private populateResolutionYears() {
     const year = moment('1974');
     const currentYear = moment().year();
     while (year.year() <= currentYear) {
@@ -143,15 +145,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     await this.decisionService.loadDecisions(this.fileNumber);
 
     this.codes = await this.decisionService.fetchCodes();
+    this.modificationService.fetchByFileNumber(this.fileNumber);
     this.outcomes = this.codes.outcomes;
-
-    await this.prepareDataForEdit();
   }
 
-  private async prepareDataForEdit() {
+  private setupSubscribers() {
     this.decisionService.$decision
-      .pipe(takeUntil(this.$destroy))
       .pipe(combineLatestWith(this.modificationService.$modifications, this.decisionService.$decisions))
+      .pipe(takeUntil(this.$destroy))
       .subscribe(([decision, modifications, decisions]) => {
         if (decision) {
           this.existingDecision = decision;
@@ -188,12 +189,15 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
               this.minDate = new Date(minDate);
             }
 
-            if (!this.isFirstDecision) {
+            if (this.isFirstDecision) {
+              this.form.controls.postDecision.disable();
+            } else {
+              this.form.controls.postDecision.enable();
               this.form.controls.postDecision.addValidators([Validators.required]);
-              this.form.controls.decisionMaker.disable();
             }
           } else {
             this.isFirstDecision = true;
+            this.form.controls.postDecision.disable();
           }
         } else {
           this.resolutionYearControl.enable();
@@ -205,24 +209,24 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     modifications: NoticeOfIntentModificationDto[],
     existingDecision?: NoticeOfIntentDecisionDto
   ) {
-    this.postDecisions = modifications
-      .filter(
-        (modification) =>
-          (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision)
-      )
-      .map((modification, index) => ({
-        label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
-          .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
-          .join(', ')}`,
-        uuid: modification.uuid,
-      }));
+    const proceededModifications = modifications.filter(
+      (modification) =>
+        (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
+        (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision)
+    );
+    this.postDecisions = proceededModifications.map((modification, index) => ({
+      label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
+        .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
+        .join(', ')}`,
+      uuid: modification.uuid,
+    }));
   }
 
   private patchFormWithExistingData(existingDecision: NoticeOfIntentDecisionDto) {
     this.form.patchValue({
       outcome: existingDecision.outcome.code,
       decisionMaker: existingDecision.decisionMaker,
+      decisionMakerName: existingDecision.decisionMakerName,
       date: existingDecision.date ? new Date(existingDecision.date) : undefined,
       resolutionYear: existingDecision.resolutionYear,
       resolutionNumber: existingDecision.resolutionNumber?.toString(10) || undefined,
@@ -299,6 +303,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       date,
       outcome,
       decisionMaker,
+      decisionMakerName,
       resolutionNumber,
       resolutionYear,
       auditDate,
@@ -314,6 +319,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       date: formatDateForApi(date!),
       resolutionNumber: parseInt(resolutionNumber!),
       resolutionYear: resolutionYear!,
+      decisionMakerName,
       auditDate: auditDate ? formatDateForApi(auditDate) : auditDate,
       outcomeCode: outcome!,
       fileNumber: this.fileNumber,

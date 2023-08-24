@@ -21,14 +21,9 @@ export interface UpdateNoticeOfIntentDecisionDto {
 
 export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisionDto {
   date: number;
-  outcomeCode?: string;
   resolutionNumber?: number;
   resolutionYear: number;
   fileNumber: string;
-  decisionMaker?: string;
-  decisionMakerName?: string;
-  auditDate?: number | null;
-  modifiesUuid?: string;
 }
 
 export interface LinkedResolutionDto {
@@ -38,14 +33,14 @@ export interface LinkedResolutionDto {
 
 export interface NoticeOfIntentDecisionDto {
   uuid: string;
-  date: number;
+  date: number | null;
   createdAt: Date;
   outcome: NoticeOfIntentDecisionOutcomeCodeDto;
   resolutionNumber: number;
   resolutionYear: number;
   auditDate?: number | null;
-  decisionMaker: string;
-  decisionMakerName?: string;
+  decisionMaker: string | null;
+  decisionMakerName: string | null;
   isSubjectToConditions: boolean | null;
   isDraft: boolean;
   wasReleased: boolean;
@@ -57,6 +52,7 @@ export interface NoticeOfIntentDecisionDto {
   documents: NoticeOfIntentDecisionDocumentDto[];
   modifies?: LinkedResolutionDto;
   modifiedBy?: LinkedResolutionDto[];
+  modifiedByResolutions?: string[];
   components: NoticeOfIntentDecisionComponentDto[];
   conditions: NoticeOfIntentDecisionConditionDto[];
 }

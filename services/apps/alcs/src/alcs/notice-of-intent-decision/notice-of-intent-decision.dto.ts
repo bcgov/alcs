@@ -88,24 +88,6 @@ export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisio
   @IsString()
   fileNumber: string;
 
-  @IsNumber()
-  date: number;
-
-  @IsString()
-  outcomeCode: string;
-
-  @IsNumber()
-  @IsOptional()
-  resolutionNumber?: number;
-
-  @IsNumber()
-  @IsOptional()
-  resolutionYear?: number;
-
-  @IsUUID()
-  @IsOptional()
-  modifiesUuid?: string;
-
   @IsOptional()
   override isDraft = true;
 }
@@ -122,17 +104,21 @@ export class NoticeOfIntentDecisionDto {
   @AutoMap()
   fileNumber: string;
 
-  @AutoMap()
   date: number;
-
-  @AutoMap()
   auditDate: number;
+  createdAt: number;
 
   @AutoMap()
   resolutionNumber: string;
 
   @AutoMap()
   resolutionYear: number;
+
+  @AutoMap(() => String)
+  decisionMaker: string | null;
+
+  @AutoMap(() => String)
+  decisionMakerName: string | null;
 
   @AutoMap(() => Boolean)
   isSubjectToConditions: boolean | null;
@@ -154,12 +140,6 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => [NoticeOfIntentDecisionDocumentDto])
   documents: NoticeOfIntentDecisionDocumentDto[];
-
-  @AutoMap(() => String)
-  decisionMaker?: string | null;
-
-  @AutoMap(() => String)
-  decisionMakerName?: string | null;
 
   @AutoMap(() => NoticeOfIntentDecisionOutcomeCodeDto)
   outcome?: NoticeOfIntentDecisionOutcomeCodeDto | null;

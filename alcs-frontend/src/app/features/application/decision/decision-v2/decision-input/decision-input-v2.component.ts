@@ -122,6 +122,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (this.fileNumber) {
       this.loadData();
+      this.setupSubscribers();
     }
   }
 
@@ -169,11 +170,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.decisionMakers = this.codes.decisionMakers;
     this.ceoCriterionItems = this.codes.ceoCriterion;
     this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
-
-    await this.prepareDataForEdit();
   }
 
-  private async prepareDataForEdit() {
+  private setupSubscribers() {
     this.decisionService.$decision
       .pipe(takeUntil(this.$destroy))
       .pipe(
@@ -219,15 +218,18 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
               this.minDate = new Date(minDate);
             }
 
-            if (!this.isFirstDecision) {
+            if (this.isFirstDecision) {
+              this.form.controls.postDecision.disable();
+            } else {
               this.form.controls.postDecision.addValidators([Validators.required]);
-              this.form.controls.decisionMaker.disable();
+              this.form.controls.postDecision.enable();
               this.onSelectPostDecision({
                 type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
               });
             }
           } else {
             this.isFirstDecision = true;
+            this.form.controls.postDecision.disable();
           }
         } else {
           this.resolutionYearControl.enable();

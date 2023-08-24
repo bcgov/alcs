@@ -155,7 +155,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     });
 
     it('should get decisions by notice of intent', async () => {
-      const result = await service.getByAppFileNumber(
+      const result = await service.getByFileNumber(
         mockNoticeOfIntent.fileNumber,
       );
 

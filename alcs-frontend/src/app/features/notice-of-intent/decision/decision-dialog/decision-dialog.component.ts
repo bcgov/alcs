@@ -141,7 +141,7 @@ export class DecisionDialogComponent implements OnInit {
       outcome: existingDecision.outcome.code,
       decisionMaker: existingDecision.decisionMaker,
       decisionMakerName: existingDecision.decisionMakerName,
-      date: new Date(existingDecision.date),
+      date: new Date(existingDecision.date!),
       resolutionYear: existingDecision.resolutionYear,
       resolutionNumber: existingDecision.resolutionNumber.toString(10),
       auditDate: existingDecision.auditDate ? new Date(existingDecision.auditDate) : undefined,
