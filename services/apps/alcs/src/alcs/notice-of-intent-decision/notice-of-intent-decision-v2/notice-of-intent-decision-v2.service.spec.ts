@@ -488,6 +488,13 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       expect(mockDocumentService.softRemove).not.toHaveBeenCalled();
     });
 
+    it('should call through to document service for update', async () => {
+      mockDocumentService.update.mockResolvedValue({} as any);
+
+      await service.updateDocument('document-uuid', 'file-name');
+      expect(mockDocumentService.update).toHaveBeenCalledTimes(1);
+    });
+
     it('should call through to document service for download', async () => {
       const downloadUrl = 'download-url';
       mockDocumentService.getDownloadUrl.mockResolvedValue(downloadUrl);

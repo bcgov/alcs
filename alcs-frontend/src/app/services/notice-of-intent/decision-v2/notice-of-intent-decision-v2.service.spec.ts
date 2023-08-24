@@ -182,6 +182,19 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     expect(httpClient.post).toHaveBeenCalledTimes(0);
   });
 
+  it('should make an http patch call for update file', async () => {
+    httpClient.patch.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ])
+    );
+    await service.updateFile('', '', '');
+
+    expect(httpClient.patch).toHaveBeenCalledTimes(1);
+  });
+
   it('should make an http delete when deleting a file', async () => {
     httpClient.delete.mockReturnValue(
       of({

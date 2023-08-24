@@ -102,6 +102,19 @@ export class NoticeOfIntentDecisionV2Service {
     return res;
   }
 
+  async updateFile(decisionUuid: string, documentUuid: string, fileName: string) {
+    try {
+      await firstValueFrom(
+        this.http.patch(`${this.url}/${decisionUuid}/file/${documentUuid}`, {
+          fileName,
+        })
+      );
+      this.toastService.showSuccessToast('File updated');
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to update file');
+    }
+  }
+
   async downloadFile(decisionUuid: string, documentUuid: string, fileName: string, isInline = true) {
     const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
     const finalUrl = isInline ? `${url}/open` : `${url}/download`;

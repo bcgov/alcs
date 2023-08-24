@@ -174,6 +174,22 @@ export class NoticeOfIntentDecisionV2Controller {
     };
   }
 
+  @Patch('/:uuid/file/:documentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('documentUuid') documentUuid: string,
+    @Body() body: { fileName: string },
+  ) {
+    await this.noticeOfIntentDecisionV2Service.updateDocument(
+      documentUuid,
+      body.fileName,
+    );
+    return {
+      uploaded: true,
+    };
+  }
+
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
   async getDownloadUrl(
