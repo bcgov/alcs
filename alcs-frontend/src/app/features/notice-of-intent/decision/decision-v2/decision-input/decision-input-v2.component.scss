@@ -71,27 +71,9 @@ form {
     }
   }
 
-  .container,
-  .container-wide {
+  .container {
     border: 1px solid colors.$grey-dark;
     max-width: 438px;
-
-    .soil-table {
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 39% 59%;
-      grid-row-gap: 28px;
-      padding: 10px;
-
-      &.double-table {
-        grid-template-columns: 22% 37% 37%;
-        column-gap: 10px;
-      }
-
-      .full-width {
-        width: 100%;
-      }
-    }
 
     .label {
       display: flex;
@@ -108,10 +90,6 @@ form {
       text-align: right;
       padding-right: 8px;
     }
-  }
-
-  .container-wide {
-    max-width: 700px;
   }
 
   .resolution-number-wrapper {
