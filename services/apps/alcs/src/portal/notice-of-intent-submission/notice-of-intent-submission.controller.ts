@@ -25,7 +25,7 @@ import {
   generateSUBMNoiApplicantHtml,
   generateSUBMNoiGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
-import { ParentType } from '../../common/dtos/base.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 
 @Controller('notice-of-intent-submission')
@@ -155,7 +155,7 @@ export class NoticeOfIntentSubmissionController {
         status: NOI_SUBMISSION_STATUS.CANCELLED,
         noticeOfIntentSubmission,
         government: submissionGovernment,
-        parentType: ParentType.Application,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
       });
@@ -200,7 +200,7 @@ export class NoticeOfIntentSubmissionController {
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
           government: submissionGovernment,
-          parentType: ParentType.NoticeOfIntent,
+          parentType: PARENT_TYPE.NOTICE_OF_INTENT,
           primaryContact,
         });
       }
@@ -211,7 +211,7 @@ export class NoticeOfIntentSubmissionController {
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
           government: submissionGovernment,
-          parentType: ParentType.NoticeOfIntent,
+          parentType: PARENT_TYPE.NOTICE_OF_INTENT,
         });
       }
 

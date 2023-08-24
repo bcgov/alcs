@@ -17,13 +17,13 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
-import { ParentType } from '../../common/dtos/base.dto';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 describe('EmailService', () => {
   let service: EmailService;
@@ -232,7 +232,7 @@ describe('EmailService', () => {
       generateStatusHtml: () => ({} as MJMLParseResults),
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
-      parentType: 'application' as ParentType,
+      parentType: 'application' as PARENT_TYPE,
       government: new LocalGovernment({ emails: [] }),
       primaryContact: new ApplicationOwner(),
     };
@@ -257,7 +257,7 @@ describe('EmailService', () => {
       generateStatusHtml: () => ({} as MJMLParseResults),
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
-      parentType: 'notice-of-intent' as ParentType,
+      parentType: 'notice-of-intent' as PARENT_TYPE,
       government: new LocalGovernment({ emails: [] }),
       primaryContact: new NoticeOfIntentOwner(),
     };

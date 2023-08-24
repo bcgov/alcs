@@ -32,7 +32,7 @@ import { ApplicationService } from './application.service';
 import { EmailService } from '../../providers/email/email.service';
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
-import { ParentType } from '../../common/dtos/base.dto';
+import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -136,7 +136,7 @@ export class ApplicationController {
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,
         government: submissionGovernment,
-        parentType: ParentType.Application,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
       });

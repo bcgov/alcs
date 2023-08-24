@@ -32,7 +32,7 @@ import {
   generateSUBGTurGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import { ParentType } from '../../common/dtos/base.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -212,7 +212,7 @@ export class ApplicationSubmissionController {
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
         government: submissionGovernment,
-        parentType: ParentType.Application,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
       });
@@ -258,7 +258,7 @@ export class ApplicationSubmissionController {
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
             government: submissionGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
           });
         }
@@ -269,7 +269,7 @@ export class ApplicationSubmissionController {
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
             government: submissionGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
           });
         }
 
@@ -298,7 +298,7 @@ export class ApplicationSubmissionController {
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               government: submissionGovernment,
-              parentType: ParentType.Application,
+              parentType: PARENT_TYPE.APPLICATION,
               primaryContact,
             });
           }
@@ -309,7 +309,7 @@ export class ApplicationSubmissionController {
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               government: submissionGovernment,
-              parentType: ParentType.Application,
+              parentType: PARENT_TYPE.APPLICATION,
             });
           }
         }

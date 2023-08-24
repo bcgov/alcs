@@ -14,7 +14,7 @@ import { ApplicationOwner } from '../../portal/application-submission/applicatio
 import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
-import { ParentType } from '../../common/dtos/base.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
@@ -27,13 +27,13 @@ export interface StatusUpdateEmail {
   status: string;
   childType: string;
   governmentName: string;
-  parentType: ParentType;
+  parentType: PARENT_TYPE;
 }
 
 type BaseStatusEmailData = {
   generateStatusHtml: MJMLParseResults;
   government: LocalGovernment | null;
-  parentType: ParentType;
+  parentType: PARENT_TYPE;
   ccGovernment?: boolean;
   decisionReleaseMaskedDate?: string;
 };
@@ -64,9 +64,10 @@ export const noiFees = [
   { type: 'Placement of Fill/Removal of Soil', fee: 150 },
 ];
 
-const parentTypeLabel: {
-  [key in ParentType.Application | ParentType.NoticeOfIntent]: string;
-} = {
+const parentTypeLabel: Record<
+  PARENT_TYPE.APPLICATION | PARENT_TYPE.NOTICE_OF_INTENT,
+  string
+> = {
   application: 'Application',
   'notice-of-intent': 'NOI',
 };

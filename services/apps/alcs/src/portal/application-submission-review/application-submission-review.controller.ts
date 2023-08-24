@@ -35,7 +35,7 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
 import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
-import { ParentType } from '../../common/dtos/base.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -194,7 +194,7 @@ export class ApplicationSubmissionReviewController {
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
         government: userLocalGovernment,
-        parentType: ParentType.Application,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
       });
     }
@@ -294,7 +294,7 @@ export class ApplicationSubmissionReviewController {
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: application,
             government: userLocalGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });
@@ -311,7 +311,7 @@ export class ApplicationSubmissionReviewController {
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
             applicationSubmission: application,
             government: userLocalGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });
@@ -397,7 +397,7 @@ export class ApplicationSubmissionReviewController {
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
             government: userLocalGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
           });
         }
@@ -408,7 +408,7 @@ export class ApplicationSubmissionReviewController {
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,
             government: userLocalGovernment,
-            parentType: ParentType.Application,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });
