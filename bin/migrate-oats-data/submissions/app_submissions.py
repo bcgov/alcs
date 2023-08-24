@@ -101,11 +101,15 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                                 test_dict[application_id]['south_type_code'] = row['nonfarm_use_type_code']
                             
                     # for row in {adj_rows['alr_application_id']: adj_rows for adj_rows in adj_rows}
-                    print(test_dict)
+                    # print(test_dict)
+
+                    # print("this is rows")
+                    # print(rows)
+                    # print("end rows")
 
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -129,7 +133,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
+def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict):
     """
     Function to insert submission records in batches.
 
@@ -146,7 +150,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
         nfu_data_list,
         other_data_list,
         inc_exc_data_list,
-    ) = prepare_app_sub_data(rows, adj_rows)
+    ) = prepare_app_sub_data(rows, adj_rows, test_dict)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -174,7 +178,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows):
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list):
+def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list, test_dict):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
@@ -194,9 +198,12 @@ def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list):
     for row in app_sub_raw_data_list:
         data = dict(row)
         data = add_direction_field(data)
-        for adj_row in raw_dir_data_list:
-            dir_data = dict(adj_row) 
-            data = map_direction_field(data, dir_data)
+        if data["alr_application_id"] in test_dict:
+            print(test_dict[data["alr_application_id"]]["alr_application_id"])
+            #leaving off here to insert values from new fcn
+        # for adj_row in raw_dir_data_list:
+        #     dir_data = dict(adj_row) 
+        #     data = map_direction_field(data, dir_data)
             # currently rather slow
             # ToDo optimize, potentially give index for dir_data resume point
 
