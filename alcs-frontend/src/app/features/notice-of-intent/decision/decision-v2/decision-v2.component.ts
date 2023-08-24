@@ -26,6 +26,8 @@ type LoadingDecision = NoticeOfIntentDecisionDto & {
   loading: boolean;
 };
 
+export const OUTCOMES_WITH_COMPONENTS = ['APPR', 'APPA', 'RESC'];
+
 @Component({
   selector: 'app-noi-decision-v2',
   templateUrl: './decision-v2.component.html',
@@ -42,6 +44,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
   decisions: LoadingDecision[] = [];
   outcomes: NoticeOfIntentDecisionOutcomeCodeDto[] = [];
   isPaused = true;
+  OUTCOMES_WITH_COMPONENTS = OUTCOMES_WITH_COMPONENTS;
 
   modificationLabel = MODIFICATION_TYPE_LABEL;
   noticeOfIntent: NoticeOfIntentDto | undefined;

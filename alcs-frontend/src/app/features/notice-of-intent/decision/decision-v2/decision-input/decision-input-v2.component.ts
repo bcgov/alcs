@@ -21,6 +21,7 @@ import { NoticeOfIntentModificationService } from '../../../../../services/notic
 import { ToastService } from '../../../../../services/toast/toast.service';
 import { formatDateForApi } from '../../../../../shared/utils/api-date-formatter';
 import { parseBooleanToString, parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
+import { OUTCOMES_WITH_COMPONENTS } from '../decision-v2.component';
 import { ReleaseDialogComponent } from '../release-dialog/release-dialog.component';
 import { DecisionComponentsComponent } from './decision-components/decision-components.component';
 import { DecisionConditionsComponent } from './decision-conditions/decision-conditions.component';
@@ -250,7 +251,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     this.requireComponents = ['APPR', 'APPA'].includes(existingDecision.outcome.code);
 
-    if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
+    if (OUTCOMES_WITH_COMPONENTS.includes(existingDecision.outcome.code)) {
       this.showComponents = true;
     } else {
       this.showComponents = false;
@@ -434,7 +435,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   onChangeDecisionOutcome(selectedOutcome: NoticeOfIntentDecisionOutcomeCodeDto) {
-    if (['APPR', 'APPA', 'RESC'].includes(selectedOutcome.code)) {
+    if (OUTCOMES_WITH_COMPONENTS.includes(selectedOutcome.code)) {
       if (this.form.controls.isSubjectToConditions.disabled) {
         this.showComponents = true;
         this.form.controls.isSubjectToConditions.enable();

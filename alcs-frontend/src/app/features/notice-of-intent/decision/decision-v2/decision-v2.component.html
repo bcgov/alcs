@@ -129,7 +129,7 @@
       <!--      </section>-->
 
       <!-- Components -->
-      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
+      <ng-container *ngIf="OUTCOMES_WITH_COMPONENTS.includes(decision.outcome.code)">
         <h4>Components</h4>
         <section class="decision-section">
           <app-no-data
@@ -209,7 +209,7 @@
         </section>
       </ng-container>
 
-      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
+      <ng-container *ngIf="OUTCOMES_WITH_COMPONENTS.includes(decision.outcome.code) && decision.isSubjectToConditions">
         <h4>Conditions</h4>
         <section class="decision-section">
           <div>
