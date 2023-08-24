@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { ApplicationDecisionConditionTypeDto } from '../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { DecisionConditionTypesService } from '../../../services/decision-condition-types/decision-condition-types.service';
+import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types-dialog/decision-condition-types-dialog.component';
 
@@ -18,7 +18,7 @@ export class DecisionConditionTypesComponent implements OnInit {
   displayedColumns: string[] = ['label', 'description', 'code', 'actions'];
 
   constructor(
-    private decisionConditionTypesService: DecisionConditionTypesService,
+    private decisionConditionTypesService: ApplicationDecisionConditionTypesService,
     public dialog: MatDialog,
     private confirmationDialogService: ConfirmationDialogService
   ) {}

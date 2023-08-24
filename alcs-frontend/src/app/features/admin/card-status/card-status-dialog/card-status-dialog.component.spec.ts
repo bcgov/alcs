@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CardStatusService } from '../../../../services/card/card-status/card-status.service';
-import { DecisionConditionTypesService } from '../../../../services/decision-condition-types/decision-condition-types.service';
+import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 
 import { CardStatusDialogComponent } from './card-status-dialog.component';
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-basic',
@@ -7,7 +7,7 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
   styleUrls: ['./basic.component.scss'],
 })
 export class BasicComponent {
-  @Input() component!: DecisionComponentDto;
+  @Input() component!: ApplicationDecisionComponentDto;
   @Input() fillRow = false;
   @Output() saveAlrArea = new EventEmitter<string | null>();
 

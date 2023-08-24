@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../../../environments/environment';
 import { ToastService } from '../../../../toast/toast.service';
-import { DecisionComponentDto } from '../application-decision-v2.dto';
+import { ApplicationDecisionComponentDto } from '../application-decision-v2.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,9 +13,9 @@ export class ApplicationDecisionComponentService {
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  async update(uuid: string, data: DecisionComponentDto) {
+  async update(uuid: string, data: ApplicationDecisionComponentDto) {
     try {
-      const res = await firstValueFrom(this.http.patch<DecisionComponentDto>(`${this.url}/${uuid}`, data));
+      const res = await firstValueFrom(this.http.patch<ApplicationDecisionComponentDto>(`${this.url}/${uuid}`, data));
       this.toastService.showSuccessToast('Decision updated');
       return res;
     } catch (e) {

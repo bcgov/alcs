@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-pfrs',
@@ -7,5 +7,5 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
   styleUrls: ['./pfrs.component.scss'],
 })
 export class PfrsComponent {
-  @Input() component!: DecisionComponentDto;
+  @Input() component!: ApplicationDecisionComponentDto;
 }

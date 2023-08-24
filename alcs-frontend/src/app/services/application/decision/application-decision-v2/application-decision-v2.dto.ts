@@ -41,7 +41,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
-  decisionComponents?: DecisionComponentDto[];
+  decisionComponents?: ApplicationDecisionComponentDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -59,7 +59,7 @@ export interface ApplicationDecisionDto {
   chairReviewOutcome: ChairReviewOutcomeCodeDto | null;
   linkedResolutionOutcome: LinkedResolutionOutcomeTypeDto | null;
   applicationFileNumber: string;
-  documents: DecisionDocumentDto[];
+  documents: ApplicationDecisionDocumentDto[];
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
   isDraft: boolean;
@@ -72,7 +72,7 @@ export interface ApplicationDecisionDto {
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
-  components: DecisionComponentDto[];
+  components: ApplicationDecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
   wasReleased: boolean;
 }
@@ -88,7 +88,7 @@ export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationD
   index: number;
 }
 
-export interface DecisionDocumentDto {
+export interface ApplicationDecisionDocumentDto {
   uuid: string;
   fileName: string;
   mimeType: string;
@@ -170,7 +170,7 @@ export interface InclExclDecisionComponentDto {
   inclExclApplicantType?: string | null;
 }
 
-export interface DecisionComponentDto
+export interface ApplicationDecisionComponentDto
   extends NfuDecisionComponentDto,
     TurpDecisionComponentDto,
     PofoDecisionComponentDto,
@@ -190,7 +190,7 @@ export interface DecisionComponentDto
   conditionComponentsLabels?: string;
 }
 
-export interface DecisionCodesDto {
+export interface ApplicationDecisionCodesDto {
   outcomes: DecisionOutcomeCodeDto[];
   decisionMakers: DecisionMakerDto[];
   ceoCriterion: CeoCriterionDto[];
@@ -226,7 +226,7 @@ export interface ApplicationDecisionConditionDto {
   completionDate?: number | null;
   supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
-  components?: DecisionComponentDto[] | null;
+  components?: ApplicationDecisionComponentDto[] | null;
 }
 
 export interface ComponentToCondition {

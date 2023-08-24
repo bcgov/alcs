@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DecisionCodesDto } from '../../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionCodesDto } from '../../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 import { NaruInputComponent } from './naru-input.component';
 
@@ -16,7 +16,7 @@ describe('NaruInputComponent', () => {
 
     fixture = TestBed.createComponent(NaruInputComponent);
     component = fixture.componentInstance;
-    component.codes = {} as DecisionCodesDto;
+    component.codes = {} as ApplicationDecisionCodesDto;
     fixture.detectChanges();
   });
 

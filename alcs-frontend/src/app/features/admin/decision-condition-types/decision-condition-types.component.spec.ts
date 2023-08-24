@@ -3,7 +3,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { DecisionConditionTypesService } from '../../../services/decision-condition-types/decision-condition-types.service';
+import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionConditionTypesComponent } from './decision-condition-types.component';
@@ -11,7 +11,7 @@ import { DecisionConditionTypesComponent } from './decision-condition-types.comp
 describe('DecisionConditionTypesComponent', () => {
   let component: DecisionConditionTypesComponent;
   let fixture: ComponentFixture<DecisionConditionTypesComponent>;
-  let mockDecTypesService: DeepMocked<DecisionConditionTypesService>;
+  let mockDecTypesService: DeepMocked<ApplicationDecisionConditionTypesService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockConfirmationDialogService: DeepMocked<ConfirmationDialogService>;
 
@@ -24,7 +24,7 @@ describe('DecisionConditionTypesComponent', () => {
       declarations: [DecisionConditionTypesComponent],
       providers: [
         {
-          provide: DecisionConditionTypesService,
+          provide: ApplicationDecisionConditionTypesService,
           useValue: mockDecTypesService,
         },
         {

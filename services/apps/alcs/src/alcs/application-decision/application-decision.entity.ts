@@ -67,10 +67,6 @@ export class ApplicationDecision extends Base {
   outcomeCode: string;
 
   @AutoMap()
-  @ManyToOne(() => Application)
-  application: Application;
-
-  @AutoMap()
   @Column({ type: 'int4', nullable: true })
   resolutionNumber: number;
 
@@ -177,6 +173,10 @@ export class ApplicationDecision extends Base {
   @AutoMap()
   @Column({ nullable: true, type: 'text' })
   linkedResolutionOutcomeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => Application)
+  application: Application;
 
   @AutoMap()
   @Column({ type: 'uuid' })

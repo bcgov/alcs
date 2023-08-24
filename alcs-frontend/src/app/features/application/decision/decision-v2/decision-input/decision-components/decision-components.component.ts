@@ -15,8 +15,8 @@ import { ApplicationSubmissionService } from '../../../../../../services/applica
 import { ApplicationDto } from '../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
@@ -33,13 +33,13 @@ export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisab
 export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
-  @Input() codes!: DecisionCodesDto;
+  @Input() codes!: ApplicationDecisionCodesDto;
   @Input() fileNumber!: string;
   @Input() showError = false;
 
-  @Input() components: DecisionComponentDto[] = [];
+  @Input() components: ApplicationDecisionComponentDto[] = [];
   @Output() componentsChange = new EventEmitter<{
-    components: DecisionComponentDto[];
+    components: ApplicationDecisionComponentDto[];
     isValid: boolean;
   }>();
   @ViewChildren(DecisionComponentComponent) childComponents!: QueryList<DecisionComponentComponent>;
@@ -84,7 +84,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   onAddNewComponent(uiCode: string, typeCode: string) {
     switch (uiCode) {
       case 'COPY':
-        const component: DecisionComponentDto = {
+        const component: ApplicationDecisionComponentDto = {
           applicationDecisionComponentTypeCode: typeCode,
           alrArea: this.application.alrArea,
           agCap: this.application.agCap,
@@ -149,7 +149,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           applicationDecisionComponentType: this.decisionComponentTypes.find(
             (e) => e.code === typeCode && e.uiCode !== 'COPY'
           ),
-        } as DecisionComponentDto);
+        } as ApplicationDecisionComponentDto);
         break;
       default:
         this.toastService.showErrorToast(`Failed to create component ${typeCode}`);
@@ -171,7 +171,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       });
   }
 
-  trackByFn(index: any, item: DecisionComponentDto) {
+  trackByFn(index: any, item: ApplicationDecisionComponentDto) {
     return item.applicationDecisionComponentTypeCode;
   }
 
@@ -196,7 +196,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     });
   }
 
-  private async prepareDecisionComponentTypes(codes: DecisionCodesDto) {
+  private async prepareDecisionComponentTypes(codes: ApplicationDecisionCodesDto) {
     const decisionComponentTypes: DecisionComponentTypeMenuItem[] = codes.decisionComponentTypes.map((e) => ({
       ...e,
       isDisabled: false,
@@ -220,17 +220,17 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     this.updateComponentsMenuItems();
   }
 
-  private patchNfuFields(component: DecisionComponentDto) {
+  private patchNfuFields(component: ApplicationDecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
     component.endDate = this.application.proposalEndDate;
   }
 
-  private patchTurpFields(component: DecisionComponentDto) {
+  private patchTurpFields(component: ApplicationDecisionComponentDto) {
     component.expiryDate = this.application.proposalExpiryDate;
   }
 
-  private patchPofoFields(component: DecisionComponentDto) {
+  private patchPofoFields(component: ApplicationDecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
     component.soilFillTypeToPlace = this.application.submittedApplication?.soilFillTypeToPlace;
     component.soilToPlaceVolume = this.application.submittedApplication?.soilToPlaceVolume;
@@ -239,7 +239,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     component.soilToPlaceAverageDepth = this.application.submittedApplication?.soilToPlaceAverageDepth;
   }
 
-  private patchRosoFields(component: DecisionComponentDto) {
+  private patchRosoFields(component: ApplicationDecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
     component.soilTypeRemoved = this.application.submittedApplication?.soilTypeRemoved;
     component.soilToRemoveVolume = this.application.submittedApplication?.soilToRemoveVolume;
@@ -248,13 +248,13 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
   }
 
-  private patchNaruFields(component: DecisionComponentDto) {
+  private patchNaruFields(component: ApplicationDecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
     component.expiryDate = this.application.proposalExpiryDate;
     component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
   }
 
-  private patchInclExclFields(component: DecisionComponentDto) {
+  private patchInclExclFields(component: ApplicationDecisionComponentDto) {
     if (this.application.inclExclApplicantType) {
       component.inclExclApplicantType = this.application.inclExclApplicantType;
     } else {

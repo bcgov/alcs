@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   DecisionComponentTypeDto,
   NaruDecisionComponentDto,
   NfuDecisionComponentDto,
@@ -24,9 +24,9 @@ import { SubdInputComponent } from './subd-input/subd-input.component';
   styleUrls: ['./decision-component.component.scss'],
 })
 export class DecisionComponentComponent implements OnInit {
-  @Input() data!: DecisionComponentDto;
-  @Input() codes!: DecisionCodesDto;
-  @Output() dataChange = new EventEmitter<DecisionComponentDto>();
+  @Input() data!: ApplicationDecisionComponentDto;
+  @Input() codes!: ApplicationDecisionCodesDto;
+  @Output() dataChange = new EventEmitter<ApplicationDecisionComponentDto>();
   @Output() remove = new EventEmitter<void>();
 
   @ViewChild(SubdInputComponent) subdInputComponent?: SubdInputComponent;
