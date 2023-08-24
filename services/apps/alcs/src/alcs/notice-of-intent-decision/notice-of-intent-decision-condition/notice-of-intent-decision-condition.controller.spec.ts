@@ -12,10 +12,10 @@ import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decis
 
 describe('NoticeOfIntentDecisionConditionController', () => {
   let controller: NoticeOfIntentDecisionConditionController;
-  let mockApplicationDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
+  let mockNOIDecisionConditionService: DeepMocked<NoticeOfIntentDecisionConditionService>;
 
   beforeEach(async () => {
-    mockApplicationDecisionConditionService = createMock();
+    mockNOIDecisionConditionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -28,7 +28,7 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         NoticeOfIntentDecisionProfile,
         {
           provide: NoticeOfIntentDecisionConditionService,
-          useValue: mockApplicationDecisionConditionService,
+          useValue: mockNOIDecisionConditionService,
         },
         {
           provide: ClsService,
@@ -81,23 +81,22 @@ describe('NoticeOfIntentDecisionConditionController', () => {
         supersededDate: date,
       });
 
-      mockApplicationDecisionConditionService.getOneOrFail.mockResolvedValue(
-        condition,
-      );
-      mockApplicationDecisionConditionService.update.mockResolvedValue(updated);
+      mockNOIDecisionConditionService.getOneOrFail.mockResolvedValue(condition);
+      mockNOIDecisionConditionService.update.mockResolvedValue(updated);
 
       const result = await controller.update(uuid, updates);
 
-      expect(
-        mockApplicationDecisionConditionService.getOneOrFail,
-      ).toHaveBeenCalledWith(uuid);
-      expect(
-        mockApplicationDecisionConditionService.update,
-      ).toHaveBeenCalledWith(condition, {
-        ...updates,
-        completionDate: date,
-        supersededDate: date,
-      });
+      expect(mockNOIDecisionConditionService.getOneOrFail).toHaveBeenCalledWith(
+        uuid,
+      );
+      expect(mockNOIDecisionConditionService.update).toHaveBeenCalledWith(
+        condition,
+        {
+          ...updates,
+          completionDate: date,
+          supersededDate: date,
+        },
+      );
       expect(new Date(result.completionDate!)).toEqual(updated.completionDate);
       expect(new Date(result.supersededDate!)).toEqual(updated.supersededDate);
       expect(result.description).toEqual(updated.description);

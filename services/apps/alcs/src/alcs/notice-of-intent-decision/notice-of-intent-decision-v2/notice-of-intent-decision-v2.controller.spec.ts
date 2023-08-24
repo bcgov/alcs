@@ -24,7 +24,7 @@ import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.
 describe('NoticeOfIntentDecisionV2Controller', () => {
   let controller: NoticeOfIntentDecisionV2Controller;
   let mockDecisionService: DeepMocked<NoticeOfIntentDecisionV2Service>;
-  let mockApplicationService: DeepMocked<NoticeOfIntentService>;
+  let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockEmailService: DeepMocked<EmailService>;
@@ -34,7 +34,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
   beforeEach(async () => {
     mockDecisionService = createMock();
-    mockApplicationService = createMock();
+    mockNoticeOfIntentService = createMock();
     mockCodeService = createMock();
     mockModificationService = createMock();
     mockEmailService = createMock();
@@ -61,7 +61,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
         },
         {
           provide: NoticeOfIntentService,
-          useValue: mockApplicationService,
+          useValue: mockNoticeOfIntentService,
         },
         {
           provide: CodeService,
@@ -103,7 +103,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should get all for application', async () => {
+  it('should get all for notice of intent', async () => {
     mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
 
     const result = await controller.getByFileNumber('fake-number');
@@ -129,8 +129,8 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     expect(mockDecisionService.delete).toBeCalledWith('fake-uuid');
   });
 
-  it('should create the decision if application exists', async () => {
-    mockApplicationService.getByFileNumber.mockResolvedValue(
+  it('should create the decision if noi exists', async () => {
+    mockNoticeOfIntentService.getByFileNumber.mockResolvedValue(
       mockNoticeOfintent,
     );
     mockDecisionService.create.mockResolvedValue(mockDecision);
@@ -158,7 +158,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   });
 
   it('should update the decision', async () => {
-    mockApplicationService.getFileNumber.mockResolvedValue('file-number');
+    mockNoticeOfIntentService.getFileNumber.mockResolvedValue('file-number');
     mockDecisionService.get.mockResolvedValue(new NoticeOfIntentDecision());
     mockDecisionService.getByAppFileNumber.mockResolvedValue([
       new NoticeOfIntentDecision(),

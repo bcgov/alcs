@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import moment from 'moment';
-import { UpdateApplicationDecisionConditionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { NoticeOfIntentDecisionConditionService } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { UpdateNoticeOfIntentDecisionConditionDto } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
 import {
@@ -34,7 +33,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
   isReadMoreClicked = false;
   isReadMoreVisible = false;
   conditionStatus: string = '';
-  isRequireSurveyPlan = false;
 
   constructor(private conditionService: NoticeOfIntentDecisionConditionService) {}
 
@@ -45,8 +43,6 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         ...this.condition,
         componentLabelsStr: this.condition.conditionComponentsLabels?.flatMap((e) => e.label).join(';\n'),
       };
-
-      this.isRequireSurveyPlan = this.condition.type?.code === 'RSPL';
     }
   }
 

@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../../shared/confirmation-dialo
 
 import { DecisionV1Component } from './decision-v1.component';
 
-describe('DecisionComponent', () => {
+describe('DecisionV1Component', () => {
   let component: DecisionV1Component;
   let fixture: ComponentFixture<DecisionV1Component>;
   let mockNOIDetailService: DeepMocked<NoticeOfIntentDetailService>;

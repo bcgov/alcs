@@ -56,7 +56,7 @@ export class NoticeOfIntentService {
 
   async fetchByFileNumber(fileNumber: string) {
     try {
-      return firstValueFrom(this.http.get<NoticeOfIntentDto>(`${this.url}/${fileNumber}`));
+      return await firstValueFrom(this.http.get<NoticeOfIntentDto>(`${this.url}/${fileNumber}`));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to fetch Notice of Intent');

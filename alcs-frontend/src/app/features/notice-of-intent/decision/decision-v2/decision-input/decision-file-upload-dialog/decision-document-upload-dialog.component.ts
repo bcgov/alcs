@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
+import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
 @Component({
@@ -39,7 +39,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; decisionUuid: string; existingDocument?: DecisionDocumentDto },
+    public data: { fileId: string; decisionUuid: string; existingDocument?: NoticeOfIntentDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
     private decisionService: NoticeOfIntentDecisionV2Service
   ) {}

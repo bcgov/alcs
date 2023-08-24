@@ -59,7 +59,7 @@ export interface ApplicationDecisionDto {
   chairReviewOutcome: ChairReviewOutcomeCodeDto | null;
   linkedResolutionOutcome: LinkedResolutionOutcomeTypeDto | null;
   applicationFileNumber: string;
-  documents: DecisionDocumentDto[];
+  documents: ApplicationDecisionDocumentDto[];
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
   isDraft: boolean;
@@ -88,7 +88,7 @@ export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationD
   index: number;
 }
 
-export interface DecisionDocumentDto {
+export interface ApplicationDecisionDocumentDto {
   uuid: string;
   fileName: string;
   mimeType: string;

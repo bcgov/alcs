@@ -93,12 +93,10 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.fileNumber = '100135';
-    this.load();
-
     this.route.params.pipe(takeUntil(this.destroy)).subscribe(async (routeParams) => {
       const { fileNumber } = routeParams;
       this.fileNumber = fileNumber;
+      this.load();
     });
 
     this.noticeOfIntentDetailService.$noticeOfIntent.pipe(takeUntil(this.destroy)).subscribe((noticeOfIntent) => {

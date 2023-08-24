@@ -204,8 +204,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     modifications: NoticeOfIntentModificationDto[],
     existingDecision?: NoticeOfIntentDecisionDto
   ) {
-    //TOOD: Clean this up
-    const mappedModifications = modifications
+    this.postDecisions = modifications
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
@@ -217,8 +216,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           .join(', ')}`,
         uuid: modification.uuid,
       }));
-
-    this.postDecisions = [...mappedModifications];
   }
 
   private patchFormWithExistingData(existingDecision: NoticeOfIntentDecisionDto) {

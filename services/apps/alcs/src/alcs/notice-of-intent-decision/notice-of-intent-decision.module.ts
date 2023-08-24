@@ -44,6 +44,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     NoticeOfIntentSubmissionStatusModule,
   ],
   providers: [
+    //These are in the same module, so be careful to import the correct one
     NoticeOfIntentDecisionV1Service,
     NoticeOfIntentDecisionV2Service,
     NoticeOfIntentDecisionComponentService,

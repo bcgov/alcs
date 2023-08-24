@@ -7,29 +7,29 @@ import { UpdateNoticeOfIntentDecisionConditionDto } from './notice-of-intent-dec
 import { NoticeOfIntentDecisionCondition } from './notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from './notice-of-intent-decision-condition.service';
 
-describe('ApplicationDecisionConditionService', () => {
+describe('NoticeOfIntentDecisionConditionService', () => {
   let service: NoticeOfIntentDecisionConditionService;
-  let mockApplicationDecisionConditionRepository: DeepMocked<
+  let mockNOIDecisionConditionRepository: DeepMocked<
     Repository<NoticeOfIntentDecisionCondition>
   >;
-  let mockAppDecCondTypeRepository: DeepMocked<
+  let mockNOIDecisionConditionTypeRepository: DeepMocked<
     Repository<NoticeOfIntentDecisionConditionType>
   >;
 
   beforeEach(async () => {
-    mockApplicationDecisionConditionRepository = createMock();
-    mockAppDecCondTypeRepository = createMock();
+    mockNOIDecisionConditionRepository = createMock();
+    mockNOIDecisionConditionTypeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NoticeOfIntentDecisionConditionService,
         {
           provide: getRepositoryToken(NoticeOfIntentDecisionCondition),
-          useValue: mockApplicationDecisionConditionRepository,
+          useValue: mockNOIDecisionConditionRepository,
         },
         {
           provide: getRepositoryToken(NoticeOfIntentDecisionConditionType),
-          useValue: mockAppDecCondTypeRepository,
+          useValue: mockNOIDecisionConditionTypeRepository,
         },
       ],
     }).compile();
@@ -44,18 +44,14 @@ describe('ApplicationDecisionConditionService', () => {
   });
 
   it('should call repo to get one or fails with correct parameters', async () => {
-    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
 
     const result = await service.getOneOrFail('fake');
 
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: 'fake' },
       relations: { type: true },
     });
@@ -68,19 +64,17 @@ describe('ApplicationDecisionConditionService', () => {
       new NoticeOfIntentDecisionCondition(),
     ];
 
-    mockApplicationDecisionConditionRepository.remove.mockResolvedValue(
+    mockNOIDecisionConditionRepository.remove.mockResolvedValue(
       {} as NoticeOfIntentDecisionCondition,
     );
 
     await service.remove(conditions);
 
-    expect(mockApplicationDecisionConditionRepository.remove).toBeCalledTimes(
-      1,
-    );
+    expect(mockNOIDecisionConditionRepository.remove).toBeCalledTimes(1);
   });
 
   it('should create new components when given a DTO without a UUID', async () => {
-    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
 
@@ -90,13 +84,11 @@ describe('ApplicationDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(2);
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
   });
 
   it('should update existing components when given a DTO with a UUID', async () => {
-    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
       new NoticeOfIntentDecisionCondition({
         uuid: 'uuid',
       }),
@@ -110,12 +102,8 @@ describe('ApplicationDecisionConditionService', () => {
 
     expect(result).toBeDefined();
     expect(result.length).toBe(1);
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledWith({
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledWith({
       where: { uuid: 'uuid' },
       relations: { type: true },
     });
@@ -123,10 +111,10 @@ describe('ApplicationDecisionConditionService', () => {
   });
 
   it('should persist entity if persist flag is true', async () => {
-    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
-    mockApplicationDecisionConditionRepository.save.mockResolvedValue(
+    mockNOIDecisionConditionRepository.save.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
 
@@ -135,17 +123,15 @@ describe('ApplicationDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], true);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
-    expect(mockApplicationDecisionConditionRepository.save).toBeCalledTimes(1);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.save).toBeCalledTimes(1);
   });
 
   it('should not persist entity if persist flag is false', async () => {
-    mockApplicationDecisionConditionRepository.findOneOrFail.mockResolvedValue(
+    mockNOIDecisionConditionRepository.findOneOrFail.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
-    mockApplicationDecisionConditionRepository.save.mockResolvedValue(
+    mockNOIDecisionConditionRepository.save.mockResolvedValue(
       new NoticeOfIntentDecisionCondition(),
     );
 
@@ -154,9 +140,7 @@ describe('ApplicationDecisionConditionService', () => {
     const result = await service.createOrUpdate(updateDtos, [], [], false);
 
     expect(result).toBeDefined();
-    expect(
-      mockApplicationDecisionConditionRepository.findOneOrFail,
-    ).toBeCalledTimes(0);
-    expect(mockApplicationDecisionConditionRepository.save).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.findOneOrFail).toBeCalledTimes(0);
+    expect(mockNOIDecisionConditionRepository.save).toBeCalledTimes(0);
   });
 });
