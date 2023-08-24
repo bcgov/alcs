@@ -200,6 +200,15 @@ def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list, test_dict):
         data = add_direction_field(data)
         if data["alr_application_id"] in test_dict:
             print(test_dict[data["alr_application_id"]]["alr_application_id"])
+            data['east_land_use_type_description'] = test_dict[data["alr_application_id"]]['east_description']
+            data['east_land_use_type'] = test_dict[data["alr_application_id"]]['east_type_code']
+            data['west_land_use_type_description'] = test_dict[data["alr_application_id"]]['west_description']
+            data['west_land_use_type'] = test_dict[data["alr_application_id"]]['west_type_code']
+            data['north_land_use_type_description'] = test_dict[data["alr_application_id"]]['north_description']
+            data['north_land_use_type'] = test_dict[data["alr_application_id"]]['north_type_code']
+            data['south_land_use_type_description'] = test_dict[data["alr_application_id"]]['south_description']
+            data['south_land_use_type'] = test_dict[data["alr_application_id"]]['south_type_code']
+            print(data)
             #leaving off here to insert values from new fcn
         # for adj_row in raw_dir_data_list:
         #     dir_data = dict(adj_row) 

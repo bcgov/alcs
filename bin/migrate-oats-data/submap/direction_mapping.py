@@ -27,3 +27,6 @@ def map_direction_field(data, dir_data):
     else:
         return data
     return data
+
+# def map_dict_field(data, NESW)
+#     if data[]
