@@ -5,7 +5,9 @@ from common import (
 )
 from submap import (
     add_direction_field,
-    map_direction_field,
+    map_direction_values,
+    create_dir_dict,
+    get_NESW_rows,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
@@ -57,59 +59,12 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    application_ids = [dict(item)["alr_application_id"] for item in rows]
-                    application_ids_string = ', '.join(str(item) for item in application_ids)    
-                    adj_rows_query = f"""SELECT * from 
-                                        oats.oats_adjacent_land_uses oalu 
-                                        WHERE oalu.alr_application_id in ({application_ids_string})
-                                        """
-                    cursor.execute(adj_rows_query)
-                    adj_rows = cursor.fetchall()
-                    test_dict = {}
-                    for row in adj_rows:
-                        application_id = row['alr_application_id']
-                        if application_id in test_dict:
-                            if row['cardinal_direction'] == 'EAST':
-                                test_dict[application_id]['east_description'] = row['description']
-                                test_dict[application_id]['east_type_code'] = row['nonfarm_use_type_code']
-                            # test_dict[application_id].append(row)
-                            if row['cardinal_direction'] == 'WEST':
-                                test_dict[application_id]['west_description'] = row['description']
-                                test_dict[application_id]['west_type_code'] = row['nonfarm_use_type_code']
-                            if row['cardinal_direction'] == 'NORTH':
-                                test_dict[application_id]['north_description'] = row['description']
-                                test_dict[application_id]['north_type_code'] = row['nonfarm_use_type_code']
-                            if row['cardinal_direction'] == 'SOUTH':
-                                test_dict[application_id]['south_description'] = row['description']
-                                test_dict[application_id]['south_type_code'] = row['nonfarm_use_type_code']
-                        else:
-                            test_dict[application_id] = {}
-                            test_dict[application_id]['alr_application_id'] = row['alr_application_id']
-                            # test_dict[application_id] = [row]
-                            if row['cardinal_direction'] == 'EAST':
-                                test_dict[application_id]['east_description'] = row['description']
-                                test_dict[application_id]['east_type_code'] = row['nonfarm_use_type_code']
-                            # test_dict[application_id].append(row)
-                            if row['cardinal_direction'] == 'WEST':
-                                test_dict[application_id]['west_description'] = row['description']
-                                test_dict[application_id]['west_type_code'] = row['nonfarm_use_type_code']
-                            if row['cardinal_direction'] == 'NORTH':
-                                test_dict[application_id]['north_description'] = row['description']
-                                test_dict[application_id]['north_type_code'] = row['nonfarm_use_type_code']
-                            if row['cardinal_direction'] == 'SOUTH':
-                                test_dict[application_id]['south_description'] = row['description']
-                                test_dict[application_id]['south_type_code'] = row['nonfarm_use_type_code']
-                            
-                    # for row in {adj_rows['alr_application_id']: adj_rows for adj_rows in adj_rows}
-                    # print(test_dict)
-
-                    # print("this is rows")
-                    # print(rows)
-                    # print("end rows")
+                    adj_rows = get_NESW_rows(rows, cursor)
+                    direction_data = create_dir_dict(adj_rows)
 
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -133,7 +88,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict):
+def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
     """
     Function to insert submission records in batches.
 
@@ -150,7 +105,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict):
         nfu_data_list,
         other_data_list,
         inc_exc_data_list,
-    ) = prepare_app_sub_data(rows, adj_rows, test_dict)
+    ) = prepare_app_sub_data(rows, direction_data)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -178,7 +133,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, adj_rows, test_dict):
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list, test_dict):
+def prepare_app_sub_data(app_sub_raw_data_list, direction_data):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
@@ -198,24 +153,8 @@ def prepare_app_sub_data(app_sub_raw_data_list, raw_dir_data_list, test_dict):
     for row in app_sub_raw_data_list:
         data = dict(row)
         data = add_direction_field(data)
-        if data["alr_application_id"] in test_dict:
-            print(test_dict[data["alr_application_id"]]["alr_application_id"])
-            data['east_land_use_type_description'] = test_dict[data["alr_application_id"]]['east_description']
-            data['east_land_use_type'] = test_dict[data["alr_application_id"]]['east_type_code']
-            data['west_land_use_type_description'] = test_dict[data["alr_application_id"]]['west_description']
-            data['west_land_use_type'] = test_dict[data["alr_application_id"]]['west_type_code']
-            data['north_land_use_type_description'] = test_dict[data["alr_application_id"]]['north_description']
-            data['north_land_use_type'] = test_dict[data["alr_application_id"]]['north_type_code']
-            data['south_land_use_type_description'] = test_dict[data["alr_application_id"]]['south_description']
-            data['south_land_use_type'] = test_dict[data["alr_application_id"]]['south_type_code']
-            print(data)
-            #leaving off here to insert values from new fcn
-        # for adj_row in raw_dir_data_list:
-        #     dir_data = dict(adj_row) 
-        #     data = map_direction_field(data, dir_data)
-            # currently rather slow
-            # ToDo optimize, potentially give index for dir_data resume point
-
+        if data["alr_application_id"] in direction_data:
+            data = map_direction_values(data, direction_data)
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
             nfu_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.EXC.value or data["alr_change_code"] == ALRChangeCode.INC.value:
