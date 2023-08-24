@@ -33,6 +33,7 @@ import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 import { EmailService } from '../../../../providers/email/email.service';
 import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../../../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
@@ -117,16 +118,17 @@ export class ApplicationDecisionMeetingController {
     // Send status email for first review discussion
     if (meetings.length === 1) {
       const { applicationSubmission, primaryContact, submissionGovernment } =
-        await this.emailService.getSubmissionStatusEmailData(
+        await this.emailService.getApplicationEmailData(
           meeting.applicationFileNumber,
         );
 
       if (primaryContact) {
-        await this.emailService.sendStatusEmail({
+        await this.emailService.sendApplicationStatusEmail({
           generateStatusHtml: generateREVAHtml,
           status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
           applicationSubmission,
           government: submissionGovernment,
+          parentType: PARENT_TYPE.APPLICATION,
           primaryContact,
           ccGovernment: true,
         });

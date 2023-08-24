@@ -1,7 +1,7 @@
 import { MJMLParseResults } from 'mjml-core';
-import { EmailTemplateService } from '../../libs/common/src/email-template-service/email-template.service';
-import { header, footer, notificationOnly, portalButton } from './partials';
-import { StatusUpdateEmail } from '../../apps/alcs/src/providers/email/email.service';
+import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
+import { header, footer, notificationOnly, portalButton } from '../partials';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to advise that the above noted <b>{{ applicationType }}</b> application has been cancelled and will not be considered further.
+          This email is to advise that the above noted <b>{{ childType }}</b> application has been cancelled and will not be considered further.
         </mj-text>
         <mj-text font-size='16px'>
           If you are an agent acting on behalf of the applicant(s)/landowner(s), it is your responsibility to advise your client(s) of this, and any future, correspondence.
@@ -37,6 +37,8 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateCANCHtml = (data: StatusUpdateEmail): MJMLParseResults => {
+export const generateCANCApplicationHtml = (
+  data: StatusUpdateEmail,
+): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);
 };

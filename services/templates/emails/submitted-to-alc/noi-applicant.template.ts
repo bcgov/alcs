@@ -1,7 +1,10 @@
 import { MJMLParseResults } from 'mjml-core';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from '../partials';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
+import {
+  StatusUpdateEmail,
+  noiFees,
+} from '../../../apps/alcs/src/providers/email/email.service';
 
 const template = `<mjml>
   <mj-head>
@@ -21,20 +24,26 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
+          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> Notice of Intent (NOI). Please refer to the ALC NOI ID in all future correspondence with this office. A copy of this NOI has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
         </mj-text>
         <mj-text font-size='16px'>
-          APPLICATION FEES - Payable to the Minister of Finance c/o the ALC
+          NOTICE OF INTENT FEES - Payable to the Minister of Finance c/o the ALC
         </mj-text>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
             <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
-            <th style="padding-left: 8px">{{ governmentName }} Portion of Fee</th>
+            <th style="padding-left: 8px">ALC Portion of Fee</th>
           </tr>
-          <tr style="font-size: 16px; border: 1px solid black;">
-            <td style="padding-left: 8px; border-right: 1px solid black;">Transportation, Utility, and Recreational Trail Uses</td>
-            <td style="padding-left: 8px">$1500</td>
-          </tr>
+          ${noiFees
+            .map((a) => {
+              return `
+              <tr style="font-size: 16px; border: 1px solid black;">
+                <td style="padding-left: 8px; border-right: 1px solid black;">${a.type}</td>
+                <td style="padding-left: 8px">$${a.fee}</td>
+              </tr>
+              `;
+            })
+            .join('')}
         </mj-table>
         <mj-text font-size='16px'>
           This fee can be paid:
@@ -44,7 +53,7 @@ const template = `<mjml>
           </ol>
         </mj-text>
         <mj-text font-size='16px'>
-          Please include your assigned Application ID with your payment.
+          Please include your assigned NOI ID with your payment.
         </mj-text>
         <mj-text font-size='16px'>
           Mailing address:
@@ -76,7 +85,7 @@ const template = `<mjml>
           If you are an agent acting on behalf of the applicant(s) / landowner(s), it is your responsibility to advise them of this, and any future, correspondence.
         </mj-text>
         <mj-text font-size='16px'>
-          Please log into the ALC Portal for further updates on the application as it progresses.
+          Please log into the ALC Portal for further updates on the NOI as it progresses.
         </mj-text>
         ${notificationOnly}
       </mj-column>
@@ -89,7 +98,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBGTurApplicantHtml = (
+export const generateSUBMNoiApplicantHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

@@ -33,7 +33,7 @@ import { ApplicationSubmissionReviewController } from './application-submission-
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
-import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
@@ -217,7 +217,7 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should send an email through the service when creating with a valid primary contact', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const user = new User({
       bceidBusinessGuid: 'id',
@@ -251,7 +251,9 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     });
 
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(2);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
@@ -340,7 +342,7 @@ describe('ApplicationSubmissionReviewController', () => {
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
@@ -384,12 +386,15 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBMApplicantHtml,
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+      generateStatusHtml: generateSUBMApplicationHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -432,7 +437,7 @@ describe('ApplicationSubmissionReviewController', () => {
       errors: [],
     });
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
     mockAppDocService.list.mockResolvedValue([]);
 
     await controller.finish(fileNumber, {
@@ -454,12 +459,15 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateRFFGHtml,
       status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -490,7 +498,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const documents = [
       new ApplicationDocument({
@@ -551,12 +559,15 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
     ).toHaveBeenCalledTimes(2);
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateINCMHtml,
       status: SUBMISSION_STATUS.INCOMPLETE,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });
@@ -587,7 +598,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const documents = [
       new ApplicationDocument({
@@ -624,12 +635,15 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     );
 
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toHaveBeenCalledWith({
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
       generateStatusHtml: generateWRNGHtml,
       status: SUBMISSION_STATUS.WRONG_GOV,
       applicationSubmission: mockSubmission,
       government: mockLG,
+      parentType: 'application',
       primaryContact: mockOwner,
     });
   });

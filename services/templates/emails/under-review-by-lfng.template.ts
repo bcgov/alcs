@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to advise that the above noted <b>{{ applicationType }}</b> application has been received by the <b>{{ governmentName }}</b> for review.
+          This email is to advise that the above noted <b>{{ childType }}</b> application has been received by the <b>{{ governmentName }}</b> for review.
         </mj-text>
         <mj-text font-size='16px'>
           If you have not already done so, please contact the {{ governmentName }} to determine the preferred form of payment as the application may not be processed until payment is received.

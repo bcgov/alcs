@@ -22,6 +22,7 @@ import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-sub
 import { NoticeOfIntentSubmissionController } from './notice-of-intent-submission.controller';
 import { NoticeOfIntentSubmission } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
 @Module({
   imports: [
@@ -31,10 +32,11 @@ import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.s
       NoticeOfIntentParcelOwnershipType,
       OwnerType,
       NoticeOfIntentOwner,
+      NoticeOfIntentSubmissionStatusType,
     ]),
     NoticeOfIntentSubmissionStatusModule,
     forwardRef(() => NoticeOfIntentModule),
-    AuthorizationModule,
+    forwardRef(() => AuthorizationModule),
     forwardRef(() => DocumentModule),
     forwardRef(() => BoardModule),
     LocalGovernmentModule,

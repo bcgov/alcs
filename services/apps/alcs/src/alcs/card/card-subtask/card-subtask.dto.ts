@@ -4,6 +4,14 @@ import { ApplicationTypeDto } from '../../code/application-code/application-type
 import { AssigneeDto } from '../../../user/user.dto';
 import { CardDto } from '../card.dto';
 
+export enum PARENT_TYPE {
+  APPLICATION = 'application',
+  RECONSIDERATION = 'reconsideration',
+  COVENANT = 'covenant',
+  MODIFICATION = 'modification',
+  PLANNING_REVIEW = 'planning-review',
+  NOTICE_OF_INTENT = 'notice-of-intent',
+}
 export class UpdateCardSubtaskDto {
   @AutoMap()
   @IsUUID()
@@ -50,13 +58,7 @@ export class HomepageSubtaskDTO extends CardSubtaskDto {
   card: CardDto;
   title: string;
   appType?: ApplicationTypeDto;
-  parentType:
-    | 'application'
-    | 'reconsideration'
-    | 'covenant'
-    | 'modification'
-    | 'planning-review'
-    | 'notice-of-intent';
+  parentType: PARENT_TYPE;
   activeDays?: number;
   paused: boolean;
 }

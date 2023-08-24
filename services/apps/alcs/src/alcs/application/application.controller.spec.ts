@@ -25,7 +25,7 @@ import { EmailService } from '../../providers/email/email.service';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 
 describe('ApplicationController', () => {
@@ -391,23 +391,24 @@ describe('ApplicationController', () => {
       localGovernmentUuid,
     });
 
-    emailService.getSubmissionStatusEmailData.mockResolvedValue({
+    emailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    emailService.sendStatusEmail.mockResolvedValue();
+    emailService.sendApplicationStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
     await controller.cancel(mockApplicationEntity.uuid);
 
     expect(applicationService.cancel).toBeCalledTimes(1);
-    expect(emailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(emailService.sendStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateCANCHtml,
+    expect(emailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(emailService.sendApplicationStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
     });

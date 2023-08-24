@@ -40,7 +40,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     forwardRef(() => BoardModule),
     CardModule,
     DocumentModule,
-    NoticeOfIntentModule,
+    forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentSubmissionStatusModule,
   ],
   providers: [

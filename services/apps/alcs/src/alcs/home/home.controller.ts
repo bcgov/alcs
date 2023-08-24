@@ -23,6 +23,7 @@ import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import {
   CARD_SUBTASK_TYPE,
   HomepageSubtaskDTO,
+  PARENT_TYPE,
 } from '../card/card-subtask/card-subtask.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
@@ -219,7 +220,7 @@ export class HomeController {
           paused: false,
           title: `${recon.application.fileNumber} (${recon.application.applicant})`,
           appType: recon.application.type,
-          parentType: 'reconsideration',
+          parentType: PARENT_TYPE.RECONSIDERATION,
         });
       }
     }
@@ -251,7 +252,7 @@ export class HomeController {
           paused: appPausedMap.get(application.uuid) || false,
           title: `${application.fileNumber} (${application.applicant})`,
           appType: application.type,
-          parentType: 'application',
+          parentType: PARENT_TYPE.APPLICATION,
         });
       }
     }
@@ -271,7 +272,7 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${planningReview.fileNumber} (${planningReview.type})`,
-          parentType: 'planning-review',
+          parentType: PARENT_TYPE.PLANNING_REVIEW,
         });
       }
     }
@@ -291,7 +292,7 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${covenant.fileNumber} (${covenant.applicant})`,
-          parentType: 'covenant',
+          parentType: PARENT_TYPE.COVENANT,
         });
       }
     }
@@ -312,7 +313,7 @@ export class HomeController {
             completedAt: subtask.completedAt?.getTime(),
             paused: false,
             title: `${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`,
-            parentType: 'notice-of-intent',
+            parentType: PARENT_TYPE.NOTICE_OF_INTENT,
           });
         }
       }
@@ -337,7 +338,7 @@ export class HomeController {
           paused: false,
           title: `${modification.application.fileNumber} (${modification.application.applicant})`,
           appType: modification.application.type,
-          parentType: 'modification',
+          parentType: PARENT_TYPE.MODIFICATION,
         });
       }
     }
@@ -362,7 +363,7 @@ export class HomeController {
           completedAt: subtask.completedAt?.getTime(),
           paused: false,
           title: `${modification.noticeOfIntent.fileNumber} (${modification.noticeOfIntent.applicant})`,
-          parentType: 'modification',
+          parentType: PARENT_TYPE.MODIFICATION,
         });
       }
     }

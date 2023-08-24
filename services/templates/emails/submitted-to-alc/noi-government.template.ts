@@ -21,10 +21,10 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          Agricultural Land Commission <b>{{ childType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been successfully submitted to the Agricultural Land Commission. A read-only copy of the application has been submitted to the <b>{{ governmentName }}</b> for informational purposes. Should the {{ governmentName }} wish to comment on the application, please submit comments directly to the ALC. 
+          Agricultural Land Commission <b>{{ childType }}</b> NOI ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been successfully submitted to the Agricultural Land Commission. A read-only copy of the Notice of Intent (NOI) has been submitted to the <b>{{ governmentName }}</b> for informational purposes. Should the {{ governmentName}} wish to comment on the NOI, please submit comments directly to the ALC. 
         </mj-text>
         <mj-text font-size='16px'>
-          Please log into the ALC Portal to view the application.
+          Please log into the ALC Portal to view the NOI.
         </mj-text>
         ${notificationOnly}
       </mj-column>
@@ -37,7 +37,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBGTurGovernmentHtml = (
+export const generateSUBMNoiGovernmentHtml = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);

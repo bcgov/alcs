@@ -3,6 +3,10 @@ import { EmailTemplateService } from '../../../libs/common/src/email-template-se
 import { header, footer, notificationOnly, portalButton } from '../partials';
 import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
 
+type DecisionReleasedStatusEmail = StatusUpdateEmail & {
+  decisionReleaseMaskedDate: number;
+};
+
 const template = `<mjml>
   <mj-head>
     <mj-style>
@@ -21,10 +25,16 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          Agricultural Land Commission <b>{{ childType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been successfully submitted to the Agricultural Land Commission. A read-only copy of the application has been submitted to the <b>{{ governmentName }}</b> for informational purposes. Should the {{ governmentName }} wish to comment on the application, please submit comments directly to the ALC. 
+        The decision for the above noted Notice of Intent (NOI) has been released on the the ALC Portal. 
         </mj-text>
         <mj-text font-size='16px'>
-          Please log into the ALC Portal to view the application.
+          The decision document can be found by clicking 'View' from the NOI Inbox table in the ALC Portal, and then navigating to the 'ALC Review and Decision' tab. The decision will be available to the public on <b>{{ decisionReleaseMaskedDate }}</b>.
+        </mj-text>
+        <mj-text font-size='16px'>
+          Further correspondence with respect to this NOI should be directed to <a href="mailto:ALC.Soil@gov.bc.ca">ALC.Soil@gov.bc.ca</a>. 
+        </mj-text>
+        <mj-text font-size='16px'>
+          If you are an agent acting on behalf of the applicant(s)/landowner(s), it is your responsibility to advise your client(s) of this, and any future, correspondence.
         </mj-text>
         ${notificationOnly}
       </mj-column>
@@ -37,8 +47,8 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBGTurGovernmentHtml = (
-  data: StatusUpdateEmail,
+export const generateALCDNoticeOfIntentHtml = (
+  data: DecisionReleasedStatusEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);
 };

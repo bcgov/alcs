@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to advise that the above noted <b>{{ applicationType }}</b> application does not fall within the jurisdiction of the <b>{{ governmentName }}</b> and consequently it has been returned to the applicant. 
+          This email is to advise that the above noted <b>{{ childType }}</b> application does not fall within the jurisdiction of the <b>{{ governmentName }}</b> and consequently it has been returned to the applicant. 
         </mj-text>
         <mj-text font-size='16px'>
           Please login to the ALC Portal to select the correct Local or First Nation Government jurisdiction and re-submit the application. 
