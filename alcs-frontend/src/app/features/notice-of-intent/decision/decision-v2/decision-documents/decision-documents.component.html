@@ -1,15 +1,20 @@
 <div *ngIf="editable">
-  <button
-    type="button"
-    [ngClass]="{ 'upload-button': true, 'error-field-outlined ng-invalid': showError }"
-    class=""
-    (click)="onUploadFile()"
-    mat-flat-button
-    color="primary"
-  >
-    Upload
-  </button>
-  <app-error-message *ngIf="showError"></app-error-message>
+  <div class="split">
+    <h3>Documents</h3>
+    <div>
+      <button
+        type="button"
+        [ngClass]="{ 'upload-button': true, 'error-field-outlined ng-invalid': showError }"
+        class=""
+        (click)="onUploadFile()"
+        mat-flat-button
+        color="primary"
+      >
+        Add Document
+      </button>
+      <app-error-message *ngIf="showError"></app-error-message>
+    </div>
+  </div>
 </div>
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3 documents">
   <ng-container matColumnDef="type">

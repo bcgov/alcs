@@ -1,0 +1,15 @@
+.soil-table {
+  display: grid;
+  grid-template-columns: calc(20% - 10px) 40% 40%;
+  grid-row-gap: 28px;
+  padding: 10px;
+  column-gap: 10px;
+
+  .full-width {
+    width: 100%;
+  }
+
+  label {
+    font-weight: 700;
+  }
+}

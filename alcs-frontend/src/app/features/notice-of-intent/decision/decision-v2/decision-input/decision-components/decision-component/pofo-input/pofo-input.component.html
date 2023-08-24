@@ -38,77 +38,57 @@
     ></textarea>
   </mat-form-field>
 
-  <div class="container">
-    <div class="soil-table">
-      <div></div>
-      <div>
-        <label for="volume">Fill to be placed</label>
-      </div>
-      <div class="label">
-        <label for="volumeToPlace">Volume*</label>
-      </div>
-      <div>
-        <mat-form-field appearance="outline" class="full-width">
-          <input
-            min="0.01"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="volumeToPlace"
-          />
-          <span matTextSuffix>m<sup>3</sup></span>
-        </mat-form-field>
-      </div>
-      <div class="label">
-        <label for="areaToPlace">Area*</label>
-        <div class="subtext">Note: 0.01 ha is 100m2</div>
-      </div>
-      <div>
-        <mat-form-field appearance="outline" class="full-width">
-          <input
-            min="0.01"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="areaToPlace"
-          />
-          <span matTextSuffix>ha</span>
-        </mat-form-field>
-      </div>
-      <div class="label">
-        <label for="maximumDepthToPlace">Maximum Depth*</label>
-      </div>
-      <div>
-        <mat-form-field appearance="outline" class="full-width">
-          <input
-            min="0.01"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="maximumDepthToPlace"
-          />
-          <span matTextSuffix>m</span>
-        </mat-form-field>
-      </div>
-      <div class="label">
-        <label for="averageDepthToPlace">Average Depth*</label>
-      </div>
-      <div>
-        <mat-form-field appearance="outline" class="full-width">
-          <input
-            min="0.01"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            matInput
-            formControlName="averageDepthToPlace"
-          />
-          <span matTextSuffix>m</span>
-        </mat-form-field>
-      </div>
-    </div>
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="volumeToPlace"
+        placeholder="Volume*"
+      />
+      <span matTextSuffix>m<sup>3</sup></span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="areaToPlace"
+        placeholder="Area*"
+      />
+      <span matTextSuffix>ha</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="maximumDepthToPlace"
+        placeholder="Maximum Depth*"
+      />
+      <span matTextSuffix>m</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="averageDepthToPlace"
+        placeholder="Volume*"
+      />
+      <span matTextSuffix>m</span>
+    </mat-form-field>
   </div>
 </form>
