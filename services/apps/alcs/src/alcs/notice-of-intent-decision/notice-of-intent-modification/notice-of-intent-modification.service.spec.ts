@@ -13,7 +13,7 @@ import { CardService } from '../../card/card.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
-import { NoticeOfIntentDecisionService } from '../notice-of-intent-decision.service';
+import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
 import {
   NoticeOfIntentModificationCreateDto,
   NoticeOfIntentModificationUpdateDto,
@@ -26,7 +26,7 @@ describe('NoticeOfIntentModificationService', () => {
   let service: NoticeOfIntentModificationService;
   let noticeOfIntentServiceMock: DeepMocked<NoticeOfIntentService>;
   let cardServiceMock: DeepMocked<CardService>;
-  let decisionServiceMock: DeepMocked<NoticeOfIntentDecisionService>;
+  let decisionServiceMock: DeepMocked<NoticeOfIntentDecisionV1Service>;
 
   let mockModification;
   let mockModificationCreateDto: NoticeOfIntentModificationCreateDto;
@@ -83,7 +83,7 @@ describe('NoticeOfIntentModificationService', () => {
           useValue: cardServiceMock,
         },
         {
-          provide: NoticeOfIntentDecisionService,
+          provide: NoticeOfIntentDecisionV1Service,
           useValue: decisionServiceMock,
         },
         {

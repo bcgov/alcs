@@ -15,7 +15,7 @@ export class NoticeOfIntentDetailService {
     this.$noticeOfIntent.next(noticeOfIntent);
   }
 
-  async clear() {
+  clear() {
     this.$noticeOfIntent.next(undefined);
   }
 

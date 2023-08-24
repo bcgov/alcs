@@ -8,7 +8,7 @@ import {
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   ApplicationDecisionWithLinkedResolutionDto,
-  DecisionCodesDto,
+  ApplicationDecisionCodesDto,
 } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import {
@@ -53,7 +53,7 @@ export class ConditionsComponent implements OnInit {
   decision!: ApplicationDecisionWithConditionComponentLabels;
   conditionDecision!: ApplicationDecisionDto;
   application: ApplicationDto | undefined;
-  codes!: DecisionCodesDto;
+  codes!: ApplicationDecisionCodesDto;
   today!: number;
 
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;

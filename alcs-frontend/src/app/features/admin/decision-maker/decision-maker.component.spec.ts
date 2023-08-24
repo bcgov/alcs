@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
-import { DecisionMakerService } from '../../../services/decision-maker/decision-maker.service';
+import { ApplicationDecisionMakerService } from '../../../services/application/application-decision-maker/application-decision-maker.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionMakerComponent } from './decision-maker.component';
@@ -25,7 +25,7 @@ describe('DecisionMakerComponent', () => {
       declarations: [DecisionMakerComponent],
       providers: [
         {
-          provide: DecisionMakerService,
+          provide: ApplicationDecisionMakerService,
           useValue: mockCeoCriterionService,
         },
         {

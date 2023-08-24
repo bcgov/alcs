@@ -1,0 +1,98 @@
+import { HttpClient } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { of, throwError } from 'rxjs';
+import { ToastService } from '../../toast/toast.service';
+import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status.service';
+
+describe('NoticeOfIntentSubmissionStatusService', () => {
+  let service: NoticeOfIntentSubmissionStatusService;
+  let mockHttpClient: DeepMocked<HttpClient>;
+  let mockToastService: DeepMocked<ToastService>;
+
+  beforeEach(() => {
+    mockToastService = createMock();
+    mockHttpClient = createMock();
+
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: HttpClient,
+          useValue: mockHttpClient,
+        },
+        {
+          provide: ToastService,
+          useValue: mockToastService,
+        },
+      ],
+    });
+    service = TestBed.inject(NoticeOfIntentSubmissionStatusService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should fetch statuses by fileNumber', async () => {
+    mockHttpClient.get.mockReturnValue(
+      of([
+        {
+          submissionUuid: 'fake',
+        },
+      ])
+    );
+
+    const res = await service.fetchSubmissionStatusesByFileNumber('1');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].submissionUuid).toEqual('fake');
+  });
+
+  it('should show a toast message if fetch statuses by fileNumber fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    try {
+      await service.fetchSubmissionStatusesByFileNumber('1');
+    } catch {
+      // suppress error message
+    }
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch current status by fileNumber', async () => {
+    mockHttpClient.get.mockReturnValue(
+      of({
+        submissionUuid: 'fake',
+      })
+    );
+
+    const res = await service.fetchCurrentStatusByFileNumber('1');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.submissionUuid).toEqual('fake');
+  });
+
+  it('should show a toast message if fetch current status by fileNumber fails', async () => {
+    mockHttpClient.get.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    try {
+      await service.fetchCurrentStatusByFileNumber('1');
+    } catch {
+      // suppress error message
+    }
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+});

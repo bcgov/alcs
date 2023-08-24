@@ -17,7 +17,7 @@ export class NoticeOfIntentParcelService {
     try {
       return firstValueFrom(this.http.get<NoticeOfIntentParcelDto[]>(`${this.baseUrl}/${fileNumber}`));
     } catch (e) {
-      this.toastService.showErrorToast('Failed to fetch Application Parcels');
+      this.toastService.showErrorToast('Failed to fetch Notice of Intent Parcels');
       throw e;
     }
   }

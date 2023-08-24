@@ -14,7 +14,7 @@ import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
-import { NoticeOfIntentDecisionService } from '../notice-of-intent-decision.service';
+import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
 import {
   NoticeOfIntentModificationCreateDto,
   NoticeOfIntentModificationDto,
@@ -29,7 +29,7 @@ export class NoticeOfIntentModificationService {
     private modificationRepository: Repository<NoticeOfIntentModification>,
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentService: NoticeOfIntentService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV1Service,
     private cardService: CardService,
   ) {}
 

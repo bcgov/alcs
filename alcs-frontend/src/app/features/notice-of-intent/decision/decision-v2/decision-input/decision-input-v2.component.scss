@@ -1,0 +1,166 @@
+@use '../../../../../../styles/colors.scss';
+
+.bottom-scroller {
+  margin-top: 36px;
+  position: absolute;
+  bottom: 0;
+  left: 212px;
+  right: 0;
+  background-color: #fff;
+  padding: 16px;
+  z-index: 2;
+  border-top: 1px solid colors.$grey-light;
+
+  button:not(:last-child) {
+    margin-right: 16px !important;
+  }
+}
+
+form {
+  padding-bottom: 120px;
+}
+
+:host::ng-deep {
+  .grid,
+  .grid-2 {
+    display: grid;
+    grid-template-columns: calc(50% - 12px) calc(50% - 12px);
+    grid-column-gap: 24px;
+    grid-row-gap: 32px;
+
+    .full-width {
+      grid-column: 1/3;
+    }
+  }
+
+  h3 {
+    margin-top: 36px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .resolution-number-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 16px 0.7fr;
+    .resolution-number-btn-wrapper {
+      width: 100%;
+    }
+  }
+
+  .row-no-flex,
+  .row,
+  .btn-row {
+    width: 100%;
+    margin: 24px 0;
+  }
+
+  .row,
+  .btn-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 100%;
+      flex: 1;
+    }
+
+    .release-decision-btn {
+      width: 50%;
+    }
+  }
+
+  .container,
+  .container-wide {
+    border: 1px solid colors.$grey-dark;
+    max-width: 438px;
+
+    .soil-table {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 39% 59%;
+      grid-row-gap: 28px;
+      padding: 10px;
+
+      &.double-table {
+        grid-template-columns: 22% 37% 37%;
+        column-gap: 10px;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+    }
+
+    .label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 0;
+
+      .subtext {
+        margin-bottom: -8px !important;
+      }
+    }
+
+    input {
+      text-align: right;
+      padding-right: 8px;
+    }
+  }
+
+  .container-wide {
+    max-width: 700px;
+  }
+
+  .resolution-number-wrapper {
+    display: flex;
+    align-items: center;
+
+    .generate-number-btn {
+      width: 100%;
+    }
+
+    .resolution-number {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      color: colors.$grey-dark;
+
+      .delete-icon {
+        color: colors.$error-color;
+      }
+    }
+  }
+
+  .decision-component-form {
+    .grid {
+      margin-bottom: 24px;
+    }
+  }
+
+  .soil-text-area {
+    height: 100px !important;
+  }
+
+  .error-field-outlined.ng-invalid {
+    border: 1px solid colors.$error-color !important;
+
+    .mat-button-toggle {
+      border-color: colors.$error-color;
+      color: colors.$error-color !important;
+    }
+
+    &.upload-button {
+      border: 2px solid colors.$error-color;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .toggle-label {
+    color: colors.$grey-dark;
+    display: block;
+    margin-bottom: 3px;
+  }
+}

@@ -1,0 +1,70 @@
+<ng-content></ng-content>
+<div>
+  <div class="subheading2">Use End Date</div>
+  {{ component.endDate | date }}
+  <app-no-data *ngIf="component.endDate === null || component.endDate === undefined"></app-no-data>
+</div>
+<div class="full-width">
+  <div class="subheading2">Type, origin and quality of fill proposed to be placed</div>
+  <div class="pre-wrapped-text">{{ component.soilFillTypeToPlace }}</div>
+  <app-no-data
+    *ngIf="component.soilFillTypeToPlace === null || component.soilFillTypeToPlace === undefined"
+  ></app-no-data>
+</div>
+<div class="full-width">
+  <table>
+    <thead>
+      <th></th>
+      <th>Fill to be Placed</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="soil-table-label">Volume</td>
+        <td>
+          <span *ngIf="component.soilToPlaceVolume !== null && component.soilToPlaceVolume !== undefined">
+            {{ component.soilToPlaceVolume }} m<sup>3</sup>
+          </span>
+          <app-no-data
+            *ngIf="component.soilToPlaceVolume === null || component.soilToPlaceVolume === undefined"
+          ></app-no-data>
+        </td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">
+          Area
+          <div class="subtext">Note: 0.01 ha is 100m2</div>
+        </td>
+        <td>
+          <span *ngIf="component.soilToPlaceArea !== null && component.soilToPlaceArea !== undefined">
+            {{ component.soilToPlaceArea }} ha
+          </span>
+          <app-no-data
+            *ngIf="component.soilToPlaceArea === null || component.soilToPlaceArea === undefined"
+          ></app-no-data>
+        </td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Maximum Depth</td>
+        <td>
+          <span *ngIf="component.soilToPlaceMaximumDepth !== null && component.soilToPlaceMaximumDepth !== undefined">
+            {{ component.soilToPlaceMaximumDepth }} m
+          </span>
+          <app-no-data
+            *ngIf="component.soilToPlaceMaximumDepth === null || component.soilToPlaceMaximumDepth === undefined"
+          ></app-no-data>
+        </td>
+      </tr>
+      <tr>
+        <td class="soil-table-label">Average Depth</td>
+        <td>
+          <span *ngIf="component.soilToPlaceAverageDepth !== null && component.soilToPlaceAverageDepth !== undefined"
+            >{{ component.soilToPlaceAverageDepth }} m</span
+          >
+          <app-no-data
+            *ngIf="component.soilToPlaceAverageDepth === null || component.soilToPlaceAverageDepth === undefined"
+          ></app-no-data>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

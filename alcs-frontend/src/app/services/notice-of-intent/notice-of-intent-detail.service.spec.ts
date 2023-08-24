@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { firstValueFrom, of } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
 import { NoticeOfIntentDetailService } from './notice-of-intent-detail.service';
-import { NoticeOfIntentDto, UpdateNoticeOfIntentDto } from './notice-of-intent.dto';
+import { NoticeOfIntentDto } from './notice-of-intent.dto';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
 describe('NoticeOfIntentDetailService', () => {
@@ -33,7 +33,7 @@ describe('NoticeOfIntentDetailService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should publish the loaded application', async () => {
+  it('should publish the loaded noi', async () => {
     noticeOfIntentService.fetchByFileNumber.mockResolvedValue({
       fileNumber: '1',
     } as NoticeOfIntentDto);
@@ -46,7 +46,7 @@ describe('NoticeOfIntentDetailService', () => {
     expect(res!.fileNumber).toEqual('1');
   });
 
-  it('should publish the updated application for update', async () => {
+  it('should publish the updated noi for update', async () => {
     noticeOfIntentService.update.mockResolvedValue({
       fileNumber: '1',
     } as NoticeOfIntentDto);

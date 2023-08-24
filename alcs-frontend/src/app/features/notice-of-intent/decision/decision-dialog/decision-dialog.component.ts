@@ -118,18 +118,16 @@ export class DecisionDialogComponent implements OnInit {
       outcomeCode: outcome!,
       decisionMaker: decisionMaker!,
       decisionMakerName: decisionMakerName!,
-      applicationFileNumber: this.data.fileNumber,
+      fileNumber: this.data.fileNumber,
       modifiesUuid: postDecision ?? undefined,
+      isDraft: false,
     };
 
     try {
       if (this.data.existingDecision) {
         await this.decisionService.update(this.data.existingDecision.uuid, data);
       } else {
-        await this.decisionService.create({
-          ...data,
-          applicationFileNumber: this.data.fileNumber,
-        });
+        await this.decisionService.create(data);
       }
       this.dialogRef.close(true);
     } finally {

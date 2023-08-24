@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { CardStatusService } from '../../../services/card/card-status/card-status.service';
-import { DecisionConditionTypesService } from '../../../services/decision-condition-types/decision-condition-types.service';
+import { ApplicationDecisionConditionTypesService } from '../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { CardStatusComponent } from './card-status.component';

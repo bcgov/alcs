@@ -9,7 +9,7 @@ import {
   ApplicationDecisionDto,
   ApplicationDecisionWithLinkedResolutionDto,
   CreateApplicationDecisionDto,
-  DecisionCodesDto,
+  ApplicationDecisionCodesDto,
   UpdateApplicationDecisionDto,
 } from './application-decision-v2.dto';
 
@@ -37,9 +37,9 @@ export class ApplicationDecisionV2Service {
     return decisions;
   }
 
-  async fetchCodes(): Promise<DecisionCodesDto> {
+  async fetchCodes(): Promise<ApplicationDecisionCodesDto> {
     try {
-      return await firstValueFrom(this.http.get<DecisionCodesDto>(`${this.url}/codes`));
+      return await firstValueFrom(this.http.get<ApplicationDecisionCodesDto>(`${this.url}/codes`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
