@@ -25,13 +25,13 @@ def get_NESW_rows(rows, cursor):
 
 def map_direction_values(data, direction_data):
     # adds direction field values into data row
-    data['east_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('east_description', 'No entry found')
+    data['east_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('east_description', 'No data found')
     data['east_land_use_type'] = direction_data.get(data["alr_application_id"], {}).get('east_type_code', None)
-    data['west_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('west_description', 'No entry found')
+    data['west_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('west_description', 'No data found')
     data['west_land_use_type'] = direction_data.get(data["alr_application_id"], {}).get('west_type_code', None)
-    data['north_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('north_description', 'No entry found')
+    data['north_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('north_description', 'No data found')
     data['north_land_use_type'] = direction_data.get(data["alr_application_id"], {}).get('north_type_code', None)    
-    data['south_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('south_description', 'No entry found')
+    data['south_land_use_type_description'] = direction_data.get(data["alr_application_id"], {}).get('south_description', 'No data found')
     data['south_land_use_type'] = direction_data.get(data["alr_application_id"], {}).get('south_type_code', None)
     return data
 
