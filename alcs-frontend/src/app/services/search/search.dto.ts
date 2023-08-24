@@ -8,4 +8,7 @@ export interface SearchResultDto {
   localGovernmentName: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
+  ownerName: string;
+  dateSubmitted: number;
+  portalStatus?: string;
 }

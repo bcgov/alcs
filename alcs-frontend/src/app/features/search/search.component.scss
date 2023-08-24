@@ -1,4 +1,4 @@
-@use '../../../../styles/colors';
+@use '../../../styles/colors';
 h3,
 div,
 span {
@@ -159,4 +159,9 @@ span {
       width: 18px;
     }
   }
+}
+
+.search-result-wrapper {
+  margin-top: 60px;
+  margin-bottom: 60px;
 }

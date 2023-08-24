@@ -4,20 +4,25 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/application/application-code.dto';
-import { ApplicationLocalGovernmentDto } from '../../../services/application/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernmentService } from '../../../services/application/application-local-government/application-local-government.service';
-import { ApplicationService } from '../../../services/application/application.service';
-import { SearchResultDto } from '../../../services/search/search.dto';
-import { SearchService } from '../../../services/search/search.service';
-import { ToastService } from '../../../services/toast/toast.service';
-import { COVENANT_TYPE_LABEL, PLANNING_TYPE_LABEL } from '../../application-type-pill/application-type-pill.constants';
+import { ApplicationRegionDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
+import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
+import { ApplicationService } from '../../services/application/application.service';
+import { SearchResultDto } from '../../services/search/search.dto';
+import { SearchService } from '../../services/search/search.service';
+import { ToastService } from '../../services/toast/toast.service';
+import {
+  COVENANT_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+} from '../../shared/application-type-pill/application-type-pill.constants';
 
 interface SearchResult {
-  title: string;
-  class: string;
+  fileNumber: string;
+  dateSubmitted: number;
+  ownerName: string;
   type?: any;
   government?: string;
+  portalStatus?: string;
   referenceId: string;
   board?: string;
   label?: ApplicationTypeDto;
@@ -33,7 +38,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchText?: string;
 
   searchResults: SearchResult[] = [];
-  displayedColumns = ['fileId', 'class', 'type', 'government'];
+  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
 
   constructor(
     private searchService: SearchService,
@@ -103,11 +108,13 @@ export class SearchComponent implements OnInit, OnDestroy {
       const { classType, label } = this.mapClassAndLabels(e);
 
       return {
-        title: `${e.fileNumber} ${e.applicant ?? ''}`,
-        class: classType,
+        fileNumber: e.fileNumber,
+        dateSubmitted: e.dateSubmitted,
+        ownerName: e.ownerName,
         type: e.type,
         label: label,
         government: e.localGovernmentName,
+        portalStatus: e.portalStatus,
         referenceId: e.referenceId,
         board: e.boardCode,
       };

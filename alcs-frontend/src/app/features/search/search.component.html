@@ -227,48 +227,78 @@
   <button mat-flat-button color="primary" (click)="onSearch()">Search</button>
 </div>
 
-<!-- 
+<div class="search-fields-wrapper search-result-wrapper">
+  <h2 class="search-title">Search Results:</h2>
 
-<div class="search-title">
-  <h4>Search Results:</h4>
-  <h4>File ID: {{ searchText }}</h4>
+  <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
+    <mat-tab>
+      <ng-template mat-tab-label> Applications: 0 </ng-template>
+      <ng-container *ngTemplateOutlet="searchResultTable"></ng-container>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Notice of Intent: 0 </ng-template>
+      <ng-container *ngTemplateOutlet="searchResultTable"></ng-container>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Non-Applications: 0 </ng-template>
+      <ng-container *ngTemplateOutlet="searchResultTable"></ng-container>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
-<table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table">
-  <ng-container matColumnDef="fileId">
-    <th mat-header-cell *matHeaderCellDef>File ID</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.title }}
-    </td>
-  </ng-container>
+<ng-template #searchResultTable>
+  <table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table">
+    <ng-container matColumnDef="fileId">
+      <th mat-header-cell *matHeaderCellDef>File ID</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.fileNumber }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="class">
-    <th mat-header-cell *matHeaderCellDef>Class</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.class }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="dateSubmitted">
+      <th mat-header-cell *matHeaderCellDef>Date Submitted</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateSubmitted }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="type">
-    <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
-    <td mat-cell class="type-cell" *matCellDef="let element">
-      <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
-      </app-application-type-pill>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="ownerName">
+      <th mat-header-cell *matHeaderCellDef>Owner Name</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.ownerName }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="government">
-    <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
-    <td mat-cell *matCellDef="let element">
-      {{ element.government }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="type">
+      <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell class="type-cell" *matCellDef="let element">
+        <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
+        </app-application-type-pill>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr (click)="onSelectCard(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <ng-container matColumnDef="government">
+      <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.government }}
+      </td>
+    </ng-container>
 
-  <tr class="mat-row no-data" *matNoDataRow>
-    <td class="text-center" colspan="4">No Search Results</td>
-  </tr>
-</table>
-</div> -->
+    <ng-container matColumnDef="portalStatus">
+      <th class="type-cell" mat-header-cell *matHeaderCellDef>Portal Status</th>
+      <td mat-cell class="type-cell" *matCellDef="let element">
+        <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
+        </app-application-type-pill>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr (click)="onSelectCard(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="6">No Search Results</td>
+    </tr>
+  </table>
+</ng-template>
