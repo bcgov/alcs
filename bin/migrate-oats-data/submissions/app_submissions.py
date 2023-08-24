@@ -65,6 +65,43 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                                         """
                     cursor.execute(adj_rows_query)
                     adj_rows = cursor.fetchall()
+                    test_dict = {}
+                    for row in adj_rows:
+                        application_id = row['alr_application_id']
+                        if application_id in test_dict:
+                            if row['cardinal_direction'] == 'EAST':
+                                test_dict[application_id]['east_description'] = row['description']
+                                test_dict[application_id]['east_type_code'] = row['nonfarm_use_type_code']
+                            # test_dict[application_id].append(row)
+                            if row['cardinal_direction'] == 'WEST':
+                                test_dict[application_id]['west_description'] = row['description']
+                                test_dict[application_id]['west_type_code'] = row['nonfarm_use_type_code']
+                            if row['cardinal_direction'] == 'NORTH':
+                                test_dict[application_id]['north_description'] = row['description']
+                                test_dict[application_id]['north_type_code'] = row['nonfarm_use_type_code']
+                            if row['cardinal_direction'] == 'SOUTH':
+                                test_dict[application_id]['south_description'] = row['description']
+                                test_dict[application_id]['south_type_code'] = row['nonfarm_use_type_code']
+                        else:
+                            test_dict[application_id] = {}
+                            test_dict[application_id]['alr_application_id'] = row['alr_application_id']
+                            # test_dict[application_id] = [row]
+                            if row['cardinal_direction'] == 'EAST':
+                                test_dict[application_id]['east_description'] = row['description']
+                                test_dict[application_id]['east_type_code'] = row['nonfarm_use_type_code']
+                            # test_dict[application_id].append(row)
+                            if row['cardinal_direction'] == 'WEST':
+                                test_dict[application_id]['west_description'] = row['description']
+                                test_dict[application_id]['west_type_code'] = row['nonfarm_use_type_code']
+                            if row['cardinal_direction'] == 'NORTH':
+                                test_dict[application_id]['north_description'] = row['description']
+                                test_dict[application_id]['north_type_code'] = row['nonfarm_use_type_code']
+                            if row['cardinal_direction'] == 'SOUTH':
+                                test_dict[application_id]['south_description'] = row['description']
+                                test_dict[application_id]['south_type_code'] = row['nonfarm_use_type_code']
+                            
+                    # for row in {adj_rows['alr_application_id']: adj_rows for adj_rows in adj_rows}
+                    print(test_dict)
 
                     submissions_to_be_inserted_count = len(rows)
 
