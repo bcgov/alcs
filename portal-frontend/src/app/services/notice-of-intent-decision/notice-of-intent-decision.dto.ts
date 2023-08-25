@@ -6,7 +6,7 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
-export interface ApplicationPortalDecisionDto {
+export interface NoticeOfIntentPortalDecisionDto {
   uuid: string;
   date: number;
   outcome: BaseCodeDto;

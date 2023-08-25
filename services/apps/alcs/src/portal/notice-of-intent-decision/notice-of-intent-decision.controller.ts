@@ -3,28 +3,28 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
+import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { ApplicationPortalDecisionDto } from './application-decision.dto';
+import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentPortalDecisionDto } from './notice-of-intent-decision.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(PortalAuthGuard)
-@Controller('application-decision')
-export class ApplicationDecisionController {
+@Controller('notice-of-intent-decision')
+export class NoticeOfIntentDecisionController {
   constructor(
-    private applicationSubmissionService: ApplicationSubmissionService,
-    private decisionService: ApplicationDecisionV2Service,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
+    private decisionService: NoticeOfIntentDecisionV2Service,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('/application/:fileNumber')
+  @Get('/notice-of-intent/:fileNumber')
   async listDecisions(
     @Param('fileNumber') fileNumber: string,
     @Req() req,
-  ): Promise<ApplicationPortalDecisionDto[]> {
-    await this.applicationSubmissionService.verifyAccessByFileId(
+  ): Promise<NoticeOfIntentPortalDecisionDto[]> {
+    await this.noticeOfIntentSubmissionService.getByFileNumber(
       fileNumber,
       req.user.entity,
     );
@@ -33,8 +33,8 @@ export class ApplicationDecisionController {
 
     return this.mapper.mapArray(
       decisions,
-      ApplicationDecision,
-      ApplicationPortalDecisionDto,
+      NoticeOfIntentDecision,
+      NoticeOfIntentPortalDecisionDto,
     );
   }
 

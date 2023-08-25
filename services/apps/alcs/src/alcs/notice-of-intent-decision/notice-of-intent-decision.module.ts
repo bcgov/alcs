@@ -61,6 +61,10 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
   ],
-  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV1Service],
+  exports: [
+    NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionV1Service,
+    NoticeOfIntentDecisionV2Service,
+  ],
 })
 export class NoticeOfIntentDecisionModule {}
