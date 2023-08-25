@@ -195,6 +195,7 @@ export class ApplicationModificationService {
 
   async delete(uuid: string) {
     const modification = await this.getByUuidOrFail(uuid);
+    await this.cardService.archive(modification.cardUuid);
     return this.modificationRepository.softRemove([modification]);
   }
 

@@ -224,6 +224,7 @@ export class ApplicationReconsiderationService {
 
   async delete(uuid: string) {
     const reconToDelete = await this.fetchAndValidateReconsideration(uuid);
+    await this.cardService.archive(reconToDelete.cardUuid);
     return this.reconsiderationRepository.softRemove([reconToDelete]);
   }
 
