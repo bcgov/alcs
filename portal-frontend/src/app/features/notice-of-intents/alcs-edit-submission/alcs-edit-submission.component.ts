@@ -39,7 +39,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
   $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
-  originalSubmissionUuid = '';
+  originalSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   steps = EditNoiSteps;
   expandedParcelUuid?: string;
@@ -72,6 +72,13 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   ngOnInit(): void {
     this.expandedParcelUuid = undefined;
+
+    this.$noiSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
+      if (submission) {
+        this.noiSubmission = submission;
+        this.calculateUpdatedFields();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -111,18 +118,8 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   private async loadOriginalSubmission(fileId: string) {
     const originalSubmission = await this.noticeOfIntentSubmissionService.getByFileId(fileId);
     if (originalSubmission) {
-      this.originalSubmissionUuid = originalSubmission?.uuid;
-
-      const diffResult = getDiff(originalSubmission, this.noiSubmission);
-      const changedFields = new Set<string>();
-      for (const diff of diffResult) {
-        const fullPath = diff.path.join('.');
-        if (!fullPath.toLowerCase().includes('uuid')) {
-          changedFields.add(diff.path.join('.'));
-          changedFields.add(diff.path[0].toString());
-        }
-      }
-      this.updatedFields = [...changedFields.keys()];
+      this.originalSubmission = originalSubmission;
+      this.calculateUpdatedFields();
     }
   }
 
@@ -130,7 +127,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     if (!this.noiSubmission) {
       this.overlayService.showSpinner();
       this.noiSubmission = await this.noticeOfIntentSubmissionDraftService.getByFileId(fileId);
-      this.loadOriginalSubmission(fileId);
+      await this.loadOriginalSubmission(fileId);
       const documents = await this.noticeOfIntentDocumentService.getByFileId(fileId);
       if (documents) {
         this.$noiDocuments.next(documents);
@@ -226,5 +223,18 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
           window.location.href = `${environment.alcsUrl}/notice-of-intent/${this.fileId}/applicant-info`;
         }
       });
+  }
+
+  private calculateUpdatedFields() {
+    const diffResult = getDiff(this.originalSubmission, this.noiSubmission);
+    const changedFields = new Set<string>();
+    for (const diff of diffResult) {
+      const fullPath = diff.path.join('.');
+      if (!fullPath.toLowerCase().includes('uuid')) {
+        changedFields.add(diff.path.join('.'));
+        changedFields.add(diff.path[0].toString());
+      }
+    }
+    this.updatedFields = [...changedFields.keys()];
   }
 }
