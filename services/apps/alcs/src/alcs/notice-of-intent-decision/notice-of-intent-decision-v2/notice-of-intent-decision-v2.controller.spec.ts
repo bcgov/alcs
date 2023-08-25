@@ -104,11 +104,11 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   });
 
   it('should get all for notice of intent', async () => {
-    mockDecisionService.getByAppFileNumber.mockResolvedValue([mockDecision]);
+    mockDecisionService.getByFileNumber.mockResolvedValue([mockDecision]);
 
     const result = await controller.getByFileNumber('fake-number');
 
-    expect(mockDecisionService.getByAppFileNumber).toBeCalledTimes(1);
+    expect(mockDecisionService.getByFileNumber).toBeCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockDecision.uuid);
   });
 
@@ -160,7 +160,7 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   it('should update the decision', async () => {
     mockNoticeOfIntentService.getFileNumber.mockResolvedValue('file-number');
     mockDecisionService.get.mockResolvedValue(new NoticeOfIntentDecision());
-    mockDecisionService.getByAppFileNumber.mockResolvedValue([
+    mockDecisionService.getByFileNumber.mockResolvedValue([
       new NoticeOfIntentDecision(),
     ]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
@@ -222,6 +222,15 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for updating the file', async () => {
+    mockDecisionService.updateDocument.mockResolvedValue({} as any);
+    await controller.updateDocument('fake-uuid', 'document-uuid', {
+      fileName: '',
+    });
+
+    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
   });
 
   it('should call through for getting open url', async () => {

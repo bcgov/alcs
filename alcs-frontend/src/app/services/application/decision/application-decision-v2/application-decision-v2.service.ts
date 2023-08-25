@@ -117,6 +117,19 @@ export class ApplicationDecisionV2Service {
     }
   }
 
+  async updateFile(decisionUuid: string, documentUuid: string, fileName: string) {
+    try {
+      await firstValueFrom(
+        this.http.patch(`${this.url}/${decisionUuid}/file/${documentUuid}`, {
+          fileName,
+        })
+      );
+      this.toastService.showSuccessToast('File updated');
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to update file');
+    }
+  }
+
   async deleteFile(decisionUuid: string, documentUuid: string) {
     const url = `${this.url}/${decisionUuid}/file/${documentUuid}`;
     return await firstValueFrom(this.http.delete<{ url: string }>(url));

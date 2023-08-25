@@ -72,7 +72,7 @@ export class DecisionV1Component implements OnInit, OnDestroy {
   onCreate() {
     let minDate = new Date(0);
     if (this.decisions.length > 0) {
-      minDate = new Date(this.decisions[this.decisions.length - 1].date);
+      minDate = new Date(this.decisions[this.decisions.length - 1].date!);
     }
 
     this.dialog
@@ -101,7 +101,7 @@ export class DecisionV1Component implements OnInit, OnDestroy {
     const decisionIndex = this.decisions.indexOf(decision);
     let minDate = new Date(0);
     if (decisionIndex !== this.decisions.length - 1) {
-      minDate = new Date(this.decisions[this.decisions.length - 1].date);
+      minDate = new Date(this.decisions[this.decisions.length - 1].date!);
     }
     this.dialog
       .open(DecisionDialogComponent, {

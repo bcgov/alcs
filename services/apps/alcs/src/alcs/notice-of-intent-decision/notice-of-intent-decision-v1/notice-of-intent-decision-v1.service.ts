@@ -211,8 +211,8 @@ export class NoticeOfIntentDecisionV1Service {
     modifies: NoticeOfIntentModification | undefined | null,
   ) {
     const decision = new NoticeOfIntentDecision({
-      outcome: await this.getOutcomeByCode(createDto.outcomeCode),
-      date: new Date(createDto.date),
+      outcome: await this.getOutcomeByCode(createDto.outcomeCode ?? 'APPR'),
+      date: createDto.date ? new Date(createDto.date) : null,
       resolutionNumber: createDto.resolutionNumber,
       resolutionYear: createDto.resolutionYear,
       decisionMaker: filterUndefined(createDto.decisionMaker, undefined),

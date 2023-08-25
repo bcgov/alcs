@@ -32,6 +32,8 @@ import {
   NoticeOfIntentModificationOutcomeCodeDto,
 } from '../../alcs/notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModification } from '../../alcs/notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.entity';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
+import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 
 @Injectable()
@@ -59,6 +61,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.date,
           mapFrom((a) => a.date?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.createdAt,
+          mapFrom((a) => a.createdAt?.getTime()),
         ),
         forMember(
           (ad) => ad.auditDate,
@@ -111,6 +117,12 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
             }
           }),
         ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentSubmissionStatusType,
+        NoticeOfIntentStatusDto,
       );
 
       createMap(

@@ -241,6 +241,19 @@ export class ApplicationDecisionV2Controller {
     };
   }
 
+  @Patch('/:uuid/file/:documentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('documentUuid') documentUuid: string,
+    @Body() body: { fileName: string },
+  ) {
+    await this.appDecisionService.updateDocument(documentUuid, body.fileName);
+    return {
+      uploaded: true,
+    };
+  }
+
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
   async getDownloadUrl(

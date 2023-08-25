@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject, takeUntil } from 'rxjs';
-import { DecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
+import { ApplicationDecisionDocumentDto } from '../../../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { ApplicationDecisionDto } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
@@ -25,11 +25,12 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   @Output() beforeDocumentUpload = new EventEmitter<boolean>();
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
-  documents: DecisionDocumentDto[] = [];
+  documents: ApplicationDecisionDocumentDto[] = [];
   private fileId = '';
 
   @ViewChild(MatSort) sort!: MatSort;
-  dataSource: MatTableDataSource<DecisionDocumentDto> = new MatTableDataSource<DecisionDocumentDto>();
+  dataSource: MatTableDataSource<ApplicationDecisionDocumentDto> =
+    new MatTableDataSource<ApplicationDecisionDocumentDto>();
 
   constructor(
     private decisionService: ApplicationDecisionV2Service,
@@ -67,11 +68,11 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
     this.openFileDialog();
   }
 
-  onEditFile(element: DecisionDocumentDto) {
+  onEditFile(element: ApplicationDecisionDocumentDto) {
     this.openFileDialog(element);
   }
 
-  private openFileDialog(existingDocument?: DecisionDocumentDto) {
+  private openFileDialog(existingDocument?: ApplicationDecisionDocumentDto) {
     if (this.decision) {
       this.dialog
         .open(DecisionDocumentUploadDialogComponent, {
@@ -93,7 +94,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDeleteFile(element: DecisionDocumentDto) {
+  onDeleteFile(element: ApplicationDecisionDocumentDto) {
     this.confirmationDialogService
       .openDialog({
         body: 'Are you sure you want to delete the selected file?',

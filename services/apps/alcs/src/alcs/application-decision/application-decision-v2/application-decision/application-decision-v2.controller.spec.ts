@@ -241,6 +241,15 @@ describe('ApplicationDecisionV2Controller', () => {
     expect(res.url).toEqual(fakeUrl);
   });
 
+  it('should call through for updating the file', async () => {
+    mockDecisionService.updateDocument.mockResolvedValue({} as any);
+    await controller.updateDocument('fake-uuid', 'document-uuid', {
+      fileName: '',
+    });
+
+    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
+  });
+
   it('should call through for getting open url', async () => {
     const fakeUrl = 'fake-url';
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);

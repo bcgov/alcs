@@ -23,15 +23,15 @@
     <div *ngIf="decision.modifiedBy?.length" class="post-decisions body-text">
       <div>
         <strong>Modified&nbsp;By:&nbsp;</strong>
-        {{ decision.modifiedBy?.join(', ') }}
-        <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+        {{ decision.modifiedByResolutions?.join(', ') }}
+        <span *ngIf="!decision.modifiedByResolutions?.length">N/A</span>
       </div>
     </div>
 
     <div class="decision-padding">
       <div class="header">
         <div class="title">
-          <h3>Decision #{{ i }}</h3>
+          <h3>Decision #{{ decisions.length - i }}</h3>
           <div *ngIf="i === decisions.length - 1 && noticeOfIntent">
             <span class="days" matTooltip="Active Days">
               <mat-icon class="icon">calendar_month</mat-icon>
@@ -79,7 +79,7 @@
         <div class="grid-2">
           <div>
             <div class="subheading2">Decision Date</div>
-            {{ decision.date | momentFormat }}
+            <span *ngIf="decision.date">{{ decision.date | momentFormat }}</span>
             <app-no-data *ngIf="decision.date === null || decision.date === undefined"></app-no-data>
           </div>
           <div>
@@ -91,6 +91,14 @@
           <div>
             <div class="subheading2">Decision Outcome</div>
             {{ decision.outcome.label }} {{ decision.isSubjectToConditions ? '- Subject to Conditions' : '' }}
+          </div>
+
+          <div>
+            <div class="subheading2">Decision Maker Name</div>
+            {{ decision.decisionMakerName }}
+            <app-no-data
+              *ngIf="decision.decisionMakerName === null || decision.decisionMakerName === undefined"
+            ></app-no-data>
           </div>
 
           <div class="full-width">
@@ -124,9 +132,9 @@
       </section>
 
       <h4>Documents</h4>
-      <!--      <section class="decision-section">-->
-      <!--        <noi-decision-documents [editable]="false" [loadData]="false" [decision]="decision"></noi-decision-documents>-->
-      <!--      </section>-->
+      <section class="decision-section">
+        <app-decision-documents [editable]="false" [loadData]="false" [decision]="decision"></app-decision-documents>
+      </section>
 
       <!-- Components -->
       <ng-container *ngIf="OUTCOMES_WITH_COMPONENTS.includes(decision.outcome.code)">
@@ -149,8 +157,8 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-pofo>
+                ></app-basic>
+              </app-pofo>
 
               <app-roso
                 class="grid-2"
@@ -161,8 +169,8 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-roso>
+                ></app-basic>
+              </app-roso>
 
               <app-pfrs
                 class="grid-2"
@@ -173,8 +181,8 @@
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-pfrs>
+                ></app-basic>
+              </app-pfrs>
 
               <div class="grid-2">
                 <div>
