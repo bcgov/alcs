@@ -33,7 +33,7 @@ import {
 import { ApplicationDecisionComponent } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
 import { LinkedResolutionOutcomeType } from '../../alcs/application-decision/application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
+import { ApplicationPortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
 import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/application-decision/application-condition-to-component-lot/application-condition-to-component-lot.controller.dto';
@@ -264,7 +264,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationDecision,
-        PortalDecisionDto,
+        ApplicationPortalDecisionDto,
         forMember(
           (a) => a.reconsiders,
           mapFrom((dec) =>
