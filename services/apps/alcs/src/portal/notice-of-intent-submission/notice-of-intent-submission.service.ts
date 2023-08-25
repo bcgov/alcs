@@ -61,6 +61,21 @@ export class NoticeOfIntentSubmissionService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
+  async getOrFailByFileNumber(fileNumber: string) {
+    const noticeOfIntent =
+      await this.noticeOfIntentSubmissionRepository.findOne({
+        where: {
+          fileNumber,
+          isDraft: false,
+        },
+        relations: this.DEFAULT_RELATIONS,
+      });
+    if (!noticeOfIntent) {
+      throw new Error('Failed to find notice of intent');
+    }
+    return noticeOfIntent;
+  }
+
   async create(type: string, createdBy: User) {
     const fileNumber = await this.fileNumberService.generateNextFileNumber();
 

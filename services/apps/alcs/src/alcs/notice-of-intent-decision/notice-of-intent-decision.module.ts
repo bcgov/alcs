@@ -25,6 +25,7 @@ import { NoticeOfIntentModificationOutcomeType } from './notice-of-intent-modifi
 import { NoticeOfIntentModificationController } from './notice-of-intent-modification/notice-of-intent-modification.controller';
 import { NoticeOfIntentModification } from './notice-of-intent-modification/notice-of-intent-modification.entity';
 import { NoticeOfIntentModificationService } from './notice-of-intent-modification/notice-of-intent-modification.service';
+import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { NoticeOfIntentModificationService } from './notice-of-intent-modificati
     DocumentModule,
     forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentSubmissionStatusModule,
+    NoticeOfIntentSubmissionModule,
   ],
   providers: [
     //These are in the same module, so be careful to import the correct one
