@@ -3,11 +3,11 @@ from common import (
     log_end,
     log_start,
 )
-from submap import (
+from .submap import (
     add_direction_field,
     map_direction_values,
-    create_dir_dict,
-    get_NESW_rows,
+    create_direction_dict,
+    get_directions_rows,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
@@ -59,8 +59,8 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    adj_rows = get_NESW_rows(rows, cursor)
-                    direction_data = create_dir_dict(adj_rows)
+                    adj_rows = get_directions_rows(rows, cursor)
+                    direction_data = create_direction_dict(adj_rows)
 
                     submissions_to_be_inserted_count = len(rows)
 
@@ -97,6 +97,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
     batch_size (int): Number of rows to execute at one time.
     cursor (obj): Cursor object to execute queries.
     rows (list): Rows of data to insert in the database.
+    direction_data (dict): Dictionary of adjacent parcel data
 
     Returns:
     None: Commits the changes to the database.
@@ -138,11 +139,13 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data):
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
-    :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' grouped based on the 'alr_change_code' field
+    :param direction_data: A dictionary of adjacent parcel data.
+    :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
     - Initializes empty lists
     - Iterates over 'app_sub_raw_data_list'
+        - Maps adjacent parcel data based on alr_application_id
         - Maps the basic fields of the data dictionary based on the alr_change_code
     - Returns the mapped lists
     """
