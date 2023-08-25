@@ -16,8 +16,8 @@ import {
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -70,12 +70,12 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
   existingDecision: ApplicationDecisionDto | undefined;
-  codes?: DecisionCodesDto;
+  codes?: ApplicationDecisionCodesDto;
 
   resolutionNumberControl = new FormControl<string | null>(null, [Validators.required]);
   resolutionYearControl = new FormControl<number | null>(null, [Validators.required]);
 
-  components: DecisionComponentDto[] = [];
+  components: ApplicationDecisionComponentDto[] = [];
   conditions: ApplicationDecisionConditionDto[] = [];
   conditionUpdates: UpdateApplicationDecisionConditionDto[] = [];
 
@@ -122,6 +122,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (this.fileNumber) {
       this.loadData();
+      this.setupSubscribers();
     }
   }
 
@@ -169,11 +170,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.decisionMakers = this.codes.decisionMakers;
     this.ceoCriterionItems = this.codes.ceoCriterion;
     this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
-
-    await this.prepareDataForEdit();
   }
 
-  private async prepareDataForEdit() {
+  private setupSubscribers() {
     this.decisionService.$decision
       .pipe(takeUntil(this.$destroy))
       .pipe(
@@ -219,15 +218,18 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
               this.minDate = new Date(minDate);
             }
 
-            if (!this.isFirstDecision) {
+            if (this.isFirstDecision) {
+              this.form.controls.postDecision.disable();
+            } else {
               this.form.controls.postDecision.addValidators([Validators.required]);
-              this.form.controls.decisionMaker.disable();
+              this.form.controls.postDecision.enable();
               this.onSelectPostDecision({
                 type: this.existingDecision.modifies ? PostDecisionType.Modification : PostDecisionType.Reconsideration,
               });
             }
           } else {
             this.isFirstDecision = true;
+            this.form.controls.postDecision.disable();
           }
         } else {
           this.resolutionYearControl.enable();
@@ -589,7 +591,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     }
   }
 
-  onComponentChange($event: { components: DecisionComponentDto[]; isValid: boolean }) {
+  onComponentChange($event: { components: ApplicationDecisionComponentDto[]; isValid: boolean }) {
     this.components = Array.from($event.components);
     this.componentsValid = $event.isValid;
   }

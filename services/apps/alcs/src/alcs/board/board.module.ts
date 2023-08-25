@@ -16,7 +16,7 @@ import { BoardService } from './board.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Board, BoardStatus]),
-    ApplicationModule,
+    forwardRef(() => ApplicationModule),
     CardModule,
     forwardRef(() => ApplicationDecisionModule),
     PlanningReviewModule,

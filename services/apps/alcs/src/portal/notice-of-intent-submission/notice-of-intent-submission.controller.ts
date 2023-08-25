@@ -20,6 +20,13 @@ import {
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
+import { EmailService } from '../../providers/email/email.service';
+import {
+  generateSUBMNoiApplicantHtml,
+  generateSUBMNoiGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
+import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 
 @Controller('notice-of-intent-submission')
 @UseGuards(PortalAuthGuard)
@@ -29,6 +36,7 @@ export class NoticeOfIntentSubmissionController {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentValidatorService: NoticeOfIntentSubmissionValidatorService,
+    private emailService: EmailService,
   ) {}
 
   @Get()
@@ -136,6 +144,23 @@ export class NoticeOfIntentSubmissionController {
       );
     }
 
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getNoticeOfIntentEmailData(
+        noticeOfIntentSubmission,
+      );
+
+    if (primaryContact) {
+      await this.emailService.sendNoticeOfIntentStatusEmail({
+        generateStatusHtml: generateCANCNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.CANCELLED,
+        noticeOfIntentSubmission,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
+
     await this.noticeOfIntentSubmissionService.cancel(noticeOfIntentSubmission);
 
     return {
@@ -163,6 +188,32 @@ export class NoticeOfIntentSubmissionController {
       await this.noticeOfIntentSubmissionService.submitToAlcs(
         validatedApplicationSubmission,
       );
+
+      const { primaryContact, submissionGovernment } =
+        await this.emailService.getNoticeOfIntentEmailData(
+          noticeOfIntentSubmission,
+        );
+
+      if (primaryContact) {
+        await this.emailService.sendNoticeOfIntentStatusEmail({
+          generateStatusHtml: generateSUBMNoiApplicantHtml,
+          status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          noticeOfIntentSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+          primaryContact,
+        });
+      }
+
+      if (submissionGovernment) {
+        await this.emailService.sendNoticeOfIntentStatusEmail({
+          generateStatusHtml: generateSUBMNoiGovernmentHtml,
+          status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          noticeOfIntentSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+        });
+      }
 
       const finalSubmission =
         await this.noticeOfIntentSubmissionService.getByUuid(

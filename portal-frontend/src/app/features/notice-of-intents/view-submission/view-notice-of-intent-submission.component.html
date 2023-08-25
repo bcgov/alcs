@@ -67,12 +67,7 @@
         </div>
         <div class="buttons" *ngIf="submission">
           <div>
-            <button
-              *ngIf="submission.canEdit"
-              mat-stroked-button
-              color="warn"
-              (click)="onCancel(submission.fileNumber)"
-            >
+            <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
               Cancel NOI
             </button>
           </div>

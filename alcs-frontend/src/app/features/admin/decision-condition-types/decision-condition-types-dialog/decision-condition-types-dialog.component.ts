@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionConditionTypeDto } from '../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
-import { DecisionConditionTypesService } from '../../../../services/decision-condition-types/decision-condition-types.service';
+import { ApplicationDecisionConditionTypesService } from '../../../../services/application/application-decision-condition-types/application-decision-condition-types.service';
 
 @Component({
   selector: 'app-decision-condition-types-dialog',
@@ -19,7 +19,7 @@ export class DecisionConditionTypesDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDecisionConditionTypeDto | undefined,
     private dialogRef: MatDialogRef<DecisionConditionTypesDialogComponent>,
-    private decisionConditionTypesService: DecisionConditionTypesService
+    private decisionConditionTypesService: ApplicationDecisionConditionTypesService
   ) {
     if (data) {
       this.description = data.description;

@@ -30,8 +30,9 @@ import {
 } from './application.dto';
 import { ApplicationService } from './application.service';
 import { EmailService } from '../../providers/email/email.service';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -127,14 +128,15 @@ export class ApplicationController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
     const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+      await this.emailService.getApplicationEmailData(fileNumber);
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateCANCHtml,
+      await this.emailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,
         government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
       });

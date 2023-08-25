@@ -1,0 +1,74 @@
+<section>
+  <div class="header">
+    <h3>View Conditions</h3>
+    <button
+      *ngIf="decision"
+      type="button"
+      mat-stroked-button
+      color="primary"
+      [routerLink]="['../../']"
+      [queryParams]="{ uuid: decision.uuid }"
+    >
+      back to decision view
+    </button>
+  </div>
+  <section class="body" *ngIf="decision">
+    <div class="decision-container">
+      <div *ngIf="decision.modifiedBy?.length" class="post-decisions">
+        <div>
+          <strong>Modified&nbsp;By:&nbsp;</strong>
+          {{ decision.modifiedByResolutions?.join(', ') }}
+          <span *ngIf="!decision.modifiedBy?.length">N/A</span>
+        </div>
+      </div>
+      <div class="header">
+        <div class="subheading1 title">
+          <h5>Decision #{{ decision.index }}</h5>
+          <div *ngIf="decision.index === decisions.length - 1 && noticeOfIntent">
+            <span class="days" matTooltip="Active Days">
+              <mat-icon class="icon">calendar_month</mat-icon>
+              {{ noticeOfIntent.activeDays }}
+            </span>
+            <span class="days" matTooltip="Paused Days">
+              <mat-icon class="icon">pause</mat-icon>
+              {{ noticeOfIntent.pausedDays }}
+            </span>
+          </div>
+          <ng-container *ngIf="!!decision?.modifies">
+            <app-application-type-pill [type]="modificationLabel"></app-application-type-pill>
+          </ng-container>
+          <span class="body-text">Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}</span>
+          <ng-container *ngIf="decision.isDraft === true"
+            ><app-application-type-pill [type]="dratDecisionLabel"></app-application-type-pill>
+          </ng-container>
+          <ng-container *ngIf="decision?.isDraft === false"
+            ><app-application-type-pill [type]="releasedDecisionLabel"></app-application-type-pill>
+          </ng-container>
+        </div>
+      </div>
+      <div class="no-conditions" *ngIf="decision.conditions.length < 1">
+        <app-no-data text="No conditions added. Return to decision draft to add conditions."></app-no-data>
+      </div>
+      <div *ngFor="let condition of decision.conditions; let j = index">
+        <app-condition
+          [ngClass]="{ 'condition-container': true, 'even-condition': j % 2 }"
+          [condition]="condition"
+          [isDraftDecision]="decision.isDraft"
+          [fileNumber]="fileNumber"
+        ></app-condition>
+      </div>
+    </div>
+  </section>
+  <div class="footer">
+    <button
+      *ngIf="decision"
+      type="button"
+      mat-stroked-button
+      color="primary"
+      [routerLink]="['../../']"
+      [queryParams]="{ uuid: decision.uuid }"
+    >
+      back to decision view
+    </button>
+  </div>
+</section>

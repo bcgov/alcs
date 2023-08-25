@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
@@ -39,7 +39,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; decisionUuid: string; existingDocument?: DecisionDocumentDto },
+    public data: { fileId: string; decisionUuid: string; existingDocument?: ApplicationDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
     private decisionService: ApplicationDecisionV2Service
   ) {}
@@ -58,12 +58,18 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
   async onSubmit() {
     const file = this.pendingFile;
     if (file) {
-      const renamedFile = new File([file], this.name.getRawValue() ?? file.name);
+      const renamedFile = new File([file], this.name.value ?? file.name);
       this.isSaving = true;
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
       }
       await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
+
+      this.dialog.close(true);
+      this.isSaving = false;
+    } else if (this.data.existingDocument) {
+      this.isSaving = true;
+      await this.decisionService.updateFile(this.data.decisionUuid, this.data.existingDocument.uuid, this.name.value!);
 
       this.dialog.close(true);
       this.isSaving = false;

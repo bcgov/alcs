@@ -211,7 +211,6 @@
   </ng-container>
 
   <div>
-    <h3>Documents</h3>
     <app-decision-documents
       (beforeDocumentUpload)="onSubmit(true, true)"
       [showError]="form.touched && !existingDecision?.documents?.length"

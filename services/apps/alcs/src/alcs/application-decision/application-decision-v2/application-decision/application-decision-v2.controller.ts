@@ -43,7 +43,8 @@ import { ApplicationDecisionComponentTypeDto } from './component/application-dec
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 import { EmailService } from '../../../../providers/email/email.service';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
-import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
+import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
+import { PARENT_TYPE } from '../../../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -240,6 +241,19 @@ export class ApplicationDecisionV2Controller {
     };
   }
 
+  @Patch('/:uuid/file/:documentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('documentUuid') documentUuid: string,
+    @Body() body: { fileName: string },
+  ) {
+    await this.appDecisionService.updateDocument(documentUuid, body.fileName);
+    return {
+      uploaded: true,
+    };
+  }
+
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
   async getDownloadUrl(
@@ -293,7 +307,7 @@ export class ApplicationDecisionV2Controller {
     );
 
     const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(fileNumber);
+      await this.emailService.getApplicationEmailData(fileNumber);
 
     const date = decision.date ? new Date(decision.date) : new Date();
 
@@ -305,11 +319,12 @@ export class ApplicationDecisionV2Controller {
     };
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateALCDHtml,
+      await this.emailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateALCDApplicationHtml,
         status: SUBMISSION_STATUS.ALC_DECISION,
         applicationSubmission,
         government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: true,
         decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),

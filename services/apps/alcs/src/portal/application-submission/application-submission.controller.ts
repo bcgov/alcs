@@ -31,7 +31,8 @@ import {
   generateSUBGTurApplicantHtml,
   generateSUBGTurGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
-import { generateCANCHtml } from '../../../../../templates/emails/cancelled.template';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -200,17 +201,18 @@ export class ApplicationSubmissionController {
     }
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(
+      await this.emailService.getApplicationEmailData(
         application.fileNumber,
         application,
       );
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
-        generateStatusHtml: generateCANCHtml,
+      await this.emailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
         government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: !!submissionGovernment,
       });
@@ -237,7 +239,7 @@ export class ApplicationSubmissionController {
       );
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getSubmissionStatusEmailData(
+      await this.emailService.getApplicationEmailData(
         applicationSubmission.fileNumber,
         applicationSubmission,
       );
@@ -251,21 +253,23 @@ export class ApplicationSubmissionController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurApplicantHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
             government: submissionGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
           });
         }
 
         if (submissionGovernment) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurGovernmentHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
             government: submissionGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
           });
         }
 
@@ -289,21 +293,23 @@ export class ApplicationSubmissionController {
         // Send status emails for first time submissions
         if (!wasSubmittedToLfng) {
           if (primaryContact) {
-            await this.emailService.sendStatusEmail({
+            await this.emailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGApplicantHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               government: submissionGovernment,
+              parentType: PARENT_TYPE.APPLICATION,
               primaryContact,
             });
           }
 
           if (submissionGovernment) {
-            await this.emailService.sendStatusEmail({
+            await this.emailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGGovernmentHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
               government: submissionGovernment,
+              parentType: PARENT_TYPE.APPLICATION,
             });
           }
         }

@@ -34,7 +34,8 @@ import {
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
 import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
 import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateSUBMApplicantHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -188,11 +189,12 @@ export class ApplicationSubmissionReviewController {
     );
 
     if (primaryContact) {
-      await this.emailService.sendStatusEmail({
+      await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateREVGHtml,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
         government: userLocalGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
       });
     }
@@ -287,11 +289,12 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
-            generateStatusHtml: generateSUBMApplicantHtml,
+          await this.emailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateSUBMApplicationHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: application,
             government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });
@@ -303,11 +306,12 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateRFFGHtml,
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
             applicationSubmission: application,
             government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });
@@ -388,21 +392,23 @@ export class ApplicationSubmissionReviewController {
 
       if (primaryContact) {
         if (returnDto.reasonForReturn === 'wrongGovernment') {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateWRNGHtml,
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
             government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
           });
         }
 
         if (returnDto.reasonForReturn === 'incomplete') {
-          await this.emailService.sendStatusEmail({
+          await this.emailService.sendApplicationStatusEmail({
             generateStatusHtml: generateINCMHtml,
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,
             government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
             ccGovernment: true,
           });

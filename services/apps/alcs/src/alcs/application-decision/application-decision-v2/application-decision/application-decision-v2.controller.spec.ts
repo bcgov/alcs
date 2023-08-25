@@ -26,7 +26,7 @@ import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
 import { LocalGovernment } from '../../../local-government/local-government.entity';
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
-import { generateALCDHtml } from '../../../../../../../templates/emails/decision-released.template';
+import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
 import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { ApplicationDecision } from '../../application-decision.entity';
 
@@ -241,6 +241,15 @@ describe('ApplicationDecisionV2Controller', () => {
     expect(res.url).toEqual(fakeUrl);
   });
 
+  it('should call through for updating the file', async () => {
+    mockDecisionService.updateDocument.mockResolvedValue({} as any);
+    await controller.updateDocument('fake-uuid', 'document-uuid', {
+      fileName: '',
+    });
+
+    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
+  });
+
   it('should call through for getting open url', async () => {
     const fakeUrl = 'fake-url';
     mockDecisionService.getDownloadUrl.mockResolvedValue(fakeUrl);
@@ -283,12 +292,12 @@ describe('ApplicationDecisionV2Controller', () => {
       new ApplicationDecision({ wasReleased: false }),
     );
     mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.getSubmissionStatusEmailData.mockResolvedValue({
+    mockEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const updates = {
       outcome: 'New Outcome',
@@ -310,12 +319,13 @@ describe('ApplicationDecisionV2Controller', () => {
       undefined,
     );
 
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateALCDHtml,
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateALCDApplicationHtml,
       status: SUBMISSION_STATUS.ALC_DECISION,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
+      parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
       decisionReleaseMaskedDate: new Date().toLocaleDateString('en-CA', {
@@ -332,7 +342,7 @@ describe('ApplicationDecisionV2Controller', () => {
       new ApplicationDecision({ wasReleased: true }),
     );
     mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.sendStatusEmail.mockResolvedValue();
+    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const updates = {
       outcome: 'New Outcome',
@@ -353,6 +363,6 @@ describe('ApplicationDecisionV2Controller', () => {
       undefined,
       undefined,
     );
-    expect(mockEmailService.sendStatusEmail).toBeCalledTimes(0);
+    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 });

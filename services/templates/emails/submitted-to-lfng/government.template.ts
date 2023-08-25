@@ -30,7 +30,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          Agricultural Land Commission <b>{{ applicationType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been successfully submitted to the <b>{{ governmentName }}</b>. The Applicant has been instructed to contact the {{ governmentName }} for payment instructions regarding the applicable application fee.
+          Agricultural Land Commission <b>{{ childType }}</b> Application ID: <b>{{ fileNumber }} ({{ applicantName }})</b> has been successfully submitted to the <b>{{ governmentName }}</b>. The Applicant has been instructed to contact the {{ governmentName }} for payment instructions regarding the applicable application fee.
         </mj-text>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">

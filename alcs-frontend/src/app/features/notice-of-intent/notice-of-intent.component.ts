@@ -8,7 +8,7 @@ import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/n
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
-import { DecisionComponent } from './decision/decision.component';
+import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
 import { NoiDocumentsComponent } from './documents/documents.component';
 import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { IntakeComponent } from './intake/intake.component';
@@ -50,9 +50,11 @@ export const childRoutes = [
   },
   {
     path: 'decision',
-    menuTitle: 'Decision',
+    menuTitle: 'Decisions',
     icon: 'gavel',
-    component: DecisionComponent,
+    module: DecisionModule,
+    portalOnly: false,
+    children: decisionChildRoutes,
   },
   {
     path: 'post-decision',
@@ -113,14 +115,14 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
     });
   }
 
+  async load() {
+    await this.noticeOfIntentDetailService.load(this.fileNumber!);
+  }
+
   ngOnDestroy(): void {
     this.noticeOfIntentDetailService.clear();
     this.noticeOfIntentModificationService.clearModifications();
     this.destroy.next();
     this.destroy.complete();
-  }
-
-  async load() {
-    await this.noticeOfIntentDetailService.load(this.fileNumber!);
   }
 }

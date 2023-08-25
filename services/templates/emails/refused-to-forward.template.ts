@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to advise that the above noted <b>{{ applicationType }}</b> application has been reviewed by the <b>{{ governmentName }}</b> which has determined not to forward your application to the Agricultural Land Commission for further review.
+          This email is to advise that the above noted <b>{{ childType }}</b> application has been reviewed by the <b>{{ governmentName }}</b> which has determined not to forward your application to the Agricultural Land Commission for further review.
         </mj-text>
         <mj-text font-size='16px'>
           If you have any questions about this outcome, please contact {{ governmentName }}.

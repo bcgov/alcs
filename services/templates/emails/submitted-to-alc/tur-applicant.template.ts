@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ applicationType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
+          This email is to acknowledge that the Agricultural Land Commission (ALC) is in receipt of the above noted <b>{{ childType }}</b> application. Please refer to the ALC Application ID in all future correspondence with this office. A copy of this application has been forwarded to the <b>{{ governmentName }}</b> for information purposes.
         </mj-text>
         <mj-text font-size='16px'>
           APPLICATION FEES - Payable to the Minister of Finance c/o the ALC

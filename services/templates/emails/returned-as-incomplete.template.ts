@@ -21,7 +21,7 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-          This email is to advise that the above noted <b>{{ applicationType }}</b> application is considered to be incomplete by the <b>{{ governmentName }}</b> and consequently it has been returned to the applicant.
+          This email is to advise that the above noted <b>{{ childType }}</b> application is considered to be incomplete by the <b>{{ governmentName }}</b> and consequently it has been returned to the applicant.
         </mj-text>
         <mj-text font-size='16px'>
           Please login to the ALC Portal to view the comments left by the {{ governmentName }}. Please review, edit and re-submit the application.

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-incl-excl',
@@ -7,5 +7,5 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
   styleUrls: ['./incl-excl.component.scss'],
 })
 export class InclExclComponent {
-  @Input() component!: DecisionComponentDto;
+  @Input() component!: ApplicationDecisionComponentDto;
 }

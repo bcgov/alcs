@@ -1,0 +1,93 @@
+<form [formGroup]="form" class="roso-component-form">
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <mat-label>ALR Area Impacted (ha)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="alrArea"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Use End Date</mat-label>
+      <input
+        matInput
+        (click)="endDatePicker.open()"
+        [matDatepicker]="endDatePicker"
+        formControlName="endDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="row">
+    <textarea
+      class="soil-text-area"
+      formControlName="soilTypeRemoved"
+      maxlength="4000"
+      matInput
+      placeholder="Type of soil approved to be removed*"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="volumeToRemove"
+        placeholder="Volume*"
+      />
+      <span matTextSuffix>m<sup>3</sup></span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="areaToRemove"
+        placeholder="Area*"
+      />
+      <span matTextSuffix>ha</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="maximumDepthToRemove"
+        placeholder="Maximum Depth*"
+      />
+      <span matTextSuffix>m</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="averageDepthToRemove"
+        placeholder="Volume*"
+      />
+      <span matTextSuffix>m</span>
+    </mat-form-field>
+  </div>
+</form>

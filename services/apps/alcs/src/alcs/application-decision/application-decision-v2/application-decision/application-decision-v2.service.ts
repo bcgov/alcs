@@ -735,4 +735,12 @@ export class ApplicationDecisionV2Service {
     }
     return decisionDocument;
   }
+
+  async updateDocument(documentUuid: string, fileName: string) {
+    const document = await this.getDecisionDocumentOrFail(documentUuid);
+    await this.documentService.update(document.document, {
+      fileName,
+      source: DOCUMENT_SOURCE.ALC,
+    });
+  }
 }

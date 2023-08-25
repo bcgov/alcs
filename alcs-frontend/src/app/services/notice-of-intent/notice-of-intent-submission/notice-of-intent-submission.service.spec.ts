@@ -12,7 +12,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockToastService: DeepMocked<ToastService>;
   let mockHttpClient: DeepMocked<HttpClient>;
 
-  const mockSubmittedApplication: NoticeOfIntentSubmissionDto = {
+  const mockSubmittedNOI: NoticeOfIntentSubmissionDto = {
     fileNumber: '',
     uuid: '',
     createdAt: 0,
@@ -66,7 +66,7 @@ describe('NoticeOfIntentSubmissionService', () => {
     soilAlreadyPlacedAverageDepth: null,
     soilProjectDurationAmount: null,
     soilIsRemovingSoilForNewStructure: null,
-    soilProposedStructures: []
+    soilProposedStructures: [],
   };
 
   beforeEach(() => {
@@ -89,12 +89,12 @@ describe('NoticeOfIntentSubmissionService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should successfully fetch application submission', async () => {
-    mockHttpClient.get.mockReturnValue(of(mockSubmittedApplication));
+  it('should successfully fetch noi submission', async () => {
+    mockHttpClient.get.mockReturnValue(of(mockSubmittedNOI));
 
     const result = await service.fetchSubmission('1');
 
-    expect(result).toEqual(mockSubmittedApplication);
+    expect(result).toEqual(mockSubmittedNOI);
     expect(mockHttpClient.get).toBeCalledTimes(1);
   });
 });
