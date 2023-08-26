@@ -8,12 +8,15 @@ from .submap import (
     map_direction_values,
     create_direction_dict,
     get_directions_rows,
+    get_subdiv_rows,
+    create_subdiv_dict,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 from enum import Enum
+import json
 
 etl_name = "alcs_app_sub"
 
@@ -59,8 +62,13 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
+                    # print(rows)
                     adj_rows = get_directions_rows(rows, cursor)
                     direction_data = create_direction_dict(adj_rows)
+                    subdiv_rows = get_subdiv_rows(rows, cursor)
+                    print(subdiv_rows)
+                    subdiv_data = create_subdiv_dict(subdiv_rows)
+                    print(subdiv_data)
 
                     submissions_to_be_inserted_count = len(rows)
 
