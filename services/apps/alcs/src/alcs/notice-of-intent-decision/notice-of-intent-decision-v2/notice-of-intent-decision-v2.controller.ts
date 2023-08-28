@@ -292,7 +292,7 @@ export class NoticeOfIntentDecisionV2Controller {
         parentType: PARENT_TYPE.NOTICE_OF_INTENT,
         primaryContact,
         ccGovernment: true,
-        decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
+        decisionDate: date.toLocaleDateString('en-CA', options),
       });
     }
   }

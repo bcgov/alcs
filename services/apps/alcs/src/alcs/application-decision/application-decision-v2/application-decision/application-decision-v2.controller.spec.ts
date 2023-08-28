@@ -328,7 +328,7 @@ describe('ApplicationDecisionV2Controller', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
-      decisionReleaseMaskedDate: new Date().toLocaleDateString('en-CA', {
+      decisionDate: new Date().toLocaleDateString('en-CA', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
