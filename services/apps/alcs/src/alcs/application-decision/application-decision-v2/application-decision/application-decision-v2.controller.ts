@@ -327,7 +327,7 @@ export class ApplicationDecisionV2Controller {
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: true,
-        decisionReleaseMaskedDate: date.toLocaleDateString('en-CA', options),
+        decisionDate: date.toLocaleDateString('en-CA', options),
       });
     }
   }

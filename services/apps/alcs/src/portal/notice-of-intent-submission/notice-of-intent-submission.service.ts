@@ -61,6 +61,16 @@ export class NoticeOfIntentSubmissionService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
+  async getOrFailByFileNumber(fileNumber: string) {
+    return await this.noticeOfIntentSubmissionRepository.findOneOrFail({
+      where: {
+        fileNumber,
+        isDraft: false,
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
+  }
+
   async create(type: string, createdBy: User) {
     const fileNumber = await this.fileNumberService.generateNextFileNumber();
 
@@ -155,13 +165,7 @@ export class NoticeOfIntentSubmissionService {
       user.clientRoles!.includes(value),
     );
     if (overlappingRoles.length > 0) {
-      return await this.noticeOfIntentSubmissionRepository.findOneOrFail({
-        where: {
-          fileNumber,
-          isDraft: false,
-        },
-        relations: this.DEFAULT_RELATIONS,
-      });
+      return await this.getOrFailByFileNumber(fileNumber);
     }
 
     const whereClauses = await this.generateWhereClauses(

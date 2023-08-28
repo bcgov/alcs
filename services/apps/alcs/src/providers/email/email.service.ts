@@ -35,7 +35,7 @@ type BaseStatusEmailData = {
   government: LocalGovernment | null;
   parentType: PARENT_TYPE;
   ccGovernment?: boolean;
-  decisionReleaseMaskedDate?: string;
+  decisionDate?: string;
 };
 type ApplicationEmailData = BaseStatusEmailData & {
   applicationSubmission: ApplicationSubmission;
@@ -296,7 +296,7 @@ export class EmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
-      decisionReleaseMaskedDate: data?.decisionReleaseMaskedDate,
+      decisionDate: data?.decisionDate,
     });
 
     const parentId = await this.applicationService.getUuid(fileNumber);
@@ -336,6 +336,7 @@ export class EmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
+      decisionDate: data?.decisionDate,
     });
 
     const parentId = await this.noticeOfIntentService.getUuid(fileNumber);

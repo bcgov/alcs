@@ -33,6 +33,11 @@ import {
 import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.service';
+import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
+import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { PARENT_TYPE } from '../../card/card-subtask/card-subtask.dto';
+import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent-decision/v2')
@@ -41,6 +46,7 @@ export class NoticeOfIntentDecisionV2Controller {
   constructor(
     private noticeOfIntentDecisionV2Service: NoticeOfIntentDecisionV2Service,
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private emailService: EmailService,
     private modificationService: NoticeOfIntentModificationService,
     @InjectMapper() private mapper: Mapper,
@@ -137,11 +143,17 @@ export class NoticeOfIntentDecisionV2Controller {
       modifies = null;
     }
 
+    const decision = await this.noticeOfIntentDecisionV2Service.get(uuid);
+
     const updatedDecision = await this.noticeOfIntentDecisionV2Service.update(
       uuid,
       updateDto,
       modifies,
     );
+
+    if (!decision.wasReleased && updateDto.isDraft === false) {
+      this.sendDecisionReleasedEmail(updatedDecision);
+    }
 
     return this.mapper.mapAsync(
       updatedDecision,
@@ -237,5 +249,43 @@ export class NoticeOfIntentDecisionV2Controller {
     return this.noticeOfIntentDecisionV2Service.generateResolutionNumber(
       resolutionYear,
     );
+  }
+
+  private async sendDecisionReleasedEmail(decision: NoticeOfIntentDecision) {
+    const fileNumber = await this.noticeOfIntentService.getFileNumber(
+      decision.noticeOfIntentUuid,
+    );
+
+    const noticeOfIntentSubmission =
+      await this.noticeOfIntentSubmissionService.getOrFailByFileNumber(
+        fileNumber,
+      );
+
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getNoticeOfIntentEmailData(
+        noticeOfIntentSubmission,
+      );
+
+    const date = decision.date ? new Date(decision.date) : new Date();
+
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+
+    if (primaryContact) {
+      await this.emailService.sendNoticeOfIntentStatusEmail({
+        generateStatusHtml: generateALCDNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.ALC_DECISION,
+        noticeOfIntentSubmission,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+        primaryContact,
+        ccGovernment: true,
+        decisionDate: date.toLocaleDateString('en-CA', options),
+      });
+    }
   }
 }
