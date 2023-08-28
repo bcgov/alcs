@@ -67,9 +67,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     adj_rows = get_directions_rows(rows, cursor)
                     direction_data = create_direction_dict(adj_rows)
                     subdiv_rows = get_subdiv_rows(rows, cursor)
-                    # print(subdiv_rows)
                     subdiv_data = create_subdiv_dict(subdiv_rows)
-                    # print(subdiv_data)
 
                     submissions_to_be_inserted_count = len(rows)
 
@@ -107,6 +105,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
     cursor (obj): Cursor object to execute queries.
     rows (list): Rows of data to insert in the database.
     direction_data (dict): Dictionary of adjacent parcel data
+    subdiv_data: list of subdivision data
 
     Returns:
     None: Commits the changes to the database.
@@ -149,6 +148,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data):
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
     :param direction_data: A dictionary of adjacent parcel data.
+    :param subdiv_data: list of subdivision data
     :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
