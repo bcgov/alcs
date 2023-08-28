@@ -86,11 +86,11 @@ export class ApplicationSubmissionStatusService {
     );
   }
 
-  async getCurrentStatusesBy(submissionUuid: string) {
+  async getStatusesByUuid(submissionUuid: string) {
     return await this.statusesRepository.findBy({ submissionUuid });
   }
 
-  async getCurrentStatusesByFileNumber(fileNumber: string) {
+  async getStatusesByFileNumber(fileNumber: string) {
     const submission = await this.getSubmission(fileNumber);
 
     return await this.statusesRepository.findBy({
@@ -121,7 +121,7 @@ export class ApplicationSubmissionStatusService {
   //Note: do not use fileNumber as identifier since there maybe multiple submissions with
   //      the same fileNumber due to isDraft flag
   async removeStatuses(submissionUuid: string) {
-    const statusesToRemove = await this.getCurrentStatusesBy(submissionUuid);
+    const statusesToRemove = await this.getStatusesByUuid(submissionUuid);
 
     return await this.statusesRepository.remove(statusesToRemove);
   }

@@ -62,6 +62,7 @@ describe('NoticeOfIntentMeetingService', () => {
     mockNoiMeetingRepository.findOne.mockResolvedValue(mockMeeting);
     mockNoiMeetingRepository.save.mockResolvedValue(mockMeeting);
     mockNoiService.getOrFailByUuid.mockResolvedValue(mockNoi);
+    mockNoiService.getUuid.mockResolvedValue(mockNoi.uuid);
   });
 
   it('should be defined', () => {
@@ -69,14 +70,14 @@ describe('NoticeOfIntentMeetingService', () => {
   });
 
   it('should get meetings for noi', async () => {
-    const result = await service.getByAppFileNumber(mockNoi.fileNumber);
+    const result = await service.getByFileNumber(mockNoi.fileNumber);
 
     expect(result).toStrictEqual([mockMeeting]);
   });
 
   it('should return empty array if no meetings for noi', async () => {
     mockNoiMeetingRepository.find.mockResolvedValue([]);
-    const result = await service.getByAppFileNumber('non-existing number');
+    const result = await service.getByFileNumber('non-existing number');
 
     expect(result).toStrictEqual([]);
   });

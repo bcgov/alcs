@@ -19,12 +19,12 @@ export class NoticeOfIntentMeetingService {
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
-  async fetch(uuid: string) {
+  async fetch(fileNumber: string) {
     this.clearMeetings();
     let meetings: NoticeOfIntentMeetingDto[] = [];
 
     try {
-      meetings = await firstValueFrom(this.http.get<NoticeOfIntentMeetingDto[]>(`${this.url}/${uuid}`));
+      meetings = await firstValueFrom(this.http.get<NoticeOfIntentMeetingDto[]>(`${this.url}/${fileNumber}`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch meetings');
     }

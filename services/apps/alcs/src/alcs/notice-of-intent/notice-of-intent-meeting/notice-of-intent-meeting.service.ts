@@ -22,22 +22,22 @@ const DEFAULT_RELATIONS: FindOptionsRelations<NoticeOfIntentMeeting> = {
 export class NoticeOfIntentMeetingService {
   constructor(
     @InjectRepository(NoticeOfIntentMeeting)
-    private noiRepository: Repository<NoticeOfIntentMeeting>,
+    private noticeOfIntentMeetingRepository: Repository<NoticeOfIntentMeeting>,
     @InjectRepository(NoticeOfIntentMeetingType)
     private noiMeetingTypeRepository: Repository<NoticeOfIntentMeetingType>,
-    private noiService: NoticeOfIntentService,
+    private noticeOfIntentService: NoticeOfIntentService,
   ) {}
 
-  async getByAppFileNumber(number: string): Promise<NoticeOfIntentMeeting[]> {
-    const noi = await this.noiService.getOrFailByUuid(number);
-    return this.noiRepository.find({
-      where: { noticeOfIntentUuid: noi.uuid },
+  async getByFileNumber(number: string): Promise<NoticeOfIntentMeeting[]> {
+    const uuid = await this.noticeOfIntentService.getUuid(number);
+    return await this.noticeOfIntentMeetingRepository.find({
+      where: { noticeOfIntentUuid: uuid },
       relations: DEFAULT_RELATIONS,
     });
   }
 
   get(uuid) {
-    return this.noiRepository.findOne({
+    return this.noticeOfIntentMeetingRepository.findOne({
       where: { uuid },
       relations: DEFAULT_RELATIONS,
     });
@@ -68,7 +68,7 @@ export class NoticeOfIntentMeetingService {
       : existingMeeting.startDate;
     existingMeeting.endDate = formatIncomingDate(updateDto.meetingEndDate);
 
-    await this.noiRepository.save(existingMeeting);
+    await this.noticeOfIntentMeetingRepository.save(existingMeeting);
 
     return this.get(uuid);
   }
@@ -83,13 +83,15 @@ export class NoticeOfIntentMeetingService {
     createMeeting.typeCode = meeting.meetingTypeCode;
     createMeeting.noticeOfIntentUuid = meeting.noticeOfIntentUuid;
 
-    const savedMeeting = await this.noiRepository.save(createMeeting);
+    const savedMeeting = await this.noticeOfIntentMeetingRepository.save(
+      createMeeting,
+    );
 
     return this.get(savedMeeting.uuid);
   }
 
   async remove(meeting: NoticeOfIntentMeeting) {
-    return this.noiRepository.softRemove(meeting);
+    return this.noticeOfIntentMeetingRepository.softRemove(meeting);
   }
 
   async fetNoticeOfIntentMeetingTypes() {

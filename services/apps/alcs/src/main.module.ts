@@ -20,10 +20,10 @@ import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
 import { MainController } from './main.controller';
 import { MainService } from './main.service';
+import { NoticeOfIntentSubmissionModule } from './portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
 import { UserModule } from './user/user.module';
-import { NoticeOfIntentSubmissionModule } from './portal/notice-of-intent-submission/notice-of-intent-submission.module';
 
 @Module({
   imports: [

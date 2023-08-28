@@ -4,13 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationMeetingService } from '../../../services/application/application-meeting/application-meeting.service';
-import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
-import { ApplicationReconsiderationService } from '../../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationReviewService } from '../../../services/application/application-review/application-review.service';
 import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
+import { ApplicationTimelineService } from '../../../services/application/application-timeline/application-timeline.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
-import { ApplicationDecisionService } from '../../../services/application/decision/application-decision-v1/application-decision.service';
 
 import { OverviewComponent } from './overview.component';
 
@@ -30,26 +26,8 @@ describe('OverviewComponent', () => {
           useValue: mockAppDetailService,
         },
         {
-          provide: ApplicationDecisionService,
+          provide: ApplicationTimelineService,
           useValue: {},
-        },
-        {
-          provide: ApplicationReconsiderationService,
-          useValue: {},
-        },
-        {
-          provide: ApplicationModificationService,
-          useValue: {},
-        },
-        {
-          provide: ApplicationReviewService,
-          useValue: {},
-        },
-        {
-          provide: ApplicationMeetingService,
-          useValue: {
-            fetch: jest.fn(),
-          },
         },
         {
           provide: MatDialog,

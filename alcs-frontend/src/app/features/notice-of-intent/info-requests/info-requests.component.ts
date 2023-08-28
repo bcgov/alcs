@@ -36,7 +36,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
       if (noi) {
         this.fileNumber = noi.fileNumber;
         this.uuid = noi.uuid;
-        this.meetingService.fetch(noi.uuid);
+        this.meetingService.fetch(noi.fileNumber);
       }
     });
 

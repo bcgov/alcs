@@ -116,7 +116,7 @@ describe('ApplicationSubmissionStatusService', () => {
       mockStatuses,
     );
 
-    const statuses = await service.getCurrentStatusesBy(fakeSubmissionUuid);
+    const statuses = await service.getStatusesByUuid(fakeSubmissionUuid);
 
     expect(
       mockApplicationSubmissionToSubmissionStatusRepository.findBy,
@@ -150,9 +150,7 @@ describe('ApplicationSubmissionStatusService', () => {
       }),
     );
 
-    const statuses = await service.getCurrentStatusesByFileNumber(
-      fakeFileNumber,
-    );
+    const statuses = await service.getStatusesByFileNumber(fakeFileNumber);
 
     expect(
       mockApplicationSubmissionToSubmissionStatusRepository.findBy,
@@ -188,7 +186,7 @@ describe('ApplicationSubmissionStatusService', () => {
     mockApplicationSubmissionRepository.findOneBy.mockResolvedValue(null);
 
     await expect(
-      service.getCurrentStatusesByFileNumber(fakeFileNumber),
+      service.getStatusesByFileNumber(fakeFileNumber),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(
         `Submission does not exist for provided application ${fakeFileNumber}. Only applications originated in portal have statuses.`,

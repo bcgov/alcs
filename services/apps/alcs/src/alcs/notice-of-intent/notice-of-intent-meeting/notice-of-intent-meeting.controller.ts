@@ -1,17 +1,17 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Logger,
   NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
-import { Logger, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
@@ -44,9 +44,7 @@ export class NoticeOfIntentMeetingController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<NoticeOfIntentMeetingDto[]> {
-    const meetings = await this.noiMeetingService.getByAppFileNumber(
-      fileNumber,
-    );
+    const meetings = await this.noiMeetingService.getByFileNumber(fileNumber);
 
     return this.mapper.mapArrayAsync(
       meetings,

@@ -77,7 +77,7 @@ describe('ApplicationDecisionMeetingService', () => {
     mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
       {} as any,
     );
-    mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue(
+    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue(
       [mockSubmissionStatus],
     );
   });
@@ -125,10 +125,10 @@ describe('ApplicationDecisionMeetingService', () => {
     expect(mockAppDecisionMeetingRepository.findOne).toBeCalledTimes(0);
     expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledWith(mockApplication.fileNumber);
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
@@ -156,10 +156,10 @@ describe('ApplicationDecisionMeetingService', () => {
     });
     expect(mockAppDecisionMeetingRepository.save).toBeCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledWith(mockApplication.fileNumber);
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
