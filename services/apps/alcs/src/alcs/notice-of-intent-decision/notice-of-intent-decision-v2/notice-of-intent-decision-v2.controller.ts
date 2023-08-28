@@ -151,7 +151,7 @@ export class NoticeOfIntentDecisionV2Controller {
       modifies,
     );
 
-    if (!decision.wasReleased && updatedDecision.isDraft === false) {
+    if (!decision.wasReleased && updateDto.isDraft === false) {
       this.sendDecisionReleasedEmail(updatedDecision);
     }
 
@@ -261,16 +261,10 @@ export class NoticeOfIntentDecisionV2Controller {
         fileNumber,
       );
 
-    const primaryContact = noticeOfIntentSubmission.owners?.find(
-      (owner) =>
-        owner.uuid === noticeOfIntentSubmission.primaryContactOwnerUuid,
-    );
-
-    const submissionGovernment = noticeOfIntentSubmission.localGovernmentUuid
-      ? await this.emailService.getSubmissionGovernmentOrFail(
-          noticeOfIntentSubmission,
-        )
-      : null;
+    const { primaryContact, submissionGovernment } =
+      await this.emailService.getNoticeOfIntentEmailData(
+        noticeOfIntentSubmission,
+      );
 
     const date = decision.date ? new Date(decision.date) : new Date();
 
@@ -280,8 +274,6 @@ export class NoticeOfIntentDecisionV2Controller {
       month: 'long',
       day: 'numeric',
     };
-
-    debugger;
 
     if (primaryContact) {
       await this.emailService.sendNoticeOfIntentStatusEmail({

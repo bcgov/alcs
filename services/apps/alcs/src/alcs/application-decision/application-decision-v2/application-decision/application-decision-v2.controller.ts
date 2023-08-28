@@ -206,7 +206,7 @@ export class ApplicationDecisionV2Controller {
       reconsiders,
     );
 
-    if (!decision.wasReleased && updatedDecision.isDraft === false) {
+    if (!decision.wasReleased && updateDto.isDraft === false) {
       this.sendDecisionReleasedEmail(updatedDecision);
     }
 
