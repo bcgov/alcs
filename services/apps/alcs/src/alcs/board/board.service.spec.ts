@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { BoardStatus } from './board-status.entity';
@@ -120,5 +121,54 @@ describe('BoardsService', () => {
     await service.unlinkStatus('code');
 
     expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for getOneOrFail', async () => {
+    mockBoardRepository.findOneOrFail.mockResolvedValue({} as any);
+
+    await service.getOneOrFail({});
+
+    expect(mockBoardRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for getBoardsWithStatus', async () => {
+    mockBoardRepository.find.mockResolvedValue([]);
+
+    await service.getBoardsWithStatus(CARD_STATUS.READY_FOR_REVIEW);
+
+    expect(mockBoardRepository.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should delete the status links then remove the board for delete', async () => {
+    mockBoardRepository.findOneOrFail.mockResolvedValue(new Board());
+    mockBoardRepository.remove.mockResolvedValue({} as any);
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+
+    await service.delete('board-code');
+
+    expect(mockBoardRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.remove).toHaveBeenCalledTimes(1);
+  });
+
+  it('should save both the board and updated status when creating or updating', async () => {
+    cardService.getCardTypes.mockResolvedValue([]);
+    mockBoardRepository.save.mockResolvedValue(new Board());
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+    mockBoardStatusRepository.save.mockResolvedValue([] as any);
+
+    await service.create({
+      allowedCardTypes: [],
+      code: '',
+      createCardTypes: [],
+      showOnSchedule: false,
+      statuses: [],
+      title: '',
+    });
+
+    expect(cardService.getCardTypes).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.save).toHaveBeenCalledTimes(1);
   });
 });
