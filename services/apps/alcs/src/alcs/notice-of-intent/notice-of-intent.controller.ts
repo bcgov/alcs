@@ -88,7 +88,7 @@ export class NoticeOfIntentController {
 
   @Get('/search/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async searchApplications(@Param('fileNumber') fileNumber: string) {
+  async search(@Param('fileNumber') fileNumber: string) {
     const noticeOfIntents = await this.noticeOfIntentService.searchByFileNumber(
       fileNumber,
     );
