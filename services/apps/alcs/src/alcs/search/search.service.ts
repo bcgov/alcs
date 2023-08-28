@@ -236,15 +236,47 @@ export class SearchService {
       });
     }
 
-    console.log('search applications', query.getQuery());
-
-    const result = await query
+    query = query
       .innerJoinAndMapOne(
         'appSearch.applicationType',
         'appSearch.applicationType',
         'applicationType',
       )
-      .getMany();
+      .groupBy(
+        `
+          "appSearch"."uuid"
+        , "appSearch"."application_uuid"
+        , "appSearch"."application_region_code" 
+        , "appSearch"."file_number"
+        , "appSearch"."applicant"
+        , "appSearch"."local_government_uuid"
+        , "appSearch"."local_government_name"
+        , "appSearch"."application_type_code"
+        , "appSearch"."legacy_id"
+        , "appSearch"."status"
+        , "appSearch"."date_submitted_to_alc"
+        , "appSearch"."decision_date"
+        , "applicationType"."audit_deleted_date_at"
+        , "applicationType"."audit_created_at"
+        , "applicationType"."audit_updated_by"
+        , "applicationType"."audit_updated_at"
+        , "applicationType"."audit_created_by"
+        , "applicationType"."short_label"
+        , "applicationType"."label"
+        , "applicationType"."code"
+        , "applicationType"."background_color"
+        , "applicationType"."text_color"
+        , "applicationType"."html_description"
+        , "applicationType"."portal_label"
+        `,
+      );
+
+    console.log('search applications', query.getQuery());
+
+    const result = await query
+      .take(searchDto.pageSize)
+      .skip((searchDto.page - 1) * searchDto.pageSize)
+      .getManyAndCount();
 
     // TODO remove this
     if (result && result.length > 2) {
@@ -252,19 +284,25 @@ export class SearchService {
     } else {
       console.log('search applications ', result);
     }
+    return {
+      applications: result[0],
+      total: result[1],
+    };
+  }
 
-    return result;
-    // const application = await this.applicationRepository.findOne({
-    //   where: {
-    //     fileNumber,
-    //   },
-    //   relations: {
-    //     card: true,
-    //     localGovernment: true,
-    //     type: true,
-    //   },
-    // });
-    // return application;
+  async getApplication(fileNumber: string) {
+    const application = await this.applicationRepository.findOne({
+      where: {
+        fileNumber,
+      },
+      relations: {
+        card: true,
+        localGovernment: true,
+        type: true,
+      },
+    });
+
+    return application;
   }
 
   async getNoi(fileNumber: string) {

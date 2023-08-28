@@ -1,32 +1,32 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
-import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
+import { ApplicationStatusDto } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { SearchRequestDto, SearchResultDto } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
-import {
-  COVENANT_TYPE_LABEL,
-  PLANNING_TYPE_LABEL,
-} from '../../shared/application-type-pill/application-type-pill.constants';
+import { ApplicationSubmissionStatusPill } from '../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 
 interface SearchResult {
   fileNumber: string;
   dateSubmitted: number;
   ownerName: string;
-  type?: any;
+  type?: ApplicationTypeDto;
   government?: string;
   portalStatus?: string;
   referenceId: string;
   board?: string;
-  label?: ApplicationTypeDto;
+  class: string;
+  status?: ApplicationSubmissionStatusPill;
 }
 
 @Component({
@@ -59,27 +59,35 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
     this.resolutionYears.reverse();
     this.loadGovernments();
+    this.applicationService.setup();
 
     this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
       startWith(''),
       map((value) => this.filterLocalGovernment(value || ''))
     );
 
-    this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
-      this.regions = regions;
-    });
+    this.applicationService.$applicationRegions
+      .pipe(takeUntil(this.$destroy))
+      .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
+      .subscribe(([regions, statuses, queryParamMap]) => {
+        this.regions = regions;
+        this.statuses = statuses;
 
-    this.activatedRoute.queryParamMap.pipe(takeUntil(this.$destroy)).subscribe((queryParamMap) => {
-      const searchText = queryParamMap.get('searchText');
+        const searchText = queryParamMap.get('searchText');
 
-      if (searchText) {
-        this.searchText = searchText;
+        if (searchText) {
+          this.searchText = searchText;
 
-        this.searchService
-          .fetch({ fileNumber: searchText, isIncludeOtherParcels: false })
-          .then((result) => (this.searchResults = this.mapSearchResults(result ?? [])));
-      }
-    });
+          this.searchService
+            .fetch({
+              fileNumber: searchText,
+              isIncludeOtherParcels: false,
+              pageSize: this.itemsPerPage,
+              page: this.pageIndex,
+            })
+            .then((result) => (this.searchResults = this.mapSearchResults(result)));
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -88,7 +96,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async onSelectCard(record: SearchResult) {
-    switch (record.type) {
+    switch (record.class) {
       case 'APP':
         await this.router.navigateByUrl(`/application/${record.referenceId}`);
         break;
@@ -104,40 +112,41 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  private mapSearchResults(data: SearchResultDto[]) {
-    return data.map((e) => {
-      const { classType, label } = this.mapClassAndLabels(e);
+  // new search functionality
+
+  private mapSearchResults(searchResult?: SearchResultDto) {
+    if (!searchResult) {
+      searchResult = {
+        data: [],
+        total: 0,
+      };
+    }
+
+    this.total = searchResult.total;
+
+    return searchResult.data.map((e) => {
+      const status = this.statuses.find((st) => st.code === e.status);
 
       return {
         fileNumber: e.fileNumber,
         dateSubmitted: e.dateSubmitted,
         ownerName: e.ownerName,
         type: e.type,
-        label: label,
-        government: e.localGovernmentName,
+        localGovernmentName: e.localGovernmentName,
         portalStatus: e.portalStatus,
         referenceId: e.referenceId,
         board: e.boardCode,
+        class: e.class,
+        status: {
+          backgroundColor: status?.portalBackgroundColor,
+          textColor: status?.portalColor,
+          borderColor: status?.portalBackgroundColor,
+          label: status?.label,
+          shortLabel: status?.label,
+        } as ApplicationSubmissionStatusPill,
       };
     });
   }
-
-  private mapClassAndLabels(data: SearchResultDto) {
-    switch (data.type) {
-      case 'APP':
-        return { classType: 'Application', label: data.label };
-      case 'NOI':
-        return { classType: 'NOI' };
-      case 'COV':
-        return { classType: 'Non-App', label: COVENANT_TYPE_LABEL };
-      case 'PLAN':
-        return { classType: 'Non-App', label: PLANNING_TYPE_LABEL };
-      default:
-        return { classType: 'Unknown' };
-    }
-  }
-
-  // new search functionality
 
   localGovernment = new FormControl<string | undefined>(undefined);
   searchForm = new FormGroup({
@@ -164,6 +173,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
+  statuses: ApplicationStatusDto[] = [];
+
+  pageIndex = 0;
+  itemsPerPage = 20;
+  total: number = 0;
 
   onSubmit() {
     console.log('onSubmit');
@@ -218,11 +232,14 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async onSearch() {
     const searchParams = this.getSearchParams();
-    this.searchResults = (await this.searchService.fetch(searchParams)) ?? [];
+    const result = await this.searchService.fetch(searchParams);
+    this.searchResults = this.mapSearchResults(result);
   }
 
   getSearchParams() {
     return {
+      pageSize: this.itemsPerPage,
+      page: this.pageIndex + 1,
       // TODO move condition into helper function
       fileNumber:
         this.searchForm.controls.fileNumber.value && this.searchForm.controls.fileNumber.value !== ''
@@ -253,5 +270,12 @@ export class SearchComponent implements OnInit, OnDestroy {
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
     } as SearchRequestDto;
+  }
+
+  onPageChange($event: PageEvent) {
+    this.pageIndex = $event.pageIndex;
+    this.itemsPerPage = $event.pageSize;
+
+    this.onSearch();
   }
 }

@@ -232,7 +232,7 @@
 
   <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
     <mat-tab>
-      <ng-template mat-tab-label> Applications: 0 </ng-template>
+      <ng-template mat-tab-label> Applications: {{ total }} </ng-template>
       <ng-container *ngTemplateOutlet="searchResultTable"></ng-container>
     </mat-tab>
 
@@ -260,7 +260,7 @@
     <ng-container matColumnDef="dateSubmitted">
       <th mat-header-cell *matHeaderCellDef>Date Submitted</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.dateSubmitted | date}}
+        {{ element.dateSubmitted | date }}
       </td>
     </ng-container>
 
@@ -274,7 +274,7 @@
     <ng-container matColumnDef="type">
       <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
       <td mat-cell class="type-cell" *matCellDef="let element">
-        <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
+        <app-application-type-pill *ngIf="element.type" [type]="element.type" [useShortLabel]="true">
         </app-application-type-pill>
       </td>
     </ng-container>
@@ -282,15 +282,17 @@
     <ng-container matColumnDef="government">
       <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.government }}
+        {{ element.localGovernmentName }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="portalStatus">
       <th class="type-cell" mat-header-cell *matHeaderCellDef>Portal Status</th>
       <td mat-cell class="type-cell" *matCellDef="let element">
-        <app-application-type-pill *ngIf="element.label" [type]="element.label" [useShortLabel]="true">
-        </app-application-type-pill>
+        <app-application-submission-status-type-pill
+          *ngIf="element.status"
+          [type]="element.status"
+        ></app-application-submission-status-type-pill>
       </td>
     </ng-container>
 
@@ -298,7 +300,17 @@
     <tr (click)="onSelectCard(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
     <tr class="mat-row no-data" *matNoDataRow>
-      <td class="text-center" colspan="6">No Search Results</td>
+      <td class="text-center" colspan="6">
+        <div><b>No Search results.</b></div>
+        <div>Please adjust criteria and try again.</div>
+      </td>
     </tr>
   </table>
+  <mat-paginator
+    [length]="total"
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page"
+  ></mat-paginator>
 </ng-template>

@@ -15,7 +15,7 @@ export class SearchService {
 
   async fetch(searchDto: SearchRequestDto) {
     try {
-      return await firstValueFrom(this.http.post<SearchResultDto[]>(`${this.baseUrl}`, searchDto));
+      return await firstValueFrom(this.http.post<SearchResultDto>(`${this.baseUrl}`, searchDto));
     } catch (e) {
       console.error(e);
       console.warn(`search params ${searchDto}`);

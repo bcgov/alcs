@@ -8,7 +8,7 @@ import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { SearchRequestDto, SearchResultDto } from './search.dto';
+import { ApplicationSearchResultDto, SearchRequestDto } from './search.dto';
 import { ApplicationSubmissionSearchView } from './search.entity';
 import { SearchService } from './search.service';
 
@@ -24,7 +24,9 @@ export class SearchController {
   @Post('')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async search(@Body() searchDto: SearchRequestDto) {
-    const applications = await this.searchService.searchApplications(searchDto);
+    const applicationSearchResult = await this.searchService.searchApplications(
+      searchDto,
+    );
 
     // const noi = await this.searchService.getNoi(searchTerm);
 
@@ -34,15 +36,18 @@ export class SearchController {
 
     // const covenant = await this.searchService.getCovenant(searchTerm);
 
-    const result: SearchResultDto[] = [];
+    const mappedApplications: ApplicationSearchResultDto[] = [];
 
-    this.mapSearchResults(result, applications);
+    this.mapSearchResults(
+      mappedApplications,
+      applicationSearchResult.applications,
+    );
 
-    return result;
+    return { data: mappedApplications, total: applicationSearchResult.total };
   }
 
   private mapSearchResults(
-    result: SearchResultDto[],
+    result: ApplicationSearchResultDto[],
     applications: ApplicationSubmissionSearchView[],
   ) {
     if (applications.length > 0) {
@@ -76,9 +81,11 @@ export class SearchController {
         ApplicationType,
         ApplicationTypeDto,
       ),
-      localGovernmentName: 'to map', // TODO map
-      label: undefined, // TODO map
-    } as SearchResultDto;
+      localGovernmentName: application.localGovernmentName,
+      ownerName: application.applicant,
+      class: 'APP',
+      status: application.status.status_type_code,
+    } as ApplicationSearchResultDto;
 
     return result;
   }

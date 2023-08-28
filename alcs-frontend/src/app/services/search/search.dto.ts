@@ -1,19 +1,27 @@
 import { ApplicationTypeDto } from '../application/application-code.dto';
 
-export interface SearchResultDto {
+export interface ApplicationSearchResultDto {
   fileNumber: string;
-  type: string;
+  type: ApplicationTypeDto;
   referenceId: string;
   applicant?: string;
   localGovernmentName: string;
   boardCode?: string;
-  label?: ApplicationTypeDto;
   ownerName: string;
   dateSubmitted: number;
   portalStatus?: string;
+  class: string;
+  status: string;
+}
+
+export interface SearchResultDto {
+  data: ApplicationSearchResultDto[];
+  total: number;
 }
 
 export interface SearchRequestDto {
+  pageSize: number;
+  page: number;
   fileNumber?: string;
   legacyId?: string;
   name?: string;

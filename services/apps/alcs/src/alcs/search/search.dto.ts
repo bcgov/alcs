@@ -7,14 +7,19 @@ import {
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
 
-export class SearchResultDto {
+export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
   referenceId: string;
-  applicant?: string;
+  ownerName?: string;
   localGovernmentName: string;
   fileNumber: string;
   boardCode?: string;
-  label?: ApplicationTypeDto;
+  status: string;
+}
+
+export class SearchResultDto {
+  data: ApplicationSearchResultDto[];
+  total: number;
 }
 
 export class SearchRequestDto {
@@ -82,4 +87,10 @@ export class SearchRequestDto {
   @IsNumber()
   @IsOptional()
   dateDecidedTo?: number;
+
+  @IsNumber()
+  page: number;
+
+  @IsNumber()
+  pageSize: number;
 }
