@@ -70,6 +70,36 @@ describe('NoticeOfIntentController', () => {
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through to service for get', async () => {
+    mockService.getByFileNumber.mockResolvedValue(new NoticeOfIntent());
+    mockService.mapToDtos.mockResolvedValue([]);
+
+    await controller.get('fileNumber');
+
+    expect(mockService.getByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for search', async () => {
+    mockService.searchByFileNumber.mockResolvedValue([new NoticeOfIntent()]);
+    mockService.mapToDtos.mockResolvedValue([]);
+
+    await controller.search('fileNumber');
+
+    expect(mockService.searchByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to service for update', async () => {
+    mockService.update.mockResolvedValue(new NoticeOfIntent());
+    mockService.mapToDtos.mockResolvedValue([]);
+
+    await controller.update({}, 'fileNumber');
+
+    expect(mockService.update).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
   it('should call through to service for get card', async () => {
     mockService.getByCardUuid.mockResolvedValue(new NoticeOfIntent());
     mockService.mapToDtos.mockResolvedValue([]);

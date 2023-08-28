@@ -63,6 +63,10 @@ import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-su
     NoticeOfIntentDecisionComponentController,
     NoticeOfIntentDecisionConditionController,
   ],
-  exports: [NoticeOfIntentModificationService, NoticeOfIntentDecisionV1Service],
+  exports: [
+    NoticeOfIntentModificationService,
+    NoticeOfIntentDecisionV1Service,
+    NoticeOfIntentDecisionV2Service,
+  ],
 })
 export class NoticeOfIntentDecisionModule {}

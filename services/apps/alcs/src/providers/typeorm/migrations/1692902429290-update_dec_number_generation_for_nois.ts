@@ -4,6 +4,9 @@ export class updateDecNumberGenerationForNois1692902429290
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // This function gets the next available decision number for the given year, these numbers are shared among Applications and NOIs
+    // When a decision is deleted, that number returns to the pool.
+    // This function unions both NOI and Application tables then uses row_number by resolution_number to find the next one
     await queryRunner.query(
       `CREATE OR REPLACE FUNCTION alcs.generate_next_resolution_number(p_resolution_year integer)
           RETURNS integer
