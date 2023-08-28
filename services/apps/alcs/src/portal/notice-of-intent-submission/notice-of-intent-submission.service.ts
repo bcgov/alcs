@@ -62,18 +62,13 @@ export class NoticeOfIntentSubmissionService {
   ) {}
 
   async getOrFailByFileNumber(fileNumber: string) {
-    const noticeOfIntent =
-      await this.noticeOfIntentSubmissionRepository.findOne({
-        where: {
-          fileNumber,
-          isDraft: false,
-        },
-        relations: this.DEFAULT_RELATIONS,
-      });
-    if (!noticeOfIntent) {
-      throw new Error('Failed to find notice of intent');
-    }
-    return noticeOfIntent;
+    return await this.noticeOfIntentSubmissionRepository.findOneOrFail({
+      where: {
+        fileNumber,
+        isDraft: false,
+      },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 
   async create(type: string, createdBy: User) {
@@ -170,13 +165,7 @@ export class NoticeOfIntentSubmissionService {
       user.clientRoles!.includes(value),
     );
     if (overlappingRoles.length > 0) {
-      return await this.noticeOfIntentSubmissionRepository.findOneOrFail({
-        where: {
-          fileNumber,
-          isDraft: false,
-        },
-        relations: this.DEFAULT_RELATIONS,
-      });
+      return await this.getOrFailByFileNumber(fileNumber);
     }
 
     const whereClauses = await this.generateWhereClauses(
