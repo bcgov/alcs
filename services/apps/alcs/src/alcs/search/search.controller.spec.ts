@@ -42,7 +42,7 @@ describe('SearchController', () => {
 
     controller = module.get<SearchController>(SearchController);
 
-    mockSearchService.getApplication.mockResolvedValue(new Application());
+    mockSearchService.searchApplications.mockResolvedValue(new Application());
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
     mockSearchService.getPlanningReview.mockResolvedValue(
       new PlanningReview({
@@ -72,8 +72,8 @@ describe('SearchController', () => {
     const searchString = 'fake';
     const result = await controller.search(searchString);
 
-    expect(mockSearchService.getApplication).toBeCalledTimes(1);
-    expect(mockSearchService.getApplication).toBeCalledWith(searchString);
+    expect(mockSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockSearchService.searchApplications).toBeCalledWith(searchString);
     expect(mockSearchService.getNoi).toBeCalledTimes(1);
     expect(mockSearchService.getNoi).toBeCalledWith(searchString);
     expect(mockSearchService.getPlanningReview).toBeCalledTimes(1);

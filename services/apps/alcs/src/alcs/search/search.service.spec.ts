@@ -73,7 +73,7 @@ describe('SearchService', () => {
   it('should call repository to get application', async () => {
     mockApplicationRepository.findOne.mockResolvedValue(new Application());
 
-    const result = await service.getApplication('fake');
+    const result = await service.searchApplications('fake');
 
     expect(mockApplicationRepository.findOne).toBeCalledTimes(1);
     expect(mockApplicationRepository.findOne).toBeCalledWith({

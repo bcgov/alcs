@@ -8,6 +8,7 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
+import { ApplicationSubmissionSearchView } from './search.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SearchService } from './search.service';
       PlanningReview,
       Covenant,
       LocalGovernment,
+      ApplicationSubmissionSearchView,
     ]),
   ],
   providers: [SearchService, ApplicationProfile],

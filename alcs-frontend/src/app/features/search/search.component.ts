@@ -8,13 +8,14 @@ import { ApplicationRegionDto, ApplicationTypeDto } from '../../services/applica
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../services/application/application.service';
-import { SearchResultDto } from '../../services/search/search.dto';
+import { SearchRequestDto, SearchResultDto } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
 import {
   COVENANT_TYPE_LABEL,
   PLANNING_TYPE_LABEL,
 } from '../../shared/application-type-pill/application-type-pill.constants';
+import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 
 interface SearchResult {
   fileNumber: string;
@@ -61,7 +62,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
       startWith(''),
-      map((value) => this.filter(value || ''))
+      map((value) => this.filterLocalGovernment(value || ''))
     );
 
     this.applicationService.$applicationRegions.pipe(takeUntil(this.$destroy)).subscribe((regions) => {
@@ -75,7 +76,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.searchText = searchText;
 
         this.searchService
-          .fetch(searchText)
+          .fetch({ fileNumber: searchText, isIncludeOtherParcels: false })
           .then((result) => (this.searchResults = this.mapSearchResults(result ?? [])));
       }
     });
@@ -138,24 +139,24 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   // new search functionality
 
-  localGovernment = new FormControl<string | null>(null);
-  createForm = new FormGroup({
-    fileNumber: new FormControl(null),
-    name: new FormControl(null),
-    pid: new FormControl(null),
-    civicAddress: new FormControl(null),
+  localGovernment = new FormControl<string | undefined>(undefined);
+  searchForm = new FormGroup({
+    fileNumber: new FormControl(undefined),
+    name: new FormControl(undefined),
+    pid: new FormControl(undefined),
+    civicAddress: new FormControl(undefined),
     isIncludeOtherParcels: new FormControl(false),
-    resolutionNumber: new FormControl(null),
-    resolutionYear: new FormControl(null),
-    legacyId: new FormControl(null),
-    portalStatus: new FormControl(null),
-    componentType: new FormControl(null),
+    resolutionNumber: new FormControl<string | undefined>(undefined),
+    resolutionYear: new FormControl<number | undefined>(undefined),
+    legacyId: new FormControl(undefined),
+    portalStatus: new FormControl(undefined),
+    componentType: new FormControl(undefined),
     government: this.localGovernment,
-    region: new FormControl(null),
-    dateSubmittedFrom: new FormControl(null),
-    dateSubmittedTo: new FormControl(null),
-    dateDecidedFrom: new FormControl(null),
-    dateDecidedTo: new FormControl(null),
+    region: new FormControl(undefined),
+    dateSubmittedFrom: new FormControl(undefined),
+    dateSubmittedTo: new FormControl(undefined),
+    dateDecidedFrom: new FormControl(undefined),
+    dateDecidedTo: new FormControl(undefined),
   });
 
   isSearchExpanded = true;
@@ -177,7 +178,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.localGovernments = governments.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 
-  private filter(value: string): ApplicationLocalGovernmentDto[] {
+  private filterLocalGovernment(value: string): ApplicationLocalGovernmentDto[] {
     if (this.localGovernments) {
       const filterValue = value.toLowerCase();
       return this.localGovernments.filter((localGovernment) =>
@@ -212,10 +213,45 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onReset() {
-    console.log('onReset');
+    this.searchForm.reset();
   }
 
-  onSearch() {
-    console.log('onSearch');
+  async onSearch() {
+    const searchParams = this.getSearchParams();
+    this.searchResults = (await this.searchService.fetch(searchParams)) ?? [];
+  }
+
+  getSearchParams() {
+    return {
+      // TODO move condition into helper function
+      fileNumber:
+        this.searchForm.controls.fileNumber.value && this.searchForm.controls.fileNumber.value !== ''
+          ? this.searchForm.controls.fileNumber.value
+          : undefined,
+      legacyId: this.searchForm.controls.legacyId.value ?? undefined,
+      name: this.searchForm.controls.name.value ?? undefined,
+      civicAddress: this.searchForm.controls.civicAddress.value ?? undefined,
+      pid: this.searchForm.controls.pid.value ?? undefined,
+      isIncludeOtherParcels: this.searchForm.controls.isIncludeOtherParcels.value ?? false,
+      resolutionNumber: this.searchForm.controls.resolutionNumber.value
+        ? parseInt(this.searchForm.controls.resolutionNumber.value)
+        : undefined,
+      resolutionYear: this.searchForm.controls.resolutionYear.value ?? undefined,
+      portalStatusCode: this.searchForm.controls.portalStatus.value ?? undefined,
+      governmentName: this.searchForm.controls.government.value ?? undefined,
+      regionCode: this.searchForm.controls.region.value ?? undefined,
+      dateSubmittedFrom: this.searchForm.controls.dateSubmittedFrom.value
+        ? formatDateForApi(this.searchForm.controls.dateSubmittedFrom.value)
+        : undefined,
+      dateSubmittedTo: this.searchForm.controls.dateSubmittedTo.value
+        ? formatDateForApi(this.searchForm.controls.dateSubmittedTo.value)
+        : undefined,
+      dateDecidedFrom: this.searchForm.controls.dateDecidedFrom.value
+        ? formatDateForApi(this.searchForm.controls.dateDecidedFrom.value)
+        : undefined,
+      dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
+        ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
+        : undefined,
+    } as SearchRequestDto;
   }
 }
