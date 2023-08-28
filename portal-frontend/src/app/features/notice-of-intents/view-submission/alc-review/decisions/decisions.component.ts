@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ApplicationPortalDecisionDto } from '../../../../../services/application-decision/application-decision.dto';
-import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
+import { NoticeOfIntentPortalDecisionDto } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentDecisionService } from '../../../../../services/notice-of-intent-decision/notice-of-intent-decision.service';
 
 @Component({
   selector: 'app-decisions[fileNumber]',
@@ -9,9 +9,9 @@ import { ApplicationDecisionService } from '../../../../../services/application-
 })
 export class DecisionsComponent implements OnInit, OnChanges {
   @Input() fileNumber = '';
-  decisions: ApplicationPortalDecisionDto[] = [];
+  decisions: NoticeOfIntentPortalDecisionDto[] = [];
 
-  constructor(private decisionService: ApplicationDecisionService) {}
+  constructor(private decisionService: NoticeOfIntentDecisionService) {}
 
   ngOnInit(): void {
     this.loadDecisions();

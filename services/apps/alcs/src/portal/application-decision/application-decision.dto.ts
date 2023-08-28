@@ -5,7 +5,7 @@ import {
 } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
 import { ApplicationDecisionOutcomeCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 
-export class PortalDecisionDto {
+export class ApplicationPortalDecisionDto {
   @AutoMap()
   uuid: string;
 

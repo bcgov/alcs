@@ -3,6 +3,12 @@ from common import (
     log_end,
     log_start,
 )
+from .submap import (
+    add_direction_field,
+    map_direction_values,
+    create_direction_dict,
+    get_directions_rows,
+)
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -53,9 +59,12 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
+                    adj_rows = get_directions_rows(rows, cursor)
+                    direction_data = create_direction_dict(adj_rows)
+
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -79,7 +88,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows):
+def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
     """
     Function to insert submission records in batches.
 
@@ -88,17 +97,16 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
     batch_size (int): Number of rows to execute at one time.
     cursor (obj): Cursor object to execute queries.
     rows (list): Rows of data to insert in the database.
+    direction_data (dict): Dictionary of adjacent parcel data
 
     Returns:
     None: Commits the changes to the database.
     """
     (
         nfu_data_list,
-        nar_data_list,
         other_data_list,
-        exc_data_list,
-        inc_data_list,
-    ) = prepare_app_sub_data(rows)
+        inc_exc_data_list,
+    ) = prepare_app_sub_data(rows, direction_data)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -108,27 +116,11 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
             page_size=batch_size,
         )
 
-    if len(nar_data_list) > 0:
+    if len(inc_exc_data_list) > 0:
         execute_batch(
             cursor,
-            get_insert_query_for_nar(),
-            nar_data_list,
-            page_size=batch_size,
-        )
-
-    if len(exc_data_list) > 0:
-        execute_batch(
-            cursor,
-            get_insert_query_for_exc(),
-            exc_data_list,
-            page_size=batch_size,
-        )
-
-    if len(inc_data_list) > 0:
-        execute_batch(
-            cursor,
-            get_insert_query_for_inc(),
-            inc_data_list,
+            get_insert_query_for_inc_exc(),
+            inc_exc_data_list,
             page_size=batch_size,
         )
 
@@ -142,44 +134,38 @@ def insert_app_sub_records(conn, batch_size, cursor, rows):
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list):
+def prepare_app_sub_data(app_sub_raw_data_list, direction_data):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
-    :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' grouped based on the 'alr_change_code' field
+    :param direction_data: A dictionary of adjacent parcel data.
+    :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
     - Initializes empty lists
     - Iterates over 'app_sub_raw_data_list'
+        - Maps adjacent parcel data based on alr_application_id
         - Maps the basic fields of the data dictionary based on the alr_change_code
     - Returns the mapped lists
     """
     nfu_data_list = []
-    nar_data_list = []
-    exc_data_list = []
-    inc_data_list = []
+    inc_exc_data_list = []
     other_data_list = []
 
     for row in app_sub_raw_data_list:
         data = dict(row)
-        # data = map_basic_field(data)
-
+        data = add_direction_field(data)
+        if data["alr_application_id"] in direction_data:
+            data = map_direction_values(data, direction_data)
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
-            # data = mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.NAR.value:
-            nar_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.EXC.value:
-            # data = mapOatsToAlcsLegislationCode(data)
-            exc_data_list.append(data)
-        elif data["alr_change_code"] == ALRChangeCode.INC.value:
-            # data = mapOatsToAlcsLegislationCode(data)
-            inc_data_list.append(data)
+        elif data["alr_change_code"] == ALRChangeCode.EXC.value or data["alr_change_code"] == ALRChangeCode.INC.value:
+            inc_exc_data_list.append(data)
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
+    return nfu_data_list, other_data_list, inc_exc_data_list
 
 
 def get_insert_query(unique_fields,unique_values):
@@ -191,7 +177,15 @@ def get_insert_query(unique_fields,unique_values):
                     type_code,
                     is_draft,
                     audit_created_by,
-                    applicant
+                    applicant,
+                    east_land_use_type_description,
+                    west_land_use_type_description,
+                    north_land_use_type_description,
+                    south_land_use_type_description,
+                    east_land_use_type,
+                    west_land_use_type,
+                    north_land_use_type,
+                    south_land_use_type
                     {unique_fields}
                 )
                 VALUES (
@@ -200,7 +194,15 @@ def get_insert_query(unique_fields,unique_values):
                     %(type_code)s,
                     false,
                     'oats_etl',
-                    %(applicant)s
+                    %(applicant)s,
+                    %(east_land_use_type_description)s,
+                    %(west_land_use_type_description)s,
+                    %(north_land_use_type_description)s,
+                    %(south_land_use_type_description)s,
+                    %(east_land_use_type)s,
+                    %(west_land_use_type)s,
+                    %(north_land_use_type)s,
+                    %(south_land_use_type)s
                     {unique_values}
                 )
     """
@@ -211,23 +213,11 @@ def get_insert_query_for_nfu():
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
-def get_insert_query_for_nar():
-    # naruSubtype is a part of submission, import there
-    unique_fields = ""
-    unique_values = ""
-    return get_insert_query(unique_fields,unique_values)
-
-
-def get_insert_query_for_exc():
+def get_insert_query_for_inc_exc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
 
-
-def get_insert_query_for_inc():
-    unique_fields = ", incl_excl_hectares"
-    unique_values = ", %(alr_area)s"
-    return get_insert_query(unique_fields,unique_values)
 
 @inject_conn_pool
 def clean_application_submission(conn=None):

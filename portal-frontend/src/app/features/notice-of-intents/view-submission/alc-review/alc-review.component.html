@@ -21,6 +21,7 @@
       noiSubmission.status.code === NOI_SUBMISSION_STATUS.ALC_DECISION
     "
   >
+    <app-decisions [fileNumber]="noiSubmission.fileNumber"></app-decisions>
     <app-submission-documents [$noiDocuments]="$noiDocuments"></app-submission-documents>
   </div>
 </div>

@@ -35,6 +35,7 @@ import { NoticeOfIntentModification } from '../../alcs/notice-of-intent-decision
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
+import { NoticeOfIntentPortalDecisionDto } from '../../portal/notice-of-intent-decision/notice-of-intent-decision.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
@@ -280,6 +281,30 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (a) => a.card,
           mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDecision,
+        NoticeOfIntentPortalDecisionDto,
+        forMember(
+          (a) => a.date,
+          mapFrom((rd) => rd.date?.getTime()),
+        ),
+        forMember(
+          (a) => a.modifies,
+          mapFrom((dec) =>
+            dec.modifies
+              ? {
+                  uuid: dec.modifies.uuid,
+                  linkedResolutions: dec.modifies.modifiesDecisions.map(
+                    (decision) =>
+                      `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+                  ),
+                }
+              : undefined,
+          ),
         ),
       );
     };

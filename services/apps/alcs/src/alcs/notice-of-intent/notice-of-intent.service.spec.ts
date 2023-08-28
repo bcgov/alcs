@@ -4,7 +4,10 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import {
+  ServiceNotFoundException,
+  ServiceValidationException,
+} from '../../../../../libs/common/src/exceptions/base.exception';
 import { NoticeOfIntentProfile } from '../../common/automapper/notice-of-intent.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
@@ -172,11 +175,56 @@ describe('NoticeOfIntentService', () => {
     expect(mockRepository.find.mock.calls[0][0]!.where).toEqual(mockFilter);
   });
 
+  it('should call throw an exception when getOrFailByUuid fails', async () => {
+    mockRepository.findOne.mockResolvedValue(null);
+    const promise = service.getOrFailByUuid('uuid');
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceNotFoundException(
+        `Failed to find notice of intent with uuid uuid`,
+      ),
+    );
+
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
+
   it('should call through to the repo for getByFileNumber', async () => {
     mockRepository.findOneOrFail.mockResolvedValue(new NoticeOfIntent());
     await service.getByFileNumber('file');
 
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to the repo for searchByFileNumber', async () => {
+    mockRepository.find.mockResolvedValue([new NoticeOfIntent()]);
+    const res = await service.searchByFileNumber('file');
+
+    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+  });
+
+  it('should call through to the repo for getFileNumber', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(
+      new NoticeOfIntent({
+        fileNumber: 'fileNumber',
+      }),
+    );
+    const res = await service.getFileNumber('file');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(res).toEqual('fileNumber');
+  });
+
+  it('should call through to the repo for getUuid', async () => {
+    mockRepository.findOneOrFail.mockResolvedValue(
+      new NoticeOfIntent({
+        uuid: 'uuid',
+      }),
+    );
+    const res = await service.getUuid('file');
+
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(res).toEqual('uuid');
   });
 
   it('should set values and call save for update', async () => {
@@ -327,5 +375,30 @@ describe('NoticeOfIntentService', () => {
     expect(res[0].activeDays).toEqual(1);
     expect(res[0].pausedDays).toEqual(5);
     expect(res[0].paused).toEqual(true);
+  });
+
+  it('should create a card and save it for submit', async () => {
+    const mockNoi = new NoticeOfIntent();
+    mockRepository.findOne.mockResolvedValue(mockNoi);
+    mockRepository.findOneOrFail.mockResolvedValue(mockNoi);
+    mockCodeService.fetchRegion.mockResolvedValue(new ApplicationRegion());
+    mockRepository.save.mockResolvedValue({} as any);
+
+    await service.submit({
+      applicant: 'Bruce Wayne',
+      typeCode: 'CAT',
+      fileNumber: 'fileNumber',
+      localGovernmentUuid: 'governmentUuid',
+      regionCode: 'REGION',
+    });
+
+    expect(mockNoi.fileNumber).toEqual('fileNumber');
+    expect(mockNoi.region).toBeDefined();
+    expect(mockNoi.card).toBeDefined();
+    expect(mockCodeService.fetchRegion).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    0;
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.save).toHaveBeenCalledTimes(1);
   });
 });
