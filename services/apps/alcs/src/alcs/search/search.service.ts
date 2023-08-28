@@ -60,9 +60,72 @@ export class SearchService {
   ) {}
 
   async searchApplications(searchDto: SearchRequestDto) {
+    let query = await this.compileApplicationSearchQuery(searchDto);
+
+    query = this.compileApplicationGroupBySearchQuery(query);
+
+    console.log('search applications', query.getQuery());
+
+    const result = await query
+      .take(searchDto.pageSize)
+      .skip((searchDto.page - 1) * searchDto.pageSize)
+      .getManyAndCount();
+
+    // TODO remove this
+    if (result && result.length > 2) {
+      console.log('search applications result > 2', result[0], result[1]);
+    } else {
+      console.log('search applications ', result);
+    }
+    return {
+      applications: result[0],
+      total: result[1],
+    };
+  }
+
+  private compileApplicationGroupBySearchQuery(query) {
+    query = query
+      .innerJoinAndMapOne(
+        'appSearch.applicationType',
+        'appSearch.applicationType',
+        'applicationType',
+      )
+      .groupBy(
+        `
+          "appSearch"."uuid"
+        , "appSearch"."application_uuid"
+        , "appSearch"."application_region_code" 
+        , "appSearch"."file_number"
+        , "appSearch"."applicant"
+        , "appSearch"."local_government_uuid"
+        , "appSearch"."local_government_name"
+        , "appSearch"."application_type_code"
+        , "appSearch"."legacy_id"
+        , "appSearch"."status"
+        , "appSearch"."date_submitted_to_alc"
+        , "appSearch"."decision_date"
+        , "applicationType"."audit_deleted_date_at"
+        , "applicationType"."audit_created_at"
+        , "applicationType"."audit_updated_by"
+        , "applicationType"."audit_updated_at"
+        , "applicationType"."audit_created_by"
+        , "applicationType"."short_label"
+        , "applicationType"."label"
+        , "applicationType"."code"
+        , "applicationType"."background_color"
+        , "applicationType"."text_color"
+        , "applicationType"."html_description"
+        , "applicationType"."portal_label"
+        , "appSearch"."is_draft"
+        `,
+      );
+    return query;
+  }
+
+  private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
     let query = this.applicationSearchRepository
       .createQueryBuilder('appSearch')
-      .where('1 = 1');
+      .where('appSearch.is_draft = false');
 
     if (searchDto.fileNumber) {
       query = query
@@ -76,95 +139,11 @@ export class SearchService {
       });
     }
 
-    if (searchDto.name) {
-      const formattedSearchString = this.formatNameSearchText(searchDto.name!);
-      console.log(this.formatNameSearchText(searchDto.name!));
-      query = query
-        .leftJoin(
-          ApplicationOwner,
-          'application_owner',
-          'application_owner.application_submission_uuid = appSearch.uuid',
-        )
-        .andWhere(
-          new Brackets((qb) =>
-            qb
-              .where(
-                "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere(
-                'LOWER(application_owner.first_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              )
-              .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
-                names: formattedSearchString,
-              })
-              .orWhere(
-                'LOWER(application_owner.organization_name) LIKE ANY (:names)',
-                {
-                  names: formattedSearchString,
-                },
-              ),
-          ),
-        );
-    }
+    query = this.compileApplicationSearchByNameQuery(searchDto, query);
 
-    if (
-      (searchDto.pid || searchDto.civicAddress) &&
-      searchDto.isIncludeOtherParcels
-    ) {
-      query = query.leftJoin(
-        ApplicationParcel,
-        'parcel',
-        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type IN ('application', 'other')",
-      );
-    } else {
-      query = query.leftJoin(
-        ApplicationParcel,
-        'parcel',
-        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type = 'application'",
-      );
-    }
+    query = this.compileApplicationParcelSearchQuery(searchDto, query);
 
-    if (searchDto.pid) {
-      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
-    }
-
-    if (searchDto.civicAddress) {
-      query = query.andWhere('parcel.civic_address like :civic_address', {
-        civic_address: `%${searchDto.civicAddress}%`,
-      });
-    }
-
-    if (
-      searchDto.resolutionNumber !== undefined ||
-      searchDto.resolutionYear !== undefined
-    ) {
-      query = query.leftJoin(
-        ApplicationDecision,
-        'decision',
-        'decision.application_uuid = "appSearch"."application_uuid"',
-      );
-
-      if (searchDto.resolutionNumber !== undefined) {
-        query = query.andWhere(
-          'decision.resolution_number = :resolution_number',
-          {
-            resolution_number: searchDto.resolutionNumber,
-          },
-        );
-      }
-
-      if (searchDto.resolutionYear !== undefined) {
-        query = query.andWhere('decision.resolution_year = :resolution_year', {
-          resolution_year: searchDto.resolutionYear,
-        });
-      }
-    }
+    query = this.compileApplicationDecisionSearchQuery(searchDto, query);
 
     if (searchDto.portalStatusCode) {
       query = query.andWhere(
@@ -198,6 +177,14 @@ export class SearchService {
     }
 
     // check dates toIsoString
+    query = this.compileApplicationDateRangeSearchQuery(searchDto, query);
+    return query;
+  }
+
+  private compileApplicationDateRangeSearchQuery(
+    searchDto: SearchRequestDto,
+    query,
+  ) {
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
         'appSearch.date_submitted_to_alc >= :date_submitted_to_alc',
@@ -235,59 +222,115 @@ export class SearchService {
         )!.toISOString(),
       });
     }
+    return query;
+  }
 
-    query = query
-      .innerJoinAndMapOne(
-        'appSearch.applicationType',
-        'appSearch.applicationType',
-        'applicationType',
-      )
-      .groupBy(
-        `
-          "appSearch"."uuid"
-        , "appSearch"."application_uuid"
-        , "appSearch"."application_region_code" 
-        , "appSearch"."file_number"
-        , "appSearch"."applicant"
-        , "appSearch"."local_government_uuid"
-        , "appSearch"."local_government_name"
-        , "appSearch"."application_type_code"
-        , "appSearch"."legacy_id"
-        , "appSearch"."status"
-        , "appSearch"."date_submitted_to_alc"
-        , "appSearch"."decision_date"
-        , "applicationType"."audit_deleted_date_at"
-        , "applicationType"."audit_created_at"
-        , "applicationType"."audit_updated_by"
-        , "applicationType"."audit_updated_at"
-        , "applicationType"."audit_created_by"
-        , "applicationType"."short_label"
-        , "applicationType"."label"
-        , "applicationType"."code"
-        , "applicationType"."background_color"
-        , "applicationType"."text_color"
-        , "applicationType"."html_description"
-        , "applicationType"."portal_label"
-        `,
+  private compileApplicationDecisionSearchQuery(
+    searchDto: SearchRequestDto,
+    query,
+  ) {
+    if (
+      searchDto.resolutionNumber !== undefined ||
+      searchDto.resolutionYear !== undefined
+    ) {
+      query = query.leftJoin(
+        ApplicationDecision,
+        'decision',
+        'decision.application_uuid = "appSearch"."application_uuid"',
       );
 
-    console.log('search applications', query.getQuery());
+      if (searchDto.resolutionNumber !== undefined) {
+        query = query.andWhere(
+          'decision.resolution_number = :resolution_number',
+          {
+            resolution_number: searchDto.resolutionNumber,
+          },
+        );
+      }
 
-    const result = await query
-      .take(searchDto.pageSize)
-      .skip((searchDto.page - 1) * searchDto.pageSize)
-      .getManyAndCount();
-
-    // TODO remove this
-    if (result && result.length > 2) {
-      console.log('search applications result > 2', result[0], result[1]);
-    } else {
-      console.log('search applications ', result);
+      if (searchDto.resolutionYear !== undefined) {
+        query = query.andWhere('decision.resolution_year = :resolution_year', {
+          resolution_year: searchDto.resolutionYear,
+        });
+      }
     }
-    return {
-      applications: result[0],
-      total: result[1],
-    };
+    return query;
+  }
+
+  private compileApplicationParcelSearchQuery(
+    searchDto: SearchRequestDto,
+    query,
+  ) {
+    if (
+      (searchDto.pid || searchDto.civicAddress) &&
+      searchDto.isIncludeOtherParcels
+    ) {
+      query = query.leftJoin(
+        ApplicationParcel,
+        'parcel',
+        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type IN ('application', 'other')",
+      );
+    } else {
+      query = query.leftJoin(
+        ApplicationParcel,
+        'parcel',
+        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type = 'application'",
+      );
+    }
+
+    if (searchDto.pid) {
+      query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });
+    }
+
+    if (searchDto.civicAddress) {
+      query = query.andWhere('parcel.civic_address like :civic_address', {
+        civic_address: `%${searchDto.civicAddress}%`,
+      });
+    }
+    return query;
+  }
+
+  private compileApplicationSearchByNameQuery(
+    searchDto: SearchRequestDto,
+    query,
+  ) {
+    if (searchDto.name) {
+      const formattedSearchString = this.formatNameSearchText(searchDto.name!);
+      console.log(this.formatNameSearchText(searchDto.name!));
+      query = query
+        .leftJoin(
+          ApplicationOwner,
+          'application_owner',
+          'application_owner.application_submission_uuid = appSearch.uuid',
+        )
+        .andWhere(
+          new Brackets((qb) =>
+            qb
+              .where(
+                "LOWER(application_owner.first_name || ' ' || application_owner.last_name) LIKE ANY (:names)",
+                {
+                  names: formattedSearchString,
+                },
+              )
+              .orWhere(
+                'LOWER(application_owner.first_name) LIKE ANY (:names)',
+                {
+                  names: formattedSearchString,
+                },
+              )
+              .orWhere('LOWER(application_owner.last_name) LIKE ANY (:names)', {
+                names: formattedSearchString,
+              })
+              .orWhere(
+                'LOWER(application_owner.organization_name) LIKE ANY (:names)',
+                {
+                  names: formattedSearchString,
+                },
+              ),
+          ),
+        );
+    }
+    return query;
   }
 
   async getApplication(fileNumber: string) {

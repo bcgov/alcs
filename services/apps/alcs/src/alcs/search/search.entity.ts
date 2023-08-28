@@ -30,6 +30,7 @@ export class SearchApplicationSubmissionStatusType {
       .addSelect('as2.local_government_uuid', 'local_government_uuid')
       .addSelect('localGovernment.name', 'local_government_name')
       .addSelect('as2.type_code', 'application_type_code')
+      .addSelect('as2.is_draft', 'is_draft')
       .addSelect('a.legacy_id', 'legacy_id')
       .addSelect('a.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('a.decision_date', 'decision_date')
@@ -61,13 +62,16 @@ export class ApplicationSubmissionSearchView {
   applicationUuid: string;
 
   @ViewColumn()
-  applicationRegionCode: string;
+  isDraft: boolean;
+
+  @ViewColumn()
+  applicationRegionCode?: string;
 
   @ViewColumn()
   fileNumber: string;
 
   @ViewColumn()
-  applicant: string;
+  applicant?: string;
 
   @ViewColumn()
   localGovernmentUuid?: string;
@@ -79,7 +83,7 @@ export class ApplicationSubmissionSearchView {
   applicationTypeCode: string;
 
   @ViewColumn()
-  legacyId: string;
+  legacyId?: string;
 
   @ViewColumn()
   status: SearchApplicationSubmissionStatusType;
