@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 import { AdvancedSearchResultDto, SearchRequestDto, SearchResultDto } from './search.dto';
 
+
 @Injectable({
   providedIn: 'root',
 })

@@ -44,9 +44,10 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
   pageIndex = 0;
   itemsPerPage = 20;
-  total: number = 0;
+  applicationsTotal: number = 0;
 
-  localGovernment = new FormControl<string | undefined>(undefined);
+  localGovernmentControl = new FormControl<string | undefined>(undefined);
+  portalStatusControl = new FormControl<string | undefined>(undefined);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
     name: new FormControl<string | undefined>(undefined),
@@ -56,9 +57,9 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     resolutionNumber: new FormControl<string | undefined>(undefined),
     resolutionYear: new FormControl<number | undefined>(undefined),
     legacyId: new FormControl<string | undefined>(undefined),
-    portalStatus: new FormControl<string | undefined>(undefined),
+    portalStatus: this.portalStatusControl,
     componentType: new FormControl<string | undefined>(undefined),
-    government: this.localGovernment,
+    government: this.localGovernmentControl,
     region: new FormControl<string | undefined>(undefined),
     dateSubmittedFrom: new FormControl(undefined),
     dateSubmittedTo: new FormControl(undefined),
@@ -121,7 +122,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadGovernments();
     this.applicationService.setup();
 
-    this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
+    this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
       map((value) => this.filterLocalGovernment(value || ''))
     );
@@ -157,7 +158,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
       };
     }
 
-    this.total = searchResult.total;
+    this.applicationsTotal = searchResult.total;
 
     return searchResult.data.map((e) => {
       const status = this.statuses.find((st) => st.code === e.status);
@@ -211,7 +212,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     if (localGovernmentName) {
       const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
       if (localGovernment) {
-        this.localGovernment.setValue(localGovernment.name);
+        this.localGovernmentControl.setValue(localGovernment.name);
       }
     }
   }
@@ -219,11 +220,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   onBlur() {
     //Blur will fire before onChange above, so use setTimeout to delay it
     setTimeout(() => {
-      const localGovernmentName = this.localGovernment.getRawValue();
+      const localGovernmentName = this.localGovernmentControl.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
         if (!localGovernment) {
-          this.localGovernment.setValue(null);
+          this.localGovernmentControl.setValue(null);
           console.log('Clearing Local Government field');
         }
       }
@@ -242,13 +243,13 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getSearchParams() {
     return {
-      // TODO use paginator instead
+      // pagination
       pageSize: this.itemsPerPage,
       page: this.pageIndex + 1,
-      //
+      // sorting
       sortField: this.sortField,
       sortDirection: this.sortDirection,
-      // TODO move condition into helper function
+      // TODO move condition into helper function?
       fileNumber:
         this.searchForm.controls.fileNumber.value && this.searchForm.controls.fileNumber.value !== ''
           ? this.searchForm.controls.fileNumber.value
@@ -293,14 +294,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   sortField = 'dateSubmitted';
 
   ngAfterViewInit() {
-    // reset the paginator after sorting
-
-    // merge(this.sort.sortChange, this.paginator.page)
-    //   .pipe(tap(() => this.loadLessonsPage()))
-    //   .subscribe();
-
     this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-      console.log(this.sort, sortObj);
       this.paginator.pageIndex = 0;
       this.pageIndex = 0;
       this.sortDirection = sortObj.direction.toUpperCase();
