@@ -10,7 +10,7 @@
 
 This project contains the frontend and backend for the ALCS used for tracking various permits and other ALC related documents
 
-## Getting Help or Reporting an Issue
+## Getting Help or Reporting an Issue 
 
 To report bugs/issues/features requests, please file an [issue](https://github.com/bcgov/alcs/issues).
 
