@@ -135,10 +135,12 @@
     <ng-container *ngTemplateOutlet="header"></ng-container>
     <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit">
       <app-review-and-submit
+        *ngIf="originalSubmission"
         [$noiSubmission]="$noiSubmission"
         [$noiDocuments]="$noiDocuments"
         [draftMode]="true"
         [updatedFields]="updatedFields"
+        [originalSubmissionUuid]="originalSubmission.uuid"
         (exit)="onExit()"
         (submit)="onSubmit()"
       ></app-review-and-submit>
