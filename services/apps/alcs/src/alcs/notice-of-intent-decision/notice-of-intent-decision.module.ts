@@ -45,7 +45,7 @@ import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-su
     DocumentModule,
     forwardRef(() => NoticeOfIntentModule),
     NoticeOfIntentSubmissionStatusModule,
-    NoticeOfIntentSubmissionModule,
+    forwardRef(() => NoticeOfIntentSubmissionModule),
   ],
   providers: [
     //These are in the same module, so be careful to import the correct one
