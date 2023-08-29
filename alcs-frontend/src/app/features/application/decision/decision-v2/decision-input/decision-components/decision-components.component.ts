@@ -59,10 +59,9 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       if (application) {
         this.application = application;
         this.application.submittedApplication = await this.submissionService.fetchSubmission(application.fileNumber);
+        await this.prepareDecisionComponentTypes(this.codes);
       }
     });
-
-    this.prepareDecisionComponentTypes(this.codes);
 
     // validate components on load
     setTimeout(() => this.onChange(), 0);
