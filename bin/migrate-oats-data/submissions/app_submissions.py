@@ -64,10 +64,9 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    adj_rows = get_directions_rows(rows, cursor)
-                    direction_data = create_direction_dict(adj_rows)
-                    subdiv_rows = get_subdiv_rows(rows, cursor)
-                    subdiv_data = create_subdiv_dict(subdiv_rows)
+
+                    direction_data = get_direction_data(rows, cursor)
+                    subdiv_data = get_subdiv_data(rows, cursor)
 
                     submissions_to_be_inserted_count = len(rows)
 
@@ -105,7 +104,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
     cursor (obj): Cursor object to execute queries.
     rows (list): Rows of data to insert in the database.
     direction_data (dict): Dictionary of adjacent parcel data
-    subdiv_data: list of subdivision data
+    subdiv_data: dictionary of subdivision data lists
 
     Returns:
     None: Commits the changes to the database.
@@ -148,7 +147,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data):
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
     :param direction_data: A dictionary of adjacent parcel data.
-    :param subdiv_data: list of subdivision data
+    :param subdiv_data: dictionary of subdivision data lists
     :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
@@ -231,6 +230,18 @@ def get_insert_query_for_inc_exc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
+
+def get_direction_data(rows, cursor):
+    # runs query to get direction data and creates a dict based on alr_application_id
+    adj_rows = get_directions_rows(rows, cursor)
+    direction_data = create_direction_dict(adj_rows)
+    return direction_data
+
+def get_subdiv_data(rows, cursor):
+    # runs query to get subdivision data and creates a dictionaly based on alr_appl_component_id with a list of plots
+    subdiv_rows = get_subdiv_rows(rows, cursor)
+    subdiv_data = create_subdiv_dict(subdiv_rows)
+    return subdiv_data
 
 
 @inject_conn_pool
