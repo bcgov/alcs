@@ -148,4 +148,6 @@ describe('SearchService', () => {
     });
     expect(result).toBeDefined();
   });
+
+  // TODO this will be expanded once it is more clear with the structure for noi search.
 });

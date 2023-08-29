@@ -11,6 +11,7 @@ import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { SearchController } from './search.controller';
+import { SearchRequestDto } from './search.dto';
 import { SearchService } from './search.service';
 
 describe('SearchController', () => {
@@ -72,8 +73,8 @@ describe('SearchController', () => {
     const searchString = 'fake';
     const result = await controller.search(searchString);
 
-    expect(mockSearchService.searchApplications).toBeCalledTimes(1);
-    expect(mockSearchService.searchApplications).toBeCalledWith(searchString);
+    expect(mockSearchService.getApplication).toBeCalledTimes(1);
+    expect(mockSearchService.getApplication).toBeCalledWith(searchString);
     expect(mockSearchService.getNoi).toBeCalledTimes(1);
     expect(mockSearchService.getNoi).toBeCalledWith(searchString);
     expect(mockSearchService.getPlanningReview).toBeCalledTimes(1);
@@ -82,5 +83,32 @@ describe('SearchController', () => {
     expect(mockSearchService.getCovenant).toBeCalledWith(searchString);
     expect(result).toBeDefined();
     expect(result.length).toBe(4);
+  });
+
+  it('should call service for advanced search to retrieve Applications', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      isIncludeOtherParcels: false,
+      applicationFileTypes: [],
+    };
+
+    mockSearchService.searchApplications.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(mockSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockSearchService.searchApplications).toBeCalledWith(
+      mockSearchRequestDto,
+    );
+    expect(result.data).toBeDefined();
+    expect(result.total).toBe(0);
   });
 });

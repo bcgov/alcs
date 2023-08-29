@@ -135,14 +135,6 @@ export class SearchController {
       searchDto,
     );
 
-    // const noi = await this.searchService.getNoi(searchTerm);
-
-    // const planningReview = await this.searchService.getPlanningReview(
-    //   searchTerm,
-    // );
-
-    // const covenant = await this.searchService.getCovenant(searchTerm);
-
     const mappedApplications = this.mapAdvancedSearchResults(
       applicationSearchResult.data,
     );
