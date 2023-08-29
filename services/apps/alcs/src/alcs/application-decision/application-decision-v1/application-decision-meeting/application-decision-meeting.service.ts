@@ -76,7 +76,7 @@ export class ApplicationDecisionMeetingService {
     );
 
     const currentStatuses =
-      await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
+      await this.applicationSubmissionStatusService.getStatusesByFileNumber(
         application.fileNumber,
       );
 

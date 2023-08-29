@@ -18,7 +18,7 @@ export class ApplicationSubmissionStatusController {
   @Get('/:fileNumber')
   async getStatusesByFileNumber(@Param('fileNumber') fileNumber) {
     const statuses =
-      await this.applicationSubmissionStatusService.getCurrentStatusesByFileNumber(
+      await this.applicationSubmissionStatusService.getStatusesByFileNumber(
         fileNumber,
       );
 

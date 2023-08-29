@@ -8,6 +8,7 @@ import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
+import { NoticeOfIntentTimelineService } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 
 import { OverviewComponent } from './overview.component';
@@ -16,8 +17,6 @@ describe('OverviewComponent', () => {
   let component: OverviewComponent;
   let fixture: ComponentFixture<OverviewComponent>;
   let mockNOIDetailService: DeepMocked<NoticeOfIntentDetailService>;
-  let mockNoticeOfIntentMeetingService: DeepMocked<NoticeOfIntentMeetingService>;
-  let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
   let mockNOIDecisionService: DeepMocked<NoticeOfIntentDecisionService>;
 
   beforeEach(async () => {
@@ -25,28 +24,13 @@ describe('OverviewComponent', () => {
 
     mockNOIDetailService = createMock();
     mockNOIDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
-
-    mockNoticeOfIntentMeetingService = createMock();
-    mockNoticeOfIntentMeetingService.$meetings = new BehaviorSubject<NoticeOfIntentMeetingDto[]>([]);
-
-    mockNOIModificationService = createMock();
-    mockNOIModificationService.$modifications = new BehaviorSubject<NoticeOfIntentModificationDto[]>([]);
-
     await TestBed.configureTestingModule({
       providers: [
         {
           provide: NoticeOfIntentDetailService,
           useValue: mockNOIDetailService,
         },
-        { provide: NoticeOfIntentMeetingService, useValue: mockNoticeOfIntentMeetingService },
-        {
-          provide: NoticeOfIntentModificationService,
-          useValue: mockNOIModificationService,
-        },
-        {
-          provide: NoticeOfIntentDecisionService,
-          useValue: mockNOIDecisionService,
-        },
+        { provide: NoticeOfIntentTimelineService, useValue: {} },
       ],
       declarations: [OverviewComponent],
       schemas: [NO_ERRORS_SCHEMA],

@@ -80,14 +80,12 @@ describe('NoticeOfIntentMeetingController', () => {
   });
 
   it('should get all for notice of intent', async () => {
-    mockNoticeOfIntentMeetingService.getByAppFileNumber.mockResolvedValue([
+    mockNoticeOfIntentMeetingService.getByFileNumber.mockResolvedValue([
       mockMeeting,
     ]);
     const result = await controller.getAllForApplication('fake-number');
 
-    expect(mockNoticeOfIntentMeetingService.getByAppFileNumber).toBeCalledTimes(
-      1,
-    );
+    expect(mockNoticeOfIntentMeetingService.getByFileNumber).toBeCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockMeeting.uuid);
   });
 

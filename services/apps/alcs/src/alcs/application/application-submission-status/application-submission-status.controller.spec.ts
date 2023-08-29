@@ -49,17 +49,17 @@ describe('ApplicationSubmissionStatusController', () => {
   it('should call service to get statuses by file number', async () => {
     const fakeFileNumber = 'fake';
 
-    mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber.mockResolvedValue(
+    mockApplicationSubmissionStatusService.getStatusesByFileNumber.mockResolvedValue(
       [new ApplicationSubmissionToSubmissionStatus()],
     );
 
     const result = await controller.getStatusesByFileNumber(fakeFileNumber);
 
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledTimes(1);
     expect(
-      mockApplicationSubmissionStatusService.getCurrentStatusesByFileNumber,
+      mockApplicationSubmissionStatusService.getStatusesByFileNumber,
     ).toBeCalledWith(fakeFileNumber);
     expect(result.length).toEqual(1);
     expect(result).toBeDefined();

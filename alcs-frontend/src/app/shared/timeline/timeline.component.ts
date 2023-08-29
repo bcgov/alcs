@@ -1,12 +1,5 @@
 import { Component, Input } from '@angular/core';
-
-export interface TimelineEvent {
-  startDate: Date;
-  fulfilledDate?: Date;
-  isFulfilled: boolean;
-  htmlText: string;
-  link?: string;
-}
+import { TimelineEventDto } from '../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.dto';
 
 @Component({
   selector: 'app-timeline[events]',
@@ -14,7 +7,7 @@ export interface TimelineEvent {
   styleUrls: ['./timeline.component.scss'],
 })
 export class TimelineComponent {
-  @Input() events: TimelineEvent[] = [];
+  @Input() events: TimelineEventDto[] = [];
 
   constructor() {}
 }
