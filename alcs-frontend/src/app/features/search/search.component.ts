@@ -38,7 +38,7 @@ interface SearchResult {
 export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
-  isSearchExpanded = true;
+  isSearchExpanded = false;
 
   searchResults: SearchResult[] = [];
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
@@ -185,8 +185,8 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  onSubmit() {
-    console.log('onSubmit');
+  async onSubmit() {
+    await this.onSearch();
   }
 
   expandSearchClicked() {
@@ -294,18 +294,20 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) sort?: MatSort;
   sortDirection = 'DESC';
   sortField = 'dateSubmitted';
 
   ngAfterViewInit() {
-    this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-      this.paginator.pageIndex = 0;
-      this.pageIndex = 0;
-      this.sortDirection = sortObj.direction.toUpperCase();
-      this.sortField = sortObj.active;
+    if (this.sort) {
+      this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
+        this.paginator.pageIndex = 0;
+        this.pageIndex = 0;
+        this.sortDirection = sortObj.direction.toUpperCase();
+        this.sortField = sortObj.active;
 
-      await this.onSearch();
-    });
+        await this.onSearch();
+      });
+    }
   }
 }

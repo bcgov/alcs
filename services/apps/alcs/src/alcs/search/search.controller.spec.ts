@@ -42,7 +42,7 @@ describe('SearchController', () => {
 
     controller = module.get<SearchController>(SearchController);
 
-    mockSearchService.searchApplications.mockResolvedValue(new Application());
+    mockSearchService.getApplication.mockResolvedValue(new Application());
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
     mockSearchService.getPlanningReview.mockResolvedValue(
       new PlanningReview({

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
-import { AdvancedSearchResultDto } from './search.dto';
+import { SearchResultDto } from './search.dto';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
@@ -11,7 +11,7 @@ describe('SearchService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
-  const mockSearchResults: AdvancedSearchResultDto[] = [
+  const mockSearchResults: SearchResultDto[] = [
     {
       fileNumber: '123456',
       type: 'Type A',
@@ -35,6 +35,20 @@ describe('SearchService', () => {
       },
     },
   ];
+
+  const mockAdvancedSearchResult = {
+    total: 0,
+    data: [],
+  };
+
+  const mockSearchRequestDto = {
+    pageSize: 1,
+    page: 1,
+    sortField: '1',
+    sortDirection: 'ASC',
+    isIncludeOtherParcels: false,
+    applicationFileTypes: [],
+  };
 
   beforeEach(() => {
     mockHttpClient = createMock();
@@ -62,7 +76,7 @@ describe('SearchService', () => {
   it('should fetch search results by search text', async () => {
     mockHttpClient.get.mockReturnValue(of(mockSearchResults));
 
-    const res = await service.advancedSearchFetch('1');
+    const res = await service.fetch('1');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
@@ -76,9 +90,34 @@ describe('SearchService', () => {
       })
     );
 
-    const res = await service.advancedSearchFetch('1');
+    const res = await service.fetch('1');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeUndefined();
+    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should fetch advanced search results by AdvancedSearchRequestDto', async () => {
+    mockHttpClient.post.mockReturnValue(of(mockAdvancedSearchResult));
+
+    const res = await service.advancedSearchFetch(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+    expect(res?.total).toEqual(0);
+    expect(res?.data).toEqual([]);
+  });
+
+  it('should show an error toast message if search fails', async () => {
+    mockHttpClient.post.mockReturnValue(
+      throwError(() => {
+        new Error('');
+      })
+    );
+
+    const res = await service.advancedSearchFetch(mockSearchRequestDto);
+
+    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(res).toBeUndefined();
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });

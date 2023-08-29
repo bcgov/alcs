@@ -61,8 +61,6 @@ export class SearchService {
   }
 
   private compileSortQuery(searchDto: SearchRequestDto) {
-    console.log(searchDto.sortField, searchDto.sortDirection);
-
     switch (searchDto.sortField) {
       case 'fileId':
         return '"appSearch"."file_number"';
