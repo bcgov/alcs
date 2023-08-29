@@ -14,7 +14,7 @@ export interface ApplicationSearchResultDto {
   status: string;
 }
 
-export interface SearchResultDto {
+export interface AdvancedSearchResultDto {
   data: ApplicationSearchResultDto[];
   total: number;
 }
@@ -22,6 +22,8 @@ export interface SearchResultDto {
 export interface SearchRequestDto {
   pageSize: number;
   page: number;
+  sortField: string;
+  sortDirection: string;
   fileNumber?: string;
   legacyId?: string;
   name?: string;
@@ -37,4 +39,14 @@ export interface SearchRequestDto {
   dateSubmittedTo?: number;
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
+}
+
+export interface SearchResultDto {
+  fileNumber: string;
+  type: string;
+  referenceId: string;
+  applicant?: string;
+  localGovernmentName: string;
+  boardCode?: string;
+  label?: ApplicationTypeDto;
 }

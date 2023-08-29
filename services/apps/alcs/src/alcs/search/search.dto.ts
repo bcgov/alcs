@@ -6,6 +6,17 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
+import { ApplicationSubmissionSearchView } from './search.entity';
+
+export class SearchResultDto {
+  type: string;
+  referenceId: string;
+  applicant?: string;
+  localGovernmentName: string;
+  fileNumber: string;
+  boardCode?: string;
+  label?: ApplicationTypeDto;
+}
 
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
@@ -17,8 +28,13 @@ export class ApplicationSearchResultDto {
   status: string;
 }
 
-export class SearchResultDto {
+export class AdvancedSearchResponseDto {
   data: ApplicationSearchResultDto[];
+  total: number;
+}
+
+export class AdvancedSearchResultDto {
+  data: ApplicationSubmissionSearchView[];
   total: number;
 }
 
@@ -93,4 +109,10 @@ export class SearchRequestDto {
 
   @IsNumber()
   pageSize: number;
+
+  @IsString()
+  sortField: string;
+
+  @IsString()
+  sortDirection: 'ASC' | 'DESC';
 }

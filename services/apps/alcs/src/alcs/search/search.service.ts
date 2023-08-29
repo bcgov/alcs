@@ -10,7 +10,7 @@ import { Covenant } from '../covenant/covenant.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
-import { SearchRequestDto } from './search.dto';
+import { AdvancedSearchResultDto, SearchRequestDto } from './search.dto';
 import { ApplicationSubmissionSearchView } from './search.entity';
 
 const CARD_RELATIONSHIP = {
@@ -59,28 +59,63 @@ export class SearchService {
     private governmentRepository: Repository<LocalGovernment>,
   ) {}
 
-  async searchApplications(searchDto: SearchRequestDto) {
+  async searchApplications(
+    searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto> {
     let query = await this.compileApplicationSearchQuery(searchDto);
 
     query = this.compileApplicationGroupBySearchQuery(query);
 
+    const sortQuery = this.compileSortQuery(searchDto);
+
+    query = query
+      .orderBy(sortQuery, searchDto.sortDirection)
+      .offset((searchDto.page - 1) * searchDto.pageSize)
+      .limit(searchDto.pageSize);
+
     console.log('search applications', query.getQuery());
 
     const result = await query
-      .take(searchDto.pageSize)
-      .skip((searchDto.page - 1) * searchDto.pageSize)
+      // .orderBy(
+      //   'appSearch.date_submitted_to_alc',
+      //   searchDto.sortDirection === 'asc' ? 'ASC' : 'DESC',
+      // )
+
       .getManyAndCount();
 
     // TODO remove this
-    if (result && result.length > 2) {
-      console.log('search applications result > 2', result[0], result[1]);
-    } else {
-      console.log('search applications ', result);
+    if (result) {
+      console.log('search applications result > 2', result[0][0], result[1]);
     }
     return {
-      applications: result[0],
+      data: result[0],
       total: result[1],
     };
+  }
+
+  private compileSortQuery(searchDto: SearchRequestDto) {
+    console.log(searchDto.sortField, searchDto.sortDirection);
+
+    switch (searchDto.sortField) {
+      case 'fileId':
+        return '"appSearch"."file_number"';
+
+      case 'ownerName':
+        return '"appSearch"."applicant"';
+
+      case 'type':
+        return '"appSearch"."application_type_code"';
+
+      case 'government':
+        return '"appSearch"."local_government_name"';
+
+      case 'portalStatus':
+        return `"appSearch"."status" ->> 'label' `;
+
+      default:
+      case 'dateSubmitted':
+        return '"appSearch"."date_submitted_to_alc"';
+    }
   }
 
   private compileApplicationGroupBySearchQuery(query) {

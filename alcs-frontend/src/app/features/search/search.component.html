@@ -42,8 +42,8 @@
         <mat-icon>info</mat-icon>
       </div>
       <div class="info-description">
-        Property details change over time. Use both ALCS and <a href="#FIXME">iMap</a> to confirm ALC history on a
-        property
+        Property details change over time. Use both ALCS and <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/">iMap</a> to
+        confirm ALC history on a property
       </div>
     </div>
 
@@ -249,30 +249,30 @@
 </div>
 
 <ng-template #searchResultTable>
-  <table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table">
+  <table mat-table [dataSource]="searchResults" class="mat-elevation-z2 table" matSort matSortActive="dateSubmitted" matSortDirection="desc" matSortDisableClear>
     <ng-container matColumnDef="fileId">
-      <th mat-header-cell *matHeaderCellDef>File ID</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>File ID</th>
       <td mat-cell *matCellDef="let element">
         {{ element.fileNumber }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="dateSubmitted">
-      <th mat-header-cell *matHeaderCellDef>Date Submitted</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Submitted</th>
       <td mat-cell *matCellDef="let element">
         {{ element.dateSubmitted | date }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="ownerName">
-      <th mat-header-cell *matHeaderCellDef>Owner Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Name</th>
       <td mat-cell *matCellDef="let element">
         {{ element.ownerName }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th class="type-cell" mat-header-cell *matHeaderCellDef>Type</th>
+      <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
       <td mat-cell class="type-cell" *matCellDef="let element">
         <app-application-type-pill *ngIf="element.type" [type]="element.type" [useShortLabel]="true">
         </app-application-type-pill>
@@ -280,14 +280,14 @@
     </ng-container>
 
     <ng-container matColumnDef="government">
-      <th mat-header-cell *matHeaderCellDef>Local/First Nation Government</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Local/First Nation Government</th>
       <td mat-cell *matCellDef="let element">
         {{ element.localGovernmentName }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="portalStatus">
-      <th class="type-cell" mat-header-cell *matHeaderCellDef>Portal Status</th>
+      <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Portal Status</th>
       <td mat-cell class="type-cell" *matCellDef="let element">
         <app-application-submission-status-type-pill
           *ngIf="element.status"

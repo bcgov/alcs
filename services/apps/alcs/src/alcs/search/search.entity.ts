@@ -18,6 +18,8 @@ export class SearchApplicationSubmissionStatusType {
   status_type_code: string;
 
   effective_date: Date;
+
+  label: string;
 }
 
 @ViewEntity({

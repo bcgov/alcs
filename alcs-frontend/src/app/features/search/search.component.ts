@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
@@ -10,7 +11,7 @@ import { ApplicationLocalGovernmentDto } from '../../services/application/applic
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationStatusDto } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../services/application/application.service';
-import { SearchRequestDto, SearchResultDto } from '../../services/search/search.dto';
+import { AdvancedSearchResultDto, SearchRequestDto } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ApplicationSubmissionStatusPill } from '../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
@@ -34,12 +35,42 @@ interface SearchResult {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
-  searchText?: string;
+
+  isSearchExpanded = true;
 
   searchResults: SearchResult[] = [];
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
+  pageIndex = 0;
+  itemsPerPage = 20;
+  total: number = 0;
+
+  localGovernment = new FormControl<string | undefined>(undefined);
+  searchForm = new FormGroup({
+    fileNumber: new FormControl<string | undefined>(undefined),
+    name: new FormControl<string | undefined>(undefined),
+    pid: new FormControl<string | undefined>(undefined),
+    civicAddress: new FormControl<string | undefined>(undefined),
+    isIncludeOtherParcels: new FormControl(false),
+    resolutionNumber: new FormControl<string | undefined>(undefined),
+    resolutionYear: new FormControl<number | undefined>(undefined),
+    legacyId: new FormControl<string | undefined>(undefined),
+    portalStatus: new FormControl<string | undefined>(undefined),
+    componentType: new FormControl<string | undefined>(undefined),
+    government: this.localGovernment,
+    region: new FormControl<string | undefined>(undefined),
+    dateSubmittedFrom: new FormControl(undefined),
+    dateSubmittedTo: new FormControl(undefined),
+    dateDecidedFrom: new FormControl(undefined),
+    dateDecidedTo: new FormControl(undefined),
+  });
+
+  resolutionYears: number[] = [];
+  localGovernments: ApplicationLocalGovernmentDto[] = [];
+  filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
+  regions: ApplicationRegionDto[] = [];
+  statuses: ApplicationStatusDto[] = [];
 
   constructor(
     private searchService: SearchService,
@@ -51,6 +82,35 @@ export class SearchComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.setup();
+
+    this.applicationService.$applicationRegions
+      .pipe(takeUntil(this.$destroy))
+      .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
+      .subscribe(([regions, statuses, queryParamMap]) => {
+        this.regions = regions;
+        this.statuses = statuses;
+
+        const searchText = queryParamMap.get('searchText');
+
+        if (searchText) {
+          this.searchForm.controls.fileNumber.setValue(searchText);
+
+          this.searchService
+            .advancedSearchFetch({
+              fileNumber: searchText,
+              isIncludeOtherParcels: false,
+              pageSize: this.itemsPerPage,
+              page: this.pageIndex + 1,
+              sortDirection: this.sortDirection,
+              sortField: this.sortField,
+            })
+            .then((result) => (this.searchResults = this.mapSearchResults(result)));
+        }
+      });
+  }
+
+  private setup() {
     const year = moment('1950');
     const currentYear = moment().year();
     while (year.year() <= currentYear) {
@@ -65,29 +125,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       startWith(''),
       map((value) => this.filterLocalGovernment(value || ''))
     );
-
-    this.applicationService.$applicationRegions
-      .pipe(takeUntil(this.$destroy))
-      .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
-      .subscribe(([regions, statuses, queryParamMap]) => {
-        this.regions = regions;
-        this.statuses = statuses;
-
-        const searchText = queryParamMap.get('searchText');
-
-        if (searchText) {
-          this.searchText = searchText;
-
-          this.searchService
-            .fetch({
-              fileNumber: searchText,
-              isIncludeOtherParcels: false,
-              pageSize: this.itemsPerPage,
-              page: this.pageIndex,
-            })
-            .then((result) => (this.searchResults = this.mapSearchResults(result)));
-        }
-      });
   }
 
   ngOnDestroy(): void {
@@ -112,9 +149,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
   }
 
-  // new search functionality
-
-  private mapSearchResults(searchResult?: SearchResultDto) {
+  private mapSearchResults(searchResult?: AdvancedSearchResultDto) {
     if (!searchResult) {
       searchResult = {
         data: [],
@@ -147,37 +182,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       };
     });
   }
-
-  localGovernment = new FormControl<string | undefined>(undefined);
-  searchForm = new FormGroup({
-    fileNumber: new FormControl(undefined),
-    name: new FormControl(undefined),
-    pid: new FormControl(undefined),
-    civicAddress: new FormControl(undefined),
-    isIncludeOtherParcels: new FormControl(false),
-    resolutionNumber: new FormControl<string | undefined>(undefined),
-    resolutionYear: new FormControl<number | undefined>(undefined),
-    legacyId: new FormControl(undefined),
-    portalStatus: new FormControl(undefined),
-    componentType: new FormControl(undefined),
-    government: this.localGovernment,
-    region: new FormControl(undefined),
-    dateSubmittedFrom: new FormControl(undefined),
-    dateSubmittedTo: new FormControl(undefined),
-    dateDecidedFrom: new FormControl(undefined),
-    dateDecidedTo: new FormControl(undefined),
-  });
-
-  isSearchExpanded = true;
-  resolutionYears: number[] = [];
-  localGovernments: ApplicationLocalGovernmentDto[] = [];
-  filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
-  regions: ApplicationRegionDto[] = [];
-  statuses: ApplicationStatusDto[] = [];
-
-  pageIndex = 0;
-  itemsPerPage = 20;
-  total: number = 0;
 
   onSubmit() {
     console.log('onSubmit');
@@ -232,14 +236,18 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async onSearch() {
     const searchParams = this.getSearchParams();
-    const result = await this.searchService.fetch(searchParams);
+    const result = await this.searchService.advancedSearchFetch(searchParams);
     this.searchResults = this.mapSearchResults(result);
   }
 
   getSearchParams() {
     return {
+      // TODO use paginator instead
       pageSize: this.itemsPerPage,
       page: this.pageIndex + 1,
+      //
+      sortField: this.sortField,
+      sortDirection: this.sortDirection,
       // TODO move condition into helper function
       fileNumber:
         this.searchForm.controls.fileNumber.value && this.searchForm.controls.fileNumber.value !== ''
@@ -277,5 +285,28 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.itemsPerPage = $event.pageSize;
 
     this.onSearch();
+  }
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  sortDirection = 'DESC';
+  sortField = 'dateSubmitted';
+
+  ngAfterViewInit() {
+    // reset the paginator after sorting
+
+    // merge(this.sort.sortChange, this.paginator.page)
+    //   .pipe(tap(() => this.loadLessonsPage()))
+    //   .subscribe();
+
+    this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
+      console.log(this.sort, sortObj);
+      this.paginator.pageIndex = 0;
+      this.pageIndex = 0;
+      this.sortDirection = sortObj.direction.toUpperCase();
+      this.sortField = sortObj.active;
+
+      await this.onSearch();
+    });
   }
 }

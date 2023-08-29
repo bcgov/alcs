@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { of, throwError } from 'rxjs';
 import { ToastService } from '../toast/toast.service';
-import { SearchResultDto } from './search.dto';
+import { AdvancedSearchResultDto } from './search.dto';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
@@ -11,7 +11,7 @@ describe('SearchService', () => {
   let mockHttpClient: DeepMocked<HttpClient>;
   let mockToastService: DeepMocked<ToastService>;
 
-  const mockSearchResults: SearchResultDto[] = [
+  const mockSearchResults: AdvancedSearchResultDto[] = [
     {
       fileNumber: '123456',
       type: 'Type A',
@@ -62,7 +62,7 @@ describe('SearchService', () => {
   it('should fetch search results by search text', async () => {
     mockHttpClient.get.mockReturnValue(of(mockSearchResults));
 
-    const res = await service.fetch('1');
+    const res = await service.advancedSearchFetch('1');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
@@ -76,7 +76,7 @@ describe('SearchService', () => {
       })
     );
 
-    const res = await service.fetch('1');
+    const res = await service.advancedSearchFetch('1');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeUndefined();
