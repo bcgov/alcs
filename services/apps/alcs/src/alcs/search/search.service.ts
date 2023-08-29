@@ -4,6 +4,7 @@ import { Brackets, Repository } from 'typeorm';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { ApplicationDecisionComponent } from '../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../application-decision/application-decision.entity';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
@@ -19,28 +20,6 @@ const CARD_RELATIONSHIP = {
   },
   localGovernment: true,
 };
-
-// -- done -- file number = exact search
-// -- done --submissionType -- submission type for application, for the rest it will be different queries
-// -- done -- name = owner table
-//     -- done -- primary contact
-//     -- done -- parcel owner
-//     -- done -- organization
-//     -- done -- ministry or department
-// -- done -- is include other parcels -> parcels = exact match
-// -- done -- pid -> parcels = exact match
-// -- done -- civic address -> parcels = partial match
-// -- done -- resolution number -> decisions = exact match
-// -- done -- resolution year -> decisions = exact match
-// -- done -- legacy id -> exact match
-// -- done -- portal status -> submission -> calculated field? = exact match
-// -- inpr -- application type code -> submission = exact match
-// -- done -- local government -> submission = exact match
-// -- done -- region -> submission = exact match
-// -- done -- dateFrom -> application -> date_submitted = exact match
-// -- done -- dateTo -> application -> date_submitted = exact match
-// -- done -- dateDecidedFrom -> application -> decision date = exact match
-// -- done -- dateDecidedTo -> application -> decision date = exact match
 
 @Injectable()
 export class SearchService {
@@ -73,20 +52,8 @@ export class SearchService {
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
-    console.log('search applications', query.getQuery());
+    const result = await query.getManyAndCount();
 
-    const result = await query
-      // .orderBy(
-      //   'appSearch.date_submitted_to_alc',
-      //   searchDto.sortDirection === 'asc' ? 'ASC' : 'DESC',
-      // )
-
-      .getManyAndCount();
-
-    // TODO remove this
-    if (result) {
-      console.log('search applications result > 2', result[0][0], result[1]);
-    }
     return {
       data: result[0],
       total: result[1],
@@ -174,12 +141,6 @@ export class SearchService {
       });
     }
 
-    query = this.compileApplicationSearchByNameQuery(searchDto, query);
-
-    query = this.compileApplicationParcelSearchQuery(searchDto, query);
-
-    query = this.compileApplicationDecisionSearchQuery(searchDto, query);
-
     if (searchDto.portalStatusCode) {
       query = query.andWhere(
         "alcs.get_current_status_for_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' = :status",
@@ -211,8 +172,16 @@ export class SearchService {
       );
     }
 
-    // check dates toIsoString
+    query = this.compileApplicationSearchByNameQuery(searchDto, query);
+
+    query = this.compileApplicationParcelSearchQuery(searchDto, query);
+
+    query = this.compileApplicationDecisionSearchQuery(searchDto, query);
+
+    query = this.compileApplicationFileTypeSearchQuery(searchDto, query);
+
     query = this.compileApplicationDateRangeSearchQuery(searchDto, query);
+
     return query;
   }
 
@@ -220,6 +189,7 @@ export class SearchService {
     searchDto: SearchRequestDto,
     query,
   ) {
+    // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
         'appSearch.date_submitted_to_alc >= :date_submitted_to_alc',
@@ -268,11 +238,7 @@ export class SearchService {
       searchDto.resolutionNumber !== undefined ||
       searchDto.resolutionYear !== undefined
     ) {
-      query = query.leftJoin(
-        ApplicationDecision,
-        'decision',
-        'decision.application_uuid = "appSearch"."application_uuid"',
-      );
+      query = this.joinApplicationDecision(query);
 
       if (searchDto.resolutionNumber !== undefined) {
         query = query.andWhere(
@@ -289,6 +255,15 @@ export class SearchService {
         });
       }
     }
+    return query;
+  }
+
+  private joinApplicationDecision(query: any) {
+    query = query.leftJoin(
+      ApplicationDecision,
+      'decision',
+      'decision.application_uuid = "appSearch"."application_uuid"',
+    );
     return query;
   }
 
@@ -331,7 +306,7 @@ export class SearchService {
   ) {
     if (searchDto.name) {
       const formattedSearchString = this.formatNameSearchText(searchDto.name!);
-      console.log(this.formatNameSearchText(searchDto.name!));
+
       query = query
         .leftJoin(
           ApplicationOwner,
@@ -365,6 +340,46 @@ export class SearchService {
           ),
         );
     }
+    return query;
+  }
+
+  private compileApplicationFileTypeSearchQuery(
+    searchDto: SearchRequestDto,
+    query,
+  ) {
+    query = query;
+
+    if (searchDto.applicationFileTypes.length > 0) {
+      // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
+      if (
+        searchDto.resolutionNumber === undefined &&
+        searchDto.resolutionYear === undefined
+      ) {
+        query = this.joinApplicationDecision(query);
+      }
+
+      query = query.leftJoin(
+        ApplicationDecisionComponent,
+        'decisionComponent',
+        'decisionComponent.application_decision_uuid = decision.uuid',
+      );
+
+      query = query.andWhere(
+        new Brackets((qb) =>
+          qb
+            .where('appSearch.application_type_code IN (:...typeCodes)', {
+              typeCodes: searchDto.applicationFileTypes,
+            })
+            .orWhere(
+              'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
+              {
+                typeCodes: searchDto.applicationFileTypes,
+              },
+            ),
+        ),
+      );
+    }
+
     return query;
   }
 
@@ -421,7 +436,7 @@ export class SearchService {
     return covenant;
   }
 
-  formatNameSearchText(input: string): string {
+  private formatNameSearchText(input: string): string {
     let output = input
       .split(' ')
       .map((word) => `%${word}%`)

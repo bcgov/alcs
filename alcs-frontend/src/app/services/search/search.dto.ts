@@ -39,6 +39,7 @@ export interface SearchRequestDto {
   dateSubmittedTo?: number;
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
+  applicationFileTypes: string[];
 }
 
 export interface SearchResultDto {

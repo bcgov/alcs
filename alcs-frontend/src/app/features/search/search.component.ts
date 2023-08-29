@@ -105,6 +105,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
               page: this.pageIndex + 1,
               sortDirection: this.sortDirection,
               sortField: this.sortField,
+              applicationFileTypes: [],
             })
             .then((result) => (this.searchResults = this.mapSearchResults(result)));
         }
@@ -241,7 +242,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.searchResults = this.mapSearchResults(result);
   }
 
-  getSearchParams() {
+  getSearchParams(): SearchRequestDto {
     return {
       // pagination
       pageSize: this.itemsPerPage,
@@ -278,7 +279,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
       dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
-    } as SearchRequestDto;
+      // TODO this will be reworked in later tickets
+      applicationFileTypes: this.searchForm.controls.componentType.value
+        ? this.searchForm.controls.componentType.value.split(',')
+        : [],
+    };
   }
 
   onPageChange($event: PageEvent) {

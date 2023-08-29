@@ -11,7 +11,7 @@ import { Application } from '../application/application.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 
-// typeomr does not transform property names for the status
+// typeorm does not transform property names for the status
 export class SearchApplicationSubmissionStatusType {
   submission_uuid: string;
 

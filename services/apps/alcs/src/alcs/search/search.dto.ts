@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsNumber,
   IsOptional,
@@ -103,6 +104,9 @@ export class SearchRequestDto {
   @IsNumber()
   @IsOptional()
   dateDecidedTo?: number;
+
+  @IsArray()
+  applicationFileTypes: string[];
 
   @IsNumber()
   page: number;
