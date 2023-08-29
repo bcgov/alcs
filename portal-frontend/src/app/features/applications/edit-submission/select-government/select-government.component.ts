@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Router } from '@angular/router';
 import { map, Observable, startWith, takeUntil } from 'rxjs';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';

@@ -230,7 +230,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     const changedFields = new Set<string>();
     for (const diff of diffResult) {
       const fullPath = diff.path.join('.');
-      if (!fullPath.toLowerCase().includes('uuid')) {
+      if (!fullPath.toLowerCase().includes('uuid') || fullPath === 'localGovernmentUuid') {
         changedFields.add(diff.path.join('.'));
         changedFields.add(diff.path[0].toString());
       }

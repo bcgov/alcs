@@ -53,7 +53,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
         title: 'Cancel Application',
       })
       .subscribe(async (didConfirm) => {
-        debugger;
         if (didConfirm && this.application) {
           await this.applicationDetailService.cancelApplication(this.application.fileNumber);
           await this.loadStatusHistory(this.application.fileNumber);
