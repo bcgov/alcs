@@ -8,12 +8,17 @@ from .submap import (
     map_direction_values,
     create_direction_dict,
     get_directions_rows,
+    get_subdiv_rows,
+    create_subdiv_dict,
+    add_subdiv,
+    map_subdiv_lots,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 from enum import Enum
+import json
 
 etl_name = "alcs_app_sub"
 
@@ -59,12 +64,13 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 if not rows:
                     break
                 try:
-                    adj_rows = get_directions_rows(rows, cursor)
-                    direction_data = create_direction_dict(adj_rows)
+
+                    direction_data = get_direction_data(rows, cursor)
+                    subdiv_data = get_subdiv_data(rows, cursor)
 
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -88,7 +94,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
+def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data):
     """
     Function to insert submission records in batches.
 
@@ -98,6 +104,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
     cursor (obj): Cursor object to execute queries.
     rows (list): Rows of data to insert in the database.
     direction_data (dict): Dictionary of adjacent parcel data
+    subdiv_data: dictionary of subdivision data lists
 
     Returns:
     None: Commits the changes to the database.
@@ -106,7 +113,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
         nfu_data_list,
         other_data_list,
         inc_exc_data_list,
-    ) = prepare_app_sub_data(rows, direction_data)
+    ) = prepare_app_sub_data(rows, direction_data, subdiv_data)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -134,12 +141,13 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data):
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list, direction_data):
+def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
     :param direction_data: A dictionary of adjacent parcel data.
+    :param subdiv_data: dictionary of subdivision data lists
     :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
@@ -156,6 +164,9 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data):
     for row in app_sub_raw_data_list:
         data = dict(row)
         data = add_direction_field(data)
+        data = add_subdiv(data,json)
+        if data['alr_appl_component_id'] in subdiv_data:
+            data = map_subdiv_lots(data, subdiv_data, json)
         if data["alr_application_id"] in direction_data:
             data = map_direction_values(data, direction_data)
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
@@ -185,7 +196,8 @@ def get_insert_query(unique_fields,unique_values):
                     east_land_use_type,
                     west_land_use_type,
                     north_land_use_type,
-                    south_land_use_type
+                    south_land_use_type,
+                    subd_proposed_lots
                     {unique_fields}
                 )
                 VALUES (
@@ -202,7 +214,8 @@ def get_insert_query(unique_fields,unique_values):
                     %(east_land_use_type)s,
                     %(west_land_use_type)s,
                     %(north_land_use_type)s,
-                    %(south_land_use_type)s
+                    %(south_land_use_type)s,
+                    %(subd_proposed_lots)s
                     {unique_values}
                 )
     """
@@ -217,6 +230,18 @@ def get_insert_query_for_inc_exc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
     return get_insert_query(unique_fields,unique_values)
+
+def get_direction_data(rows, cursor):
+    # runs query to get direction data and creates a dict based on alr_application_id
+    adj_rows = get_directions_rows(rows, cursor)
+    direction_data = create_direction_dict(adj_rows)
+    return direction_data
+
+def get_subdiv_data(rows, cursor):
+    # runs query to get subdivision data and creates a dictionaly based on alr_appl_component_id with a list of plots
+    subdiv_rows = get_subdiv_rows(rows, cursor)
+    subdiv_data = create_subdiv_dict(subdiv_rows)
+    return subdiv_data
 
 
 @inject_conn_pool

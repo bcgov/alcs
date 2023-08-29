@@ -19,7 +19,8 @@ SELECT
     oc.alr_change_code,
     acg.alr_application_id,
     aa.applicant,
-    aa.alr_area
+    aa.alr_area,
+    oc.alr_appl_component_id
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
