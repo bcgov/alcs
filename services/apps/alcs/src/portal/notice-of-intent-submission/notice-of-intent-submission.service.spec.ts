@@ -347,4 +347,13 @@ describe('NoticeOfIntentSubmissionService', () => {
     expect(mockRepository.save).toBeCalledTimes(1);
     expect(mockRepository.findOneOrFail).toBeCalledTimes(2);
   });
+
+  it('should return the fetched notice of intent when fetching with file number', async () => {
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const app = await service.getOrFailByFileNumber('');
+
+    expect(app).toBe(noiSubmission);
+  });
 });
