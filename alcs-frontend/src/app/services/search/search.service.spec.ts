@@ -104,8 +104,8 @@ describe('SearchService', () => {
 
     expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();
-    expect(res?.total).toEqual(0);
-    expect(res?.data).toEqual([]);
+    expect(res?.totalApplications).toEqual(0);
+    expect(res?.totalNoticeOfIntents).toEqual([]);
   });
 
   it('should show an error toast message if search fails', async () => {

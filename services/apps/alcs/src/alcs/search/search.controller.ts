@@ -175,7 +175,7 @@ export class SearchController {
     response.applications = mappedApplications;
     response.totalApplications = applications.total;
     response.noticeOfIntents = mappedNoticeOfIntents;
-    response.totalApplications = noticeOfIntents.total;
+    response.totalNoticeOfIntents = noticeOfIntents.total;
 
     return response;
   }

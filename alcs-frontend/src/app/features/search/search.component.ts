@@ -1,50 +1,49 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { ApplicationRegionDto, ApplicationTypeDto } from '../../services/application/application-code.dto';
+import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../../services/application/application-local-government/application-local-government.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationStatusDto } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../services/application/application.service';
-import { AdvancedSearchResultDto, SearchRequestDto } from '../../services/search/search.dto';
+import {
+  AdvancedSearchResponseDto,
+  ApplicationSearchResultDto,
+  NoticeOfIntentSearchResultDto,
+  SearchRequestDto,
+} from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { ApplicationSubmissionStatusPill } from '../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
-
-interface SearchResult {
-  fileNumber: string;
-  dateSubmitted: number;
-  ownerName: string;
-  type?: ApplicationTypeDto;
-  government?: string;
-  portalStatus?: string;
-  referenceId: string;
-  board?: string;
-  class: string;
-  status?: ApplicationSubmissionStatusPill;
-}
+import { TableChange } from './search.interface';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SearchComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  isSearchExpanded = false;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
 
-  searchResults: SearchResult[] = [];
-  displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
+  applications: ApplicationSearchResultDto[] = [];
+  applicationTotal = 0;
+
+  noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
+  noticeOfIntentTotal = 0;
+
+  isSearchExpanded = false;
   pageIndex = 0;
   itemsPerPage = 20;
-  applicationsTotal = 0;
+  sortDirection = 'DESC';
+  sortField = 'dateSubmitted';
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string | undefined>(undefined);
@@ -66,17 +65,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     dateDecidedFrom: new FormControl(undefined),
     dateDecidedTo: new FormControl(undefined),
   });
-
   resolutionYears: number[] = [];
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   statuses: ApplicationStatusDto[] = [];
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort?: MatSort;
-  sortDirection = 'DESC';
-  sortField = 'dateSubmitted';
 
   constructor(
     private searchService: SearchService,
@@ -112,7 +105,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
               sortField: this.sortField,
               applicationFileTypes: [],
             })
-            .then((result) => (this.searchResults = this.mapSearchResults(result)));
+            .then((result) => this.mapSearchResults(result));
         }
       });
   }
@@ -139,55 +132,39 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     this.$destroy.complete();
   }
 
-  async onSelectCard(record: SearchResult) {
-    switch (record.class) {
-      case 'APP':
-        await this.router.navigateByUrl(`/application/${record.referenceId}`);
-        break;
-      case 'NOI':
-        await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
-        break;
-      case 'COV':
-      case 'PLAN':
-        await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
-        break;
-      default:
-        this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
-    }
-  }
+  // TODO: remove this once the search is complete
+  // async onSelectCard(record: SearchResult) {
+  //   switch (record.class) {
+  //     case 'APP':
+  //       await this.router.navigateByUrl(`/application/${record.referenceId}`);
+  //       break;
+  //     case 'NOI':
+  //       await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
+  //       break;
+  //     case 'COV':
+  //     case 'PLAN':
+  //       await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
+  //       break;
+  //     default:
+  //       this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
+  //   }
+  // }
 
-  private mapSearchResults(searchResult?: AdvancedSearchResultDto) {
+  private mapSearchResults(searchResult?: AdvancedSearchResponseDto) {
     if (!searchResult) {
       searchResult = {
-        data: [],
-        total: 0,
+        applications: [],
+        noticeOfIntents: [],
+        totalApplications: 0,
+        totalNoticeOfIntents: 0,
       };
     }
 
-    this.applicationsTotal = searchResult.total;
+    this.applicationTotal = searchResult.totalApplications;
+    this.applications = searchResult.applications;
 
-    return searchResult.data.map((e) => {
-      const status = this.statuses.find((st) => st.code === e.status);
-
-      return {
-        fileNumber: e.fileNumber,
-        dateSubmitted: e.dateSubmitted,
-        ownerName: e.ownerName,
-        type: e.type,
-        localGovernmentName: e.localGovernmentName,
-        portalStatus: e.portalStatus,
-        referenceId: e.referenceId,
-        board: e.boardCode,
-        class: e.class,
-        status: {
-          backgroundColor: status?.portalBackgroundColor,
-          textColor: status?.portalColor,
-          borderColor: status?.portalBackgroundColor,
-          label: status?.label,
-          shortLabel: status?.label,
-        } as ApplicationSubmissionStatusPill,
-      };
-    });
+    this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
+    this.noticeOfIntents = searchResult.noticeOfIntents;
   }
 
   async onSubmit() {
@@ -244,7 +221,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   async onSearch() {
     const searchParams = this.getSearchParams();
     const result = await this.searchService.advancedSearchFetch(searchParams);
-    this.searchResults = this.mapSearchResults(result);
+    this.mapSearchResults(result);
   }
 
   getSearchParams(): SearchRequestDto {
@@ -291,23 +268,13 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  onPageChange($event: PageEvent) {
-    this.pageIndex = $event.pageIndex;
-    this.itemsPerPage = $event.pageSize;
+  async onTableChange(event: TableChange) {
+    this.pageIndex = event.pageIndex;
+    this.itemsPerPage = event.itemsPerPage;
+    this.sortDirection = event.sortDirection;
+    this.sortField = event.sortField;
 
-    this.onSearch();
-  }
-
-  ngAfterViewInit() {
-    if (this.sort) {
-      this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-        this.paginator.pageIndex = 0;
-        this.pageIndex = 0;
-        this.sortDirection = sortObj.direction.toUpperCase();
-        this.sortField = sortObj.active;
-
-        await this.onSearch();
-      });
-    }
+    // TODO call only specific search endpoint per table
+    await this.onSearch();
   }
 }

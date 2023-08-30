@@ -14,9 +14,13 @@ export interface ApplicationSearchResultDto {
   status: string;
 }
 
-export interface AdvancedSearchResultDto {
-  data: ApplicationSearchResultDto[];
-  total: number;
+export interface NoticeOfIntentSearchResultDto extends ApplicationSearchResultDto {}
+
+export interface AdvancedSearchResponseDto {
+  applications: ApplicationSearchResultDto[];
+  noticeOfIntents: NoticeOfIntentSearchResultDto[];
+  totalApplications: number;
+  totalNoticeOfIntents: number;
 }
 
 export interface SearchRequestDto {

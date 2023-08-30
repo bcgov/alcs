@@ -6,6 +6,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { SearchComponent } from './search.component';
+import { ApplicationSearchTableComponent } from './application-search-table/application-search-table.component';
+import { NoticeOfIntentSearchTableComponent } from './notice-of-intent-search-table/notice-of-intent-search-table.component';
 
 const routes: Routes = [
   {
@@ -15,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SearchComponent],
+  declarations: [SearchComponent, ApplicationSearchTableComponent, NoticeOfIntentSearchTableComponent],
   imports: [
     CommonModule,
     SharedModule.forRoot(),

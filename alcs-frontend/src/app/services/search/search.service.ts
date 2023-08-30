@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { AdvancedSearchResultDto, SearchRequestDto, SearchResultDto } from './search.dto';
-
+import { AdvancedSearchResponseDto, SearchRequestDto, SearchResultDto } from './search.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +15,7 @@ export class SearchService {
 
   async advancedSearchFetch(searchDto: SearchRequestDto) {
     try {
-      return await firstValueFrom(this.http.post<AdvancedSearchResultDto>(`${this.baseUrl}/advanced`, searchDto));
+      return await firstValueFrom(this.http.post<AdvancedSearchResponseDto>(`${this.baseUrl}/advanced`, searchDto));
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
