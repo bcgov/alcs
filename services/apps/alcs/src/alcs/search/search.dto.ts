@@ -7,7 +7,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationSubmissionSearchView } from './search.entity';
+import { ApplicationSubmissionSearchView } from './application/application-search.entity';
+import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search.entity';
 
 export class SearchResultDto {
   type: string;
@@ -29,13 +30,27 @@ export class ApplicationSearchResultDto {
   status: string;
 }
 
+export class NoticeOfIntentSearchResultDto {
+  type: ApplicationTypeDto;
+  referenceId: string;
+  ownerName?: string;
+  localGovernmentName: string;
+  fileNumber: string;
+  boardCode?: string;
+  status: string;
+}
+
 export class AdvancedSearchResponseDto {
-  data: ApplicationSearchResultDto[];
-  total: number;
+  applications: ApplicationSearchResultDto[];
+  noticeOfIntents: NoticeOfIntentSearchResultDto[];
+  totalApplications: number;
+  totalNoticeOfIntents: number;
 }
 
 export class AdvancedSearchResultDto {
-  data: ApplicationSubmissionSearchView[];
+  data:
+    | ApplicationSubmissionSearchView[]
+    | NoticeOfIntentSubmissionSearchView[];
   total: number;
 }
 

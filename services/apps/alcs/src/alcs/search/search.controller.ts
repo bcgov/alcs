@@ -13,12 +13,17 @@ import { ApplicationType } from '../code/application-code/application-type/appli
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
+import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
+import { ApplicationSubmissionSearchView } from './application/application-search.entity';
+import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
+import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search.entity';
 import {
+  AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
+  NoticeOfIntentSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
-import { ApplicationSubmissionSearchView } from './search.entity';
 import { SearchService } from './search.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
@@ -28,6 +33,8 @@ export class SearchController {
   constructor(
     private searchService: SearchService,
     @InjectMapper() private mapper: Mapper,
+    private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
+    private applicationSearchService: ApplicationAdvancedSearchService,
   ) {}
 
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -131,29 +138,46 @@ export class SearchController {
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    const applicationSearchResult = await this.searchService.searchApplications(
-      searchDto,
+    const applicationSearchResult =
+      await this.applicationSearchService.searchApplications(searchDto);
+    const noticeOfIntentSearchService =
+      await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      applicationSearchResult,
+      noticeOfIntentSearchService,
     );
 
-    const mappedApplications = this.mapAdvancedSearchResults(
-      applicationSearchResult.data,
-    );
-
-    return { data: mappedApplications, total: applicationSearchResult.total };
+    return mappedSearchResult;
   }
 
-  private mapAdvancedSearchResults(
-    applications: ApplicationSubmissionSearchView[],
-  ) {
+  private mapAdvancedSearchResults(applications: any, noticeOfIntents: any) {
+    const response = new AdvancedSearchResponseDto();
+
     const mappedApplications: ApplicationSearchResultDto[] = [];
-    if (applications.length > 0) {
+    if (applications.data.length > 0) {
       mappedApplications.push(
-        ...applications.map((app) =>
+        ...applications.data.map((app) =>
           this.mapApplicationToAdvancedSearchResult(app),
         ),
       );
     }
-    return mappedApplications;
+
+    const mappedNoticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
+    if (noticeOfIntents.data.length > 0) {
+      mappedNoticeOfIntents.push(
+        ...noticeOfIntents.data.map((noi) =>
+          this.mapNoticeOfIntentToAdvancedSearchResult(noi),
+        ),
+      );
+    }
+
+    response.applications = mappedApplications;
+    response.totalApplications = applications.total;
+    response.noticeOfIntents = mappedNoticeOfIntents;
+    response.totalApplications = noticeOfIntents.total;
+
+    return response;
   }
 
   private mapApplicationToAdvancedSearchResult(
@@ -173,6 +197,27 @@ export class SearchController {
       class: 'APP',
       status: application.status.status_type_code,
     } as ApplicationSearchResultDto;
+
+    return result;
+  }
+
+  private mapNoticeOfIntentToAdvancedSearchResult(
+    noi: NoticeOfIntentSubmissionSearchView,
+  ) {
+    const result = {
+      referenceId: noi.fileNumber,
+      fileNumber: noi.fileNumber,
+      dateSubmitted: noi.dateSubmittedToAlc,
+      type: this.mapper.map(
+        noi.noticeOfIntentType,
+        ApplicationType,
+        ApplicationTypeDto,
+      ),
+      localGovernmentName: noi.localGovernmentName,
+      ownerName: noi.applicant,
+      class: 'NOI',
+      status: noi.status.status_type_code,
+    } as NoticeOfIntentSearchResultDto;
 
     return result;
   }

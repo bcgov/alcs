@@ -6,10 +6,10 @@ import {
   ViewColumn,
   ViewEntity,
 } from 'typeorm';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
-import { Application } from '../application/application.entity';
-import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { LocalGovernment } from '../local-government/local-government.entity';
+import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { Application } from '../../application/application.entity';
+import { ApplicationType } from '../../code/application-code/application-type/application-type.entity';
+import { LocalGovernment } from '../../local-government/local-government.entity';
 
 // typeorm does not transform property names for the status
 export class SearchApplicationSubmissionStatusType {
@@ -39,7 +39,7 @@ export class SearchApplicationSubmissionStatusType {
       .addSelect('a.uuid', 'application_uuid')
       .addSelect('a.region_code', 'application_region_code')
       .addSelect(
-        'alcs.get_current_status_for_submission_by_uuid(as2.uuid)',
+        'alcs.get_current_status_for_application_submission_by_uuid(as2.uuid)',
         'status',
       )
       .from(ApplicationSubmission, 'as2')
