@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-
-
 export type ApplicationSubmissionStatusPill = {
   backgroundColor: string;
   textColor: string;

@@ -39,7 +39,6 @@ import { SharedModule } from './shared/shared.module';
     SharedModule.forRoot(),
     AppRoutingModule,
     MomentDateModule,
-    SearchModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },

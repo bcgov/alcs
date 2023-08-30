@@ -19,7 +19,6 @@ export class SearchService {
       return await firstValueFrom(this.http.post<AdvancedSearchResultDto>(`${this.baseUrl}/advanced`, searchDto));
     } catch (e) {
       console.error(e);
-      console.warn(`search params ${searchDto}`);
       this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
       return undefined;
     }

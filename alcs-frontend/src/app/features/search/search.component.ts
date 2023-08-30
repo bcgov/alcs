@@ -44,7 +44,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
   pageIndex = 0;
   itemsPerPage = 20;
-  applicationsTotal: number = 0;
+  applicationsTotal = 0;
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string | undefined>(undefined);
@@ -72,6 +72,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   statuses: ApplicationStatusDto[] = [];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
+  sortDirection = 'DESC';
+  sortField = 'dateSubmitted';
 
   constructor(
     private searchService: SearchService,
@@ -113,11 +118,11 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setup() {
-    const year = moment('1950');
+    const startingYear = moment('1950');
     const currentYear = moment().year();
-    while (year.year() <= currentYear) {
-      this.resolutionYears.push(year.year());
-      year.add(1, 'year');
+    while (startingYear.year() <= currentYear) {
+      this.resolutionYears.push(startingYear.year());
+      startingYear.add(1, 'year');
     }
     this.resolutionYears.reverse();
     this.loadGovernments();
@@ -292,11 +297,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.onSearch();
   }
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort?: MatSort;
-  sortDirection = 'DESC';
-  sortField = 'dateSubmitted';
 
   ngAfterViewInit() {
     if (this.sort) {
