@@ -111,7 +111,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
       const isNOIFollowUp = this.isFollowUp.getRawValue();
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
