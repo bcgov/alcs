@@ -247,7 +247,6 @@
 
     <mat-tab>
       <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
-      <ng-container *ngTemplateOutlet="noticeOfIntentSearchResultTable"></ng-container>
       <app-notice-of-intent-search-table
         [noticeOfIntents]="noticeOfIntents"
         [totalCount]="noticeOfIntentTotal"
