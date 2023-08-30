@@ -207,6 +207,8 @@ export class ApplicationTimelineService {
         applicationUuid: application.uuid,
       },
       relations: {
+        type: true,
+        reviewOutcome: true,
         card: {
           subtasks: {
             type: true,
@@ -270,6 +272,7 @@ export class ApplicationTimelineService {
             type: true,
           },
         },
+        reviewOutcome: true,
       },
       order: {
         submittedDate: 'DESC',
