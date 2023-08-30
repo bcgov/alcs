@@ -74,8 +74,6 @@ export class ApplicationSearchTableComponent implements AfterViewInit, OnDestroy
   }
 
   async onTableChange() {
-    console.log('Application -> onTableChange');
-
     this.tableChange.emit({
       pageIndex: this.pageIndex,
       itemsPerPage: this.itemsPerPage,
