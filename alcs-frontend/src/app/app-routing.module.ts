@@ -4,7 +4,6 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
-import { SearchComponent } from './features/search/search.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 import { ALL_ROLES, ROLES } from './services/authentication/authentication.service';
 import { HasRolesGuard } from './services/authentication/hasRoles.guard';
@@ -71,6 +70,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.module').then((m) => m.AdminModule),
   },
   {
+    path: 'search',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ALL_ROLES,
+    },
+    loadChildren: () => import('./features/search/search.module').then((m) => m.SearchModule),
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },
@@ -81,11 +88,6 @@ const routes: Routes = [
   {
     path: 'provision',
     component: ProvisionComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'search',
-    component: SearchComponent,
     canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
