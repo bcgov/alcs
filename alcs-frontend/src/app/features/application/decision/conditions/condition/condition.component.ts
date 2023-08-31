@@ -134,8 +134,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         [field]: value,
       });
 
-      const labels = this.condition.componentLabels;
-      this.condition = { ...update, componentLabels: labels } as Condition;
+      const labels = this.condition.componentLabelsStr;
+      this.condition = { ...update, componentLabelsStr: labels } as Condition;
 
       this.updateStatus();
     }

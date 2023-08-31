@@ -13,7 +13,6 @@ import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-
 import {
   DRAFT_DECISION_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
-  RECON_TYPE_LABEL,
   RELEASED_DECISION_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 
@@ -56,7 +55,6 @@ export class ConditionsComponent implements OnInit {
 
   dratDecisionLabel = DRAFT_DECISION_TYPE_LABEL;
   releasedDecisionLabel = RELEASED_DECISION_TYPE_LABEL;
-  reconLabel = RECON_TYPE_LABEL;
   modificationLabel = MODIFICATION_TYPE_LABEL;
 
   constructor(
