@@ -32,7 +32,7 @@
       <div>
         <mat-button-toggle-group
           class="input"
-          (valueChange)="onChangeIsFollowUp($event)"
+          (change)="onChangeIsFollowUp($event.value)"
           id="noi-follow-up"
           [formControl]="isFollowUp"
         >
@@ -270,7 +270,7 @@
       <div>
         <mat-button-toggle-group
           class="input"
-          (valueChange)="onChangeIsAreaWideFilling($event)"
+          (change)="onChangeIsAreaWideFilling($event.value)"
           id="noi-area-wide-filling"
           [formControl]="isAreaWideFilling"
         >
@@ -299,7 +299,7 @@
       <div>
         <mat-button-toggle-group
           class="input"
-          (valueChange)="onChangeIsExtractionOrMining($event)"
+          (change)="onChangeIsExtractionOrMining($event.value)"
           id="noi-extraction-or-mining"
           [formControl]="isExtractionOrMining"
         >
@@ -373,7 +373,7 @@
       <div>
         <mat-button-toggle-group
           class="input"
-          (valueChange)="onChangeNoticeOfWork($event)"
+          (change)="onChangeNoticeOfWork($event.value)"
           id="hasSubmittedNotice"
           formControlName="hasSubmittedNotice"
         >

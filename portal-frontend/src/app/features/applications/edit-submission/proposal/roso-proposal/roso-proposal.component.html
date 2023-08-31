@@ -32,7 +32,7 @@
       <div>
         <mat-button-toggle-group
           class="input"
-          (valueChange)="onChangeIsFollowUp($event)"
+          (change)="onChangeIsFollowUp($event.value)"
           id="noi-follow-up"
           [formControl]="isFollowUp"
         >
