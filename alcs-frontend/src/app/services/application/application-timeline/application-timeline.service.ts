@@ -18,7 +18,7 @@ export class ApplicationTimelineService {
       return await firstValueFrom(this.http.get<TimelineEventDto[]>(`${this.url}/${fileNumber}`));
     } catch (err) {
       console.error(err);
-      this.toastService.showErrorToast('Failed to timeline events');
+      this.toastService.showErrorToast('Failed to fetch timeline events');
     }
     return [];
   }
