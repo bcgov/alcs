@@ -70,6 +70,7 @@
               placeholder="Type phone number"
               formControlName="phoneNumber"
               mask="(000) 000-0000"
+              type="tel"
             />
           </mat-form-field>
           <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">

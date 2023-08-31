@@ -82,6 +82,12 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
       .subscribe(([queryParamMap, paramMap]) => {
         const fileId = paramMap.get('fileId');
         if (fileId) {
+          if (this.fileId !== fileId) {
+            this.loadApplication(fileId);
+            this.loadApplicationDocuments(fileId);
+            this.loadApplicationReview(fileId);
+          }
+
           this.fileId = fileId;
           const stepInd = paramMap.get('stepInd');
 
@@ -90,27 +96,24 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
             this.showValidationErrors = showErrors === 't';
           }
 
-          this.loadApplication(fileId);
-          this.loadApplicationDocuments(fileId);
-          this.loadApplicationReview(fileId).then(() => {
-            if (stepInd) {
-              // setTimeout is required for stepper to be initialized
-              setTimeout(() => {
-                const stepInt = parseInt(stepInd);
-                this.customStepper.navigateToStep(stepInt, true);
+          if (stepInd) {
+            // setTimeout is required for stepper to be initialized
+            setTimeout(() => {
+              const stepInt = parseInt(stepInd);
+              this.customStepper.navigateToStep(stepInt, true);
 
-                this.showDownloadPdf = this.isFirstNationGovernment
-                  ? stepInt === ReviewApplicationFngSteps.ReviewAndSubmitFng
-                  : stepInt === ReviewApplicationSteps.ReviewAndSubmit;
-              });
-            }
-          });
+              this.showDownloadPdf = this.isFirstNationGovernment
+                ? stepInt === ReviewApplicationFngSteps.ReviewAndSubmitFng
+                : stepInt === ReviewApplicationSteps.ReviewAndSubmit;
+            });
+          }
         }
       });
 
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
     });
+
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((appReview) => {
       this.isFirstNationGovernment = appReview?.isFirstNationGovernment ?? false;
     });
