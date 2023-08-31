@@ -9,7 +9,6 @@ export class ApplicationPortalDecisionDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap()
   date: number;
 
   @AutoMap(() => ApplicationDecisionOutcomeCodeDto)

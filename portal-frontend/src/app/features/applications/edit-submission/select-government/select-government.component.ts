@@ -47,6 +47,10 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
       }
     });
 
+    if (this.draftMode) {
+      this.localGovernment.disable();
+    }
+
     this.filteredLocalGovernments = this.localGovernment.valueChanges.pipe(
       startWith(''),
       map((value) => this.filter(value || ''))
