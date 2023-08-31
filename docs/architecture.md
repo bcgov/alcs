@@ -4,6 +4,9 @@
 # Deployments
 ![Deployments](imgs/architecture-Deployments.drawio.png)
 
+# Connections
+![Deployments](imgs/architecture-Connections.drawio.png)
+
 # ETL Process
 ![ETL Process](imgs/architecture-ETL.drawio.png)
 
