@@ -7,8 +7,6 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
-import { ApplicationSubmissionSearchView } from './application/application-search.entity';
-import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search.entity';
 
 export class SearchResultDto {
   type: string;
@@ -47,10 +45,11 @@ export class AdvancedSearchResponseDto {
   totalNoticeOfIntents: number;
 }
 
-export class AdvancedSearchResultDto {
-  data:
-    | ApplicationSubmissionSearchView[]
-    | NoticeOfIntentSubmissionSearchView[];
+export class AdvancedSearchResultDto<T> {
+  // data:
+  //   | ApplicationSubmissionSearchView[]
+  //   | NoticeOfIntentSubmissionSearchView[];
+  data: T;
   total: number;
 }
 

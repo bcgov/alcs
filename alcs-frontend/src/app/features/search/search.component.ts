@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
@@ -73,11 +73,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private searchService: SearchService,
-    private router: Router,
     private activatedRoute: ActivatedRoute,
-    private toastService: ToastService,
     private localGovernmentService: ApplicationLocalGovernmentService,
-    private applicationService: ApplicationService
+    private applicationService: ApplicationService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -268,13 +267,37 @@ export class SearchComponent implements OnInit, OnDestroy {
     };
   }
 
+  async onApplicationSearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchApplicationsFetch(searchParams);
+
+    this.applications = result?.data ?? [];
+    this.applicationTotal = result?.total ?? 0;
+  }
+
+  async onNoticeOfIntentSearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchNoticeOfIntentsFetch(searchParams);
+
+    this.noticeOfIntents = result?.data ?? [];
+    this.noticeOfIntentTotal = result?.total ?? 0;
+  }
+
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
     this.sortDirection = event.sortDirection;
     this.sortField = event.sortField;
 
-    // TODO call only specific search endpoint per table
-    await this.onSearch();
+    switch (event.tableType) {
+      case 'APP':
+        await this.onApplicationSearch();
+        break;
+      case 'NOI':
+        await this.onApplicationSearch();
+        break;
+      default:
+        this.toastService.showErrorToast('Not implemented');
+    }
   }
 }

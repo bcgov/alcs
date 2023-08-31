@@ -19,6 +19,7 @@ import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-o
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search.entity';
 import {
   AdvancedSearchResponseDto,
+  AdvancedSearchResultDto,
   ApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   SearchRequestDto,
@@ -140,6 +141,7 @@ export class SearchController {
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
     const applicationSearchResult =
       await this.applicationSearchService.searchApplications(searchDto);
+
     const noticeOfIntentSearchService =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
@@ -151,11 +153,56 @@ export class SearchController {
     return mappedSearchResult;
   }
 
-  private mapAdvancedSearchResults(applications: any, noticeOfIntents: any) {
+  @Post('/advanced/application')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchApplications(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
+    const applicationSearchResult =
+      await this.applicationSearchService.searchApplications(searchDto);
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      applicationSearchResult,
+      null,
+    );
+
+    return {
+      total: mappedSearchResult.totalApplications,
+      data: mappedSearchResult.applications,
+    };
+  }
+
+  @Post('/advanced/notice-of-intent')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchNoticeOfIntents(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
+    const noticeOfIntentSearchService =
+      await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      null,
+      noticeOfIntentSearchService,
+    );
+
+    return {
+      total: mappedSearchResult.totalNoticeOfIntents,
+      data: mappedSearchResult.noticeOfIntents,
+    };
+  }
+
+  private mapAdvancedSearchResults(
+    applications: AdvancedSearchResultDto<
+      ApplicationSubmissionSearchView[]
+    > | null,
+    noticeOfIntents: AdvancedSearchResultDto<
+      NoticeOfIntentSubmissionSearchView[]
+    > | null,
+  ) {
     const response = new AdvancedSearchResponseDto();
 
     const mappedApplications: ApplicationSearchResultDto[] = [];
-    if (applications.data.length > 0) {
+    if (applications && applications.data.length > 0) {
       mappedApplications.push(
         ...applications.data.map((app) =>
           this.mapApplicationToAdvancedSearchResult(app),
@@ -164,7 +211,7 @@ export class SearchController {
     }
 
     const mappedNoticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
-    if (noticeOfIntents.data.length > 0) {
+    if (noticeOfIntents && noticeOfIntents.data.length > 0) {
       mappedNoticeOfIntents.push(
         ...noticeOfIntents.data.map((noi) =>
           this.mapNoticeOfIntentToAdvancedSearchResult(noi),
@@ -173,9 +220,9 @@ export class SearchController {
     }
 
     response.applications = mappedApplications;
-    response.totalApplications = applications.total;
+    response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
-    response.totalNoticeOfIntents = noticeOfIntents.total;
+    response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
 
     return response;
   }

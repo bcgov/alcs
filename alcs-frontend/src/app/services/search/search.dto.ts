@@ -23,6 +23,11 @@ export interface AdvancedSearchResponseDto {
   totalNoticeOfIntents: number;
 }
 
+export interface AdvancedSearchEntityResponseDto<T> {
+  data: T[];
+  total: number;
+}
+
 export interface SearchRequestDto {
   pageSize: number;
   page: number;

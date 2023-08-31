@@ -21,7 +21,7 @@ export class ApplicationAdvancedSearchService {
 
   async searchApplications(
     searchDto: SearchRequestDto,
-  ): Promise<AdvancedSearchResultDto> {
+  ): Promise<AdvancedSearchResultDto<ApplicationSubmissionSearchView[]>> {
     let query = await this.compileApplicationSearchQuery(searchDto);
 
     query = this.compileApplicationGroupBySearchQuery(query);

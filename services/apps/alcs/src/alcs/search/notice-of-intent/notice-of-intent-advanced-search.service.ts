@@ -24,7 +24,7 @@ export class NoticeOfIntentAdvancedSearchService {
 
   async searchNoticeOfIntents(
     searchDto: SearchRequestDto,
-  ): Promise<AdvancedSearchResultDto> {
+  ): Promise<AdvancedSearchResultDto<NoticeOfIntentSubmissionSearchView[]>> {
     let query = await this.compileNoticeOfIntentSearchQuery(searchDto);
 
     query = this.compileGroupBySearchQuery(query);
