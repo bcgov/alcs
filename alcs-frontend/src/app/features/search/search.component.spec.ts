@@ -16,14 +16,12 @@ describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
   let mockSearchService: DeepMocked<SearchService>;
-  let mockRouter: DeepMocked<Router>;
   let mockToastService: DeepMocked<ToastService>;
   let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
-    mockRouter = createMock();
     mockToastService = createMock();
     mockLocalGovernmentService = createMock();
     mockApplicationService = createMock();
@@ -35,10 +33,6 @@ describe('SearchComponent', () => {
         {
           provide: SearchService,
           useValue: mockSearchService,
-        },
-        {
-          provide: Router,
-          useValue: mockRouter,
         },
         {
           provide: ActivatedRoute,
