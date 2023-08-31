@@ -26,12 +26,14 @@ export class ParcelPrepComponent implements OnChanges {
 
   async loadParcels(fileNumber: string) {
     const parcels = await this.parcelService.fetchParcels(fileNumber);
-    this.parcels = parcels.map((parcel) => ({
-      ...parcel,
-      owners: `${parcel.owners[0].displayName} ${parcel.owners.length > 1 ? ' et al.' : ''}`,
-      fullOwners: parcel.owners.map((owner) => owner.displayName).join(', '),
-      hasManyOwners: parcel.owners.length > 1,
-    }));
+    this.parcels = parcels
+      .filter((parcel) => parcel.parcelType === 'application')
+      .map((parcel) => ({
+        ...parcel,
+        owners: `${parcel.owners[0].displayName} ${parcel.owners.length > 1 ? ' et al.' : ''}`,
+        fullOwners: parcel.owners.map((owner) => owner.displayName).join(', '),
+        hasManyOwners: parcel.owners.length > 1,
+      }));
   }
 
   async saveParcel(uuid: string, alrArea: string | null) {
