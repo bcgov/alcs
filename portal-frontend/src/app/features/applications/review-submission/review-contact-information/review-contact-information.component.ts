@@ -70,7 +70,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   }
 
   private async saveProgress() {
-    if (this.fileId) {
+    if (this.fileId && this.contactForm.dirty) {
       await this.applicationReviewService.update(this.fileId, {
         localGovernmentFileNumber: this.lgFileNumber.getRawValue(),
         firstName: this.firstName.getRawValue(),

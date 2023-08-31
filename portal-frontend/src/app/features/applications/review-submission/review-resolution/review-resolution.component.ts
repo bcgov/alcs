@@ -61,7 +61,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   }
 
   private async saveProgress() {
-    if (this.fileId) {
+    if (this.fileId && this.resolutionForm.dirty) {
       if (this.isAuthorized.getRawValue() !== null) {
         if (this.isFirstNationGovernment || this.isSubjectToZoning || this.isOCPDesignation) {
           await this.applicationReviewService.update(this.fileId, {

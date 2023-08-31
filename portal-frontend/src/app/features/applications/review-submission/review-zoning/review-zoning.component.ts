@@ -73,7 +73,7 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   }
 
   private async saveProgress() {
-    if (this.fileId) {
+    if (this.fileId && this.zoningForm.dirty) {
       const isSubjectToZoning = this.isSubjectToZoning.getRawValue();
       let subjectToZoningResult = null;
       if (isSubjectToZoning !== null) {
