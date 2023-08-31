@@ -46,9 +46,6 @@ export class AdvancedSearchResponseDto {
 }
 
 export class AdvancedSearchResultDto<T> {
-  // data:
-  //   | ApplicationSubmissionSearchView[]
-  //   | NoticeOfIntentSubmissionSearchView[];
   data: T;
   total: number;
 }

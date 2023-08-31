@@ -7,15 +7,12 @@ import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NoticeOfIntentDecisionComponent } from '../../notice-of-intent-decision/notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
-import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search.entity';
 
 @Injectable()
 export class NoticeOfIntentAdvancedSearchService {
   constructor(
-    @InjectRepository(NoticeOfIntent)
-    private noiRepository: Repository<NoticeOfIntent>,
     @InjectRepository(NoticeOfIntentSubmissionSearchView)
     private noiSearchRepository: Repository<NoticeOfIntentSubmissionSearchView>,
     @InjectRepository(LocalGovernment)
@@ -333,20 +330,6 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     return query;
-  }
-
-  async getNoi(fileNumber: string) {
-    const noi = await this.noiRepository.findOne({
-      where: {
-        fileNumber,
-      },
-      relations: {
-        card: true,
-        localGovernment: true,
-      },
-    });
-
-    return noi;
   }
 
   private formatNameSearchText(input: string): string {
