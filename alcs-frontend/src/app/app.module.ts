@@ -12,13 +12,13 @@ import { AuthorizationComponent } from './features/authorization/authorization.c
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { LoginComponent } from './features/login/login.component';
 import { ProvisionComponent } from './features/provision/provision.component';
+import { SearchModule } from './features/search/search.module';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
 import { TokenRefreshService } from './services/authentication/token-refresh.service';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
-import { SearchComponent } from './shared/header/search/search.component';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -32,9 +32,14 @@ import { SharedModule } from './shared/shared.module';
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
-    SearchComponent,
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule.forRoot(),
+    AppRoutingModule,
+    MomentDateModule,
+  ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },

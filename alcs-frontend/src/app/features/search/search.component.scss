@@ -1,0 +1,154 @@
+@use '../../../styles/colors';
+h3,
+div,
+span {
+  color: colors.$black;
+}
+
+.search-title {
+  width: 100%;
+  margin-top: 42px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+
+  h4 {
+    margin-right: 12px !important;
+  }
+}
+
+:host::ng-deep {
+  .table {
+    width: 100%;
+    margin-top: 12px;
+
+    td,
+    th {
+      font-size: 16px;
+      width: 25%;
+    }
+
+    .type-cell {
+      width: 90px;
+    }
+
+    tr.mdc-data-table__row:hover {
+      box-shadow: 0 0 0 2px rgba(colors.$primary-color, 0.9);
+      cursor: pointer;
+      transform: scale(1);
+    }
+
+    tr.no-data {
+      border: none;
+      background-color: colors.$grey-light;
+      align-items: center;
+      justify-content: center;
+      cursor: auto;
+      box-shadow: none !important;
+      height: 32px;
+    }
+  }
+}
+
+.search-fields-wrapper {
+  padding: 0 80px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+  width: 100%;
+  margin: 24px 0;
+
+  &.date-row {
+    margin: 0 0 12px 0;
+  }
+
+  &.date-row-label {
+    margin: 0 0 4px 0;
+    gap: 4px;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+  }
+
+  .resolution-wrapper {
+    gap: 12px;
+    margin: 0;
+  }
+}
+
+.address-search-fields-wrapper {
+  background-color: #fee9b580;
+  padding: 12px 80px;
+
+  .row {
+    margin: 4px 0;
+  }
+  .column {
+    background-color: white;
+  }
+}
+
+.expand-search {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+
+  .expand-search-btn {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #1a5a96;
+
+    span {
+      color: #1a5a96;
+    }
+  }
+}
+
+.btn-controls {
+  padding: 12px 80px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 36px 80px;
+}
+
+.subtitle {
+  margin: 18px 80px;
+}
+
+.info-banner {
+  display: flex;
+  align-items: center;
+
+  .info-description {
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+  }
+}
+
+.search-result-wrapper {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}

@@ -34,6 +34,7 @@ import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
+import { ApplicationLegacyIdComponent } from './application-legacy-id/application-legacy-id.component';
 import { ApplicationSubmissionStatusTypePillComponent } from './application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
@@ -58,6 +59,7 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
+import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
 import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
 import { StaffJournalComponent } from './staff-journal/staff-journal.component';
@@ -66,7 +68,6 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
-import { ApplicationLegacyIdComponent } from './application-legacy-id/application-legacy-id.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { ApplicationLegacyIdComponent } from './application-legacy-id/applicatio
     LotsTableFormComponent,
     InlineNgSelectComponent,
     ApplicationLegacyIdComponent,
+    TableColumnNoDataPipe,
   ],
   imports: [
     CommonModule,
@@ -193,6 +195,7 @@ import { ApplicationLegacyIdComponent } from './application-legacy-id/applicatio
     ErrorMessageComponent,
     LotsTableFormComponent,
     ApplicationLegacyIdComponent,
+    TableColumnNoDataPipe,
   ],
 })
 export class SharedModule {

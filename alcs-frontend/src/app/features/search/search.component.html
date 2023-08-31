@@ -1,0 +1,263 @@
+<div class="title">
+  <h1>Advanced Search</h1>
+</div>
+
+<div class="subtitle">
+  <h6 class="subheading">Provide one or more of the following criteria:</h6>
+</div>
+
+<form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+  <div class="search-fields-wrapper">
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>File ID</mat-label>
+          <input id="fileNumber" matInput placeholder="File ID" formControlName="fileNumber" />
+        </mat-form-field>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input id="name" matInput placeholder="File ID" formControlName="name" />
+        </mat-form-field>
+        <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Ministry or Department</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="address-search-fields-wrapper">
+    <div class="row">
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>PID</mat-label>
+        <input id="pid" matInput placeholder="PID" formControlName="pid" />
+      </mat-form-field>
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>Civic Address</mat-label>
+        <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" />
+      </mat-form-field>
+    </div>
+
+    <div class="info-banner">
+      <div class="icon">
+        <mat-icon>info</mat-icon>
+      </div>
+      <div class="info-description">
+        Property details change over time. Use both ALCS and <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/">iMap</a> to
+        confirm ALC history on a property
+      </div>
+    </div>
+
+    <mat-checkbox formControlName="isIncludeOtherParcels"
+      >Expand search to include 'Other Parcels in the Community' from applicant submission</mat-checkbox
+    >
+  </div>
+  <div class="expand-search search-fields-wrapper">
+    <div
+      *ngIf="!isSearchExpanded"
+      class="expand-search-btn"
+      (click)="expandSearchClicked()"
+      (keyup)="expandSearchClicked()"
+    >
+      <span>More Criteria</span>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </div>
+
+    <div
+      *ngIf="isSearchExpanded"
+      class="expand-search-btn"
+      (click)="expandSearchClicked()"
+      (keyup)="expandSearchClicked()"
+    >
+      <span>Less Criteria</span>
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </div>
+  </div>
+
+  <div *ngIf="isSearchExpanded" class="search-fields-wrapper">
+    <div class="row">
+      <div class="column">
+        <div class="row resolution-wrapper">
+          <div class="column">
+            <mat-form-field appearance="outline">
+              <mat-label>Resolution Number</mat-label>
+              <input id="resolutionNumber" matInput formControlName="resolutionNumber" />
+            </mat-form-field>
+          </div>
+          <div class="center">/</div>
+          <div class="column">
+            <ng-select
+              appearance="outline"
+              class="resolution-year"
+              [items]="resolutionYears"
+              formControlName="resolutionYear"
+              appendTo="body"
+              placeholder="Resolution Year"
+            ></ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Legacy ID</mat-label>
+          <input id="legacyId" matInput formControlName="legacyId" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Portal Status" [formControl]="portalStatusControl">
+            <mat-option *ngFor="let status of statuses" [value]="status.code">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <mat-label>File Type (To be implemented)</mat-label>
+          <input id="componentType" matInput formControlName="componentType" />
+        </mat-form-field>
+        <div class="subtext">Note: This field searches both proposal and decision component type</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <mat-form-field appearance="outline">
+          <input
+            (blur)="onBlur()"
+            id="government"
+            type="text"
+            matInput
+            formControlName="government"
+            placeholder="L/FNG Government"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <ng-select
+          appearance="outline"
+          [items]="regions"
+          appendTo="body"
+          placeholder="Region"
+          bindLabel="label"
+          bindValue="code"
+          formControlName="region"
+        >
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <div [ngOptionHighlight]="search">{{ item.label }}</div>
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row date-row-label">Date Submitted</div>
+    <div class="row date-row">
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>From</mat-label>
+          <input
+            matInput
+            (click)="dateSubmittedFromPicker.open()"
+            [matDatepicker]="dateSubmittedFromPicker"
+            formControlName="dateSubmittedFrom"
+            name="dateSubmittedFrom"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateSubmittedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateSubmittedFromPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>To</mat-label>
+          <input
+            matInput
+            (click)="dateSubmittedToPicker.open()"
+            [matDatepicker]="dateSubmittedToPicker"
+            formControlName="dateSubmittedTo"
+            name="dateSubmittedTo"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateSubmittedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateSubmittedToPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row date-row-label">Date Decided</div>
+    <div class="row date-row">
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>From</mat-label>
+          <input
+            matInput
+            (click)="dateDecidedFromPicker.open()"
+            [matDatepicker]="dateDecidedFromPicker"
+            formControlName="dateDecidedFrom"
+            name="dateDecidedFrom"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateDecidedFromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedFromPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+        <mat-form-field appearance="outline" class="date-picker">
+          <mat-label>To</mat-label>
+          <input
+            matInput
+            (click)="dateDecidedToPicker.open()"
+            [matDatepicker]="dateDecidedToPicker"
+            formControlName="dateDecidedTo"
+            name="dateDecidedTo"
+          />
+          <mat-datepicker-toggle matSuffix [for]="dateDecidedToPicker"></mat-datepicker-toggle>
+          <mat-datepicker #dateDecidedToPicker type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="btn-controls">
+  <button mat-stroked-button color="primary" (click)="onReset()">Reset</button>
+  <button mat-flat-button color="primary" (click)="onSearch()">Search</button>
+</div>
+
+<div class="search-fields-wrapper search-result-wrapper">
+  <h2 class="search-title">Search Results:</h2>
+
+  <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
+    <mat-tab>
+      <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+      <app-application-search-table
+        [applications]="applications"
+        [totalCount]="applicationTotal"
+        [statuses]="statuses"
+        [regions]="regions"
+        (tableChange)="onTableChange($event)"
+      ></app-application-search-table>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+      <app-notice-of-intent-search-table
+        [noticeOfIntents]="noticeOfIntents"
+        [totalCount]="noticeOfIntentTotal"
+        [statuses]="statuses"
+        [regions]="regions"
+        (tableChange)="onTableChange($event)"
+      ></app-notice-of-intent-search-table>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Non-Applications: 0 </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
