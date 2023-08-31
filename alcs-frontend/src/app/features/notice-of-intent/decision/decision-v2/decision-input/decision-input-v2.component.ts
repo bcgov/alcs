@@ -380,6 +380,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     if (this.decisionConditionsComponent) {
       this.decisionConditionsComponent.onValidate();
     }
+    if (this.decisionComponentsComponent) {
+      this.decisionComponentsComponent.onValidate();
+    }
 
     if (
       !this.form.valid ||

@@ -61,8 +61,8 @@ export class ConditionComponent implements OnInit, AfterViewInit {
         [field]: value,
       });
 
-      const labels = this.condition.componentLabels;
-      this.condition = { ...update, componentLabels: labels } as Condition;
+      const labels = this.condition.componentLabelsStr;
+      this.condition = { ...update, componentLabelsStr: labels } as Condition;
 
       this.updateStatus();
     }
@@ -92,9 +92,5 @@ export class ConditionComponent implements OnInit, AfterViewInit {
     } else {
       this.conditionStatus = CONDITION_STATUS.INCOMPLETE;
     }
-  }
-
-  getComponentLabel(componentUuid: string) {
-    return this.condition.conditionComponentsLabels?.find((e) => e.componentUuid === componentUuid)?.label;
   }
 }

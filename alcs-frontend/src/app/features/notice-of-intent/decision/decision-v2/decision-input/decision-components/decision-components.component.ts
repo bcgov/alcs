@@ -212,4 +212,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       isDisabled: this.components.some((c) => c.noticeOfIntentDecisionComponentTypeCode === e.code),
     }));
   }
+
+  onValidate() {
+    this.childComponents.forEach((component) => component.form.markAllAsTouched());
+  }
 }

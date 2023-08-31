@@ -37,7 +37,6 @@ import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emai
 import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PARENT_TYPE } from '../../card/card-subtask/card-subtask.dto';
 import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent-decision/v2')

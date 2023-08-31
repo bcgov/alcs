@@ -8,7 +8,10 @@ import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../../../services/application/application-modification/application-modification.service';
-import { ApplicationReconsiderationDto } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
+import {
+  ApplicationReconsiderationDto,
+  RECONSIDERATION_TYPE,
+} from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import {
   ApplicationDecisionConditionDto,
@@ -260,7 +263,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       .filter(
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
-          (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision)
+          (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision) ||
+          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1 && !reconsideration.resultingDecision)
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
