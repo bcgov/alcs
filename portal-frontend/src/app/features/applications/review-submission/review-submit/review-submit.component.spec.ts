@@ -10,12 +10,14 @@ import { ApplicationSubmissionDto } from '../../../../services/application-submi
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 
 import { ReviewSubmitComponent } from './review-submit.component';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 describe('ReviewSubmitComponent', () => {
   let component: ReviewSubmitComponent;
   let fixture: ComponentFixture<ReviewSubmitComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockToastService: DeepMocked<ToastService>;
   let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
 
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
@@ -28,6 +30,7 @@ describe('ReviewSubmitComponent', () => {
     );
 
     mockAppDocumentService = createMock();
+    mockToastService = createMock();
     mockPdfGenerationService = createMock();
 
     await TestBed.configureTestingModule({
@@ -40,6 +43,10 @@ describe('ReviewSubmitComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: ToastService,
+          useValue: mockToastService,
         },
         {
           provide: PdfGenerationService,
