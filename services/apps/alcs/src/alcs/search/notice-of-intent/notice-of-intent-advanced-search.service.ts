@@ -4,6 +4,7 @@ import { Brackets, Repository } from 'typeorm';
 import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NoticeOfIntentDecisionComponent } from '../../notice-of-intent-decision/notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
@@ -254,7 +255,8 @@ export class NoticeOfIntentAdvancedSearchService {
 
   private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.name) {
-      const formattedSearchString = this.formatNameSearchText(searchDto.name!);
+      const formattedSearchString =
+        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
 
       query = query
         .leftJoin(
@@ -330,14 +332,5 @@ export class NoticeOfIntentAdvancedSearchService {
     }
 
     return query;
-  }
-
-  private formatNameSearchText(input: string): string {
-    let output = input
-      .split(' ')
-      .map((word) => `%${word}%`)
-      .join(',');
-    output += `,%${input}%`;
-    return `{${output}}`;
   }
 }

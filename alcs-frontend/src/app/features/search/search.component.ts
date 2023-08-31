@@ -149,22 +149,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   //   }
   // }
 
-  private mapSearchResults(searchResult?: AdvancedSearchResponseDto) {
-    if (!searchResult) {
-      searchResult = {
-        applications: [],
-        noticeOfIntents: [],
-        totalApplications: 0,
-        totalNoticeOfIntents: 0,
-      };
-    }
-
-    this.applicationTotal = searchResult.totalApplications;
-    this.applications = searchResult.applications;
-
-    this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
-    this.noticeOfIntents = searchResult.noticeOfIntents;
-  }
 
   async onSubmit() {
     await this.onSearch();
@@ -172,21 +156,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   expandSearchClicked() {
     this.isSearchExpanded = !this.isSearchExpanded;
-  }
-
-  private async loadGovernments() {
-    const governments = await this.localGovernmentService.list();
-    this.localGovernments = governments.sort((a, b) => (a.name > b.name ? 1 : -1));
-  }
-
-  private filterLocalGovernment(value: string): ApplicationLocalGovernmentDto[] {
-    if (this.localGovernments) {
-      const filterValue = value.toLowerCase();
-      return this.localGovernments.filter((localGovernment) =>
-        localGovernment.name.toLowerCase().includes(filterValue)
-      );
-    }
-    return [];
   }
 
   onGovernmentChange($event: MatAutocompleteSelectedEvent) {
@@ -300,4 +269,37 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.toastService.showErrorToast('Not implemented');
     }
   }
+
+  private async loadGovernments() {
+    const governments = await this.localGovernmentService.list();
+    this.localGovernments = governments.sort((a, b) => (a.name > b.name ? 1 : -1));
+  }
+
+  private filterLocalGovernment(value: string): ApplicationLocalGovernmentDto[] {
+    if (this.localGovernments) {
+      const filterValue = value.toLowerCase();
+      return this.localGovernments.filter((localGovernment) =>
+        localGovernment.name.toLowerCase().includes(filterValue)
+      );
+    }
+    return [];
+  }
+
+  private mapSearchResults(searchResult?: AdvancedSearchResponseDto) {
+    if (!searchResult) {
+      searchResult = {
+        applications: [],
+        noticeOfIntents: [],
+        totalApplications: 0,
+        totalNoticeOfIntents: 0,
+      };
+    }
+
+    this.applicationTotal = searchResult.totalApplications;
+    this.applications = searchResult.applications;
+
+    this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
+    this.noticeOfIntents = searchResult.noticeOfIntents;
+  }
+
 }

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
@@ -18,13 +17,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [SearchComponent, ApplicationSearchTableComponent, NoticeOfIntentSearchTableComponent],
-  imports: [
-    CommonModule,
-    SharedModule.forRoot(),
-    RouterModule.forChild(routes),
-    MatTabsModule,
-    MatTableModule,
-    MatPaginatorModule,
-  ],
+  imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatTabsModule, MatPaginatorModule],
 })
 export class SearchModule {}

@@ -4,6 +4,7 @@ import { Brackets, Repository } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { ApplicationDecisionComponent } from '../../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -284,7 +285,8 @@ export class ApplicationAdvancedSearchService {
     query,
   ) {
     if (searchDto.name) {
-      const formattedSearchString = this.formatNameSearchText(searchDto.name!);
+      const formattedSearchString =
+        formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
 
       query = query
         .leftJoin(
@@ -360,14 +362,5 @@ export class ApplicationAdvancedSearchService {
     }
 
     return query;
-  }
-
-  private formatNameSearchText(input: string): string {
-    let output = input
-      .split(' ')
-      .map((word) => `%${word}%`)
-      .join(',');
-    output += `,%${input}%`;
-    return `{${output}}`;
   }
 }
