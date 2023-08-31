@@ -54,6 +54,16 @@ export class ApplicationDocumentService {
     return undefined;
   }
 
+  async downloadFile(fileUuid: string) {
+    try {
+      return await firstValueFrom(this.httpClient.get<{ url: string }>(`${this.serviceUrl}/${fileUuid}/download`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to download the document, please try again');
+    }
+    return undefined;
+  }
+
   async deleteExternalFile(fileUuid: string) {
     try {
       this.overlayService.showSpinner();
