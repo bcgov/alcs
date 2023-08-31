@@ -9,7 +9,7 @@ import { ApplicationDecisionComponent } from '../../application-decision/applica
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
-import { ApplicationSubmissionSearchView } from './application-search.entity';
+import { ApplicationSubmissionSearchView } from './application-search-view.entity';
 
 @Injectable()
 export class ApplicationAdvancedSearchService {

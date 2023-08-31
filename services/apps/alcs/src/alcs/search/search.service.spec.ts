@@ -7,7 +7,7 @@ import { Covenant } from '../covenant/covenant.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
-import { ApplicationSubmissionSearchView } from './application/application-search.entity';
+import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {

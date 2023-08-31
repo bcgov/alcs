@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent-advanced-search.service';
-import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search.entity';
+import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
 
 describe('NoticeOfIntentService', () => {
   let service: NoticeOfIntentAdvancedSearchService;

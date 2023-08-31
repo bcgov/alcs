@@ -22,6 +22,8 @@ import { ToastService } from '../../services/toast/toast.service';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
 import { TableChange } from './search.interface';
 
+export const defaultStatusBackgroundColour = '#ffffff';
+export const defaultStatusColour = '#313132';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -148,7 +150,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   //       this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
   //   }
   // }
-
 
   async onSubmit() {
     await this.onSearch();
@@ -301,5 +302,4 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
     this.noticeOfIntents = searchResult.noticeOfIntents;
   }
-
 }

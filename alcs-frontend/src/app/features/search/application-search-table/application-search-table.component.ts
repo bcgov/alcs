@@ -7,6 +7,7 @@ import { ApplicationRegionDto, ApplicationTypeDto } from '../../../services/appl
 import { ApplicationStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSearchResultDto } from '../../../services/search/search.dto';
 import { ApplicationSubmissionStatusPill } from '../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
+import { defaultStatusBackgroundColour, defaultStatusColour } from '../search.component';
 import { TableChange } from '../search.interface';
 
 interface SearchResult {
@@ -14,7 +15,7 @@ interface SearchResult {
   dateSubmitted: number;
   ownerName: string;
   type?: ApplicationTypeDto;
-  government?: string;
+  localGovernmentName?: string;
   portalStatus?: string;
   referenceId: string;
   board?: string;
@@ -94,7 +95,7 @@ export class ApplicationSearchTableComponent implements AfterViewInit, OnDestroy
     await this.router.navigateByUrl(`/application/${record.referenceId}`);
   }
 
-  private mapApplications(applications: ApplicationSearchResultDto[]) {
+  private mapApplications(applications: ApplicationSearchResultDto[]): SearchResult[] {
     return applications.map((e) => {
       const status = this.statuses.find((st) => st.code === e.status);
 
@@ -109,12 +110,12 @@ export class ApplicationSearchTableComponent implements AfterViewInit, OnDestroy
         board: e.boardCode,
         class: e.class,
         status: {
-          backgroundColor: status?.portalBackgroundColor,
-          textColor: status?.portalColor,
+          backgroundColor: status?.portalBackgroundColor ?? defaultStatusBackgroundColour,
+          textColor: status?.portalColor ?? defaultStatusColour,
           borderColor: status?.portalBackgroundColor,
           label: status?.label,
           shortLabel: status?.label,
-        } as ApplicationSubmissionStatusPill,
+        },
       };
     });
   }

@@ -9,7 +9,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
 import { NoticeOfIntentDecisionComponent } from '../../notice-of-intent-decision/notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
-import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search.entity';
+import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
 
 @Injectable()
 export class NoticeOfIntentAdvancedSearchService {
