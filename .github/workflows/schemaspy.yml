@@ -34,12 +34,16 @@ jobs:
           npm install
           npm run alcs:migration:run
         working-directory: services
+      - name: Import OATS
+        run: |
+          export PGPASSWORD='postgres';
+          psql -h 127.0.0.1 -p 5432 -U postgres -f ora2pg/data/oats_prod_schema_ddl_18_2.sql
       - name: Create Output Folder
         run: |
           mkdir output
           chmod a+rwx -R output
       - name: Run Schemaspy
-        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs
+        run: docker run --network host -v "$PWD/output:/output" schemaspy/schemaspy:snapshot -t pgsql -db postgres -host 127.0.0.1 -port 5432 -u postgres -p postgres -schemas alcs,oats
       - name: Deploy to Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

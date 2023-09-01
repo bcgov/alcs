@@ -211,9 +211,10 @@ describe('NoticeOfIntentModificationService', () => {
     expect(modificationRepoMock.save).toHaveBeenCalledTimes(0);
   });
 
-  it('should call softRemove on delete', async () => {
+  it('should archive the card and call softRemove on delete', async () => {
     const uuid = 'fake';
     modificationRepoMock.softRemove.mockResolvedValue({} as any);
+    cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
@@ -221,6 +222,7 @@ describe('NoticeOfIntentModificationService', () => {
       uuid,
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on delete if modification does not exist', async () => {

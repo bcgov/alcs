@@ -294,14 +294,16 @@ describe('ReconsiderationService', () => {
     } as ApplicationReconsideration);
   });
 
-  it('should call softRemove on delete', async () => {
+  it('should archive the card and call softRemove on delete', async () => {
     const uuid = 'fake';
     reconsiderationRepositoryMock.softRemove.mockResolvedValue({} as any);
+    cardServiceMock.archive.mockResolvedValue();
 
     await service.delete(uuid);
 
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
   });
 
   it('should fail on delete if reconsideration does not exist', async () => {
