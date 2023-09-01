@@ -941,32 +941,32 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>oats_apcp_chk3</td>
-                                    <td>(((((alr_change_code)::text &#61; &#39;NFU&#39;::text) AND ((nonfarm_use_type_code IS NOT NULL) AND (nonfarm_use_subtype_code IS NOT NULL))) OR ((nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)) OR (((alr_change_code)::text &#61; ANY ((ARRAY[&#39;INC&#39;::character varying, &#39;EXC&#39;::character varying, &#39;SDV&#39;::character varying, &#39;SCH&#39;::character varying])::text[])) AND (nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL))))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_apcp_asi_ck</td>
-                                    <td>(((applicationshare_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_apcp_hsi_ck</td>
-                                    <td>(((homesite_severance_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
                                     <td>oats_apcp_aii_ck</td>
                                     <td>(((alr_impact_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_apcp_oni_ck</td>
-                                    <td>(((owners_notified_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_apcp_aai_ck</td>
                                     <td>(((agricultural_activities_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 <tr>
+                                    <td>oats_apcp_asi_ck</td>
+                                    <td>(((applicationshare_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
                                     <td>oats_apcp_mni_ck</td>
                                     <td>(((material_need_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_apcp_hsi_ck</td>
+                                    <td>(((homesite_severance_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_apcp_chk3</td>
+                                    <td>(((((alr_change_code)::text &#61; &#39;NFU&#39;::text) AND ((nonfarm_use_type_code IS NOT NULL) AND (nonfarm_use_subtype_code IS NOT NULL))) OR ((nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL)) OR (((alr_change_code)::text &#61; ANY ((ARRAY[&#39;INC&#39;::character varying, &#39;EXC&#39;::character varying, &#39;SDV&#39;::character varying, &#39;SCH&#39;::character varying])::text[])) AND (nonfarm_use_type_code IS NULL) AND (nonfarm_use_subtype_code IS NULL))))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_apcp_oni_ck</td>
+                                    <td>(((owners_notified_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>

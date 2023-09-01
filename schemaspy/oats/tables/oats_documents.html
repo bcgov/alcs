@@ -546,10 +546,6 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>oats_od_pvi_chk</td>
-                                    <td>(((publicly_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
                                     <td>oats_docu_chk</td>
                                     <td>((((alr_application_id IS NOT NULL) AND (issue_id IS NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NOT NULL) AND (planning_review_id IS NULL)) OR ((alr_application_id IS NULL) AND (issue_id IS NULL) AND (planning_review_id IS NOT NULL))))</td>
                                 </tr>
@@ -560,6 +556,10 @@
                                 <tr>
                                     <td>oats_od_alvi_chk</td>
                                     <td>(((app_lg_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
+                                    <td>oats_od_pvi_chk</td>
+                                    <td>(((publicly_viewable_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>

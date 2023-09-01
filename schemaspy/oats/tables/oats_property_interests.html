@@ -488,16 +488,16 @@
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td>oats_prin_pt_chk</td>
+                                    <td>(((prin_type)::text &#61; ANY ((ARRAY[&#39;OWN&#39;::character varying, &#39;CHG&#39;::character varying, &#39;NOOWN&#39;::character varying])::text[])))</td>
+                                </tr>
+                                <tr>
                                     <td>oats_prin_chk</td>
                                     <td>(((((prin_type)::text &#61; &#39;CHG&#39;::text) AND (property_owner_type_code IS NULL) AND (land_title_charge_code IS NOT NULL) AND (active_ind IS NULL) AND (charge_nbr IS NOT NULL) AND (charge_desc IS NOT NULL)) OR (((prin_type)::text &#61; &#39;OWN&#39;::text) AND (person_organization_id IS NOT NULL) AND (property_owner_type_code IS NOT NULL) AND (land_title_charge_code IS NULL) AND (active_ind IS NOT NULL) AND (charge_nbr IS NULL) AND (charge_desc IS NULL)) OR (((prin_type)::text &#61; &#39;NOOWN&#39;::text) AND (person_organization_id IS NULL) AND (property_owner_type_code IS NOT NULL) AND (active_ind IS NOT NULL))))</td>
                                 </tr>
                                 <tr>
                                     <td>oats_prin_ai_chk</td>
                                     <td>(((active_ind)::text &#61; ANY ((ARRAY[&#39;Y&#39;::character varying, &#39;N&#39;::character varying])::text[])))</td>
-                                </tr>
-                                <tr>
-                                    <td>oats_prin_pt_chk</td>
-                                    <td>(((prin_type)::text &#61; ANY ((ARRAY[&#39;OWN&#39;::character varying, &#39;CHG&#39;::character varying, &#39;NOOWN&#39;::character varying])::text[])))</td>
                                 </tr>
                                 </tbody>
                             </table>
