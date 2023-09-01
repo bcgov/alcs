@@ -18,36 +18,78 @@ export class SearchResultDto {
   label?: ApplicationTypeDto;
 }
 
+export type SearchEntityClass = 'APP' | 'NOI' | 'PLN' | 'COV';
+
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
   referenceId: string;
   ownerName?: string;
-  localGovernmentName: string;
+  localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
   status: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
 }
 
 export class NoticeOfIntentSearchResultDto {
   type: ApplicationTypeDto;
   referenceId: string;
   ownerName?: string;
-  localGovernmentName: string;
+  localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
   status: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
+}
+
+export class PlanningReviewSearchResultDto {
+  type: string;
+  referenceId: string;
+  localGovernmentName?: string;
+  fileNumber: string;
+  boardCode?: string;
+  class: SearchEntityClass;
+}
+
+export class CovenantSearchResultDto {
+  ownerName?: string;
+  referenceId: string;
+  localGovernmentName?: string;
+  fileNumber: string;
+  boardCode?: string;
+  class: SearchEntityClass;
 }
 
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
+  planningReviews: PlanningReviewSearchResultDto[];
+  covenants: CovenantSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
+  totalPlanningReviews: number;
+  totalCovenants: number;
 }
 
 export class AdvancedSearchResultDto<T> {
   data: T;
   total: number;
+}
+
+export class PagingRequestDto {
+  @IsNumber()
+  page: number;
+
+  @IsNumber()
+  pageSize: number;
+
+  @IsString()
+  sortField: string;
+
+  @IsString()
+  sortDirection: 'ASC' | 'DESC';
 }
 
 export class SearchRequestDto {
@@ -130,4 +172,22 @@ export class SearchRequestDto {
 
   @IsString()
   sortDirection: 'ASC' | 'DESC';
+}
+
+export class PlanningReviewSearchRequestDto extends PagingRequestDto {
+  fileNumber?: string;
+
+  governmentName?: string;
+
+  regionCode?: string;
+}
+
+export class CovenantSearchRequestDto extends PagingRequestDto {
+  fileNumber?: string;
+
+  name?: string;
+
+  governmentName?: string;
+
+  regionCode?: string;
 }

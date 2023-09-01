@@ -8,8 +8,10 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { CovenantAdvancedSearchService } from './covenant/covenant-advanced-search.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
+import { PlanningReviewAdvancedService } from './planning-review/planning-review-advanced-search.service';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
@@ -30,6 +32,8 @@ import { SearchService } from './search.service';
     ApplicationProfile,
     ApplicationAdvancedSearchService,
     NoticeOfIntentAdvancedSearchService,
+    PlanningReviewAdvancedService,
+    CovenantAdvancedSearchService,
   ],
   controllers: [SearchController],
 })

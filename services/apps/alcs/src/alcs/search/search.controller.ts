@@ -15,13 +15,19 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
+import { CovenantAdvancedSearchService } from './covenant/covenant-advanced-search.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
+import { PlanningReviewAdvancedService } from './planning-review/planning-review-advanced-search.service';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
+  CovenantSearchRequestDto,
+  CovenantSearchResultDto,
   NoticeOfIntentSearchResultDto,
+  PlanningReviewSearchRequestDto,
+  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -36,6 +42,8 @@ export class SearchController {
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
+    private planningReviewSearchService: PlanningReviewAdvancedService,
+    private covenantSearchService: CovenantAdvancedSearchService,
   ) {}
 
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -145,9 +153,18 @@ export class SearchController {
     const noticeOfIntentSearchService =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
+    const planningReviews =
+      await this.planningReviewSearchService.searchPlanningReviews(searchDto);
+
+    const covenants = await this.covenantSearchService.searchCovenants(
+      searchDto,
+    );
+
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applicationSearchResult,
       noticeOfIntentSearchService,
+      planningReviews,
+      covenants,
     );
 
     return mappedSearchResult;
@@ -158,11 +175,14 @@ export class SearchController {
   async advancedSearchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
-    const applicationSearchResult =
-      await this.applicationSearchService.searchApplications(searchDto);
+    const applications = await this.applicationSearchService.searchApplications(
+      searchDto,
+    );
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
-      applicationSearchResult,
+      applications,
+      null,
+      null,
       null,
     );
 
@@ -177,17 +197,62 @@ export class SearchController {
   async advancedSearchNoticeOfIntents(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
-    const noticeOfIntentSearchService =
+    const noticeOfIntents =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       null,
-      noticeOfIntentSearchService,
+      noticeOfIntents,
+      null,
+      null,
     );
 
     return {
       total: mappedSearchResult.totalNoticeOfIntents,
       data: mappedSearchResult.noticeOfIntents,
+    };
+  }
+
+  @Post('/advanced/planning-review')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchPlanningReviews(
+    @Body() searchDto: PlanningReviewSearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
+    const planningReviews =
+      await this.planningReviewSearchService.searchPlanningReviews(searchDto);
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      null,
+      null,
+      planningReviews,
+      null,
+    );
+
+    return {
+      total: mappedSearchResult.totalPlanningReviews,
+      data: mappedSearchResult.planningReviews,
+    };
+  }
+
+  @Post('/advanced/covenant')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchCovenants(
+    @Body() searchDto: CovenantSearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<CovenantSearchResultDto[]>> {
+    const covenants = await this.covenantSearchService.searchCovenants(
+      searchDto,
+    );
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      null,
+      null,
+      null,
+      covenants,
+    );
+
+    return {
+      total: mappedSearchResult.totalCovenants,
+      data: mappedSearchResult.covenants,
     };
   }
 
@@ -198,6 +263,8 @@ export class SearchController {
     noticeOfIntents: AdvancedSearchResultDto<
       NoticeOfIntentSubmissionSearchView[]
     > | null,
+    planningReviews: AdvancedSearchResultDto<PlanningReview[]> | null,
+    covenants: AdvancedSearchResultDto<Covenant[]> | null,
   ) {
     const response = new AdvancedSearchResponseDto();
 
@@ -219,21 +286,43 @@ export class SearchController {
       );
     }
 
+    const mappedPlanningReviews: PlanningReviewSearchResultDto[] = [];
+    if (planningReviews?.data && planningReviews?.data.length > 0) {
+      mappedPlanningReviews.push(
+        ...planningReviews.data.map((planReview) =>
+          this.mapPlanningReviewToAdvancedSearchResult(planReview),
+        ),
+      );
+    }
+
+    const mappedCovenants: CovenantSearchResultDto[] = [];
+    if (covenants?.data && covenants?.data.length > 0) {
+      mappedCovenants.push(
+        ...covenants.data.map((cov) =>
+          this.mapCovenantToAdvancedSearchResult(cov),
+        ),
+      );
+    }
+
     response.applications = mappedApplications;
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
+    response.planningReviews = mappedPlanningReviews;
+    response.totalPlanningReviews = planningReviews?.total ?? 0;
+    response.covenants = mappedCovenants;
+    response.totalPlanningReviews = covenants?.total ?? 0;
 
     return response;
   }
 
   private mapApplicationToAdvancedSearchResult(
     application: ApplicationSubmissionSearchView,
-  ) {
-    const result = {
+  ): ApplicationSearchResultDto {
+    return {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
-      dateSubmitted: application.dateSubmittedToAlc,
+      dateSubmitted: application.dateSubmittedToAlc?.getTime(),
       type: this.mapper.map(
         application.applicationType,
         ApplicationType,
@@ -243,18 +332,16 @@ export class SearchController {
       ownerName: application.applicant,
       class: 'APP',
       status: application.status.status_type_code,
-    } as ApplicationSearchResultDto;
-
-    return result;
+    };
   }
 
   private mapNoticeOfIntentToAdvancedSearchResult(
     noi: NoticeOfIntentSubmissionSearchView,
-  ) {
-    const result = {
+  ): NoticeOfIntentSearchResultDto {
+    return {
       referenceId: noi.fileNumber,
       fileNumber: noi.fileNumber,
-      dateSubmitted: noi.dateSubmittedToAlc,
+      dateSubmitted: noi.dateSubmittedToAlc?.getTime(),
       type: this.mapper.map(
         noi.noticeOfIntentType,
         ApplicationType,
@@ -264,8 +351,30 @@ export class SearchController {
       ownerName: noi.applicant,
       class: 'NOI',
       status: noi.status.status_type_code,
-    } as NoticeOfIntentSearchResultDto;
+    };
+  }
 
-    return result;
+  private mapPlanningReviewToAdvancedSearchResult(
+    planningReview: PlanningReview,
+  ): PlanningReviewSearchResultDto {
+    return {
+      referenceId: planningReview.cardUuid,
+      fileNumber: planningReview.fileNumber,
+      type: planningReview.type,
+      localGovernmentName: planningReview.localGovernment.name,
+      class: 'PLN',
+    };
+  }
+
+  private mapCovenantToAdvancedSearchResult(
+    covenant: Covenant,
+  ): CovenantSearchResultDto {
+    return {
+      referenceId: covenant.cardUuid,
+      fileNumber: covenant.fileNumber,
+      ownerName: covenant.applicant,
+      localGovernmentName: covenant.localGovernment.name,
+      class: 'COV',
+    };
   }
 }
