@@ -8,9 +8,6 @@ import { ApplicationModification } from '../../application-decision/application-
 import { ApplicationReconsideration } from '../../application-decision/application-reconsideration/application-reconsideration.entity';
 import { ApplicationReconsiderationOutcomeType } from '../../application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { NoticeOfIntentMeetingType } from '../../notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting-type.entity';
-import { NoticeOfIntentMeeting } from '../../notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting.entity';
-import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { ApplicationMeeting } from '../application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from '../application-meeting/application-meeting.service';
 import { ApplicationPaused } from '../application-paused.entity';

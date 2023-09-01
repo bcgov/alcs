@@ -100,7 +100,5 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.isCancelled =
       statusHistory.filter((status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.CANCELLED)
         .length > 0;
-
-    debugger;
   }
 }

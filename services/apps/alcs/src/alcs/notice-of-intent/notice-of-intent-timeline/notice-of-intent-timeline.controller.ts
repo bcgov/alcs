@@ -15,7 +15,6 @@ export class NoticeOfIntentTimelineController {
   @Get('/:fileNumber')
   @UserRoles(AUTH_ROLE.ADMIN)
   async fetchTimelineEvents(@Param('fileNumber') fileNumber: string) {
-    debugger;
     return await this.noiTimelineService.getTimelineEvents(fileNumber);
   }
 }

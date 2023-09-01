@@ -6,6 +6,7 @@ import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentModule } from '../notice-of-intent.module';
 import { NoticeOfIntentTimelineController } from './notice-of-intent-timeline.controller';
 import { NoticeOfIntentTimelineService } from './notice-of-intent-timeline.service';
+import { NoticeOfIntentSubmissionStatusModule } from '../notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { NoticeOfIntentTimelineService } from './notice-of-intent-timeline.servi
       NoticeOfIntentDecision,
     ]),
     NoticeOfIntentModule,
+    NoticeOfIntentSubmissionStatusModule,
   ],
   providers: [NoticeOfIntentTimelineService],
   controllers: [NoticeOfIntentTimelineController],

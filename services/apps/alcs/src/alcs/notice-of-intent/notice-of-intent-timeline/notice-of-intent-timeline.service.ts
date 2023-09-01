@@ -7,6 +7,8 @@ import { NoticeOfIntentModification } from '../../notice-of-intent-decision/noti
 import { NoticeOfIntentMeetingService } from '../notice-of-intent-meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent.service';
+import { NoticeOfIntentSubmissionStatusService } from '../notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NOI_SUBMISSION_STATUS } from '../notice-of-intent-submission-status/notice-of-intent-status.dto';
 
 export interface TimelineEvent {
   htmlText: string;
@@ -45,6 +47,7 @@ export class NoticeOfIntentTimelineService {
     private noticeOfIntentDecisionRepo: Repository<NoticeOfIntentDecision>,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentMeetingService: NoticeOfIntentMeetingService,
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
   ) {}
 
   async getTimelineEvents(fileNumber: string) {
@@ -67,6 +70,7 @@ export class NoticeOfIntentTimelineService {
     await this.addDecisionEvents(noticeOfIntent, events);
     await this.addModificationEvents(noticeOfIntent, events);
     await this.addMeetingEvents(noticeOfIntent, events);
+    await this.addStatusEvents(noticeOfIntent, events);
 
     if (noticeOfIntent.card) {
       for (const subtask of noticeOfIntent.card.subtasks) {
@@ -83,27 +87,6 @@ export class NoticeOfIntentTimelineService {
     noticeOfIntent: NoticeOfIntent,
     events: TimelineEvent[],
   ) {
-    if (noticeOfIntent.dateSubmittedToAlc) {
-      events.push({
-        htmlText: 'Submitted to ALC',
-        startDate:
-          noticeOfIntent.dateSubmittedToAlc.getTime() + SORTING_ORDER.SUBMITTED,
-        isFulfilled: true,
-        fulfilledDate: null,
-      });
-    }
-
-    if (noticeOfIntent.dateAcknowledgedIncomplete) {
-      events.push({
-        htmlText: 'Acknowledged Incomplete',
-        startDate:
-          noticeOfIntent.dateAcknowledgedIncomplete.getTime() +
-          SORTING_ORDER.ACKNOWLEDGED_INCOMPLETE,
-        isFulfilled: true,
-        fulfilledDate: null,
-      });
-    }
-
     if (noticeOfIntent.dateAcknowledgedComplete) {
       events.push({
         htmlText: 'Acknowledged Complete',
@@ -120,17 +103,6 @@ export class NoticeOfIntentTimelineService {
         htmlText: 'Fee Received Date',
         startDate:
           noticeOfIntent.feePaidDate.getTime() + SORTING_ORDER.FEE_RECEIVED,
-        isFulfilled: true,
-        fulfilledDate: null,
-      });
-    }
-
-    if (noticeOfIntent.dateReceivedAllItems) {
-      events.push({
-        htmlText: 'Received All Items',
-        startDate:
-          noticeOfIntent.dateReceivedAllItems.getTime() +
-          SORTING_ORDER.FEE_RECEIVED,
         isFulfilled: true,
         fulfilledDate: null,
       });
@@ -263,5 +235,44 @@ export class NoticeOfIntentTimelineService {
 
       typeCount.set(meeting.type.code, count + 1);
     });
+  }
+
+  private async addStatusEvents(
+    noticeOfIntent: NoticeOfIntent,
+    events: TimelineEvent[],
+  ) {
+    const statusHistory =
+      await this.noticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber(
+        noticeOfIntent.fileNumber,
+      );
+
+    for (const status of statusHistory) {
+      if (status.effectiveDate) {
+        let htmlText = `<strong>${status.statusType.label}</strong>`;
+
+        if (status.statusType.code === NOI_SUBMISSION_STATUS.IN_PROGRESS) {
+          htmlText = 'Created - <strong>In Progress</strong>';
+        }
+
+        if (
+          status.statusType.code ===
+          NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE
+        ) {
+          htmlText =
+            'Acknowledged Incomplete - <strong>Submitted to ALC - Incomplete</strong>';
+        }
+
+        if (status.statusType.code === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC) {
+          htmlText = 'Received All Items - <strong>Received by ALC</strong>';
+        }
+
+        events.push({
+          htmlText,
+          startDate: status.effectiveDate.getTime() + status.statusType.weight,
+          fulfilledDate: null,
+          isFulfilled: true,
+        });
+      }
+    }
   }
 }
