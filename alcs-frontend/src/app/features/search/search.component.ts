@@ -14,6 +14,7 @@ import { ApplicationService } from '../../services/application/application.servi
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
+  NonApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   SearchRequestDto,
 } from '../../services/search/search.dto';
@@ -40,6 +41,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   noticeOfIntentTotal = 0;
+
+  nonApplications: NonApplicationSearchResultDto[] = [];
+  nonApplicationsTotal = 0;
 
   isSearchExpanded = false;
   pageIndex = 0;
@@ -253,6 +257,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = result?.total ?? 0;
   }
 
+  async onNonApplicationSearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchNonApplicationsFetch(searchParams);
+
+    this.nonApplications = result?.data ?? [];
+    this.nonApplicationsTotal = result?.total ?? 0;
+  }
+
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
@@ -265,6 +277,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         break;
       case 'NOI':
         await this.onApplicationSearch();
+        break;
+      case 'NONAPP':
+        await this.onNonApplicationSearch();
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
@@ -291,8 +306,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       searchResult = {
         applications: [],
         noticeOfIntents: [],
+        nonApplications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
+        totalNonApplications: 0,
       };
     }
 
@@ -301,5 +318,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
     this.noticeOfIntents = searchResult.noticeOfIntents;
+
+    this.nonApplicationsTotal = searchResult.totalNonApplications;
+    this.nonApplications = searchResult.nonApplications;
   }
 }

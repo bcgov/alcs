@@ -44,33 +44,23 @@ export class NoticeOfIntentSearchResultDto {
   class: SearchEntityClass;
 }
 
-export class PlanningReviewSearchResultDto {
-  type: string;
-  referenceId: string;
-  localGovernmentName?: string;
+export class NonApplicationSearchResultDto {
+  type: string | null;
+  applicant: string | null;
+  referenceId: string | null;
+  localGovernmentName: string | null;
   fileNumber: string;
-  boardCode?: string;
-  class: SearchEntityClass;
-}
-
-export class CovenantSearchResultDto {
-  ownerName?: string;
-  referenceId: string;
-  localGovernmentName?: string;
-  fileNumber: string;
-  boardCode?: string;
+  boardCode: string | null;
   class: SearchEntityClass;
 }
 
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
-  planningReviews: PlanningReviewSearchResultDto[];
-  covenants: CovenantSearchResultDto[];
+  nonApplications: NonApplicationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
-  totalPlanningReviews: number;
-  totalCovenants: number;
+  totalNonApplications: number;
 }
 
 export class AdvancedSearchResultDto<T> {
@@ -162,7 +152,7 @@ export class SearchRequestDto extends PagingRequestDto {
   applicationFileTypes: string[];
 }
 
-export class PlanningReviewSearchRequestDto extends PagingRequestDto {
+export class NonApplicationsSearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   fileNumber?: string;
@@ -174,22 +164,8 @@ export class PlanningReviewSearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   regionCode?: string;
-}
-
-export class CovenantSearchRequestDto extends PagingRequestDto {
-  @IsString()
-  @IsOptional()
-  fileNumber?: string;
 
   @IsString()
   @IsOptional()
   name?: string;
-
-  @IsString()
-  @IsOptional()
-  governmentName?: string;
-
-  @IsString()
-  @IsOptional()
-  regionCode?: string;
 }

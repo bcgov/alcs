@@ -1,0 +1,47 @@
+<table
+  mat-table
+  [dataSource]="dataSource"
+  class="mat-elevation-z2 table"
+  matSort
+  matSortActive="dateSubmitted"
+  matSortDirection="desc"
+  matSortDisableClear
+>
+  <ng-container matColumnDef="fileId">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>File ID</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.fileNumber | emptyColumn }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="applicant">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Name</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.applicant | emptyColumn }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="government">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Local/First Nation Government</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.localGovernmentName | emptyColumn }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr (click)="onSelectRecord(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  <tr class="mat-row no-data" *matNoDataRow>
+    <td class="text-center" colspan="4">
+      <div><b>No Search results.</b></div>
+      <div>Please adjust criteria and try again.</div>
+    </td>
+  </tr>
+</table>
+<mat-paginator
+  [length]="totalCount"
+  [pageSize]="20"
+  [pageSizeOptions]="[20, 50, 100]"
+  (page)="onPageChange($event)"
+  aria-label="Select page"
+></mat-paginator>

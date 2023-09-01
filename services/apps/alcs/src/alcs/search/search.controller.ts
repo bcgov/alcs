@@ -15,19 +15,17 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
-import { CovenantAdvancedSearchService } from './covenant/covenant-advanced-search.service';
+import { NonApplicationSearchView } from './non-applications/non-applications-view.entity';
+import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
-import { PlanningReviewAdvancedService } from './planning-review/planning-review-advanced-search.service';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
-  CovenantSearchRequestDto,
-  CovenantSearchResultDto,
+  NonApplicationSearchResultDto,
+  NonApplicationsSearchRequestDto,
   NoticeOfIntentSearchResultDto,
-  PlanningReviewSearchRequestDto,
-  PlanningReviewSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -42,8 +40,7 @@ export class SearchController {
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
-    private planningReviewSearchService: PlanningReviewAdvancedService,
-    private covenantSearchService: CovenantAdvancedSearchService,
+    private nonApplicationsSearchService: NonApplicationsAdvancedSearchService,
   ) {}
 
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -153,18 +150,13 @@ export class SearchController {
     const noticeOfIntentSearchService =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
-    const planningReviews =
-      await this.planningReviewSearchService.searchPlanningReviews(searchDto);
-
-    const covenants = await this.covenantSearchService.searchCovenants(
-      searchDto,
-    );
+    const nonApplications =
+      await this.nonApplicationsSearchService.searchNonApplications(searchDto);
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applicationSearchResult,
       noticeOfIntentSearchService,
-      planningReviews,
-      covenants,
+      nonApplications,
     );
 
     return mappedSearchResult;
@@ -181,7 +173,6 @@ export class SearchController {
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applications,
-      null,
       null,
       null,
     );
@@ -204,7 +195,6 @@ export class SearchController {
       null,
       noticeOfIntents,
       null,
-      null,
     );
 
     return {
@@ -213,46 +203,23 @@ export class SearchController {
     };
   }
 
-  @Post('/advanced/planning-review')
+  @Post('/advanced/non-applications')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchPlanningReviews(
-    @Body() searchDto: PlanningReviewSearchRequestDto,
-  ): Promise<AdvancedSearchResultDto<PlanningReviewSearchResultDto[]>> {
-    const planningReviews =
-      await this.planningReviewSearchService.searchPlanningReviews(searchDto);
+  async advancedSearchNonApplications(
+    @Body() searchDto: NonApplicationsSearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<NonApplicationSearchResultDto[]>> {
+    const nonApplications =
+      await this.nonApplicationsSearchService.searchNonApplications(searchDto);
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       null,
       null,
-      planningReviews,
-      null,
+      nonApplications,
     );
 
     return {
-      total: mappedSearchResult.totalPlanningReviews,
-      data: mappedSearchResult.planningReviews,
-    };
-  }
-
-  @Post('/advanced/covenant')
-  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async advancedSearchCovenants(
-    @Body() searchDto: CovenantSearchRequestDto,
-  ): Promise<AdvancedSearchResultDto<CovenantSearchResultDto[]>> {
-    const covenants = await this.covenantSearchService.searchCovenants(
-      searchDto,
-    );
-
-    const mappedSearchResult = this.mapAdvancedSearchResults(
-      null,
-      null,
-      null,
-      covenants,
-    );
-
-    return {
-      total: mappedSearchResult.totalCovenants,
-      data: mappedSearchResult.covenants,
+      total: mappedSearchResult.totalNonApplications,
+      data: mappedSearchResult.nonApplications,
     };
   }
 
@@ -263,8 +230,7 @@ export class SearchController {
     noticeOfIntents: AdvancedSearchResultDto<
       NoticeOfIntentSubmissionSearchView[]
     > | null,
-    planningReviews: AdvancedSearchResultDto<PlanningReview[]> | null,
-    covenants: AdvancedSearchResultDto<Covenant[]> | null,
+    nonApplications: AdvancedSearchResultDto<NonApplicationSearchView[]> | null,
   ) {
     const response = new AdvancedSearchResponseDto();
 
@@ -286,20 +252,11 @@ export class SearchController {
       );
     }
 
-    const mappedPlanningReviews: PlanningReviewSearchResultDto[] = [];
-    if (planningReviews?.data && planningReviews?.data.length > 0) {
-      mappedPlanningReviews.push(
-        ...planningReviews.data.map((planReview) =>
-          this.mapPlanningReviewToAdvancedSearchResult(planReview),
-        ),
-      );
-    }
-
-    const mappedCovenants: CovenantSearchResultDto[] = [];
-    if (covenants?.data && covenants?.data.length > 0) {
-      mappedCovenants.push(
-        ...covenants.data.map((cov) =>
-          this.mapCovenantToAdvancedSearchResult(cov),
+    const mappedNonApplications: NonApplicationSearchResultDto[] = [];
+    if (nonApplications?.data && nonApplications?.data.length > 0) {
+      mappedNonApplications.push(
+        ...nonApplications.data.map((nonApplication) =>
+          this.mapNonApplicationToAdvancedSearchResult(nonApplication),
         ),
       );
     }
@@ -308,10 +265,8 @@ export class SearchController {
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
-    response.planningReviews = mappedPlanningReviews;
-    response.totalPlanningReviews = planningReviews?.total ?? 0;
-    response.covenants = mappedCovenants;
-    response.totalCovenants = covenants?.total ?? 0;
+    response.nonApplications = mappedNonApplications;
+    response.totalNonApplications = nonApplications?.total ?? 0;
 
     return response;
   }
@@ -354,27 +309,17 @@ export class SearchController {
     };
   }
 
-  private mapPlanningReviewToAdvancedSearchResult(
-    planningReview: PlanningReview,
-  ): PlanningReviewSearchResultDto {
+  private mapNonApplicationToAdvancedSearchResult(
+    nonApplication: NonApplicationSearchView,
+  ): NonApplicationSearchResultDto {
     return {
-      referenceId: planningReview.cardUuid,
-      fileNumber: planningReview.fileNumber,
-      type: planningReview.type,
-      localGovernmentName: planningReview.localGovernment.name,
-      class: 'PLN',
-    };
-  }
-
-  private mapCovenantToAdvancedSearchResult(
-    covenant: Covenant,
-  ): CovenantSearchResultDto {
-    return {
-      referenceId: covenant.cardUuid,
-      fileNumber: covenant.fileNumber,
-      ownerName: covenant.applicant,
-      localGovernmentName: covenant.localGovernment.name,
-      class: 'COV',
+      referenceId: nonApplication.cardUuid,
+      fileNumber: nonApplication.fileNumber,
+      applicant: nonApplication.applicant,
+      boardCode: nonApplication.boardCode,
+      type: nonApplication.type,
+      localGovernmentName: nonApplication.localGovernment?.name ?? null,
+      class: nonApplication.class,
     };
   }
 }

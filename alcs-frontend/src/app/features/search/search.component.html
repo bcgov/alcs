@@ -257,7 +257,13 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Non-Applications: 0 </ng-template>
+      <ng-template mat-tab-label> Non-Applications: {{ nonApplicationsTotal }} </ng-template>
+      <app-non-application-search-table
+        [nonApplications]="nonApplications"
+        [totalCount]="nonApplicationsTotal"
+        (tableChange)="onTableChange($event)"
+      >
+      </app-non-application-search-table>
     </mat-tab>
   </mat-tab-group>
 </div>

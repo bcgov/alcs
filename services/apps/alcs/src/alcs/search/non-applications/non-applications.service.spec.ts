@@ -2,17 +2,19 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Covenant } from '../../covenant/covenant.entity';
-import { CovenantSearchRequestDto } from '../search.dto';
-import { CovenantAdvancedSearchService } from './covenant-advanced-search.service';
+import { NonApplicationsSearchRequestDto } from '../search.dto';
+import { NonApplicationSearchView } from './non-applications-view.entity';
+import { NonApplicationsAdvancedSearchService } from './non-applications.service';
 
-describe('CovenantAdvancedSearchService', () => {
-  let service: CovenantAdvancedSearchService;
-  let mockCovenantRepository: DeepMocked<Repository<Covenant>>;
+describe('NonApplicationsService', () => {
+  let service: NonApplicationsAdvancedSearchService;
+  let mockNonApplicationsRepository: DeepMocked<
+    Repository<NonApplicationSearchView>
+  >;
 
   let mockQuery: any = {};
 
-  const mockSearchRequestDto: CovenantSearchRequestDto = {
+  const mockSearchRequestDto: NonApplicationsSearchRequestDto = {
     fileNumber: '123',
     governmentName: 'B',
     regionCode: 'C',
@@ -24,7 +26,7 @@ describe('CovenantAdvancedSearchService', () => {
   };
 
   beforeEach(async () => {
-    mockCovenantRepository = createMock();
+    mockNonApplicationsRepository = createMock();
 
     mockQuery = {
       getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
@@ -39,16 +41,16 @@ describe('CovenantAdvancedSearchService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CovenantAdvancedSearchService,
+        NonApplicationsAdvancedSearchService,
         {
-          provide: getRepositoryToken(Covenant),
-          useValue: mockCovenantRepository,
+          provide: getRepositoryToken(NonApplicationSearchView),
+          useValue: mockNonApplicationsRepository,
         },
       ],
     }).compile();
 
-    service = module.get<CovenantAdvancedSearchService>(
-      CovenantAdvancedSearchService,
+    service = module.get<NonApplicationsAdvancedSearchService>(
+      NonApplicationsAdvancedSearchService,
     );
   });
 
@@ -57,25 +59,29 @@ describe('CovenantAdvancedSearchService', () => {
   });
 
   it('should successfully build a query using all search parameters defined', async () => {
-    mockCovenantRepository.createQueryBuilder.mockReturnValue(mockQuery as any);
+    mockNonApplicationsRepository.createQueryBuilder.mockReturnValue(
+      mockQuery as any,
+    );
 
-    const result = await service.searchCovenants(mockSearchRequestDto);
+    const result = await service.searchNonApplications(mockSearchRequestDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(mockCovenantRepository.createQueryBuilder).toBeCalledTimes(1);
+    expect(mockNonApplicationsRepository.createQueryBuilder).toBeCalledTimes(1);
     expect(mockQuery.andWhere).toBeCalledTimes(4);
     expect(mockQuery.where).toBeCalledTimes(1);
   });
 
   it('should call compileSearchQuery method correctly', async () => {
-    const compileCovenantSearchQuerySpy = jest
+    const compileNonApplicationSearchQuerySpy = jest
       .spyOn(service as any, 'compileSearchQuery')
       .mockResolvedValue(mockQuery);
 
-    const result = await service.searchCovenants(mockSearchRequestDto);
+    const result = await service.searchNonApplications(mockSearchRequestDto);
 
     expect(result).toEqual({ data: [], total: 0 });
-    expect(compileCovenantSearchQuerySpy).toBeCalledWith(mockSearchRequestDto);
+    expect(compileNonApplicationSearchQuerySpy).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(mockQuery.orderBy).toHaveBeenCalledTimes(1);
     expect(mockQuery.offset).toHaveBeenCalledTimes(1);
     expect(mockQuery.limit).toHaveBeenCalledTimes(1);
