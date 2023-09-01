@@ -114,7 +114,7 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef>Action</th>
             <td mat-cell *matCellDef="let element; let i = index">
-              <button mat-stroked-button color="accent" (click)="onStructureRemove(i)">Remove</button>
+              <button mat-stroked-button color="accent" (click)="onStructureRemove(i)" type="button">Remove</button>
             </td>
           </ng-container>
 
@@ -137,6 +137,7 @@
           color="primary"
           (click)="onStructureAdd()"
           [ngClass]="{ 'mat-error': proposedStructures.length < 1 && showErrors }"
+          type="button"
         >
           + Add Structure
         </button>
