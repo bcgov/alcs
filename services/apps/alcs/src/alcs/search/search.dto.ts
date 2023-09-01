@@ -92,7 +92,7 @@ export class PagingRequestDto {
   sortDirection: 'ASC' | 'DESC';
 }
 
-export class SearchRequestDto {
+export class SearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   @MinLength(3)
@@ -160,34 +160,36 @@ export class SearchRequestDto {
 
   @IsArray()
   applicationFileTypes: string[];
-
-  @IsNumber()
-  page: number;
-
-  @IsNumber()
-  pageSize: number;
-
-  @IsString()
-  sortField: string;
-
-  @IsString()
-  sortDirection: 'ASC' | 'DESC';
 }
 
 export class PlanningReviewSearchRequestDto extends PagingRequestDto {
+  @IsString()
+  @IsOptional()
   fileNumber?: string;
 
+  @IsString()
+  @IsOptional()
   governmentName?: string;
 
+  @IsString()
+  @IsOptional()
   regionCode?: string;
 }
 
 export class CovenantSearchRequestDto extends PagingRequestDto {
+  @IsString()
+  @IsOptional()
   fileNumber?: string;
 
+  @IsString()
+  @IsOptional()
   name?: string;
 
+  @IsString()
+  @IsOptional()
   governmentName?: string;
 
+  @IsString()
+  @IsOptional()
   regionCode?: string;
 }

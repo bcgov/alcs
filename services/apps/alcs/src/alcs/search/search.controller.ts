@@ -311,7 +311,7 @@ export class SearchController {
     response.planningReviews = mappedPlanningReviews;
     response.totalPlanningReviews = planningReviews?.total ?? 0;
     response.covenants = mappedCovenants;
-    response.totalPlanningReviews = covenants?.total ?? 0;
+    response.totalCovenants = covenants?.total ?? 0;
 
     return response;
   }

@@ -43,7 +43,7 @@ export class CovenantAdvancedSearchService {
         'localGovernment',
         'cov.local_government_uuid = "localGovernment".uuid',
       )
-      .where('1 = 1');
+      .where('1 = 1'); // need this so the code can safely chain andWhere
 
     if (searchDto.fileNumber) {
       query = query.andWhere('cov.file_number = :fileNumber', {
@@ -77,7 +77,7 @@ export class CovenantAdvancedSearchService {
 
   private compileSortQuery(searchDto: CovenantSearchRequestDto) {
     switch (searchDto.sortField) {
-      case 'ownerName':
+      case 'applicant':
         return '"cov"."applicant"';
 
       case 'government':
