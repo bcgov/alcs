@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import moment from 'moment';
 import { environment } from '../../../../environments/environment';
-import { NotificationService } from '../../../services/notification/notification.service';
+import { MessageService } from '../../../services/message/message.service';
 
 type FormattedNotification = {
   uuid: string;
@@ -24,7 +24,7 @@ export class NotificationsComponent implements OnInit {
   hasUnread = false;
   unreadCount = 0;
 
-  constructor(private router: Router, private notificationService: NotificationService) {}
+  constructor(private router: Router, private notificationService: MessageService) {}
 
   ngOnInit(): void {
     this.loadNotifications();

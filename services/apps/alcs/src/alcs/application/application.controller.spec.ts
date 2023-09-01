@@ -15,7 +15,7 @@ import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
@@ -31,7 +31,7 @@ import { SUBMISSION_STATUS } from './application-submission-status/submission-st
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
-  let notificationService: DeepMocked<NotificationService>;
+  let notificationService: DeepMocked<MessageService>;
   let cardService: DeepMocked<CardService>;
   let emailService: DeepMocked<EmailService>;
 
@@ -72,7 +72,7 @@ describe('ApplicationController', () => {
 
   beforeEach(async () => {
     applicationService = createMock<ApplicationService>();
-    notificationService = createMock<NotificationService>();
+    notificationService = createMock<MessageService>();
     cardService = createMock<CardService>();
     emailService = createMock<EmailService>();
 
@@ -86,7 +86,7 @@ describe('ApplicationController', () => {
           useValue: applicationService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: notificationService,
         },
         {
@@ -119,7 +119,7 @@ describe('ApplicationController', () => {
     });
 
     applicationService.mapToDtos.mockResolvedValue([mockApplicationDto]);
-    notificationService.createNotification.mockResolvedValue();
+    notificationService.create.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -174,7 +174,7 @@ describe('ApplicationController', () => {
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(notificationService.createNotification).not.toHaveBeenCalled();
+    expect(notificationService.create).not.toHaveBeenCalled();
     expect(applicationService.update).toHaveBeenCalledWith(
       mockApplicationEntity,
       mockUpdate,

@@ -14,26 +14,26 @@ import * as config from 'config';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { ANY_AUTH_ROLE } from '../../common/authorization/roles';
 import { UserRoles } from '../../common/authorization/roles.decorator';
-import { NotificationDto } from './notification.dto';
-import { Notification } from './notification.entity';
-import { NotificationService } from './notification.service';
+import { MessageDto } from './message.dto';
+import { Message } from './message.entity';
+import { MessageService } from './message.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@Controller('notification')
+@Controller('message')
 @UseGuards(RolesGuard)
-export class NotificationController {
+export class MessageController {
   constructor(
-    private notificationService: NotificationService,
+    private messageService: MessageService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
   @Get()
   @UserRoles(...ANY_AUTH_ROLE)
-  async getMyNotifications(@Req() req): Promise<NotificationDto[]> {
+  async getMyNotifications(@Req() req): Promise<MessageDto[]> {
     const userId = req.user.entity.uuid;
     if (userId) {
-      const notifications = await this.notificationService.list(userId);
-      return this.mapToDto(notifications);
+      const messages = await this.messageService.list(userId);
+      return this.mapToDto(messages);
     } else {
       return [];
     }
@@ -43,26 +43,22 @@ export class NotificationController {
   @UserRoles(...ANY_AUTH_ROLE)
   async markAllRead(@Req() req): Promise<void> {
     const userId = req.user.entity.uuid;
-    await this.notificationService.markAllRead(userId);
+    await this.messageService.markAllRead(userId);
   }
 
   @Post('/:uuid')
   @UserRoles(...ANY_AUTH_ROLE)
   async markRead(@Req() req, @Param('uuid') id): Promise<void> {
     const userId = req.user.entity.uuid;
-    const notification = await this.notificationService.get(id, userId);
-    if (notification) {
-      await this.notificationService.markRead(id);
+    const message = await this.messageService.get(id, userId);
+    if (message) {
+      await this.messageService.markRead(id);
     } else {
-      throw new NotFoundException('Failed to find notification');
+      throw new NotFoundException('Failed to find message');
     }
   }
 
-  private mapToDto(notifications: Notification[]): NotificationDto[] {
-    return this.autoMapper.mapArray(
-      notifications,
-      Notification,
-      NotificationDto,
-    );
+  private mapToDto(notifications: Message[]): MessageDto[] {
+    return this.autoMapper.mapArray(notifications, Message, MessageDto);
   }
 }

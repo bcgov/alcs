@@ -7,14 +7,14 @@ import { ClsService } from 'nestjs-cls';
 import { CommentProfile } from '../../common/automapper/comment.automapper.profile';
 import { initCommentMock } from '../../../test/mocks/mockEntities';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 
 describe('CommentController', () => {
   let controller: CommentController;
   let mockCommentService: DeepMocked<CommentService>;
-  let mockNotificationService: DeepMocked<NotificationService>;
+  let mockNotificationService: DeepMocked<MessageService>;
 
   let comment;
   let user;
@@ -23,7 +23,7 @@ describe('CommentController', () => {
 
   beforeEach(async () => {
     mockCommentService = createMock<CommentService>();
-    mockNotificationService = createMock<NotificationService>();
+    mockNotificationService = createMock<MessageService>();
 
     user = {
       name: 'Bruce Wayne',
@@ -55,7 +55,7 @@ describe('CommentController', () => {
           useValue: mockCommentService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: mockNotificationService,
         },
         {

@@ -1,4 +1,4 @@
-export interface NotificationDto {
+export interface MessageDto {
   uuid: string;
   title: string;
   body: string;

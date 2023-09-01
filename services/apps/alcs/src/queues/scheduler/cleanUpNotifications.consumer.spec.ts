@@ -2,22 +2,22 @@ import { ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeleteResult } from 'typeorm';
-import { NotificationService } from '../../alcs/notification/notification.service';
+import { MessageService } from '../../alcs/message/message.service';
 import { CleanUpNotificationsConsumer } from './cleanUpNotifications.consumer';
 
 describe('SchedulerConsumerService', () => {
   let notificationCleanUpConsumer: CleanUpNotificationsConsumer;
-  let mockNotificationService: DeepMocked<NotificationService>;
+  let mockNotificationService: DeepMocked<MessageService>;
 
   beforeEach(async () => {
-    mockNotificationService = createMock<NotificationService>();
+    mockNotificationService = createMock<MessageService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
       providers: [
         CleanUpNotificationsConsumer,
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: mockNotificationService,
         },
       ],

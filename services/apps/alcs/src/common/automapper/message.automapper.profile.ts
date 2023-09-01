@@ -1,11 +1,11 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { NotificationDto } from '../../alcs/notification/notification.dto';
-import { Notification } from '../../alcs/notification/notification.entity';
+import { MessageDto } from '../../alcs/message/message.dto';
+import { Message } from '../../alcs/message/message.entity';
 
 @Injectable()
-export class NotificationProfile extends AutomapperProfile {
+export class MessageProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
@@ -14,8 +14,8 @@ export class NotificationProfile extends AutomapperProfile {
     return (mapper) => {
       createMap(
         mapper,
-        Notification,
-        NotificationDto,
+        Message,
+        MessageDto,
         forMember(
           (n) => n.createdAt,
           mapFrom((n) => n.createdAt.getTime()),

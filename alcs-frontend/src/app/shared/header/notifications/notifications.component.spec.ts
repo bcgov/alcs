@@ -2,7 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NotificationService } from '../../../services/notification/notification.service';
+import { MessageService } from '../../../services/message/message.service';
 
 import { NotificationsComponent } from './notifications.component';
 
@@ -15,7 +15,7 @@ describe('NotificationsComponent', () => {
       imports: [RouterTestingModule, MatMenuModule],
       providers: [
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: {},
         },
       ],

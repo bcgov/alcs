@@ -13,7 +13,7 @@ import {
 } from '../../../test/mocks/mockEntities';
 import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { CardSubtask } from './card-subtask/card-subtask.entity';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CARD_TYPE, CardType } from './card-type/card-type.entity';
@@ -27,7 +27,7 @@ describe('CardService', () => {
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
   let mockCardEntity;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
-  let mockNotificationService: DeepMocked<NotificationService>;
+  let mockNotificationService: DeepMocked<MessageService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
@@ -61,7 +61,7 @@ describe('CardService', () => {
           useValue: mockSubtaskService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: mockNotificationService,
         },
       ],
@@ -217,10 +217,10 @@ describe('CardService', () => {
 
     await service.update(fakeAuthor, 'fake', mockUpdate, 'Notification Text');
 
-    expect(mockNotificationService.createNotification).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
 
     const createNotificationServiceDto =
-      mockNotificationService.createNotification.mock.calls[0][0];
+      mockNotificationService.create.mock.calls[0][0];
     expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
     expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
       mockUserUuid,

@@ -3,18 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { NotificationProfile } from '../../common/automapper/notification.automapper.profile';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { NotificationController } from './notification.controller';
-import { NotificationService } from './notification.service';
-import { Notification } from './notification.entity';
+import { MessageProfile } from '../../common/automapper/message.automapper.profile';
+import { MessageController } from './message.controller';
+import { Message } from './message.entity';
+import { MessageService } from './message.service';
 
-describe('NotificationController', () => {
-  let controller: NotificationController;
-  let notificationService: DeepMocked<NotificationService>;
+describe('MessageController', () => {
+  let controller: MessageController;
+  let notificationService: DeepMocked<MessageService>;
 
   beforeEach(async () => {
-    notificationService = createMock<NotificationService>();
+    notificationService = createMock<MessageService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -22,22 +22,22 @@ describe('NotificationController', () => {
           strategyInitializer: classes(),
         }),
       ],
-      controllers: [NotificationController],
+      controllers: [MessageController],
       providers: [
-        NotificationProfile,
+        MessageProfile,
         {
           provide: ClsService,
           useValue: {},
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: notificationService,
         },
         ...mockKeyCloakProviders,
       ],
     }).compile();
 
-    controller = module.get<NotificationController>(NotificationController);
+    controller = module.get<MessageController>(MessageController);
   });
 
   it('should be defined', () => {
@@ -49,7 +49,7 @@ describe('NotificationController', () => {
     notificationService.list.mockResolvedValue([
       {
         createdAt: date,
-      } as Notification,
+      } as Message,
     ]);
 
     const res = await controller.getMyNotifications({
@@ -95,7 +95,7 @@ describe('NotificationController', () => {
   });
 
   it('should call into service for markRead', async () => {
-    notificationService.get.mockResolvedValue({} as Notification);
+    notificationService.get.mockResolvedValue({} as Message);
     notificationService.markRead.mockResolvedValue({} as any);
 
     await controller.markRead(
@@ -130,7 +130,7 @@ describe('NotificationController', () => {
         },
         'fake-notification',
       ),
-    ).rejects.toMatchObject(new Error(`Failed to find notification`));
+    ).rejects.toMatchObject(new Error(`Failed to find message`));
 
     expect(notificationService.markRead).not.toHaveBeenCalled();
   });

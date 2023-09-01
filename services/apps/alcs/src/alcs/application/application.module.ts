@@ -20,7 +20,7 @@ import { ApplicationType } from '../code/application-code/application-type/appli
 import { CodeModule } from '../code/code.module';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { LocalGovernmentModule } from '../local-government/local-government.module';
-import { NotificationModule } from '../notification/notification.module';
+import { MessageModule } from '../message/message.module';
 import { LocalGovernmentController } from '../local-government/local-government.controller';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { DocumentCode } from '../../document/document-code.entity';
@@ -59,7 +59,7 @@ import { ApplicationService } from './application.service';
       ApplicationSubmissionToSubmissionStatus,
       LocalGovernment,
     ]),
-    NotificationModule,
+    MessageModule,
     DocumentModule,
     CardModule,
     CodeModule,
