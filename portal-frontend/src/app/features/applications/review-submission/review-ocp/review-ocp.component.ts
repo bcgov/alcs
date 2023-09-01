@@ -69,7 +69,7 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
   }
 
   private async saveProgress() {
-    if (this.fileId) {
+    if (this.fileId && this.ocpForm.dirty) {
       const ocpDesignation = this.isOCPDesignation.getRawValue();
       let ocpDesignationResult = null;
       if (ocpDesignation !== null) {

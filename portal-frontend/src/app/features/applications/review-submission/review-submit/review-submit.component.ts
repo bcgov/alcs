@@ -12,6 +12,7 @@ import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-review-submit[stepper]',
@@ -46,6 +47,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
+    private toastService: ToastService,
     private pdfGenerationService: PdfGenerationService
   ) {}
 
@@ -157,6 +159,8 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
           block: 'center',
         });
       }
+
+      this.toastService.showErrorToast('Please correct all errors before submitting the form');
 
       return contactInfoValid && ocpValid && zoningValid && authorizationValid && attachmentsValid;
     }

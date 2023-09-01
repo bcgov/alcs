@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -146,7 +146,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       )
     ) {
       this.isSoilStructureResidentialUseReasonVisible = true;
-      this.setRequiredAsync(this.soilStructureResidentialUseReason);
+      this.setRequired(this.soilStructureResidentialUseReason);
     } else {
       this.isSoilStructureResidentialUseReasonVisible = false;
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
@@ -157,7 +157,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   private setVisibilityAndValidatorsForAccessoryFields() {
     if (this.proposedStructures.some((structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE)) {
       this.isSoilStructureResidentialAccessoryUseReasonVisible = true;
-      this.setRequiredAsync(this.soilStructureResidentialAccessoryUseReason);
+      this.setRequired(this.soilStructureResidentialAccessoryUseReason);
     } else {
       this.isSoilStructureResidentialAccessoryUseReasonVisible = false;
       this.soilStructureResidentialAccessoryUseReason.removeValidators([Validators.required]);
@@ -169,8 +169,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     if (this.proposedStructures.some((structure) => structure.type === STRUCTURE_TYPES.FARM_STRUCTURE)) {
       this.isSoilAgriParcelActivityVisible = true;
       this.isSoilStructureFarmUseReasonVisible = true;
-      this.setRequiredAsync(this.soilAgriParcelActivity);
-      this.setRequiredAsync(this.soilStructureFarmUseReason);
+      this.setRequired(this.soilAgriParcelActivity);
+      this.setRequired(this.soilStructureFarmUseReason);
     } else {
       this.isSoilAgriParcelActivityVisible = false;
       this.isSoilStructureFarmUseReasonVisible = false;
@@ -293,10 +293,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.form.markAsDirty();
   }
 
-  private setRequiredAsync(formControl: FormControl<any>) {
-    //We set these asynchronously so they don't run immediately
-    setTimeout(() => {
-      formControl.setValidators([Validators.required]);
-    });
+  private setRequired(formControl: FormControl<any>) {
+    formControl.setValidators([Validators.required]);
   }
 }

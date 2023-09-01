@@ -4,8 +4,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
+import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
@@ -14,6 +16,10 @@ describe('SearchService', () => {
   let mockNoiRepository: DeepMocked<Repository<NoticeOfIntent>>;
   let mockPlanningReviewRepository: DeepMocked<Repository<PlanningReview>>;
   let mockCovenantRepository: DeepMocked<Repository<Covenant>>;
+  let mockApplicationSubmissionSearchView: DeepMocked<
+    Repository<ApplicationSubmissionSearchView>
+  >;
+  let mockLocalGovernment: DeepMocked<Repository<LocalGovernment>>;
 
   const fakeFileNumber = 'fake';
 
@@ -22,6 +28,8 @@ describe('SearchService', () => {
     mockNoiRepository = createMock();
     mockPlanningReviewRepository = createMock();
     mockCovenantRepository = createMock();
+    mockApplicationSubmissionSearchView = createMock();
+    mockLocalGovernment = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -41,6 +49,14 @@ describe('SearchService', () => {
         {
           provide: getRepositoryToken(Covenant),
           useValue: mockCovenantRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationSubmissionSearchView),
+          useValue: mockApplicationSubmissionSearchView,
+        },
+        {
+          provide: getRepositoryToken(LocalGovernment),
+          useValue: mockLocalGovernment,
         },
       ],
     }).compile();

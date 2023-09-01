@@ -36,6 +36,21 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  async downloadFile(uuid: string) {
+    const res = await this.applicationDocumentService.downloadFile(uuid);
+    if (res) {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = res.url;
+      downloadLink.download = res.url.split('/').pop()!;
+      if (window.webkitURL == null) {
+        downloadLink.onclick = (event: MouseEvent) => document.body.removeChild(<Node>event.target);
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+      }
+      downloadLink.click();
+    }
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

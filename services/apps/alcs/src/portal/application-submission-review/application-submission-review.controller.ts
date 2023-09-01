@@ -265,7 +265,9 @@ export class ApplicationSubmissionReviewController {
 
     if (!validationResult.application) {
       throw new BaseServiceException(
-        `Invalid application found during LG Submission ${application.fileNumber}`,
+        `Invalid application found during LG Submission ${
+          application.fileNumber
+        } ${validationResult.errors.toString()}`,
       );
     }
 

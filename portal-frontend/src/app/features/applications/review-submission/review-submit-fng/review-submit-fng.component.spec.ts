@@ -11,6 +11,7 @@ import { ApplicationSubmissionService } from '../../../../services/application-s
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 
 import { ReviewSubmitFngComponent } from './review-submit-fng.component';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 describe('ReviewSubmitFngComponent', () => {
   let component: ReviewSubmitFngComponent;
@@ -18,6 +19,7 @@ describe('ReviewSubmitFngComponent', () => {
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockToastService: DeepMocked<ToastService>;
   let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
 
   let applicationPipe = new BehaviorSubject<ApplicationSubmissionDto | undefined>(undefined);
@@ -29,6 +31,7 @@ describe('ReviewSubmitFngComponent', () => {
       undefined
     );
     mockAppDocumentService = createMock();
+    mockToastService = createMock();
     mockPdfGenerationService = createMock();
     mockAppSubmissionService = createMock();
 
@@ -49,6 +52,10 @@ describe('ReviewSubmitFngComponent', () => {
         {
           provide: PdfGenerationService,
           useValue: mockPdfGenerationService,
+        },
+        {
+          provide: ToastService,
+          useValue: mockToastService,
         },
       ],
       declarations: [ReviewSubmitFngComponent],

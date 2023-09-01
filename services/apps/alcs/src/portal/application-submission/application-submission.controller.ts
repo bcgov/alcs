@@ -155,12 +155,13 @@ export class ApplicationSubmissionController {
       );
 
     if (
-      !submission.status ||
-      ![
-        SUBMISSION_STATUS.INCOMPLETE.toString(),
-        SUBMISSION_STATUS.WRONG_GOV.toString(),
-        SUBMISSION_STATUS.IN_PROGRESS.toString(),
-      ].includes(submission.status.statusTypeCode)
+      !submission.isDraft &&
+      (!submission.status ||
+        ![
+          SUBMISSION_STATUS.INCOMPLETE.toString(),
+          SUBMISSION_STATUS.WRONG_GOV.toString(),
+          SUBMISSION_STATUS.IN_PROGRESS.toString(),
+        ].includes(submission.status.statusTypeCode))
     ) {
       throw new ServiceValidationException('Not allowed to update submission');
     }

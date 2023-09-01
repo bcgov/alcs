@@ -97,6 +97,8 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           this.hasSubmittedNotice.disable();
         }
 
+        this.requiresNoticeOfWork = !!noiSubmission.soilHasSubmittedNotice;
+
         this.form.patchValue({
           isFollowUp: formatBooleanToString(noiSubmission.soilIsFollowUp),
           followUpIds: noiSubmission.soilFollowUpIDs,

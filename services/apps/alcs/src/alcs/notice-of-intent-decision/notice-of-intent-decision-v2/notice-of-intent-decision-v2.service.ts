@@ -98,6 +98,7 @@ export class NoticeOfIntentDecisionV2Service {
         },
         conditions: {
           type: true,
+          components: true,
         },
       },
     });

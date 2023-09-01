@@ -18,7 +18,6 @@ export class SearchBarComponent {
   async onSearch() {
     try {
       const searchResult = await this.searchService.fetch(this.searchText);
-
       if (!searchResult || searchResult.length < 1) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         return;

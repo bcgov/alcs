@@ -266,6 +266,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecision,
         ApplicationPortalDecisionDto,
         forMember(
+          (ad) => ad.date,
+          mapFrom((a) => a.date?.getTime()),
+        ),
+        forMember(
           (a) => a.reconsiders,
           mapFrom((dec) =>
             dec.reconsiders

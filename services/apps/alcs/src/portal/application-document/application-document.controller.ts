@@ -73,6 +73,20 @@ export class ApplicationDocumentController {
     return { url };
   }
 
+  @Get('/:uuid/download')
+  async download(@Param('uuid') fileUuid: string, @Req() req) {
+    const document = await this.applicationDocumentService.get(fileUuid);
+
+    //TODO: How do we know which documents applicant can access?
+    // await this.applicationSubmissionService.verifyAccess(
+    //   document.applicationUuid,
+    //   req.user.entity,
+    // );
+
+    const url = await this.applicationDocumentService.getDownloadUrl(document);
+    return { url };
+  }
+
   @Patch('/application/:fileNumber')
   async update(
     @Param('fileNumber') fileNumber: string,

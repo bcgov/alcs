@@ -113,7 +113,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.areComponentsDirty)) {
       const isFollowUp = this.isFollowUp.getRawValue();
       const soilFollowUpIDs = this.followUpIDs.getRawValue();
       const purpose = this.purpose.getRawValue();

@@ -12,6 +12,7 @@ import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-submission.component';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -42,6 +43,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
+    private toastService: ToastService,
     private pdfGenerationService: PdfGenerationService
   ) {}
 
@@ -130,6 +132,8 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
         });
       }
     }, 5);
+
+    this.toastService.showErrorToast('Please correct all errors before submitting the form');
 
     return contactInfoValid && resolutionValid && attachmentsValid;
   }

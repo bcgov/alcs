@@ -117,12 +117,26 @@ describe('ApplicationDocumentController', () => {
     );
   });
 
-  it('should call through for download', async () => {
+  it('should call through for open', async () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
 
     const res = await controller.open('fake-uuid', {
+      user: {
+        entity: {},
+      },
+    });
+
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for download', async () => {
+    const fakeUrl = 'fake-url';
+    appDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    appDocumentService.get.mockResolvedValue(mockDocument);
+
+    const res = await controller.download('fake-uuid', {
       user: {
         entity: {},
       },
