@@ -8,6 +8,7 @@ import { AuthorizationModule } from '../../common/authorization/authorization.mo
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
+import { ParcelOwnershipType } from '../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
@@ -15,7 +16,6 @@ import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwnerController } from './application-owner/application-owner.controller';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationOwnerService } from './application-owner/application-owner.service';
-import { ApplicationParcelOwnershipType } from './application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
 import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
@@ -31,7 +31,7 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
       ApplicationSubmission,
       ApplicationSubmissionStatusType,
       ApplicationParcel,
-      ApplicationParcelOwnershipType,
+      ParcelOwnershipType,
       ApplicationOwner,
       OwnerType,
       NaruSubtype,

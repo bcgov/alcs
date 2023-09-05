@@ -1,0 +1,60 @@
+<ng-template #header>
+  <div class="header">
+    <h6 *ngIf="notificationSubmission">Notice of Intent ID: {{ notificationSubmission.fileNumber }} | {{ notificationSubmission.type }}</h6>
+    <div class="header-btn-wrapper">
+      <button
+        *ngIf="notificationSubmission?.fileNumber && cdkStepper.selectedIndex === steps.ReviewAndSubmit"
+        mat-flat-button
+        color="primary"
+        (click)="onDownloadPdf(notificationSubmission?.fileNumber)"
+      >
+        Download PDF
+      </button>
+      <div class="change-app-type-btn-wrapper">
+        <button mat-flat-button color="accent" (click)="onChangeSubmissionType()">Change SRW Type</button>
+        <mat-icon
+          color="accent"
+          matTooltip="Changing application type will remove some inputs from your saved progress"
+        >
+          help_outline
+        </mat-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<app-custom-stepper
+  class="edit-application"
+  #cdkStepper
+  (selectionChange)="onStepChange($event)"
+  (beforeSwitchStep)="switchStep($event)"
+>
+  <cdk-step label="Parcel Details">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Parcel"></div>
+  </cdk-step>
+  <cdk-step label="Identify Transferees">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Transferees"></div>
+  </cdk-step>
+  <cdk-step label="Primary Contact">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.PrimaryContact"></div>
+  </cdk-step>
+  <cdk-step label="Government">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Government"></div>
+  </cdk-step>
+  <cdk-step label="Purpose of SRW">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="notificationSubmission && cdkStepper.selectedIndex === steps.Proposal"></div>
+  </cdk-step>
+  <cdk-step label="Optional Attachments">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Attachments"></div>
+  </cdk-step>
+  <cdk-step label="Review & Submit">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit"></div>
+  </cdk-step>
+</app-custom-stepper>

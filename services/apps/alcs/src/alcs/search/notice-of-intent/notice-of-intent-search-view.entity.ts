@@ -7,7 +7,7 @@ import {
   ViewEntity,
 } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { NoticeOfIntentType } from '../../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { NoticeOfIntentType } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 

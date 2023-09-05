@@ -8,10 +8,8 @@ import {
   IsString,
 } from 'class-validator';
 import { NoticeOfIntentDocumentDto } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
-import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import { ParcelOwnershipTypeDto } from '../../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { NoticeOfIntentOwnerDto } from '../notice-of-intent-owner/notice-of-intent-owner.dto';
-
-export class NoticeOfIntentParcelOwnershipTypeDto extends BaseCodeDto {}
 
 export class NoticeOfIntentParcelDto {
   @AutoMap()
@@ -53,7 +51,7 @@ export class NoticeOfIntentParcelDto {
   @AutoMap(() => String)
   crownLandOwnerType?: string | null;
 
-  ownershipType?: NoticeOfIntentParcelOwnershipTypeDto;
+  ownershipType?: ParcelOwnershipTypeDto;
 
   @AutoMap(() => String)
   parcelType: string;

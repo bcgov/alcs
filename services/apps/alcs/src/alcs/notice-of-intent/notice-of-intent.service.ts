@@ -26,7 +26,7 @@ import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { CodeService } from '../code/code.service';
 import { LocalGovernmentService } from '../local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';

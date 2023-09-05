@@ -88,6 +88,22 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/notice-of-intents/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
   },
+  {
+    title: 'View SRW',
+    path: 'notification/:fileId',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/notifications/view-submission/view-notification-submission.module').then(
+        (m) => m.ViewNotificationSubmissionModule
+      ),
+  },
+  {
+    title: 'Edit SRW',
+    path: 'notification/:fileId/edit',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./features/notifications/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
+  },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 

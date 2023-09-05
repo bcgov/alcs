@@ -9,7 +9,7 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
-import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { CodeModule } from '../code/code.module';
 import { LocalGovernmentModule } from '../local-government/local-government.module';
 import { NoticeOfIntentDocumentController } from './notice-of-intent-document/notice-of-intent-document.controller';
