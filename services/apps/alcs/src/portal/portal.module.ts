@@ -18,6 +18,7 @@ import { NoticeOfIntentSubmissionDraftModule } from './notice-of-intent-submissi
 import { NoticeOfIntentSubmissionModule } from './notice-of-intent-submission/notice-of-intent-submission.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
+import { NotificationSubmissionModule } from './notification-submission/notification-submission.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
     PortalNoticeOfIntentDocumentModule,
     NoticeOfIntentSubmissionDraftModule,
     PortalNoticeOfIntentDecisionModule,
+    NotificationSubmissionModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
@@ -51,6 +53,7 @@ import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
       { path: 'portal', module: PortalNoticeOfIntentDocumentModule },
       { path: 'portal', module: NoticeOfIntentSubmissionDraftModule },
       { path: 'portal', module: PortalNoticeOfIntentDecisionModule },
+      { path: 'portal', module: NotificationSubmissionModule },
     ]),
   ],
   controllers: [CodeController],

@@ -15,7 +15,7 @@ import { Base } from '../../common/entities/base.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
-import { NoticeOfIntentType } from '../code/application-code/notice-of-intent-type/notice-of-intent-type.entity';
+import { NoticeOfIntentType } from './notice-of-intent-type/notice-of-intent-type.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntentDocument } from './notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';

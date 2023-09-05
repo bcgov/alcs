@@ -59,6 +59,15 @@ ul {
   margin-bottom: rem(8);
 }
 
+.srw-list {
+  margin-left: rem(-24);
+  margin-bottom: 0;
+
+  li {
+    margin: 16px 0;
+  }
+}
+
 .dialog-container {
   display: flex;
   flex-direction: column;

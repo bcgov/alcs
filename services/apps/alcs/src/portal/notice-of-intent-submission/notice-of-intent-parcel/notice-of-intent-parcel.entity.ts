@@ -10,10 +10,10 @@ import {
 import { NoticeOfIntentDocumentDto } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocument } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { Base } from '../../../common/entities/base.entity';
+import { ParcelOwnershipType } from '../../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from '../notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission.entity';
-import { NoticeOfIntentParcelOwnershipType } from './notice-of-intent-parcel-ownership-type/notice-of-intent-parcel-ownership-type.entity';
 
 @Entity()
 export class NoticeOfIntentParcel extends Base {
@@ -107,8 +107,8 @@ export class NoticeOfIntentParcel extends Base {
   ownershipTypeCode?: string | null;
 
   @AutoMap()
-  @ManyToOne(() => NoticeOfIntentParcelOwnershipType)
-  ownershipType: NoticeOfIntentParcelOwnershipType;
+  @ManyToOne(() => ParcelOwnershipType)
+  ownershipType: ParcelOwnershipType;
 
   @AutoMap(() => Boolean)
   @Column({

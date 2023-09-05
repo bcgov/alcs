@@ -6,6 +6,7 @@ import { ApplicationSubmissionService } from '../../services/application-submiss
 import { ApplicationTypeDto, NoticeOfIntentTypeDto, SubmissionTypeDto } from '../../services/code/code.dto';
 import { CodeService } from '../../services/code/code.service';
 import { NoticeOfIntentSubmissionService } from '../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NotificationSubmissionService } from '../../services/notification-submission/notification-submission.service';
 import { scrollToElement } from '../../shared/utils/scroll-helper';
 
 export enum ApplicationCreateDialogStepsEnum {
@@ -13,6 +14,7 @@ export enum ApplicationCreateDialogStepsEnum {
   applicationType = 1,
   prescribedBody = 2,
   noticeOfIntentType = 3,
+  srwType = 4,
 }
 
 @Component({
@@ -43,6 +45,7 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
     private codeService: CodeService,
     private appSubmissionService: ApplicationSubmissionService,
     private noiSubmissionService: NoticeOfIntentSubmissionService,
+    private srwSubmissionService: NotificationSubmissionService,
     private router: Router
   ) {}
 
@@ -77,10 +80,18 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
   }
 
   async onSubmitNoi() {
-    if (this.selectedAppType && this.selectedAppType.code === 'EXCL') {
-      this.currentStep++;
-    } else {
-      await this.createNoi();
+    const res = await this.noiSubmissionService.create(this.selectedNoiType!.code);
+    if (res) {
+      await this.router.navigateByUrl(`/notice-of-intent/${res.fileId}/edit`);
+      this.dialogRef.close(true);
+    }
+  }
+
+  async onSubmitSrw() {
+    const res = await this.srwSubmissionService.create();
+    if (res) {
+      await this.router.navigateByUrl(`/notification/${res.fileId}/edit`);
+      this.dialogRef.close(true);
     }
   }
 
@@ -92,14 +103,6 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
     const res = await this.appSubmissionService.create(this.selectedAppType!.code, this.prescribedBody);
     if (res) {
       await this.router.navigateByUrl(`/application/${res.fileId}/edit`);
-      this.dialogRef.close(true);
-    }
-  }
-
-  private async createNoi() {
-    const res = await this.noiSubmissionService.create(this.selectedNoiType!.code);
-    if (res) {
-      await this.router.navigateByUrl(`/notice-of-intent/${res.fileId}/edit`);
       this.dialogRef.close(true);
     }
   }
@@ -159,6 +162,8 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
   onConfirmSubmissionType() {
     if (this.selectedSubmissionType && this.selectedSubmissionType.code === 'APP') {
       this.currentStep = this.steps.applicationType;
+    } else if (this.selectedSubmissionType && this.selectedSubmissionType.code === 'SRW') {
+      this.currentStep = this.steps.srwType;
     } else {
       this.currentStep = this.steps.noticeOfIntentType;
     }

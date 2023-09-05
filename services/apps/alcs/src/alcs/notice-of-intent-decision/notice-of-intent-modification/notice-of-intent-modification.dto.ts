@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
-import { NoticeOfIntentTypeDto } from '../../code/application-code/notice-of-intent-type/notice-of-intent-type.dto';
+import { NoticeOfIntentTypeDto } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
 import { LocalGovernmentDto } from '../../local-government/local-government.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';

@@ -10,10 +10,10 @@ import {
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
+import { ParcelOwnershipType } from '../../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
 import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
 
 @Entity()
 export class ApplicationParcel extends Base {
@@ -117,8 +117,8 @@ export class ApplicationParcel extends Base {
   ownershipTypeCode?: string | null;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationParcelOwnershipType)
-  ownershipType: ApplicationParcelOwnershipType;
+  @ManyToOne(() => ParcelOwnershipType)
+  ownershipType: ParcelOwnershipType;
 
   @AutoMap(() => Boolean)
   @Column({

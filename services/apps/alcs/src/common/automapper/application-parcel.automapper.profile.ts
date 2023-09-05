@@ -5,12 +5,12 @@ import { ApplicationDocumentDto } from '../../alcs/application/application-docum
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationOwnerDto } from '../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationParcelOwnershipType } from '../../portal/application-submission/application-parcel/application-parcel-ownership-type/application-parcel-ownership-type.entity';
-import {
-  ApplicationParcelDto,
-  ApplicationParcelOwnershipTypeDto,
-} from '../../portal/application-submission/application-parcel/application-parcel.dto';
+import { ApplicationParcelDto } from '../../portal/application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
+import {
+  ParcelOwnershipType,
+  ParcelOwnershipTypeDto,
+} from '../entities/parcel-ownership-type/parcel-ownership-type.entity';
 
 @Injectable()
 export class ApplicationParcelProfile extends AutomapperProfile {
@@ -65,8 +65,8 @@ export class ApplicationParcelProfile extends AutomapperProfile {
             if (pd.ownershipType) {
               return this.mapper.map(
                 pd.ownershipType,
-                ApplicationParcelOwnershipType,
-                ApplicationParcelOwnershipTypeDto,
+                ParcelOwnershipType,
+                ParcelOwnershipTypeDto,
               );
             } else {
               return undefined;
@@ -75,11 +75,7 @@ export class ApplicationParcelProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        ApplicationParcelOwnershipType,
-        ApplicationParcelOwnershipTypeDto,
-      );
+      createMap(mapper, ParcelOwnershipType, ParcelOwnershipTypeDto);
     };
   }
 }

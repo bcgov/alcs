@@ -5,6 +5,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 import { NoticeOfIntentSubmissionService } from '../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NotificationSubmissionService } from '../../services/notification-submission/notification-submission.service';
 import { CreateSubmissionDialogComponent } from './create-submission-dialog.component';
 
 describe('CreateSubmissionDialogComponent', () => {
@@ -26,6 +27,10 @@ describe('CreateSubmissionDialogComponent', () => {
         },
         {
           provide: NoticeOfIntentSubmissionService,
+          useValue: {},
+        },
+        {
+          provide: NotificationSubmissionService,
           useValue: {},
         },
       ],

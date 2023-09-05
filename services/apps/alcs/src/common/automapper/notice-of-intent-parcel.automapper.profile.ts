@@ -5,12 +5,12 @@ import { NoticeOfIntentDocumentDto } from '../../alcs/notice-of-intent/notice-of
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentOwnerDto } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentParcelOwnershipType } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel-ownership-type/notice-of-intent-parcel-ownership-type.entity';
-import {
-  NoticeOfIntentParcelDto,
-  NoticeOfIntentParcelOwnershipTypeDto,
-} from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.dto';
+import { NoticeOfIntentParcelDto } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcel } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
+import {
+  ParcelOwnershipType,
+  ParcelOwnershipTypeDto,
+} from '../entities/parcel-ownership-type/parcel-ownership-type.entity';
 
 @Injectable()
 export class NoticeOfIntentParcelProfile extends AutomapperProfile {
@@ -65,8 +65,8 @@ export class NoticeOfIntentParcelProfile extends AutomapperProfile {
             if (pd.ownershipType) {
               return this.mapper.map(
                 pd.ownershipType,
-                NoticeOfIntentParcelOwnershipType,
-                NoticeOfIntentParcelOwnershipTypeDto,
+                ParcelOwnershipType,
+                ParcelOwnershipTypeDto,
               );
             } else {
               return undefined;
@@ -75,11 +75,7 @@ export class NoticeOfIntentParcelProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        NoticeOfIntentParcelOwnershipType,
-        NoticeOfIntentParcelOwnershipTypeDto,
-      );
+      createMap(mapper, ParcelOwnershipType, ParcelOwnershipTypeDto);
     };
   }
 }
