@@ -3,7 +3,6 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { User } from '../../../user/user.entity';
-import { filterUndefined } from '../../../utils/undefined';
 import { NotificationTransfereeService } from '../notification-transferee/notification-transferee.service';
 import { NotificationParcelUpdateDto } from './notification-parcel.dto';
 import { NotificationParcel } from './notification-parcel.entity';
@@ -58,11 +57,7 @@ export class NotificationParcelService {
       parcel.legalDescription = updateDto.legalDescription;
       parcel.mapAreaHectares = updateDto.mapAreaHectares;
       parcel.civicAddress = updateDto.civicAddress;
-      parcel.isConfirmedByApplicant = filterUndefined(
-        updateDto.isConfirmedByApplicant,
-        parcel.isConfirmedByApplicant,
-      );
-      parcel.crownLandOwnerType = updateDto.crownLandOwnerType;
+      parcel.ownershipTypeCode = updateDto.ownershipTypeCode;
 
       updatedParcels.push(parcel);
     }

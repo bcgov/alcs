@@ -32,12 +32,11 @@ export class NotificationParcelService {
     return undefined;
   }
 
-  async create(notificationSubmissionUuid: string, ownerUuid?: string) {
+  async create(notificationSubmissionUuid: string) {
     try {
       return await firstValueFrom(
         this.httpClient.post<NotificationParcelDto>(`${this.serviceUrl}`, {
-          noticeOfIntentSubmissionUuid: notificationSubmissionUuid,
-          ownerUuid,
+          notificationSubmissionUuid: notificationSubmissionUuid,
         })
       );
     } catch (e) {

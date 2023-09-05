@@ -1,0 +1,136 @@
+<form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
+  <div class="type">
+    <label>Select ownership type:</label>
+    <div class="warning">
+      The answer to the following question will change the rest of the notice of intent form. Do not change this answer
+      once selected.
+    </div>
+    <mat-button-toggle-group
+      class="input"
+      (change)="onChangeParcelType($event)"
+      id="parcelType"
+      formControlName="parcelType"
+    >
+      <mat-button-toggle
+        value="{{ PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE }}"
+        [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
+        >Fee Simple</mat-button-toggle
+      >
+      <mat-button-toggle
+        value="{{ PARCEL_OWNERSHIP_TYPES.CROWN }}"
+        [ngClass]="{ 'error-outline': parcelType.invalid && (parcelType.dirty || parcelType.touched) }"
+        >Crown</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+    <div *ngIf="parcelType.invalid && (parcelType.dirty || parcelType.touched)" class="field-error">
+      <mat-icon>warning</mat-icon>
+      <div *ngIf="parcelType.errors?.['required']">This field is required</div>
+    </div>
+  </div>
+
+  <h5>Parcel Lookup</h5>
+  <div class="form-row">
+    <div class="full-row pmbc-search">
+      <label *ngIf="!isCrownLand" for="lookup-pid">Enter PID to auto-fill parcel details</label>
+      <label *ngIf="isCrownLand" for="lookup-pid">Enter PID or PIN to auto-fill parcel details</label>
+      <div class="subtext">Please ensure the auto-filled information is accurate by comparing with your records</div>
+      <div>
+        <div class="lookup-pid-fields">
+          <mat-form-field class="lookup-search-by" *ngIf="isCrownLand" appearance="outline">
+            <mat-select [formControl]="searchBy" (valueChange)="onChangeSearchBy($event)" placeholder="Search by ...">
+              <mat-option value="pid">Search by PID</mat-option>
+              <mat-option value="pin">Search by PIN</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="lookup-input" appearance="outline">
+            <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" formControlName="pidPin" />
+          </mat-form-field>
+          <button
+            class="lookup-search-button"
+            mat-flat-button
+            color="primary"
+            (click)="onSearch()"
+            [disabled]="!parcelType.getRawValue() || _disabled || (!!isCrownLand && !searchBy.getRawValue())"
+          >
+            Search
+          </button>
+        </div>
+        <div class="lookup-bottom-row">
+          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
+            Reset
+          </button>
+          <span class="float-right">Powered by PMBC!</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <label for="legal-description">Legal Description</label>
+      <div class="subtext">Can be found on the parcel's Certificate of Title</div>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input
+          id="legal-description"
+          matInput
+          placeholder="Enter legal description"
+          formControlName="legalDescription"
+        />
+      </mat-form-field>
+      <div *ngIf="legalDescription.invalid && (legalDescription.dirty || legalDescription.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="legalDescription.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div>
+      <label for="map-area">Approx. Map Area (Hectares)</label>
+      <div class="subtext">The area of the entire parcel in hectares, not just the area under application.</div>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input
+          id="map-area"
+          mask="separator.2"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          matInput
+          placeholder="Enter parcel size"
+          formControlName="mapArea"
+        />
+      </mat-form-field>
+      <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="mapArea.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+
+    <div>
+      <label for="pid">PID <span *ngIf="isCrownLand">(optional)</span></label>
+      <div class="subtext">A unique nine-digit number found on the parcel's Certificate of Title</div>
+      <mat-form-field appearance="outline">
+        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength="11" mask="000-000-000" />
+      </mat-form-field>
+      <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="pid.errors?.['required']">This field is required</div>
+        <div *ngIf="pid.errors?.['mask']">Invalid format</div>
+      </div>
+    </div>
+
+    <div *ngIf="isCrownLand">
+      <label for="pin">PIN (optional)</label>
+      <div class="subtext">Unique numeric identifier for Crown land parcels</div>
+      <mat-form-field appearance="outline">
+        <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
+      </mat-form-field>
+    </div>
+
+    <div class="full-row">
+      <label for="civicAddress">Civic Address</label>
+      <mat-form-field class="full-width-input" appearance="outline">
+        <input id="civicAddress" matInput placeholder="Enter Address" formControlName="civicAddress" />
+      </mat-form-field>
+      <div *ngIf="civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="civicAddress.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -22,7 +22,6 @@ describe('NotificationParcelService', () => {
     pin: 'mock_pin',
     legalDescription: 'mock_legalDescription',
     mapAreaHectares: 1,
-    isConfirmedByApplicant: true,
     notificationSubmissionUuid: mockFileNumber,
     ownershipTypeCode: 'mock_ownershipTypeCode',
   });

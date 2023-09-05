@@ -31,7 +31,15 @@
 >
   <cdk-step label="Parcel Details">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.Parcel"></div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Parcel">
+      <app-notification-parcel-details
+        [$notificationSubmission]='$notificationSubmission'
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (componentInitialized)="onParcelDetailsInitialized()"
+        (exit)="onExit()">
+      </app-notification-parcel-details>
+    </div>
   </cdk-step>
   <cdk-step label="Identify Transferees">
     <ng-container *ngTemplateOutlet="header"></ng-container>
