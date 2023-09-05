@@ -4,18 +4,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { Repository, UpdateResult } from 'typeorm';
-import { Notification } from './notification.entity';
-import { NotificationService } from './notification.service';
+import { Message } from './message.entity';
+import { MessageService } from './message.service';
 
-describe('NotificationService', () => {
-  let service: NotificationService;
-  let mockRepository: DeepMocked<Repository<Notification>>;
-  let fakeNotification: Notification;
+describe('MessageService', () => {
+  let service: MessageService;
+  let mockRepository: DeepMocked<Repository<Message>>;
+  let mockmessage: Message;
 
   beforeEach(async () => {
-    mockRepository = createMock<Repository<Notification>>();
+    mockRepository = createMock<Repository<Message>>();
 
-    fakeNotification = {
+    mockmessage = new Message({
       createdAt: new Date(),
       targetType: 'application',
       uuid: 'fake-uuid',
@@ -24,13 +24,13 @@ describe('NotificationService', () => {
       link: 'link goes here',
       title: 'title goes here',
       read: false,
-    } as Notification;
+    });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        NotificationService,
+        MessageService,
         {
-          provide: getRepositoryToken(Notification),
+          provide: getRepositoryToken(Message),
           useValue: mockRepository,
         },
         {
@@ -40,28 +40,28 @@ describe('NotificationService', () => {
       ],
     }).compile();
 
-    service = module.get<NotificationService>(NotificationService);
+    service = module.get<MessageService>(MessageService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should call find when loading notifications', async () => {
-    mockRepository.find.mockResolvedValue([fakeNotification]);
+  it('should call find when loading messages', async () => {
+    mockRepository.find.mockResolvedValue([mockmessage]);
 
-    const notifications = await service.list('fake-user');
-    expect(notifications.length).toEqual(1);
-    expect(notifications[0]).toEqual(fakeNotification);
+    const messages = await service.list('fake-user');
+    expect(messages.length).toEqual(1);
+    expect(messages[0]).toEqual(mockmessage);
   });
 
   it('should call update with correct uuid when marking read', async () => {
     mockRepository.update.mockResolvedValue({} as UpdateResult);
 
-    await service.markRead(fakeNotification.uuid);
+    await service.markRead(mockmessage.uuid);
     expect(mockRepository.update).toHaveBeenCalledTimes(1);
     expect(mockRepository.update.mock.calls[0][0]).toEqual({
-      uuid: fakeNotification.uuid,
+      uuid: mockmessage.uuid,
     });
   });
 
@@ -84,7 +84,7 @@ describe('NotificationService', () => {
   });
 
   it('should call findOne when doing get', async () => {
-    mockRepository.findOne.mockResolvedValue({} as Notification);
+    mockRepository.findOne.mockResolvedValue({} as Message);
 
     await service.get('fake-uuid', 'fake-receiever');
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);

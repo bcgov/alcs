@@ -9,7 +9,7 @@ import {
 } from '../../../test/mocks/mockEntities';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { User } from '../../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentService } from './comment.service';
@@ -19,7 +19,7 @@ describe('CommentService', () => {
   let service: CommentService;
   let mockCommentRepository: DeepMocked<Repository<Comment>>;
   let mockCommentMentionService: DeepMocked<CommentMentionService>;
-  let mockNotificationService: DeepMocked<NotificationService>;
+  let mockNotificationService: DeepMocked<MessageService>;
   let mockCardService: DeepMocked<CardService>;
 
   let comment;
@@ -27,7 +27,7 @@ describe('CommentService', () => {
   beforeEach(async () => {
     mockCommentRepository = createMock<Repository<Comment>>();
     mockCommentMentionService = createMock<CommentMentionService>();
-    mockNotificationService = createMock<NotificationService>();
+    mockNotificationService = createMock<MessageService>();
     mockCardService = createMock<CardService>();
 
     mockCommentMentionService.updateMentions.mockResolvedValue([]);
@@ -47,7 +47,7 @@ describe('CommentService', () => {
           useValue: mockCommentMentionService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: mockNotificationService,
         },
         { provide: CardService, useValue: mockCardService },

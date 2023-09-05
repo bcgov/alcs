@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CodeModule } from '../code/code.module';
 import { CardProfile } from '../../common/automapper/card.automapper.profile';
-import { NotificationModule } from '../notification/notification.module';
+import { MessageModule } from '../message/message.module';
 import { CardHistory } from './card-history/card-history.entity';
 import { CardSubscriber } from './card-history/card.subscriber';
 import { CardStatus } from './card-status/card-status.entity';
@@ -27,7 +27,7 @@ import { CardService } from './card.service';
       CardHistory,
     ]),
     CodeModule,
-    NotificationModule,
+    MessageModule,
   ],
   controllers: [CardSubtaskController, CardController],
   providers: [

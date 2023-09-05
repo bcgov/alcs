@@ -1,7 +1,7 @@
 import { BullModule } from '@nestjs/bull';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ApplicationModule } from '../../alcs/application/application.module';
-import { NotificationModule } from '../../alcs/notification/notification.module';
+import { MessageModule } from '../../alcs/message/message.module';
 import { EmailModule } from '../../providers/email/email.module';
 import { BullConfigService } from '../bullConfig.service';
 import { ApplicationExpiryConsumer } from './applicationExpiry.consumer';
@@ -21,7 +21,7 @@ import { QUEUES, SchedulerService } from './scheduler.service';
     }),
     EmailModule,
     ApplicationModule,
-    NotificationModule,
+    MessageModule,
   ],
   providers: [
     SchedulerService,

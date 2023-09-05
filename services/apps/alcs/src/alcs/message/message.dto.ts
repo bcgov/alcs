@@ -1,6 +1,6 @@
 import { User } from '../../user/user.entity';
 
-export class NotificationDto {
+export class MessageDto {
   uuid: string;
   title: string;
   body: string;
@@ -10,7 +10,7 @@ export class NotificationDto {
   link: string;
 }
 
-export class CreateNotificationServiceDto {
+export class CreateMessageServiceDto {
   actor: User;
   receiverUuid: string;
   body: string;

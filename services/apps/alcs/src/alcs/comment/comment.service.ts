@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { User } from '../../user/user.entity';
 import { Comment } from './comment.entity';
 import { CommentMention } from './mention/comment-mention.entity';
@@ -25,7 +25,7 @@ export class CommentService {
     private commentRepository: Repository<Comment>,
     private cardService: CardService,
     private commentMentionService: CommentMentionService,
-    private notificationService: NotificationService,
+    private notificationService: MessageService,
   ) {}
 
   async fetch(cardUuid: string) {

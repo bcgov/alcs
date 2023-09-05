@@ -18,7 +18,7 @@ import { NoticeOfIntentDecisionModule } from './notice-of-intent-decision/notice
 import { NoticeOfIntentTimelineModule } from './notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.module';
 import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
-import { NotificationModule } from './notification/notification.module';
+import { MessageModule } from './message/message.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
@@ -28,7 +28,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     ImportModule,
     ApplicationModule,
     CommentModule,
-    NotificationModule,
+    MessageModule,
     BoardModule,
     CodeModule,
     PlanningReviewModule,
@@ -48,7 +48,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
-      { path: 'alcs', module: NotificationModule },
+      { path: 'alcs', module: MessageModule },
       { path: 'alcs', module: BoardModule },
       { path: 'alcs', module: CodeModule },
       { path: 'alcs', module: PlanningReviewModule },

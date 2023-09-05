@@ -9,8 +9,8 @@ import {
 import { User } from '../../user/user.entity';
 
 @Entity()
-export class Notification {
-  constructor(data?: Partial<Notification>) {
+export class Message {
+  constructor(data?: Partial<Message>) {
     if (data) {
       Object.assign(this, data);
     }

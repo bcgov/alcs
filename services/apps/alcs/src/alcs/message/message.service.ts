@@ -6,19 +6,19 @@ import { IConfig } from 'config';
 import { LessThan, Repository } from 'typeorm';
 import { Card } from '../card/card.entity';
 import { User } from '../../user/user.entity';
-import { CreateNotificationServiceDto } from './notification.dto';
-import { Notification } from './notification.entity';
+import { CreateMessageServiceDto } from './message.dto';
+import { Message } from './message.entity';
 
 @Injectable()
-export class NotificationService {
+export class MessageService {
   constructor(
-    @InjectRepository(Notification)
-    private notificationRepository: Repository<Notification>,
+    @InjectRepository(Message)
+    private messageRepository: Repository<Message>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
   ) {}
 
   async list(userUuid: string) {
-    return await this.notificationRepository.find({
+    return await this.messageRepository.find({
       where: {
         receiver: {
           uuid: userUuid,
@@ -37,7 +37,7 @@ export class NotificationService {
       );
     }
 
-    return this.notificationRepository.findOne({
+    return this.messageRepository.findOne({
       where: {
         uuid,
         receiverUuid,
@@ -45,15 +45,15 @@ export class NotificationService {
     });
   }
 
-  async createNotification(notificationDto: CreateNotificationServiceDto) {
-    const notification = new Notification({
-      ...notificationDto,
+  async create(messageServiceDto: CreateMessageServiceDto) {
+    const notification = new Message({
+      ...messageServiceDto,
     });
-    await this.notificationRepository.save(notification);
+    await this.messageRepository.save(notification);
   }
 
   async markRead(uuid: string) {
-    return await this.notificationRepository.update(
+    return await this.messageRepository.update(
       {
         uuid,
       },
@@ -64,7 +64,7 @@ export class NotificationService {
   }
 
   async markAllRead(receiverUuid: string) {
-    return await this.notificationRepository.update(
+    return await this.messageRepository.update(
       {
         receiverUuid,
       },
@@ -75,7 +75,7 @@ export class NotificationService {
   }
 
   async cleanUp(olderThan: Date, read = true) {
-    return await this.notificationRepository.delete({
+    return await this.messageRepository.delete({
       createdAt: LessThan(olderThan),
       read,
     });
@@ -94,7 +94,7 @@ export class NotificationService {
       throw new Error('Cannot set notifications without proper card');
     }
 
-    const notification = new Notification({
+    const message = new Message({
       body,
       title: title,
       link: `${frontEnd}/board/${card.board.code}?card=${card.uuid}&type=${card.type.code}`,
@@ -102,6 +102,6 @@ export class NotificationService {
       actor: author,
       receiverUuid,
     });
-    await this.notificationRepository.save(notification);
+    await this.messageRepository.save(message);
   }
 }
