@@ -83,13 +83,13 @@ export class NotificationSubmissionController {
     @Body() updateDto: NotificationSubmissionUpdateDto,
     @Req() req,
   ) {
-    // const noticeOfIntentSubmission = await this.notificationSubmissionService.getByUuid(
+    // const submission = await this.notificationSubmissionService.getByUuid(
     //   uuid,
     //   req.user.entity,
     // );
     //
     // if (
-    //   noticeOfIntentSubmission.status.statusTypeCode !==
+    //   submission.status.statusTypeCode !==
     //     NOI_SUBMISSION_STATUS.IN_PROGRESS &&
     //   overlappingRoles.length === 0
     // ) {
@@ -110,17 +110,17 @@ export class NotificationSubmissionController {
 
   @Post('/:uuid/cancel')
   async cancel(@Param('uuid') uuid: string, @Req() req) {
-    const noticeOfIntentSubmission =
+    const notificationSubmission =
       await this.notificationSubmissionService.getByUuid(uuid, req.user.entity);
 
     // if (
-    //   noticeOfIntentSubmission.status.statusTypeCode !==
+    //   notificationSubmission.status.statusTypeCode !==
     //   NOI_SUBMISSION_STATUS.IN_PROGRESS
     // ) {
     //   throw new BadRequestException('Can only cancel in progress SRWs');
     // }
 
-    await this.notificationSubmissionService.cancel(noticeOfIntentSubmission);
+    await this.notificationSubmissionService.cancel(notificationSubmission);
 
     return {
       cancelled: true,
