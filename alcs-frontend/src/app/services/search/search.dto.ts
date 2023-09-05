@@ -16,11 +16,23 @@ export interface ApplicationSearchResultDto {
 
 export interface NoticeOfIntentSearchResultDto extends ApplicationSearchResultDto {}
 
+export interface NonApplicationSearchResultDto {
+  type: string | null;
+  applicant: string | null;
+  referenceId: string | null;
+  localGovernmentName: string | null;
+  fileNumber: string;
+  boardCode: string | null;
+  class: 'PLAN' | 'COV';
+}
+
 export interface AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
+  nonApplications: NonApplicationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
+  totalNonApplications: number;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {
@@ -28,11 +40,14 @@ export interface AdvancedSearchEntityResponseDto<T> {
   total: number;
 }
 
-export interface SearchRequestDto {
+export interface PagingRequestDto {
   pageSize: number;
   page: number;
   sortField: string;
   sortDirection: string;
+}
+
+export interface SearchRequestDto extends PagingRequestDto {
   fileNumber?: string;
   legacyId?: string;
   name?: string;
@@ -49,6 +64,13 @@ export interface SearchRequestDto {
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
   applicationFileTypes: string[];
+}
+
+export interface NonApplicationsSearchRequestDto extends PagingRequestDto {
+  fileNumber?: string;
+  governmentName?: string;
+  regionCode?: string;
+  name?: string;
 }
 
 export interface SearchResultDto {

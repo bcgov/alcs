@@ -18,31 +18,49 @@ export class SearchResultDto {
   label?: ApplicationTypeDto;
 }
 
+export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV';
+
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
   referenceId: string;
   ownerName?: string;
-  localGovernmentName: string;
+  localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
   status: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
 }
 
 export class NoticeOfIntentSearchResultDto {
   type: ApplicationTypeDto;
   referenceId: string;
   ownerName?: string;
-  localGovernmentName: string;
+  localGovernmentName?: string;
   fileNumber: string;
   boardCode?: string;
   status: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
+}
+
+export class NonApplicationSearchResultDto {
+  type: string | null;
+  applicant: string | null;
+  referenceId: string | null;
+  localGovernmentName: string | null;
+  fileNumber: string;
+  boardCode: string | null;
+  class: SearchEntityClass;
 }
 
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
+  nonApplications: NonApplicationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
+  totalNonApplications: number;
 }
 
 export class AdvancedSearchResultDto<T> {
@@ -50,7 +68,21 @@ export class AdvancedSearchResultDto<T> {
   total: number;
 }
 
-export class SearchRequestDto {
+export class PagingRequestDto {
+  @IsNumber()
+  page: number;
+
+  @IsNumber()
+  pageSize: number;
+
+  @IsString()
+  sortField: string;
+
+  @IsString()
+  sortDirection: 'ASC' | 'DESC';
+}
+
+export class SearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   @MinLength(3)
@@ -118,16 +150,22 @@ export class SearchRequestDto {
 
   @IsArray()
   applicationFileTypes: string[];
+}
 
-  @IsNumber()
-  page: number;
-
-  @IsNumber()
-  pageSize: number;
+export class NonApplicationsSearchRequestDto extends PagingRequestDto {
+  @IsString()
+  @IsOptional()
+  fileNumber?: string;
 
   @IsString()
-  sortField: string;
+  @IsOptional()
+  governmentName?: string;
 
   @IsString()
-  sortDirection: 'ASC' | 'DESC';
+  @IsOptional()
+  regionCode?: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
 }

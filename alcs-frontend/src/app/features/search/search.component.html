@@ -12,13 +12,13 @@
       <div class="column">
         <mat-form-field appearance="outline">
           <mat-label>File ID</mat-label>
-          <input id="fileNumber" matInput placeholder="File ID" formControlName="fileNumber" />
+          <input id="fileNumber" matInput formControlName="fileNumber" />
         </mat-form-field>
       </div>
       <div class="column">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
-          <input id="name" matInput placeholder="File ID" formControlName="name" />
+          <input id="name" matInput formControlName="name" />
         </mat-form-field>
         <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Ministry or Department</div>
       </div>
@@ -29,7 +29,7 @@
     <div class="row">
       <mat-form-field class="column" appearance="outline">
         <mat-label>PID</mat-label>
-        <input id="pid" matInput placeholder="PID" formControlName="pid" />
+        <input id="pid" matInput formControlName="pid" />
       </mat-form-field>
       <mat-form-field class="column" appearance="outline">
         <mat-label>Civic Address</mat-label>
@@ -233,7 +233,7 @@
 <div class="search-fields-wrapper search-result-wrapper">
   <h2 class="search-title">Search Results:</h2>
 
-  <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false">
+  <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
     <mat-tab>
       <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
       <app-application-search-table
@@ -257,7 +257,13 @@
     </mat-tab>
 
     <mat-tab>
-      <ng-template mat-tab-label> Non-Applications: 0 </ng-template>
+      <ng-template mat-tab-label> Non-Applications: {{ nonApplicationsTotal }} </ng-template>
+      <app-non-application-search-table
+        [nonApplications]="nonApplications"
+        [totalCount]="nonApplicationsTotal"
+        (tableChange)="onTableChange($event)"
+      >
+      </app-non-application-search-table>
     </mat-tab>
   </mat-tab-group>
 </div>

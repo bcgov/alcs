@@ -2,18 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 
-import { ApplicationSearchTableComponent } from './application-search-table.component';
+import { NonApplicationSearchTableComponent } from './non-application-search-table.component';
 
-describe('ApplicationSearchTableComponent', () => {
-  let component: ApplicationSearchTableComponent;
-  let fixture: ComponentFixture<ApplicationSearchTableComponent>;
+describe('NonApplicationSearchTableComponent', () => {
+  let component: NonApplicationSearchTableComponent;
+  let fixture: ComponentFixture<NonApplicationSearchTableComponent>;
   let mockRouter: DeepMocked<Router>;
 
   beforeEach(async () => {
     mockRouter = createMock();
-
+    
     await TestBed.configureTestingModule({
-      declarations: [ApplicationSearchTableComponent],
+      declarations: [NonApplicationSearchTableComponent],
       providers: [
         {
           provide: Router,
@@ -22,7 +22,7 @@ describe('ApplicationSearchTableComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationSearchTableComponent);
+    fixture = TestBed.createComponent(NonApplicationSearchTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

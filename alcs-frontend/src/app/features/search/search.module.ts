@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { SearchComponent } from './search.component';
 import { ApplicationSearchTableComponent } from './application-search-table/application-search-table.component';
 import { NoticeOfIntentSearchTableComponent } from './notice-of-intent-search-table/notice-of-intent-search-table.component';
+import { NonApplicationSearchTableComponent } from './non-application-search-table/non-application-search-table.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SearchComponent, ApplicationSearchTableComponent, NoticeOfIntentSearchTableComponent],
+  declarations: [SearchComponent, ApplicationSearchTableComponent, NoticeOfIntentSearchTableComponent, NonApplicationSearchTableComponent],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatTabsModule, MatPaginatorModule],
 })
 export class SearchModule {}

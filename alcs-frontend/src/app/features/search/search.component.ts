@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
@@ -14,6 +15,7 @@ import { ApplicationService } from '../../services/application/application.servi
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
+  NonApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
   SearchRequestDto,
 } from '../../services/search/search.dto';
@@ -24,6 +26,11 @@ import { TableChange } from './search.interface';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
+
+const APPLICATION_TAB_INDEX = 0;
+const NOTICE_OF_INTENT_TAB_INDEX = 1;
+const NON_APPLICATION_TAB_INDEX = 2;
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -34,12 +41,16 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
+  @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
 
   applications: ApplicationSearchResultDto[] = [];
   applicationTotal = 0;
 
   noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   noticeOfIntentTotal = 0;
+
+  nonApplications: NonApplicationSearchResultDto[] = [];
+  nonApplicationsTotal = 0;
 
   isSearchExpanded = false;
   pageIndex = 0;
@@ -133,24 +144,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  // TODO: remove this once the search is complete
-  // async onSelectCard(record: SearchResult) {
-  //   switch (record.class) {
-  //     case 'APP':
-  //       await this.router.navigateByUrl(`/application/${record.referenceId}`);
-  //       break;
-  //     case 'NOI':
-  //       await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
-  //       break;
-  //     case 'COV':
-  //     case 'PLAN':
-  //       await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.type}`);
-  //       break;
-  //     default:
-  //       this.toastService.showErrorToast(`Unable to navigate to ${record.referenceId}`);
-  //   }
-  // }
-
   async onSubmit() {
     await this.onSearch();
   }
@@ -191,9 +184,12 @@ export class SearchComponent implements OnInit, OnDestroy {
     const searchParams = this.getSearchParams();
     const result = await this.searchService.advancedSearchFetch(searchParams);
     this.mapSearchResults(result);
+
+    this.setActiveTab();
   }
 
   getSearchParams(): SearchRequestDto {
+    const resolutionNumberString = this.formatStringSearchParam(this.searchForm.controls.resolutionNumber.value);
     return {
       // pagination
       pageSize: this.itemsPerPage,
@@ -201,22 +197,17 @@ export class SearchComponent implements OnInit, OnDestroy {
       // sorting
       sortField: this.sortField,
       sortDirection: this.sortDirection,
-      // TODO move condition into helper function?
-      fileNumber:
-        this.searchForm.controls.fileNumber.value && this.searchForm.controls.fileNumber.value !== ''
-          ? this.searchForm.controls.fileNumber.value
-          : undefined,
-      legacyId: this.searchForm.controls.legacyId.value ?? undefined,
-      name: this.searchForm.controls.name.value ?? undefined,
-      civicAddress: this.searchForm.controls.civicAddress.value ?? undefined,
-      pid: this.searchForm.controls.pid.value ?? undefined,
+      // search parameters
+      fileNumber: this.formatStringSearchParam(this.searchForm.controls.fileNumber.value),
+      legacyId: this.formatStringSearchParam(this.searchForm.controls.legacyId.value),
+      name: this.formatStringSearchParam(this.searchForm.controls.name.value),
+      civicAddress: this.formatStringSearchParam(this.searchForm.controls.civicAddress.value),
+      pid: this.formatStringSearchParam(this.searchForm.controls.pid.value),
       isIncludeOtherParcels: this.searchForm.controls.isIncludeOtherParcels.value ?? false,
-      resolutionNumber: this.searchForm.controls.resolutionNumber.value
-        ? parseInt(this.searchForm.controls.resolutionNumber.value)
-        : undefined,
+      resolutionNumber: resolutionNumberString ? parseInt(resolutionNumberString) : undefined,
       resolutionYear: this.searchForm.controls.resolutionYear.value ?? undefined,
       portalStatusCode: this.searchForm.controls.portalStatus.value ?? undefined,
-      governmentName: this.searchForm.controls.government.value ?? undefined,
+      governmentName: this.formatStringSearchParam(this.searchForm.controls.government.value),
       regionCode: this.searchForm.controls.region.value ?? undefined,
       dateSubmittedFrom: this.searchForm.controls.dateSubmittedFrom.value
         ? formatDateForApi(this.searchForm.controls.dateSubmittedFrom.value)
@@ -253,6 +244,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.noticeOfIntentTotal = result?.total ?? 0;
   }
 
+  async onNonApplicationSearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchNonApplicationsFetch(searchParams);
+
+    this.nonApplications = result?.data ?? [];
+    this.nonApplicationsTotal = result?.total ?? 0;
+  }
+
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
@@ -265,6 +264,9 @@ export class SearchComponent implements OnInit, OnDestroy {
         break;
       case 'NOI':
         await this.onApplicationSearch();
+        break;
+      case 'NONAPP':
+        await this.onNonApplicationSearch();
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
@@ -291,8 +293,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       searchResult = {
         applications: [],
         noticeOfIntents: [],
+        nonApplications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
+        totalNonApplications: 0,
       };
     }
 
@@ -301,5 +305,30 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.noticeOfIntentTotal = searchResult.totalNoticeOfIntents;
     this.noticeOfIntents = searchResult.noticeOfIntents;
+
+    this.nonApplicationsTotal = searchResult.totalNonApplications;
+    this.nonApplications = searchResult.nonApplications;
+  }
+
+  private setActiveTab() {
+    let maxVal = Math.max(this.applicationTotal, this.noticeOfIntentTotal, this.nonApplicationsTotal);
+    this.tabGroup.selectedIndex =
+      maxVal === this.applicationTotal
+        ? APPLICATION_TAB_INDEX
+        : maxVal === this.noticeOfIntentTotal
+        ? NOTICE_OF_INTENT_TAB_INDEX
+        : NON_APPLICATION_TAB_INDEX;
+  }
+
+  private formatStringSearchParam(value: string | undefined | null) {
+    if (value === undefined || value === null) {
+      return undefined;
+    }
+
+    if (value.trim() === '') {
+      return undefined;
+    } else {
+      return value.trim();
+    }
   }
 }
