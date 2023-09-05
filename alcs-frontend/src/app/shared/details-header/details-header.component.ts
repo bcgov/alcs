@@ -4,10 +4,7 @@ import { Subject } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
-import {
-  ApplicationStatusDto,
-  DEFAULT_NO_STATUS,
-} from '../../services/application/application-submission-status/application-submission-status.dto';
+import { DEFAULT_NO_STATUS } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
@@ -21,12 +18,6 @@ import {
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
-import { NoticeOfIntentStatusDto } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
-
-export enum PARENT_TYPE {
-  APPLICATION = 'application',
-  NOTICE_OF_INTENT = 'notice-of-intent',
-}
 
 @Component({
   selector: 'app-details-header[application]',
@@ -40,7 +31,7 @@ export class DetailsHeaderComponent {
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
-  @Input() parentType: PARENT_TYPE = PARENT_TYPE.APPLICATION;
+  @Input() submissionStatusService?: ApplicationSubmissionStatusService | NoticeOfIntentSubmissionStatusService;
 
   legacyId?: string;
 
@@ -72,26 +63,20 @@ export class DetailsHeaderComponent {
         this.legacyId = application.legacyId;
       }
 
-      if (this.showStatus) {
-        if (this.parentType === PARENT_TYPE.APPLICATION) {
-          this.applicationStatusService
-            .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-            .then((res) => this.setStatus(res.status))
-            .catch((e) => {
-              console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
-              this.currentStatus = DEFAULT_NO_STATUS;
-            });
-        }
-
-        if (this.parentType === PARENT_TYPE.NOTICE_OF_INTENT) {
-          this.noticeOfIntentStatusService
-            .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-            .then((res) => this.setStatus(res.status))
-            .catch((e) => {
-              console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
-              this.currentStatus = DEFAULT_NO_STATUS;
-            });
-        }
+      if (this.showStatus && this.submissionStatusService) {
+        this.submissionStatusService
+          .fetchCurrentStatusByFileNumber(application.fileNumber, false)
+          .then((res) => {
+            this.currentStatus = {
+              label: res.status.label,
+              backgroundColor: res.status.alcsBackgroundColor,
+              textColor: res.status.alcsColor,
+            };
+          })
+          .catch((e) => {
+            console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
+            this.currentStatus = DEFAULT_NO_STATUS;
+          });
       }
     }
   }
@@ -122,11 +107,7 @@ export class DetailsHeaderComponent {
   isNOI = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
-  constructor(
-    private router: Router,
-    private applicationStatusService: ApplicationSubmissionStatusService,
-    private noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService
-  ) {}
+  constructor(private router: Router) {}
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.boardCode;
@@ -161,13 +142,5 @@ export class DetailsHeaderComponent {
     result.push(...mappedReconCards);
 
     this.linkedCards = result;
-  }
-
-  private setStatus(status: ApplicationStatusDto | NoticeOfIntentStatusDto) {
-    this.currentStatus = {
-      label: status.label,
-      backgroundColor: status.alcsBackgroundColor,
-      textColor: status.alcsColor,
-    };
   }
 }
