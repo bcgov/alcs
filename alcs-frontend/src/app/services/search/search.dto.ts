@@ -23,7 +23,7 @@ export interface NonApplicationSearchResultDto {
   localGovernmentName: string | null;
   fileNumber: string;
   boardCode: string | null;
-  class: 'PLN' | 'COV';
+  class: 'PLAN' | 'COV';
 }
 
 export interface AdvancedSearchResponseDto {

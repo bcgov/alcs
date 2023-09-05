@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
@@ -25,6 +26,11 @@ import { TableChange } from './search.interface';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
+
+const APPLICATION_TAB_INDEX = 0;
+const NOTICE_OF_INTENT_TAB_INDEX = 1;
+const NON_APPLICATION_TAB_INDEX = 2;
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -35,6 +41,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
+  @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
 
   applications: ApplicationSearchResultDto[] = [];
   applicationTotal = 0;
@@ -195,6 +202,18 @@ export class SearchComponent implements OnInit, OnDestroy {
     const searchParams = this.getSearchParams();
     const result = await this.searchService.advancedSearchFetch(searchParams);
     this.mapSearchResults(result);
+
+    this.setActiveTab();
+  }
+
+  private setActiveTab() {
+    let maxVal = Math.max(this.applicationTotal, this.noticeOfIntentTotal, this.nonApplicationsTotal);
+    this.tabGroup.selectedIndex =
+      maxVal === this.applicationTotal
+        ? APPLICATION_TAB_INDEX
+        : maxVal === this.noticeOfIntentTotal
+          ? NOTICE_OF_INTENT_TAB_INDEX
+          : NON_APPLICATION_TAB_INDEX;
   }
 
   getSearchParams(): SearchRequestDto {

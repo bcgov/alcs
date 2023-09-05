@@ -18,7 +18,7 @@ export class SearchResultDto {
   label?: ApplicationTypeDto;
 }
 
-export type SearchEntityClass = 'APP' | 'NOI' | 'PLN' | 'COV';
+export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV';
 
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;

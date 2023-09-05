@@ -85,7 +85,7 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
   }
 
   async onSelectRecord(record: SearchResult) {
-    await this.router.navigateByUrl(`/application/${record.referenceId}`);
+    await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.class}`);
   }
 
   private mapNonApplications(nonApplications: NonApplicationSearchResultDto[]): NonApplicationSearchResultDto[] {

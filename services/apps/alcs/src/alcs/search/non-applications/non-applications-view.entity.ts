@@ -42,7 +42,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
             planning_review.file_number AS "file_number",
             NULL AS "applicant",
             "type",
-            'PLN' AS "class",
+            'PLAN' AS "class",
             planning_review.local_government_uuid AS "local_government_uuid",
             card.uuid AS "card_uuid",
             board.code AS "board_code"
@@ -74,7 +74,7 @@ export class NonApplicationSearchView {
   localGovernmentUuid: string | null;
 
   @ViewColumn()
-  class: 'COV' | 'PLN';
+  class: 'COV' | 'PLAN';
 
   @ViewColumn()
   cardUuid: string | null;
