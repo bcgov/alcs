@@ -15,6 +15,7 @@ import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 
 export const childRoutes = [
   {
@@ -89,7 +90,8 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
     private route: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    public noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService
   ) {}
 
   ngOnInit(): void {

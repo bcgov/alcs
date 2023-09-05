@@ -3,15 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDecisionService } from '../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
-import { NoticeOfIntentMeetingDto } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
-import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
-import { NoticeOfIntentModificationService } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentTimelineService } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 
 import { OverviewComponent } from './overview.component';
+import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 
 describe('OverviewComponent', () => {
   let component: OverviewComponent;
@@ -30,7 +27,14 @@ describe('OverviewComponent', () => {
           provide: NoticeOfIntentDetailService,
           useValue: mockNOIDetailService,
         },
-        { provide: NoticeOfIntentTimelineService, useValue: {} },
+        {
+          provide: NoticeOfIntentTimelineService,
+          useValue: {},
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: {},
+        },
       ],
       declarations: [OverviewComponent],
       schemas: [NO_ERRORS_SCHEMA],

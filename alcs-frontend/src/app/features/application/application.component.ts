@@ -26,6 +26,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
+import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 
 export const unsubmittedRoutes = [
   {
@@ -183,7 +184,8 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private route: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    public applicationStatusService: ApplicationSubmissionStatusService
   ) {}
 
   ngOnInit(): void {

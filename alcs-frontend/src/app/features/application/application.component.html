@@ -7,6 +7,7 @@
       days="Business Days"
       heading="Application"
       [showStatus]="true"
+      [submissionStatusService]="applicationStatusService"
     ></app-details-header>
     <div class="content">
       <div *ngIf="showSubmittedToAlcMenuItems" class="nav">

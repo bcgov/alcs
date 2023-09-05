@@ -12,6 +12,7 @@ import { ApplicationReviewService } from '../../services/application/application
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
 import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
+import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 
 import { ApplicationComponent } from './application.component';
 
@@ -23,6 +24,7 @@ describe('ApplicationComponent', () => {
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockReviewService: DeepMocked<ApplicationReviewService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
     mockAppDetailService = createMock();
@@ -36,6 +38,7 @@ describe('ApplicationComponent', () => {
 
     mockReviewService = createMock();
     mockAppSubmissionService = createMock();
+    mockAppStatusService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -62,6 +65,10 @@ describe('ApplicationComponent', () => {
         {
           provide: ApplicationSubmissionService,
           useValue: mockAppSubmissionService,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockAppStatusService,
         },
         {
           provide: ActivatedRoute,

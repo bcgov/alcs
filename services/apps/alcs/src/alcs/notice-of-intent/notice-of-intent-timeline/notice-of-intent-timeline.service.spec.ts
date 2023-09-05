@@ -11,6 +11,9 @@ import { NoticeOfIntentMeetingService } from '../notice-of-intent-meeting/notice
 import { NoticeOfIntent } from '../notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent.service';
 import { NoticeOfIntentTimelineService } from './notice-of-intent-timeline.service';
+import { NoticeOfIntentSubmissionStatusService } from '../notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from '../notice-of-intent-submission-status/notice-of-intent-status.entity';
+import { NOI_SUBMISSION_STATUS } from '../notice-of-intent-submission-status/notice-of-intent-status.dto';
 
 describe('NoticeOfIntentTimelineService', () => {
   let service: NoticeOfIntentTimelineService;
@@ -21,6 +24,7 @@ describe('NoticeOfIntentTimelineService', () => {
   let mockNOIDecisionRepo: DeepMocked<Repository<NoticeOfIntentDecision>>;
   let mockNOIService: DeepMocked<NoticeOfIntentService>;
   let mockNOIMeetingService: DeepMocked<NoticeOfIntentMeetingService>;
+  let mockNOIStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
     mockNOIRepo = createMock();
@@ -28,6 +32,7 @@ describe('NoticeOfIntentTimelineService', () => {
     mockNOIDecisionRepo = createMock();
     mockNOIService = createMock();
     mockNOIMeetingService = createMock();
+    mockNOIStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -51,6 +56,10 @@ describe('NoticeOfIntentTimelineService', () => {
           provide: NoticeOfIntentMeetingService,
           useValue: mockNOIMeetingService,
         },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNOIStatusService,
+        },
         NoticeOfIntentTimelineService,
       ],
     }).compile();
@@ -64,6 +73,7 @@ describe('NoticeOfIntentTimelineService', () => {
     mockNOIModificationRepo.find.mockResolvedValue([]);
     mockNOIMeetingService.getByFileNumber.mockResolvedValue([]);
     mockNOIService.mapToDtos.mockResolvedValue([]);
+    mockNOIStatusService.getCurrentStatusesByFileNumber.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -91,12 +101,9 @@ describe('NoticeOfIntentTimelineService', () => {
     const res = await service.getTimelineEvents('file-number');
 
     expect(res).toBeDefined();
-    expect(res.length).toEqual(5);
+    expect(res.length).toEqual(2);
     expect(res[0].htmlText).toEqual('Acknowledged Complete');
     expect(res[1].htmlText).toEqual('Fee Received Date');
-    expect(res[2].htmlText).toEqual('Received All Items');
-    expect(res[3].htmlText).toEqual('Acknowledged Incomplete');
-    expect(res[4].htmlText).toEqual('Submitted to ALC');
   });
 
   it('should map Decision Events', async () => {
@@ -183,5 +190,44 @@ describe('NoticeOfIntentTimelineService', () => {
     expect(res.length).toEqual(2);
     expect(res[1].htmlText).toEqual('Meeting #1');
     expect(res[0].htmlText).toEqual('Meeting #2');
+  });
+
+  it('should map Status Events', async () => {
+    const sameDate = new Date();
+    mockNOIStatusService.getCurrentStatusesByFileNumber.mockResolvedValue([
+      new NoticeOfIntentSubmissionToSubmissionStatus({
+        statusType: {
+          code: NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC,
+          weight: 2,
+        } as any,
+        effectiveDate: sameDate,
+      }),
+      new NoticeOfIntentSubmissionToSubmissionStatus({
+        statusType: {
+          code: NOI_SUBMISSION_STATUS.IN_PROGRESS,
+          weight: 0,
+        } as any,
+        effectiveDate: sameDate,
+      }),
+      new NoticeOfIntentSubmissionToSubmissionStatus({
+        statusType: {
+          code: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+          weight: 1,
+        } as any,
+        effectiveDate: sameDate,
+      }),
+    ]);
+
+    const res = await service.getTimelineEvents('file-number');
+
+    expect(res).toBeDefined();
+    expect(res.length).toEqual(3);
+    expect(res[2].htmlText).toEqual('Created - <strong>In Progress</strong>');
+    expect(res[1].htmlText).toEqual(
+      'Acknowledged Incomplete - <strong>Submitted to ALC - Incomplete</strong>',
+    );
+    expect(res[0].htmlText).toEqual(
+      'Received All Items - <strong>Received by ALC</strong>',
+    );
   });
 });

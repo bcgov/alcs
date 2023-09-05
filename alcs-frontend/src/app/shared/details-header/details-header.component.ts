@@ -17,6 +17,7 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -30,6 +31,7 @@ export class DetailsHeaderComponent {
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
+  @Input() submissionStatusService?: ApplicationSubmissionStatusService | NoticeOfIntentSubmissionStatusService;
 
   legacyId?: string;
 
@@ -61,17 +63,16 @@ export class DetailsHeaderComponent {
         this.legacyId = application.legacyId;
       }
 
-      if (this.showStatus) {
+      if (this.showStatus && this.submissionStatusService) {
         this.submissionStatusService
           .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-          .then(
-            (status) =>
-              (this.currentStatus = {
-                label: status.status.label,
-                backgroundColor: status.status.alcsBackgroundColor,
-                textColor: status.status.alcsColor,
-              })
-          )
+          .then((res) => {
+            this.currentStatus = {
+              label: res.status.label,
+              backgroundColor: res.status.alcsBackgroundColor,
+              textColor: res.status.alcsColor,
+            };
+          })
           .catch((e) => {
             console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
             this.currentStatus = DEFAULT_NO_STATUS;
@@ -106,7 +107,7 @@ export class DetailsHeaderComponent {
   isNOI = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
-  constructor(private router: Router, private submissionStatusService: ApplicationSubmissionStatusService) {}
+  constructor(private router: Router) {}
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.boardCode;
