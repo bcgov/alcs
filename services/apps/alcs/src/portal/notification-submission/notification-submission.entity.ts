@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -7,6 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
+import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
@@ -85,4 +88,46 @@ export class NotificationSubmission extends Base {
     (parcel) => parcel.notificationSubmission,
   )
   parcels: NotificationParcel[];
+
+  @OneToMany(
+    () => NotificationSubmissionToSubmissionStatus,
+    (status) => status.submission,
+    {
+      eager: true,
+      persistence: false,
+    },
+  )
+  submissionStatuses: NotificationSubmissionToSubmissionStatus[] = [];
+
+  private _status: NotificationSubmissionToSubmissionStatus;
+
+  get status(): NotificationSubmissionToSubmissionStatus {
+    return this._status;
+  }
+
+  private set status(value: NotificationSubmissionToSubmissionStatus) {
+    this._status = value;
+  }
+
+  @AfterLoad()
+  populateCurrentStatus() {
+    // using JS date object is intentional for performance reasons
+    const now = Date.now();
+
+    for (const status of this.submissionStatuses) {
+      const effectiveDate = status.effectiveDate?.getTime();
+      const currentEffectiveDate = this.status?.effectiveDate?.getTime();
+
+      if (
+        effectiveDate &&
+        effectiveDate <= now &&
+        (!currentEffectiveDate ||
+          effectiveDate > currentEffectiveDate ||
+          (effectiveDate === currentEffectiveDate &&
+            status.statusType.weight > this.status.statusType.weight))
+      ) {
+        this.status = status;
+      }
+    }
+  }
 }

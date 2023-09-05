@@ -1,6 +1,12 @@
 import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { NotificationSubmissionStatusType } from '../../alcs/notification/notification-submission-status/notification-status-type.entity';
+import {
+  NotificationStatusDto,
+  NotificationSubmissionToSubmissionStatusDto,
+} from '../../alcs/notification/notification-submission-status/notification-status.dto';
+import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import {
   NotificationSubmissionDetailedDto,
   NotificationSubmissionDto,
@@ -31,6 +37,18 @@ export class NotificationSubmissionProfile extends AutomapperProfile {
             return ad.auditUpdatedAt?.getTime();
           }),
         ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
       );
 
       createMap(
@@ -47,6 +65,40 @@ export class NotificationSubmissionProfile extends AutomapperProfile {
           (a) => a.updatedAt,
           mapFrom((ad) => {
             return ad.auditUpdatedAt?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return ad.status.statusType;
+          }),
+        ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
+      );
+
+      createMap(
+        mapper,
+        NotificationSubmissionToSubmissionStatus,
+        NotificationSubmissionToSubmissionStatusDto,
+        forMember(
+          (a) => a.effectiveDate,
+          mapFrom((ad) => {
+            return ad.effectiveDate?.getTime();
+          }),
+        ),
+        forMember(
+          (a) => a.status,
+          mapFrom((ad) => {
+            return this.mapper.map(
+              ad.statusType,
+              NotificationSubmissionStatusType,
+              NotificationStatusDto,
+            );
           }),
         ),
       );

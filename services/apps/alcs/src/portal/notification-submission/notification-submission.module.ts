@@ -2,6 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BoardModule } from '../../alcs/board/board.module';
 import { LocalGovernmentModule } from '../../alcs/local-government/local-government.module';
+import { NotificationSubmissionStatusModule } from '../../alcs/notification/notification-submission-status/notification-submission-status.module';
 import { NotificationModule } from '../../alcs/notification/notification.module';
 import { AuthorizationModule } from '../../common/authorization/authorization.module';
 import { NotificationParcelProfile } from '../../common/automapper/notification-parcel.automapper.profile';
@@ -34,6 +35,7 @@ import { NotificationTransfereeService } from './notification-transferee/notific
     forwardRef(() => BoardModule),
     LocalGovernmentModule,
     FileNumberModule,
+    NotificationSubmissionStatusModule,
   ],
   controllers: [
     NotificationSubmissionController,

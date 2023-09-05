@@ -127,13 +127,12 @@ export class NoticeOfIntentSubmissionProfile extends AutomapperProfile {
         mapper,
         NoticeOfIntentSubmission,
         AlcsNoticeOfIntentSubmissionDto,
-        // TODO uncomment when working on statuses
-        // forMember(
-        //   (a) => a.lastStatusUpdate,
-        //   mapFrom((ad) => {
-        //     return ad.status?.effectiveDate?.getTime();
-        //   }),
-        // ),
+        forMember(
+          (a) => a.lastStatusUpdate,
+          mapFrom((ad) => {
+            return ad.status?.effectiveDate?.getTime();
+          }),
+        ),
         forMember(
           (a) => a.status,
           mapFrom((ad) => {

@@ -7,6 +7,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
+import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
@@ -21,6 +23,7 @@ describe('NotificationSubmissionService', () => {
   let mockNotificationService: DeepMocked<NotificationService>;
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockStatusService: DeepMocked<NotificationSubmissionStatusService>;
   let mockSubmission;
 
   beforeEach(async () => {
@@ -28,6 +31,7 @@ describe('NotificationSubmissionService', () => {
     mockNotificationService = createMock();
     mockLGService = createMock();
     mockFileNumberService = createMock();
+    mockStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -53,6 +57,10 @@ describe('NotificationSubmissionService', () => {
         {
           provide: FileNumberService,
           useValue: mockFileNumberService,
+        },
+        {
+          provide: NotificationSubmissionStatusService,
+          useValue: mockStatusService,
         },
       ],
     }).compile();
@@ -108,6 +116,7 @@ describe('NotificationSubmissionService', () => {
     mockRepository.save.mockResolvedValue(new NotificationSubmission());
     mockFileNumberService.generateNextFileNumber.mockResolvedValue(fileId);
     mockNotificationService.create.mockResolvedValue(new Notification());
+    mockStatusService.setInitialStatuses.mockResolvedValue([]);
 
     const fileNumber = await service.create(
       'type',
@@ -119,6 +128,7 @@ describe('NotificationSubmissionService', () => {
     expect(fileNumber).toEqual(fileId);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
     expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
+    expect(mockStatusService.setInitialStatuses).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for get by user', async () => {
@@ -167,6 +177,8 @@ describe('NotificationSubmissionService', () => {
       typeCode: typeCode,
       auditCreatedAt: new Date(),
       createdBy: new User(),
+      submissionStatuses: [],
+      status: new NotificationSubmissionToSubmissionStatus(),
     });
     mockRepository.findOne.mockResolvedValue(noiSubmission);
 
@@ -206,11 +218,15 @@ describe('NotificationSubmissionService', () => {
     const notification = new Notification({
       dateSubmittedToAlc: new Date(),
     });
+    mockStatusService.setStatusDate.mockResolvedValue(
+      new NotificationSubmissionToSubmissionStatus(),
+    );
 
     mockNotificationService.submit.mockResolvedValue(notification);
     await service.submitToAlcs(mockSubmission);
 
     expect(mockNotificationService.submit).toBeCalledTimes(1);
+    expect(mockStatusService.setStatusDate).toHaveBeenCalledTimes(1);
   });
 
   it('should update fields if notification exists', async () => {

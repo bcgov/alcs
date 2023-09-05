@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,6 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
 import { NotificationSubmissionUpdateDto } from './notification-submission.dto';
@@ -83,18 +85,14 @@ export class NotificationSubmissionController {
     @Body() updateDto: NotificationSubmissionUpdateDto,
     @Req() req,
   ) {
-    // const submission = await this.notificationSubmissionService.getByUuid(
-    //   uuid,
-    //   req.user.entity,
-    // );
-    //
-    // if (
-    //   submission.status.statusTypeCode !==
-    //     NOI_SUBMISSION_STATUS.IN_PROGRESS &&
-    //   overlappingRoles.length === 0
-    // ) {
-    //   throw new BadRequestException('Can only edit in progress SRWs');
-    // }
+    const submission = await this.notificationSubmissionService.getByUuid(
+      uuid,
+      req.user.entity,
+    );
+
+    if (submission.status.statusTypeCode !== NOTIFICATION_STATUS.IN_PROGRESS) {
+      throw new BadRequestException('Can only edit in progress SRWs');
+    }
 
     const updatedSubmission = await this.notificationSubmissionService.update(
       uuid,
@@ -113,12 +111,12 @@ export class NotificationSubmissionController {
     const notificationSubmission =
       await this.notificationSubmissionService.getByUuid(uuid, req.user.entity);
 
-    // if (
-    //   notificationSubmission.status.statusTypeCode !==
-    //   NOI_SUBMISSION_STATUS.IN_PROGRESS
-    // ) {
-    //   throw new BadRequestException('Can only cancel in progress SRWs');
-    // }
+    if (
+      notificationSubmission.status.statusTypeCode !==
+      NOTIFICATION_STATUS.IN_PROGRESS
+    ) {
+      throw new BadRequestException('Can only cancel in progress SRWs');
+    }
 
     await this.notificationSubmissionService.cancel(notificationSubmission);
 
