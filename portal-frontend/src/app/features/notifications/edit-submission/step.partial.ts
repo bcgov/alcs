@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { NotificationSubmissionDto } from '../../../services/notification-submission/notification-submission.dto';
+import {
+  NotificationSubmissionDetailedDto,
+  NotificationSubmissionDto,
+} from '../../../services/notification-submission/notification-submission.dto';
 
 @Component({
   selector: 'app-step',
@@ -10,10 +13,9 @@ import { NotificationSubmissionDto } from '../../../services/notification-submis
 export class StepComponent implements OnDestroy {
   protected $destroy = new Subject<void>();
 
-  @Input() $notificationSubmission!: BehaviorSubject<NotificationSubmissionDto | undefined>;
+  @Input() $notificationSubmission!: BehaviorSubject<NotificationSubmissionDetailedDto | undefined>;
 
   @Input() showErrors = false;
-  @Input() draftMode = false;
 
   @Output() navigateToStep = new EventEmitter<number>();
   @Output() exit = new EventEmitter<void>();

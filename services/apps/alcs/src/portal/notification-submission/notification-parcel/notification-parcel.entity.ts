@@ -58,20 +58,6 @@ export class NotificationParcel extends Base {
   })
   mapAreaHectares?: number | null;
 
-  @AutoMap(() => Boolean)
-  @Column({
-    type: 'boolean',
-    comment:
-      'The Parcels indication whether applicant signed off provided data including the Certificate of Title',
-    nullable: false,
-    default: false,
-  })
-  isConfirmedByApplicant: boolean;
-
-  @IsString()
-  @IsOptional()
-  crownLandOwnerType?: string | null;
-
   @AutoMap(() => String)
   @Column({ nullable: true })
   ownershipTypeCode?: string | null;

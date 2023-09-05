@@ -8,8 +8,6 @@ export interface NotificationParcelUpdateDto {
   legalDescription?: string | null;
   mapAreaHectares?: string | null;
   ownershipTypeCode?: string | null;
-  crownLandOwnerType?: string | null;
-  isConfirmedByApplicant: boolean;
 }
 
 export interface NotificationParcelDto extends Omit<NotificationParcelUpdateDto, 'ownerUuids'> {

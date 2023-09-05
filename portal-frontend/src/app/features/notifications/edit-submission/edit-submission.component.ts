@@ -4,16 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import {
-  NOI_SUBMISSION_STATUS,
-  NoticeOfIntentSubmissionDetailedDto,
-} from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
+import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 
 export enum EditNotificationSteps {
   Parcel = 0,
@@ -43,6 +40,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   showValidationErrors = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
+  @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
@@ -116,9 +114,20 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     await this.router.navigateByUrl(`notification/${this.fileId}/edit/${index}`);
   }
 
+  onParcelDetailsInitialized() {
+    if (this.expandedParcelUuid && this.parcelDetailsComponent) {
+      this.parcelDetailsComponent.openParcel(this.expandedParcelUuid);
+      this.expandedParcelUuid = undefined;
+    }
+  }
+
   async saveSubmission(step: number) {
     switch (step) {
       case EditNotificationSteps.Parcel:
+        if (this.parcelDetailsComponent) {
+          await this.parcelDetailsComponent.onSave();
+        }
+        break;
       case EditNotificationSteps.Transferees:
       case EditNotificationSteps.PrimaryContact:
       case EditNotificationSteps.Government:

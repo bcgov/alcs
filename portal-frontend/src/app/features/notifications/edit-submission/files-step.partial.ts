@@ -5,7 +5,6 @@ import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-do
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
-import { RemoveFileConfirmationDialogComponent } from '../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { StepComponent } from './step.partial';
 
 @Component({
@@ -42,21 +41,6 @@ export abstract class FilesStepComponent extends StepComponent {
   }
 
   async onDeleteFile($event: NoticeOfIntentDocumentDto) {
-    if (this.draftMode) {
-      this.dialog
-        .open(RemoveFileConfirmationDialogComponent)
-        .beforeClosed()
-        .subscribe(async (didConfirm) => {
-          if (didConfirm) {
-            this.deleteFile($event);
-          }
-        });
-    } else {
-      await this.deleteFile($event);
-    }
-  }
-
-  private async deleteFile($event: NoticeOfIntentDocumentDto) {
     await this.noticeOfIntentDocumentService.deleteExternalFile($event.uuid);
     if (this.fileId) {
       const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
