@@ -72,7 +72,7 @@ const TREE_DATA: TreeNode[] = [
 @Injectable({ providedIn: 'root' })
 export class FileTypeDataSourceService {
   dataChange = new BehaviorSubject<TreeNode[]>([]);
-  treeData: any[] = [];
+  treeData: TreeNode[] = [];
 
   get data(): TreeNode[] {
     return this.dataChange.value;
@@ -84,20 +84,16 @@ export class FileTypeDataSourceService {
 
   initialize() {
     this.treeData = TREE_DATA;
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    //     file node as children.
-    const data = TREE_DATA;
-
-    // Notify the change.
-    this.dataChange.next(data);
+    this.dataChange.next(TREE_DATA);
   }
 
   public filter(filterText: string) {
     let filteredTreeData;
     if (filterText) {
       // Filter the tree
-      function filter(array: any[], text: string) {
+      const filter = (array: TreeNode[], text: string) => {
         const getChildren = (result: any, object: any) => {
+          console.log(text, object.item.label, object.item.label.toLowerCase().includes(text.toLowerCase()));
           if (object.item.label.toLowerCase().includes(text.toLowerCase())) {
             result.push(object);
             return result;
@@ -110,18 +106,13 @@ export class FileTypeDataSourceService {
         };
 
         return array.reduce(getChildren, []);
-      }
+      };
 
       filteredTreeData = filter(this.treeData, filterText);
     } else {
       // Return the initial tree
       filteredTreeData = this.treeData;
     }
-
-    // Build the tree nodes from Json object. The result is a list of `TodoItemNode` with nested
-    // file node as children.
-    const data = filteredTreeData;
-    // Notify the change.
-    this.dataChange.next(data);
+    this.dataChange.next(filteredTreeData);
   }
 }
