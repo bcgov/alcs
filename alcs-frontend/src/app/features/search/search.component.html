@@ -115,11 +115,6 @@
       </div>
 
       <div class="column">
-        <!-- <app-file-type-filter-drop-down
-          [componentTypeControl]="componentTypeControl"
-          (fileTypeBlur)="onFileTypeBlur($event)"
-          [form]="searchForm"
-        ></app-file-type-filter-drop-down> -->
         <app-file-type-filter-drop-down #fileTypeDropDown (fileTypeChange)="onFileTypeChange($event)" />
         <div class="subtext">Note: This field searches both proposal and decision component type</div>
       </div>

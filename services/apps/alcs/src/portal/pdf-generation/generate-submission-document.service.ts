@@ -31,7 +31,13 @@ import { ApplicationSubmissionService } from '../application-submission/applicat
 export enum APPLICATION_SUBMISSION_TYPES {
   NFUP = 'NFUP',
   TURP = 'TURP',
+  POFO = 'POFO',
+  ROSO = 'ROSO',
+  PFRS = 'PFRS',
+  NARU = 'NARU',
   SUBD = 'SUBD',
+  INCL = 'INCL',
+  EXCL = 'EXCL',
 }
 
 class PdfTemplate {

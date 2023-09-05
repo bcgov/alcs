@@ -93,7 +93,7 @@ describe('NoticeOfIntentService', () => {
     expect(
       mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
     ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(14);
+    expect(mockQuery.andWhere).toBeCalledTimes(13);
     expect(mockQuery.where).toBeCalledTimes(1);
   });
 

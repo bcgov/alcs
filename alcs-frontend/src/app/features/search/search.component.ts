@@ -54,8 +54,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   nonApplications: NonApplicationSearchResultDto[] = [];
   nonApplicationsTotal = 0;
 
-  // TODO do not forget to set this to false
-  isSearchExpanded = true;
+  isSearchExpanded = false;
   pageIndex = 0;
   itemsPerPage = 20;
   sortDirection = 'DESC';
@@ -182,7 +181,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onReset() {
     this.searchForm.reset();
-    this.fileTypeFilterDropDownComponent.reset()
+    this.fileTypeFilterDropDownComponent.reset();
   }
 
   async onSearch() {
@@ -226,10 +225,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
-      // TODO this will be reworked in later tickets
       applicationFileTypes: this.searchForm.controls.componentType.value
-        ? // ? []
-          this.searchForm.controls.componentType.value
+        ? this.searchForm.controls.componentType.value
         : [],
     };
   }
