@@ -4,7 +4,10 @@ import { Subject } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
-import { DEFAULT_NO_STATUS } from '../../services/application/application-submission-status/application-submission-status.dto';
+import {
+  ApplicationStatusDto,
+  DEFAULT_NO_STATUS,
+} from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
@@ -18,6 +21,7 @@ import {
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentStatusDto } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
 
 export enum PARENT_TYPE {
   APPLICATION = 'application',
@@ -70,16 +74,9 @@ export class DetailsHeaderComponent {
 
       if (this.showStatus) {
         if (this.parentType === PARENT_TYPE.APPLICATION) {
-          this.submissionStatusService
+          this.applicationStatusService
             .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-            .then(
-              (status) =>
-                (this.currentStatus = {
-                  label: status.status.label,
-                  backgroundColor: status.status.alcsBackgroundColor,
-                  textColor: status.status.alcsColor,
-                })
-            )
+            .then((res) => this.setStatus(res.status))
             .catch((e) => {
               console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
               this.currentStatus = DEFAULT_NO_STATUS;
@@ -89,14 +86,7 @@ export class DetailsHeaderComponent {
         if (this.parentType === PARENT_TYPE.NOTICE_OF_INTENT) {
           this.noticeOfIntentStatusService
             .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-            .then(
-              (status) =>
-                (this.currentStatus = {
-                  label: status.status.label,
-                  backgroundColor: status.status.alcsBackgroundColor,
-                  textColor: status.status.alcsColor,
-                })
-            )
+            .then((res) => this.setStatus(res.status))
             .catch((e) => {
               console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
               this.currentStatus = DEFAULT_NO_STATUS;
@@ -134,7 +124,7 @@ export class DetailsHeaderComponent {
 
   constructor(
     private router: Router,
-    private submissionStatusService: ApplicationSubmissionStatusService,
+    private applicationStatusService: ApplicationSubmissionStatusService,
     private noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService
   ) {}
 
@@ -171,5 +161,13 @@ export class DetailsHeaderComponent {
     result.push(...mappedReconCards);
 
     this.linkedCards = result;
+  }
+
+  private setStatus(status: ApplicationStatusDto | NoticeOfIntentStatusDto) {
+    this.currentStatus = {
+      label: status.label,
+      backgroundColor: status.alcsBackgroundColor,
+      textColor: status.alcsColor,
+    };
   }
 }
