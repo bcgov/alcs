@@ -17,6 +17,12 @@ import {
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+
+export enum PARENT_TYPE {
+  APPLICATION = 'application',
+  NOTICE_OF_INTENT = 'notice-of-intent',
+}
 
 @Component({
   selector: 'app-details-header[application]',
@@ -30,6 +36,7 @@ export class DetailsHeaderComponent {
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
+  @Input() parentType: PARENT_TYPE = PARENT_TYPE.APPLICATION;
 
   legacyId?: string;
 
@@ -62,20 +69,39 @@ export class DetailsHeaderComponent {
       }
 
       if (this.showStatus) {
-        this.submissionStatusService
-          .fetchCurrentStatusByFileNumber(application.fileNumber, false)
-          .then(
-            (status) =>
-              (this.currentStatus = {
-                label: status.status.label,
-                backgroundColor: status.status.alcsBackgroundColor,
-                textColor: status.status.alcsColor,
-              })
-          )
-          .catch((e) => {
-            console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
-            this.currentStatus = DEFAULT_NO_STATUS;
-          });
+        if (this.parentType === PARENT_TYPE.APPLICATION) {
+          this.submissionStatusService
+            .fetchCurrentStatusByFileNumber(application.fileNumber, false)
+            .then(
+              (status) =>
+                (this.currentStatus = {
+                  label: status.status.label,
+                  backgroundColor: status.status.alcsBackgroundColor,
+                  textColor: status.status.alcsColor,
+                })
+            )
+            .catch((e) => {
+              console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
+              this.currentStatus = DEFAULT_NO_STATUS;
+            });
+        }
+
+        if (this.parentType === PARENT_TYPE.NOTICE_OF_INTENT) {
+          this.noticeOfIntentStatusService
+            .fetchCurrentStatusByFileNumber(application.fileNumber, false)
+            .then(
+              (status) =>
+                (this.currentStatus = {
+                  label: status.status.label,
+                  backgroundColor: status.status.alcsBackgroundColor,
+                  textColor: status.status.alcsColor,
+                })
+            )
+            .catch((e) => {
+              console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
+              this.currentStatus = DEFAULT_NO_STATUS;
+            });
+        }
       }
     }
   }
@@ -106,7 +132,11 @@ export class DetailsHeaderComponent {
   isNOI = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
-  constructor(private router: Router, private submissionStatusService: ApplicationSubmissionStatusService) {}
+  constructor(
+    private router: Router,
+    private submissionStatusService: ApplicationSubmissionStatusService,
+    private noticeOfIntentStatusService: NoticeOfIntentSubmissionStatusService
+  ) {}
 
   async onGoToCard(card: CardDto) {
     const boardCode = card.boardCode;

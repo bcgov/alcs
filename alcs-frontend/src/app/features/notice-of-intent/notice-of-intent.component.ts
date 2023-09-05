@@ -15,6 +15,7 @@ import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { PARENT_TYPE } from '../../shared/details-header/details-header.component';
 
 export const childRoutes = [
   {
@@ -84,6 +85,7 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   modifications: NoticeOfIntentModificationDto[] = [];
 
   isAuthorized = true;
+  PARENT_TYPES = PARENT_TYPE;
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
