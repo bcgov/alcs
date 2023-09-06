@@ -690,9 +690,9 @@ export class ApplicationSubmissionService {
       updateDto.nfuWillImportFill,
       application.nfuWillImportFill,
     );
-    application.nfuTotalFillPlacement = filterUndefined(
-      updateDto.nfuTotalFillPlacement,
-      application.nfuTotalFillPlacement,
+    application.nfuTotalFillArea = filterUndefined(
+      updateDto.nfuTotalFillArea,
+      application.nfuTotalFillArea,
     );
     application.nfuMaxFillDepth = filterUndefined(
       updateDto.nfuMaxFillDepth,

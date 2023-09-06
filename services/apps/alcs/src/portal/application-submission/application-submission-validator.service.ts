@@ -413,7 +413,7 @@ export class ApplicationSubmissionValidatorService {
       if (
         !applicationSubmission.nfuFillTypeDescription ||
         !applicationSubmission.nfuFillOriginDescription ||
-        applicationSubmission.nfuTotalFillPlacement === null ||
+        applicationSubmission.nfuTotalFillArea === null ||
         applicationSubmission.nfuMaxFillDepth === null ||
         applicationSubmission.nfuAverageFillDepth === null ||
         applicationSubmission.nfuFillVolume === null ||

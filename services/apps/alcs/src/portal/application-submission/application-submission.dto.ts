@@ -102,7 +102,7 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   nfuWillImportFill?: boolean | null;
 
   @AutoMap(() => Number)
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
 
   @AutoMap(() => Number)
   nfuMaxFillDepth?: number | null;
@@ -415,7 +415,7 @@ export class ApplicationSubmissionUpdateDto {
 
   @IsNumber()
   @IsOptional()
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
 
   @IsNumber()
   @IsOptional()
