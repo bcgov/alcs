@@ -63,10 +63,12 @@ export class SearchComponent implements OnInit, OnDestroy {
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string | undefined>(undefined);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
+  pidControl = new FormControl<string | undefined>(undefined);
+  nameControl = new FormControl<string | undefined>(undefined);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
-    name: new FormControl<string | undefined>(undefined),
-    pid: new FormControl<string | undefined>(undefined),
+    name: this.nameControl,
+    pid: this.pidControl,
     civicAddress: new FormControl<string | undefined>(undefined),
     isIncludeOtherParcels: new FormControl(false),
     resolutionNumber: new FormControl<string | undefined>(undefined),
@@ -86,6 +88,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   statuses: ApplicationStatusDto[] = [];
+
+  formEmpty = true;
 
   constructor(
     private searchService: SearchService,
@@ -123,6 +127,18 @@ export class SearchComponent implements OnInit, OnDestroy {
             .then((result) => this.mapSearchResults(result));
         }
       });
+
+    this.searchForm.valueChanges.subscribe(() => {
+      let isEmpty = true;
+      for (let key in this.searchForm.controls) {
+        let value = this.searchForm.controls[key as keyof typeof this.searchForm.controls].value;
+        if (value && !(Array.isArray(value) && value.length === 0)) {
+          isEmpty = false;
+          break;
+        }
+      }
+      this.formEmpty = isEmpty;
+    });
   }
 
   private setup() {
@@ -148,7 +164,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
-    await this.onSearch();
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchFetch(searchParams);
+    this.mapSearchResults(result);
+
+    this.setActiveTab();
   }
 
   expandSearchClicked() {
@@ -182,14 +202,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   onReset() {
     this.searchForm.reset();
     this.fileTypeFilterDropDownComponent.reset();
-  }
-
-  async onSearch() {
-    const searchParams = this.getSearchParams();
-    const result = await this.searchService.advancedSearchFetch(searchParams);
-    this.mapSearchResults(result);
-
-    this.setActiveTab();
   }
 
   getSearchParams(): SearchRequestDto {

@@ -39,14 +39,12 @@
       transform: scale(1);
     }
 
-    tr.no-data {
-      border: none;
-      background-color: colors.$grey-light;
-      align-items: center;
-      justify-content: center;
-      cursor: auto;
-      box-shadow: none !important;
-      height: 32px;
+    tr.no-data td {
+      text-align: start;
+
+      > div:first-child {
+        margin-top: 28px;
+      }
     }
   }
 
@@ -150,5 +148,26 @@
   .search-result-wrapper {
     margin-top: 60px;
     margin-bottom: 60px;
+  }
+
+  .field-error {
+    color: colors.$error-color;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+
+    div {
+      color: colors.$error-color;
+    }
+  }
+
+  .btn-controls .search-btn span {
+    color: #fff !important;
+  }
+
+  .mat-mdc-select-placeholder {
+    color: rgba(0, 0, 0, 0.6);
   }
 }

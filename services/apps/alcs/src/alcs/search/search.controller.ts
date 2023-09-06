@@ -7,6 +7,7 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
+import { isStringSetAndNotEmpty } from '../../utils/string-helper';
 import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -192,32 +193,6 @@ export class SearchController {
     return mappedSearchResult;
   }
 
-  private getEntitiesTypeToSearch(
-    searchDto: SearchRequestDto,
-    searchApplications: boolean,
-    searchNoi: boolean,
-    searchNonApplications: boolean,
-  ) {
-    if (searchDto.applicationFileTypes.length > 0) {
-      searchApplications =
-        searchDto.applicationFileTypes.filter((searchType) =>
-          Object.values(APPLICATION_SUBMISSION_TYPES).includes(
-            APPLICATION_SUBMISSION_TYPES[
-              searchType as keyof typeof APPLICATION_SUBMISSION_TYPES
-            ],
-          ),
-        ).length > 0;
-
-      searchNoi = searchDto.applicationFileTypes.includes('NOI');
-
-      searchNonApplications =
-        searchDto.applicationFileTypes.filter((searchType) =>
-          ['COV', 'PLAN', 'SRW'].includes(searchType),
-        ).length > 0;
-    }
-    return { searchApplications, searchNoi, searchNonApplications };
-  }
-
   @Post('/advanced/application')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearchApplications(
@@ -277,6 +252,40 @@ export class SearchController {
       total: mappedSearchResult.totalNonApplications,
       data: mappedSearchResult.nonApplications,
     };
+  }
+
+  private getEntitiesTypeToSearch(
+    searchDto: SearchRequestDto,
+    searchApplications: boolean,
+    searchNoi: boolean,
+    searchNonApplications: boolean,
+  ) {
+    if (searchDto.applicationFileTypes.length > 0) {
+      searchApplications =
+        searchDto.applicationFileTypes.filter((searchType) =>
+          Object.values(APPLICATION_SUBMISSION_TYPES).includes(
+            APPLICATION_SUBMISSION_TYPES[
+              searchType as keyof typeof APPLICATION_SUBMISSION_TYPES
+            ],
+          ),
+        ).length > 0;
+
+      searchNoi = searchDto.applicationFileTypes.includes('NOI');
+
+      searchNonApplications =
+        searchDto.applicationFileTypes.filter((searchType) =>
+          ['COV', 'PLAN', 'SRW'].includes(searchType),
+        ).length > 0;
+    }
+
+    searchNonApplications =
+      searchNonApplications ||
+      isStringSetAndNotEmpty(searchDto.fileNumber) ||
+      isStringSetAndNotEmpty(searchDto.governmentName) ||
+      isStringSetAndNotEmpty(searchDto.regionCode) ||
+      isStringSetAndNotEmpty(searchDto.name);
+
+    return { searchApplications, searchNoi, searchNonApplications };
   }
 
   private mapAdvancedSearchResults(

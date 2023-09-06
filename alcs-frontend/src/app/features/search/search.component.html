@@ -18,23 +18,34 @@
       <div class="column">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
-          <input id="name" matInput formControlName="name" />
+          <input id="name" matInput formControlName="name" minlength="3" />
         </mat-form-field>
         <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Ministry or Department</div>
+        <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div class="address-search-fields-wrapper">
     <div class="row">
-      <mat-form-field class="column" appearance="outline">
+      <mat-form-field appearance="outline" class="column">
         <mat-label>PID</mat-label>
-        <input id="pid" matInput formControlName="pid" />
+        <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
       </mat-form-field>
+
       <mat-form-field class="column" appearance="outline">
         <mat-label>Civic Address</mat-label>
         <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" />
       </mat-form-field>
+    </div>
+    <div class="row">
+      <div *ngIf="pidControl.invalid && (pidControl.dirty || pidControl.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+      </div>
     </div>
 
     <div class="info-banner">
@@ -223,7 +234,15 @@
   </div>
   <div class="btn-controls">
     <button type="button" mat-stroked-button color="primary" (click)="onReset()">Reset</button>
-    <button type="submit" mat-flat-button color="primary" (click)="onSearch()">Search</button>
+    <button
+      class="search-btn"
+      type="submit"
+      mat-flat-button
+      color="primary"
+      [disabled]="formEmpty"
+    >
+      Search
+    </button>
   </div>
 </form>
 
