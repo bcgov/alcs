@@ -88,7 +88,7 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
   }
 
   async onSelectRecord(record: SearchResult) {
-    let url = this.router.serializeUrl(
+    const url = this.router.serializeUrl(
       this.router.createUrlTree([`/board/${record.board}`], {
         queryParams: { card: record.referenceId, type: record.class },
       })

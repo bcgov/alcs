@@ -92,7 +92,7 @@ export class ApplicationSearchTableComponent implements AfterViewInit, OnDestroy
   }
 
   async onSelectRecord(record: SearchResult) {
-    let url = this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
 
     window.open(url, '_blank');
   }
