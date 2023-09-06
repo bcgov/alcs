@@ -99,8 +99,8 @@ def map_soil_data(data, soil_data):
     data['fill_duration'] = soil_data.get(data[app_component_id], {}).get('fill_duration', None)
     data['fill_area'] = soil_data.get(data[app_component_id], {}).get('fill_area', None)
     data['import_fill'] = soil_data.get(data[app_component_id], {}).get('import_fill', None)
-    data['fill_duration_unit'] = 'duration_unit'
-    data['remove_duration_unit'] = 'duration_unit'
+    data['fill_duration_unit'] = 'months'
+    data['remove_duration_unit'] = 'months'
     data['remove_type'] = soil_data.get(data[app_component_id], {}).get('remove_type', None)
     data['remove_origin'] = soil_data.get(data[app_component_id], {}).get('remove_origin', None)
     data['total_remove'] = soil_data.get(data[app_component_id], {}).get('total_remove', None)
