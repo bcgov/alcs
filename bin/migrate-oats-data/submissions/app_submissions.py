@@ -110,6 +110,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
     rows (list): Rows of data to insert in the database.
     direction_data (dict): Dictionary of adjacent parcel data
     subdiv_data: dictionary of subdivision data lists
+    soil_data: dictonary of soil element data.
 
     Returns:
     None: Commits the changes to the database.
@@ -152,13 +153,16 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
     :param direction_data: A dictionary of adjacent parcel data.
-    :param subdiv_data: dictionary of subdivision data lists
+    :param subdiv_data: dictionary of subdivision data lists.
+    :param soil_data: dictonary of soil element data.
     :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
     - Initializes empty lists
     - Iterates over 'app_sub_raw_data_list'
         - Maps adjacent parcel data based on alr_application_id
+        - Maps subdivision data on appl_component_id
+        _ Maps soil data based on appl_component_id
         - Maps the basic fields of the data dictionary based on the alr_change_code
     - Returns the mapped lists
     """

@@ -27,7 +27,6 @@ def create_soil_dict(soil_rows):
         if app_component_id in soil_dict:
 
             if row[code] == 'REMOVE':
-                # if soil_dict[app_component_id]['RMV'] == True:
                 if 'RMV' in soil_dict.get(app_component_id, {}):
                         print('ignored element_id:',row['soil_change_element_id'])
                 else:
@@ -44,7 +43,6 @@ def create_soil_dict(soil_rows):
 
 
             elif row[code] == 'ADD':
-                # if soil_dict[app_component_id]['ADD'] == True:
                 if 'ADD' in soil_dict.get(app_component_id, {}):
                         print('ignored element_id:',row['soil_change_element_id'])
                 else:            
