@@ -277,7 +277,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onFileTypeChange(fileTypes: string[]) {
-    console.log('search -> onFileTypeChange', fileTypes);
     this.componentTypeControl.setValue(fileTypes);
   }
 
