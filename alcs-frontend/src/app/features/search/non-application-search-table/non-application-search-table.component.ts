@@ -4,7 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { NonApplicationSearchResultDto } from '../../../services/search/search.dto';
-import { COVENANT_TYPE_LABEL, PLANNING_TYPE_LABEL } from '../../../shared/application-type-pill/application-type-pill.constants';
+import {
+  COVENANT_TYPE_LABEL,
+  PLANNING_TYPE_LABEL,
+} from '../../../shared/application-type-pill/application-type-pill.constants';
 import { TableChange } from '../search.interface';
 
 interface SearchResult {
@@ -44,8 +47,8 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
   sortDirection = 'DESC';
   sortField = 'fileId';
 
-  COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL
-  PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL
+  COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
+  PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
 
   constructor(private router: Router) {}
 
@@ -85,7 +88,13 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
   }
 
   async onSelectRecord(record: SearchResult) {
-    await this.router.navigateByUrl(`/board/${record.board}?card=${record.referenceId}&type=${record.class}`);
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/board/${record.board}`], {
+        queryParams: { card: record.referenceId, type: record.class },
+      })
+    );
+
+    window.open(url, '_blank');
   }
 
   private mapNonApplications(nonApplications: NonApplicationSearchResultDto[]): NonApplicationSearchResultDto[] {
