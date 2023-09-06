@@ -92,7 +92,9 @@ export class NoticeOfIntentSearchTableComponent implements AfterViewInit, OnDest
   }
 
   async onSelectRecord(record: SearchResult) {
-    await this.router.navigateByUrl(`/notice-of-intent/${record.referenceId}`);
+    let url = this.router.serializeUrl(this.router.createUrlTree([`/notice-of-intent/${record.referenceId}`]));
+
+    window.open(url, '_blank');
   }
 
   private mapNoticeOfIntent(applications: NoticeOfIntentSearchResultDto[]) {
