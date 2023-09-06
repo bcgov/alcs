@@ -4,7 +4,7 @@ def noi_insert_query(number_of_rows_to_insert):
     nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
         INSERT INTO alcs.notice_of_intent (file_number, 
-                                      applicant, region_code, local_government_uuid, audit_created_by)
+                                      applicant, region_code, local_government_uuid, audit_created_by, type_code)
 
         VALUES{nois_to_insert}
         ON CONFLICT (file_number) DO UPDATE SET
@@ -12,7 +12,8 @@ def noi_insert_query(number_of_rows_to_insert):
             applicant = EXCLUDED.applicant,
             region_code = EXCLUDED.region_code,
             local_government_uuid = EXCLUDED.local_government_uuid,
-            audit_created_by = EXCLUDED.audit_created_by
+            audit_created_by = EXCLUDED.audit_created_by,
+            type_code = EXCLUDED.type_code
     """
 
 @inject_conn_pool

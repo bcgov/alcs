@@ -129,6 +129,18 @@ WITH
         WHERE
             oo2.organization_type_cd = 'PANEL'
             OR oo3.organization_type_cd = 'PANEL'
+    ),
+    application_type_lookup AS (
+        SELECT
+            oaac.alr_application_id AS application_id,
+            oacc."description" AS "description",
+            oaac.alr_change_code AS code
+        FROM
+            oats.oats_alr_appl_components AS oaac
+            JOIN oats.oats_alr_change_codes oacc ON oaac.alr_change_code = oacc.alr_change_code
+            LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
+        WHERE
+            aee.component_id IS NULL
     )
 SELECT
     ng.noi_application_id :: text AS file_number,
@@ -142,10 +154,17 @@ SELECT
         WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
         ELSE '001cfdad-bc6e-4d25-9294-1550603da980' --Peace River if unable to find uuid
     END AS local_government_uuid,
-    'oats_etl' AS audit_created_by
+    'oats_etl' AS audit_created_by,
+    CASE
+        WHEN atl.code = 'SCH' THEN 'PFRS'
+        WHEN atl.code = 'EXT' THEN 'ROSO'
+        WHEN atl.code = 'FILL' THEN 'POFO'
+        ELSE 'POFO' -- POFO if value is null
+    END AS type_code
 FROM
     noi_grouped AS ng
     LEFT JOIN applicant_lookup ON ng.noi_application_id = applicant_lookup.application_id
     LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
     LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON ng.noi_application_id = alcs_gov.application_id
+    LEFT JOIN application_type_lookup AS atl ON ng.noi_application_id = atl.application_id
