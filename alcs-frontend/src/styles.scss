@@ -10,6 +10,9 @@
 @use 'styles/buttons';
 @use 'styles/ngselect';
 
+// mat-autocomplete
+@use 'styles/autocomplete';
+
 // ng-select
 @use '@ng-select/ng-select/themes/material.theme.css';
 

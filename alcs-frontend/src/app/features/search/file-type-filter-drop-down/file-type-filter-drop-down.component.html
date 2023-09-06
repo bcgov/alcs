@@ -8,7 +8,7 @@
     [matAutocomplete]="auto"
     [formControl]="componentTypeControl"
   />
-  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+  <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
