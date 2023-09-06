@@ -1,5 +1,4 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
-import { NOI_SUBMISSION_STATUS } from '../notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NotificationTransfereeDto } from '../notification-transferee/notification-transferee.dto';
 
 export enum NOTIFICATION_STATUS {
@@ -10,7 +9,7 @@ export enum NOTIFICATION_STATUS {
 }
 
 export interface NotificationSubmissionStatusDto extends BaseCodeDto {
-  code: NOI_SUBMISSION_STATUS;
+  code: NOTIFICATION_STATUS;
   portalBackgroundColor: string;
   portalColor: string;
 }
@@ -36,6 +35,11 @@ export interface NotificationSubmissionDto {
   owners: NotificationTransfereeDto[];
   canEdit: boolean;
   canView: boolean;
+  contactFirstName: string | null;
+  contactLastName: string | null;
+  contactOrganization: string | null;
+  contactPhone: string | null;
+  contactEmail: string | null;
 }
 
 export interface NotificationSubmissionDetailedDto extends NotificationSubmissionDto {
@@ -46,4 +50,9 @@ export interface NotificationSubmissionUpdateDto {
   applicant?: string | null;
   purpose?: string | null;
   localGovernmentUuid?: string | null;
+  contactFirstName?: string | null;
+  contactLastName?: string | null;
+  contactOrganization?: string | null;
+  contactPhone?: string | null;
+  contactEmail?: string | null;
 }

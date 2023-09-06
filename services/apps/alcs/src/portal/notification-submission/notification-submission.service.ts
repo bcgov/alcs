@@ -2,6 +2,7 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
+import { filterMiddleware } from '@nestjs/core/middleware/utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   FindOptionsRelations,
@@ -96,6 +97,26 @@ export class NotificationSubmissionService {
       notificationSubmission.purpose,
     );
     notificationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
+    notificationSubmission.contactFirstName = filterUndefined(
+      updateDto.contactFirstName,
+      notificationSubmission.contactFirstName,
+    );
+    notificationSubmission.contactLastName = filterUndefined(
+      updateDto.contactLastName,
+      notificationSubmission.contactLastName,
+    );
+    notificationSubmission.contactOrganization = filterUndefined(
+      updateDto.contactOrganization,
+      notificationSubmission.contactOrganization,
+    );
+    notificationSubmission.contactPhone = filterUndefined(
+      updateDto.contactPhone,
+      notificationSubmission.contactPhone,
+    );
+    notificationSubmission.contactEmail = filterUndefined(
+      updateDto.contactEmail,
+      notificationSubmission.contactEmail,
+    );
 
     await this.notificationSubmissionRepository.save(notificationSubmission);
 

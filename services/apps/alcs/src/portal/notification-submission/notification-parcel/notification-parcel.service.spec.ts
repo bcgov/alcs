@@ -3,8 +3,6 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { User } from '../../../user/user.entity';
-import { NotificationTransfereeService } from '../notification-transferee/notification-transferee.service';
 import { NotificationParcelUpdateDto } from './notification-parcel.dto';
 import { NotificationParcel } from './notification-parcel.entity';
 import { NotificationParcelService } from './notification-parcel.service';
@@ -12,7 +10,6 @@ import { NotificationParcelService } from './notification-parcel.service';
 describe('NotificationParcelService', () => {
   let service: NotificationParcelService;
   let mockParcelRepo: DeepMocked<Repository<NotificationParcel>>;
-  let mockOwnerService: DeepMocked<NotificationTransfereeService>;
 
   const mockFileNumber = 'mock_applicationFileNumber';
   const mockUuid = 'mock_uuid';
@@ -29,17 +26,12 @@ describe('NotificationParcelService', () => {
 
   beforeEach(async () => {
     mockParcelRepo = createMock();
-    mockOwnerService = createMock();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NotificationParcelService,
         {
           provide: getRepositoryToken(NotificationParcel),
           useValue: mockParcelRepo,
-        },
-        {
-          provide: NotificationTransfereeService,
-          useValue: mockOwnerService,
         },
       ],
     }).compile();
@@ -147,9 +139,8 @@ describe('NotificationParcelService', () => {
   it('should successfully delete a parcel and update applicant', async () => {
     mockParcelRepo.find.mockResolvedValue([mockNOIParcel]);
     mockParcelRepo.remove.mockResolvedValue(new NotificationParcel());
-    mockOwnerService.updateSubmissionApplicant.mockResolvedValue();
 
-    const result = await service.deleteMany([mockUuid], new User());
+    const result = await service.deleteMany([mockUuid]);
 
     expect(result).toBeDefined();
     expect(mockParcelRepo.find).toBeCalledTimes(1);
@@ -158,7 +149,6 @@ describe('NotificationParcelService', () => {
     });
     expect(mockParcelRepo.remove).toBeCalledWith([mockNOIParcel]);
     expect(mockParcelRepo.remove).toBeCalledTimes(1);
-    expect(mockOwnerService.updateSubmissionApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should not call remove if the parcel does not exist', async () => {
@@ -169,9 +159,9 @@ describe('NotificationParcelService', () => {
     mockParcelRepo.find.mockResolvedValue([]);
     mockParcelRepo.remove.mockResolvedValue(new NotificationParcel());
 
-    await expect(
-      service.deleteMany([mockUuid], new User()),
-    ).rejects.toMatchObject(exception);
+    await expect(service.deleteMany([mockUuid])).rejects.toMatchObject(
+      exception,
+    );
     expect(mockParcelRepo.find).toBeCalledTimes(1);
     expect(mockParcelRepo.find).toBeCalledWith({
       where: { uuid: In([mockUuid]) },

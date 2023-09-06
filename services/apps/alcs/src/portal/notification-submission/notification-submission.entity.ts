@@ -69,6 +69,46 @@ export class NotificationSubmission extends Base {
   })
   typeCode: string;
 
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Primary Contacts First Name',
+  })
+  contactFirstName: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Primary Contacts Last Name',
+  })
+  contactLastName: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Primary Contacts Organization Name',
+  })
+  contactOrganization: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Primary Contacts Phone',
+  })
+  contactPhone: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Primary Contacts Email',
+  })
+  contactEmail: string | null;
+
   @AutoMap(() => Notification)
   @ManyToOne(() => Notification)
   @JoinColumn({

@@ -81,11 +81,8 @@ export class NotificationParcelController {
   }
 
   @Delete()
-  async delete(@Body() uuids: string[], @Req() req) {
-    const deletedParcels = await this.parcelService.deleteMany(
-      uuids,
-      req.user.entity,
-    );
+  async delete(@Body() uuids: string[]) {
+    const deletedParcels = await this.parcelService.deleteMany(uuids);
     return this.mapper.mapArrayAsync(
       deletedParcels,
       NotificationParcel,
