@@ -77,7 +77,16 @@
   </cdk-step>
   <cdk-step label="Optional Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.Attachments"></div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.Attachments">
+      <app-other-attachments
+        [$notificationSubmission]="$notificationSubmission"
+        [$notificationDocuments]="$notificationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      >
+      </app-other-attachments>
+    </div>
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>

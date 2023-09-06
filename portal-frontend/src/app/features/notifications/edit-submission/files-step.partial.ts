@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
+import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { StepComponent } from './step.partial';
@@ -13,7 +13,7 @@ import { StepComponent } from './step.partial';
   styleUrls: [],
 })
 export abstract class FilesStepComponent extends StepComponent {
-  @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;
+  @Input() $notificationDocuments!: BehaviorSubject<NotificationDocumentDto[]>;
 
   DOCUMENT_TYPE = DOCUMENT_TYPE;
 
@@ -22,7 +22,7 @@ export abstract class FilesStepComponent extends StepComponent {
   protected abstract save(): Promise<void>;
 
   protected constructor(
-    protected noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    protected notificationDocumentService: NotificationDocumentService,
     protected dialog: MatDialog
   ) {
     super();
@@ -32,26 +32,26 @@ export abstract class FilesStepComponent extends StepComponent {
     if (this.fileId) {
       await this.save();
       const mappedFiles = file.file;
-      await this.noticeOfIntentDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
-      const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
+      await this.notificationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+      const documents = await this.notificationDocumentService.getByFileId(this.fileId);
       if (documents) {
-        this.$noiDocuments.next(documents);
+        this.$notificationDocuments.next(documents);
       }
     }
   }
 
-  async onDeleteFile($event: NoticeOfIntentDocumentDto) {
-    await this.noticeOfIntentDocumentService.deleteExternalFile($event.uuid);
+  async onDeleteFile($event: NotificationDocumentDto) {
+    await this.notificationDocumentService.deleteExternalFile($event.uuid);
     if (this.fileId) {
-      const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
+      const documents = await this.notificationDocumentService.getByFileId(this.fileId);
       if (documents) {
-        this.$noiDocuments.next(documents);
+        this.$notificationDocuments.next(documents);
       }
     }
   }
 
   async openFile(uuid: string) {
-    const res = await this.noticeOfIntentDocumentService.openFile(uuid);
+    const res = await this.notificationDocumentService.openFile(uuid);
     if (res) {
       window.open(res.url, '_blank');
     }

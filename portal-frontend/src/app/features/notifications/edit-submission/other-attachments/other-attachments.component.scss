@@ -1,0 +1,38 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+section {
+  margin-top: rem(32);
+}
+
+.uploader {
+  margin-top: rem(24);
+}
+
+h4 {
+  margin-bottom: rem(8) !important;
+}
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+  height: rem(75);
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+:host::ng-deep {
+  .mdc-text-field--invalid {
+    margin-top: rem(8);
+  }
+}
+
+.no-data-text {
+  text-align: center;
+  color: colors.$grey;
+  padding-top: rem(12);
+}

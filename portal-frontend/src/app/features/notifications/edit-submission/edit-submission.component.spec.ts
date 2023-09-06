@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -17,6 +18,10 @@ describe('EditSubmissionComponent', () => {
       providers: [
         {
           provide: NotificationSubmissionService,
+          useValue: {},
+        },
+        {
+          provide: NotificationDocumentService,
           useValue: {},
         },
         {

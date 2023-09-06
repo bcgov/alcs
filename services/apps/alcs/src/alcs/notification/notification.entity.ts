@@ -6,12 +6,14 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { LocalGovernment } from '../local-government/local-government.entity';
+import { NotificationDocument } from './notification-document/notification-document.entity';
 import { NotificationType } from './notification-type/notification-type.entity';
 
 @Entity()
@@ -79,4 +81,8 @@ export class Notification extends Base {
 
   @Column()
   typeCode: string;
+
+  @AutoMap()
+  @OneToMany(() => NotificationDocument, (document) => document.notification)
+  documents: NotificationDocument[];
 }
