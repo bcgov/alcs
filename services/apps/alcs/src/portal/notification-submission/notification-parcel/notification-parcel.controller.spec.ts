@@ -146,11 +146,7 @@ describe('NotificationParcelController', () => {
     const fakeUuid = 'fake_uuid';
     mockNotificationParcelService.deleteMany.mockResolvedValue([]);
 
-    const result = await controller.delete([fakeUuid], {
-      user: {
-        entity: new User(),
-      },
-    });
+    const result = await controller.delete([fakeUuid]);
 
     expect(mockNotificationParcelService.deleteMany).toBeCalledTimes(1);
     expect(result).toBeDefined();

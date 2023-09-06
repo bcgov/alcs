@@ -1,9 +1,7 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { User } from '../../../user/user.entity';
-import { NotificationTransfereeService } from '../notification-transferee/notification-transferee.service';
 import { NotificationParcelUpdateDto } from './notification-parcel.dto';
 import { NotificationParcel } from './notification-parcel.entity';
 
@@ -12,8 +10,6 @@ export class NotificationParcelService {
   constructor(
     @InjectRepository(NotificationParcel)
     private parcelRepository: Repository<NotificationParcel>,
-    @Inject(forwardRef(() => NotificationTransfereeService))
-    private noticeOfIntentOwnerService: NotificationTransfereeService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -65,7 +61,7 @@ export class NotificationParcelService {
     return await this.parcelRepository.save(updatedParcels);
   }
 
-  async deleteMany(uuids: string[], user: User) {
+  async deleteMany(uuids: string[]) {
     const parcels = await this.parcelRepository.find({
       where: { uuid: In(uuids) },
     });
@@ -76,12 +72,6 @@ export class NotificationParcelService {
       );
     }
 
-    const result = await this.parcelRepository.remove(parcels);
-    await this.noticeOfIntentOwnerService.updateSubmissionApplicant(
-      parcels[0].notificationSubmissionUuid,
-      user,
-    );
-
-    return result;
+    return await this.parcelRepository.remove(parcels);
   }
 }

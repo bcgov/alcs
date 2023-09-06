@@ -4,13 +4,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
+import {
+  NOTIFICATION_STATUS,
+  NotificationSubmissionDetailedDto,
+} from '../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
+import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNotificationSteps {
   Parcel = 0,
@@ -41,6 +46,8 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
+  @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
+  @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
@@ -129,8 +136,18 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         }
         break;
       case EditNotificationSteps.Transferees:
+        //DO NOTHING
+        break;
       case EditNotificationSteps.PrimaryContact:
+        if (this.primaryContactComponent) {
+          await this.primaryContactComponent.onSave();
+        }
+        break;
       case EditNotificationSteps.Government:
+        if (this.selectGovernmentComponent) {
+          await this.selectGovernmentComponent.onSave();
+        }
+        break;
       case EditNotificationSteps.Proposal:
       case EditNotificationSteps.Attachments:
       case EditNotificationSteps.ReviewAndSubmit:
@@ -171,10 +188,10 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
       this.notificationSubmission = await this.notificationSubmissionService.getByFileId(fileId);
       this.fileId = fileId;
 
-      // if (this.notificationSubmission?.status.code !== NOI_SUBMISSION_STATUS.IN_PROGRESS) {
-      //   this.toastService.showErrorToast('Unable to edit Notice of Intent');
-      //   await this.router.navigateByUrl(`/home`);
-      // }
+      if (this.notificationSubmission?.status.code !== NOTIFICATION_STATUS.IN_PROGRESS) {
+        this.toastService.showErrorToast('Unable to edit Notification');
+        await this.router.navigateByUrl(`/home`);
+      }
 
       const documents: NoticeOfIntentDocumentDto[] = []; //TODO await this.noticeOfIntentDocumentService.getByFileId(fileId);
       if (documents) {

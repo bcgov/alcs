@@ -3,18 +3,18 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NotificationParcelService } from '../../../../../services/notification-parcel/notification-parcel.service';
 import { DeleteParcelDialogComponent } from './delete-parcel-dialog.component';
 
 describe('DeleteParcelDialogComponent', () => {
   let component: DeleteParcelDialogComponent;
   let fixture: ComponentFixture<DeleteParcelDialogComponent>;
   let mockHttpClient: DeepMocked<HttpClient>;
-  let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
+  let mockNotificationParcelService: DeepMocked<NotificationParcelService>;
 
   beforeEach(async () => {
     mockHttpClient = createMock();
-    mockNoiParcelService = createMock();
+    mockNotificationParcelService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [DeleteParcelDialogComponent],
@@ -24,8 +24,8 @@ describe('DeleteParcelDialogComponent', () => {
           useValue: mockHttpClient,
         },
         {
-          provide: NoticeOfIntentParcelService,
-          useValue: mockNoiParcelService,
+          provide: NotificationParcelService,
+          useValue: mockNotificationParcelService,
         },
         {
           provide: MatDialogRef,

@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { Column } from 'typeorm';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NotificationTransfereeDto } from './notification-transferee/notification-transferee.dto';
 
@@ -20,6 +21,21 @@ export class NotificationSubmissionDto {
 
   @AutoMap()
   applicant: string;
+
+  @AutoMap(() => String)
+  contactFirstName: string | null;
+
+  @AutoMap(() => String)
+  contactLastName: string | null;
+
+  @AutoMap(() => String)
+  contactOrganization: string | null;
+
+  @AutoMap(() => String)
+  contactPhone: string | null;
+
+  @AutoMap(() => String)
+  contactEmail: string | null;
 
   @AutoMap()
   localGovernmentUuid: string;
@@ -56,4 +72,24 @@ export class NotificationSubmissionUpdateDto {
   @IsUUID()
   @IsOptional()
   localGovernmentUuid?: string;
+
+  @IsString()
+  @IsOptional()
+  contactFirstName?: string | null;
+
+  @IsString()
+  @IsOptional()
+  contactLastName?: string | null;
+
+  @IsString()
+  @IsOptional()
+  contactOrganization?: string | null;
+
+  @IsString()
+  @IsOptional()
+  contactPhone?: string | null;
+
+  @IsString()
+  @IsOptional()
+  contactEmail?: string | null;
 }
