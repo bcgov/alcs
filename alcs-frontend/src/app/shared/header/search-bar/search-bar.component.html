@@ -1,13 +1,31 @@
-<div class="search-bar">
-  <mat-form-field class="search-input" appearance="outline">
-    <input
-      #searchInput
-      (keyup.enter)="onSearch()"
-      (focus)="searchInput.select()"
-      [(ngModel)]="searchText"
-      matInput
-      placeholder="File ID"
-    />
-    <mat-icon matPrefix>search</mat-icon>
-  </mat-form-field>
+<button
+  *ngIf="!showInput"
+  mat-icon-button
+  matTooltip="Search by File ID or Advanced Search"
+  type="button"
+  (click)="toggleInput()"
+>
+  <mat-icon class="icon">search</mat-icon>
+</button>
+<div *ngIf="showInput" class="search-container">
+  <div class="search-bar">
+    <mat-form-field class="search-input" appearance="outline">
+      <input
+        #searchInput
+        (keyup.enter)="onSearch()"
+        (focus)="searchInput.select()"
+        [(ngModel)]="searchText"
+        matInput
+        placeholder="Search by File ID"
+      />
+    </mat-form-field>
+    <button mat-icon-button (click)="onSearch()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+  <div class="advanced-search">
+    <a href="/search">
+      <button mat-stroked-button color="primary">Advanced Search</button>
+    </a>
+  </div>
 </div>

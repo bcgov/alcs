@@ -11,11 +11,20 @@ import { ToastService } from '../../../services/toast/toast.service';
 })
 export class SearchBarComponent {
   searchText = '';
+  showInput = false;
   @ViewChild('searchInput') input!: ElementRef;
 
   constructor(private toastService: ToastService, private router: Router, private searchService: SearchService) {}
 
+  async toggleInput() {
+    this.showInput = !this.showInput;
+  }
+
   async onSearch() {
+    if (!this.searchText) {
+      return this.toggleInput();
+    }
+
     try {
       const searchResult = await this.searchService.fetch(this.searchText);
       if (!searchResult || searchResult.length < 1) {
@@ -41,6 +50,7 @@ export class SearchBarComponent {
           default:
             this.toastService.showErrorToast(`Unable to navigate to ${result.referenceId}`);
         }
+        this.toggleInput();
       }
 
       if (searchResult?.length > 1) {
