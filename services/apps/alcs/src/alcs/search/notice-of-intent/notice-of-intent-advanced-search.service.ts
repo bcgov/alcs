@@ -149,8 +149,6 @@ export class NoticeOfIntentAdvancedSearchService {
 
     query = this.compileDecisionSearchQuery(searchDto, query);
 
-    query = this.compileFileTypeSearchQuery(searchDto, query);
-
     query = this.compileDateRangeSearchQuery(searchDto, query);
 
     return query;
@@ -294,43 +292,6 @@ export class NoticeOfIntentAdvancedSearchService {
           ),
         );
     }
-    return query;
-  }
-
-  private compileFileTypeSearchQuery(searchDto: SearchRequestDto, query) {
-    query = query;
-
-    if (searchDto.applicationFileTypes.length > 0) {
-      // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
-      if (
-        searchDto.resolutionNumber === undefined &&
-        searchDto.resolutionYear === undefined
-      ) {
-        query = this.joinDecision(query);
-      }
-
-      query = query.leftJoin(
-        NoticeOfIntentDecisionComponent,
-        'decisionComponent',
-        'decisionComponent.notice_of_intent_decision_uuid = decision.uuid',
-      );
-
-      query = query.andWhere(
-        new Brackets((qb) =>
-          qb
-            .where('noiSearch.notice_of_intent_type_code IN (:...typeCodes)', {
-              typeCodes: searchDto.applicationFileTypes,
-            })
-            .orWhere(
-              'decisionComponent.notice_of_intent_decision_component_type_code IN (:...typeCodes)',
-              {
-                typeCodes: searchDto.applicationFileTypes,
-              },
-            ),
-        ),
-      );
-    }
-
     return query;
   }
 }

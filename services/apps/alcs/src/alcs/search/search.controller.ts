@@ -6,6 +6,7 @@ import * as config from 'config';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { APPLICATION_SUBMISSION_TYPES } from '../../portal/pdf-generation/generate-submission-document.service';
 import { Application } from '../application/application.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { ApplicationTypeDto } from '../code/application-code/application-type/application-type.dto';
@@ -144,14 +145,43 @@ export class SearchController {
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    const applicationSearchResult =
-      await this.applicationSearchService.searchApplications(searchDto);
+    let searchApplications = true;
+    let searchNoi = true;
+    let searchNonApplications = true;
 
-    const noticeOfIntentSearchService =
-      await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+    ({ searchApplications, searchNoi, searchNonApplications } =
+      this.getEntitiesTypeToSearch(
+        searchDto,
+        searchApplications,
+        searchNoi,
+        searchNonApplications,
+      ));
 
-    const nonApplications =
-      await this.nonApplicationsSearchService.searchNonApplications(searchDto);
+    let applicationSearchResult: AdvancedSearchResultDto<
+      ApplicationSubmissionSearchView[]
+    > | null = null;
+    if (searchApplications) {
+      applicationSearchResult =
+        await this.applicationSearchService.searchApplications(searchDto);
+    }
+
+    let noticeOfIntentSearchService: AdvancedSearchResultDto<
+      NoticeOfIntentSubmissionSearchView[]
+    > | null = null;
+    if (searchNoi) {
+      noticeOfIntentSearchService =
+        await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
+    }
+
+    let nonApplications: AdvancedSearchResultDto<
+      NonApplicationSearchView[]
+    > | null = null;
+    if (searchNonApplications) {
+      nonApplications =
+        await this.nonApplicationsSearchService.searchNonApplications(
+          searchDto,
+        );
+    }
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applicationSearchResult,
@@ -160,6 +190,32 @@ export class SearchController {
     );
 
     return mappedSearchResult;
+  }
+
+  private getEntitiesTypeToSearch(
+    searchDto: SearchRequestDto,
+    searchApplications: boolean,
+    searchNoi: boolean,
+    searchNonApplications: boolean,
+  ) {
+    if (searchDto.applicationFileTypes.length > 0) {
+      searchApplications =
+        searchDto.applicationFileTypes.filter((searchType) =>
+          Object.values(APPLICATION_SUBMISSION_TYPES).includes(
+            APPLICATION_SUBMISSION_TYPES[
+              searchType as keyof typeof APPLICATION_SUBMISSION_TYPES
+            ],
+          ),
+        ).length > 0;
+
+      searchNoi = searchDto.applicationFileTypes.includes('NOI');
+
+      searchNonApplications =
+        searchDto.applicationFileTypes.filter((searchType) =>
+          ['COV', 'PLAN', 'SRW'].includes(searchType),
+        ).length > 0;
+    }
+    return { searchApplications, searchNoi, searchNonApplications };
   }
 
   @Post('/advanced/application')

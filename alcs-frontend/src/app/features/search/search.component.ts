@@ -22,6 +22,7 @@ import {
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { formatDateForApi } from '../../shared/utils/api-date-formatter';
+import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
 
 export const defaultStatusBackgroundColour = '#ffffff';
@@ -42,6 +43,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
   @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
+  @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
 
   applications: ApplicationSearchResultDto[] = [];
   applicationTotal = 0;
@@ -60,6 +62,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string | undefined>(undefined);
+  componentTypeControl = new FormControl<string[] | undefined>(undefined);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
     name: new FormControl<string | undefined>(undefined),
@@ -70,7 +73,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     resolutionYear: new FormControl<number | undefined>(undefined),
     legacyId: new FormControl<string | undefined>(undefined),
     portalStatus: this.portalStatusControl,
-    componentType: new FormControl<string | undefined>(undefined),
+    componentType: this.componentTypeControl,
     government: this.localGovernmentControl,
     region: new FormControl<string | undefined>(undefined),
     dateSubmittedFrom: new FormControl(undefined),
@@ -163,7 +166,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onBlur() {
-    //Blur will fire before onChange above, so use setTimeout to delay it
+    //Blur will fire before onGovernmentChange above, so use setTimeout to delay it
     setTimeout(() => {
       const localGovernmentName = this.localGovernmentControl.getRawValue();
       if (localGovernmentName) {
@@ -178,6 +181,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onReset() {
     this.searchForm.reset();
+    this.fileTypeFilterDropDownComponent.reset();
   }
 
   async onSearch() {
@@ -221,9 +225,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
-      // TODO this will be reworked in later tickets
       applicationFileTypes: this.searchForm.controls.componentType.value
-        ? this.searchForm.controls.componentType.value.split(',')
+        ? this.searchForm.controls.componentType.value
         : [],
     };
   }
@@ -271,6 +274,10 @@ export class SearchComponent implements OnInit, OnDestroy {
       default:
         this.toastService.showErrorToast('Not implemented');
     }
+  }
+
+  onFileTypeChange(fileTypes: string[]) {
+    this.componentTypeControl.setValue(fileTypes);
   }
 
   private async loadGovernments() {

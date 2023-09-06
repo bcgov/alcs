@@ -115,10 +115,7 @@
       </div>
 
       <div class="column">
-        <mat-form-field appearance="outline">
-          <mat-label>File Type (To be implemented)</mat-label>
-          <input id="componentType" matInput formControlName="componentType" />
-        </mat-form-field>
+        <app-file-type-filter-drop-down #fileTypeDropDown (fileTypeChange)="onFileTypeChange($event)" />
         <div class="subtext">Note: This field searches both proposal and decision component type</div>
       </div>
     </div>
@@ -224,11 +221,11 @@
       </div>
     </div>
   </div>
+  <div class="btn-controls">
+    <button type="button" mat-stroked-button color="primary" (click)="onReset()">Reset</button>
+    <button type="submit" mat-flat-button color="primary" (click)="onSearch()">Search</button>
+  </div>
 </form>
-<div class="btn-controls">
-  <button mat-stroked-button color="primary" (click)="onReset()">Reset</button>
-  <button mat-flat-button color="primary" (click)="onSearch()">Search</button>
-</div>
 
 <div class="search-fields-wrapper search-result-wrapper">
   <h2 class="search-title">Search Results:</h2>

@@ -251,4 +251,78 @@ describe('SearchController', () => {
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
+
+  it('should call advanced search to retrieve Applications only when application file type selected', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      isIncludeOtherParcels: false,
+      applicationFileTypes: ['NFUP'],
+    };
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toBeCalledWith(mockSearchRequestDto);
+    expect(result.applications).toBeDefined();
+    expect(result.totalApplications).toBe(0);
+  });
+
+  it('should call advanced search to retrieve NOIs only when NOI file type selected', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      isIncludeOtherParcels: false,
+      applicationFileTypes: ['NOI'],
+    };
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toBeCalledTimes(1);
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toBeCalledWith(mockSearchRequestDto);
+    expect(result.noticeOfIntents).toBeDefined();
+    expect(result.totalNoticeOfIntents).toBe(0);
+  });
+
+  it('should call advanced search to retrieve Non Applications only when non application file type selected', async () => {
+    const mockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      isIncludeOtherParcels: false,
+      applicationFileTypes: ['COV'],
+    };
+
+    const result = await controller.advancedSearch(
+      mockSearchRequestDto as SearchRequestDto,
+    );
+
+    expect(result.totalNoticeOfIntents).toBe(0);
+
+    expect(
+      mockNonApplicationsAdvancedSearchService.searchNonApplications,
+    ).toBeCalledTimes(1);
+    expect(
+      mockNonApplicationsAdvancedSearchService.searchNonApplications,
+    ).toBeCalledWith(mockSearchRequestDto);
+    expect(result.nonApplications).toBeDefined();
+    expect(result.totalNonApplications).toBe(0);
+  });
 });
