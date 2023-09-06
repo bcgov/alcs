@@ -111,7 +111,7 @@ export class NotificationSubmissionStatusService {
 
     if (!submission) {
       throw new ServiceNotFoundException(
-        `Submission does not exist for provided notice of intent ${fileNumber}. Only notice of intents originated in portal have statuses.`,
+        `Submission does not exist for provided notification ${fileNumber}. Only notifications originated in portal have statuses.`,
       );
     }
 

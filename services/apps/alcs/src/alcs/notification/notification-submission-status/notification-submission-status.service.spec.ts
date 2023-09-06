@@ -191,7 +191,7 @@ describe('NotificationSubmissionStatusService', () => {
       service.getCurrentStatusesByFileNumber(fakeFileNumber),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(
-        `Submission does not exist for provided notice of intent ${fakeFileNumber}. Only notice of intents originated in portal have statuses.`,
+        `Submission does not exist for provided notification ${fakeFileNumber}. Only notifications originated in portal have statuses.`,
       ),
     );
 
