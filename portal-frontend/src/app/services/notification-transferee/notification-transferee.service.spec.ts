@@ -43,7 +43,7 @@ describe('NotificationTransfereeService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should make a get request for loading owners', async () => {
+  it('should make a get request for loading transferees', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
     await service.fetchBySubmissionId(fileId);
@@ -52,7 +52,7 @@ describe('NotificationTransfereeService', () => {
     expect(mockHttpClient.get.mock.calls[0][0]).toContain('notification-transferee');
   });
 
-  it('should show an error toast if getting owners fails', async () => {
+  it('should show an error toast if getting transferees fails', async () => {
     mockHttpClient.get.mockReturnValue(throwError(() => ({})));
 
     await service.fetchBySubmissionId(fileId);
@@ -65,7 +65,7 @@ describe('NotificationTransfereeService', () => {
     mockHttpClient.post.mockReturnValue(of({}));
 
     await service.create({
-      noticeOfIntentSubmissionUuid: '',
+      notificationSubmissionUuid: '',
       email: '',
       phoneNumber: '',
       typeCode: '',
@@ -75,11 +75,11 @@ describe('NotificationTransfereeService', () => {
     expect(mockHttpClient.post.mock.calls[0][0]).toContain('notification-transferee');
   });
 
-  it('should show an error toast if creating owner fails', async () => {
+  it('should show an error toast if creating transferee fails', async () => {
     mockHttpClient.post.mockReturnValue(throwError(() => ({})));
 
     await service.create({
-      noticeOfIntentSubmissionUuid: '',
+      notificationSubmissionUuid: '',
       email: '',
       phoneNumber: '',
       typeCode: '',
@@ -102,7 +102,7 @@ describe('NotificationTransfereeService', () => {
     expect(mockHttpClient.patch.mock.calls[0][0]).toContain('notification-transferee');
   });
 
-  it('should show an error toast if updating owner fails', async () => {
+  it('should show an error toast if updating transferee fails', async () => {
     mockHttpClient.patch.mockReturnValue(throwError(() => ({})));
 
     await service.update('', {
@@ -124,66 +124,12 @@ describe('NotificationTransfereeService', () => {
     expect(mockHttpClient.delete.mock.calls[0][0]).toContain('notification-transferee');
   });
 
-  it('should show an error toast if delete owner fails', async () => {
+  it('should show an error toast if delete transferee fails', async () => {
     mockHttpClient.delete.mockReturnValue(throwError(() => ({})));
 
     await service.delete('');
 
     expect(mockHttpClient.delete).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should make a post request for removeFromParcel', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.removeFromParcel('', '');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('notification-transferee');
-  });
-
-  it('should show an error toast if removeFromParcel', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
-
-    await service.removeFromParcel('', '');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should make a post request for linkToParcel', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.linkToParcel('', '');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('notification-transferee');
-  });
-
-  it('should show an error toast if linkToParcel', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
-
-    await service.linkToParcel('', '');
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
-
-  it('should make a post request for setPrimaryContact', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.setPrimaryContact({ noticeOfIntentSubmissionUuid: '' });
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('notification-transferee');
-  });
-
-  it('should show an error toast if setPrimaryContact', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
-
-    await service.setPrimaryContact({ noticeOfIntentSubmissionUuid: '' });
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 });
