@@ -1,6 +1,7 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
@@ -8,6 +9,8 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
+import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
+import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
@@ -22,7 +25,7 @@ import { NotificationTransferee } from './notification-transferee/notification-t
 
 describe('NotificationSubmissionController', () => {
   let controller: NotificationSubmissionController;
-  let mockNoiSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
   let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockEmailService: DeepMocked<EmailService>;
@@ -33,7 +36,7 @@ describe('NotificationSubmissionController', () => {
   const bceidBusinessGuid = 'business-guid';
 
   beforeEach(async () => {
-    mockNoiSubmissionService = createMock();
+    mockNotificationSubmissionService = createMock();
     mockDocumentService = createMock();
     mockLgService = createMock();
     mockEmailService = createMock();
@@ -44,7 +47,7 @@ describe('NotificationSubmissionController', () => {
         NotificationSubmissionProfile,
         {
           provide: NotificationSubmissionService,
-          useValue: mockNoiSubmissionService,
+          useValue: mockNotificationSubmissionService,
         },
         {
           provide: NoticeOfIntentDocumentService,
@@ -75,22 +78,22 @@ describe('NotificationSubmissionController', () => {
       NotificationSubmissionController,
     );
 
-    mockNoiSubmissionService.update.mockResolvedValue(
+    mockNotificationSubmissionService.update.mockResolvedValue(
       new NotificationSubmission({
         applicant: applicant,
         localGovernmentUuid,
       }),
     );
 
-    mockNoiSubmissionService.create.mockResolvedValue('2');
-    mockNoiSubmissionService.getByFileNumber.mockResolvedValue(
+    mockNotificationSubmissionService.create.mockResolvedValue('2');
+    mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(
       new NotificationSubmission(),
     );
-    mockNoiSubmissionService.getByUuid.mockResolvedValue(
+    mockNotificationSubmissionService.getByUuid.mockResolvedValue(
       new NotificationSubmission(),
     );
 
-    mockNoiSubmissionService.mapToDTOs.mockResolvedValue([]);
+    mockNotificationSubmissionService.mapToDTOs.mockResolvedValue([]);
     mockLgService.list.mockResolvedValue([
       new LocalGovernment({
         uuid: localGovernmentUuid,
@@ -106,7 +109,7 @@ describe('NotificationSubmissionController', () => {
   });
 
   it('should call out to service when fetching notice of intents', async () => {
-    mockNoiSubmissionService.getAllByUser.mockResolvedValue([]);
+    mockNotificationSubmissionService.getAllByUser.mockResolvedValue([]);
 
     const submissions = await controller.getSubmissions({
       user: {
@@ -115,11 +118,13 @@ describe('NotificationSubmissionController', () => {
     });
 
     expect(submissions).toBeDefined();
-    expect(mockNoiSubmissionService.getAllByUser).toHaveBeenCalledTimes(1);
+    expect(
+      mockNotificationSubmissionService.getAllByUser,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when fetching a notice of intent', async () => {
-    mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NotificationSubmissionDetailedDto,
     );
 
@@ -133,14 +138,16 @@ describe('NotificationSubmissionController', () => {
     );
 
     expect(noticeOfIntent).toBeDefined();
-    expect(mockNoiSubmissionService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.getByUuid).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should fetch notice of intent by bceid if user has same guid as a local government', async () => {
-    mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NotificationSubmissionDetailedDto,
     );
-    mockNoiSubmissionService.getByUuid.mockResolvedValue(
+    mockNotificationSubmissionService.getByUuid.mockResolvedValue(
       new NotificationSubmission({
         localGovernmentUuid: '',
       }),
@@ -158,12 +165,14 @@ describe('NotificationSubmissionController', () => {
     );
 
     expect(noiSubmission).toBeDefined();
-    expect(mockNoiSubmissionService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.getByUuid).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call out to service when creating an notice of intent', async () => {
-    mockNoiSubmissionService.create.mockResolvedValue('');
-    mockNoiSubmissionService.mapToDTOs.mockResolvedValue([
+    mockNotificationSubmissionService.create.mockResolvedValue('');
+    mockNotificationSubmissionService.mapToDTOs.mockResolvedValue([
       {} as NotificationSubmissionDto,
     ]);
 
@@ -174,15 +183,19 @@ describe('NotificationSubmissionController', () => {
     });
 
     expect(noiSubmission).toBeDefined();
-    expect(mockNoiSubmissionService.create).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service for update and map', async () => {
-    mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NotificationSubmissionDetailedDto,
     );
-    mockNoiSubmissionService.getByUuid.mockResolvedValue(
-      new NotificationSubmission({}),
+    mockNotificationSubmissionService.getByUuid.mockResolvedValue(
+      new NotificationSubmission({
+        status: new NotificationSubmissionToSubmissionStatus({
+          statusTypeCode: NOTIFICATION_STATUS.IN_PROGRESS,
+        }),
+      }),
     );
 
     await controller.update(
@@ -200,54 +213,66 @@ describe('NotificationSubmissionController', () => {
       },
     );
 
-    expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
-    expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.update).toHaveBeenCalledTimes(1);
+    expect(
+      mockNotificationSubmissionService.mapToDetailedDTO,
+    ).toHaveBeenCalledTimes(1);
   });
 
-  // it('should throw an exception when trying to update a not in progress noi', async () => {
-  //   mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
-  //     {} as NotificationSubmissionDetailedDto,
-  //   );
-  //
-  //   const promise = controller.update(
-  //     'file-id',
-  //     {
-  //       localGovernmentUuid,
-  //       applicant,
-  //     },
-  //     {
-  //       user: {
-  //         entity: new User({
-  //           clientRoles: [],
-  //         }),
-  //       },
-  //     },
-  //   );
-  //   await expect(promise).rejects.toMatchObject(
-  //     new BadRequestException('Can only edit in progress Notice of Intents'),
-  //   );
-  //
-  //   expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(0);
-  //   expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(0);
-  // });
+  it('should throw an exception when trying to update a not in progress notification', async () => {
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as NotificationSubmissionDetailedDto,
+    );
+    mockNotificationSubmissionService.getByUuid.mockResolvedValue(
+      new NotificationSubmission({
+        status: new NotificationSubmissionToSubmissionStatus({
+          statusTypeCode: NOTIFICATION_STATUS.CANCELLED,
+        }),
+      }),
+    );
+
+    const promise = controller.update(
+      'file-id',
+      {
+        localGovernmentUuid,
+        applicant,
+      },
+      {
+        user: {
+          entity: new User({
+            clientRoles: [],
+          }),
+        },
+      },
+    );
+    await expect(promise).rejects.toMatchObject(
+      new BadRequestException('Can only edit in progress SRWs'),
+    );
+
+    expect(mockNotificationSubmissionService.update).toHaveBeenCalledTimes(0);
+    expect(
+      mockNotificationSubmissionService.mapToDetailedDTO,
+    ).toHaveBeenCalledTimes(0);
+  });
 
   it('should call out to service on submitAlcs', async () => {
     const mockFileId = 'file-id';
     const mockOwner = new NotificationTransferee({
       uuid: primaryContactOwnerUuid,
     });
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
     const mockSubmission = new NotificationSubmission({
       fileNumber: mockFileId,
       transferees: [mockOwner],
       localGovernmentUuid,
     });
 
-    mockNoiSubmissionService.submitToAlcs.mockResolvedValue(
+    mockNotificationSubmissionService.submitToAlcs.mockResolvedValue(
       new NoticeOfIntent(),
     );
-    mockNoiSubmissionService.getByUuid.mockResolvedValue(mockSubmission);
-    mockNoiSubmissionService.mapToDetailedDTO.mockResolvedValue(
+    mockNotificationSubmissionService.getByUuid.mockResolvedValue(
+      mockSubmission,
+    );
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NotificationSubmissionDetailedDto,
     );
 
@@ -257,8 +282,14 @@ describe('NotificationSubmissionController', () => {
       },
     });
 
-    expect(mockNoiSubmissionService.getByUuid).toHaveBeenCalledTimes(2);
-    expect(mockNoiSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
-    expect(mockNoiSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.getByUuid).toHaveBeenCalledTimes(
+      2,
+    );
+    expect(
+      mockNotificationSubmissionService.submitToAlcs,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockNotificationSubmissionService.mapToDetailedDTO,
+    ).toHaveBeenCalledTimes(1);
   });
 });

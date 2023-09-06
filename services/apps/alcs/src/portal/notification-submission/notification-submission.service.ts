@@ -11,7 +11,8 @@ import {
   Repository,
 } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
+import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { FileNumberService } from '../../file-number/file-number.service';
@@ -43,6 +44,7 @@ export class NotificationSubmissionService {
     private notificationService: NotificationService,
     private localGovernmentService: LocalGovernmentService,
     private fileNumberService: FileNumberService,
+    private notificationSubmissionStatusService: NotificationSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -74,9 +76,9 @@ export class NotificationSubmissionService {
       noiSubmission,
     );
 
-    // await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(
-    //   savedSubmission.uuid,
-    // );
+    await this.notificationSubmissionStatusService.setInitialStatuses(
+      savedSubmission.uuid,
+    );
 
     return fileNumber;
   }
@@ -282,11 +284,11 @@ export class NotificationSubmissionService {
         dateSubmittedToAlc: new Date(),
       });
 
-      // await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-      //   notificationSubmission.uuid,
-      //   NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      //   submittedNotification.dateSubmittedToAlc,
-      // );
+      await this.notificationSubmissionStatusService.setStatusDate(
+        notificationSubmission.uuid,
+        NOTIFICATION_STATUS.SUBMITTED_TO_ALC,
+        submittedNotification.dateSubmittedToAlc,
+      );
 
       return submittedNotification;
     } catch (ex) {
@@ -299,30 +301,22 @@ export class NotificationSubmissionService {
 
   async updateStatus(
     uuid: string,
-    statusCode: NOI_SUBMISSION_STATUS,
+    statusCode: NOTIFICATION_STATUS,
     effectiveDate?: Date | null,
   ) {
     const submission = await this.loadBarebonesSubmission(uuid);
-    // await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-    //   submission.uuid,
-    //   statusCode,
-    //   effectiveDate,
-    // );
-  }
-
-  async getStatus(code: NOI_SUBMISSION_STATUS) {
-    // return await this.noticeOfIntentStatusRepository.findOneOrFail({
-    //   where: {
-    //     code,
-    //   },
-    // });
+    await this.notificationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      statusCode,
+      effectiveDate,
+    );
   }
 
   async cancel(submission: NotificationSubmission) {
-    // return await this.noticeOfIntentSubmissionStatusService.setStatusDate(
-    //   noticeOfIntentSubmission.uuid,
-    //   NOI_SUBMISSION_STATUS.CANCELLED,
-    // );
+    return await this.notificationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      NOTIFICATION_STATUS.CANCELLED,
+    );
   }
 
   private loadBarebonesSubmission(uuid: string) {

@@ -8,6 +8,7 @@ import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
 import { LocalGovernmentModule } from '../local-government/local-government.module';
+import { NotificationSubmissionStatusModule } from './notification-submission-status/notification-submission-status.module';
 import { NotificationType } from './notification-type/notification-type.entity';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
@@ -22,6 +23,7 @@ import { Notification } from './notification.entity';
     DocumentModule,
     CodeModule,
     LocalGovernmentModule,
+    NotificationSubmissionStatusModule,
   ],
   providers: [NotificationService, NotificationProfile],
   controllers: [NotificationController],
