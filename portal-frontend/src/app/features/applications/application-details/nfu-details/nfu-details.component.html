@@ -85,11 +85,11 @@
       </div>
       <div class="grid-1"><strong>Area</strong></div>
       <div class="grid-2">
-        {{ applicationSubmission.nfuTotalFillPlacement }}
-        <span *ngIf="applicationSubmission.nfuTotalFillPlacement !== null">ha</span>
+        {{ applicationSubmission.nfuTotalFillArea }}
+        <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">ha</span>
         <app-no-data
           [showRequired]="showErrors"
-          *ngIf="applicationSubmission.nfuTotalFillPlacement === null"
+          *ngIf="applicationSubmission.nfuTotalFillArea === null"
         ></app-no-data>
       </div>
       <div class="grid-1"><strong>Maximum Depth</strong></div>

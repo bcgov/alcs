@@ -75,7 +75,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
 
         this.fillTableData = {
           volume: applicationSubmission.nfuFillVolume ?? undefined,
-          area: applicationSubmission.nfuTotalFillPlacement ?? undefined,
+          area: applicationSubmission.nfuTotalFillArea ?? undefined,
           maximumDepth: applicationSubmission.nfuMaxFillDepth ?? undefined,
           averageDepth: applicationSubmission.nfuAverageFillDepth ?? undefined,
         };
@@ -118,7 +118,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
         nfuOutsideLands,
         nfuAgricultureSupport,
         nfuWillImportFill: parseStringToBoolean(nfuWillImportFill),
-        nfuTotalFillPlacement: this.fillTableData.area ?? null,
+        nfuTotalFillArea: this.fillTableData.area ?? null,
         nfuMaxFillDepth: this.fillTableData.maximumDepth ?? null,
         nfuAverageFillDepth: this.fillTableData.averageDepth ?? null,
         nfuFillVolume: this.fillTableData.volume ?? null,
