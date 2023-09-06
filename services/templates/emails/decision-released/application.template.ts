@@ -28,7 +28,7 @@ const template = `<mjml>
           This email is to advise that the Reasons for Decision for the above noted application has been released.
         </mj-text>
         <mj-text font-size='16px'>
-          Please log into the ALC Portal to view the Reasons for Decision. The document can be found by clicking 'View' from the Inbox table and then navigating to the 'ALC Review and Decision' tab. The Reasons for Decision will be available to the public on <b>{{ decisionDate }}</b>. 
+          Please log into the ALC Portal to view the Reasons for Decision. The document can be found by clicking 'View' from the Inbox table and then navigating to the 'ALC Review and Decision' tab. The Reasons for Decision will also be available to the public. 
         </mj-text>
         <mj-text font-size='16px'>
           Further correspondence with respect to this application should be directed to the ALC Land Use Planner for your region, found on the ALC website <a href="https://www.alc.gov.bc.ca/contact#land-use-planner" target="_blank">Contact Us</a> page. 

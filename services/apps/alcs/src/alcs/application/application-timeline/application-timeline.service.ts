@@ -184,10 +184,20 @@ export class ApplicationTimelineService {
           });
         }
 
+        const isAddDecisionReleasedTitle =
+          application.decisionDate !== null &&
+          decision.date !== null &&
+          application.decisionDate?.toDateString() ===
+            decision.date?.toDateString();
+
+        const decisionReleasedTitle = ' - <b>Decision Released</b>';
+
         events.push({
           htmlText: `Decision #${decisions.length - index} Made${
             decisions.length - 1 === index
-              ? ` - Active Days: ${mappedApplication.activeDays}`
+              ? ` - Active Days: ${mappedApplication.activeDays}${
+                  isAddDecisionReleasedTitle ? decisionReleasedTitle : ''
+                }`
               : ''
           }`,
           startDate: decision.date!.getTime() + SORTING_ORDER.DECISION_MADE,
@@ -373,9 +383,10 @@ export class ApplicationTimelineService {
 
     const statusesToInclude = statusHistory.filter(
       (status) =>
-        ![SUBMISSION_STATUS.IN_REVIEW_BY_ALC].includes(
-          <SUBMISSION_STATUS.IN_REVIEW_BY_ALC>status.statusType.code,
-        ),
+        ![
+          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+          SUBMISSION_STATUS.ALC_DECISION,
+        ].includes(<SUBMISSION_STATUS.IN_REVIEW_BY_ALC>status.statusType.code),
     );
     for (const status of statusesToInclude) {
       if (status.effectiveDate) {

@@ -5,21 +5,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MJMLParseResults } from 'mjml-core';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
-import { EmailStatus } from './email-status.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
 import { ApplicationService } from '../../alcs/application/application.service';
-import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
-import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
+import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
+import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
+import { EmailStatus } from './email-status.entity';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -35,7 +35,6 @@ type BaseStatusEmailData = {
   government: LocalGovernment | null;
   parentType: PARENT_TYPE;
   ccGovernment?: boolean;
-  decisionDate?: string;
 };
 type ApplicationEmailData = BaseStatusEmailData & {
   applicationSubmission: ApplicationSubmission;
@@ -296,7 +295,6 @@ export class EmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
-      decisionDate: data?.decisionDate,
     });
 
     const parentId = await this.applicationService.getUuid(fileNumber);
@@ -336,7 +334,6 @@ export class EmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
-      decisionDate: data?.decisionDate,
     });
 
     const parentId = await this.noticeOfIntentService.getUuid(fileNumber);

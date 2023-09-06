@@ -29,6 +29,7 @@ describe('ApplicationTimelineService', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockAppMeetingService: DeepMocked<ApplicationMeetingService>;
   let mockAppStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  const mockSameDate = new Date();
 
   beforeEach(async () => {
     mockAppRepo = createMock();
@@ -77,7 +78,9 @@ describe('ApplicationTimelineService', () => {
       ApplicationTimelineService,
     );
 
-    mockAppRepo.findOneOrFail.mockResolvedValue(new Application());
+    mockAppRepo.findOneOrFail.mockResolvedValue(
+      new Application({ decisionDate: mockSameDate }),
+    );
     mockAppModificationRepo.find.mockResolvedValue([]);
     mockAppReconsiderationRepo.find.mockResolvedValue([]);
     mockAppDecisionRepo.find.mockResolvedValue([]);
@@ -128,7 +131,7 @@ describe('ApplicationTimelineService', () => {
       new ApplicationDecision({
         auditDate: new Date(sameDate.getTime() + 1000),
         chairReviewDate: new Date(sameDate.getTime() + 1000),
-        date: new Date(sameDate.getTime() + 1000),
+        date: new Date(mockSameDate.getTime() + 1000),
       }),
       new ApplicationDecision({
         auditDate: sameDate,
@@ -141,7 +144,9 @@ describe('ApplicationTimelineService', () => {
 
     expect(res).toBeDefined();
     expect(res.length).toEqual(6);
-    expect(res[5].htmlText).toEqual('Decision #1 Made - Active Days: 6');
+    expect(res[5].htmlText).toEqual(
+      'Decision #1 Made - Active Days: 6 - <b>Decision Released</b>',
+    );
     expect(res[4].htmlText).toEqual('Audited Decision #1');
     expect(res[3].htmlText).toEqual('Chair Reviewed Decision #1');
     expect(res[2].htmlText).toEqual('Decision #2 Made');

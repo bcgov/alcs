@@ -3,12 +3,18 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentDecisionProfile } from '../../../common/automapper/notice-of-intent-decision.automapper.profile';
 import { NoticeOfIntentProfile } from '../../../common/automapper/notice-of-intent.automapper.profile';
 import { UserProfile } from '../../../common/automapper/user.automapper.profile';
+import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
+import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
+import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from '../../../providers/email/email.service';
 import { CodeService } from '../../code/code.service';
+import { LocalGovernment } from '../../local-government/local-government.entity';
+import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
@@ -20,12 +26,6 @@ import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDecisionV2Controller } from './notice-of-intent-decision-v2.controller';
 import { NoticeOfIntentDecisionV2Service } from './notice-of-intent-decision-v2.service';
-import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { LocalGovernment } from '../../local-government/local-government.entity';
-import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
-import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 
 describe('NoticeOfIntentDecisionV2Controller', () => {
   let controller: NoticeOfIntentDecisionV2Controller;
@@ -325,12 +325,6 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
       parentType: 'notice-of-intent',
       primaryContact: mockOwner,
       ccGovernment: true,
-      decisionDate: new Date().toLocaleDateString('en-CA', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
     });
   });
 

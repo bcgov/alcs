@@ -309,15 +309,6 @@ export class ApplicationDecisionV2Controller {
     const { applicationSubmission, primaryContact, submissionGovernment } =
       await this.emailService.getApplicationEmailData(fileNumber);
 
-    const date = decision.date ? new Date(decision.date) : new Date();
-
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    };
-
     if (primaryContact) {
       await this.emailService.sendApplicationStatusEmail({
         generateStatusHtml: generateALCDApplicationHtml,
@@ -327,7 +318,6 @@ export class ApplicationDecisionV2Controller {
         parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
         ccGovernment: true,
-        decisionDate: date.toLocaleDateString('en-CA', options),
       });
     }
   }

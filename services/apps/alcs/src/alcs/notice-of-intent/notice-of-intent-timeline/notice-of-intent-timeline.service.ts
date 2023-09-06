@@ -148,10 +148,20 @@ export class NoticeOfIntentTimelineService {
         });
       }
 
+      const isAddDecisionReleasedTitle =
+        noticeOfIntent.decisionDate !== null &&
+        decision.date !== null &&
+        noticeOfIntent.decisionDate?.toDateString() ===
+          decision.date?.toDateString();
+
+      const decisionReleasedTitle = ' - <b>Decision Released</b>';
+
       events.push({
         htmlText: `Decision #${decisions.length - index} Made${
           decisions.length - 1 === index
-            ? ` - Active Days: ${mappedNOI.activeDays}`
+            ? ` - Active Days: ${mappedNOI.activeDays}${
+                isAddDecisionReleasedTitle ? decisionReleasedTitle : ''
+              }`
             : ''
         }`,
         startDate: decision.date!.getTime() + SORTING_ORDER.DECISION_MADE,
@@ -246,7 +256,11 @@ export class NoticeOfIntentTimelineService {
         noticeOfIntent.fileNumber,
       );
 
-    for (const status of statusHistory) {
+    const statusesToInclude = statusHistory.filter(
+      (status) => NOI_SUBMISSION_STATUS.ALC_DECISION !== status.statusType.code,
+    );
+
+    for (const status of statusesToInclude) {
       if (status.effectiveDate) {
         let htmlText = `<strong>${status.statusType.label}</strong>`;
 
