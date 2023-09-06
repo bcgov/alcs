@@ -27,7 +27,7 @@ import {
 import { NotificationTransferee } from './notification-transferee.entity';
 import { NotificationTransfereeService } from './notification-transferee.service';
 
-@Controller('srw-transferee')
+@Controller('notification-transferee')
 @UseGuards(PortalAuthGuard)
 export class NotificationTransfereeController {
   constructor(

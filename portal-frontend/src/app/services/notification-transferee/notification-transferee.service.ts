@@ -2,14 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../shared/dto/document.dto';
-import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import {
-  NotificationOwnerCreateDto,
+  NotificationTransfereeCreateDto,
   NotificationTransfereeDto,
-  NotificationOwnerUpdateDto,
-  SetPrimaryContactDto,
+  NotificationTransfereeUpdateDto,
 } from './notification-transferee.dto';
 
 @Injectable({
@@ -18,11 +15,7 @@ import {
 export class NotificationTransfereeService {
   private serviceUrl = `${environment.apiUrl}/notification-transferee`;
 
-  constructor(
-    private httpClient: HttpClient,
-    private toastService: ToastService,
-    private documentService: DocumentService
-  ) {}
+  constructor(private httpClient: HttpClient, private toastService: ToastService) {}
   async fetchBySubmissionId(submissionUuid: string) {
     try {
       return await firstValueFrom(
@@ -30,87 +23,44 @@ export class NotificationTransfereeService {
       );
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to load Owners, please try again later');
+      this.toastService.showErrorToast('Failed to load Transferees, please try again later');
     }
     return undefined;
   }
 
-  async create(dto: NotificationOwnerCreateDto) {
+  async create(dto: NotificationTransfereeCreateDto) {
     try {
       const res = await firstValueFrom(this.httpClient.post<NotificationTransfereeDto>(`${this.serviceUrl}`, dto));
-      this.toastService.showSuccessToast('Owner created');
+      this.toastService.showSuccessToast('Transferee created');
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to create Owner, please try again later');
+      this.toastService.showErrorToast('Failed to create Transferee, please try again later');
       return undefined;
     }
   }
 
-  async update(uuid: string, updateDto: NotificationOwnerUpdateDto) {
+  async update(uuid: string, updateDto: NotificationTransfereeUpdateDto) {
     try {
       const res = await firstValueFrom(
         this.httpClient.patch<NotificationTransfereeDto>(`${this.serviceUrl}/${uuid}`, updateDto)
       );
-      this.toastService.showSuccessToast('Owner saved');
+      this.toastService.showSuccessToast('Transferee saved');
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to update Owner, please try again later');
+      this.toastService.showErrorToast('Failed to update Transferee, please try again later');
       return undefined;
     }
   }
-
-  async setPrimaryContact(updateDto: SetPrimaryContactDto) {
-    try {
-      const res = await firstValueFrom(
-        this.httpClient.post<NotificationTransfereeDto>(`${this.serviceUrl}/setPrimaryContact`, updateDto)
-      );
-      this.toastService.showSuccessToast('Notice of Intent saved');
-      return res;
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to update Notice of Intent, please try again later');
-      return undefined;
-    }
-  }
-
   async delete(uuid: string) {
     try {
       const result = await firstValueFrom(this.httpClient.delete(`${this.serviceUrl}/${uuid}`));
-      this.toastService.showSuccessToast('Owner deleted');
+      this.toastService.showSuccessToast('Transferees deleted');
       return result;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to delete Owner, please try again');
-    }
-    return undefined;
-  }
-
-  async removeFromParcel(ownerUuid: string, parcelUuid: string) {
-    try {
-      const result = await firstValueFrom(
-        this.httpClient.post(`${this.serviceUrl}/${ownerUuid}/unlink/${parcelUuid}`, {})
-      );
-      this.toastService.showSuccessToast('Owner removed from parcel');
-      return result;
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to remove Owner, please try again');
-    }
-    return undefined;
-  }
-
-  async linkToParcel(ownerUuid: any, parcelUuid: string) {
-    try {
-      const result = await firstValueFrom(
-        this.httpClient.post(`${this.serviceUrl}/${ownerUuid}/link/${parcelUuid}`, {})
-      );
-      this.toastService.showSuccessToast('Owner linked to parcel');
-      return result;
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to link Owner, please try again');
+      this.toastService.showErrorToast('Failed to delete Transferee, please try again');
     }
     return undefined;
   }
@@ -123,21 +73,5 @@ export class NotificationTransfereeService {
       return 1;
     }
     return 0;
-  }
-
-  async uploadCorporateSummary(noticeOfIntentFileId: string, file: File) {
-    try {
-      return await this.documentService.uploadFile<{ uuid: string }>(
-        noticeOfIntentFileId,
-        file,
-        DOCUMENT_TYPE.CORPORATE_SUMMARY,
-        DOCUMENT_SOURCE.APPLICANT,
-        `${this.serviceUrl}/attachCorporateSummary`
-      );
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
-    }
-    return undefined;
   }
 }

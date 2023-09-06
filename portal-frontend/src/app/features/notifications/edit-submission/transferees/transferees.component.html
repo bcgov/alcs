@@ -1,0 +1,89 @@
+<div class="step-description">
+  <h2>Identify Transferee(s)</h2>
+  <p>Provide the name and contact information for all transferees who will be registered owners of the SRW.</p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<section>
+  <div class="split">
+    <h4>All Transferees</h4>
+    <div>
+      <button
+        mat-flat-button
+        color="accent"
+        [ngClass]="{
+          'error-outline': transferees.length === 0 && showErrors
+        }"
+        (click)="onAdd()"
+      >
+        Add Transferee
+      </button>
+      <app-validation-error *ngIf="transferees.length === 0 && showErrors">
+        At least one transferee is required
+      </app-validation-error>
+    </div>
+  </div>
+  <div class="table">
+    <table mat-table [dataSource]="transferees">
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.type.code === 'INVD' ? 'Individual' : 'Organization' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>Full Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="organizationName">
+        <th mat-header-cell *matHeaderCellDef>Organization Name</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.organizationName">
+            {{ element.organizationName }}
+          </span>
+          <span class="no-data" *ngIf="!element.organizationName"> No Data </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Phone</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.phoneNumber | mask : '(000) 000-0000' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.email }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td class="actions-cell" mat-cell *matCellDef="let element">
+          <button mat-flat-button color="primary" (click)="onEdit(element.uuid)">Edit</button>
+          <button mat-stroked-button color="warn" (click)="onDelete(element.uuid)">Remove</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="no-data" colspan="6">
+          No Transferee added. Use ‘Add New Transferee’ button to the right to add your first transferee.
+        </td>
+      </tr>
+    </table>
+  </div>
+</section>
+<div class="button-container">
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

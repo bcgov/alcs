@@ -1,0 +1,38 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+.no-data {
+  color: colors.$grey;
+  text-align: center;
+  padding: rem(8);
+}
+
+.actions-cell {
+  button:not(:last-child) {
+    margin-right: rem(12) !important;
+  }
+}
+
+.split {
+  margin-bottom: rem(16);
+}
+
+@media screen and (max-width: $desktopBreakpoint) {
+  .table {
+    overflow-x: auto;
+    max-width: 100vw;
+
+    table {
+      white-space: nowrap;
+    }
+  }
+
+  .split {
+    flex-direction: column;
+    align-items: start;
+
+    button {
+      width: 100%;
+    }
+  }
+}
