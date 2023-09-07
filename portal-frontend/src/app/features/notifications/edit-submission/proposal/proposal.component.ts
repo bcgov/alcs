@@ -10,6 +10,7 @@ import {
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionUpdateDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -50,6 +51,7 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
     private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
+    private confirmationDialogService: ConfirmationDialogService,
     dialog: MatDialog
   ) {
     super(notificationDocumentService, dialog);
@@ -121,7 +123,25 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   }
 
   onChangeHasSurveyPlan(selectedValue: string) {
-    this.allowSurveyPlanUploads = selectedValue === 'true';
+    if (selectedValue === 'false' && this.surveyPlans.length > 0) {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'Warning: Changing this answer will remove the uploaded survey plans.',
+        })
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            for (const file of this.surveyPlans) {
+              await this.onDeleteFile(file);
+            }
+            this.allowSurveyPlanUploads = false;
+          } else {
+            this.allowSurveyPlanUploads = true;
+            this.hasSurveyPlan.setValue('true');
+          }
+        });
+    } else {
+      this.allowSurveyPlanUploads = selectedValue === 'true';
+    }
   }
 
   onChangeControlNumber(uuid: any, event: Event) {

@@ -36,9 +36,9 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
 
   override async onNavigateToStep(step: number) {
     if (this.draftMode) {
-      await this.router.navigateByUrl(`alcs/application/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(`alcs/notice-of-intent/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
     } else {
-      await this.router.navigateByUrl(`application/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
+      await this.router.navigateByUrl(`notice-of-intent/${this.noiSubmission?.fileNumber}/edit/${step}?errors=t`);
     }
   }
 

@@ -79,15 +79,13 @@ describe('NotificationParcelController', () => {
   });
 
   it('should call out to service when fetching parcels', async () => {
-    mockNotificationParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue(
-      [],
-    );
+    mockNotificationParcelService.fetchBySubmissionUuid.mockResolvedValue([]);
 
     const parcels = await controller.fetchByFileId('mockFileID');
 
     expect(parcels).toBeDefined();
     expect(
-      mockNotificationParcelService.fetchByApplicationSubmissionUuid,
+      mockNotificationParcelService.fetchBySubmissionUuid,
     ).toHaveBeenCalledTimes(1);
   });
 

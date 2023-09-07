@@ -1,0 +1,27 @@
+<section>
+  <app-notification-details
+    [$notificationSubmission]="$notificationSubmission"
+    [$notificationDocuments]="$notificationDocuments"
+  ></app-notification-details>
+  <div class="button-container">
+    <button
+      *ngIf="notificationSubmission?.fileNumber"
+      mat-flat-button
+      color="primary"
+      (click)="onDownloadPdf(notificationSubmission?.fileNumber)"
+    >
+      Download PDF
+    </button>
+  </div>
+
+  <div class="button-container">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+
+    <div>
+      <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
+    </div>
+  </div>
+</section>

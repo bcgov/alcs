@@ -3,7 +3,6 @@ import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
-import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import {
@@ -19,6 +18,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNotificationSteps {
@@ -180,7 +180,16 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   }
 
   async onSubmit() {
-    //TODO
+    if (this.notificationSubmission) {
+      this.dialog
+        .open(SubmitConfirmationDialogComponent)
+        .beforeClosed()
+        .subscribe((didConfirm) => {
+          if (didConfirm) {
+            this.submit();
+          }
+        });
+    }
   }
 
   private async submit() {

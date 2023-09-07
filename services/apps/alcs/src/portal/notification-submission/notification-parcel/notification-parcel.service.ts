@@ -21,10 +21,13 @@ export class NotificationParcelService {
     });
   }
 
-  async fetchByApplicationSubmissionUuid(uuid: string) {
+  async fetchBySubmissionUuid(uuid: string) {
     return this.parcelRepository.find({
       where: { notificationSubmissionUuid: uuid },
       order: { auditCreatedAt: 'ASC' },
+      relations: {
+        ownershipType: true,
+      },
     });
   }
 
