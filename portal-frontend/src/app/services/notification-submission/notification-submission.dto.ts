@@ -44,11 +44,17 @@ export interface NotificationSubmissionDto {
 
 export interface NotificationSubmissionDetailedDto extends NotificationSubmissionDto {
   purpose: string | null;
+  submittersFileNumber: string | null;
+  totalArea: number | null;
+  hasSurveyPlan: boolean | null;
 }
 
 export interface NotificationSubmissionUpdateDto {
   applicant?: string | null;
   purpose?: string | null;
+  submittersFileNumber?: string | null;
+  totalArea?: number | null;
+  hasSurveyPlan?: boolean | null;
   localGovernmentUuid?: string | null;
   contactFirstName?: string | null;
   contactLastName?: string | null;

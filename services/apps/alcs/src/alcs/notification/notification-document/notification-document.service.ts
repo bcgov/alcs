@@ -224,6 +224,8 @@ export class NotificationDocumentService {
 
       file.typeCode = update.type;
       file.description = update.description;
+      file.controlNumber = update.controlNumber;
+      file.surveyPlanNumber = update.surveyPlanNumber;
       const updatedFile = await this.notificationDocumentRepository.save(file);
       results.push(updatedFile);
     }

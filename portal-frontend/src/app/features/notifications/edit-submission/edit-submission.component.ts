@@ -18,6 +18,7 @@ import { scrollToElement } from '../../../shared/utils/scroll-helper';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ProposalComponent } from './proposal/proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 
 export enum EditNotificationSteps {
@@ -51,6 +52,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
+  @ViewChild(ProposalComponent) proposalComponent!: ProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -154,6 +156,9 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         }
         break;
       case EditNotificationSteps.Proposal:
+        if (this.proposalComponent) {
+          await this.proposalComponent.onSave();
+        }
         break;
       case EditNotificationSteps.Attachments:
         if (this.otherAttachmentsComponent) {

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
+import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
@@ -40,7 +41,8 @@ export abstract class FilesStepComponent extends StepComponent {
     }
   }
 
-  async onDeleteFile($event: NotificationDocumentDto) {
+  //Using ApplicationDocumentDto is "correct" here, quack quack
+  async onDeleteFile($event: ApplicationDocumentDto) {
     await this.notificationDocumentService.deleteExternalFile($event.uuid);
     if (this.fileId) {
       const documents = await this.notificationDocumentService.getByFileId(this.fileId);

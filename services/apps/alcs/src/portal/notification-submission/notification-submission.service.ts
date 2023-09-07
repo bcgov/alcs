@@ -92,10 +92,23 @@ export class NotificationSubmissionService {
     const notificationSubmission = await this.getByUuid(submissionUuid, user);
 
     notificationSubmission.applicant = updateDto.applicant;
+    notificationSubmission.submittersFileNumber = filterUndefined(
+      updateDto.submittersFileNumber,
+      notificationSubmission.submittersFileNumber,
+    );
     notificationSubmission.purpose = filterUndefined(
       updateDto.purpose,
       notificationSubmission.purpose,
     );
+    notificationSubmission.totalArea = filterUndefined(
+      updateDto.totalArea,
+      notificationSubmission.totalArea,
+    );
+    notificationSubmission.hasSurveyPlan = filterUndefined(
+      updateDto.hasSurveyPlan,
+      notificationSubmission.hasSurveyPlan,
+    );
+
     notificationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
     notificationSubmission.contactFirstName = filterUndefined(
       updateDto.contactFirstName,

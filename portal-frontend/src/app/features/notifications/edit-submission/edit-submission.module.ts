@@ -14,6 +14,7 @@ import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ProposalComponent } from './proposal/proposal.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { StepComponent } from './step.partial';
 import { TransfereeDialogComponent } from './transferees/transferee-dialog/transferee-dialog.component';
@@ -43,6 +44,7 @@ const routes: Routes = [
     TransfereeDialogComponent,
     PrimaryContactComponent,
     SelectGovernmentComponent,
+    ProposalComponent,
     OtherAttachmentsComponent,
   ],
   imports: [
