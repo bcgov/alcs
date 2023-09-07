@@ -3,19 +3,18 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import {
-  DOCUMENT_SOURCE,
-  DOCUMENT_SYSTEM,
-  DOCUMENT_TYPE,
-  DocumentTypeDto,
-} from '../../../../shared/document/document.dto';
-import {
   ApplicationDocumentDto,
   UpdateDocumentDto,
 } from '../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
-import { SubmittedApplicationOwnerDto } from '../../../../services/application/application.dto';
+import {
+  DOCUMENT_SOURCE,
+  DOCUMENT_SYSTEM,
+  DOCUMENT_TYPE,
+  DocumentTypeDto,
+} from '../../../../shared/document/document.dto';
 
 @Component({
   selector: 'app-document-upload-dialog',
@@ -63,7 +62,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { fileId: string; owners: SubmittedApplicationOwnerDto[]; existingDocument?: ApplicationDocumentDto },
+    public data: { fileId: string; existingDocument?: ApplicationDocumentDto },
     protected dialog: MatDialogRef<any>,
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,

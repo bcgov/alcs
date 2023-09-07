@@ -25,6 +25,8 @@ import {
   DOCUMENT_SYSTEM,
   DocumentTypeDto,
 } from '../../../document/document.dto';
+import { NoticeOfIntentOwnerService } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
+import { NoticeOfIntentParcelService } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentDocumentDto } from './notice-of-intent-document.dto';
 import {
   NoticeOfIntentDocument,
@@ -38,6 +40,8 @@ import { NoticeOfIntentDocumentService } from './notice-of-intent-document.servi
 export class NoticeOfIntentDocumentController {
   constructor(
     private noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private noiParcelService: NoticeOfIntentParcelService,
+    private noiOwnerService: NoticeOfIntentOwnerService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -66,22 +70,21 @@ export class NoticeOfIntentDocumentController {
 
     const savedDocument = await this.saveUploadedFile(req, fileNumber);
 
-    //TODO: Re-enable as part of creating Step 1
-    // const parcelUuid = req.body.parcelUuid?.value as string | undefined;
-    // if (
-    //   parcelUuid &&
-    //   savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
-    // ) {
-    //   await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
-    // }
-    //
-    // const ownerUuid = req.body.ownerUuid?.value as string | undefined;
-    // if (
-    //   ownerUuid &&
-    //   savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
-    // ) {
-    //   await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
-    // }
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
+
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
+    }
 
     return this.mapper.map(
       savedDocument,
@@ -116,22 +119,21 @@ export class NoticeOfIntentDocumentController {
       user: req.user.entity,
     });
 
-    //TODO: Re-enable as part of creating Step 1
-    // const parcelUuid = req.body.parcelUuid?.value as string | undefined;
-    // if (
-    //   parcelUuid &&
-    //   savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
-    // ) {
-    //   await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
-    // }
-    //
-    // const ownerUuid = req.body.ownerUuid?.value as string | undefined;
-    // if (
-    //   ownerUuid &&
-    //   savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
-    // ) {
-    //   await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
-    // }
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
+
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
+    }
 
     return this.mapper.map(
       savedDocument,
@@ -229,43 +231,40 @@ export class NoticeOfIntentDocumentController {
     return {};
   }
 
-  //TODO: Re-enable as part of creating Step 1
-  //
-  // private async handleCertificateOfTitleUpdates(
-  //   parcelUuid: string,
-  //   savedDocument: NoticeOfIntentDocument,
-  // ) {
-  //   const parcel = await this.parcelService.getOneOrFail(parcelUuid);
-  //   if (parcel) {
-  //     if (
-  //       parcel.certificateOfTitleUuid &&
-  //       parcel.certificateOfTitleUuid !== savedDocument.uuid
-  //     ) {
-  //       await this.supersedeDocument(parcel.certificateOfTitleUuid);
-  //     }
-  //
-  //     await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
-  //   }
-  // }
+  private async handleCertificateOfTitleUpdates(
+    parcelUuid: string,
+    savedDocument: NoticeOfIntentDocument,
+  ) {
+    const parcel = await this.noiParcelService.getOneOrFail(parcelUuid);
+    if (parcel) {
+      if (
+        parcel.certificateOfTitleUuid &&
+        parcel.certificateOfTitleUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(parcel.certificateOfTitleUuid);
+      }
 
-  //
-  // private async handleCorporateSummaryUpdates(
-  //   ownerUuid: string,
-  //   savedDocument: NoticeOfIntentDocument,
-  // ) {
-  //   const owner = await this.ownerService.getOwner(ownerUuid);
-  //   if (owner) {
-  //     if (
-  //       owner.corporateSummaryUuid &&
-  //       owner.corporateSummaryUuid !== savedDocument.uuid
-  //     ) {
-  //       await this.supersedeDocument(owner.corporateSummaryUuid);
-  //     }
-  //
-  //     owner.corporateSummary = savedDocument;
-  //     await this.ownerService.save(owner);
-  //   }
-  // }
+      await this.noiParcelService.setCertificateOfTitle(parcel, savedDocument);
+    }
+  }
+
+  private async handleCorporateSummaryUpdates(
+    ownerUuid: string,
+    savedDocument: NoticeOfIntentDocument,
+  ) {
+    const owner = await this.noiOwnerService.getOwner(ownerUuid);
+    if (owner) {
+      if (
+        owner.corporateSummaryUuid &&
+        owner.corporateSummaryUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(owner.corporateSummaryUuid);
+      }
+
+      owner.corporateSummary = savedDocument;
+      await this.noiOwnerService.save(owner);
+    }
+  }
 
   private async supersedeDocument(documentUuid: string) {
     const document = await this.noticeOfIntentDocumentService.get(documentUuid);
