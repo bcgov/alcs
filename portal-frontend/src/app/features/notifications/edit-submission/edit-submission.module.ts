@@ -24,6 +24,7 @@ const routes: Routes = [
   {
     path: '',
     component: EditSubmissionComponent,
+    canDeactivate: [CanDeactivateGuard],
   },
   {
     path: ':stepInd',
