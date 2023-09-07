@@ -41,6 +41,12 @@ export class NotificationDocument extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description?: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  surveyPlanNumber?: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  controlNumber?: string | null;
+
   @ManyToOne(() => Notification, { nullable: false })
   notification: Notification;
 

@@ -14,8 +14,14 @@ export class NotificationDocumentDto {
   @AutoMap(() => [String])
   visibilityFlags: string[];
 
-  @AutoMap(() => [Number])
+  @AutoMap(() => Number)
   evidentiaryRecordSorting?: number;
+
+  @AutoMap(() => String)
+  surveyPlanNumber: string | null;
+
+  @AutoMap(() => String)
+  controlNumber: string | null;
 
   //Document Fields
   documentUuid: string;

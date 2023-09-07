@@ -73,7 +73,16 @@
   </cdk-step>
   <cdk-step label="Purpose of SRW">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="notificationSubmission && cdkStepper.selectedIndex === steps.Proposal"></div>
+    <div *ngIf="notificationSubmission && cdkStepper.selectedIndex === steps.Proposal">
+      <app-proposal
+        [$notificationSubmission]="$notificationSubmission"
+        [$notificationDocuments]="$notificationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+      >
+      </app-proposal>
+    </div>
   </cdk-step>
   <cdk-step label="Optional Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>

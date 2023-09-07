@@ -13,6 +13,7 @@ import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notificatio
 import { Notification } from '../../alcs/notification/notification.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
+import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
 import { NotificationTransferee } from './notification-transferee/notification-transferee.entity';
 
@@ -54,10 +55,32 @@ export class NotificationSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'varchar',
+    comment: 'File number provided by Applicant from the LTSA',
+    nullable: true,
+  })
+  submittersFileNumber?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'varchar',
     comment: 'The purpose of the application',
     nullable: true,
   })
   purpose?: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  totalArea: number | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  hasSurveyPlan: boolean | null;
 
   @AutoMap()
   @ManyToOne(() => User)
