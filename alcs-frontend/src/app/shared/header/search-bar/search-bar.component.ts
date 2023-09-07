@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -12,9 +12,23 @@ import { ToastService } from '../../../services/toast/toast.service';
 export class SearchBarComponent {
   searchText = '';
   showInput = false;
+  wasInside = false;
   @ViewChild('searchInput') input!: ElementRef;
 
   constructor(private toastService: ToastService, private router: Router, private searchService: SearchService) {}
+
+  @HostListener('click')
+  clickInside() {
+    this.wasInside = true;
+  }
+
+  @HostListener('document:click')
+  clickOutside() {
+    if (!this.wasInside) {
+      this.showInput = false;
+    }
+    this.wasInside = false;
+  }
 
   async toggleInput() {
     this.showInput = !this.showInput;
@@ -22,7 +36,8 @@ export class SearchBarComponent {
 
   async onSearch() {
     if (!this.searchText) {
-      return this.toggleInput();
+      this.toastService.showErrorToast(`File not found, try again`);
+      return;
     }
 
     try {
