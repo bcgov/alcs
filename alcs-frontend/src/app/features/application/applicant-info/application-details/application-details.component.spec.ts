@@ -82,7 +82,7 @@ describe('ApplicationDetailsComponent', () => {
       nfuOutsideLands: null,
       nfuProjectDurationAmount: null,
       nfuProjectDurationUnit: null,
-      nfuTotalFillPlacement: null,
+      nfuTotalFillArea: null,
       nfuWillImportFill: null,
       soilAlreadyPlacedArea: null,
       soilAlreadyPlacedAverageDepth: null,

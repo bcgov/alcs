@@ -75,7 +75,7 @@ describe('ApplicationSubmissionService', () => {
     nfuProjectDurationAmount: null,
     nfuProjectDurationUnit: null,
     purpose: '',
-    nfuTotalFillPlacement: null,
+    nfuTotalFillArea: null,
     nfuWillImportFill: null,
     soilAlreadyPlacedArea: null,
     soilAlreadyPlacedAverageDepth: null,

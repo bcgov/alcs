@@ -77,7 +77,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   nfuOutsideLands: string | null;
   nfuAgricultureSupport: string | null;
   nfuWillImportFill: boolean | null;
-  nfuTotalFillPlacement: number | null;
+  nfuTotalFillArea: number | null;
   nfuMaxFillDepth: number | null;
   nfuAverageFillDepth: number | null;
   nfuFillVolume: number | null;
@@ -182,7 +182,7 @@ export interface ApplicationSubmissionUpdateDto {
   nfuOutsideLands?: string | null;
   nfuAgricultureSupport?: string | null;
   nfuWillImportFill?: boolean | null;
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
   nfuMaxFillDepth?: number | null;
   nfuAverageFillDepth?: number | null;
   nfuFillVolume?: number | null;

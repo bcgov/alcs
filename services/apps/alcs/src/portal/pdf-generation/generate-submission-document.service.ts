@@ -309,7 +309,7 @@ export class GenerateSubmissionDocumentService {
       // NFU Proposal => Soil and Fill
       nfuFillTypeDescription: submission.nfuFillTypeDescription,
       nfuFillOriginDescription: submission.nfuFillOriginDescription,
-      nfuTotalFillPlacement: submission.nfuTotalFillPlacement,
+      nfuTotalFillArea: submission.nfuTotalFillArea,
       nfuMaxFillDepth: submission.nfuMaxFillDepth,
       nfuAverageFillDepth: submission.nfuAverageFillDepth,
       nfuFillVolume: submission.nfuFillVolume,

@@ -238,7 +238,7 @@ export class ApplicationSubmission extends Base {
     scale: 2,
     transformer: new ColumnNumericTransformer(),
   })
-  nfuTotalFillPlacement: number | null;
+  nfuTotalFillArea: number | null;
 
   @AutoMap(() => Number)
   @Column({

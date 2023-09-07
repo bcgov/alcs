@@ -12,6 +12,10 @@ from .submap import (
     create_subdiv_dict,
     add_subdiv,
     map_subdiv_lots,
+    get_soil_rows,
+    create_soil_dict,
+    map_soil_data,
+    add_soil_field,
 )
 from db import inject_conn_pool
 from constants import BATCH_UPLOAD_SIZE
@@ -67,10 +71,11 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
                     direction_data = get_direction_data(rows, cursor)
                     subdiv_data = get_subdiv_data(rows, cursor)
+                    soil_data = get_soil_data(rows, cursor)
 
                     submissions_to_be_inserted_count = len(rows)
 
-                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data)
+                    insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data, soil_data)
 
                     successful_inserts_count = (
                         successful_inserts_count + submissions_to_be_inserted_count
@@ -94,7 +99,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     print("Total failed inserts:", failed_inserts)
     log_end(etl_name)
 
-def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data):
+def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdiv_data, soil_data):
     """
     Function to insert submission records in batches.
 
@@ -105,6 +110,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
     rows (list): Rows of data to insert in the database.
     direction_data (dict): Dictionary of adjacent parcel data
     subdiv_data: dictionary of subdivision data lists
+    soil_data: dictonary of soil element data.
 
     Returns:
     None: Commits the changes to the database.
@@ -113,7 +119,7 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
         nfu_data_list,
         other_data_list,
         inc_exc_data_list,
-    ) = prepare_app_sub_data(rows, direction_data, subdiv_data)
+    ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
 
     if len(nfu_data_list) > 0:
         execute_batch(
@@ -141,19 +147,22 @@ def insert_app_sub_records(conn, batch_size, cursor, rows, direction_data, subdi
 
     conn.commit()
 
-def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data):
+def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soil_data):
     """
     This function prepares different lists of data based on the 'alr_change_code' field of each data dict in 'app_sub_raw_data_list'.
 
     :param app_sub_raw_data_list: A list of raw data dictionaries.
     :param direction_data: A dictionary of adjacent parcel data.
-    :param subdiv_data: dictionary of subdivision data lists
+    :param subdiv_data: dictionary of subdivision data lists.
+    :param soil_data: dictonary of soil element data.
     :return: Five lists, each containing dictionaries from 'app_sub_raw_data_list' and 'direction_data' grouped based on the 'alr_change_code' field
 
     Detailed Workflow:
     - Initializes empty lists
     - Iterates over 'app_sub_raw_data_list'
         - Maps adjacent parcel data based on alr_application_id
+        - Maps subdivision data on appl_component_id
+        _ Maps soil data based on appl_component_id
         - Maps the basic fields of the data dictionary based on the alr_change_code
     - Returns the mapped lists
     """
@@ -165,10 +174,13 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data):
         data = dict(row)
         data = add_direction_field(data)
         data = add_subdiv(data,json)
+        data = add_soil_field(data)
         if data['alr_appl_component_id'] in subdiv_data:
             data = map_subdiv_lots(data, subdiv_data, json)
         if data["alr_application_id"] in direction_data:
             data = map_direction_values(data, direction_data)
+        if data["alr_appl_component_id"] in soil_data:
+            data = map_soil_data(data, soil_data)
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
             nfu_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.EXC.value or data["alr_change_code"] == ALRChangeCode.INC.value:
@@ -222,8 +234,26 @@ def get_insert_query(unique_fields,unique_values):
     return query.format(unique_fields=unique_fields, unique_values=unique_values)
 
 def get_insert_query_for_nfu():
-    unique_fields = ", nfu_hectares"
-    unique_values = ", %(alr_area)s"
+    unique_fields = """, nfu_hectares,
+                        nfu_will_import_fill,
+                        nfu_fill_volume,
+                        nfu_max_fill_depth,
+                        nfu_project_duration_amount,
+                        nfu_fill_type_description,
+                        nfu_fill_origin_description,
+                        nfu_project_duration_unit,
+                        nfu_total_fill_area
+                        """
+    unique_values = """, %(alr_area)s,
+                        %(import_fill)s,
+                        %(total_fill)s,
+                        %(max_fill_depth)s,
+                        %(fill_duration)s,
+                        %(fill_type)s,
+                        %(fill_origin)s,
+                        %(fill_duration_unit)s,
+                        %(fill_area)s
+                    """
     return get_insert_query(unique_fields,unique_values)
 
 def get_insert_query_for_inc_exc():
@@ -243,6 +273,10 @@ def get_subdiv_data(rows, cursor):
     subdiv_data = create_subdiv_dict(subdiv_rows)
     return subdiv_data
 
+def get_soil_data(rows, cursor):
+    soil_rows = get_soil_rows(rows, cursor)
+    soil_data = create_soil_dict(soil_rows)
+    return soil_data
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
