@@ -265,15 +265,6 @@ export class NoticeOfIntentDecisionV2Controller {
         noticeOfIntentSubmission,
       );
 
-    const date = decision.date ? new Date(decision.date) : new Date();
-
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    };
-
     if (primaryContact) {
       await this.emailService.sendNoticeOfIntentStatusEmail({
         generateStatusHtml: generateALCDNoticeOfIntentHtml,
@@ -283,7 +274,6 @@ export class NoticeOfIntentDecisionV2Controller {
         parentType: PARENT_TYPE.NOTICE_OF_INTENT,
         primaryContact,
         ccGovernment: true,
-        decisionDate: date.toLocaleDateString('en-CA', options),
       });
     }
   }

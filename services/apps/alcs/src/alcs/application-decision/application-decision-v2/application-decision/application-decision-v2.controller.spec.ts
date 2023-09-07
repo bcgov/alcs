@@ -328,12 +328,6 @@ describe('ApplicationDecisionV2Controller', () => {
       parentType: 'application',
       primaryContact: mockOwner,
       ccGovernment: true,
-      decisionDate: new Date().toLocaleDateString('en-CA', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
     });
   });
 
