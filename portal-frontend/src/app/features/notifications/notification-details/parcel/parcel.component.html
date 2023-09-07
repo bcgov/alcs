@@ -1,4 +1,4 @@
-<h3 class="flex-item">1. Identify Parcel(s) Under Application</h3>
+<h3 class="flex-item">1. Identify Parcel(s) Under The Statutory Right of Way</h3>
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
@@ -48,10 +48,7 @@
       <div class="subheading2 grid-1">PIN (optional)</div>
       <div class="grid-double">
         {{ parcel.pin }}
-        <app-no-data
-          [showRequired]="false"
-          *ngIf="!parcel.pin"
-        ></app-no-data>
+        <app-no-data [showRequired]="false" *ngIf="!parcel.pin"></app-no-data>
       </div>
     </ng-container>
     <div class="subheading2 grid-1">Civic Address</div>

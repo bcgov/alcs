@@ -54,7 +54,14 @@
                 </button>
               </div>
             </div>
-            <div>TODO</div>
+            <div>
+              <app-notification-details
+                [$notificationSubmission]="$notificationSubmission"
+                [$notificationDocuments]="$notificationDocuments"
+                [showErrors]="false"
+                [showEdit]="false"
+              ></app-notification-details>
+            </div>
           </section>
         </div>
         <div class="buttons" *ngIf="submission">
@@ -75,8 +82,8 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="ALC Review and Decision">
-        <div class="content">To Add Later</div>
+      <mat-tab label="ALC Review and Response">
+        <div class="content">//TODO</div>
       </mat-tab>
     </mat-tab-group>
   </div>

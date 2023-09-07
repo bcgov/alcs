@@ -3,7 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
+import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { ViewNotificationSubmissionComponent } from './view-notification-submission.component';
 
@@ -12,10 +14,12 @@ describe('ViewNotificationSubmissionComponent', () => {
   let fixture: ComponentFixture<ViewNotificationSubmissionComponent>;
 
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockNotificationDocumentService: DeepMocked<NotificationDocumentService>;
   let mockActivatedRoute: DeepMocked<any>;
 
   beforeEach(async () => {
     mockNotificationSubmissionService = createMock();
+    mockNotificationDocumentService = createMock();
     mockActivatedRoute = createMock();
 
     mockActivatedRoute.paramMap = new BehaviorSubject(new Map());
@@ -28,8 +32,16 @@ describe('ViewNotificationSubmissionComponent', () => {
           useValue: mockNotificationSubmissionService,
         },
         {
+          provide: NotificationDocumentService,
+          useValue: mockNotificationDocumentService,
+        },
+        {
           provide: ActivatedRoute,
           useValue: mockActivatedRoute,
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

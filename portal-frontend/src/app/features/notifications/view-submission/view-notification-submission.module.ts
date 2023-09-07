@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
+import { NotificationDetailsModule } from '../notification-details/notification-details.module';
 import { ViewNotificationSubmissionComponent } from './view-notification-submission.component';
 
 const routes: Routes = [
@@ -13,7 +14,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(routes),
+    NgxMaskDirective,
+    NgxMaskPipe,
+    NotificationDetailsModule,
+  ],
   declarations: [ViewNotificationSubmissionComponent],
 })
 export class ViewNotificationSubmissionModule {}

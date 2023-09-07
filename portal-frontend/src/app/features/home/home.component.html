@@ -39,7 +39,16 @@
         </app-warning-banner>
         <app-noi-list></app-noi-list>
       </mat-tab>
-      <mat-tab label="Notification of SRW"> Notification of SRW </mat-tab>
+      <mat-tab label="Notification of SRW">
+        <app-warning-banner>
+          Create a Notification of Statutory Right of Way to the ALC if you plan to register a SRW under
+          <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96250_00_multi#section218"
+            >s. 218 of the Land Title Act</a
+          >
+          in the ALR.
+        </app-warning-banner>
+        <app-notification-list></app-notification-list>
+      </mat-tab>
     </mat-tab-group>
   </div>
 </div>

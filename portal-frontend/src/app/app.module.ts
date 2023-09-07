@@ -13,6 +13,7 @@ import { CreateSubmissionDialogComponent } from './features/create-submission-di
 import { ApplicationListComponent } from './features/home/application-list/application-list.component';
 import { HomeComponent } from './features/home/home.component';
 import { NoiListComponent } from './features/home/noi-list/noi-list.component';
+import { NotificationListComponent } from './features/home/notification-list/notification-list.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
@@ -33,6 +34,7 @@ import { SharedModule } from './shared/shared.module';
     AuthorizationComponent,
     ApplicationListComponent,
     NoiListComponent,
+    NotificationListComponent,
     CreateSubmissionDialogComponent,
     LandingPageComponent,
     ConfirmationDialogComponent,
