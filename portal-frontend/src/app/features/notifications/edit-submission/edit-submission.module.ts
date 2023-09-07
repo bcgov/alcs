@@ -8,6 +8,7 @@ import { NgxMaskPipe } from 'ngx-mask';
 import { CanDeactivateGuard } from '../../../shared/guard/can-deactivate.guard';
 import { SharedModule } from '../../../shared/shared.module';
 import { EditSubmissionComponent } from './edit-submission.component';
+import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { DeleteParcelDialogComponent } from './parcels/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
@@ -42,6 +43,7 @@ const routes: Routes = [
     TransfereeDialogComponent,
     PrimaryContactComponent,
     SelectGovernmentComponent,
+    OtherAttachmentsComponent,
   ],
   imports: [
     CommonModule,

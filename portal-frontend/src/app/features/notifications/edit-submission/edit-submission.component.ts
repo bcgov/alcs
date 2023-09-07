@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
+import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
+import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import {
   NOTIFICATION_STATUS,
   NotificationSubmissionDetailedDto,
@@ -13,6 +15,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../shared/custom-stepper/custom-stepper.component';
 import { OverlaySpinnerService } from '../../../shared/overlay-spinner/overlay-spinner.service';
 import { scrollToElement } from '../../../shared/utils/scroll-helper';
+import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
 import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
@@ -37,7 +40,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   $destroy = new Subject<void>();
   $notificationSubmission = new BehaviorSubject<NotificationSubmissionDetailedDto | undefined>(undefined);
-  $notificationDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
+  $notificationDocuments = new BehaviorSubject<NotificationDocumentDto[]>([]);
   notificationSubmission: NotificationSubmissionDetailedDto | undefined;
 
   steps = EditNotificationSteps;
@@ -48,9 +51,11 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
   @ViewChild(PrimaryContactComponent) primaryContactComponent!: PrimaryContactComponent;
   @ViewChild(SelectGovernmentComponent) selectGovernmentComponent!: SelectGovernmentComponent;
+  @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
+    private notificationDocumentService: NotificationDocumentService,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
     private toastService: ToastService,
@@ -149,7 +154,12 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         }
         break;
       case EditNotificationSteps.Proposal:
+        break;
       case EditNotificationSteps.Attachments:
+        if (this.otherAttachmentsComponent) {
+          await this.otherAttachmentsComponent.onSave();
+        }
+        break;
       case EditNotificationSteps.ReviewAndSubmit:
         //DO NOTHING
         break;
@@ -162,10 +172,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     if (fileNumber) {
       //TODO: Hook this up later
     }
-  }
-
-  onChangeSubmissionType() {
-    //TODO
   }
 
   async onSubmit() {
@@ -193,7 +199,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
         await this.router.navigateByUrl(`/home`);
       }
 
-      const documents: NoticeOfIntentDocumentDto[] = []; //TODO await this.noticeOfIntentDocumentService.getByFileId(fileId);
+      const documents = await this.notificationDocumentService.getByFileId(fileId);
       if (documents) {
         this.$notificationDocuments.next(documents);
       }

@@ -16,6 +16,7 @@ import { PortalNoticeOfIntentDecisionModule } from './notice-of-intent-decision/
 import { PortalNoticeOfIntentDocumentModule } from './notice-of-intent-document/notice-of-intent-document.module';
 import { NoticeOfIntentSubmissionDraftModule } from './notice-of-intent-submission-draft/notice-of-intent-submission-draft.module';
 import { NoticeOfIntentSubmissionModule } from './notice-of-intent-submission/notice-of-intent-submission.module';
+import { PortalNotificationDocumentModule } from './notification-document/notification-document.module';
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 import { NotificationSubmissionModule } from './notification-submission/notification-submission.module';
@@ -40,6 +41,7 @@ import { NotificationSubmissionModule } from './notification-submission/notifica
     NoticeOfIntentSubmissionDraftModule,
     PortalNoticeOfIntentDecisionModule,
     NotificationSubmissionModule,
+    PortalNotificationDocumentModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
@@ -54,6 +56,7 @@ import { NotificationSubmissionModule } from './notification-submission/notifica
       { path: 'portal', module: NoticeOfIntentSubmissionDraftModule },
       { path: 'portal', module: PortalNoticeOfIntentDecisionModule },
       { path: 'portal', module: NotificationSubmissionModule },
+      { path: 'portal', module: PortalNotificationDocumentModule },
     ]),
   ],
   controllers: [CodeController],

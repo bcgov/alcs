@@ -19,6 +19,7 @@ import { NoticeOfIntentTimelineModule } from './notice-of-intent/notice-of-inten
 import { NoticeOfIntentSubmissionStatusModule } from './notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.module';
 import { NoticeOfIntentModule } from './notice-of-intent/notice-of-intent.module';
 import { MessageModule } from './message/message.module';
+import { NotificationModule } from './notification/notification.module';
 import { PlanningReviewModule } from './planning-review/planning-review.module';
 import { SearchModule } from './search/search.module';
 import { StaffJournalModule } from './staff-journal/staff-journal.module';
@@ -45,6 +46,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
     NoticeOfIntentTimelineModule,
     SearchModule,
     LocalGovernmentModule,
+    NotificationModule,
     RouterModule.register([
       { path: 'alcs', module: ApplicationModule },
       { path: 'alcs', module: CommentModule },
@@ -67,6 +69,7 @@ import { StaffJournalModule } from './staff-journal/staff-journal.module';
       { path: 'alcs', module: LocalGovernmentModule },
       { path: 'alcs', module: ApplicationTimelineModule },
       { path: 'alcs', module: NoticeOfIntentTimelineModule },
+      { path: 'alcs', module: NotificationModule },
     ]),
   ],
   controllers: [],

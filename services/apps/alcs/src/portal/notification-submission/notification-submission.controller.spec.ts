@@ -8,9 +8,9 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
+import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
@@ -267,7 +267,7 @@ describe('NotificationSubmissionController', () => {
     });
 
     mockNotificationSubmissionService.submitToAlcs.mockResolvedValue(
-      new NoticeOfIntent(),
+      new Notification(),
     );
     mockNotificationSubmissionService.getByUuid.mockResolvedValue(
       mockSubmission,

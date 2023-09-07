@@ -8,6 +8,9 @@ import { BoardModule } from '../board/board.module';
 import { CardModule } from '../card/card.module';
 import { CodeModule } from '../code/code.module';
 import { LocalGovernmentModule } from '../local-government/local-government.module';
+import { NotificationDocumentController } from './notification-document/notification-document.controller';
+import { NotificationDocument } from './notification-document/notification-document.entity';
+import { NotificationDocumentService } from './notification-document/notification-document.service';
 import { NotificationSubmissionStatusModule } from './notification-submission-status/notification-submission-status.module';
 import { NotificationType } from './notification-type/notification-type.entity';
 import { NotificationController } from './notification.controller';
@@ -16,7 +19,12 @@ import { Notification } from './notification.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Notification, NotificationType, DocumentCode]),
+    TypeOrmModule.forFeature([
+      Notification,
+      NotificationType,
+      NotificationDocument,
+      DocumentCode,
+    ]),
     forwardRef(() => BoardModule),
     CardModule,
     FileNumberModule,
@@ -25,8 +33,12 @@ import { Notification } from './notification.entity';
     LocalGovernmentModule,
     NotificationSubmissionStatusModule,
   ],
-  providers: [NotificationService, NotificationProfile],
-  controllers: [NotificationController],
-  exports: [NotificationService],
+  providers: [
+    NotificationService,
+    NotificationProfile,
+    NotificationDocumentService,
+  ],
+  controllers: [NotificationController, NotificationDocumentController],
+  exports: [NotificationService, NotificationDocumentService],
 })
 export class NotificationModule {}
