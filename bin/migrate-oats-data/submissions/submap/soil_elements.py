@@ -1,4 +1,17 @@
 from enum import Enum
+
+class SoilAction(Enum):
+    RMV = 'REMOVE'
+    ADD = 'ADD'
+    
+alr_id = 'alr_appl_component_id'
+area = 'project_area'
+desc = 'material_desc'
+origin_desc = 'material_origin_desc'
+duration = 'project_duration'
+volume = 'volume'
+depth = 'depth'
+
 def get_soil_rows(rows, cursor):
     # fetches adjacent land use data, specifically direction, description and type code
     component_ids = [dict(item)["alr_appl_component_id"] for item in rows]
@@ -13,80 +26,34 @@ def get_soil_rows(rows, cursor):
 
 def create_soil_dict(soil_rows):
     # creates dict contailing fill and remove data
-
-    class SoilAction(Enum):
-        RMV = 'REMOVE'
-        ADD = 'ADD'
-    alr_id = 'alr_appl_component_id'
-    area = 'project_area'
-    desc = 'material_desc'
-    origin_desc = 'material_origin_desc'
-    duration = 'project_duration'
-    volume = 'volume'
-    depth = 'depth'
     code = 'soil_change_code'
-
     soil_dict = {}
     for row in soil_rows:
         app_component_id = row[alr_id]
         if app_component_id in soil_dict:
-
             if row[code] == SoilAction.RMV.value:
                 if 'RMV' in soil_dict.get(app_component_id, {}):
                          print('ignored element_id:',row['soil_change_element_id'])
                 else:
-                    soil_dict[app_component_id]['remove_type'] = row[desc]
-                    soil_dict[app_component_id]['remove_origin'] = row[origin_desc]
-                    soil_dict[app_component_id]['max_remove_depth'] = row[depth]
-                    soil_dict[app_component_id]['total_remove'] = row[volume]
-                    soil_dict[app_component_id]['remove_duration'] = row[duration]
-                    soil_dict[app_component_id]['remove_area'] = row[area]
+                    dict_rmv_insert(soil_dict, app_component_id, row)
                     if 'import_fill' not in soil_dict.get(app_component_id, {}):
                         soil_dict[app_component_id]['import_fill'] = False                    
-
-                soil_dict[app_component_id][SoilAction.RMV.name] = True
-
-
+                
             elif row[code] == SoilAction.ADD.value:
                 if 'ADD' in soil_dict.get(app_component_id, {}):
                         print('ignored element_id:',row['soil_change_element_id'])
                 else:            
-                    soil_dict[app_component_id]['fill_type'] = row[desc]
-                    soil_dict[app_component_id]['fill_origin'] = row[origin_desc]
-                    soil_dict[app_component_id]['total_fill'] = row[volume]
-                    soil_dict[app_component_id]['max_fill_depth'] = row[depth]
-                    soil_dict[app_component_id]['fill_duration'] = row[duration]
-                    soil_dict[app_component_id]['fill_area'] = row[area]
-                    soil_dict[app_component_id]['import_fill'] = True
-
-                soil_dict[app_component_id][SoilAction.ADD.name] = True
-            
+                    dict_fill_insert(soil_dict, app_component_id, row)         
             else:
                 print('unknown soil action')
         else:
             soil_dict[app_component_id] = {}
             soil_dict[app_component_id][alr_id] = row[alr_id]
             if row[code] == SoilAction.RMV.value:
-                soil_dict[app_component_id]['remove_type'] = row[desc]
-                soil_dict[app_component_id]['remove_origin'] = row[origin_desc]
-                soil_dict[app_component_id]['max_remove_depth'] = row[depth]
-                soil_dict[app_component_id]['total_remove'] = row[volume]
-                soil_dict[app_component_id]['remove_duration'] = row[duration]
-                soil_dict[app_component_id]['remove_area'] = row[area]
-                soil_dict[app_component_id][SoilAction.RMV.name] = True
+                dict_rmv_insert(soil_dict, app_component_id, row)
                 soil_dict[app_component_id]['import_fill'] = False
-
-
             elif row[code] == SoilAction.ADD.value:          
-                soil_dict[app_component_id]['fill_type'] = row[desc]
-                soil_dict[app_component_id]['fill_origin'] = row[origin_desc]
-                soil_dict[app_component_id]['total_fill'] = row[volume]
-                soil_dict[app_component_id]['max_fill_depth'] = row[depth]
-                soil_dict[app_component_id]['fill_duration'] = row[duration]
-                soil_dict[app_component_id]['fill_area'] = row[area]
-                soil_dict[app_component_id]['import_fill'] = True
-                soil_dict[app_component_id][SoilAction.ADD.name] = True
-                
+                dict_fill_insert(soil_dict, app_component_id, row)       
             else:
                 print('unknown soil action')
     return soil_dict
@@ -130,3 +97,24 @@ def add_soil_field(data):
     data['fill_duration_unit'] = None
     data['remove_duration_unit'] = None    
     return data
+
+def dict_fill_insert(soil_dict, app_component_id, row):
+    soil_dict[app_component_id]['fill_type'] = row[desc]
+    soil_dict[app_component_id]['fill_origin'] = row[origin_desc]
+    soil_dict[app_component_id]['total_fill'] = row[volume]
+    soil_dict[app_component_id]['max_fill_depth'] = row[depth]
+    soil_dict[app_component_id]['fill_duration'] = row[duration]
+    soil_dict[app_component_id]['fill_area'] = row[area]
+    soil_dict[app_component_id]['import_fill'] = True
+    soil_dict[app_component_id][SoilAction.ADD.name] = True
+    return
+
+def dict_rmv_insert(soil_dict, app_component_id, row):
+    soil_dict[app_component_id]['remove_type'] = row[desc]
+    soil_dict[app_component_id]['remove_origin'] = row[origin_desc]
+    soil_dict[app_component_id]['max_remove_depth'] = row[depth]
+    soil_dict[app_component_id]['total_remove'] = row[volume]
+    soil_dict[app_component_id]['remove_duration'] = row[duration]
+    soil_dict[app_component_id]['remove_area'] = row[area]
+    soil_dict[app_component_id][SoilAction.RMV.name] = True
+    return
