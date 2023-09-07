@@ -66,8 +66,15 @@
     </mat-form-field>
 
     <div>
-      <mat-label>Decision Maker*</mat-label>
-      <mat-button-toggle-group required id="decisionMaker" formControlName="decisionMaker">
+      <mat-label class="toggle-label">Decision Maker*</mat-label>
+      <mat-button-toggle-group
+        required
+        id="decisionMaker"
+        formControlName="decisionMaker"
+        [ngClass]="{
+          'error-field-outlined': !form.controls.decisionMaker.valid && form.controls.decisionMaker.touched
+        }"
+      >
         <mat-button-toggle value="CEO Delegate">CEO Delegate</mat-button-toggle>
         <mat-button-toggle value="CEO">CEO</mat-button-toggle>
       </mat-button-toggle-group>
