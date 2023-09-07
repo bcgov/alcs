@@ -4,15 +4,9 @@ import { Router } from '@angular/router';
 import { DeepMocked, createMock } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { CodeService } from '../../../services/code/code.service';
-import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
-import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../services/notification-submission/notification-submission.dto';
-import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
-import { ToastService } from '../../../services/toast/toast.service';
 
 import { NotificationDetailsComponent } from './notification-details.component';
 
