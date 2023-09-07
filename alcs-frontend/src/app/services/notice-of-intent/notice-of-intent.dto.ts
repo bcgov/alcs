@@ -283,6 +283,7 @@ export enum STRUCTURE_TYPES {
 export interface NoticeOfIntentOwnerDto {
   uuid: string;
   noticeOfIntentSubmissionUuid: string;
+  corporateSummaryUuid?: string;
   displayName: string;
   firstName: string | null;
   lastName: string | null;
@@ -332,7 +333,6 @@ export interface NoticeOfIntentParcelDto {
   isFarm?: boolean;
   ownershipType?: string;
   crownLandOwnerType?: string;
-  parcelType?: string;
   certificateOfTitleUuid?: string;
   owners: SubmittedNoticeOfIntentOwnerDto[];
   alrArea: number;

@@ -2,6 +2,8 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
+import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -62,7 +64,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA)
     public data: { fileId: string; existingDocument?: NoticeOfIntentDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private applicationDocumentService: NoiDocumentService
+    private noiDocumentService: NoiDocumentService,
+    private noiSubmissionService: NoticeOfIntentSubmissionService,
+    private noiParcelService: NoticeOfIntentParcelService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +76,16 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
       const document = this.data.existingDocument;
       this.title = 'Edit';
       this.allowsFileEdit = document.system === DOCUMENT_SYSTEM.ALCS;
+
+      if (document.type?.code === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+        this.prepareCertificateOfTitleUpload(document.uuid);
+        this.allowsFileEdit = false;
+      }
+      if (document.type?.code === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+        this.allowsFileEdit = false;
+        this.prepareCorporateSummaryUpload(document.uuid);
+      }
+
       this.form.patchValue({
         name: document.fileName,
         type: document.type?.code,
@@ -111,9 +125,9 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     const file = this.pendingFile;
     this.isSaving = true;
     if (this.data.existingDocument) {
-      await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
+      await this.noiDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
-      await this.applicationDocumentService.upload(this.data.fileId, {
+      await this.noiDocumentService.upload(this.data.fileId, {
         ...dto,
         file,
       });
@@ -141,6 +155,24 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     } else {
       this.type.setValue(undefined);
     }
+
+    if (this.type.value === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE) {
+      await this.prepareCertificateOfTitleUpload();
+      this.visibleToInternal.setValue(true);
+    } else {
+      this.parcelId.setValue(null);
+      this.parcelId.setValidators([]);
+      this.parcelId.updateValueAndValidity();
+    }
+
+    if (this.type.value === DOCUMENT_TYPE.CORPORATE_SUMMARY) {
+      await this.prepareCorporateSummaryUpload();
+      this.visibleToInternal.setValue(true);
+    } else {
+      this.ownerId.setValue(null);
+      this.ownerId.setValidators([]);
+      this.ownerId.updateValueAndValidity();
+    }
   }
 
   uploadFile(event: Event) {
@@ -166,15 +198,58 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   async openExistingFile() {
     if (this.data.existingDocument) {
-      await this.applicationDocumentService.download(
-        this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName
-      );
+      await this.noiDocumentService.download(this.data.existingDocument.uuid, this.data.existingDocument.fileName);
+    }
+  }
+
+  private async prepareCertificateOfTitleUpload(uuid?: string) {
+    const parcels = await this.noiParcelService.fetchParcels(this.data.fileId);
+    if (parcels.length > 0) {
+      this.parcelId.setValidators([Validators.required]);
+      this.parcelId.updateValueAndValidity();
+      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+
+      const selectedParcel = parcels.find((parcel) => parcel.certificateOfTitleUuid === uuid);
+      if (selectedParcel) {
+        this.parcelId.setValue(selectedParcel.uuid);
+      } else if (uuid) {
+        this.showSupersededWarning = true;
+      }
+
+      this.selectableParcels = parcels.map((parcel, index) => ({
+        uuid: parcel.uuid,
+        pid: parcel.pid,
+        index: index,
+      }));
+    }
+  }
+
+  private async prepareCorporateSummaryUpload(uuid?: string) {
+    const submission = await this.noiSubmissionService.fetchSubmission(this.data.fileId);
+    if (submission.owners.length > 0) {
+      const owners = submission.owners;
+      this.ownerId.setValidators([Validators.required]);
+      this.ownerId.updateValueAndValidity();
+      this.source.setValue(DOCUMENT_SOURCE.APPLICANT);
+
+      const selectedOwner = owners.find((owner) => owner.corporateSummaryUuid === uuid);
+      if (selectedOwner) {
+        this.ownerId.setValue(selectedOwner.uuid);
+      } else if (uuid) {
+        this.showSupersededWarning = true;
+      }
+
+      this.selectableOwners = owners
+        .filter((owner) => owner.type.code === 'ORGZ')
+        .map((owner, index) => ({
+          label: owner.organizationName ?? owner.displayName,
+          uuid: owner.uuid,
+        }));
     }
   }
 
   private async loadDocumentTypes() {
-    const docTypes = await this.applicationDocumentService.fetchTypes();
+    const docTypes = await this.noiDocumentService.fetchTypes();
     docTypes.sort((a, b) => (a.label > b.label ? 1 : -1));
     this.documentTypes = docTypes.filter((type) => type.code !== DOCUMENT_TYPE.ORIGINAL_APPLICATION);
   }
