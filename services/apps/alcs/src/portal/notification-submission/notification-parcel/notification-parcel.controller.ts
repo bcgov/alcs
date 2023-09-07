@@ -36,7 +36,7 @@ export class NotificationParcelController {
   async fetchByFileId(
     @Param('submissionUuid') submissionUuid: string,
   ): Promise<NotificationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
+    const parcels = await this.parcelService.fetchBySubmissionUuid(
       submissionUuid,
     );
     return this.mapper.mapArrayAsync(

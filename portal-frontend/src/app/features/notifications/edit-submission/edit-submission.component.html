@@ -99,6 +99,16 @@
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>
-    <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit"></div>
+    <div *ngIf="cdkStepper.selectedIndex === steps.ReviewAndSubmit">
+      <app-review-and-submit
+        [$notificationSubmission]="$notificationSubmission"
+        [$notificationDocuments]="$notificationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="switchStep($event)"
+        (exit)="onExit()"
+        (submit)='onSubmit()'
+      >
+      </app-review-and-submit>
+    </div>
   </cdk-step>
 </app-custom-stepper>

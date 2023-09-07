@@ -1,0 +1,105 @@
+<section>
+  <app-parcel
+    [$notificationSubmission]="$notificationSubmission"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+  ></app-parcel>
+</section>
+<section>
+  <h3>3. Primary Contact</h3>
+  <div *ngIf="notificationSubmission" class="review-table">
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ notificationSubmission.contactFirstName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactFirstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ notificationSubmission.contactLastName }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactLastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      <span>Organization (optional)</span>
+    </div>
+    <div class="grid-double">
+      {{ notificationSubmission.contactOrganization }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactOrganization"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ notificationSubmission.contactPhone }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactPhone"></app-no-data>
+      <app-validation-error *ngIf="!(notificationSubmission.contactPhone || '' | phoneValid)"
+        >Invalid Format</app-validation-error
+      >
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ notificationSubmission.contactEmail }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactEmail"></app-no-data>
+      <app-validation-error *ngIf="!(notificationSubmission.contactEmail || '' | emailValid)"
+        >Invalid Format</app-validation-error
+      >
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(2)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>4. Government</h3>
+  <div *ngIf="notificationSubmission" class="review-table">
+    <div class="subheading2 grid-1">Local or First Nation Government</div>
+    <div class="grid-double">
+      {{ localGovernment?.name }}
+      <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
+      <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
+        This Local/First Nation Government has not yet been set up with the ALC Portal to receive notice of intents. To
+        submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca"
+          >ALC.Portal@gov.bc.ca</a
+        >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+      </app-warning-banner>
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(3)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
+<section *ngIf="notificationSubmission">
+  <h3>5. Proposal</h3>
+  <app-proposal-details
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [notificationSubmission]="notificationSubmission"
+    [notificationDocuments]="notificationDocuments"
+  ></app-proposal-details>
+</section>
+<section>
+  <h3>6. Optional Attachments</h3>
+  <div *ngIf="notificationSubmission" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">
+          {{ file.type?.label }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
+        </div>
+        <div class="grid-2">
+          {{ file.description }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!file.description"></app-no-data>
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div class="full-width">
+        <app-no-data [showRequired]="false" *ngIf="otherFiles.length === 0"></app-no-data>
+      </div>
+    </div>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(5)" color="accent">Edit Section</button>
+    </div>
+  </div>
+</section>
