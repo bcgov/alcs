@@ -3,11 +3,15 @@ import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
+  animations: [
+    trigger('inAnimation', [transition(':enter', [style({ height: 0, opacity: 0 }), animate('100ms ease-out')])]),
+  ],
 })
 export class SearchBarComponent {
   searchText = '';
@@ -70,6 +74,7 @@ export class SearchBarComponent {
 
       if (searchResult?.length > 1) {
         await this.router.navigateByUrl(`/search?searchText=${this.searchText}`);
+        this.toggleInput();
       }
 
       this.searchText = '';
