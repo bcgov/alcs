@@ -25,37 +25,23 @@ def get_soil_rows(rows, cursor):
     return soil_rows
 
 def create_soil_dict(soil_rows):
-    # creates dict contailing fill and remove data
-    code = 'soil_change_code'
-    soil_dict = {}
+    # creates dict containing fill & remove data
+    soil_dict = dict()
+
     for row in soil_rows:
         app_component_id = row[alr_id]
-        if app_component_id in soil_dict:
-            if row[code] == SoilAction.RMV.value:
-                if 'RMV' in soil_dict.get(app_component_id, {}):
-                         print('ignored element_id:',row['soil_change_element_id'])
-                else:
-                    dict_rmv_insert(soil_dict, app_component_id, row)
-                    if 'import_fill' not in soil_dict.get(app_component_id, {}):
-                        soil_dict[app_component_id]['import_fill'] = False                    
-                
-            elif row[code] == SoilAction.ADD.value:
-                if 'ADD' in soil_dict.get(app_component_id, {}):
-                        print('ignored element_id:',row['soil_change_element_id'])
-                else:            
-                    dict_fill_insert(soil_dict, app_component_id, row)         
-            else:
-                print('unknown soil action')
+        soil_dict.setdefault(app_component_id, {alr_id: row[alr_id]})
+        
+        if (row['soil_change_code'] == SoilAction.RMV.value and 'RMV' not in soil_dict[app_component_id]) or \
+           (row['soil_change_code'] == SoilAction.ADD.value and 'ADD' not in soil_dict[app_component_id]):
+            action_function = dict_rmv_insert if row['soil_change_code'] == SoilAction.RMV.value else dict_fill_insert
+            action_function(soil_dict, app_component_id, row)
+        
+        elif row['soil_change_code'] not in [SoilAction.ADD.value, SoilAction.RMV.value]:
+            print('unknown soil action')
         else:
-            soil_dict[app_component_id] = {}
-            soil_dict[app_component_id][alr_id] = row[alr_id]
-            if row[code] == SoilAction.RMV.value:
-                dict_rmv_insert(soil_dict, app_component_id, row)
-                soil_dict[app_component_id]['import_fill'] = False
-            elif row[code] == SoilAction.ADD.value:          
-                dict_fill_insert(soil_dict, app_component_id, row)       
-            else:
-                print('unknown soil action')
+            print('ignored element_id:', row['soil_change_element_id'])
+
     return soil_dict
         
 
