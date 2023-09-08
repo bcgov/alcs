@@ -23,7 +23,7 @@
     </div>
     <div class="grid-double">
       {{ notificationSubmission.contactOrganization }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactOrganization"></app-no-data>
+      <app-no-data [showRequired]="false" *ngIf="!notificationSubmission.contactOrganization"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Phone</div>
     <div class="grid-double">

@@ -2,6 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Notification } from '../../../alcs/notification/notification.entity';
 import { NotificationService } from '../../../alcs/notification/notification.service';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { User } from '../../../user/user.entity';
@@ -70,6 +71,7 @@ describe('NotificationTransfereeService', () => {
   it('should load the type and then call save for create', async () => {
     mockRepo.save.mockResolvedValue(new NotificationTransferee());
     mockTypeRepo.findOneOrFail.mockResolvedValue(new OwnerType());
+    mockRepo.find.mockResolvedValue([]);
 
     await service.create(
       {
@@ -79,6 +81,7 @@ describe('NotificationTransfereeService', () => {
         typeCode: '',
       },
       new NotificationSubmission(),
+      new User(),
     );
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);

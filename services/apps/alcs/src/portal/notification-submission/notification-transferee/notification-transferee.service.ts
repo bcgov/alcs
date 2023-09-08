@@ -41,6 +41,7 @@ export class NotificationTransfereeService {
   async create(
     createDto: NotificationTransfereeCreateDto,
     notificationSubmission: NotificationSubmission,
+    user: User,
   ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -57,6 +58,11 @@ export class NotificationTransfereeService {
       notificationSubmission: notificationSubmission,
       type,
     });
+
+    await this.updateSubmissionApplicant(
+      newOwner.notificationSubmissionUuid,
+      user,
+    );
 
     return await this.repository.save(newOwner);
   }

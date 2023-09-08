@@ -13,6 +13,7 @@ import {
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
+import { NotificationSubmissionValidatorService } from './notification-submission-validator.service';
 import { NotificationSubmissionUpdateDto } from './notification-submission.dto';
 import { NotificationSubmissionService } from './notification-submission.service';
 
@@ -23,6 +24,7 @@ export class NotificationSubmissionController {
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
+    private notificationValidationService: NotificationSubmissionValidatorService,
   ) {}
 
   @Get()
@@ -130,18 +132,32 @@ export class NotificationSubmissionController {
     const notificationSubmission =
       await this.notificationSubmissionService.getByUuid(uuid, req.user.entity);
 
-    await this.notificationSubmissionService.submitToAlcs(
-      notificationSubmission,
-    );
+    const validationResult =
+      await this.notificationValidationService.validateSubmission(
+        notificationSubmission,
+      );
 
-    const finalSubmission = await this.notificationSubmissionService.getByUuid(
-      uuid,
-      req.user.entity,
-    );
+    if (validationResult.noticeOfIntentSubmission) {
+      const validatedApplicationSubmission =
+        validationResult.noticeOfIntentSubmission;
 
-    return await this.notificationSubmissionService.mapToDetailedDTO(
-      finalSubmission,
-      req.user.entity,
-    );
+      await this.notificationSubmissionService.submitToAlcs(
+        validatedApplicationSubmission,
+      );
+
+      const finalSubmission =
+        await this.notificationSubmissionService.getByUuid(
+          uuid,
+          req.user.entity,
+        );
+
+      return await this.notificationSubmissionService.mapToDetailedDTO(
+        finalSubmission,
+        req.user.entity,
+      );
+    } else {
+      this.logger.debug(validationResult.errors);
+      throw new BadRequestException('Invalid Notification');
+    }
   }
 }

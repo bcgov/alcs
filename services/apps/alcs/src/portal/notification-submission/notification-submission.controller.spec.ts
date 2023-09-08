@@ -14,6 +14,10 @@ import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
+import {
+  NotificationSubmissionValidatorService,
+  ValidatedNotificationSubmission,
+} from './notification-submission-validator.service';
 import { NotificationSubmissionController } from './notification-submission.controller';
 import {
   NotificationSubmissionDetailedDto,
@@ -26,6 +30,7 @@ import { NotificationTransferee } from './notification-transferee/notification-t
 describe('NotificationSubmissionController', () => {
   let controller: NotificationSubmissionController;
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockNotificationValidationService: DeepMocked<NotificationSubmissionValidatorService>;
   let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockEmailService: DeepMocked<EmailService>;
@@ -40,6 +45,7 @@ describe('NotificationSubmissionController', () => {
     mockDocumentService = createMock();
     mockLgService = createMock();
     mockEmailService = createMock();
+    mockNotificationValidationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationSubmissionController],
@@ -52,6 +58,10 @@ describe('NotificationSubmissionController', () => {
         {
           provide: NoticeOfIntentDocumentService,
           useValue: mockDocumentService,
+        },
+        {
+          provide: NotificationSubmissionValidatorService,
+          useValue: mockNotificationValidationService,
         },
         {
           provide: LocalGovernmentService,
@@ -275,6 +285,11 @@ describe('NotificationSubmissionController', () => {
     mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as NotificationSubmissionDetailedDto,
     );
+    mockNotificationValidationService.validateSubmission.mockResolvedValue({
+      noticeOfIntentSubmission:
+        mockSubmission as ValidatedNotificationSubmission,
+      errors: [],
+    });
 
     await controller.submitAsApplicant(mockFileId, {
       user: {

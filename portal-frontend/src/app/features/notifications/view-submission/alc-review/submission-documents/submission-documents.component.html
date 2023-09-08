@@ -1,0 +1,43 @@
+<h4>SRW Documents</h4>
+<div class='table-container'>
+  <table mat-table [dataSource]='dataSource' matSort class='mat-elevation-z3 documents'>
+    <ng-container matColumnDef='type'>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription='Sort by type'>Type</th>
+      <td mat-cell *matCellDef='let element'>
+        {{ element.type?.label }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef='fileName'>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription='Sort by name'>Document Name</th>
+      <td mat-cell *matCellDef='let element'>
+        <a (click)='openFile(element.uuid)'>{{ element.fileName }}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef='source'>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription='Sort by source'>Source</th>
+      <td mat-cell *matCellDef='let element'>{{ element.source }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef='uploadedAt'>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription='Sort by date'>Upload Date</th>
+      <td mat-cell *matCellDef='let element'>{{ element.uploadedAt | date }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef='actions'>
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef='let element'>
+        <button mat-icon-button (click)='openFile(element.uuid)'>
+          <mat-icon>file_download</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef='displayedColumns'></tr>
+    <tr mat-row *matRowDef='let row; columns: displayedColumns'></tr>
+    <tr class='mat-row' *matNoDataRow>
+      <td class='text-center' colspan='6'>Documents will be visible here once provided by ALC</td>
+    </tr>
+  </table>
+</div>

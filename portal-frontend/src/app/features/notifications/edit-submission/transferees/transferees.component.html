@@ -26,7 +26,7 @@
     <table mat-table [dataSource]="transferees">
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef>Type</th>
-        <td mat-cell *matCellDef="let element">{{ element.type.code === 'INVD' ? 'Individual' : 'Organization' }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.type.code === 'INDV' ? 'Individual' : 'Organization' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="fullName">
