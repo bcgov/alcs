@@ -22,6 +22,7 @@ import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
+import { ValidatedNotificationSubmission } from './notification-submission-validator.service';
 import {
   NotificationSubmissionDetailedDto,
   NotificationSubmissionDto,
@@ -325,12 +326,12 @@ export class NotificationSubmissionService {
     };
   }
 
-  async submitToAlcs(notificationSubmission: NotificationSubmission) {
+  async submitToAlcs(notificationSubmission: ValidatedNotificationSubmission) {
     try {
       const submittedNotification = await this.notificationService.submit({
         fileNumber: notificationSubmission.fileNumber,
-        applicant: notificationSubmission.applicant!,
-        localGovernmentUuid: notificationSubmission.localGovernmentUuid!,
+        applicant: notificationSubmission.applicant,
+        localGovernmentUuid: notificationSubmission.localGovernmentUuid,
         typeCode: notificationSubmission.typeCode,
         dateSubmittedToAlc: new Date(),
       });

@@ -69,6 +69,7 @@ export class NotificationTransfereeController {
     const owner = await this.ownerService.create(
       createDto,
       noticeOfIntentSubmission,
+      req.user.entity,
     );
 
     return this.mapper.mapAsync(

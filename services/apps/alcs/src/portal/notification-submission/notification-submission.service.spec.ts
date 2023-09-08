@@ -14,6 +14,7 @@ import { NotificationService } from '../../alcs/notification/notification.servic
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { ValidatedNotificationSubmission } from './notification-submission-validator.service';
 import { NotificationSubmission } from './notification-submission.entity';
 import { NotificationSubmissionService } from './notification-submission.service';
 
@@ -193,7 +194,7 @@ describe('NotificationSubmissionService', () => {
     expect(res[0].applicant).toEqual(applicant);
   });
 
-  it('should fail on submitToAlcs if error', async () => {
+  it('should fail on submitToAlcs if validation fails', async () => {
     const applicant = 'Bruce Wayne';
     const typeCode = 'fake-code';
     const fileNumber = 'fake';
@@ -208,7 +209,9 @@ describe('NotificationSubmissionService', () => {
     mockNotificationService.submit.mockRejectedValue(new Error());
 
     await expect(
-      service.submitToAlcs(noticeOfIntentSubmission),
+      service.submitToAlcs(
+        noticeOfIntentSubmission as ValidatedNotificationSubmission,
+      ),
     ).rejects.toMatchObject(
       new BaseServiceException(`Failed to submit notification: ${fileNumber}`),
     );

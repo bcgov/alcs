@@ -1,0 +1,26 @@
+<div *ngIf="notificationSubmission">
+  <div class="header">
+    <h3>ALC Review and Response</h3>
+    <div>
+      <button
+        [routerLink]="'/notice-of-intent/' + notificationSubmission.fileNumber + '/edit'"
+        *ngIf="notificationSubmission.canEdit"
+        mat-flat-button
+        color="primary"
+      >
+        Edit SRW
+      </button>
+    </div>
+  </div>
+  <div *ngIf="notificationSubmission.status.code === NOTIFICATION_STATUS.IN_PROGRESS" class="warning">
+    This section will update after the notification is submitted to the ALC.
+  </div>
+  <div
+    *ngIf="
+      notificationSubmission.status.code === NOTIFICATION_STATUS.SUBMITTED_TO_ALC ||
+      notificationSubmission.status.code === NOTIFICATION_STATUS.ALC_RESPONSE
+    "
+  >
+    <app-submission-documents [$notificationDocuments]="$notificationDocuments"></app-submission-documents>
+  </div>
+</div>

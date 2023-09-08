@@ -14,6 +14,7 @@ import { FileNumberModule } from '../../file-number/file-number.module';
 import { NotificationParcelController } from './notification-parcel/notification-parcel.controller';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
 import { NotificationParcelService } from './notification-parcel/notification-parcel.service';
+import { NotificationSubmissionValidatorService } from './notification-submission-validator.service';
 import { NotificationSubmissionController } from './notification-submission.controller';
 import { NotificationSubmission } from './notification-submission.entity';
 import { NotificationSubmissionService } from './notification-submission.service';
@@ -44,6 +45,7 @@ import { NotificationTransfereeService } from './notification-transferee/notific
   ],
   providers: [
     NotificationSubmissionService,
+    NotificationSubmissionValidatorService,
     NotificationParcelService,
     NotificationTransfereeService,
     NotificationSubmissionProfile,
