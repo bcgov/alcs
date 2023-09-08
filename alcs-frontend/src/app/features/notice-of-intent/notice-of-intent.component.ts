@@ -6,7 +6,9 @@ import { environment } from '../../../environments/environment';
 import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/notice-of-intent-detail.service';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
-import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NOI_SUBMISSION_STATUS, NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
 import { NoiDocumentsComponent } from './documents/documents.component';
@@ -15,7 +17,6 @@ import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
-import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 
 export const childRoutes = [
   {
@@ -71,6 +72,22 @@ export const childRoutes = [
   },
 ];
 
+const preSubmissionRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'NOI Preview',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+];
+
 @Component({
   selector: 'app-notice-of-intent',
   templateUrl: './notice-of-intent.component.html',
@@ -79,12 +96,14 @@ export const childRoutes = [
 export class NoticeOfIntentComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   childRoutes = childRoutes;
+  preSubmissionRoute = preSubmissionRoutes;
 
   fileNumber?: string;
   noticeOfIntent: NoticeOfIntentDto | undefined;
   modifications: NoticeOfIntentModificationDto[] = [];
 
-  isAuthorized = true;
+  isApplicantSubmission = false;
+  showSubmittedToAlcMenuItems = false;
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
@@ -101,11 +120,17 @@ export class NoticeOfIntentComponent implements OnInit, OnDestroy {
       this.load();
     });
 
-    this.noticeOfIntentDetailService.$noticeOfIntent.pipe(takeUntil(this.destroy)).subscribe((noticeOfIntent) => {
+    this.noticeOfIntentDetailService.$noticeOfIntent.pipe(takeUntil(this.destroy)).subscribe(async (noticeOfIntent) => {
       if (noticeOfIntent) {
         this.titleService.setTitle(
           `${environment.siteName} | ${noticeOfIntent.fileNumber} (${noticeOfIntent.applicant})`
         );
+
+        this.isApplicantSubmission = noticeOfIntent.source === SYSTEM_SOURCE_TYPES.APPLICANT;
+
+        if (this.isApplicantSubmission) {
+          this.showSubmittedToAlcMenuItems = !!noticeOfIntent.dateSubmittedToAlc;
+        }
 
         this.noticeOfIntentModificationService.fetchByFileNumber(noticeOfIntent.fileNumber);
         this.noticeOfIntent = noticeOfIntent;

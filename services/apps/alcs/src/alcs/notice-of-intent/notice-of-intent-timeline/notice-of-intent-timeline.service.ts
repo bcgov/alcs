@@ -251,41 +251,47 @@ export class NoticeOfIntentTimelineService {
     noticeOfIntent: NoticeOfIntent,
     events: TimelineEvent[],
   ) {
-    const statusHistory =
-      await this.noticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber(
-        noticeOfIntent.fileNumber,
+    if (noticeOfIntent.source === 'APPLICANT') {
+      const statusHistory =
+        await this.noticeOfIntentSubmissionStatusService.getCurrentStatusesByFileNumber(
+          noticeOfIntent.fileNumber,
+        );
+
+      const statusesToInclude = statusHistory.filter(
+        (status) =>
+          NOI_SUBMISSION_STATUS.ALC_DECISION !== status.statusType.code,
       );
 
-    const statusesToInclude = statusHistory.filter(
-      (status) => NOI_SUBMISSION_STATUS.ALC_DECISION !== status.statusType.code,
-    );
+      for (const status of statusesToInclude) {
+        if (status.effectiveDate) {
+          let htmlText = `<strong>${status.statusType.label}</strong>`;
 
-    for (const status of statusesToInclude) {
-      if (status.effectiveDate) {
-        let htmlText = `<strong>${status.statusType.label}</strong>`;
+          if (status.statusType.code === NOI_SUBMISSION_STATUS.IN_PROGRESS) {
+            htmlText = 'Created - <strong>In Progress</strong>';
+          }
 
-        if (status.statusType.code === NOI_SUBMISSION_STATUS.IN_PROGRESS) {
-          htmlText = 'Created - <strong>In Progress</strong>';
+          if (
+            status.statusType.code ===
+            NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE
+          ) {
+            htmlText =
+              'Acknowledged Incomplete - <strong>Submitted to ALC - Incomplete</strong>';
+          }
+
+          if (
+            status.statusType.code === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC
+          ) {
+            htmlText = 'Received All Items - <strong>Received by ALC</strong>';
+          }
+
+          events.push({
+            htmlText,
+            startDate:
+              status.effectiveDate.getTime() + status.statusType.weight,
+            fulfilledDate: null,
+            isFulfilled: true,
+          });
         }
-
-        if (
-          status.statusType.code ===
-          NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE
-        ) {
-          htmlText =
-            'Acknowledged Incomplete - <strong>Submitted to ALC - Incomplete</strong>';
-        }
-
-        if (status.statusType.code === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC) {
-          htmlText = 'Received All Items - <strong>Received by ALC</strong>';
-        }
-
-        events.push({
-          htmlText,
-          startDate: status.effectiveDate.getTime() + status.statusType.weight,
-          fulfilledDate: null,
-          isFulfilled: true,
-        });
       }
     }
   }
