@@ -84,7 +84,7 @@ export class EmailService {
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationService: ApplicationService,
     private noticeOfIntentService: NoticeOfIntentService,
-    private noticeOfInterntSubmissionService: NoticeOfIntentSubmissionService,
+    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
   ) {}
 
   private token = '';
@@ -309,7 +309,7 @@ export class EmailService {
   }
 
   private async setNoticeOfIntentEmailTemplate(data: NoticeOfIntentEmailData) {
-    const status = await this.noticeOfInterntSubmissionService.getStatus(
+    const status = await this.noticeOfIntentSubmissionService.getStatus(
       data.status,
     );
 
@@ -356,21 +356,21 @@ export class EmailService {
   async sendNoticeOfIntentStatusEmail(data: NoticeOfIntentEmailData) {
     const email = await this.setNoticeOfIntentEmailTemplate(data);
 
-    this.sendStatusEmail(data, email);
+    await this.sendStatusEmail(data, email);
   }
 
-  private sendStatusEmail(
+  private async sendStatusEmail(
     data: ApplicationEmailData | NoticeOfIntentEmailData,
     email,
   ) {
     if (data.primaryContact && data.primaryContact.email) {
-      this.sendEmail({
+      await this.sendEmail({
         ...email,
         to: [data.primaryContact.email],
         cc: data.ccGovernment ? data.government?.emails : [],
       });
     } else if (data.government && data.government.emails.length > 0) {
-      this.sendEmail({
+      await this.sendEmail({
         ...email,
         to: data.government.emails,
       });

@@ -23,6 +23,15 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true })
   effectiveDate: Date | null;
 
+  @AutoMap(() => Date)
+  @Column({
+    nullable: true,
+    type: 'timestamptz',
+    comment:
+      'Applicable only for "REVA" (Under Review by ALC) and ALCD("Decision released") statuses all others always set to false',
+  })
+  emailSentDate?: Date | null;
+
   @AutoMap()
   @PrimaryColumn({ type: 'uuid' })
   submissionUuid: string;

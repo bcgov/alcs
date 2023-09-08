@@ -1,10 +1,10 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { In, IsNull, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
@@ -142,5 +142,27 @@ export class ApplicationSubmissionStatusService {
     );
 
     return newStatuses;
+  }
+
+  async getSubmissionToSubmissionStatusForSendingEmails(date: Date) {
+    return await this.statusesRepository.find({
+      where: {
+        statusTypeCode: In([
+          SUBMISSION_STATUS.ALC_DECISION,
+          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+        ]),
+        emailSentDate: IsNull(),
+        effectiveDate: date, // this will get only statuses set for today since the status service converts all days to .startOf('day')
+      },
+      relations: {
+        submission: true,
+      },
+    });
+  }
+
+  async saveSubmissionToSubmissionStatus(
+    submissionStatus: ApplicationSubmissionToSubmissionStatus,
+  ) {
+    return await this.statusesRepository.save(submissionStatus);
   }
 }

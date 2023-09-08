@@ -23,6 +23,7 @@ import { MainService } from './main.service';
 import { NoticeOfIntentSubmissionModule } from './portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
+import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -64,6 +65,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     FileNumberModule,
     NoticeOfIntentSubmissionModule,
+    SchedulerModule, // this will init BullMQ
   ],
   controllers: [MainController, LogoutController],
   providers: [
