@@ -11,7 +11,9 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
@@ -264,21 +266,30 @@ export class NotificationSubmissionService {
   async mapToDTOs(submissions: NotificationSubmission[], user: User) {
     const types = await this.notificationService.listTypes();
 
-    return submissions.map((noiSubmission) => {
-      const isCreator = noiSubmission.createdBy.uuid === user.uuid;
+    return submissions.map((notificationSubmission) => {
+      const isCreator = notificationSubmission.createdBy.uuid === user.uuid;
       const isSameAccount =
         user.bceidBusinessGuid &&
-        noiSubmission.createdBy.bceidBusinessGuid === user.bceidBusinessGuid;
+        notificationSubmission.createdBy.bceidBusinessGuid ===
+          user.bceidBusinessGuid;
 
       return {
         ...this.mapper.map(
-          noiSubmission,
+          notificationSubmission,
           NotificationSubmission,
           NotificationSubmissionDto,
         ),
-        type: types.find((type) => type.code === noiSubmission.typeCode)!.label,
-        canEdit: isCreator || isSameAccount,
-        canView: true,
+        type: types.find(
+          (type) => type.code === notificationSubmission.typeCode,
+        )!.label,
+        canEdit:
+          [NOTIFICATION_STATUS.IN_PROGRESS].includes(
+            notificationSubmission.status.statusTypeCode as NOTIFICATION_STATUS,
+          ) &&
+          (isCreator || isSameAccount),
+        canView:
+          notificationSubmission.status.statusTypeCode !==
+          SUBMISSION_STATUS.CANCELLED,
       };
     });
   }
@@ -303,8 +314,14 @@ export class NotificationSubmissionService {
       ...mappedApp,
       type: types.find((type) => type.code === notificationSubmission.typeCode)!
         .label,
-      canEdit: isCreator || isSameAccount,
-      canView: true,
+      canEdit:
+        [NOTIFICATION_STATUS.IN_PROGRESS].includes(
+          notificationSubmission.status.statusTypeCode as NOTIFICATION_STATUS,
+        ) &&
+        (isCreator || isSameAccount),
+      canView:
+        notificationSubmission.status.statusTypeCode !==
+        SUBMISSION_STATUS.CANCELLED,
     };
   }
 

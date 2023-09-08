@@ -1,8 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { NotificationSubmissionDto } from '../../../services/notification-submission/notification-submission.dto';
+import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
+import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
+import {
+  NotificationSubmissionDetailedDto,
+  NotificationSubmissionDto,
+} from '../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-view-notification-submission',
@@ -11,11 +17,14 @@ import { NotificationSubmissionService } from '../../../services/notification-su
 })
 export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  $notificationSubmission = new BehaviorSubject<NotificationSubmissionDto | undefined>(undefined);
-  submission: NotificationSubmissionDto | undefined;
+  $notificationSubmission = new BehaviorSubject<NotificationSubmissionDetailedDto | undefined>(undefined);
+  $notificationDocuments = new BehaviorSubject<NotificationDocumentDto[]>([]);
+  submission: NotificationSubmissionDetailedDto | undefined;
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
+    private notificationDocumentService: NotificationDocumentService,
+    private confirmationDialogService: ConfirmationDialogService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -37,10 +46,10 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async loadDocuments(fileId: string) {
-    // const documents = await this.noiDocumentService.getByFileId(fileId);
-    // if (documents) {
-    //   this.$noiDocuments.next(documents);
-    // }
+    const documents = await this.notificationDocumentService.getByFileId(fileId);
+    if (documents) {
+      this.$notificationDocuments.next(documents);
+    }
   }
 
   ngOnDestroy(): void {
@@ -53,8 +62,18 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onCancel(uuid: string) {
-    await this.notificationSubmissionService.cancel(uuid);
-    await this.router.navigateByUrl(`home`);
+    const dialog = this.confirmationDialogService.openDialog({
+      body: 'Are you sure you want to cancel the notification? A cancelled notification cannot be edited or submitted to the ALC. This cannot be undone.',
+      confirmAction: 'Confirm',
+      cancelAction: 'Return',
+    });
+
+    dialog.subscribe(async (isConfirmed) => {
+      if (isConfirmed) {
+        await this.notificationSubmissionService.cancel(uuid);
+        await this.router.navigateByUrl(`home`);
+      }
+    });
   }
 
   onDownloadSubmissionPdf(fileNumber: string) {
