@@ -548,6 +548,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
 
     if (
       !this.form.valid ||
+      !this.existingDecision ||
+      this.existingDecision.documents.length === 0 ||
       !this.conditionsValid ||
       !this.componentsValid ||
       (this.components.length === 0 && requiresComponents) ||
