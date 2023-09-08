@@ -60,58 +60,85 @@
       </mat-hint>
     </div>
     <div class="full-row">
-      <label for="purpose">Enter your proposed lot areas (ha)</label>
-      <table mat-table [dataSource]="lotsSource">
-        <ng-container matColumnDef="index">
-          <th mat-header-cell *matHeaderCellDef>#</th>
-          <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
-        </ng-container>
+      <form [formGroup]="lotsForm">
+        <label for="purpose">Enter your proposed lot areas (ha)</label>
+        <table class="proposed-lots" mat-table [dataSource]="lotsSource">
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let i = index">{{ i + 1 }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let element; let i = index">
-            <mat-form-field appearance="outline">
-              <mat-select [value]="element.type" placeholder="Please select" (valueChange)="onChangeLotType(i, $event)">
-                <mat-option value="Lot"> Lot </mat-option>
-                <mat-option value="Road Dedication"> Road Dedication </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <mat-form-field appearance="outline">
+                <mat-select
+                  placeholder="Please select"
+                  required
+                  [formControlName]="i + '-type'"
+                  (valueChange)="onChangeLotType(i, $event)"
+                >
+                  <mat-option value="Lot"> Lot </mat-option>
+                  <mat-option value="Road Dedication"> Road Dedication </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div
+                *ngIf="
+                  lotsForm.controls[i + '-type']!.invalid &&
+                  (lotsForm.controls[i + '-type']!.dirty || lotsForm.controls[i + '-type']!.touched)
+                "
+                class="field-error"
+              >
+                <mat-icon>warning</mat-icon>
+                <div *ngIf="lotsForm.controls[i + '-type']!.errors?.['required']">This field is required</div>
+              </div>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="size">
-          <th mat-header-cell *matHeaderCellDef>Size</th>
-          <td mat-cell *matCellDef="let element; let i = index">
-            <mat-form-field appearance="outline">
-              <input
-                [(ngModel)]="element.size"
-                type="text"
-                matInput
-                thousandSeparator=","
-                mask="separator.2"
-                separatorLimit="9999999999"
-                min="0.01"
-                placeholder="Type size in hectares"
-                [ngModelOptions]="{ standalone: true }"
-                (change)="onChangeLotSize()"
-              />
-              <span *ngIf="element.size" matTextSuffix>ha</span>
-            </mat-form-field>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="size">
+            <th mat-header-cell *matHeaderCellDef>Size</th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <mat-form-field appearance="outline">
+                <input
+                  type="text"
+                  matInput
+                  thousandSeparator=","
+                  mask="separator.2"
+                  separatorLimit="9999999999"
+                  min="0.01"
+                  required
+                  placeholder="Type size in hectares"
+                  [formControlName]="i + '-size'"
+                  (change)="onChangeLotSize()"
+                />
+                <span *ngIf="element.size" matTextSuffix>ha</span>
+              </mat-form-field>
+              <div
+                *ngIf="
+                  lotsForm.controls[i + '-size']!.invalid &&
+                  (lotsForm.controls[i + '-size']!.dirty || lotsForm.controls[i + '-size']!.touched)
+                "
+                class="field-error"
+              >
+                <mat-icon>warning</mat-icon>
+                <div *ngIf="lotsForm.controls[i + '-size']!.errors?.['required']">This field is required</div>
+              </div>
+            </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-        <tr class="mat-row no-data" *matNoDataRow>
-          <td class="text-center" colspan="7">No Proposed Lots Entered</td>
-        </tr>
-      </table>
-      <div>Total area of the proposed lots: {{ totalAcres }} ha</div>
-      <div *ngIf="totalAcres !== '0' && totalAcres !== totalTargetAcres" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
-      </div>
+          <tr class="mat-row no-data" *matNoDataRow>
+            <td class="text-center" colspan="7">No Proposed Lots Entered</td>
+          </tr>
+        </table>
+        <div>Total area of the proposed lots: {{ totalAcres }} ha</div>
+        <div *ngIf="totalAcres !== '0' && totalAcres !== totalTargetAcres" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
+        </div>
+      </form>
     </div>
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>

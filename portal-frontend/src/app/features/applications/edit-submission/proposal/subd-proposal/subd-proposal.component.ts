@@ -8,13 +8,16 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { PARCEL_TYPE } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
-import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
+import {
+  ApplicationSubmissionUpdateDto,
+  ProposedLot,
+} from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 
-type ProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
+type FormProposedLot = { type: 'Lot' | 'Road Dedication' | null; size: string | null };
 
 @Component({
   selector: 'app-subd-proposal',
@@ -35,7 +38,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
 
   totalTargetAcres = '0';
   totalAcres = '0';
-  proposedLots: ProposedLot[] = [];
+  proposedLots: FormProposedLot[] = [];
   lotsSource = new MatTableDataSource(this.proposedLots);
   displayedColumns = ['index', 'type', 'size'];
 
@@ -46,6 +49,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
     agriculturalSupport: this.agriculturalSupport,
     isHomeSiteSeverance: this.isHomeSiteSeverance,
   });
+  lotsForm = new FormGroup({} as any);
   private submissionUuid = '';
 
   constructor(
@@ -81,6 +85,14 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
           size: lot.size ? lot.size.toString(10) : null,
         }));
         this.lotsSource = new MatTableDataSource(this.proposedLots);
+
+        const newForm = new FormGroup({});
+        for (const [index, lot] of applicationSubmission.subdProposedLots.entries()) {
+          newForm.addControl(`${index}-type`, new FormControl(lot.type, [Validators.required]));
+          newForm.addControl(`${index}-size`, new FormControl(lot.size, [Validators.required]));
+        }
+        this.lotsForm = newForm;
+
         this.calculateLotSize();
 
         if (this.showErrors) {
@@ -102,21 +114,28 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
   }
 
   protected async save() {
-    if (this.fileId && this.form.dirty) {
+    if (this.fileId && (this.form.dirty || this.lotsForm.dirty)) {
       const purpose = this.purpose.getRawValue();
       const subdSuitability = this.suitability.getRawValue();
       const subdAgricultureSupport = this.agriculturalSupport.getRawValue();
       const subdIsHomeSiteSeverance = this.isHomeSiteSeverance.getRawValue();
+
+      const updatedStructures: ProposedLot[] = [];
+      for (const [index, lot] of this.proposedLots.entries()) {
+        const lotType = this.lotsForm.controls[`${index}-type`].value;
+        const lotSize = this.lotsForm.controls[`${index}-size`].value;
+        updatedStructures.push({
+          type: lotType,
+          size: lotSize ? parseFloat(lotSize) : null,
+        });
+      }
 
       const updateDto: ApplicationSubmissionUpdateDto = {
         purpose,
         subdSuitability,
         subdAgricultureSupport,
         subdIsHomeSiteSeverance: subdIsHomeSiteSeverance !== null ? subdIsHomeSiteSeverance === 'true' : null,
-        subdProposedLots: this.proposedLots.map((lot) => ({
-          ...lot,
-          size: lot.size ? parseFloat(lot.size) : null,
-        })),
+        subdProposedLots: updatedStructures,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
@@ -128,12 +147,21 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
     const targetString = (event.target as HTMLInputElement).value;
     const targetCount = parseInt(targetString);
 
+    for (let index = this.proposedLots.length; index > targetCount; index--) {
+      this.lotsForm.removeControl(`${index}-type`);
+      this.lotsForm.removeControl(`${index}-size`);
+    }
+
     this.proposedLots = this.proposedLots.slice(0, targetCount);
     while (this.proposedLots.length < targetCount) {
       this.proposedLots.push({
         size: '0',
         type: null,
       });
+
+      const index = this.proposedLots.length - 1;
+      this.lotsForm.addControl(`${index}-type`, new FormControl(null, [Validators.required]));
+      this.lotsForm.addControl(`${index}-size`, new FormControl(null, [Validators.required]));
     }
     this.lotsSource = new MatTableDataSource(this.proposedLots);
     this.calculateLotSize();
