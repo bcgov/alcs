@@ -79,7 +79,7 @@ describe('ApplicationTimelineService', () => {
     );
 
     mockAppRepo.findOneOrFail.mockResolvedValue(
-      new Application({ decisionDate: mockSameDate }),
+      new Application({ decisionDate: mockSameDate, source: 'APPLICANT' }),
     );
     mockAppModificationRepo.find.mockResolvedValue([]);
     mockAppReconsiderationRepo.find.mockResolvedValue([]);

@@ -68,7 +68,11 @@ describe('NoticeOfIntentTimelineService', () => {
       NoticeOfIntentTimelineService,
     );
 
-    mockNOIRepo.findOneOrFail.mockResolvedValue(new NoticeOfIntent());
+    mockNOIRepo.findOneOrFail.mockResolvedValue(
+      new NoticeOfIntent({
+        source: 'APPLICANT',
+      }),
+    );
     mockNOIDecisionRepo.find.mockResolvedValue([]);
     mockNOIModificationRepo.find.mockResolvedValue([]);
     mockNOIMeetingService.getByFileNumber.mockResolvedValue([]);
