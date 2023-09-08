@@ -25,7 +25,7 @@ def get_directions_rows(rows, cursor):
 
 def map_direction_values(data, direction_data):
     # adds direction field values into data row
-    no_data = 'No data found'
+    no_data = 'No data found in OATS'
     app_id = "alr_application_id"
     data['east_land_use_type_description'] = direction_data.get(data[app_id], {}).get('east_description', no_data)
     data['east_land_use_type'] = direction_data.get(data[app_id], {}).get('east_type_code', None)
