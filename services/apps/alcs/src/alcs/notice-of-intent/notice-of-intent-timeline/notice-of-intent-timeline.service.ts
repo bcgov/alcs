@@ -70,8 +70,9 @@ export class NoticeOfIntentTimelineService {
     await this.addDecisionEvents(noticeOfIntent, events);
     await this.addModificationEvents(noticeOfIntent, events);
     await this.addMeetingEvents(noticeOfIntent, events);
-    await this.addStatusEvents(noticeOfIntent, events);
-
+    if (noticeOfIntent.source === 'APPLICANT') {
+      await this.addStatusEvents(noticeOfIntent, events);
+    }
     if (noticeOfIntent.card) {
       for (const subtask of noticeOfIntent.card.subtasks) {
         const mappedEvent = this.mapSubtaskToEvent(subtask);

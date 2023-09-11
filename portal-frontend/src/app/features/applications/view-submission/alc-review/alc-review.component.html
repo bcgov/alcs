@@ -33,6 +33,9 @@
   <div
     *ngIf="
       application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC ||
+      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE ||
+      application.status.code === SUBMISSION_STATUS.RECEIVED_BY_ALC ||
+      application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_ALC ||
       application.status.code === SUBMISSION_STATUS.ALC_DECISION
     "
   >

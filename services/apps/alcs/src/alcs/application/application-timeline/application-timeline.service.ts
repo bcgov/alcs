@@ -83,7 +83,9 @@ export class ApplicationTimelineService {
     await this.addReconsiderationEvents(application, events);
     await this.addModificationEvents(application, events);
     await this.addMeetingEvents(application, events);
-    await this.addStatusEvents(application, events);
+    if (application.source === 'APPLICANT') {
+      await this.addStatusEvents(application, events);
+    }
 
     if (application.card) {
       for (const subtask of application.card.subtasks) {

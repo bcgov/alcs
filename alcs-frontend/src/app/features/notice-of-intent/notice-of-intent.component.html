@@ -10,8 +10,21 @@
       [submissionStatusService]="noticeOfIntentStatusService"
     ></app-details-header>
     <div class="content">
-      <div class="nav">
+      <div *ngIf='!isApplicantSubmission || showSubmittedToAlcMenuItems' class="nav">
         <div *ngFor="let route of childRoutes" class="nav-link">
+          <div
+            [routerLink]="route.path ? route.path : './'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf='isApplicantSubmission && !showSubmittedToAlcMenuItems' class="nav">
+        <div *ngFor="let route of preSubmissionRoute" class="nav-link">
           <div
             [routerLink]="route.path ? route.path : './'"
             routerLinkActive="active"
