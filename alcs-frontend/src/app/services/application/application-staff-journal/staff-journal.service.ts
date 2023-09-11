@@ -8,6 +8,7 @@ import {
   CreateApplicationStaffJournalDto,
   UpdateStaffJournalDto,
   CreateNoticeOfIntentStaffJournalDto,
+  CreateNotificationStaffJournalDto,
 } from './staff-journal.dto';
 
 @Injectable({
@@ -29,6 +30,12 @@ export class StaffJournalService {
 
   async createNoteForNoticeOfIntent(note: CreateNoticeOfIntentStaffJournalDto) {
     const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/notice-of-intent`, note));
+    this.toastService.showSuccessToast('Journal note created');
+    return createdNote;
+  }
+
+  async createNoteForNotification(note: CreateNotificationStaffJournalDto) {
+    const createdNote = firstValueFrom(this.http.post<StaffJournalDto>(`${this.baseUrl}/notification`, note));
     this.toastService.showSuccessToast('Journal note created');
     return createdNote;
   }

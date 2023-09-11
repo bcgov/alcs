@@ -83,6 +83,12 @@ export class NotificationSubmissionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
+        NotificationSubmissionStatusType,
+        NotificationStatusDto,
+      );
+
+      createMap(
+        mapper,
         NotificationSubmissionToSubmissionStatus,
         NotificationSubmissionToSubmissionStatusDto,
         forMember(

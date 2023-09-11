@@ -1,0 +1,50 @@
+<h3 class="flex-item">Notification Parcels</h3>
+
+<div class="review-table">
+  <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
+    <div class="full-width flex-space-between-wrap">
+      <h4 [id]="parcel.uuid">Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
+    </div>
+    <div class="full-width subheading1">Parcel Information</div>
+    <div class="subheading2 grid-1">Ownership Type</div>
+    <div class="grid-double">
+      {{ parcel.ownershipType?.label }}
+      <app-no-data *ngIf="!parcel.ownershipType?.label"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Legal Description</div>
+    <div class="grid-double">
+      {{ parcel.legalDescription }}
+      <app-no-data *ngIf="!parcel.legalDescription"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Area (Hectares)</div>
+    <div class="grid-double">
+      {{ parcel.mapAreaHectares }}
+      <app-no-data *ngIf="!parcel.mapAreaHectares"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
+    </div>
+    <div class="grid-double">
+      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+      <app-no-data *ngIf="!parcel.pid"></app-no-data>
+    </div>
+    <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+      <div class="subheading2 grid-1">PIN (optional)</div>
+      <div class="grid-double">
+        {{ parcel.pin }}
+      </div>
+    </ng-container>
+    <div class="subheading2 grid-1">Civic Address</div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
+    </div>
+    <ng-container *ngIf="parcel.crownLandOwnerType">
+      <div class="subheading2 grid-1">Crown Selection</div>
+      <div class="grid-double">
+        <span class="crown-land">{{ parcel.crownLandOwnerType }}</span>
+        <app-no-data *ngIf="!parcel.crownLandOwnerType"></app-no-data>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

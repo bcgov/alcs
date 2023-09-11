@@ -46,6 +46,14 @@ const routes: Routes = [
       import('./features/notice-of-intent/notice-of-intent.module').then((m) => m.NoticeOfIntentModule),
   },
   {
+    path: 'notification',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ROLES_ALLOWED_APPLICATIONS,
+    },
+    loadChildren: () => import('./features/notification/notification.module').then((m) => m.NotificationModule),
+  },
+  {
     path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {

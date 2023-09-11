@@ -60,6 +60,10 @@ export class SearchBarComponent {
           case 'NOI':
             await this.router.navigate(['notice-of-intent', result.referenceId]);
             break;
+          case 'NOTI':
+            await this.router.navigate(['notification', result.referenceId]);
+            debugger;
+            break;
           case 'COV':
           case 'PLAN':
             await this.router.navigateByUrl(

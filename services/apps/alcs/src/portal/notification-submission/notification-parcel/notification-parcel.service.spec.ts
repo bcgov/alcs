@@ -56,6 +56,9 @@ describe('NotificationParcelService', () => {
           fileNumber: mockFileNumber,
         },
       },
+      relations: {
+        ownershipType: true,
+      },
       order: { auditCreatedAt: 'ASC' },
     });
   });

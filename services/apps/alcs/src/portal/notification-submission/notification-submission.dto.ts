@@ -23,7 +23,6 @@ export class NotificationSubmissionDto {
   @AutoMap()
   createdAt: number;
 
-  @AutoMap()
   updatedAt: number;
 
   @AutoMap()
@@ -55,7 +54,9 @@ export class NotificationSubmissionDto {
 
   status: NoticeOfIntentStatusDto;
   lastStatusUpdate: number;
-  owners: NotificationTransfereeDto[];
+
+  @AutoMap(() => [NotificationTransfereeDto])
+  transferees: NotificationTransfereeDto[];
 
   canEdit: boolean;
   canView: boolean;

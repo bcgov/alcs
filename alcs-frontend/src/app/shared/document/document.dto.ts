@@ -30,6 +30,10 @@ export enum DOCUMENT_TYPE {
 
   // NOI Documents
   BUILDING_PLAN = 'BLDP',
+
+  //SRW
+  SRW_TERMS = 'SRTD',
+  SURVEY_PLAN = 'SURV',
 }
 
 export enum DOCUMENT_SOURCE {

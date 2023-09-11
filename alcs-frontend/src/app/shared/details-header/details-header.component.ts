@@ -11,6 +11,8 @@ import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
 import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
 import {
   MODIFICATION_TYPE_LABEL,
@@ -31,18 +33,27 @@ export class DetailsHeaderComponent {
   @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
-  @Input() submissionStatusService?: ApplicationSubmissionStatusService | NoticeOfIntentSubmissionStatusService;
+  @Input() submissionStatusService?:
+    | ApplicationSubmissionStatusService
+    | NoticeOfIntentSubmissionStatusService
+    | NotificationSubmissionStatusService;
 
   legacyId?: string;
 
-  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
+  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
 
-  @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
+  @Input() set application(
+    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined
+  ) {
     if (application) {
       this._application = application;
 
       if ('retroactive' in application) {
         this.isNOI = true;
+      }
+
+      if ('pausedDays' in application) {
+        this.isTimeTrackable = true;
       }
 
       if ('type' in application) {
@@ -105,6 +116,7 @@ export class DetailsHeaderComponent {
   showRetroLabel = false;
   linkedCards: (CardDto & { displayName: string })[] = [];
   isNOI = false;
+  isTimeTrackable = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
   constructor(private router: Router) {}

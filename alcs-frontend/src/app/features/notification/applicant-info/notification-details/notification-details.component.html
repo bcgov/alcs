@@ -1,0 +1,129 @@
+<section>
+  <app-parcel *ngIf="files && submission" [notificationSubmission]="submission"></app-parcel>
+</section>
+<section>
+  <h3>Transferees</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="transferee-table full-width">
+      <div class="subheading2">Type</div>
+      <div class="subheading2">Full Name</div>
+      <div class="subheading2">Organization</div>
+      <div class="subheading2">Phone</div>
+      <div class="subheading2">Email</div>
+      <ng-container *ngFor="let transferee of submission.transferees">
+        <div>{{ transferee.type.label }}</div>
+        <div>{{ transferee.displayName }}</div>
+        <div>
+          {{ transferee.organizationName }}
+          <app-no-data *ngIf="!transferee.organizationName"></app-no-data>
+        </div>
+        <div>
+          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
+        </div>
+        <div>{{ transferee.email }}</div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Primary Contact Information</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ submission.contactFirstName }}
+      <app-no-data *ngIf="!submission.contactFirstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ submission.contactLastName }}
+      <app-no-data *ngIf="!submission.contactLastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Organization</div>
+    <div class="grid-double">
+      {{ submission.contactOrganization }}
+      <app-no-data *ngIf="!submission.contactOrganization"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Phone</div>
+    <div class="grid-double">
+      {{ submission.contactPhone }}
+      <app-no-data *ngIf="!submission.contactPhone"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Email</div>
+    <div class="grid-double">
+      {{ submission.contactEmail }}
+      <app-no-data *ngIf="!submission.contactEmail"></app-no-data>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Proposal</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">Submitter’s File Number</div>
+    <div class="grid-double">
+      {{ submission.submittersFileNumber }}
+      <app-no-data *ngIf="!submission.submittersFileNumber"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">What is the purpose of the SRW?</div>
+    <div class="grid-double">
+      {{ submission.purpose }}
+      <app-no-data *ngIf="!submission.purpose"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Total area of the SRW</div>
+    <div class="grid-double">
+      {{ submission.totalArea }}
+      <app-no-data *ngIf="!submission.totalArea"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Upload Terms of the SRW</div>
+    <div class="grid-double">
+      <div *ngFor="let document of srwTerms">
+        <a (click)="openFile(document.uuid)">
+          {{ document.fileName }}
+        </a>
+      </div>
+    </div>
+    <div class="subheading2 grid-1">Is there a survey plan associated with the SRW?</div>
+    <div class="grid-double">
+      {{ submission.hasSurveyPlan ? 'Yes' : 'No' }}
+    </div>
+    <div *ngIf="submission.hasSurveyPlan" class="full-width survey-plan-table">
+      <div class="subheading2">File Name</div>
+      <div class="subheading2">Survey Plan Number</div>
+      <div class="subheading2">Control Number</div>
+      <ng-container *ngFor="let document of surveyPlans">
+        <div>
+          <a (click)="openFile(document.uuid)">
+            {{ document.fileName }}
+          </a>
+        </div>
+        <div>
+          {{ document.surveyPlanNumber }}
+        </div>
+        <div>
+          {{ document.controlNumber }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+<section *ngIf="showFullApp">
+  <h3>Optional Documents</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="other-attachments full-width">
+      <div class="grid-1 subheading2">Type</div>
+      <div class="grid-2 subheading2">Description</div>
+      <div class="grid-3 subheading2">File Name</div>
+      <ng-container *ngFor="let file of otherFiles">
+        <div class="grid-1">
+          {{ file.type?.label }}
+        </div>
+        <div class="grid-2">
+          {{ file.description }}
+        </div>
+        <div class="grid-3">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+      </ng-container>
+      <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>
+    </div>
+  </div>
+</section>

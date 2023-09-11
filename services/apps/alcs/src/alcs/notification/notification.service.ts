@@ -302,7 +302,7 @@ export class NotificationService {
     existingNotification.typeCode = createDto.typeCode;
     existingNotification.region = region;
     existingNotification.card = new Card();
-    existingNotification.card.typeCode = CARD_TYPE.NOI;
+    existingNotification.card.typeCode = CARD_TYPE.NOTIFICATION;
 
     await this.repository.save(existingNotification);
     return this.getByFileNumber(createDto.fileNumber);

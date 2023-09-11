@@ -178,12 +178,4 @@ describe('NotificationDocumentController', () => {
       notificationDocumentService.getApplicantDocuments,
     ).toHaveBeenCalledTimes(1);
   });
-
-  it('should call through for list review documents', async () => {
-    notificationDocumentService.list.mockResolvedValue([]);
-
-    const res = await controller.listReviewDocuments('');
-
-    expect(notificationDocumentService.list).toHaveBeenCalledTimes(1);
-  });
 });

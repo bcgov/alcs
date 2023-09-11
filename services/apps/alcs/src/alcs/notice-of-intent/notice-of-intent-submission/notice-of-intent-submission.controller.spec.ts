@@ -47,7 +47,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call NoticeOfIntentSubmissionService to get Notice of Intent Submission', async () => {
+  it('should call NotificationSubmissionService to get Notice of Intent Submission', async () => {
     const fakeFileNumber = 'fake';
 
     mockNoticeOfIntentSubmissionService.get.mockResolvedValue({

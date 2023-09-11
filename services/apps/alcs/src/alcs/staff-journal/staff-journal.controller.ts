@@ -23,6 +23,7 @@ import {
   CreateApplicationStaffJournalDto,
   UpdateStaffJournalDto,
   CreateNoticeOfIntentStaffJournalDto,
+  CreateNotificationStaffJournalDto,
 } from './staff-journal.dto';
 import { StaffJournal } from './staff-journal.entity';
 import { StaffJournalService } from './staff-journal.service';
@@ -69,6 +70,21 @@ export class StaffJournalController {
   ): Promise<StaffJournalDto> {
     const newRecord = await this.staffJournalService.createForNoticeOfIntent(
       record.noticeOfIntentUuid,
+      record.body,
+      req.user.entity,
+    );
+
+    return this.autoMapper.map(newRecord, StaffJournal, StaffJournalDto);
+  }
+
+  @Post('/notification')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async createForNotification(
+    @Body() record: CreateNotificationStaffJournalDto,
+    @Req() req,
+  ): Promise<StaffJournalDto> {
+    const newRecord = await this.staffJournalService.createForNotification(
+      record.notificationUuid,
       record.body,
       req.user.entity,
     );

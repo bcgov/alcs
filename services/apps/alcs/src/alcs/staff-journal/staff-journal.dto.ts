@@ -40,6 +40,16 @@ export class CreateNoticeOfIntentStaffJournalDto {
   body: string;
 }
 
+export class CreateNotificationStaffJournalDto {
+  @IsString()
+  @IsNotEmpty()
+  notificationUuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
 export class UpdateStaffJournalDto {
   @IsString()
   @IsNotEmpty()

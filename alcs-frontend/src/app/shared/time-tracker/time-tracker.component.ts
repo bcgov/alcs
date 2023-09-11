@@ -23,7 +23,7 @@ export class TimeTrackerComponent implements OnChanges {
   dueDate: Date | null = null;
   isOverdue = false;
 
-  @Input() data: TimeTrackable | undefined;
+  @Input() data: TimeTrackable | any | undefined;
   @Input() maxActiveDays: number | undefined;
 
   constructor() {}

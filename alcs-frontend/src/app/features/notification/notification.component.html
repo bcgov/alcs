@@ -1,0 +1,30 @@
+<div class="layout">
+  <div class="application">
+    <app-details-header
+      heading="Notification"
+      [application]="notification"
+      [reconsiderations]="[]"
+      days="Calendar Days"
+      [showStatus]="true"
+      [submissionStatusService]="notificationSubmissionStatusService"
+    ></app-details-header>
+    <div class="content">
+      <div class="nav">
+        <div *ngFor="let route of childRoutes" class="nav-link">
+          <div
+            [routerLink]="route.path ? route.path : './'"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: route.path === '' }"
+            class="nav-item nav-text"
+          >
+            <mat-icon>{{ route.icon }}</mat-icon>
+            {{ route.menuTitle }}
+          </div>
+        </div>
+      </div>
+      <div class="child-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
