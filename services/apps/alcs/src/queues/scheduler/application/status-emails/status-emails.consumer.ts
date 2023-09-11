@@ -9,11 +9,11 @@ import { ApplicationSubmissionStatusService } from '../../../../alcs/application
 import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../../alcs/application/application-submission-status/submission-status.entity';
 import { PARENT_TYPE } from '../../../../alcs/card/card-subtask/card-subtask.dto';
+import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
+import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
 import { EmailService } from '../../../../providers/email/email.service';
 import { QUEUES } from '../../scheduler.service';
-import { LocalGovernment } from '/Users/mekhti/Documents/Bit3/sources/alcs/services/apps/alcs/src/alcs/local-government/local-government.entity';
-import { ApplicationOwner } from '/Users/mekhti/Documents/Bit3/sources/alcs/services/apps/alcs/src/portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationSubmission } from '/Users/mekhti/Documents/Bit3/sources/alcs/services/apps/alcs/src/portal/application-submission/application-submission.entity';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
