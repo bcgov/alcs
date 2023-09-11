@@ -28,7 +28,7 @@ export class ApplicationSubmissionToSubmissionStatus extends BaseEntity {
     nullable: true,
     type: 'timestamptz',
     comment:
-      'Applicable only for "REVA" (Under Review by ALC) and ALCD("Decision released") statuses all others always set to false',
+      'Applicable only for "REVA" (Under Review by ALC) and ALCD("Decision released") statuses all others always set to null',
   })
   emailSentDate?: Date | null;
 

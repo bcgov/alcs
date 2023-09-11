@@ -66,7 +66,6 @@ export class NoticeOfIntentSubmissionStatusService {
       date = effectiveDate;
     }
     date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
-    console.log('status date', date);
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
 
     return this.statusesRepository.save(status);
