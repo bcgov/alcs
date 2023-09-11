@@ -29,33 +29,40 @@ export class ApplicationSubmissionStatusEmailConsumer {
 
   @Process()
   async processSubmissionStatusesAndSendEmails() {
-    const today = dayjs(new Date())
-      .tz('Canada/Pacific')
-      .startOf('day')
-      .toDate();
+    try {
+      const today = dayjs(new Date())
+        .tz('Canada/Pacific')
+        .startOf('day')
+        .toDate();
 
-    const submissionStatuses =
-      await this.submissionStatusService.getSubmissionToSubmissionStatusForSendingEmails(
-        today,
-      );
+      const submissionStatuses =
+        await this.submissionStatusService.getSubmissionToSubmissionStatusForSendingEmails(
+          today,
+        );
 
-    for (const submissionStatus of submissionStatuses) {
-      try {
-        const { applicationSubmission, primaryContact, submissionGovernment } =
-          await this.emailService.getApplicationEmailData(
+      for (const submissionStatus of submissionStatuses) {
+        try {
+          const {
+            applicationSubmission,
+            primaryContact,
+            submissionGovernment,
+          } = await this.emailService.getApplicationEmailData(
             submissionStatus.submission.fileNumber,
           );
 
-        await this.sendEmailAndUpdateStatus(
-          applicationSubmission,
-          submissionGovernment,
-          primaryContact,
-          submissionStatus,
-          today,
-        );
-      } catch (e) {
-        this.logger.error(e);
+          await this.sendEmailAndUpdateStatus(
+            applicationSubmission,
+            submissionGovernment,
+            primaryContact,
+            submissionStatus,
+            today,
+          );
+        } catch (e) {
+          this.logger.error(e);
+        }
       }
+    } catch (e) {
+      this.logger.error(e);
     }
   }
 

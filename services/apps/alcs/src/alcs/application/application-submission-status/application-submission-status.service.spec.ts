@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
@@ -452,7 +452,7 @@ describe('ApplicationSubmissionStatusService', () => {
           SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
         ]),
         emailSentDate: IsNull(),
-        effectiveDate: date,
+        effectiveDate: LessThanOrEqual(date),
       },
       relations: {
         submission: true,

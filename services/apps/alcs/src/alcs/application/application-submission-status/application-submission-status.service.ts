@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
 import { SUBMISSION_STATUS } from './submission-status.dto';
@@ -152,7 +152,7 @@ export class ApplicationSubmissionStatusService {
           SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
         ]),
         emailSentDate: IsNull(),
-        effectiveDate: date, // this will get only statuses set for today since the status service converts all days to .startOf('day')
+        effectiveDate: LessThanOrEqual(date), // this will get only statuses <= today since the status service converts all days to .startOf('day')
       },
       relations: {
         submission: true,

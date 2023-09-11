@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
@@ -433,10 +433,13 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
       where: {
         statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
         emailSentDate: IsNull(),
-        effectiveDate: date,
+        effectiveDate: LessThanOrEqual(date),
       },
       relations: {
-        submission: true,
+        submission: {
+          owners: true,
+          submissionStatuses: true,
+        },
       },
     });
   });

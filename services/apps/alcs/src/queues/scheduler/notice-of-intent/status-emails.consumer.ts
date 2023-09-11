@@ -37,26 +37,30 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
         );
 
       for (const submissionStatus of submissionStatuses) {
-        const { primaryContact, submissionGovernment } =
-          await this.emailService.getNoticeOfIntentEmailData(
-            submissionStatus.submission,
-          );
+        try {
+          const { primaryContact, submissionGovernment } =
+            await this.emailService.getNoticeOfIntentEmailData(
+              submissionStatus.submission,
+            );
 
-        if (primaryContact) {
-          await this.emailService.sendNoticeOfIntentStatusEmail({
-            generateStatusHtml: generateALCDNoticeOfIntentHtml,
-            status: NOI_SUBMISSION_STATUS.ALC_DECISION,
-            noticeOfIntentSubmission: submissionStatus.submission,
-            government: submissionGovernment,
-            parentType: PARENT_TYPE.NOTICE_OF_INTENT,
-            primaryContact,
-            ccGovernment: true,
-          });
+          if (primaryContact) {
+            await this.emailService.sendNoticeOfIntentStatusEmail({
+              generateStatusHtml: generateALCDNoticeOfIntentHtml,
+              status: NOI_SUBMISSION_STATUS.ALC_DECISION,
+              noticeOfIntentSubmission: submissionStatus.submission,
+              government: submissionGovernment,
+              parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+              primaryContact,
+              ccGovernment: true,
+            });
 
-          await this.updateSubmissionStatus(submissionStatus, today);
-          this.logger.debug(
-            `Status email sent for NOI {submissionStatus.submissionUuid}`,
-          );
+            await this.updateSubmissionStatus(submissionStatus, today);
+            this.logger.debug(
+              `Status email sent for NOI {submissionStatus.submissionUuid}`,
+            );
+          }
+        } catch (e) {
+          this.logger.error(e);
         }
       }
     } catch (e) {

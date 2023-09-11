@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BullConfigService } from '../bullConfig.service';
 import {
   EVERYDAY_MIDNIGHT,
-  EVERY_15_MINUTES,
+  EVERY_15_MINUTES_STARTING_FROM_8AM,
   QUEUES,
   SchedulerService,
 } from './scheduler.service';
@@ -104,7 +104,7 @@ describe('SchedulerService', () => {
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledWith(
       {},
-      { repeat: { cron: EVERY_15_MINUTES } },
+      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   });
 
@@ -114,7 +114,7 @@ describe('SchedulerService', () => {
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledWith(
       {},
-      { repeat: { cron: EVERY_15_MINUTES } },
+      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   });
 });

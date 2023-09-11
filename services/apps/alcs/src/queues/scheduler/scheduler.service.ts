@@ -4,7 +4,7 @@ import { Queue } from 'bull';
 
 export const MONDAY_TO_FRIDAY_AT_2AM = '0 0 2 * * 1-5';
 export const EVERYDAY_MIDNIGHT = '0 0 0 * * *';
-export const EVERY_15_MINUTES = '*/15 * * * *';
+export const EVERY_15_MINUTES_STARTING_FROM_8AM = '0/15 8-23 * * *';
 
 export const QUEUES = {
   APP_EXPIRY: 'ApplicationExpiry',
@@ -55,13 +55,13 @@ export class SchedulerService {
     await this.applicationSubmissionStatusEmails.empty();
     await this.applicationSubmissionStatusEmails.add(
       {},
-      { repeat: { cron: EVERY_15_MINUTES } },
+      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
 
     await this.noticeOfIntentSubmissionStatusEmails.empty();
     await this.noticeOfIntentSubmissionStatusEmails.add(
       {},
-      { repeat: { cron: EVERY_15_MINUTES } },
+      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   }
 }

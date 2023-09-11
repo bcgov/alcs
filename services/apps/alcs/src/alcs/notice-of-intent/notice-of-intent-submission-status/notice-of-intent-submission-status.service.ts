@@ -4,9 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { SUBMISSION_STATUS } from '../../application/application-submission-status/submission-status.dto';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from './notice-of-intent-status.entity';
@@ -67,6 +66,7 @@ export class NoticeOfIntentSubmissionStatusService {
       date = effectiveDate;
     }
     date = dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
+    console.log('status date', date);
     status.effectiveDate = effectiveDate !== null ? date : effectiveDate;
 
     return this.statusesRepository.save(status);
@@ -148,10 +148,13 @@ export class NoticeOfIntentSubmissionStatusService {
       where: {
         statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
         emailSentDate: IsNull(),
-        effectiveDate: date, // this will get only statuses set for today since the status service converts all days to .startOf('day')
+        effectiveDate: LessThanOrEqual(date), // this will get only statuses <= today since the status service converts all days to .startOf('day').
       },
       relations: {
-        submission: true,
+        submission: {
+          owners: true,
+          submissionStatuses: true,
+        },
       },
     });
   }
@@ -159,6 +162,7 @@ export class NoticeOfIntentSubmissionStatusService {
   async saveSubmissionToSubmissionStatus(
     submissionStatus: NoticeOfIntentSubmissionToSubmissionStatus,
   ) {
+    console.log('save', submissionStatus);
     return await this.statusesRepository.save(submissionStatus);
   }
 }
