@@ -23,7 +23,6 @@ describe('FileTypeDataSourceService', () => {
     expect(service.data.length).toBe(1);
 
     const node: TreeNode = service.data[0];
-    console.log(service.dataChange.getValue());
     expect(node.item.label).toEqual('Non-Application');
   });
 

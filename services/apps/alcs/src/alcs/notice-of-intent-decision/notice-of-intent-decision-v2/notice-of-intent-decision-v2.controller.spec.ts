@@ -3,18 +3,13 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { generateALCDNoticeOfIntentHtml } from '../../../../../../templates/emails/decision-released';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentDecisionProfile } from '../../../common/automapper/notice-of-intent-decision.automapper.profile';
 import { NoticeOfIntentProfile } from '../../../common/automapper/notice-of-intent.automapper.profile';
 import { UserProfile } from '../../../common/automapper/user.automapper.profile';
-import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from '../../../providers/email/email.service';
 import { CodeService } from '../../code/code.service';
-import { LocalGovernment } from '../../local-government/local-government.entity';
-import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
@@ -267,92 +262,5 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
 
     expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
     expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
-  });
-
-  it('should send status email after the first release of any decisions', async () => {
-    const fileNumber = 'fake-file-number';
-    const primaryContactOwnerUuid = 'primary-contact';
-    const mockOwner = new NoticeOfIntentOwner({
-      uuid: primaryContactOwnerUuid,
-    });
-    const localGovernmentUuid = 'fake-government';
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    const mockNoticeOfIntentSubmission = new NoticeOfIntentSubmission({
-      fileNumber,
-      primaryContactOwnerUuid,
-      owners: [mockOwner],
-      localGovernmentUuid,
-    });
-
-    mockNoticeOfIntentService.getFileNumber.mockResolvedValue(fileNumber);
-    mockDecisionService.get.mockResolvedValue(
-      new NoticeOfIntentDecision({ wasReleased: false }),
-    );
-    mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockNoticeOfIntentSubmissionService.getOrFailByFileNumber.mockResolvedValue(
-      mockNoticeOfIntentSubmission,
-    );
-    mockEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
-      primaryContact: mockOwner,
-      submissionGovernment: mockGovernment,
-    });
-    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
-
-    const updates = {
-      outcome: 'New Outcome',
-      date: new Date(2023, 3, 3, 3, 3, 3, 3).valueOf(),
-      isDraft: false,
-    } as UpdateNoticeOfIntentDecisionDto;
-
-    await controller.update('fake-uuid', updates);
-
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
-      'fake-uuid',
-      {
-        outcome: 'New Outcome',
-        date: updates.date,
-        isDraft: false,
-      },
-      undefined,
-    );
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateALCDNoticeOfIntentHtml,
-      status: NOI_SUBMISSION_STATUS.ALC_DECISION,
-      noticeOfIntentSubmission: mockNoticeOfIntentSubmission,
-      government: mockGovernment,
-      parentType: 'notice-of-intent',
-      primaryContact: mockOwner,
-      ccGovernment: true,
-    });
-  });
-
-  it('should not send status email on subsequent decision releases', async () => {
-    mockDecisionService.get.mockResolvedValue(
-      new NoticeOfIntentDecision({ wasReleased: true }),
-    );
-    mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
-
-    const updates = {
-      outcome: 'New Outcome',
-      date: new Date(2023, 3, 3, 3, 3, 3, 3).valueOf(),
-      isDraft: false,
-    } as UpdateNoticeOfIntentDecisionDto;
-
-    await controller.update('fake-uuid', updates);
-
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
-      'fake-uuid',
-      {
-        outcome: 'New Outcome',
-        date: updates.date,
-        isDraft: false,
-      },
-      undefined,
-    );
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledTimes(0);
   });
 });

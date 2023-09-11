@@ -93,7 +93,6 @@ export class FileTypeDataSourceService {
       // Filter the tree
       const filter = (array: TreeNode[], text: string) => {
         const getChildren = (result: any, object: any) => {
-          console.log(text, object.item.label, object.item.label.toLowerCase().includes(text.toLowerCase()));
           if (object.item.label.toLowerCase().includes(text.toLowerCase())) {
             result.push(object);
             return result;

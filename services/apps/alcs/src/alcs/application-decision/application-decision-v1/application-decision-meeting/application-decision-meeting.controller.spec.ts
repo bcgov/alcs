@@ -11,6 +11,7 @@ import {
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v1.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
+import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { Board } from '../../../board/board.entity';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
@@ -20,13 +21,6 @@ import {
   CreateApplicationDecisionMeetingDto,
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
-import { EmailService } from '../../../../providers/email/email.service';
-import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
-import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
-import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
-import { LocalGovernment } from '../../../local-government/local-government.entity';
-import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 
 describe('ApplicationDecisionMeetingController', () => {
   let controller: ApplicationDecisionMeetingController;
@@ -133,66 +127,6 @@ describe('ApplicationDecisionMeetingController', () => {
       date: new Date(meetingToUpdate.date),
       applicationUuid: mockApplication.uuid,
     });
-  });
-
-  it('should send status email for first review discussion', async () => {
-    const primaryContactOwnerUuid = 'fake-owner';
-    const localGovernmentUuid = 'local-government';
-
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
-    const mockSubmission = new ApplicationSubmission({
-      owners: [mockOwner],
-      primaryContactOwnerUuid,
-      localGovernmentUuid,
-    });
-
-    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
-    mockMeetingService.getByAppFileNumber.mockResolvedValue([
-      new ApplicationDecisionMeeting(),
-    ]);
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
-      applicationSubmission: mockSubmission,
-      primaryContact: mockOwner,
-      submissionGovernment: mockGovernment,
-    });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    const meetingToUpdate = {
-      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: mockApplication.fileNumber,
-    } as CreateApplicationDecisionMeetingDto;
-
-    await controller.create(meetingToUpdate);
-
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateREVAHtml,
-      status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-      applicationSubmission: mockSubmission,
-      government: mockGovernment,
-      parentType: 'application',
-      primaryContact: mockOwner,
-      ccGovernment: true,
-    });
-  });
-
-  it('should not send status email for additional review discussions', async () => {
-    mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
-    mockMeetingService.getByAppFileNumber.mockResolvedValue([
-      new ApplicationDecisionMeeting(),
-      new ApplicationDecisionMeeting(),
-    ]);
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    const meetingToUpdate = {
-      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      applicationFileNumber: mockApplication.fileNumber,
-    } as CreateApplicationDecisionMeetingDto;
-
-    await controller.create(meetingToUpdate);
-
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 
   it('should update meeting', async () => {

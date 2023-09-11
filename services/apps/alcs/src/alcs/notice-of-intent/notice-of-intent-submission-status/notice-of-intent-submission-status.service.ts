@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
@@ -140,5 +140,28 @@ export class NoticeOfIntentSubmissionStatusService {
     );
 
     return newStatuses;
+  }
+
+  async getSubmissionToSubmissionStatusForSendingEmails(date: Date) {
+    return await this.statusesRepository.find({
+      where: {
+        statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
+        emailSentDate: IsNull(),
+        effectiveDate: LessThanOrEqual(date), // this will get only statuses <= today since the status service converts all days to .startOf('day').
+      },
+      relations: {
+        submission: {
+          owners: true,
+          submissionStatuses: true,
+        },
+      },
+    });
+  }
+
+  async saveSubmissionToSubmissionStatus(
+    submissionStatus: NoticeOfIntentSubmissionToSubmissionStatus,
+  ) {
+    console.log('save', submissionStatus);
+    return await this.statusesRepository.save(submissionStatus);
   }
 }

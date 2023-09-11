@@ -19,6 +19,7 @@ import { RolesGuard } from '../../../../common/authorization/roles-guard.service
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { NaruSubtypeDto } from '../../../../portal/application-submission/application-submission.dto';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
@@ -41,10 +42,6 @@ import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
 import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
-import { EmailService } from '../../../../providers/email/email.service';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
-import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
-import { PARENT_TYPE } from '../../../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -197,18 +194,12 @@ export class ApplicationDecisionV2Controller {
       reconsiders = null;
     }
 
-    const decision = await this.appDecisionService.get(uuid);
-
     const updatedDecision = await this.appDecisionService.update(
       uuid,
       updateDto,
       modifies,
       reconsiders,
     );
-
-    if (!decision.wasReleased && updateDto.isDraft === false) {
-      this.sendDecisionReleasedEmail(updatedDecision);
-    }
 
     return this.mapper.mapAsync(
       updatedDecision,
@@ -299,26 +290,5 @@ export class ApplicationDecisionV2Controller {
     @Param('resolutionYear') resolutionYear: number,
   ) {
     return this.appDecisionService.generateResolutionNumber(resolutionYear);
-  }
-
-  private async sendDecisionReleasedEmail(decision: ApplicationDecision) {
-    const fileNumber = await this.applicationService.getFileNumber(
-      decision.applicationUuid,
-    );
-
-    const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getApplicationEmailData(fileNumber);
-
-    if (primaryContact) {
-      await this.emailService.sendApplicationStatusEmail({
-        generateStatusHtml: generateALCDApplicationHtml,
-        status: SUBMISSION_STATUS.ALC_DECISION,
-        applicationSubmission,
-        government: submissionGovernment,
-        parentType: PARENT_TYPE.APPLICATION,
-        primaryContact,
-        ccGovernment: true,
-      });
-    }
   }
 }

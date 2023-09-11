@@ -1,11 +1,11 @@
+import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { Repository } from 'typeorm';
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
+import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
@@ -430,5 +430,51 @@ describe('ApplicationSubmissionStatusService', () => {
     });
 
     expect(result).toMatchObject(copiedStatuses);
+  });
+
+  it('should call find to retrieve ALCD and REVA statuses', async () => {
+    mockApplicationSubmissionToSubmissionStatusRepository.find.mockResolvedValue(
+      [],
+    );
+    const date = new Date();
+
+    await service.getSubmissionToSubmissionStatusForSendingEmails(date);
+
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.find,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.find,
+    ).toBeCalledWith({
+      where: {
+        statusTypeCode: In([
+          SUBMISSION_STATUS.ALC_DECISION,
+          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+        ]),
+        emailSentDate: IsNull(),
+        effectiveDate: LessThanOrEqual(date),
+      },
+      relations: {
+        submission: true,
+      },
+    });
+  });
+
+  it('should call save to save SubmissionToSubmissionStatus', async () => {
+    const mockApp = new ApplicationSubmissionToSubmissionStatus();
+
+    mockApplicationSubmissionToSubmissionStatusRepository.save.mockResolvedValue(
+      mockApp,
+    );
+
+    const result = await service.saveSubmissionToSubmissionStatus(mockApp);
+
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.save,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationSubmissionToSubmissionStatusRepository.save,
+    ).toBeCalledWith(mockApp);
+    expect(result).toEqual(mockApp);
   });
 });

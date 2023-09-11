@@ -13,12 +13,13 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Any } from 'typeorm';
-import { ApplicationService } from '../../../application/application.service';
 import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { UserDto } from '../../../../user/user.dto';
 import { User } from '../../../../user/user.entity';
+import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
+import { ApplicationService } from '../../../application/application.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import {
   ApplicationDecisionMeetingDto,
@@ -28,12 +29,8 @@ import {
 } from './application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
-import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
 
 import { EmailService } from '../../../../providers/email/email.service';
-import { generateREVAHtml } from '../../../../../../../templates/emails/under-review-by-alc.template';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
-import { PARENT_TYPE } from '../../../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
@@ -110,30 +107,6 @@ export class ApplicationDecisionMeetingController {
       date: formatIncomingDate(meeting.date) ?? new Date(),
       applicationUuid: application.uuid,
     });
-
-    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
-      meeting.applicationFileNumber,
-    );
-
-    // Send status email for first review discussion
-    if (meetings.length === 1) {
-      const { applicationSubmission, primaryContact, submissionGovernment } =
-        await this.emailService.getApplicationEmailData(
-          meeting.applicationFileNumber,
-        );
-
-      if (primaryContact) {
-        await this.emailService.sendApplicationStatusEmail({
-          generateStatusHtml: generateREVAHtml,
-          status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
-          applicationSubmission,
-          government: submissionGovernment,
-          parentType: PARENT_TYPE.APPLICATION,
-          primaryContact,
-          ccGovernment: true,
-        });
-      }
-    }
 
     return this.mapper.map(
       newMeeting,

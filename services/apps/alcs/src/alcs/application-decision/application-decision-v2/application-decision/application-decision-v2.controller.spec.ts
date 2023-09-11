@@ -11,9 +11,11 @@ import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v2.automapper.profile';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
+import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { CodeService } from '../../../code/code.service';
 import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Controller } from './application-decision-v2.controller';
@@ -22,13 +24,6 @@ import {
   CreateApplicationDecisionDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
-import { EmailService } from '../../../../providers/email/email.service';
-import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
-import { LocalGovernment } from '../../../local-government/local-government.entity';
-import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
-import { generateALCDApplicationHtml } from '../../../../../../../templates/emails/decision-released';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
-import { ApplicationDecision } from '../../application-decision.entity';
 
 describe('ApplicationDecisionV2Controller', () => {
   let controller: ApplicationDecisionV2Controller;
@@ -272,91 +267,5 @@ describe('ApplicationDecisionV2Controller', () => {
 
     expect(mockDecisionService.generateResolutionNumber).toBeCalledTimes(1);
     expect(mockDecisionService.generateResolutionNumber).toBeCalledWith(2023);
-  });
-
-  it('should send status email after the first release of any decisions', async () => {
-    const fileNumber = 'fake-file-number';
-    const primaryContactOwnerUuid = 'primary-contact';
-    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
-    const localGovernmentUuid = 'fake-government';
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    const mockApplicationSubmission = new ApplicationSubmission({
-      fileNumber,
-      primaryContactOwnerUuid,
-      owners: [mockOwner],
-      localGovernmentUuid,
-    });
-
-    mockApplicationService.getFileNumber.mockResolvedValue(fileNumber);
-    mockDecisionService.get.mockResolvedValue(
-      new ApplicationDecision({ wasReleased: false }),
-    );
-    mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
-      applicationSubmission: mockApplicationSubmission,
-      primaryContact: mockOwner,
-      submissionGovernment: mockGovernment,
-    });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    const updates = {
-      outcome: 'New Outcome',
-      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      isDraft: false,
-    } as UpdateApplicationDecisionDto;
-
-    await controller.update('fake-uuid', updates);
-
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
-      'fake-uuid',
-      {
-        outcome: 'New Outcome',
-        date: updates.date,
-        isDraft: false,
-      },
-      undefined,
-      undefined,
-    );
-
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
-      generateStatusHtml: generateALCDApplicationHtml,
-      status: SUBMISSION_STATUS.ALC_DECISION,
-      applicationSubmission: mockApplicationSubmission,
-      government: mockGovernment,
-      parentType: 'application',
-      primaryContact: mockOwner,
-      ccGovernment: true,
-    });
-  });
-
-  it('should not send status email on subsequent decision releases', async () => {
-    mockDecisionService.get.mockResolvedValue(
-      new ApplicationDecision({ wasReleased: true }),
-    );
-    mockDecisionService.update.mockResolvedValue(mockDecision);
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
-
-    const updates = {
-      outcome: 'New Outcome',
-      date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
-      isDraft: false,
-    } as UpdateApplicationDecisionDto;
-
-    await controller.update('fake-uuid', updates);
-
-    expect(mockDecisionService.update).toBeCalledTimes(1);
-    expect(mockDecisionService.update).toBeCalledWith(
-      'fake-uuid',
-      {
-        outcome: 'New Outcome',
-        date: updates.date,
-        isDraft: false,
-      },
-      undefined,
-      undefined,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
   });
 });

@@ -23,6 +23,15 @@ export class NoticeOfIntentSubmissionToSubmissionStatus extends BaseEntity {
   @Column({ type: 'timestamptz', nullable: true })
   effectiveDate: Date | null;
 
+  @AutoMap(() => Date)
+  @Column({
+    nullable: true,
+    type: 'timestamptz',
+    comment:
+      'Applicable only for ALCD("Decision released") status all others always set to null',
+  })
+  emailSentDate?: Date | null;
+
   @AutoMap()
   @PrimaryColumn({ type: 'uuid' })
   submissionUuid: string;
