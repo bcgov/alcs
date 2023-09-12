@@ -4,6 +4,9 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { NOI_SUBMISSION_STATUS } from '../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NOTIFICATION_STATUS } from './notification-submission-status/notification-status.dto';
+import { NotificationSubmissionStatusService } from './notification-submission-status/notification-submission-status.service';
 import { NotificationController } from './notification.controller';
 import { Notification } from './notification.entity';
 import { NotificationService } from './notification.service';
@@ -11,9 +14,11 @@ import { NotificationService } from './notification.service';
 describe('NotificationController', () => {
   let controller: NotificationController;
   let mockService: DeepMocked<NotificationService>;
+  let mockSubmissionStatusService: DeepMocked<NotificationSubmissionStatusService>;
 
   beforeEach(async () => {
-    mockService = createMock<NotificationService>();
+    mockService = createMock();
+    mockSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -26,6 +31,10 @@ describe('NotificationController', () => {
         {
           provide: NotificationService,
           useValue: mockService,
+        },
+        {
+          provide: NotificationSubmissionStatusService,
+          useValue: mockSubmissionStatusService,
         },
         {
           provide: ClsService,
@@ -80,5 +89,35 @@ describe('NotificationController', () => {
 
     expect(mockService.getByCardUuid).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to submission service for cancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+
+    await controller.cancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOTIFICATION_STATUS.CANCELLED);
+  });
+
+  it('should call through to submission service for uncancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+
+    await controller.uncancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOTIFICATION_STATUS.CANCELLED, null);
   });
 });

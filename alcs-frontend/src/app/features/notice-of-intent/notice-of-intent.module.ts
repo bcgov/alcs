@@ -12,6 +12,7 @@ import { NoticeOfIntentMeetingDialogComponent } from './info-requests/notice-of-
 import { IntakeComponent } from './intake/intake.component';
 import { childRoutes, NoticeOfIntentComponent } from './notice-of-intent.component';
 import { OverviewComponent } from './overview/overview.component';
+import { UncancelNoticeOfIntentDialogComponent } from './overview/uncancel-notice-of-intent-dialog/uncancel-notice-of-intent-dialog.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.component';
@@ -45,6 +46,7 @@ const routes: Routes = [
     ProposalComponent,
     ParcelPrepComponent,
     SoilProposalComponent,
+    UncancelNoticeOfIntentDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NoticeOfIntentDetailsModule],
 })

@@ -3,6 +3,7 @@ import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
 import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
+import { NoticeOfIntentStatusDto } from './notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
 
 export interface NoticeOfIntentSubtypeDto extends BaseCodeDto {
   isActive: boolean;
@@ -90,17 +91,11 @@ export enum NOI_SUBMISSION_STATUS {
   CANCELLED = 'CANC',
 }
 
-export interface NoticeOfIntentSubmissionStatusDto extends BaseCodeDto {
-  code: NOI_SUBMISSION_STATUS;
-  portalBackgroundColor: string;
-  portalColor: string;
-}
-
 export interface NoticeOfIntentSubmissionToSubmissionStatusDto {
   submissionUuid: string;
   effectiveDate: number | null;
   statusTypeCode: string;
-  status: NoticeOfIntentSubmissionStatusDto;
+  status: NoticeOfIntentStatusDto;
 }
 
 export interface NoticeOfIntentSubmissionDto {
@@ -112,7 +107,7 @@ export interface NoticeOfIntentSubmissionDto {
   localGovernmentUuid: string;
   type: string;
   typeCode: string;
-  status: NoticeOfIntentSubmissionStatusDto;
+  status: NoticeOfIntentStatusDto;
   submissionStatuses: NoticeOfIntentSubmissionToSubmissionStatusDto[];
   owners: NoticeOfIntentOwnerDto[];
   canEdit: boolean;
