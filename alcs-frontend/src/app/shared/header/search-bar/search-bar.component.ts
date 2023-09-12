@@ -62,7 +62,6 @@ export class SearchBarComponent {
             break;
           case 'NOTI':
             await this.router.navigate(['notification', result.referenceId]);
-            debugger;
             break;
           case 'COV':
           case 'PLAN':

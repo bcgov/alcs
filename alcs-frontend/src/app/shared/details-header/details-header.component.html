@@ -47,9 +47,9 @@
       </div>
     </div>
     <div>
-      <ng-container *ngIf="isTimeTrackable && !_application.hasOwnProperty('decisionDate')">
+      <ng-container *ngIf="!_application.hasOwnProperty('decisionDate')">
         <div class="subheading2">{{ days }}:</div>
-        <app-time-tracker [data]="_application" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+        <app-time-tracker [data]="timeTrackable" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
       </ng-container>
     </div>
     <div class="status-wrapper">
