@@ -20,6 +20,7 @@ import {
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { TimeTrackable } from '../time-tracker/time-tracker.component';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -41,6 +42,7 @@ export class DetailsHeaderComponent {
   legacyId?: string;
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
+  timeTrackable?: TimeTrackable;
 
   @Input() set application(
     application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined
@@ -53,7 +55,7 @@ export class DetailsHeaderComponent {
       }
 
       if ('pausedDays' in application) {
-        this.isTimeTrackable = true;
+        this.timeTrackable = application;
       }
 
       if ('type' in application) {
