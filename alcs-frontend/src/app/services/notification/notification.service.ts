@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { ApplicationDto } from '../application/application.dto';
 import { ToastService } from '../toast/toast.service';
 import { NotificationDto, UpdateNotificationDto } from './notification.dto';
 
@@ -51,5 +52,23 @@ export class NotificationService {
       this.toastService.showErrorToast('Failed to search Notifications');
     }
     return [];
+  }
+
+  async cancel(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/cancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to cancel Notification');
+    }
+    return;
+  }
+
+  async uncancel(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/uncancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to uncancel Notification');
+    }
+    return;
   }
 }

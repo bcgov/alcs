@@ -26,4 +26,14 @@ export class NotificationDetailService {
     }
     return updatedNotification;
   }
+
+  async cancel(fileNumber: string) {
+    await this.notificationService.cancel(fileNumber);
+    await this.load(fileNumber);
+  }
+
+  async uncancel(fileNumber: string) {
+    await this.notificationService.uncancel(fileNumber);
+    await this.load(fileNumber);
+  }
 }

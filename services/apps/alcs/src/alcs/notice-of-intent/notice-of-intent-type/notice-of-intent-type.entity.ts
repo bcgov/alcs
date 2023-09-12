@@ -16,6 +16,14 @@ export class NoticeOfIntentType extends BaseCodeEntity {
   shortLabel: string;
 
   @AutoMap()
+  @Column()
+  backgroundColor: string;
+
+  @AutoMap()
+  @Column()
+  textColor: string;
+
+  @AutoMap()
   @Column({ type: 'text', default: '' })
   htmlDescription: string;
 

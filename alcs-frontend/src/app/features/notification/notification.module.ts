@@ -8,6 +8,7 @@ import { DocumentUploadDialogComponent } from './documents/document-upload-dialo
 import { NotificationDocumentsComponent } from './documents/documents.component';
 import { NotificationComponent, postSubmissionRoutes } from './notification.component';
 import { OverviewComponent } from './overview/overview.component';
+import { UncancelNotificationDialogComponent } from './overview/uncancel-notification-dialog/uncancel-notification-dialog.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
     NotificationDocumentsComponent,
     DocumentUploadDialogComponent,
     ApplicantInfoComponent,
+    UncancelNotificationDialogComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NotificationDetailsModule],
 })

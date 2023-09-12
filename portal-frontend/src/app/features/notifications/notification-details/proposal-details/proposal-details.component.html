@@ -38,8 +38,10 @@
       <div><strong>File Name</strong></div>
       <div><strong>Survey Plan Number</strong></div>
       <div><strong>Control Number</strong></div>
-      <ng-container *ngFor="let file of surveyPlans" (click)="openFile(file.uuid)">
-        <div>{{ file.fileName }}</div>
+      <ng-container *ngFor="let file of surveyPlans">
+        <div>
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
         <div>
           {{ file.surveyPlanNumber }}
           <app-no-data [showRequired]="showErrors" *ngIf="file.surveyPlanNumber === null"></app-no-data>

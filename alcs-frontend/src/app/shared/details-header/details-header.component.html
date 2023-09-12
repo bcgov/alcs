@@ -40,14 +40,14 @@
   </div>
   <div *ngIf="_application" class="sub-heading">
     <div>
-      <div class="subheading2">Local Government:</div>
+      <div class="subheading2">Local/First Nation Government:</div>
       <div class="body-text">
         {{ _application.localGovernment?.name }}
         <app-no-data *ngIf="!_application.localGovernment"></app-no-data>
       </div>
     </div>
     <div>
-      <ng-container *ngIf="isTimeTrackable && !_application.hasOwnProperty('decisionDate')">
+      <ng-container *ngIf="timeTrackable && !_application.hasOwnProperty('decisionDate')">
         <div class="subheading2">{{ days }}:</div>
         <app-time-tracker [data]="timeTrackable" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
       </ng-container>
@@ -57,10 +57,6 @@
         *ngIf="currentStatus"
         [type]="currentStatus"
       ></app-application-submission-status-type-pill>
-    </div>
-    <div>
-      <!-- TODO add status here -->
-      <!-- <div style=""></div> -->
     </div>
   </div>
 </div>

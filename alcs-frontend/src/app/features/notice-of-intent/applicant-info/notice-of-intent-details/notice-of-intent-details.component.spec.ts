@@ -3,11 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
+import { NoticeOfIntentStatusDto } from '../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
-import {
-  NOI_SUBMISSION_STATUS,
-  NoticeOfIntentSubmissionStatusDto,
-} from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NOI_SUBMISSION_STATUS } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { NoticeOfIntentDetailsComponent } from './notice-of-intent-details.component';
@@ -64,7 +62,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
         code: NOI_SUBMISSION_STATUS.IN_PROGRESS,
         portalBackgroundColor: '',
         portalColor: '',
-      } as NoticeOfIntentSubmissionStatusDto,
+      } as NoticeOfIntentStatusDto,
       submissionStatuses: [],
       owners: [],
       canEdit: false,

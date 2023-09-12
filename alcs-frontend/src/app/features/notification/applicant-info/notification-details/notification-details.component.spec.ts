@@ -2,12 +2,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-document/noi-document.service';
-import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
-import {
-  NOI_SUBMISSION_STATUS,
-  NoticeOfIntentSubmissionStatusDto,
-} from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationDocumentService } from '../../../../services/notification/notification-document/notification-document.service';
 import { NotificationSubmissionService } from '../../../../services/notification/notification-submission/notification-submission.service';
 import {

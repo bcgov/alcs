@@ -16,7 +16,6 @@ import {
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { filterUndefined } from '../../utils/undefined';
-import { ApplicationTimeData } from '../application/application-time-tracking.service';
 import { Board } from '../board/board.entity';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';

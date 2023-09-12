@@ -1,4 +1,14 @@
-<h3>Overview</h3>
+<div class="split">
+  <h3>Overview</h3>
+  <div>
+    <button *ngIf="!isCancelled" type="button" mat-stroked-button color="warn" (click)="onCancel()">
+      Cancel NOI
+    </button>
+    <button *ngIf="isCancelled" type="button" mat-stroked-button color="primary" (click)="onUncancel()">
+      Uncancel NOI
+    </button>
+  </div>
+</div>
 <section>
   <h5>Proposal Summary</h5>
   <app-inline-edit

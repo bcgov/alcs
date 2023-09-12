@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { TimelineEventDto } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.dto';
 import { NoticeOfIntentTimelineService } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.service';
 import {
@@ -8,7 +10,8 @@ import {
   NoticeOfIntentDto,
   NoticeOfIntentSubmissionToSubmissionStatusDto,
 } from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { UncancelNoticeOfIntentDialogComponent } from './uncancel-notice-of-intent-dialog/uncancel-notice-of-intent-dialog.component';
 
 @Component({
   selector: 'app-overview',
@@ -25,7 +28,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
-    private noticeOfIntentTimelineService: NoticeOfIntentTimelineService
+    private noticeOfIntentTimelineService: NoticeOfIntentTimelineService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -68,5 +73,38 @@ export class OverviewComponent implements OnInit, OnDestroy {
       statusHistory.filter(
         (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.CANCELLED
       ).length > 0;
+  }
+
+  async onCancel() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to cancel this Notice of Intent?`,
+        cancelButtonText: 'No',
+        title: 'Cancel Notice of Intent',
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm && this.noticeOfIntent) {
+          await this.noticeOfIntentDetailService.cancel(this.noticeOfIntent.fileNumber);
+          await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+        }
+      });
+  }
+
+  async onUncancel() {
+    if (this.noticeOfIntent) {
+      this.dialog
+        .open(UncancelNoticeOfIntentDialogComponent, {
+          data: {
+            fileNumber: this.noticeOfIntent.fileNumber,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm && this.noticeOfIntent) {
+            await this.noticeOfIntentDetailService.uncancel(this.noticeOfIntent.fileNumber);
+            await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+          }
+        });
+    }
   }
 }

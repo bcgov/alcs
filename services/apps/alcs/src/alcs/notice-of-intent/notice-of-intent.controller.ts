@@ -8,6 +8,10 @@ import {
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
+import { NOTIFICATION_STATUS } from '../notification/notification-submission-status/notification-status.dto';
+import { UpdateNotificationDto } from '../notification/notification.dto';
+import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentDto,
@@ -20,6 +24,7 @@ import { NoticeOfIntentService } from './notice-of-intent.service';
 export class NoticeOfIntentController {
   constructor(
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private boardService: BoardService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -84,6 +89,25 @@ export class NoticeOfIntentController {
     );
     const mapped = await this.noticeOfIntentService.mapToDtos([updatedNotice]);
     return mapped[0];
+  }
+
+  @Post('/:fileNumber/cancel')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async cancel(@Param('fileNumber') fileNumber: string) {
+    await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      NOI_SUBMISSION_STATUS.CANCELLED,
+    );
+  }
+
+  @Post('/:fileNumber/uncancel')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async uncancel(@Param('fileNumber') fileNumber: string) {
+    await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      NOI_SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
   }
 
   @Get('/search/:fileNumber')

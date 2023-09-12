@@ -26,4 +26,14 @@ export class NoticeOfIntentDetailService {
     }
     return updatedNoticeOfIntent;
   }
+
+  async cancel(fileNumber: string) {
+    await this.noticeOfIntentService.cancel(fileNumber);
+    await this.load(fileNumber);
+  }
+
+  async uncancel(fileNumber: string) {
+    await this.noticeOfIntentService.uncancel(fileNumber);
+    await this.load(fileNumber);
+  }
 }

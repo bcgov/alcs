@@ -3,9 +3,11 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
-import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentController } from './notice-of-intent.controller';
 import { NoticeOfIntent } from './notice-of-intent.entity';
 import { NoticeOfIntentService } from './notice-of-intent.service';
@@ -14,10 +16,12 @@ describe('NoticeOfIntentController', () => {
   let controller: NoticeOfIntentController;
   let mockService: DeepMocked<NoticeOfIntentService>;
   let mockBoardService: DeepMocked<BoardService>;
+  let mockSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
     mockService = createMock<NoticeOfIntentService>();
     mockBoardService = createMock<BoardService>();
+    mockSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -34,6 +38,10 @@ describe('NoticeOfIntentController', () => {
         {
           provide: BoardService,
           useValue: mockBoardService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockSubmissionStatusService,
         },
         {
           provide: ClsService,
@@ -116,5 +124,39 @@ describe('NoticeOfIntentController', () => {
     await controller.getSubtypes();
 
     expect(mockService.listSubtypes).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to submission service for cancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+
+    await controller.cancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOI_SUBMISSION_STATUS.CANCELLED);
+  });
+
+  it('should call through to submission service for uncancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+
+    await controller.uncancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith(
+      'file-number',
+      NOI_SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
   });
 });
