@@ -4,6 +4,7 @@ import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { Application } from '../application/application.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { Notification } from '../notification/notification.entity';
 
 @Entity()
 export class StaffJournal extends Base {
@@ -40,4 +41,11 @@ export class StaffJournal extends Base {
   @Column({ nullable: true })
   @Index()
   noticeOfIntentUuid: string;
+
+  @ManyToOne(() => Notification)
+  notification: Notification | null;
+
+  @Column({ nullable: true })
+  @Index()
+  notificationUuid: string;
 }

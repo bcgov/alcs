@@ -105,23 +105,6 @@ export class NotificationDocumentController {
     );
   }
 
-  @Get('/notification/:fileNumber/reviewDocuments')
-  @UserRoles(...ANY_AUTH_ROLE)
-  async listReviewDocuments(
-    @Param('fileNumber') fileNumber: string,
-  ): Promise<NotificationDocumentDto[]> {
-    const documents = await this.notificationDocumentService.list(fileNumber);
-    const reviewDocuments = documents.filter(
-      (doc) => doc.document.source === DOCUMENT_SOURCE.LFNG,
-    );
-
-    return this.mapper.mapArray(
-      reviewDocuments,
-      NotificationDocument,
-      NotificationDocumentDto,
-    );
-  }
-
   @Get('/notification/:fileNumber/applicantDocuments')
   @UserRoles(...ANY_AUTH_ROLE)
   async listApplicantDocuments(

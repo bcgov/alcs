@@ -15,6 +15,7 @@ import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
+import { NotificationTransfereeDto } from './notification-transferee/notification-transferee.dto';
 import { NotificationTransferee } from './notification-transferee/notification-transferee.entity';
 
 @Entity()
@@ -140,6 +141,7 @@ export class NotificationSubmission extends Base {
   })
   notification: Notification;
 
+  @AutoMap(() => [NotificationTransferee])
   @OneToMany(
     () => NotificationTransferee,
     (transferee) => transferee.notificationSubmission,

@@ -14,7 +14,7 @@ import { ConfirmationDialogService } from '../confirmation-dialog/confirmation-d
 })
 export class StaffJournalComponent implements OnChanges {
   @Input() parentUuid: string = '';
-  @Input() parentType: 'Application' | 'NOI' = 'Application';
+  @Input() parentType: 'Application' | 'NOI' | 'Notification' = 'Application';
 
   labelText = 'Add a journal note';
 
@@ -61,6 +61,11 @@ export class StaffJournalComponent implements OnChanges {
     if (this.parentType === 'Application') {
       await this.staffJournalService.createNoteForApplication({
         applicationUuid: this.parentUuid,
+        body: note,
+      });
+    } else if (this.parentType === 'Notification') {
+      await this.staffJournalService.createNoteForNotification({
+        notificationUuid: this.parentUuid,
         body: note,
       });
     } else {

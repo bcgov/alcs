@@ -18,6 +18,9 @@ export class NotificationParcelService {
         notificationSubmission: { fileNumber: fileId },
       },
       order: { auditCreatedAt: 'ASC' },
+      relations: {
+        ownershipType: true,
+      },
     });
   }
 

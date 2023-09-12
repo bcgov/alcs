@@ -1,0 +1,19 @@
+@use '../../../../styles/colors';
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.documents {
+  margin-top: 64px;
+}
+
+.mat-mdc-no-data-row {
+  height: 56px;
+  color: colors.$grey-dark;
+}
+
+a {
+  word-break: break-all;
+}

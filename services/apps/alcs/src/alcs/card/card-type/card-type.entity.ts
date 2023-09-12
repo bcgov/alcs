@@ -10,6 +10,7 @@ export enum CARD_TYPE {
   COV = 'COV',
   NOI = 'NOI',
   NOI_MODI = 'NOIM',
+  NOTIFICATION = 'NOTI',
 }
 
 @Entity()

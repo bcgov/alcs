@@ -14,6 +14,7 @@ import { ApplicationTypeDto } from '../code/application-code/application-type/ap
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
@@ -49,18 +50,23 @@ export class SearchController {
   @Get('/:searchTerm')
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
-
     const noi = await this.searchService.getNoi(searchTerm);
-
     const planningReview = await this.searchService.getPlanningReview(
       searchTerm,
     );
-
     const covenant = await this.searchService.getCovenant(searchTerm);
+    const notification = await this.searchService.getNotification(searchTerm);
 
     const result: SearchResultDto[] = [];
 
-    this.mapSearchResults(result, application, noi, planningReview, covenant);
+    this.mapSearchResults(
+      result,
+      application,
+      noi,
+      planningReview,
+      covenant,
+      notification,
+    );
 
     return result;
   }
@@ -71,6 +77,7 @@ export class SearchController {
     noi: NoticeOfIntent | null,
     planningReview: PlanningReview | null,
     covenant: Covenant | null,
+    notification: Notification | null,
   ) {
     if (application) {
       result.push(this.mapApplicationToSearchResult(application));
@@ -86,6 +93,10 @@ export class SearchController {
 
     if (covenant) {
       result.push(this.mapCovenantToSearchResult(covenant));
+    }
+
+    if (notification) {
+      result.push(this.mapNotificationToSearchResult(notification));
     }
   }
 
@@ -138,6 +149,18 @@ export class SearchController {
       applicant: covenant.applicant,
       fileNumber: covenant.fileNumber,
       boardCode: covenant.card.board.code,
+    } as SearchResultDto;
+
+    return result;
+  }
+
+  private mapNotificationToSearchResult(notification: Notification) {
+    const result = {
+      type: CARD_TYPE.NOTIFICATION,
+      referenceId: notification.fileNumber,
+      localGovernmentName: notification.localGovernment?.name,
+      applicant: notification.applicant,
+      fileNumber: notification.fileNumber,
     } as SearchResultDto;
 
     return result;

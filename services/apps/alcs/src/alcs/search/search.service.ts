@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 
 const CARD_RELATIONSHIP = {
@@ -24,6 +25,8 @@ export class SearchService {
     private planningReviewRepository: Repository<PlanningReview>,
     @InjectRepository(Covenant)
     private covenantRepository: Repository<Covenant>,
+    @InjectRepository(Notification)
+    private notificationRepository: Repository<Notification>,
   ) {}
 
   async getApplication(fileNumber: string) {
@@ -77,5 +80,16 @@ export class SearchService {
     });
 
     return covenant;
+  }
+
+  async getNotification(fileNumber: string) {
+    const notification = await this.notificationRepository.findOne({
+      where: {
+        fileNumber,
+      },
+      relations: CARD_RELATIONSHIP,
+    });
+
+    return notification;
   }
 }

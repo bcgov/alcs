@@ -9,6 +9,7 @@ import { Board } from '../board/board.entity';
 import { Card } from '../card/card.entity';
 import { Covenant } from '../covenant/covenant.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
 import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
@@ -73,6 +74,7 @@ describe('SearchController', () => {
 
     mockSearchService.getApplication.mockResolvedValue(new Application());
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
+    mockSearchService.getNotification.mockResolvedValue(new Notification());
     mockSearchService.getPlanningReview.mockResolvedValue(
       new PlanningReview({
         card: {
@@ -124,7 +126,7 @@ describe('SearchController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call service to retrieve Application, Noi, Planning, Covenant by file number', async () => {
+  it('should call service to retrieve Application, Noi, Planning, Covenant, Notification, by file number', async () => {
     const searchString = 'fake';
     const result = await controller.search(searchString);
 
@@ -136,8 +138,10 @@ describe('SearchController', () => {
     expect(mockSearchService.getPlanningReview).toBeCalledWith(searchString);
     expect(mockSearchService.getCovenant).toBeCalledTimes(1);
     expect(mockSearchService.getCovenant).toBeCalledWith(searchString);
+    expect(mockSearchService.getNotification).toHaveBeenCalledTimes(1);
+    expect(mockSearchService.getNotification).toBeCalledWith(searchString);
     expect(result).toBeDefined();
-    expect(result.length).toBe(4);
+    expect(result.length).toBe(5);
   });
 
   it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants', async () => {

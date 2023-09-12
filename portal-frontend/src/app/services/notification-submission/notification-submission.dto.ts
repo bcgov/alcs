@@ -32,7 +32,7 @@ export interface NotificationSubmissionDto {
   typeCode: string;
   status: NotificationSubmissionStatusDto;
   lastStatusUpdate: number;
-  owners: NotificationTransfereeDto[];
+  transferees: NotificationTransfereeDto[];
   canEdit: boolean;
   canView: boolean;
   contactFirstName: string | null;

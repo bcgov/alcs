@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NotificationSubmissionProfile } from '../../../common/automapper/notification-submission.automapper.profile';
 import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
 import { NotificationSubmissionStatusType } from './notification-status-type.entity';
 import { NotificationSubmissionToSubmissionStatus } from './notification-status.entity';
@@ -14,7 +15,10 @@ import { NotificationSubmissionStatusService } from './notification-submission-s
       NotificationSubmission,
     ]),
   ],
-  providers: [NotificationSubmissionStatusService],
+  providers: [
+    NotificationSubmissionStatusService,
+    NotificationSubmissionProfile,
+  ],
   exports: [NotificationSubmissionStatusService],
   controllers: [NotificationSubmissionStatusController],
 })
