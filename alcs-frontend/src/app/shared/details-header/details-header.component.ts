@@ -31,7 +31,6 @@ export class DetailsHeaderComponent {
   destroy = new Subject<void>();
 
   @Input() heading = 'Title Here';
-  @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
   @Input() showStatus = false;
   @Input() submissionStatusService?:
@@ -42,6 +41,7 @@ export class DetailsHeaderComponent {
   legacyId?: string;
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
+  types: ApplicationTypeDto[] = [];
   timeTrackable?: TimeTrackable;
 
   @Input() set application(

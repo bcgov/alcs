@@ -1,12 +1,9 @@
 <div class="layout">
   <div class="application">
     <app-details-header
-      *ngIf='noticeOfIntent'
       heading="Notice of Intent"
       [application]="noticeOfIntent"
-      [reconsiderations]="[]"
       [modifications]="modifications"
-      [types]='[noticeOfIntent.type]'
       days="Calendar Days"
       [showStatus]="true"
       [submissionStatusService]="noticeOfIntentStatusService"

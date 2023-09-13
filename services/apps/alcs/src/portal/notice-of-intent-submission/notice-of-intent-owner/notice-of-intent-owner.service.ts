@@ -52,6 +52,7 @@ export class NoticeOfIntentOwnerService {
   async create(
     createDto: NoticeOfIntentOwnerCreateDto,
     noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    user: User,
   ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -70,7 +71,14 @@ export class NoticeOfIntentOwnerService {
       type,
     });
 
-    return await this.repository.save(newOwner);
+    const savedOwner = await this.repository.save(newOwner);
+
+    await this.updateSubmissionApplicant(
+      savedOwner.noticeOfIntentSubmissionUuid,
+      user,
+    );
+
+    return savedOwner;
   }
 
   async attachToParcel(uuid: string, parcelUuid: string, user: User) {
@@ -88,12 +96,12 @@ export class NoticeOfIntentOwnerService {
     );
     existingOwner.parcels.push(parcel);
 
+    await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
       user,
     );
-
-    await this.repository.save(existingOwner);
   }
 
   async save(owner: NoticeOfIntentOwner) {
@@ -113,13 +121,12 @@ export class NoticeOfIntentOwnerService {
     existingOwner.parcels = existingOwner.parcels.filter(
       (parcel) => parcel.uuid !== parcelUuid,
     );
+    await this.repository.save(existingOwner);
 
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
       user,
     );
-
-    await this.repository.save(existingOwner);
   }
 
   async update(
@@ -185,12 +192,14 @@ export class NoticeOfIntentOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    const savedOwner = await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.noticeOfIntentSubmissionUuid,
       user,
     );
 
-    return await this.repository.save(existingOwner);
+    return savedOwner;
   }
 
   async delete(owner: NoticeOfIntentOwner, user: User) {

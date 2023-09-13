@@ -120,6 +120,7 @@ export class NoticeOfIntentSubmissionDraftService {
           noticeOfIntentSubmissionUuid: savedSubmission.uuid,
         },
         savedSubmission,
+        user,
       );
       ownerUuidMap.set(owner.uuid, savedOwner.uuid);
     }

@@ -1,10 +1,8 @@
 <div class="layout">
   <div class="application">
     <app-details-header
-      *ngIf="notification"
       heading="Notification"
       [application]="notification"
-      [types]="[notification.type]"
       days="Calendar Days"
       [showStatus]="true"
       [submissionStatusService]="notificationSubmissionStatusService"

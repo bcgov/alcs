@@ -77,6 +77,7 @@ export class NoticeOfIntentOwnerController {
     const owner = await this.ownerService.create(
       createDto,
       noticeOfIntentSubmission,
+      req.user.entity,
     );
 
     return this.mapper.mapAsync(
@@ -189,6 +190,7 @@ export class NoticeOfIntentOwnerController {
           noticeOfIntentSubmissionUuid: data.noticeOfIntentSubmissionUuid,
         },
         applicationSubmission,
+        req.user.entity,
       );
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,

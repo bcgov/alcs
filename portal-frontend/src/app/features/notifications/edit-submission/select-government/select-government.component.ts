@@ -21,7 +21,6 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
 
   localGovernment = new FormControl<string | any>('', [Validators.required]);
   showWarning = false;
-  selectedOwnGovernment = false;
   selectGovernmentUuid = '';
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
@@ -71,8 +70,6 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
         } else {
           this.localGovernment.setErrors({ invalid: localGovernment.hasGuid });
         }
-
-        this.selectedOwnGovernment = localGovernment.matchesUserGuid;
       }
     }
   }
@@ -138,7 +135,6 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
       if (!lg.hasGuid) {
         this.localGovernment.setErrors({ invalid: true });
       }
-      this.selectedOwnGovernment = lg.matchesUserGuid;
     }
   }
 }

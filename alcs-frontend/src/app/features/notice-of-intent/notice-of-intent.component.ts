@@ -7,7 +7,7 @@ import { NoticeOfIntentDetailService } from '../../services/notice-of-intent/not
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
-import { NOI_SUBMISSION_STATUS, NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';

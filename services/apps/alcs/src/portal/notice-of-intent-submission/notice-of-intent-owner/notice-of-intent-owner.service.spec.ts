@@ -101,6 +101,7 @@ describe('NoticeOfIntentOwnerService', () => {
         typeCode: '',
       },
       new NoticeOfIntentSubmission(),
+      new User(),
     );
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);
