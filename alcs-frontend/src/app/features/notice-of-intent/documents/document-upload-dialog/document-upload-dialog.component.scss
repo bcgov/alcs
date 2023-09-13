@@ -30,6 +30,10 @@ a {
 
 .upload-button {
   margin-top: 6px !important;
+
+  &.error {
+    border: 2px solid colors.$error-color;
+  }
 }
 
 .spinner {

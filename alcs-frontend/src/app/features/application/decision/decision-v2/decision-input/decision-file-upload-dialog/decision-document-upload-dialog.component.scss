@@ -1,3 +1,5 @@
+@use '../../../../../../../styles/colors';
+
 .form {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -28,6 +30,10 @@ a {
 
 .upload-button {
   margin-top: 6px !important;
+
+  &.error {
+    border: 2px solid colors.$error-color;
+  }
 }
 
 .spinner {

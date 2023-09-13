@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 services:
   ####################### API #######################
   api:
@@ -10,16 +10,22 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
-      - redis
-      - migrate
+      clamav:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      migrate:
+        condition: service_started
+
     healthcheck:
-      test: [ "CMD", "curl", "localhost:8080/" ]
+      test: ["CMD", "curl", "localhost:8080/"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  ##################### Frontend ####################
+  ##################### ALCS Frontend ####################
   frontend:
     container_name: alcs_frontend
     restart: always
@@ -30,7 +36,26 @@ services:
     depends_on:
       - api
     healthcheck:
-      test: [ "CMD", "curl", "localhost:8081/" ]
+      test: ["CMD", "curl", "localhost:8081/"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    environment:
+      - API_URL=http://localhost:8080
+
+  ##################### Portal Frontend ####################
+  portal-frontend:
+    container_name: alcs_portal_frontend
+    restart: always
+    build:
+      context: portal-frontend
+    ports:
+      - 8083:8081
+    depends_on:
+      - api
+    healthcheck:
+      test: ["CMD", "curl", "localhost:8083/"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -47,7 +72,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     ports:
-      - '5432:5432'
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -57,9 +82,6 @@ services:
       - postgres:/var/lib/postgres
       - ./docker/postgres-schemas.sql:/docker-entrypoint-initdb.d/postgres-schemas.sql
 
-
-
-
   ###################### Redis ######################
   redis:
     image: "redis:alpine"
@@ -68,6 +90,16 @@ services:
       - "6379:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
+
+  ###################### Clam AV ######################
+  clamav:
+    image: clamav/clamav:stable_base
+    volumes:
+      # Socket
+      - clamsocket:/var/run/clamav/
+      - clamav:/var/lib/clamav
+    ports:
+      - "3310:3310"
 
   ################ Database Migrations ##############
   migrate:
@@ -98,62 +130,6 @@ services:
       - "80:80"
       - "9001:9001"
 
-
-  ################ Portal ############################
-  portal-api:
-    restart: always
-    container_name: alcs_portal_api
-    build:
-      context: services
-      dockerfile: Dockerfile
-      args: 
-      - NEST_APP=portal
-    ports:
-      - 8082:8081
-    depends_on:
-      - db
-      - redis
-      - migrate
-    healthcheck:
-      test: [ "CMD", "curl", "localhost:8080/" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  ##################### Frontend ####################
-  portal-frontend:
-    container_name: alcs_portal_frontend
-    restart: always
-    build:
-      context: portal-frontend
-    ports:
-      - 8083:8081
-    depends_on:
-      - api
-    healthcheck:
-      test: [ "CMD", "curl", "localhost:8081/" ]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    environment:
-      - API_URL=http://localhost:8082
-
-
-  ################ Portal Migrations ##############
-  portal-migrate:
-    container_name: alcs_portal_migration
-    restart: on-failure
-    build:
-      context: services
-      dockerfile: Dockerfile.migrate
-      args:
-        - NEST_APP=portal
-    depends_on:
-      db:
-        condition: service_healthy
-    links:
-      - db
   ##################### PGTAP #####################
   pgtap:
     image: hbpmip/pgtap:1.0.0-2
@@ -170,7 +146,9 @@ volumes:
   postgres:
   redis:
   s3:
+  clamav:
+  clamsocket:
 
-networks: 
+networks:
   default:
     driver: bridge

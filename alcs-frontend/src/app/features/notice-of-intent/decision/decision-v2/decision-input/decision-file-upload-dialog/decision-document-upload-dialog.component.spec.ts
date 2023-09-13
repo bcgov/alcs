@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
+import { ToastService } from '../../../../../../services/toast/toast.service';
 
 import { DecisionDocumentUploadDialogComponent } from './decision-document-upload-dialog.component';
 
@@ -31,6 +32,7 @@ describe('DecisionDocumentUploadDialogComponent', () => {
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ToastService, useValue: {} },
       ],
       imports: [MatDialogModule],
       schemas: [NO_ERRORS_SCHEMA],

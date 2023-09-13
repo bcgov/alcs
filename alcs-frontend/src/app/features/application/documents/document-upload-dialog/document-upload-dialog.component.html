@@ -12,10 +12,13 @@
       </div>
       <input hidden type="file" #fileInput (change)="uploadFile($event)" placeholder="Upload file" />
       <button
+        *ngIf="!pendingFile && !existingFile"
         class="full-width upload-button"
         mat-flat-button
         color="accent"
-        *ngIf="!pendingFile && !existingFile"
+        [ngClass]="{
+          error: showVirusError
+        }"
         (click)="fileInput.click()"
       >
         Upload
@@ -26,7 +29,8 @@
           &nbsp;({{ pendingFile.size | filesize }})
         </div>
         <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
-          <mat-icon>close</mat-icon>Remove
+          <mat-icon>close</mat-icon>
+          Remove
         </button>
       </div>
       <div class="file" *ngIf="existingFile">
@@ -35,9 +39,13 @@
           &nbsp;({{ existingFile.size | filesize }})
         </div>
         <button [disabled]="!allowsFileEdit" (click)="onRemoveFile()" mat-button>
-          <mat-icon>close</mat-icon>Remove
+          <mat-icon>close</mat-icon>
+          Remove
         </button>
       </div>
+      <mat-error class="left" style="display: flex" *ngIf="showVirusError">
+        <mat-icon>warning</mat-icon>&nbsp;A virus was detected in the file. Choose another file and try again.
+      </mat-error>
     </div>
 
     <div class="double">

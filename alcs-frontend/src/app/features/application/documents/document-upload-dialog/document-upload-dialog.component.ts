@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -9,6 +10,7 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -59,6 +61,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showSupersededWarning = false;
+  showVirusError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -66,7 +69,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     protected dialog: MatDialogRef<any>,
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,
-    private submissionService: ApplicationSubmissionService
+    private submissionService: ApplicationSubmissionService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -126,11 +130,23 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       await this.applicationDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
-      await this.applicationDocumentService.upload(this.data.fileId, {
-        ...dto,
-        file,
-      });
+      try {
+        await this.applicationDocumentService.upload(this.data.fileId, {
+          ...dto,
+          file,
+        });
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          this.showVirusError = true;
+          this.isSaving = false;
+          this.pendingFile = undefined;
+          return;
+        }
+      }
+      this.showVirusError = false;
     }
+
     this.dialog.close(true);
     this.isSaving = false;
   }
@@ -228,6 +244,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
       this.name.setValue(selectedFiles[0].name);
+      this.showVirusError = false;
     }
   }
 

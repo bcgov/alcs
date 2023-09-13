@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApplicationDecisionDocumentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
 @Component({
@@ -36,12 +38,14 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
 
   pendingFile: File | undefined;
   existingFile: string | undefined;
+  showVirusError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { fileId: string; decisionUuid: string; existingDocument?: ApplicationDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private decisionService: ApplicationDecisionV2Service
+    private decisionService: ApplicationDecisionV2Service,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +67,18 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
       }
-      await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
+
+      try {
+        await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          this.showVirusError = true;
+          this.isSaving = false;
+          this.pendingFile = undefined;
+          return;
+        }
+      }
 
       this.dialog.close(true);
       this.isSaving = false;
@@ -82,6 +97,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
       this.name.setValue(selectedFiles[0].name);
+      this.showVirusError = false;
     }
   }
 

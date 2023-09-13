@@ -1,9 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -59,6 +61,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
   showSupersededWarning = false;
+  showVirusError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -66,7 +69,8 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     protected dialog: MatDialogRef<any>,
     private noiDocumentService: NoiDocumentService,
     private noiSubmissionService: NoticeOfIntentSubmissionService,
-    private noiParcelService: NoticeOfIntentParcelService
+    private noiParcelService: NoticeOfIntentParcelService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -127,10 +131,20 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       await this.noiDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
-      await this.noiDocumentService.upload(this.data.fileId, {
-        ...dto,
-        file,
-      });
+      try {
+        await this.noiDocumentService.upload(this.data.fileId, {
+          ...dto,
+          file,
+        });
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          this.showVirusError = true;
+          this.isSaving = false;
+          this.pendingFile = undefined;
+          return;
+        }
+      }
     }
     this.dialog.close(true);
     this.isSaving = false;

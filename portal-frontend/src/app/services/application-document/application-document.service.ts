@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -39,7 +39,13 @@ export class ApplicationDocumentService {
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      // @ts-ignore
+      if (e!.status === 403) {
+        this.toastService.showErrorToast('Malicious file detected, upload blocked');
+        debugger;
+      } else {
+        this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      }
     }
     return undefined;
   }
