@@ -730,20 +730,26 @@ export class ApplicationSubmissionService {
     application: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    application.turAgriculturalActivities =
-      updateDto.turAgriculturalActivities ||
-      application.turAgriculturalActivities;
-    application.turReduceNegativeImpacts =
-      updateDto.turReduceNegativeImpacts ||
-      application.turReduceNegativeImpacts;
-    application.turOutsideLands =
-      updateDto.turOutsideLands || application.turOutsideLands;
-    application.turTotalCorridorArea =
-      updateDto.turTotalCorridorArea || application.turTotalCorridorArea;
-    application.turAllOwnersNotified =
-      updateDto.turAllOwnersNotified !== undefined
-        ? updateDto.turAllOwnersNotified
-        : application.turAllOwnersNotified;
+    application.turAgriculturalActivities = filterUndefined(
+      updateDto.turAgriculturalActivities,
+      application.turAgriculturalActivities,
+    );
+    application.turReduceNegativeImpacts = filterUndefined(
+      updateDto.turReduceNegativeImpacts,
+      application.turReduceNegativeImpacts,
+    );
+    application.turOutsideLands = filterUndefined(
+      updateDto.turOutsideLands,
+      application.turOutsideLands,
+    );
+    application.turTotalCorridorArea = filterUndefined(
+      updateDto.turTotalCorridorArea,
+      application.turTotalCorridorArea,
+    );
+    application.turAllOwnersNotified = filterUndefined(
+      updateDto.turAllOwnersNotified,
+      application.turAllOwnersNotified,
+    );
     return application;
   }
 
@@ -751,18 +757,22 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.subdSuitability =
-      updateDto.subdSuitability || applicationSubmission.subdSuitability;
-    applicationSubmission.subdAgricultureSupport =
-      updateDto.subdAgricultureSupport ||
-      applicationSubmission.subdAgricultureSupport;
-    applicationSubmission.subdIsHomeSiteSeverance =
-      updateDto.subdIsHomeSiteSeverance !== undefined
-        ? updateDto.subdIsHomeSiteSeverance
-        : applicationSubmission.subdIsHomeSiteSeverance;
-    applicationSubmission.subdProposedLots =
-      updateDto.subdProposedLots || applicationSubmission.subdProposedLots;
-
+    applicationSubmission.subdSuitability = filterUndefined(
+      updateDto.subdSuitability,
+      applicationSubmission.subdSuitability,
+    );
+    applicationSubmission.subdAgricultureSupport = filterUndefined(
+      updateDto.subdAgricultureSupport,
+      applicationSubmission.subdAgricultureSupport,
+    );
+    applicationSubmission.subdIsHomeSiteSeverance = filterUndefined(
+      updateDto.subdIsHomeSiteSeverance,
+      applicationSubmission.subdIsHomeSiteSeverance,
+    );
+    applicationSubmission.subdProposedLots = filterUndefined(
+      updateDto.subdProposedLots,
+      applicationSubmission.subdProposedLots,
+    );
     if (updateDto.subdIsHomeSiteSeverance === false) {
       const applicationUuid = await this.applicationService.getUuid(
         applicationSubmission.fileNumber,

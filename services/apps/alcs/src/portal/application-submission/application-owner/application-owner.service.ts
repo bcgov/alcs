@@ -86,11 +86,11 @@ export class ApplicationOwnerService {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
+    await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
-
-    await this.repository.save(existingOwner);
   }
 
   async save(owner: ApplicationOwner) {
@@ -111,11 +111,11 @@ export class ApplicationOwnerService {
       (parcel) => parcel.uuid !== parcelUuid,
     );
 
+    await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
-
-    await this.repository.save(existingOwner);
   }
 
   async update(uuid: string, updateDto: ApplicationOwnerUpdateDto) {
@@ -177,11 +177,14 @@ export class ApplicationOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    const result = await this.repository.save(existingOwner);
+
+    //Save owner before updating
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
 
-    return await this.repository.save(existingOwner);
+    return result;
   }
 
   async delete(owner: ApplicationOwner) {
