@@ -118,7 +118,6 @@ export class DetailsHeaderComponent {
   showRetroLabel = false;
   linkedCards: (CardDto & { displayName: string })[] = [];
   isNOI = false;
-  isTimeTrackable = false;
   currentStatus?: ApplicationSubmissionStatusPill;
 
   constructor(private router: Router) {}

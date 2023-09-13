@@ -60,4 +60,28 @@ describe('NotificationService', () => {
     expect(httpClient.get).toHaveBeenCalledTimes(1);
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
+
+  it('should call post for cancel', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        fileNumber: '1',
+      })
+    );
+
+    await service.cancel('file-number');
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call post for uncancel', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        fileNumber: '1',
+      })
+    );
+
+    await service.uncancel('file-number');
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
 });

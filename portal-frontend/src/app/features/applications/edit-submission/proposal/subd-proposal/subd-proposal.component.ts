@@ -97,6 +97,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
 
         if (this.showErrors) {
           this.form.markAllAsTouched();
+          this.lotsForm.markAllAsTouched();
         }
 
         this.loadParcels(this.submissionUuid);
