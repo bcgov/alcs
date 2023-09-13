@@ -82,7 +82,7 @@
                     [value]="element.type"
                     placeholder="Please select"
                     [formControlName]="i + '-type'"
-                    (valueChange)="onChangeStructureType()"
+                    (valueChange)="onChangeStructureType(i, $event)"
                   >
                     <mat-option *ngFor="let type of STRUCTURE_TYPES" [value]="type">
                       {{ type }}
