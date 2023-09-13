@@ -1,1 +1,1 @@
-from .application_docs_import import application_docs
+from .application_docs_import import import_application_docs

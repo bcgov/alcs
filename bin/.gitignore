@@ -3,3 +3,5 @@ out
 tmp
 *.pickle
 *etl_log.txt
+__pycache__
+last_imported_application_file.txt

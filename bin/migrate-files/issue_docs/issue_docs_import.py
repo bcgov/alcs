@@ -1,7 +1,7 @@
 from tqdm import tqdm
 import cx_Oracle
 from common import (
-    LAST_IMPORTED_APPLICATION_FILE,
+    LAST_IMPORTED_ISSUE_FILE,
     DocumentUploadBasePath,
     upload_file_to_s3,
     get_starting_document_id,
@@ -14,14 +14,14 @@ from common import (
 )
 
 
-def import_application_docs(batch, cursor, conn, s3):
+def import_issue_docs(batch, cursor, conn, s3):
     starting_document_id = get_last_successfully_uploaded_file_from_log(
-        LAST_IMPORTED_APPLICATION_FILE, EntityType.APPLICATION.value
+        LAST_IMPORTED_ISSUE_FILE, EntityType.ISSUE.value
     )
 
     # Get total number of files
-    application_count = _get_total_number_of_files(cursor)
-    print(f"{EntityType.APPLICATION.value} count =  {application_count}")
+    document_count = _get_total_number_of_files(cursor)
+    print(f"{EntityType.ISSUE.value} count = {document_count}")
 
     # Track progress
     documents_processed = 0
@@ -29,13 +29,13 @@ def import_application_docs(batch, cursor, conn, s3):
 
     try:
         with tqdm(
-            total=application_count,
+            total=document_count,
             unit="file",
-            desc=f"Uploading {EntityType.APPLICATION.value} files to S3",
+            desc=f"Uploading {EntityType.ISSUE.value} files to S3",
         ) as documents_upload_progress_bar:
             while True:
                 starting_document_id = get_starting_document_id(
-                    starting_document_id, last_document_id, EntityType.APPLICATION.value
+                    starting_document_id, last_document_id, EntityType.ISSUE.value
                 )
                 max_file_size = get_max_file_size(cursor)
 
@@ -53,18 +53,18 @@ def import_application_docs(batch, cursor, conn, s3):
                 for (
                     file_size,
                     document_id,
-                    application_id,
+                    issue_id,
                     filename,
                     file,
                 ) in data:
-                    tqdm.write(f"{application_id}/{document_id}_{filename}")
+                    tqdm.write(f"{issue_id}/{document_id}_{filename}")
 
                     upload_file_to_s3(
                         s3,
-                        DocumentUploadBasePath.APPLICATION.value,
+                        DocumentUploadBasePath.ISSUE.value,
                         file_size,
                         document_id,
-                        application_id,
+                        issue_id,
                         filename,
                         file,
                     )
@@ -78,15 +78,15 @@ def import_application_docs(batch, cursor, conn, s3):
             cursor,
             conn,
             error,
-            EntityType.APPLICATION.value,
+            EntityType.ISSUE.value,
             documents_processed,
             last_document_id,
         )
 
     # Display results
     process_results(
-        EntityType.APPLICATION.value,
-        application_count,
+        EntityType.ISSUE.value,
+        document_count,
         documents_processed,
         last_document_id,
     )
@@ -103,7 +103,7 @@ _document_query = """
                                             dbms_lob.getLength(DOCUMENT_BLOB) file_size,
                                             SUM(dbms_lob.getLength(DOCUMENT_BLOB)) OVER (ORDER BY DOCUMENT_ID ASC ROWS UNBOUNDED PRECEDING) AS cumulative_file_size,
                                             DOCUMENT_ID,
-                                            ALR_APPLICATION_ID,
+                                            ISSUE_ID,
                                             FILE_NAME,
                                             DOCUMENT_BLOB,
                                             DOCUMENT_CODE,
@@ -117,14 +117,14 @@ _document_query = """
                                         WHERE
                                             dbms_lob.getLength(DOCUMENT_BLOB) > 0
                                             AND DOCUMENT_ID > :starting_document_id
-                                            AND ALR_APPLICATION_ID IS NOT NULL
+                                            AND ISSUE_ID IS NOT NULL
                                         ORDER BY
                                             DOCUMENT_ID ASC
                                         )
                                         SELECT
                                             file_size,
                                             DOCUMENT_ID,
-                                            ALR_APPLICATION_ID,
+                                            ISSUE_ID,
                                             FILE_NAME,
                                             DOCUMENT_BLOB
                                         FROM
@@ -140,7 +140,7 @@ _document_query = """
 def _get_total_number_of_files(cursor):
     try:
         cursor.execute(
-            "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ALR_APPLICATION_ID IS NOT NULL"
+            "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ISSUE_ID IS NOT NULL"
         )
         return cursor.fetchone()[0]
     except cx_Oracle.Error as e:
