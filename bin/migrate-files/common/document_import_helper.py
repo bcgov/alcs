@@ -24,7 +24,7 @@ def get_starting_document_id(starting_document_id, last_document_id, entity_type
             last_document_id,
         )
 
-    return starting_document_id
+    return last_document_id
 
 
 def fetch_data_from_oracle(
