@@ -162,7 +162,7 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
   onConfirmSubmissionType() {
     if (this.selectedSubmissionType && this.selectedSubmissionType.code === 'APP') {
       this.currentStep = this.steps.applicationType;
-    } else if (this.selectedSubmissionType && this.selectedSubmissionType.code === 'SRW') {
+    } else if (this.selectedSubmissionType && this.selectedSubmissionType.code === 'NOTI') {
       this.currentStep = this.steps.srwType;
     } else {
       this.currentStep = this.steps.noticeOfIntentType;
