@@ -24,6 +24,10 @@ export class NoticeOfIntentSubmissionStatusService {
     private noticeOfIntentSubmissionRepository: Repository<NoticeOfIntentSubmission>,
   ) {}
 
+  async listStatuses() {
+    return this.submissionStatusTypeRepository.find();
+  }
+
   async setInitialStatuses(submissionUuid: string, persist = true) {
     const statuses = await this.submissionStatusTypeRepository.find();
     const newStatuses: NoticeOfIntentSubmissionToSubmissionStatus[] = [];

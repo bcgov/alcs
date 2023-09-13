@@ -46,6 +46,17 @@ describe('NoticeOfIntentSubmissionStatusController', () => {
     expect(controller).toBeDefined();
   });
 
+  it('should call the service for list statuses', async () => {
+    mockNoticeOfIntentSubmissionStatusService.listStatuses.mockResolvedValue(
+      [],
+    );
+
+    await controller.listStatuses();
+    expect(
+      mockNoticeOfIntentSubmissionStatusService.listStatuses,
+    ).toHaveBeenCalledTimes(1);
+  });
+
   it('should call service to get statuses by file number', async () => {
     const fakeFileNumber = 'fake';
 

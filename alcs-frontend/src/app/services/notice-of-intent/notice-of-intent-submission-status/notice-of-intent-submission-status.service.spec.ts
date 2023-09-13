@@ -33,6 +33,22 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should call get for list all statuses', async () => {
+    mockHttpClient.get.mockReturnValue(
+      of([
+        {
+          code: 'fake',
+        },
+      ])
+    );
+
+    const res = await service.listStatuses();
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res.length).toEqual(1);
+    expect(res[0].code).toEqual('fake');
+  });
+
   it('should fetch statuses by fileNumber', async () => {
     mockHttpClient.get.mockReturnValue(
       of([
