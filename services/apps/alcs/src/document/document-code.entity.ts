@@ -30,6 +30,9 @@ export enum DOCUMENT_TYPE {
   SRW_TERMS = 'SRTD',
   SURVEY_PLAN = 'SURV',
 
+  //Notifications
+  LTSA_LETTER = 'LTSA',
+
   ORIGINAL_SUBMISSION = 'SUBO',
   UPDATED_SUBMISSION = 'SUBU',
 }

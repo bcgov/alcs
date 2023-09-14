@@ -185,7 +185,7 @@ export class NotificationSubmissionService {
       user,
     );
 
-    return this.notificationSubmissionRepository.findOneOrFail({
+    return await this.notificationSubmissionRepository.findOneOrFail({
       where: whereClauses,
       order: {
         auditUpdatedAt: 'DESC',

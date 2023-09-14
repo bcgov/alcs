@@ -13,8 +13,10 @@ import {
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { User } from '../../user/user.entity';
+import { GenerateSrwDocumentService } from '../pdf-generation/generate-srw-document.service';
 import { NotificationSubmissionValidatorService } from './notification-submission-validator.service';
 import { NotificationSubmissionUpdateDto } from './notification-submission.dto';
+import { NotificationSubmission } from './notification-submission.entity';
 import { NotificationSubmissionService } from './notification-submission.service';
 
 @Controller('notification-submission')
@@ -25,6 +27,7 @@ export class NotificationSubmissionController {
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
     private notificationValidationService: NotificationSubmissionValidatorService,
+    private generateSrwDocumentService: GenerateSrwDocumentService,
   ) {}
 
   @Get()
@@ -145,6 +148,8 @@ export class NotificationSubmissionController {
         validatedApplicationSubmission,
       );
 
+      await this.generatePdf(notificationSubmission, req.user.entity);
+
       const finalSubmission =
         await this.notificationSubmissionService.getByUuid(
           uuid,
@@ -159,5 +164,17 @@ export class NotificationSubmissionController {
       this.logger.debug(validationResult.errors);
       throw new BadRequestException('Invalid Notification');
     }
+  }
+
+  private async generatePdf(submission: NotificationSubmission, user: User) {
+    await this.generateSrwDocumentService.generateAndAttach(
+      submission.fileNumber,
+      user,
+    );
+
+    await this.notificationSubmissionService.updateStatus(
+      submission.uuid,
+      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+    );
   }
 }

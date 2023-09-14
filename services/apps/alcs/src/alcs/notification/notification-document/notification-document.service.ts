@@ -84,6 +84,52 @@ export class NotificationDocumentService {
     return this.notificationDocumentRepository.save(appDocument);
   }
 
+  async attachDocumentAsBuffer({
+    fileNumber,
+    fileName,
+    file,
+    mimeType,
+    fileSize,
+    documentType,
+    user,
+    system,
+    source = DOCUMENT_SOURCE.ALC,
+    visibilityFlags,
+  }: {
+    fileNumber: string;
+    fileName: string;
+    file: Buffer;
+    mimeType: string;
+    fileSize: number;
+    user: User;
+    documentType: DOCUMENT_TYPE;
+    source?: DOCUMENT_SOURCE;
+    system: DOCUMENT_SYSTEM;
+    visibilityFlags: VISIBILITY_FLAG[];
+  }) {
+    const notification = await this.notificationService.getByFileNumber(
+      fileNumber,
+    );
+    const document = await this.documentService.createFromBuffer(
+      `notification/${fileNumber}`,
+      fileName,
+      file,
+      mimeType,
+      fileSize,
+      user,
+      source,
+      system,
+    );
+    const appDocument = new NotificationDocument({
+      typeCode: documentType,
+      notification,
+      document,
+      visibilityFlags,
+    });
+
+    return this.notificationDocumentRepository.save(appDocument);
+  }
+
   async get(uuid: string) {
     const document = await this.notificationDocumentRepository.findOne({
       where: {

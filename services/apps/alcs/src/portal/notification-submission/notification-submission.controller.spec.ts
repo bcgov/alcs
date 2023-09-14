@@ -14,6 +14,7 @@ import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
+import { GenerateSrwDocumentService } from '../pdf-generation/generate-srw-document.service';
 import {
   NotificationSubmissionValidatorService,
   ValidatedNotificationSubmission,
@@ -34,6 +35,7 @@ describe('NotificationSubmissionController', () => {
   let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockEmailService: DeepMocked<EmailService>;
+  let mockSrwDocumentService: DeepMocked<GenerateSrwDocumentService>;
 
   const primaryContactOwnerUuid = 'primary-contact';
   const localGovernmentUuid = 'local-government';
@@ -46,6 +48,7 @@ describe('NotificationSubmissionController', () => {
     mockLgService = createMock();
     mockEmailService = createMock();
     mockNotificationValidationService = createMock();
+    mockSrwDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationSubmissionController],
@@ -70,6 +73,10 @@ describe('NotificationSubmissionController', () => {
         {
           provide: EmailService,
           useValue: mockEmailService,
+        },
+        {
+          provide: GenerateSrwDocumentService,
+          useValue: mockSrwDocumentService,
         },
         {
           provide: ClsService,
@@ -290,6 +297,8 @@ describe('NotificationSubmissionController', () => {
         mockSubmission as ValidatedNotificationSubmission,
       errors: [],
     });
+    mockSrwDocumentService.generateAndAttach.mockResolvedValue();
+    mockNotificationSubmissionService.updateStatus.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -306,5 +315,13 @@ describe('NotificationSubmissionController', () => {
     expect(
       mockNotificationSubmissionService.mapToDetailedDTO,
     ).toHaveBeenCalledTimes(1);
+    expect(mockSrwDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
+    expect(
+      mockNotificationSubmissionService.updateStatus,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockNotificationSubmissionService.updateStatus).toHaveBeenCalledWith(
+      undefined,
+      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+    );
   });
 });

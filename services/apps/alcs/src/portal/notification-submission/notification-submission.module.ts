@@ -11,6 +11,7 @@ import { NotificationTransfereeProfile } from '../../common/automapper/notificat
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
+import { PdfGenerationModule } from '../pdf-generation/pdf-generation.module';
 import { NotificationParcelController } from './notification-parcel/notification-parcel.controller';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
 import { NotificationParcelService } from './notification-parcel/notification-parcel.service';
@@ -34,6 +35,7 @@ import { NotificationTransfereeService } from './notification-transferee/notific
     forwardRef(() => AuthorizationModule),
     forwardRef(() => DocumentModule),
     forwardRef(() => BoardModule),
+    forwardRef(() => PdfGenerationModule),
     LocalGovernmentModule,
     FileNumberModule,
     NotificationSubmissionStatusModule,
