@@ -10,22 +10,38 @@ from common import (
     handle_document_processing_error,
     fetch_data_from_oracle,
     process_results,
-    get_last_successfully_uploaded_file_from_log,
     log_last_imported_file,
+    generate_log_file_name,
 )
 
+log_file_name = generate_log_file_name(LAST_IMPORTED_APPLICATION_FILE)
 
-def import_application_docs(batch, cursor, conn, s3):
-    starting_document_id = get_last_successfully_uploaded_file_from_log(
-        LAST_IMPORTED_APPLICATION_FILE, EntityType.APPLICATION.value
-    )
 
+def import_application_docs(
+    batch,
+    cursor,
+    conn,
+    s3,
+    start_document_id_arg,
+    end_document_id_arg,
+    last_imported_document_id_arg,
+):
     # Get total number of files
-    application_count = _get_total_number_of_files(cursor)
-    offset = _get_total_number_of_transferred_files(cursor, starting_document_id)
+    application_count = _get_total_number_of_files(
+        cursor, start_document_id_arg, end_document_id_arg
+    )
+    last_imported_document_id_arg = last_imported_document_id_arg
+    offset = (
+        last_imported_document_id_arg
+        if last_imported_document_id_arg == 0
+        else _get_total_number_of_transferred_files(
+            cursor, start_document_id_arg, last_imported_document_id_arg
+        )
+    )
     print(
         f"{EntityType.APPLICATION.value} count = {application_count} offset = {offset}"
     )
+    starting_document_id = last_imported_document_id_arg
 
     # Track progress
     documents_processed = 0
@@ -45,13 +61,13 @@ def import_application_docs(batch, cursor, conn, s3):
                     starting_document_id, last_document_id, EntityType.APPLICATION.value
                 )
 
-                data = fetch_data_from_oracle(
-                    _document_query,
-                    starting_document_id,
-                    batch,
-                    cursor,
-                    max_file_size,
-                )
+                params = {
+                    "starting_document_id": starting_document_id,
+                    "end_document_id": end_document_id_arg,
+                    "max_file_size": max_file_size,
+                    "batch_size": batch,
+                }
+                data = fetch_data_from_oracle(_document_query, cursor, params)
 
                 if not data:
                     break
@@ -79,7 +95,7 @@ def import_application_docs(batch, cursor, conn, s3):
                     last_document_id = document_id
                     documents_processed += 1
 
-                log_last_imported_file(last_document_id, LAST_IMPORTED_APPLICATION_FILE)
+                log_last_imported_file(last_document_id, log_file_name)
 
     except Exception as error:
         handle_document_processing_error(
@@ -89,6 +105,7 @@ def import_application_docs(batch, cursor, conn, s3):
             EntityType.APPLICATION.value,
             documents_processed,
             last_document_id,
+            log_file_name,
         )
 
     # Display results
@@ -97,6 +114,7 @@ def import_application_docs(batch, cursor, conn, s3):
         application_count,
         documents_processed,
         last_document_id,
+        log_file_name,
     )
 
     return
@@ -125,6 +143,7 @@ _document_query = """
                                         WHERE
                                             dbms_lob.getLength(DOCUMENT_BLOB) > 0
                                             AND DOCUMENT_ID > :starting_document_id
+                                            AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
                                             AND ALR_APPLICATION_ID IS NOT NULL
                                         ORDER BY
                                             DOCUMENT_ID ASC
@@ -145,21 +164,42 @@ _document_query = """
                             """
 
 
-def _get_total_number_of_files(cursor):
+def _get_total_number_of_files(cursor, start_document_id, end_document_id):
     try:
         cursor.execute(
-            "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ALR_APPLICATION_ID IS NOT NULL",
+            """
+                SELECT COUNT(*) 
+                FROM OATS.OATS_DOCUMENTS 
+                WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
+                AND ALR_APPLICATION_ID IS NOT NULL 
+                AND (:start_document_id = 0 OR DOCUMENT_ID > :start_document_id)
+                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+            """,
+            {
+                "start_document_id": start_document_id,
+                "end_document_id": end_document_id,
+            },
         )
         return cursor.fetchone()[0]
     except cx_Oracle.Error as e:
         raise Exception("Oracle Error: {}".format(e))
 
 
-def _get_total_number_of_transferred_files(cursor, document_id):
+def _get_total_number_of_transferred_files(cursor, start_document_id, end_document_id):
     try:
         cursor.execute(
-            "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ALR_APPLICATION_ID IS NOT NULL AND DOCUMENT_ID < :document_id",
-            {"document_id": document_id},
+            """
+                SELECT COUNT(*)
+                FROM OATS.OATS_DOCUMENTS 
+                WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
+                AND ALR_APPLICATION_ID IS NOT NULL 
+                AND DOCUMENT_ID > :start_document_id
+                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+            """,
+            {
+                "start_document_id": start_document_id,
+                "end_document_id": end_document_id,
+            },
         )
         return cursor.fetchone()[0]
     except cx_Oracle.Error as e:

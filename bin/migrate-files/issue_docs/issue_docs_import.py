@@ -21,7 +21,8 @@ def import_issue_docs(batch, cursor, conn, s3):
 
     # Get total number of files
     document_count = _get_total_number_of_files(cursor)
-    print(f"{EntityType.ISSUE.value} count = {document_count}")
+    offset = _get_total_number_of_transferred_files(cursor, starting_document_id)
+    print(f"{EntityType.ISSUE.value} count = {document_count} offset = {offset}")
 
     # Track progress
     documents_processed = 0
@@ -39,13 +40,12 @@ def import_issue_docs(batch, cursor, conn, s3):
                 )
                 max_file_size = get_max_file_size(cursor)
 
-                data = fetch_data_from_oracle(
-                    _document_query,
-                    starting_document_id,
-                    batch,
-                    cursor,
-                    max_file_size,
-                )
+                params = {
+                    "starting_document_id": starting_document_id,
+                    "max_file_size": max_file_size,
+                    "batch_size": batch,
+                }
+                data = fetch_data_from_oracle(_document_query, cursor, params)
 
                 if not data:
                     break
@@ -81,6 +81,7 @@ def import_issue_docs(batch, cursor, conn, s3):
             EntityType.ISSUE.value,
             documents_processed,
             last_document_id,
+            LAST_IMPORTED_ISSUE_FILE,
         )
 
     # Display results
@@ -89,6 +90,7 @@ def import_issue_docs(batch, cursor, conn, s3):
         document_count,
         documents_processed,
         last_document_id,
+        LAST_IMPORTED_ISSUE_FILE
     )
 
     return
@@ -141,6 +143,17 @@ def _get_total_number_of_files(cursor):
     try:
         cursor.execute(
             "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ISSUE_ID IS NOT NULL"
+        )
+        return cursor.fetchone()[0]
+    except cx_Oracle.Error as e:
+        raise Exception("Oracle Error: {}".format(e))
+
+
+def _get_total_number_of_transferred_files(cursor, document_id):
+    try:
+        cursor.execute(
+            "SELECT COUNT(*) FROM OATS.OATS_DOCUMENTS WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 AND ISSUE_ID IS NOT NULL AND DOCUMENT_ID < :document_id",
+            {"document_id": document_id},
         )
         return cursor.fetchone()[0]
     except cx_Oracle.Error as e:

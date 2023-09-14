@@ -65,10 +65,44 @@ Force run python in emulation mode and reinstall requirements
 ## Running the Script
 
 To run the script, run the following command:
+2023-09-14 12:26:19_last_imported_application_file
 
 ```sh
-# to start application document import
+# To start application document import
 python migrate-files.py application
+python migrate-files.py application --start_document_id=500240 --end_document_id=505260 --last_imported_document_id=500475
+```
+
+Application document import supports running multiple terminals at the same time with specifying baches of data to import.
+
+```
+--- SQL ---
+-- use following sql to determine the import batch size.
+WITH documents_with_cumulative_file_size AS (
+    SELECT
+    ROW_NUMBER() OVER(
+        ORDER BY DOCUMENT_ID ASC
+    ) row_num,
+    DOCUMENT_ID,
+    ALR_APPLICATION_ID,
+    FILE_NAME
+FROM
+    OATS.OATS_DOCUMENTS
+WHERE
+    dbms_lob.getLength(DOCUMENT_BLOB) > 0
+    AND ALR_APPLICATION_ID IS NOT NULL
+ORDER BY
+    DOCUMENT_ID ASC
+)
+    SELECT * FROM documents_with_cumulative_file_size
+    WHERE row_num = 10000
+```
+
+```sh
+# start_document_id - starting document id of batch; end_document_id - end document id of batch; last_imported_document_id - the last successfully imported file id of batch. Could be found in [dateTime]_last_imported_application_file.txt or leave it empty and it defaults to 0.
+
+python migrate-files.py application --start_document_id=500240 --end_document_id=505260 --last_imported_document_id=500475
+
 ```
 
 ```sh
@@ -98,4 +132,4 @@ python3-intel64 migrate-files.py planning
 python3-intel64 migrate-files.py issue
 ```
 
-The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. The script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption.
+The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. For Planning and Issues documents the script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption. For Application documents import it is responsibility of whoever is running the process to specify "last_imported_document_id"
