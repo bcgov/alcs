@@ -15,12 +15,7 @@
   <div *ngIf="noiSubmission.status.code === NOI_SUBMISSION_STATUS.IN_PROGRESS" class="warning">
     This section will update after the Notice of Intent is submitted to the ALC.
   </div>
-  <div
-    *ngIf="
-      noiSubmission.status.code === NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC ||
-      noiSubmission.status.code === NOI_SUBMISSION_STATUS.ALC_DECISION
-    "
-  >
+  <div *ngIf="noiSubmission.status.code !== NOI_SUBMISSION_STATUS.IN_PROGRESS">
     <app-decisions [fileNumber]="noiSubmission.fileNumber"></app-decisions>
     <app-submission-documents [$noiDocuments]="$noiDocuments"></app-submission-documents>
   </div>

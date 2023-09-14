@@ -59,12 +59,14 @@ export class NotificationTransfereeService {
       type,
     });
 
+    const savedOwner = await this.repository.save(newOwner);
+
     await this.updateSubmissionApplicant(
       newOwner.notificationSubmissionUuid,
       user,
     );
 
-    return await this.repository.save(newOwner);
+    return savedOwner;
   }
 
   async save(owner: NotificationTransferee) {
@@ -112,12 +114,14 @@ export class NotificationTransfereeService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    const savedOwner = await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.notificationSubmissionUuid,
       user,
     );
 
-    return await this.repository.save(existingOwner);
+    return savedOwner;
   }
 
   async delete(owner: NotificationTransferee, user: User) {

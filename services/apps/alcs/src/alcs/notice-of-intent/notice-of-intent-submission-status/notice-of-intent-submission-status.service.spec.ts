@@ -63,6 +63,13 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
     expect(service).toBeDefined();
   });
 
+  it('should load all statuses from the repo', async () => {
+    mockSubmissionStatusTypeRepository.find.mockResolvedValue([]);
+
+    await service.listStatuses();
+    expect(mockSubmissionStatusTypeRepository.find).toHaveBeenCalledTimes(1);
+  });
+
   it('should successfully set initial statuses', async () => {
     mockSubmissionStatusTypeRepository.find.mockResolvedValue([
       new NoticeOfIntentSubmissionStatusType({

@@ -263,7 +263,8 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     }
   }
 
-  onChangeStructureType() {
+  onChangeStructureType(index: number, value: STRUCTURE_TYPES) {
+    this.proposedStructures[index].type = value;
     this.prepareStructureSpecificTextInputs();
     this.form.markAsDirty();
   }

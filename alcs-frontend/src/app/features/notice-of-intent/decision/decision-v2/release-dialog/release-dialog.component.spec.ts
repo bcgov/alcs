@@ -3,21 +3,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
-import { ApplicationService } from '../../../../../services/application/application.service';
-import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDecisionDto } from '../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
-import { NoticeOfIntentService } from '../../../../../services/notice-of-intent/notice-of-intent.service';
+import { NoticeOfIntentSubmissionStatusService } from '../../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { ReleaseDialogComponent } from './release-dialog.component';
 
 describe('ReleaseDialogComponent', () => {
   let component: ReleaseDialogComponent;
   let fixture: ComponentFixture<ReleaseDialogComponent>;
-  let mockNOIService: DeepMocked<NoticeOfIntentService>;
+  let mockNOISubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNOIDecisionV2Service: DeepMocked<NoticeOfIntentDecisionV2Service>;
 
   beforeEach(async () => {
-    mockNOIService = createMock();
+    mockNOISubmissionStatusService = createMock();
     mockNOIDecisionV2Service = createMock();
     mockNOIDecisionV2Service.$decision = new BehaviorSubject<NoticeOfIntentDecisionDto | undefined>(undefined);
 
@@ -25,8 +23,8 @@ describe('ReleaseDialogComponent', () => {
       declarations: [ReleaseDialogComponent],
       providers: [
         {
-          provide: NoticeOfIntentService,
-          useValue: mockNOIService,
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNOISubmissionStatusService,
         },
         {
           provide: NoticeOfIntentDecisionV2Service,
