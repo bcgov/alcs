@@ -48,7 +48,7 @@ export class BoardManagementController {
   @Get('/:code')
   @UserRoles(AUTH_ROLE.ADMIN)
   async canDelete(@Param('code') code: string) {
-    //If it's the vetting board
+    //If it's the vetting or notification board
     if (code === 'vett' || code === 'noti') {
       return {
         canDelete: false,
