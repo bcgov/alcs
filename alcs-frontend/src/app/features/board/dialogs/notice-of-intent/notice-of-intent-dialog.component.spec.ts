@@ -12,6 +12,7 @@ import { AuthenticationService, ICurrentUser } from '../../../../services/authen
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
+import { NoticeOfIntentSubmissionStatusService } from '../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -115,6 +116,10 @@ describe('NoticeOfIntentDialogComponent', () => {
         {
           provide: AuthenticationService,
           useValue: authenticationService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: {},
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],

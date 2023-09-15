@@ -280,12 +280,15 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onSubmit() {
     if (this.applicationSubmission) {
+      const isTUR = this.applicationSubmission.typeCode === 'TURP';
       const government = await this.loadGovernment(this.applicationSubmission.localGovernmentUuid);
+      const governmentName = government?.name ?? 'selected local / first nation government';
+
       this.dialog
         .open(SubmitConfirmationDialogComponent, {
           data: {
-            governmentName: government?.name ?? 'selected local / first nation government',
-            userIsGovernment: government?.matchesUserGuid ?? false,
+            governmentName: isTUR ? 'ALC' : governmentName,
+            userIsGovernment: (government?.matchesUserGuid && !isTUR) ?? false,
           },
         })
         .beforeClosed()
@@ -307,7 +310,8 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
           government = await this.loadGovernment(this.applicationSubmission?.localGovernmentUuid);
         }
 
-        if (government && government.matchesUserGuid) {
+        debugger;
+        if (government && government.matchesUserGuid && submission.typeCode !== 'TURP') {
           const review = await this.applicationReviewService.startReview(submission.fileNumber);
           if (review) {
             await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
