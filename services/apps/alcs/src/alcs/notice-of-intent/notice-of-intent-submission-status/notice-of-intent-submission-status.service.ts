@@ -151,7 +151,7 @@ export class NoticeOfIntentSubmissionStatusService {
       where: {
         statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
         emailSentDate: IsNull(),
-        effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < today+1 since the status service converts all days to .startOf('day').
+        effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < tomorrow start of day since the status service converts all days to .startOf('day').
       },
       relations: {
         submission: {

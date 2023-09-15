@@ -152,7 +152,7 @@ export class ApplicationSubmissionStatusService {
           SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
         ]),
         emailSentDate: IsNull(),
-        effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < today+1 since the status service converts all days to .startOf('day')
+        effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < tomorrow start of day since the status service converts all days to .startOf('day')
       },
       relations: {
         submission: {

@@ -26,7 +26,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
   @Process()
   async processSubmissionStatusesAndSendEmails() {
     try {
-      const today = dayjs(new Date())
+      const tomorrow = dayjs(new Date())
         .tz('Canada/Pacific')
         .startOf('day')
         .add(1, 'day')
@@ -34,7 +34,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
 
       const submissionStatuses =
         await this.submissionStatusService.getSubmissionToSubmissionStatusForSendingEmails(
-          today,
+          tomorrow,
         );
 
       for (const submissionStatus of submissionStatuses) {
@@ -55,7 +55,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
               ccGovernment: true,
             });
 
-            await this.updateSubmissionStatus(submissionStatus, today);
+            await this.updateSubmissionStatus(submissionStatus, tomorrow);
             this.logger.debug(
               `Status email sent for NOI {submissionStatus.submissionUuid}`,
             );

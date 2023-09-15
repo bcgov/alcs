@@ -30,7 +30,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
   @Process()
   async processSubmissionStatusesAndSendEmails() {
     try {
-      const today = dayjs(new Date())
+      const tomorrow = dayjs(new Date())
         .tz('Canada/Pacific')
         .startOf('day')
         .add(1, 'day')
@@ -38,7 +38,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
 
       const submissionStatuses =
         await this.submissionStatusService.getSubmissionToSubmissionStatusForSendingEmails(
-          today,
+          tomorrow,
         );
 
       for (const submissionStatus of submissionStatuses) {
@@ -56,7 +56,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
             submissionGovernment,
             primaryContact,
             submissionStatus,
-            today,
+            tomorrow,
           );
         } catch (e) {
           this.logger.error(e);
