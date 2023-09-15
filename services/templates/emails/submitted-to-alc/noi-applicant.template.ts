@@ -1,10 +1,13 @@
 import { MJMLParseResults } from 'mjml-core';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/status-email.service';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from '../partials';
-import {
-  StatusUpdateEmail,
-  noiFees,
-} from '../../../apps/alcs/src/providers/email/email.service';
+
+const noiFees = [
+  { type: 'Removal of Soil', fee: 150 },
+  { type: 'Placement of Fill', fee: 150 },
+  { type: 'Placement of Fill/Removal of Soil', fee: 150 },
+];
 
 const template = `<mjml>
   <mj-head>

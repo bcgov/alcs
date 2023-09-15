@@ -1,5 +1,5 @@
 import { MJMLParseResults } from 'mjml-core';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/email.service';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/status-email.service';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { footer, header, notificationOnly, portalButton } from '../partials';
 

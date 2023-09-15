@@ -12,7 +12,7 @@ import { PARENT_TYPE } from '../../../../alcs/card/card-subtask/card-subtask.dto
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
-import { EmailService } from '../../../../providers/email/email.service';
+import { StatusEmailService } from '../../../../providers/email/status-email.service';
 import { QUEUES } from '../../scheduler.service';
 
 dayjs.extend(utc);
@@ -24,7 +24,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
 
   constructor(
     private submissionStatusService: ApplicationSubmissionStatusService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
   ) {}
 
   @Process()
@@ -46,7 +46,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
             applicationSubmission,
             primaryContact,
             submissionGovernment,
-          } = await this.emailService.getApplicationEmailData(
+          } = await this.statusEmailService.getApplicationEmailData(
             submissionStatus.submission.fileNumber,
           );
 
@@ -85,7 +85,7 @@ export class ApplicationSubmissionStatusEmailConsumer {
           ? generateALCDApplicationHtml
           : generateREVAHtml;
 
-      await this.emailService.sendApplicationStatusEmail({
+      await this.statusEmailService.sendApplicationStatusEmail({
         applicationSubmission,
         government: submissionGovernment,
         parentType: PARENT_TYPE.APPLICATION,

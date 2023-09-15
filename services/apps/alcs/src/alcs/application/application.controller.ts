@@ -18,10 +18,14 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { CardService } from '../card/card.service';
 import {
   ApplicationDto,
@@ -29,10 +33,6 @@ import {
   UpdateApplicationDto,
 } from './application.dto';
 import { ApplicationService } from './application.service';
-import { EmailService } from '../../providers/email/email.service';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
-import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application')
@@ -41,7 +41,7 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private cardService: CardService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
@@ -128,10 +128,10 @@ export class ApplicationController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async cancel(@Param('fileNumber') fileNumber): Promise<void> {
     const { applicationSubmission, primaryContact, submissionGovernment } =
-      await this.emailService.getApplicationEmailData(fileNumber);
+      await this.statusEmailService.getApplicationEmailData(fileNumber);
 
     if (primaryContact) {
-      await this.emailService.sendApplicationStatusEmail({
+      await this.statusEmailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission,

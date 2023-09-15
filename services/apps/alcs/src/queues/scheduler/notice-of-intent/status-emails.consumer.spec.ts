@@ -8,25 +8,24 @@ import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../alcs/notice
 import { NoticeOfIntentSubmissionStatusService } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { EmailService } from '../../../providers/email/email.service';
+import { StatusEmailService } from '../../../providers/email/status-email.service';
 import { NoticeOfIntentSubmissionStatusEmailConsumer } from './status-emails.consumer';
 
 describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
   let consumer: NoticeOfIntentSubmissionStatusEmailConsumer;
-  let mockEmailService: DeepMocked<EmailService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockNoticeOfIntentSubmissionStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
-    mockEmailService = createMock<EmailService>();
-    mockNoticeOfIntentSubmissionStatusService =
-      createMock<NoticeOfIntentSubmissionStatusService>();
+    mockStatusEmailService = createMock();
+    mockNoticeOfIntentSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NoticeOfIntentSubmissionStatusEmailConsumer,
         {
-          provide: EmailService,
-          useValue: mockEmailService,
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: NoticeOfIntentSubmissionStatusService,
@@ -38,8 +37,6 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
     consumer = module.get<NoticeOfIntentSubmissionStatusEmailConsumer>(
       NoticeOfIntentSubmissionStatusEmailConsumer,
     );
-
-    mockEmailService.sendEmail.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -63,11 +60,11 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
 
-    mockEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+    mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
       primaryContact: mockPrimaryContact,
       submissionGovernment: mockLocalGovernment,
     });
-    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await consumer.processSubmissionStatusesAndSendEmails();
 
@@ -78,20 +75,26 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       mockNoticeOfIntentSubmissionStatusService.saveSubmissionToSubmissionStatus,
     ).toBeCalledTimes(1);
 
-    expect(mockEmailService.getNoticeOfIntentEmailData).toBeCalledWith(
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toBeCalledWith(
       mockSubmission,
     );
-    expect(mockEmailService.getNoticeOfIntentEmailData).toBeCalledTimes(1);
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledWith({
-      noticeOfIntentSubmission: mockSubmission,
-      government: mockLocalGovernment,
-      parentType: PARENT_TYPE.NOTICE_OF_INTENT,
-      primaryContact: mockPrimaryContact,
-      ccGovernment: true,
-      generateStatusHtml: generateALCDNoticeOfIntentHtml,
-      status: NOI_SUBMISSION_STATUS.ALC_DECISION,
-    });
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toBeCalledTimes(
+      1,
+    );
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toBeCalledTimes(1);
+    expect(mockStatusEmailService.sendNoticeOfIntentStatusEmail).toBeCalledWith(
+      {
+        noticeOfIntentSubmission: mockSubmission,
+        government: mockLocalGovernment,
+        parentType: PARENT_TYPE.NOTICE_OF_INTENT,
+        primaryContact: mockPrimaryContact,
+        ccGovernment: true,
+        generateStatusHtml: generateALCDNoticeOfIntentHtml,
+        status: NOI_SUBMISSION_STATUS.ALC_DECISION,
+      },
+    );
   });
 
   it('should not send email if no primary contact', async () => {
@@ -110,11 +113,11 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
 
-    mockEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
+    mockStatusEmailService.getNoticeOfIntentEmailData.mockResolvedValue({
       primaryContact: undefined,
       submissionGovernment: mockLocalGovernment,
     });
-    mockEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await consumer.processSubmissionStatusesAndSendEmails();
 
@@ -125,10 +128,14 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       mockNoticeOfIntentSubmissionStatusService.saveSubmissionToSubmissionStatus,
     ).toBeCalledTimes(0);
 
-    expect(mockEmailService.getNoticeOfIntentEmailData).toBeCalledWith(
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toBeCalledWith(
       mockSubmission,
     );
-    expect(mockEmailService.getNoticeOfIntentEmailData).toBeCalledTimes(1);
-    expect(mockEmailService.sendNoticeOfIntentStatusEmail).toBeCalledTimes(0);
+    expect(mockStatusEmailService.getNoticeOfIntentEmailData).toBeCalledTimes(
+      1,
+    );
+    expect(
+      mockStatusEmailService.sendNoticeOfIntentStatusEmail,
+    ).toBeCalledTimes(0);
   });
 });

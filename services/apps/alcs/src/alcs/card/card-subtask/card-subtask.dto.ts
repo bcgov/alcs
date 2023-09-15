@@ -11,6 +11,7 @@ export enum PARENT_TYPE {
   MODIFICATION = 'modification',
   PLANNING_REVIEW = 'planning-review',
   NOTICE_OF_INTENT = 'notice-of-intent',
+  NOTIFICATION = 'notification',
 }
 export class UpdateCardSubtaskDto {
   @AutoMap()

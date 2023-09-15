@@ -55,7 +55,7 @@ export class GenerateSrwDocumentService {
     const reviewRes = await this.generate(fileNumber, user);
 
     if (reviewRes.status === HttpStatus.OK) {
-      await this.notificationDocumentService.attachDocumentAsBuffer({
+      return await this.notificationDocumentService.attachDocumentAsBuffer({
         fileNumber: fileNumber,
         fileName: `SRW${fileNumber}m1.pdf`,
         user: user,

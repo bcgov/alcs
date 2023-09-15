@@ -11,10 +11,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import {
+  generateSUBGTurApplicantHtml,
+  generateSUBGTurGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import {
+  generateSUBGApplicantHtml,
+  generateSUBGGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-lfng';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import {
@@ -22,17 +33,6 @@ import {
   ApplicationSubmissionUpdateDto,
 } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
-import {
-  generateSUBGApplicantHtml,
-  generateSUBGGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-lfng';
-import { EmailService } from '../../providers/email/email.service';
-import {
-  generateSUBGTurApplicantHtml,
-  generateSUBGTurGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-submission')
 @UseGuards(PortalAuthGuard)
@@ -43,7 +43,7 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
   ) {}
 
   @Get()
@@ -202,13 +202,13 @@ export class ApplicationSubmissionController {
     }
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getApplicationEmailData(
+      await this.statusEmailService.getApplicationEmailData(
         application.fileNumber,
         application,
       );
 
     if (primaryContact) {
-      await this.emailService.sendApplicationStatusEmail({
+      await this.statusEmailService.sendApplicationStatusEmail({
         generateStatusHtml: generateCANCApplicationHtml,
         status: SUBMISSION_STATUS.CANCELLED,
         applicationSubmission: application,
@@ -240,7 +240,7 @@ export class ApplicationSubmissionController {
       );
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getApplicationEmailData(
+      await this.statusEmailService.getApplicationEmailData(
         applicationSubmission.fileNumber,
         applicationSubmission,
       );
@@ -254,7 +254,7 @@ export class ApplicationSubmissionController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurApplicantHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
@@ -265,7 +265,7 @@ export class ApplicationSubmissionController {
         }
 
         if (submissionGovernment) {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBGTurGovernmentHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission,
@@ -294,7 +294,7 @@ export class ApplicationSubmissionController {
         // Send status emails for first time submissions
         if (!wasSubmittedToLfng) {
           if (primaryContact) {
-            await this.emailService.sendApplicationStatusEmail({
+            await this.statusEmailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGApplicantHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
@@ -305,7 +305,7 @@ export class ApplicationSubmissionController {
           }
 
           if (submissionGovernment) {
-            await this.emailService.sendApplicationStatusEmail({
+            await this.statusEmailService.sendApplicationStatusEmail({
               generateStatusHtml: generateSUBGGovernmentHtml,
               status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
               applicationSubmission,
