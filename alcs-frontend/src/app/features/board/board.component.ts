@@ -21,6 +21,8 @@ import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/n
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
+import { NotificationService } from '../../services/notification/notification.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -43,6 +45,7 @@ import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
+import { NotificationDialogComponent } from './dialogs/notification/notification-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -92,6 +95,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noiModificationService: NoticeOfIntentModificationService,
+    private notificationService: NotificationService,
     private titleService: Title
   ) {}
 
@@ -195,6 +199,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       case CardType.COV:
       case CardType.NOI:
       case CardType.NOI_MODI:
+      case CardType.NOTIFICATION:
         this.cardService
           .updateCard({
             uuid: $event.id,
@@ -251,6 +256,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     const mappedNoticeOfIntentModifications = response.noiModifications.map(
       this.mapNoticeOfIntentModificationToCard.bind(this)
     );
+    const mappedNotifications = response.notifications.map(this.mapNotificationToCard.bind(this));
     if (boardCode === BOARD_TYPE_CODES.VETT) {
       const vettingSort = (a: CardData, b: CardData) => {
         if (a.highPriority === b.highPriority) {
@@ -262,6 +268,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...[...mappedNoticeOfIntents, ...mappedNoticeOfIntentModifications].sort(vettingSort),
         ...[...mappedApps, ...mappedRecons, ...mappedModifications].sort(vettingSort),
         ...[...mappedReviewMeetings, ...mappedCovenants].sort(vettingSort),
+        ...mappedNotifications,
       ];
     } else if (boardCode === BOARD_TYPE_CODES.NOI) {
       const noiSort = (a: CardData, b: CardData) => {
@@ -286,6 +293,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications,
         ...mappedReviewMeetings,
         ...mappedCovenants,
+        ...mappedNotifications,
       ].sort(noiSort);
     } else {
       const sorted = [];
@@ -300,6 +308,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedRecons.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedCovenants.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedNotifications.filter((r) => r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         // non-high priority
         ...mappedNoticeOfIntents
           .filter((a) => !a.highPriority)
@@ -311,7 +320,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         ...mappedModifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedRecons.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
         ...mappedReviewMeetings.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
-        ...mappedCovenants.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived)
+        ...mappedCovenants.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived),
+        ...mappedNotifications.filter((r) => !r.highPriority).sort((a, b) => a.dateReceived - b.dateReceived)
       );
       this.cards = sorted;
     }
@@ -451,6 +461,24 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
   }
 
+  private mapNotificationToCard(notification: NotificationDto): CardData {
+    return {
+      status: notification.card.status.code,
+      typeLabel: 'Notification',
+      title: `${notification.fileNumber} (${notification.applicant})`,
+      titleTooltip: notification.applicant,
+      assignee: notification.card.assignee,
+      id: notification.card.uuid,
+      labels: [notification.type],
+      cardType: CardType.NOTIFICATION,
+      paused: false,
+      highPriority: notification.card.highPriority,
+      cardUuid: notification.card.uuid,
+      dateReceived: notification.card.createdAt,
+      cssClasses: ['notification'],
+    };
+  }
+
   private openDialog(component: ComponentType<any>, data: any) {
     const dialogRef = this.dialog.open(component, {
       minWidth: '600px',
@@ -506,6 +534,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         case CardType.NOI_MODI:
           const noiModification = await this.noiModificationService.fetchByCardUuid(card.uuid);
           this.openDialog(NoiModificationDialogComponent, noiModification);
+          break;
+        case CardType.NOTIFICATION:
+          const notification = await this.notificationService.fetchByCardUuid(card.uuid);
+          this.openDialog(NotificationDialogComponent, notification);
           break;
         default:
           console.error('Card type is not configured for a dialog');

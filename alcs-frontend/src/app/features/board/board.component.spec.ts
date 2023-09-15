@@ -21,6 +21,8 @@ import { CovenantDto } from '../../services/covenant/covenant.dto';
 import { CovenantService } from '../../services/covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
+import { NotificationService } from '../../services/notification/notification.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -44,6 +46,7 @@ describe('BoardComponent', () => {
   let titleService: DeepMocked<Title>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let notificationService: DeepMocked<NotificationService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -97,6 +100,7 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
     dialog = createMock();
@@ -111,6 +115,7 @@ describe('BoardComponent', () => {
     titleService = createMock();
     noticeOfIntentService = createMock();
     noticeOfIntentModificationService = createMock();
+    notificationService = createMock();
 
     const params = {
       boardCode: 'boardCode',
@@ -177,6 +182,10 @@ describe('BoardComponent', () => {
           useValue: noticeOfIntentModificationService,
         },
         {
+          provide: NotificationService,
+          useValue: notificationService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -218,6 +227,7 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -238,6 +248,7 @@ describe('BoardComponent', () => {
       reconsiderations: [mockRecon],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -280,6 +291,7 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
     boardEmitter.next([mockBoard]);
@@ -353,6 +365,22 @@ describe('BoardComponent', () => {
     await sleep(1);
 
     expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
+    expect(dialog.open).toHaveBeenCalledTimes(1);
+  });
+
+  it('should load notification and open dialog when url is set', async () => {
+    notificationService.fetchByCardUuid.mockResolvedValue({} as NotificationDto);
+
+    queryParamMapEmitter.next(
+      new Map([
+        ['card', 'app-id'],
+        ['type', CardType.NOTIFICATION],
+      ])
+    );
+
+    await sleep(1);
+
+    expect(notificationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(1);
   });
 

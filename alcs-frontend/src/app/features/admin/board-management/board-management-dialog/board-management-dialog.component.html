@@ -40,9 +40,7 @@
 
       <div>
         <div>Click to add columns*</div>
-        <div class="subtext">
-          Disabled columns have cards and cannot be removed from the board
-        </div>
+        <div class="subtext">Disabled columns have cards and cannot be removed from the board</div>
         <div class="columns">
           <ul>
             <li *ngFor="let status of cardStatuses">
@@ -70,7 +68,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Create Card Types</mat-label>
           <mat-select multiple="true" [formControl]="createCardTypes">
-            <mat-option *ngFor="let cardType of permittedCardTypes.value" [value]="cardType">
+            <mat-option *ngFor="let cardType of allowedCreateCardTypes" [value]="cardType">
               {{ cardTypeMap[cardType] }}
             </mat-option>
           </mat-select>

@@ -14,6 +14,7 @@ import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../notification/notification.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
@@ -32,6 +33,7 @@ describe('BoardController', () => {
   let covenantService: DeepMocked<CovenantService>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let notificationService: DeepMocked<NotificationService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -44,6 +46,8 @@ describe('BoardController', () => {
     covenantService = createMock();
     noticeOfIntentService = createMock();
     noiModificationService = createMock();
+    notificationService = createMock();
+
     mockBoard = new Board({
       allowedCardTypes: [],
       statuses: [],
@@ -66,6 +70,8 @@ describe('BoardController', () => {
     noticeOfIntentService.mapToDtos.mockResolvedValue([]);
     noiModificationService.getByBoard.mockResolvedValue([]);
     noiModificationService.mapToDtos.mockResolvedValue([]);
+    notificationService.getByBoard.mockResolvedValue([]);
+    notificationService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -97,6 +103,10 @@ describe('BoardController', () => {
         {
           provide: NoticeOfIntentModificationService,
           useValue: noiModificationService,
+        },
+        {
+          provide: NotificationService,
+          useValue: notificationService,
         },
         {
           provide: ClsService,
