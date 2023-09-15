@@ -42,6 +42,10 @@
   <div class="header-row">
     <div class="left">
       <app-time-tracker [data]="noticeOfIntent" [maxActiveDays]="61"></app-time-tracker>
+      <app-application-submission-status-type-pill
+        *ngIf="status"
+        [type]="status"
+      ></app-application-submission-status-type-pill>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
