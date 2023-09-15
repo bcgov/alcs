@@ -17,6 +17,9 @@ import {
 import { FileNumberService } from '../../file-number/file-number.service';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
+import { BoardService } from '../board/board.service';
+import { CARD_SUBTASK_TYPE } from '../card/card-subtask/card-subtask.dto';
+import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
 import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
@@ -58,6 +61,8 @@ export class NotificationService {
     private fileNumberService: FileNumberService,
     private codeService: CodeService,
     private localGovernmentService: LocalGovernmentService,
+    private boardService: BoardService,
+    private subtaskService: CardSubtaskService,
   ) {}
 
   async create(
@@ -303,8 +308,18 @@ export class NotificationService {
     existingNotification.card = new Card();
     existingNotification.card.typeCode = CARD_TYPE.NOTIFICATION;
 
-    await this.repository.save(existingNotification);
-    return this.getByFileNumber(createDto.fileNumber);
+    const savedNotification = await this.repository.save(existingNotification);
+
+    await this.boardService.changeBoard(savedNotification.cardUuid, 'noti');
+
+    const finalNotification = await this.getByFileNumber(createDto.fileNumber);
+
+    await this.subtaskService.create(
+      finalNotification.card!,
+      CARD_SUBTASK_TYPE.GIS,
+    );
+
+    return finalNotification;
   }
 
   async updateApplicant(fileNumber: string, applicant: string) {

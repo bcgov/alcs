@@ -1,6 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { LocalGovernmentDto } from '../admin-local-government/admin-local-government.dto';
 import { ApplicationRegionDto } from '../application/application-code.dto';
+import { ApplicationLocalGovernmentDto } from '../application/application-local-government/application-local-government.dto';
 import { CardDto } from '../card/card.dto';
 
 export interface NotificationDto {
@@ -9,7 +10,7 @@ export interface NotificationDto {
   applicant: string;
   card: CardDto;
   dateSubmittedToAlc?: number;
-  localGovernment: LocalGovernmentDto;
+  localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
   summary?: string;
   type: NotificationTypeDto;

@@ -26,6 +26,7 @@
       <div>{{ transferee.displayName }}</div>
     </ng-container>
   </div>
+  <app-no-data [showRequired]="showErrors" *ngIf="notificationSubmission.transferees.length === 0"></app-no-data>
   <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
   </div>

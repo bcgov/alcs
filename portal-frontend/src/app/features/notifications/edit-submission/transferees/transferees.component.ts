@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
+import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
 import { NotificationTransfereeDto } from '../../../../services/notification-transferee/notification-transferee.dto';
 import { NotificationTransfereeService } from '../../../../services/notification-transferee/notification-transferee.service';
 import { EditNotificationSteps } from '../edit-submission.component';
@@ -25,6 +26,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   constructor(
     private router: Router,
     private notificationTransfereeService: NotificationTransfereeService,
+    private notificationSubmissionService: NotificationSubmissionService,
     private dialog: MatDialog
   ) {
     super();
@@ -34,7 +36,7 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
     this.$notificationSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
       if (submission) {
         this.submissionUuid = submission.uuid;
-        this.loadTransferees(submission.uuid);
+        this.transferees = submission.transferees;
       }
     });
   }
@@ -44,9 +46,10 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
   }
 
   private async loadTransferees(submissionUuid: string, primaryContactOwnerUuid?: string | null) {
-    const transferees = await this.notificationTransfereeService.fetchBySubmissionId(submissionUuid);
-    if (transferees) {
-      this.transferees = transferees;
+    const submission = await this.notificationSubmissionService.getByUuid(submissionUuid);
+    if (submission) {
+      this.transferees = submission.transferees;
+      this.$notificationSubmission.next(submission);
     }
   }
 
@@ -86,6 +89,4 @@ export class TransfereesComponent extends StepComponent implements OnInit, OnDes
     await this.notificationTransfereeService.delete(uuid);
     await this.loadTransferees(this.submissionUuid);
   }
-
-  protected readonly undefined = undefined;
 }

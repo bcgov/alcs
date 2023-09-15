@@ -7,24 +7,36 @@
       </h2>
     </div>
     <div>
-      <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
-      <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
-        <button *ngIf="boardHasCreateApplication" mat-menu-item (click)="onApplicationCreate()">Application</button>
-        <button *ngIf="boardHasCreateNOI" mat-menu-item (click)="onCreateNoticeOfIntent()">Notice of Intent</button>
-        <button *ngIf="boardHasCreateReconsideration" mat-menu-item (click)="onReconsiderationCreate()">
-          Reconsideration
-        </button>
-        <button *ngIf="boardHasCreatePlanningReview" mat-menu-item (click)="onCreatePlanningReview()">
-          Planning Review
-        </button>
-        <button *ngIf="boardHasCreateAppModification" mat-menu-item (click)="onCreateAppModification()">
-          Modification
-        </button>
-        <button *ngIf="boardHasCreateNOIModification" mat-menu-item (click)="onCreateNoiModifications()">
-          Modification
-        </button>
-        <button *ngIf="boardHasCreateCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
-      </mat-menu>
+      <ng-container
+        *ngIf="
+          boardHasCreateApplication ||
+          boardHasCreateNOI ||
+          boardHasCreateReconsideration ||
+          boardHasCreatePlanningReview ||
+          boardHasCreateAppModification ||
+          boardHasCreateNOIModification ||
+          boardHasCreateCovenant
+        "
+      >
+        <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>
+        <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+          <button *ngIf="boardHasCreateApplication" mat-menu-item (click)="onApplicationCreate()">Application</button>
+          <button *ngIf="boardHasCreateNOI" mat-menu-item (click)="onCreateNoticeOfIntent()">Notice of Intent</button>
+          <button *ngIf="boardHasCreateReconsideration" mat-menu-item (click)="onReconsiderationCreate()">
+            Reconsideration
+          </button>
+          <button *ngIf="boardHasCreatePlanningReview" mat-menu-item (click)="onCreatePlanningReview()">
+            Planning Review
+          </button>
+          <button *ngIf="boardHasCreateAppModification" mat-menu-item (click)="onCreateAppModification()">
+            Modification
+          </button>
+          <button *ngIf="boardHasCreateNOIModification" mat-menu-item (click)="onCreateNoiModifications()">
+            Modification
+          </button>
+          <button *ngIf="boardHasCreateCovenant" mat-menu-item (click)="onCreateCovenant()">Covenant</button>
+        </mat-menu>
+      </ng-container>
     </div>
   </div>
   <div class="board-content">

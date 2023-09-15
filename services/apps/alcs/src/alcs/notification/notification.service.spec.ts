@@ -9,6 +9,11 @@ import { NotificationProfile } from '../../common/automapper/notification.automa
 import { FileNumberService } from '../../file-number/file-number.service';
 import { NotificationSubmissionService } from '../../portal/notification-submission/notification-submission.service';
 import { Board } from '../board/board.entity';
+import { BoardService } from '../board/board.service';
+import { CARD_SUBTASK_TYPE } from '../card/card-subtask/card-subtask.dto';
+import { CardSubtask } from '../card/card-subtask/card-subtask.entity';
+import { CardSubtaskService } from '../card/card-subtask/card-subtask.service';
+import { CARD_TYPE } from '../card/card-type/card-type.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
@@ -27,6 +32,8 @@ describe('NotificationService', () => {
   let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockBoardService: DeepMocked<BoardService>;
+  let mockSubtaskService: DeepMocked<CardSubtaskService>;
 
   beforeEach(async () => {
     mockCardService = createMock();
@@ -36,6 +43,8 @@ describe('NotificationService', () => {
     mockLocalGovernmentService = createMock();
     mockCodeService = createMock();
     mockNotificationSubmissionService = createMock();
+    mockBoardService = createMock();
+    mockSubtaskService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -73,6 +82,14 @@ describe('NotificationService', () => {
         {
           provide: NotificationSubmissionService,
           useValue: mockNotificationSubmissionService,
+        },
+        {
+          provide: BoardService,
+          useValue: mockBoardService,
+        },
+        {
+          provide: CardSubtaskService,
+          useValue: mockSubtaskService,
         },
       ],
     }).compile();
@@ -238,12 +255,14 @@ describe('NotificationService', () => {
     expect(mockRepository.update).toHaveBeenCalledTimes(1);
   });
 
-  it('should create a card and save it for submit', async () => {
+  it('should create a card, move it to Noti, created a subtask and then save it for submit', async () => {
     const mockNoi = new Notification();
     mockRepository.findOne.mockResolvedValue(mockNoi);
     mockRepository.findOneOrFail.mockResolvedValue(mockNoi);
     mockCodeService.fetchRegion.mockResolvedValue(new ApplicationRegion());
     mockRepository.save.mockResolvedValue({} as any);
+    mockBoardService.changeBoard.mockResolvedValue(new Card());
+    mockSubtaskService.create.mockResolvedValue(new CardSubtask());
 
     await service.submit({
       applicant: 'Bruce Wayne',
@@ -261,5 +280,17 @@ describe('NotificationService', () => {
     0;
     expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockBoardService.changeBoard).toHaveBeenCalledTimes(1);
+    expect(mockBoardService.changeBoard).toHaveBeenCalledWith(
+      undefined,
+      'noti',
+    );
+    expect(mockSubtaskService.create).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskService.create).toHaveBeenCalledWith(
+      new Card({
+        typeCode: CARD_TYPE.NOTIFICATION,
+      }),
+      CARD_SUBTASK_TYPE.GIS,
+    );
   });
 });

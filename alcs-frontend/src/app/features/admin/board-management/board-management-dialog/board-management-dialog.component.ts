@@ -42,6 +42,7 @@ export class BoardManagementDialogComponent implements OnInit {
   selectedCardStatuses: CardStatusDto[] = [];
   cardTypeMap: Record<string, string> = {};
   cardCounts: Record<string, number> = {};
+  allowedCreateCardTypes: CardType[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -95,6 +96,10 @@ export class BoardManagementDialogComponent implements OnInit {
 
   onNextStep() {
     this.step++;
+    //We don't support creating Notifications
+    this.allowedCreateCardTypes = (this.permittedCardTypes.value ?? []).filter(
+      (cardType) => cardType !== CardType.NOTIFICATION
+    );
   }
 
   onPreviousStep() {
