@@ -6,12 +6,12 @@ import { formatIncomingDate } from './incoming-date.formatter';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const getNextDayToUtc = (timestamp: number) => {
+export const getNextDayToPacific = (timestamp: number) => {
   const date = formatIncomingDate(timestamp);
-  return dayjs(date).utc().add(1, 'day').startOf('day').toDate();
+  return dayjs(date).tz('Canada/Pacific').add(1, 'day').startOf('day').toDate();
 };
 
-export const getStartOfDayToUtc = (timestamp: number) => {
+export const getStartOfDayToPacific = (timestamp: number) => {
   const date = formatIncomingDate(timestamp);
-  return dayjs(date).utc().startOf('day').toDate();
+  return dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
 };

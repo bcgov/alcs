@@ -44,20 +44,8 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Input() set totalCount(count: number) {
     this._totalCount = count;
 
-    // push subscription to next render cycle, after the table is rendered
-    setTimeout(() => {
-      if (this.sort && !this.subscribedToSort) {
-        this.subscribedToSort = true;
-        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-          this.paginator.pageIndex = 0;
-          this.pageIndex = 0;
-          this.sortDirection = sortObj.direction.toUpperCase();
-          this.sortField = sortObj.active;
-
-          await this.onTableChange();
-        });
-      }
-    });
+    // this will ensure the reset of subscriber once the table is hidden because of empty
+    this.initSorting();
   }
 
   @Input() statuses: ApplicationStatusDto[] = [];
@@ -127,6 +115,27 @@ export class ApplicationSearchTableComponent implements OnDestroy {
           shortLabel: status?.label,
         },
       };
+    });
+  }
+
+  private initSorting() {
+    if (this._totalCount <= 0) {
+      this.subscribedToSort = false;
+    }
+
+    // push subscription to next render cycle, after the table is rendered
+    setTimeout(() => {
+      if (this.sort && !this.subscribedToSort) {
+        this.subscribedToSort = true;
+        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
+          this.paginator.pageIndex = 0;
+          this.pageIndex = 0;
+          this.sortDirection = sortObj.direction.toUpperCase();
+          this.sortField = sortObj.active;
+
+          await this.onTableChange();
+        });
+      }
     });
   }
 }

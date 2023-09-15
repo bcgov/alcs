@@ -43,20 +43,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   _totalCount = 0;
   @Input() set totalCount(count: number) {
     this._totalCount = count;
-    // push subscription to next render cycle, after the table is rendered
-    setTimeout(() => {
-      if (this.sort && !this.subscribedToSort) {
-        this.subscribedToSort = true;
-        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-          this.paginator.pageIndex = 0;
-          this.pageIndex = 0;
-          this.sortDirection = sortObj.direction.toUpperCase();
-          this.sortField = sortObj.active;
-
-          await this.onTableChange();
-        });
-      }
-    });
+    this.initSorting();
   }
 
   @Input() statuses: ApplicationStatusDto[] = [];
@@ -73,7 +60,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   sortField = 'dateSubmitted';
 
   private subscribedToSort = false;
-  
+
   constructor(private router: Router) {}
 
   ngOnDestroy(): void {
@@ -127,6 +114,27 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
           shortLabel: status?.label,
         },
       };
+    });
+  }
+
+  private initSorting() {
+    if (this._totalCount <= 0) {
+      this.subscribedToSort = false;
+    }
+
+    // push subscription to next render cycle, after the table is rendered
+    setTimeout(() => {
+      if (this.sort && !this.subscribedToSort) {
+        this.subscribedToSort = true;
+        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
+          this.paginator.pageIndex = 0;
+          this.pageIndex = 0;
+          this.sortDirection = sortObj.direction.toUpperCase();
+          this.sortField = sortObj.active;
+
+          await this.onTableChange();
+        });
+      }
     });
   }
 }

@@ -4,11 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import {
-  getNextDayToUtc,
-  getStartOfDayToUtc,
-} from '../../../utils/utc-date-time-helper';
+  getNextDayToPacific,
+  getStartOfDayToPacific,
+} from '../../../utils/pacific-date-time-helper';
+import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { ApplicationDecisionComponent } from '../../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { LocalGovernment } from '../../local-government/local-government.entity';
@@ -177,7 +177,7 @@ export class ApplicationAdvancedSearchService {
       query = query.andWhere(
         'appSearch.date_submitted_to_alc >= :date_submitted_from_alc',
         {
-          date_submitted_from_alc: getStartOfDayToUtc(
+          date_submitted_from_alc: getStartOfDayToPacific(
             searchDto.dateSubmittedFrom,
           ).toISOString(),
         },
@@ -188,7 +188,7 @@ export class ApplicationAdvancedSearchService {
       query = query.andWhere(
         'appSearch.date_submitted_to_alc < :date_submitted_to_alc',
         {
-          date_submitted_to_alc: getNextDayToUtc(
+          date_submitted_to_alc: getNextDayToPacific(
             searchDto.dateSubmittedTo,
           ).toISOString(),
         },
@@ -197,7 +197,7 @@ export class ApplicationAdvancedSearchService {
 
     if (searchDto.dateDecidedFrom) {
       query = query.andWhere('appSearch.decision_date >= :decision_date', {
-        decision_date: getStartOfDayToUtc(
+        decision_date: getStartOfDayToPacific(
           searchDto.dateDecidedFrom,
         ).toISOString(),
       });
@@ -205,7 +205,7 @@ export class ApplicationAdvancedSearchService {
 
     if (searchDto.dateDecidedTo) {
       query = query.andWhere('appSearch.decision_date < :decision_date_to', {
-        decision_date_to: getNextDayToUtc(
+        decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
         ).toISOString(),
       });
