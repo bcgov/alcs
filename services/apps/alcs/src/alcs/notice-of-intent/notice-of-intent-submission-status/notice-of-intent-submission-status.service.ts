@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
+import { And, In, IsNull, LessThan, Not, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
@@ -151,7 +151,7 @@ export class NoticeOfIntentSubmissionStatusService {
       where: {
         statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
         emailSentDate: IsNull(),
-        effectiveDate: LessThanOrEqual(date), // this will get only statuses <= today since the status service converts all days to .startOf('day').
+        effectiveDate: And(Not(IsNull()), LessThan(date)), // this will get only statuses < today+1 since the status service converts all days to .startOf('day').
       },
       relations: {
         submission: {

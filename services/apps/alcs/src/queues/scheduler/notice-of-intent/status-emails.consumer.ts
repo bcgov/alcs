@@ -29,6 +29,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
       const today = dayjs(new Date())
         .tz('Canada/Pacific')
         .startOf('day')
+        .add(1, 'day')
         .toDate();
 
       const submissionStatuses =

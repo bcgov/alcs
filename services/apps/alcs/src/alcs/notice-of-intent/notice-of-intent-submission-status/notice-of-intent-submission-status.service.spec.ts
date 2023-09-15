@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
+import { And, In, IsNull, LessThan, Not, Repository } from 'typeorm';
 import { NoticeOfIntentSubmission } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from './notice-of-intent-status-type.entity';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-status.dto';
@@ -430,17 +430,26 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
   });
 
   it('should call find to retrieve ALCD statuses', async () => {
-    mockSubmissionToSubmissionStatusRepository.find.mockResolvedValue([]);
+    const mockStatuses = [
+      new NoticeOfIntentSubmissionToSubmissionStatus({
+        statusTypeCode: NOI_SUBMISSION_STATUS.ALC_DECISION,
+      }),
+    ];
+
+    mockSubmissionToSubmissionStatusRepository.find.mockResolvedValue(
+      mockStatuses,
+    );
     const date = new Date();
 
-    await service.getSubmissionToSubmissionStatusForSendingEmails(date);
+    const result =
+      await service.getSubmissionToSubmissionStatusForSendingEmails(date);
 
     expect(mockSubmissionToSubmissionStatusRepository.find).toBeCalledTimes(1);
     expect(mockSubmissionToSubmissionStatusRepository.find).toBeCalledWith({
       where: {
         statusTypeCode: In([NOI_SUBMISSION_STATUS.ALC_DECISION]),
         emailSentDate: IsNull(),
-        effectiveDate: LessThanOrEqual(date),
+        effectiveDate: And(Not(IsNull()), LessThan(date)),
       },
       relations: {
         submission: {
@@ -449,6 +458,7 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
         },
       },
     });
+    expect(result).toEqual(mockStatuses);
   });
 
   it('should call save to save SubmissionToSubmissionStatus', async () => {
