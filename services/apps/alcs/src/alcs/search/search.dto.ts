@@ -149,7 +149,7 @@ export class SearchRequestDto extends PagingRequestDto {
   dateDecidedTo?: number;
 
   @IsArray()
-  applicationFileTypes: string[];
+  fileTypes: string[];
 }
 
 export class NonApplicationsSearchRequestDto extends PagingRequestDto {
@@ -168,4 +168,7 @@ export class NonApplicationsSearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @IsArray()
+  fileTypes: string[];
 }

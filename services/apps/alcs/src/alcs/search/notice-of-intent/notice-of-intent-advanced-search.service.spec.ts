@@ -29,7 +29,7 @@ describe('NoticeOfIntentService', () => {
     dateDecidedTo: new Date('2021-11-10').getTime(),
     resolutionNumber: 123,
     resolutionYear: 2021,
-    applicationFileTypes: ['type1', 'type2'],
+    fileTypes: ['type1', 'type2'],
     page: 1,
     pageSize: 10,
     sortField: 'ownerName',

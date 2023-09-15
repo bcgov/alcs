@@ -31,20 +31,25 @@
 
   <div class="address-search-fields-wrapper">
     <div class="row">
-      <mat-form-field appearance="outline" class="column">
-        <mat-label>PID</mat-label>
-        <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
-      </mat-form-field>
-
-      <mat-form-field class="column" appearance="outline">
-        <mat-label>Civic Address</mat-label>
-        <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" />
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <div *ngIf="pidControl.invalid && (pidControl.dirty || pidControl.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+      <div class="column">
+        <mat-form-field class="address-field" appearance="outline">
+          <mat-label>PID</mat-label>
+          <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+        </mat-form-field>
+        <div *ngIf="pidInvalid" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+        </div>
+      </div>
+      <div class="column">
+        <mat-form-field appearance="outline" class="address-field">
+          <mat-label>Civic Address</mat-label>
+          <input id="civicAddress" matInput placeholder="Civic Address" formControlName="civicAddress" minlength="3" />
+        </mat-form-field>
+        <div *ngIf="civicAddressInvalid" class="field-error column">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
+        </div>
       </div>
     </div>
 
@@ -53,8 +58,8 @@
         <mat-icon>info</mat-icon>
       </div>
       <div class="info-description">
-        Property details change over time. Use both ALCS and <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/">iMap</a> to
-        confirm ALC history on a property
+        Property details change over time. Use both ALCS and
+        <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/" target="_blank">iMap</a> to confirm ALC history on a property
       </div>
     </div>
 
@@ -233,20 +238,20 @@
     </div>
   </div>
   <div class="btn-controls">
-    <button type="button" mat-stroked-button color="primary" (click)="onReset()">Reset</button>
+    <button class="reset-btn" type="button" mat-stroked-button color="primary" (click)="onReset()">Reset</button>
     <button
       class="search-btn"
       type="submit"
       mat-flat-button
       color="primary"
-      [disabled]="formEmpty"
+      [disabled]="formEmpty || !searchForm.valid"
     >
       Search
     </button>
   </div>
 </form>
 
-<div class="search-fields-wrapper search-result-wrapper">
+<div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
   <h2 class="search-title">Search Results:</h2>
 
   <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>

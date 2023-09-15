@@ -63,7 +63,7 @@ export interface SearchRequestDto extends PagingRequestDto {
   dateSubmittedTo?: number;
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
-  applicationFileTypes: string[];
+  fileTypes: string[];
 }
 
 export interface NonApplicationsSearchRequestDto extends PagingRequestDto {

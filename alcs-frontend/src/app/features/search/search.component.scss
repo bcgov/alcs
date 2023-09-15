@@ -83,14 +83,15 @@
   }
 
   .address-search-fields-wrapper {
-    background-color: #fee9b580;
+    background-color: rgba(254, 233, 180, 0.502);
     padding: 12px 80px;
+
+    .address-field {
+      background-color: white;
+    }
 
     .row {
       margin: 4px 0;
-    }
-    .column {
-      background-color: white;
     }
   }
 
@@ -157,17 +158,29 @@
     display: flex;
     align-items: center;
     margin-top: 4px;
+    flex-direction: row !important;
+    gap: 4px;
 
     div {
       color: colors.$error-color;
     }
   }
 
-  .btn-controls .search-btn span {
-    color: #fff !important;
+  .btn-controls {
+    .reset-btn span {
+      color: colors.$primary-color;
+    }
+    .search-btn span {
+      color: #fff !important;
+    }
   }
-
   .mat-mdc-select-placeholder {
     color: rgba(0, 0, 0, 0.6);
+  }
+
+  .no-data {
+    overflow: hidden;
+    margin: 20px 0;
+    padding: 8px 12px;
   }
 }

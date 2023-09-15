@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ interface SearchResult {
   templateUrl: './non-application-search-table.component.html',
   styleUrls: ['./non-application-search-table.component.scss'],
 })
-export class NonApplicationSearchTableComponent implements AfterViewInit, OnDestroy {
+export class NonApplicationSearchTableComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -36,7 +36,25 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
     this.dataSource = this.mapNonApplications(nonApplications);
   }
 
-  @Input() totalCount = 0;
+  _totalCount = 0;
+  @Input() set totalCount(count: number) {
+    this._totalCount = count;
+    // push subscription to next render cycle, after the table is rendered
+    setTimeout(() => {
+      if (this.sort && !this.subscribedToSort) {
+        this.subscribedToSort = true;
+        this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
+          this.paginator.pageIndex = 0;
+          this.pageIndex = 0;
+          this.sortDirection = sortObj.direction.toUpperCase();
+          this.sortField = sortObj.active;
+
+          await this.onTableChange();
+        });
+      }
+    });
+  }
+
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'type', 'applicant', 'government'];
@@ -50,20 +68,9 @@ export class NonApplicationSearchTableComponent implements AfterViewInit, OnDest
   COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
   PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
 
+  private subscribedToSort = false;
+
   constructor(private router: Router) {}
-
-  ngAfterViewInit() {
-    if (this.sort) {
-      this.sort.sortChange.pipe(takeUntil(this.$destroy)).subscribe(async (sortObj) => {
-        this.paginator.pageIndex = 0;
-        this.pageIndex = 0;
-        this.sortDirection = sortObj.direction.toUpperCase();
-        this.sortField = sortObj.active;
-
-        await this.onTableChange();
-      });
-    }
-  }
 
   ngOnDestroy(): void {
     this.$destroy.next();

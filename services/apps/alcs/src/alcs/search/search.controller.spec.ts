@@ -151,7 +151,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearch(
@@ -193,7 +193,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearchApplications(
@@ -217,7 +217,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearchNoticeOfIntents(
@@ -263,7 +263,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['NFUP'],
+      fileTypes: ['NFUP'],
     };
 
     const result = await controller.advancedSearch(
@@ -287,7 +287,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['NOI'],
+      fileTypes: ['NOI'],
     };
 
     const result = await controller.advancedSearch(
@@ -311,7 +311,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['COV'],
+      fileTypes: ['COV'],
     };
 
     const result = await controller.advancedSearch(
