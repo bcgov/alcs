@@ -3,10 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, Repository } from 'typeorm';
 import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import {
+  getNextDayToPacific,
+  getStartOfDayToPacific,
+} from '../../../utils/pacific-date-time-helper';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
-import { NoticeOfIntentDecisionComponent } from '../../notice-of-intent-decision/notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecision } from '../../notice-of-intent-decision/notice-of-intent-decision.entity';
 import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent-search-view.entity';
@@ -158,39 +160,39 @@ export class NoticeOfIntentAdvancedSearchService {
     // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
-        'noiSearch.date_submitted_to_alc >= :date_submitted_to_alc',
+        'noiSearch.date_submitted_to_alc >= :date_submitted_from_alc',
         {
-          date_submitted_to_alc: formatIncomingDate(
+          date_submitted_from_alc: getStartOfDayToPacific(
             searchDto.dateSubmittedFrom,
-          )!.toISOString(),
+          ).toISOString(),
         },
       );
     }
 
     if (searchDto.dateSubmittedTo) {
       query = query.andWhere(
-        'noiSearch.date_submitted_to_alc <= :date_submitted_to_alc',
+        'noiSearch.date_submitted_to_alc < :date_submitted_to_alc',
         {
-          date_submitted_to_alc: formatIncomingDate(
+          date_submitted_to_alc: getNextDayToPacific(
             searchDto.dateSubmittedTo,
-          )!.toISOString(),
+          ).toISOString(),
         },
       );
     }
 
     if (searchDto.dateDecidedFrom) {
       query = query.andWhere('noiSearch.decision_date >= :decision_date', {
-        decision_date: formatIncomingDate(
+        decision_date: getStartOfDayToPacific(
           searchDto.dateDecidedFrom,
-        )!.toISOString(),
+        ).toISOString(),
       });
     }
 
     if (searchDto.dateDecidedTo) {
-      query = query.andWhere('noiSearch.decision_date <= :decision_date_to', {
-        decision_date_to: formatIncomingDate(
+      query = query.andWhere('noiSearch.decision_date < :decision_date_to', {
+        decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
-        )!.toISOString(),
+        ).toISOString(),
       });
     }
     return query;

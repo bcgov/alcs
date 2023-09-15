@@ -18,6 +18,7 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
         ,non_applications."local_government_uuid" as "local_government_uuid"
         ,non_applications."card_uuid"
         ,non_applications."board_code"
+        ,non_applications."region_code"
         FROM
         (
         SELECT
@@ -28,7 +29,8 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
             'COV' AS "class",
             cov.local_government_uuid AS "local_government_uuid",
             card.uuid AS "card_uuid",
-            board.code AS "board_code"
+            board.code AS "board_code",
+            cov.region_code AS "region_code"
         FROM
             alcs.covenant cov
         LEFT JOIN alcs.card card ON
@@ -45,7 +47,8 @@ import { LocalGovernment } from '../../local-government/local-government.entity'
             'PLAN' AS "class",
             planning_review.local_government_uuid AS "local_government_uuid",
             card.uuid AS "card_uuid",
-            board.code AS "board_code"
+            board.code AS "board_code",
+            planning_review.region_code AS "region_code"
         FROM
             alcs.planning_review planning_review 
         LEFT JOIN alcs.card card ON
@@ -81,6 +84,9 @@ export class NonApplicationSearchView {
 
   @ViewColumn()
   boardCode: string | null;
+
+  @ViewColumn()
+  regionCode: string;
 
   @ManyToOne(() => LocalGovernment, {
     nullable: true,

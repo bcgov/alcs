@@ -169,17 +169,8 @@ export class SearchController {
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    let searchApplications = true;
-    let searchNoi = true;
-    let searchNonApplications = true;
-
-    ({ searchApplications, searchNoi, searchNonApplications } =
-      this.getEntitiesTypeToSearch(
-        searchDto,
-        searchApplications,
-        searchNoi,
-        searchNonApplications,
-      ));
+    const { searchApplications, searchNoi, searchNonApplications } =
+      this.getEntitiesTypeToSearch(searchDto);
 
     let applicationSearchResult: AdvancedSearchResultDto<
       ApplicationSubmissionSearchView[]
@@ -277,15 +268,16 @@ export class SearchController {
     };
   }
 
-  private getEntitiesTypeToSearch(
-    searchDto: SearchRequestDto,
-    searchApplications: boolean,
-    searchNoi: boolean,
-    searchNonApplications: boolean,
-  ) {
-    if (searchDto.applicationFileTypes.length > 0) {
+  private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
+    let searchApplications = true;
+    let searchNoi = true;
+    let searchNonApplications = true;
+
+    let nonApplicationTypeSpecified = false;
+    let noiTypeSpecified = false;
+    if (searchDto.fileTypes.length > 0) {
       searchApplications =
-        searchDto.applicationFileTypes.filter((searchType) =>
+        searchDto.fileTypes.filter((searchType) =>
           Object.values(APPLICATION_SUBMISSION_TYPES).includes(
             APPLICATION_SUBMISSION_TYPES[
               searchType as keyof typeof APPLICATION_SUBMISSION_TYPES
@@ -293,22 +285,49 @@ export class SearchController {
           ),
         ).length > 0;
 
-      searchNoi = searchDto.applicationFileTypes.includes('NOI');
+      noiTypeSpecified = searchDto.fileTypes.includes('NOI');
 
-      searchNonApplications =
-        searchDto.applicationFileTypes.filter((searchType) =>
+      nonApplicationTypeSpecified =
+        searchDto.fileTypes.filter((searchType) =>
           ['COV', 'PLAN', 'SRW'].includes(searchType),
         ).length > 0;
     }
 
+    searchNoi =
+      noiTypeSpecified || this.areAnyNoiSearchFieldsSpecified(searchDto);
+
     searchNonApplications =
-      searchNonApplications ||
+      nonApplicationTypeSpecified ||
       isStringSetAndNotEmpty(searchDto.fileNumber) ||
       isStringSetAndNotEmpty(searchDto.governmentName) ||
       isStringSetAndNotEmpty(searchDto.regionCode) ||
       isStringSetAndNotEmpty(searchDto.name);
 
     return { searchApplications, searchNoi, searchNonApplications };
+  }
+
+  public areAnyNoiSearchFieldsSpecified(searchDto: SearchRequestDto): boolean {
+    for (const key in searchDto) {
+      if (
+        searchDto.hasOwnProperty(key) &&
+        ![
+          'legacyId',
+          'isIncludeOtherParcels',
+          'fileTypes',
+          'page',
+          'pageSize',
+          'sortField',
+          'sortDirection',
+        ].includes(key) &&
+        searchDto[key] !== undefined &&
+        searchDto[key] !== '' &&
+        searchDto[key] !== []
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private mapAdvancedSearchResults(

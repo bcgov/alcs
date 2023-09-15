@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { Brackets, Repository } from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
-import { formatIncomingDate } from '../../../utils/incoming-date.formatter';
+import {
+  getNextDayToPacific,
+  getStartOfDayToPacific,
+} from '../../../utils/pacific-date-time-helper';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { ApplicationDecisionComponent } from '../../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
@@ -169,42 +173,41 @@ export class ApplicationAdvancedSearchService {
     searchDto: SearchRequestDto,
     query,
   ) {
-    // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
-        'appSearch.date_submitted_to_alc >= :date_submitted_to_alc',
+        'appSearch.date_submitted_to_alc >= :date_submitted_from_alc',
         {
-          date_submitted_to_alc: formatIncomingDate(
+          date_submitted_from_alc: getStartOfDayToPacific(
             searchDto.dateSubmittedFrom,
-          )!.toISOString(),
+          ).toISOString(),
         },
       );
     }
 
     if (searchDto.dateSubmittedTo) {
       query = query.andWhere(
-        'appSearch.date_submitted_to_alc <= :date_submitted_to_alc',
+        'appSearch.date_submitted_to_alc < :date_submitted_to_alc',
         {
-          date_submitted_to_alc: formatIncomingDate(
+          date_submitted_to_alc: getNextDayToPacific(
             searchDto.dateSubmittedTo,
-          )!.toISOString(),
+          ).toISOString(),
         },
       );
     }
 
     if (searchDto.dateDecidedFrom) {
       query = query.andWhere('appSearch.decision_date >= :decision_date', {
-        decision_date: formatIncomingDate(
+        decision_date: getStartOfDayToPacific(
           searchDto.dateDecidedFrom,
-        )!.toISOString(),
+        ).toISOString(),
       });
     }
 
     if (searchDto.dateDecidedTo) {
-      query = query.andWhere('appSearch.decision_date <= :decision_date_to', {
-        decision_date_to: formatIncomingDate(
+      query = query.andWhere('appSearch.decision_date < :decision_date_to', {
+        decision_date_to: getNextDayToPacific(
           searchDto.dateDecidedTo,
-        )!.toISOString(),
+        ).toISOString(),
       });
     }
     return query;
@@ -330,7 +333,7 @@ export class ApplicationAdvancedSearchService {
   ) {
     query = query;
 
-    if (searchDto.applicationFileTypes.length > 0) {
+    if (searchDto.fileTypes.length > 0) {
       // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
       if (
         searchDto.resolutionNumber === undefined &&
@@ -349,12 +352,12 @@ export class ApplicationAdvancedSearchService {
         new Brackets((qb) =>
           qb
             .where('appSearch.application_type_code IN (:...typeCodes)', {
-              typeCodes: searchDto.applicationFileTypes,
+              typeCodes: searchDto.fileTypes,
             })
             .orWhere(
               'decisionComponent.application_decision_component_type_code IN (:...typeCodes)',
               {
-                typeCodes: searchDto.applicationFileTypes,
+                typeCodes: searchDto.fileTypes,
               },
             ),
         ),

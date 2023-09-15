@@ -4,6 +4,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTabGroup } from '@angular/material/tabs';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import moment from 'moment';
 import { combineLatestWith, map, Observable, startWith, Subject, takeUntil } from 'rxjs';
@@ -65,11 +66,12 @@ export class SearchComponent implements OnInit, OnDestroy {
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
+  civicAddressControl = new FormControl<string | undefined>(undefined);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
     name: this.nameControl,
     pid: this.pidControl,
-    civicAddress: new FormControl<string | undefined>(undefined),
+    civicAddress: this.civicAddressControl,
     isIncludeOtherParcels: new FormControl(false),
     resolutionNumber: new FormControl<string | undefined>(undefined),
     resolutionYear: new FormControl<number | undefined>(undefined),
@@ -90,14 +92,20 @@ export class SearchComponent implements OnInit, OnDestroy {
   statuses: ApplicationStatusDto[] = [];
 
   formEmpty = true;
+  civicAddressInvalid = false;
+  pidInvalid = false;
+  searchResultsHidden = true;
 
   constructor(
     private searchService: SearchService,
     private activatedRoute: ActivatedRoute,
     private localGovernmentService: ApplicationLocalGovernmentService,
     private applicationService: ApplicationService,
-    private toastService: ToastService
-  ) {}
+    private toastService: ToastService,
+    private titleService: Title
+  ) {
+    this.titleService.setTitle('ALCS | Search');
+  }
 
   ngOnInit(): void {
     this.setup();
@@ -122,13 +130,16 @@ export class SearchComponent implements OnInit, OnDestroy {
               page: this.pageIndex + 1,
               sortDirection: this.sortDirection,
               sortField: this.sortField,
-              applicationFileTypes: [],
+              fileTypes: [],
             })
-            .then((result) => this.mapSearchResults(result));
+            .then((result) => {
+              this.searchResultsHidden = false;
+              this.mapSearchResults(result);
+            });
         }
       });
 
-    this.searchForm.valueChanges.subscribe(() => {
+    this.searchForm.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
       let isEmpty = true;
       for (let key in this.searchForm.controls) {
         let value = this.searchForm.controls[key as keyof typeof this.searchForm.controls].value;
@@ -138,6 +149,15 @@ export class SearchComponent implements OnInit, OnDestroy {
         }
       }
       this.formEmpty = isEmpty;
+    });
+
+    this.civicAddressControl.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
+      this.civicAddressInvalid =
+        this.civicAddressControl.invalid && (this.civicAddressControl.dirty || this.civicAddressControl.touched);
+    });
+
+    this.pidControl.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
+      this.pidInvalid = this.pidControl.invalid && (this.pidControl.dirty || this.pidControl.touched);
     });
   }
 
@@ -166,9 +186,14 @@ export class SearchComponent implements OnInit, OnDestroy {
   async onSubmit() {
     const searchParams = this.getSearchParams();
     const result = await this.searchService.advancedSearchFetch(searchParams);
-    this.mapSearchResults(result);
+    this.searchResultsHidden = false;
 
-    this.setActiveTab();
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.mapSearchResults(result);
+
+      this.setActiveTab();
+    });
   }
 
   expandSearchClicked() {
@@ -201,7 +226,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   onReset() {
     this.searchForm.reset();
-    this.fileTypeFilterDropDownComponent.reset();
+
+    if (this.fileTypeFilterDropDownComponent) {
+      this.fileTypeFilterDropDownComponent.reset();
+    }
   }
 
   getSearchParams(): SearchRequestDto {
@@ -237,9 +265,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       dateDecidedTo: this.searchForm.controls.dateDecidedTo.value
         ? formatDateForApi(this.searchForm.controls.dateDecidedTo.value)
         : undefined,
-      applicationFileTypes: this.searchForm.controls.componentType.value
-        ? this.searchForm.controls.componentType.value
-        : [],
+      fileTypes: this.searchForm.controls.componentType.value ? this.searchForm.controls.componentType.value : [],
     };
   }
 
@@ -331,6 +357,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   private setActiveTab() {
     let maxVal = Math.max(this.applicationTotal, this.noticeOfIntentTotal, this.nonApplicationsTotal);
+
     this.tabGroup.selectedIndex =
       maxVal === this.applicationTotal
         ? APPLICATION_TAB_INDEX

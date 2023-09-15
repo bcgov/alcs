@@ -151,7 +151,8 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      name: 'test',
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearch(
@@ -193,7 +194,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearchApplications(
@@ -217,7 +218,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: [],
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearchNoticeOfIntents(
@@ -240,6 +241,7 @@ describe('SearchController', () => {
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
+      fileTypes: [],
     };
 
     const result = await controller.advancedSearchNonApplications(
@@ -263,7 +265,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['NFUP'],
+      fileTypes: ['NFUP'],
     };
 
     const result = await controller.advancedSearch(
@@ -287,7 +289,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['NOI'],
+      fileTypes: ['NOI'],
     };
 
     const result = await controller.advancedSearch(
@@ -311,7 +313,7 @@ describe('SearchController', () => {
       sortField: '1',
       sortDirection: 'ASC',
       isIncludeOtherParcels: false,
-      applicationFileTypes: ['COV'],
+      fileTypes: ['COV'],
     };
 
     const result = await controller.advancedSearch(
@@ -326,6 +328,46 @@ describe('SearchController', () => {
     expect(
       mockNonApplicationsAdvancedSearchService.searchNonApplications,
     ).toBeCalledWith(mockSearchRequestDto);
+    expect(result.nonApplications).toBeDefined();
+    expect(result.totalNonApplications).toBe(0);
+  });
+
+  it('should NOT call NOI and Non-applications advanced search to retrieve NOIs and Non-applications if no NOI or non-application search fields specified', async () => {
+    const baseMockSearchRequestDto = {
+      pageSize: 1,
+      page: 1,
+      sortField: '1',
+      sortDirection: 'ASC',
+      fileTypes: [],
+    };
+    const mockSearchRequestDto = {
+      ...baseMockSearchRequestDto,
+      isIncludeOtherParcels: false,
+    };
+
+    const result = await controller.advancedSearch({
+      ...mockSearchRequestDto,
+      legacyId: 'test',
+    } as SearchRequestDto);
+
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toBeCalledTimes(1);
+    expect(
+      mockApplicationAdvancedSearchService.searchApplications,
+    ).toBeCalledWith({ ...mockSearchRequestDto, legacyId: 'test' });
+    expect(result.applications).toBeDefined();
+    expect(result.totalApplications).toBe(0);
+
+    expect(
+      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
+    ).toBeCalledTimes(0);
+    expect(result.noticeOfIntents).toBeDefined();
+    expect(result.totalNoticeOfIntents).toBe(0);
+
+    expect(
+      mockNonApplicationsAdvancedSearchService.searchNonApplications,
+    ).toBeCalledTimes(0);
     expect(result.nonApplications).toBeDefined();
     expect(result.totalNonApplications).toBe(0);
   });

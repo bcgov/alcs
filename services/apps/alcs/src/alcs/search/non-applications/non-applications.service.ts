@@ -91,6 +91,12 @@ export class NonApplicationsAdvancedSearchService {
       });
     }
 
+    if (searchDto.fileTypes.length > 0) {
+      query = query.andWhere('nonApp.class IN (:...typeCodes)', {
+        typeCodes: searchDto.fileTypes,
+      });
+    }
+
     return query;
   }
 }

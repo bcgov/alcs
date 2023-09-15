@@ -56,7 +56,7 @@ describe('SearchService', () => {
     sortField: '1',
     sortDirection: 'ASC',
     isIncludeOtherParcels: false,
-    applicationFileTypes: [],
+    fileTypes: [],
   };
 
   beforeEach(() => {
