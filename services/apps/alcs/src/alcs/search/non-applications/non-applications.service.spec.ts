@@ -23,6 +23,7 @@ describe('NonApplicationsService', () => {
     pageSize: 10,
     sortField: 'applicant',
     sortDirection: 'ASC',
+    fileTypes: [],
   };
 
   beforeEach(async () => {
