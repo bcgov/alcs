@@ -12,16 +12,20 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
 import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
 import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
-import { EmailService } from '../../providers/email/email.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -32,10 +36,6 @@ import {
   UpdateApplicationSubmissionReviewDto,
 } from './application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
-import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
-import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
-import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
@@ -46,7 +46,7 @@ export class ApplicationSubmissionReviewController {
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
@@ -189,7 +189,7 @@ export class ApplicationSubmissionReviewController {
     );
 
     if (primaryContact) {
-      await this.emailService.sendApplicationStatusEmail({
+      await this.statusEmailService.sendApplicationStatusEmail({
         generateStatusHtml: generateREVGHtml,
         status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
@@ -291,7 +291,7 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateSUBMApplicationHtml,
             status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
             applicationSubmission: application,
@@ -308,7 +308,7 @@ export class ApplicationSubmissionReviewController {
         );
 
         if (primaryContact) {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateRFFGHtml,
             status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
             applicationSubmission: application,
@@ -394,7 +394,7 @@ export class ApplicationSubmissionReviewController {
 
       if (primaryContact) {
         if (returnDto.reasonForReturn === 'wrongGovernment') {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateWRNGHtml,
             status: SUBMISSION_STATUS.WRONG_GOV,
             applicationSubmission,
@@ -405,7 +405,7 @@ export class ApplicationSubmissionReviewController {
         }
 
         if (returnDto.reasonForReturn === 'incomplete') {
-          await this.emailService.sendApplicationStatusEmail({
+          await this.statusEmailService.sendApplicationStatusEmail({
             generateStatusHtml: generateINCMHtml,
             status: SUBMISSION_STATUS.INCOMPLETE,
             applicationSubmission,

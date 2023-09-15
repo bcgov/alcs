@@ -9,25 +9,24 @@ import { PARENT_TYPE } from '../../../../alcs/card/card-subtask/card-subtask.dto
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { ApplicationOwner } from '../../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../../portal/application-submission/application-submission.entity';
-import { EmailService } from '../../../../providers/email/email.service';
+import { StatusEmailService } from '../../../../providers/email/status-email.service';
 import { ApplicationSubmissionStatusEmailConsumer } from './status-emails.consumer';
 
 describe('ApplicationSubmissionStatusEmailConsumer', () => {
   let consumer: ApplicationSubmissionStatusEmailConsumer;
-  let mockEmailService: DeepMocked<EmailService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
-    mockEmailService = createMock<EmailService>();
-    mockApplicationSubmissionStatusService =
-      createMock<ApplicationSubmissionStatusService>();
+    mockStatusEmailService = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationSubmissionStatusEmailConsumer,
         {
-          provide: EmailService,
-          useValue: mockEmailService,
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: ApplicationSubmissionStatusService,
@@ -39,8 +38,6 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
     consumer = module.get<ApplicationSubmissionStatusEmailConsumer>(
       ApplicationSubmissionStatusEmailConsumer,
     );
-
-    mockEmailService.sendEmail.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -64,12 +61,12 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
 
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockSubmission,
       primaryContact: mockPrimaryContact,
       submissionGovernment: mockLocalGovernment,
     });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await consumer.processSubmissionStatusesAndSendEmails();
 
@@ -80,10 +77,14 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
     ).toBeCalledTimes(1);
 
-    expect(mockEmailService.getApplicationEmailData).toBeCalledWith('fake');
-    expect(mockEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
+      'fake',
+    );
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
+      1,
+    );
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledWith({
       applicationSubmission: mockSubmission,
       government: mockLocalGovernment,
       parentType: PARENT_TYPE.APPLICATION,
@@ -111,12 +112,12 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
 
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockSubmission,
       primaryContact: mockPrimaryContact,
       submissionGovernment: mockLocalGovernment,
     });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await consumer.processSubmissionStatusesAndSendEmails();
 
@@ -127,10 +128,14 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
     ).toBeCalledTimes(1);
 
-    expect(mockEmailService.getApplicationEmailData).toBeCalledWith('fake');
-    expect(mockEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledWith({
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
+      'fake',
+    );
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
+      1,
+    );
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledWith({
       applicationSubmission: mockSubmission,
       government: mockLocalGovernment,
       parentType: PARENT_TYPE.APPLICATION,
@@ -157,12 +162,12 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
 
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockSubmission,
       primaryContact: undefined,
       submissionGovernment: mockLocalGovernment,
     });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await consumer.processSubmissionStatusesAndSendEmails();
 
@@ -173,8 +178,12 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       mockApplicationSubmissionStatusService.saveSubmissionToSubmissionStatus,
     ).toBeCalledTimes(0);
 
-    expect(mockEmailService.getApplicationEmailData).toBeCalledWith('fake');
-    expect(mockEmailService.getApplicationEmailData).toBeCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toBeCalledTimes(0);
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledWith(
+      'fake',
+    );
+    expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
+    expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
+      0,
+    );
   });
 });

@@ -5,6 +5,15 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import {
+  generateSUBGTurApplicantHtml,
+  generateSUBGTurGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import {
+  generateSUBGApplicantHtml,
+  generateSUBGGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-lfng';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
@@ -14,7 +23,9 @@ import { Application } from '../../alcs/application/application.entity';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -26,17 +37,6 @@ import {
 } from './application-submission.dto';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
-import { EmailService } from '../../providers/email/email.service';
-import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import {
-  generateSUBGTurApplicantHtml,
-  generateSUBGTurGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
-import {
-  generateSUBGApplicantHtml,
-  generateSUBGGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-lfng';
 
 describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
@@ -44,7 +44,7 @@ describe('ApplicationSubmissionController', () => {
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
-  let mockEmailService: DeepMocked<EmailService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
 
   const localGovernmentUuid = 'local-government';
   const primaryContactOwnerUuid = 'primary-contact';
@@ -56,7 +56,7 @@ describe('ApplicationSubmissionController', () => {
     mockDocumentService = createMock();
     mockLgService = createMock();
     mockAppValidationService = createMock();
-    mockEmailService = createMock();
+    mockStatusEmailService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionController],
@@ -79,8 +79,8 @@ describe('ApplicationSubmissionController', () => {
           useValue: mockAppValidationService,
         },
         {
-          provide: EmailService,
-          useValue: mockEmailService,
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: ClsService,
@@ -182,13 +182,13 @@ describe('ApplicationSubmissionController', () => {
     mockAppSubmissionService.cancel.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplication,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
 
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const application = await controller.cancel('file-id', {
       user: {
@@ -205,10 +205,12 @@ describe('ApplicationSubmissionController', () => {
       'file-id',
       new User(),
     );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplication,
@@ -397,13 +399,13 @@ describe('ApplicationSubmissionController', () => {
     });
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
 
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -416,10 +418,12 @@ describe('ApplicationSubmissionController', () => {
     );
     expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      2,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(2);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBGTurApplicantHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
@@ -427,7 +431,9 @@ describe('ApplicationSubmissionController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
     });
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBGTurGovernmentHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
@@ -456,10 +462,10 @@ describe('ApplicationSubmissionController', () => {
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
@@ -475,10 +481,12 @@ describe('ApplicationSubmissionController', () => {
       1,
     );
     expect(mockAppSubmissionService.submitToLg).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      2,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(2);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBGApplicantHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
@@ -486,7 +494,9 @@ describe('ApplicationSubmissionController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
     });
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBGGovernmentHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
       applicationSubmission: mockApplicationSubmission,
@@ -522,10 +532,10 @@ describe('ApplicationSubmissionController', () => {
         new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
@@ -541,9 +551,9 @@ describe('ApplicationSubmissionController', () => {
       1,
     );
     expect(mockAppSubmissionService.submitToLg).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      0,
-    );
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(0);
   });
 
   it('should throw an exception if application fails validation', async () => {
@@ -555,7 +565,7 @@ describe('ApplicationSubmissionController', () => {
     mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
       mockApplicationSubmission,
     );
-    mockEmailService.getApplicationEmailData.mockResolvedValue({
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: new ApplicationOwner(),
       submissionGovernment: new LocalGovernment(),

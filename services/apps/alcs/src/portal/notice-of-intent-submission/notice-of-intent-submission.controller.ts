@@ -10,9 +10,16 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
+import {
+  generateSUBMNoiApplicantHtml,
+  generateSUBMNoiGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
 import {
@@ -20,13 +27,6 @@ import {
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
-import { EmailService } from '../../providers/email/email.service';
-import {
-  generateSUBMNoiApplicantHtml,
-  generateSUBMNoiGovernmentHtml,
-} from '../../../../../templates/emails/submitted-to-alc';
-import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
-import { generateCANCNoticeOfIntentHtml } from '../../../../../templates/emails/cancelled';
 
 @Controller('notice-of-intent-submission')
 @UseGuards(PortalAuthGuard)
@@ -36,7 +36,7 @@ export class NoticeOfIntentSubmissionController {
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentValidatorService: NoticeOfIntentSubmissionValidatorService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
   ) {}
 
   @Get()
@@ -145,12 +145,12 @@ export class NoticeOfIntentSubmissionController {
     }
 
     const { primaryContact, submissionGovernment } =
-      await this.emailService.getNoticeOfIntentEmailData(
+      await this.statusEmailService.getNoticeOfIntentEmailData(
         noticeOfIntentSubmission,
       );
 
     if (primaryContact) {
-      await this.emailService.sendNoticeOfIntentStatusEmail({
+      await this.statusEmailService.sendNoticeOfIntentStatusEmail({
         generateStatusHtml: generateCANCNoticeOfIntentHtml,
         status: NOI_SUBMISSION_STATUS.CANCELLED,
         noticeOfIntentSubmission,
@@ -190,12 +190,12 @@ export class NoticeOfIntentSubmissionController {
       );
 
       const { primaryContact, submissionGovernment } =
-        await this.emailService.getNoticeOfIntentEmailData(
+        await this.statusEmailService.getNoticeOfIntentEmailData(
           noticeOfIntentSubmission,
         );
 
       if (primaryContact) {
-        await this.emailService.sendNoticeOfIntentStatusEmail({
+        await this.statusEmailService.sendNoticeOfIntentStatusEmail({
           generateStatusHtml: generateSUBMNoiApplicantHtml,
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,
@@ -206,7 +206,7 @@ export class NoticeOfIntentSubmissionController {
       }
 
       if (submissionGovernment) {
-        await this.emailService.sendNoticeOfIntentStatusEmail({
+        await this.statusEmailService.sendNoticeOfIntentStatusEmail({
           generateStatusHtml: generateSUBMNoiGovernmentHtml,
           status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
           noticeOfIntentSubmission,

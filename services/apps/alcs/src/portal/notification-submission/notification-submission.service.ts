@@ -2,8 +2,8 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
-import { filterMiddleware } from '@nestjs/core/middleware/utils';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as dayjs from 'dayjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -11,9 +11,10 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { generateSRWTemplate } from '../../../../../templates/emails/notifications/srw-notice.template';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
@@ -378,5 +379,47 @@ export class NotificationSubmissionService {
         uuid,
       },
     });
+  }
+
+  async generateSrwEmailData(
+    submission: NotificationSubmission,
+    pdfDocument: NotificationDocument,
+  ) {
+    const notification = await this.notificationService.getByFileNumber(
+      submission.fileNumber,
+    );
+
+    const emailTemplate = generateSRWTemplate({
+      fileNumber: submission.fileNumber,
+      contactName: `${submission.contactFirstName} ${submission.contactLastName}`,
+      status: 'ALC Response Sent',
+      dateSubmitted: dayjs(notification.dateSubmittedToAlc).format(
+        'MMMM DD, YYYY',
+      ),
+      fileName: pdfDocument.document.fileName,
+      submittersFileNumber: submission.submittersFileNumber!,
+    });
+
+    let ccEmails: string[] = [];
+    if (submission.localGovernmentUuid) {
+      const localGovernment = await this.localGovernmentService.getByUuid(
+        submission.localGovernmentUuid,
+      );
+
+      if (localGovernment && localGovernment.emails) {
+        ccEmails = localGovernment.emails;
+      }
+    }
+
+    const parentId = await this.notificationService.getUuid(
+      submission.fileNumber,
+    );
+
+    return {
+      html: emailTemplate.html,
+      cc: ccEmails,
+      to: submission.contactEmail!,
+      parentId,
+    };
   }
 }

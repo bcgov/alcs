@@ -3,48 +3,23 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { MJMLParseResults } from 'mjml-core';
 import * as config from 'config';
 import { of } from 'rxjs';
 import { Repository } from 'typeorm';
+import { DocumentService } from '../../document/document.service';
 import { EmailStatus } from './email-status.entity';
 import { EmailService } from './email.service';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { ApplicationSubmissionService } from '../../portal/application-submission/application-submission.service';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
-import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
-import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
-import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
-import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
-import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
-import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 
 describe('EmailService', () => {
   let service: EmailService;
   let mockHttpService;
   let mockRepo: DeepMocked<Repository<EmailStatus>>;
-  let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
-  let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockApplicationService: DeepMocked<ApplicationService>;
-  let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
-  let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockHttpService = createMock();
     mockRepo = createMock();
-    mockLocalGovernmentService = createMock<LocalGovernmentService>();
-    mockApplicationSubmissionService =
-      createMock<ApplicationSubmissionService>();
-    mockApplicationService = createMock<ApplicationService>();
-    mockNoticeOfIntentSubmissionService =
-      createMock<NoticeOfIntentSubmissionService>();
-    mockNoticeOfIntentService = createMock<NoticeOfIntentService>();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
@@ -55,24 +30,8 @@ describe('EmailService', () => {
           useValue: mockHttpService,
         },
         {
-          provide: LocalGovernmentService,
-          useValue: mockLocalGovernmentService,
-        },
-        {
-          provide: ApplicationSubmissionService,
-          useValue: mockApplicationSubmissionService,
-        },
-        {
-          provide: ApplicationService,
-          useValue: mockApplicationService,
-        },
-        {
-          provide: NoticeOfIntentSubmissionService,
-          useValue: mockNoticeOfIntentSubmissionService,
-        },
-        {
-          provide: NoticeOfIntentService,
-          useValue: mockNoticeOfIntentService,
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: getRepositoryToken(EmailStatus),
@@ -155,125 +114,5 @@ describe('EmailService', () => {
 
     expect(mockRepo.save).toHaveBeenCalledTimes(2);
     expect(mockHttpService.post).toHaveBeenCalledTimes(3);
-  });
-
-  it('should return submission government if found', async () => {
-    const localGovernmentUuid = 'fake-uuid';
-    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
-    const mockApplicationSubmission = new ApplicationSubmission({
-      localGovernmentUuid,
-    });
-
-    mockLocalGovernmentService.getByUuid.mockResolvedValue(mockGovernment);
-
-    const res = await service.getSubmissionGovernmentOrFail(
-      mockApplicationSubmission,
-    );
-
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
-      mockApplicationSubmission.localGovernmentUuid,
-    );
-    expect(res).toStrictEqual(mockGovernment);
-  });
-
-  it('should throw an exception if no submission government is found', async () => {
-    mockLocalGovernmentService.getByUuid.mockResolvedValue(null);
-
-    const mockApplicationSubmission = new ApplicationSubmission({
-      localGovernmentUuid: 'fake-uuid',
-    });
-    const promise = service.getSubmissionGovernmentOrFail(
-      mockApplicationSubmission,
-    );
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
-      mockApplicationSubmission.localGovernmentUuid,
-    );
-    await expect(promise).rejects.toMatchObject(
-      new Error('Submission local government not found'),
-    );
-  });
-
-  it('should call through services and return application data', async () => {
-    const mockSubmission = new ApplicationSubmission();
-    mockApplicationSubmissionService.getOrFailByFileNumber.mockResolvedValue(
-      mockSubmission,
-    );
-
-    const res = await service.getApplicationEmailData('file-number');
-
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationSubmissionService.getOrFailByFileNumber,
-    ).toBeCalledWith('file-number');
-    expect(res).toStrictEqual({
-      applicationSubmission: mockSubmission,
-      primaryContact: undefined,
-      submissionGovernment: null,
-    });
-  });
-
-  it('should call through services and return notice of intent data', async () => {
-    const res = await service.getNoticeOfIntentEmailData(
-      new NoticeOfIntentSubmission(),
-    );
-
-    expect(res).toStrictEqual({
-      primaryContact: undefined,
-      submissionGovernment: null,
-    });
-  });
-
-  it('should call through services to set application email template', async () => {
-    const mockData = {
-      generateStatusHtml: () => ({} as MJMLParseResults),
-      status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-      applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
-      parentType: 'application' as PARENT_TYPE,
-      government: new LocalGovernment({ emails: [] }),
-      primaryContact: new ApplicationOwner(),
-    };
-
-    mockApplicationSubmissionService.getStatus.mockResolvedValue(
-      new ApplicationSubmissionStatusType(),
-    );
-    mockApplicationService.fetchApplicationTypes.mockResolvedValue([]);
-    mockApplicationService.getUuid.mockResolvedValue('fake-uuid');
-
-    await service.sendApplicationStatusEmail(mockData);
-
-    expect(mockApplicationSubmissionService.getStatus).toBeCalledTimes(1);
-    expect(mockApplicationSubmissionService.getStatus).toBeCalledWith(
-      mockData.status,
-    );
-    expect(mockApplicationService.fetchApplicationTypes).toBeCalledTimes(1);
-  });
-
-  it('should call through services to set notice of intent email template', async () => {
-    const mockData = {
-      generateStatusHtml: () => ({} as MJMLParseResults),
-      status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
-      parentType: 'notice-of-intent' as PARENT_TYPE,
-      government: new LocalGovernment({ emails: [] }),
-      primaryContact: new NoticeOfIntentOwner(),
-    };
-
-    mockNoticeOfIntentSubmissionService.getStatus.mockResolvedValue(
-      new NoticeOfIntentSubmissionStatusType(),
-    );
-    mockNoticeOfIntentService.listTypes.mockResolvedValue([]);
-    mockNoticeOfIntentService.getUuid.mockResolvedValue('fake-uuid');
-
-    await service.sendNoticeOfIntentStatusEmail(mockData);
-
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toBeCalledTimes(1);
-    expect(mockNoticeOfIntentSubmissionService.getStatus).toBeCalledWith(
-      mockData.status,
-    );
-    expect(mockNoticeOfIntentService.listTypes).toBeCalledTimes(1);
   });
 });

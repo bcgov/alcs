@@ -2,6 +2,10 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -15,12 +19,12 @@ import { LocalGovernment } from '../../alcs/local-government/local-government.en
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
 import {
-  DocumentCode,
   DOCUMENT_TYPE,
+  DocumentCode,
 } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import { EmailService } from '../../providers/email/email.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
 import {
@@ -33,10 +37,6 @@ import { ApplicationSubmissionReviewController } from './application-submission-
 import { ApplicationSubmissionReviewDto } from './application-submission-review.dto';
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from './application-submission-review.service';
-import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
-import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
-import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
-import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 
 describe('ApplicationSubmissionReviewController', () => {
   let controller: ApplicationSubmissionReviewController;
@@ -46,7 +46,7 @@ describe('ApplicationSubmissionReviewController', () => {
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockAppService: DeepMocked<ApplicationService>;
-  let mockEmailService: DeepMocked<EmailService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   const mockLG = new LocalGovernment({
@@ -67,7 +67,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
     mockAppService = createMock();
-    mockEmailService = createMock();
+    mockStatusEmailService = createMock();
 
     applicationReview = new ApplicationSubmissionReview({
       applicationFileNumber: fileNumber,
@@ -106,8 +106,8 @@ describe('ApplicationSubmissionReviewController', () => {
           useValue: mockAppService,
         },
         {
-          provide: EmailService,
-          useValue: mockEmailService,
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: ClsService,
@@ -217,7 +217,7 @@ describe('ApplicationSubmissionReviewController', () => {
   it('should send an email through the service when creating with a valid primary contact', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
     mockAppReviewService.startReview.mockResolvedValue(applicationReview);
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const user = new User({
       bceidBusinessGuid: 'id',
@@ -243,7 +243,6 @@ describe('ApplicationSubmissionReviewController', () => {
         label: '',
       }),
     );
-    mockEmailService.sendEmail.mockResolvedValue();
 
     await controller.create(fileNumber, {
       user: {
@@ -251,9 +250,9 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     });
 
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
     expect(mockLGService.getByGuid).toHaveBeenCalledTimes(2);
     expect(mockAppReviewService.startReview).toHaveBeenCalledTimes(1);
     expect(
@@ -342,7 +341,7 @@ describe('ApplicationSubmissionReviewController', () => {
     );
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppDocService.list.mockResolvedValue([]);
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     mockAppReviewService.verifyComplete.mockReturnValue({
       ...applicationReview,
@@ -386,10 +385,12 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.SUBMITTED_TO_ALC,
     );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateSUBMApplicationHtml,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockSubmission,
@@ -437,7 +438,7 @@ describe('ApplicationSubmissionReviewController', () => {
       errors: [],
     });
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
     mockAppDocService.list.mockResolvedValue([]);
 
     await controller.finish(fileNumber, {
@@ -459,10 +460,12 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
     );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateRFFGHtml,
       status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       applicationSubmission: mockSubmission,
@@ -498,7 +501,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const documents = [
       new ApplicationDocument({
@@ -559,10 +562,12 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
     ).toHaveBeenCalledTimes(2);
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateINCMHtml,
       status: SUBMISSION_STATUS.INCOMPLETE,
       applicationSubmission: mockSubmission,
@@ -598,7 +603,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const documents = [
       new ApplicationDocument({
@@ -635,10 +640,12 @@ describe('ApplicationSubmissionReviewController', () => {
       },
     );
 
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockEmailService.sendApplicationStatusEmail).toHaveBeenCalledWith({
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
       generateStatusHtml: generateWRNGHtml,
       status: SUBMISSION_STATUS.WRONG_GOV,
       applicationSubmission: mockSubmission,

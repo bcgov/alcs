@@ -11,6 +11,7 @@ import {
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
@@ -33,7 +34,7 @@ describe('ApplicationController', () => {
   let applicationService: DeepMocked<ApplicationService>;
   let notificationService: DeepMocked<MessageService>;
   let cardService: DeepMocked<CardService>;
-  let emailService: DeepMocked<EmailService>;
+  let statusEmailService: DeepMocked<StatusEmailService>;
 
   const mockApplicationEntity = initApplicationMockEntity();
 
@@ -71,10 +72,10 @@ describe('ApplicationController', () => {
   };
 
   beforeEach(async () => {
-    applicationService = createMock<ApplicationService>();
-    notificationService = createMock<MessageService>();
-    cardService = createMock<CardService>();
-    emailService = createMock<EmailService>();
+    applicationService = createMock();
+    notificationService = createMock();
+    cardService = createMock();
+    statusEmailService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -94,8 +95,8 @@ describe('ApplicationController', () => {
           useValue: cardService,
         },
         {
-          provide: EmailService,
-          useValue: emailService,
+          provide: StatusEmailService,
+          useValue: statusEmailService,
         },
         {
           provide: ClsService,
@@ -391,19 +392,19 @@ describe('ApplicationController', () => {
       localGovernmentUuid,
     });
 
-    emailService.getApplicationEmailData.mockResolvedValue({
+    statusEmailService.getApplicationEmailData.mockResolvedValue({
       applicationSubmission: mockApplicationSubmission,
       primaryContact: mockOwner,
       submissionGovernment: mockGovernment,
     });
-    emailService.sendApplicationStatusEmail.mockResolvedValue();
+    statusEmailService.sendApplicationStatusEmail.mockResolvedValue();
     applicationService.cancel.mockResolvedValue();
 
     await controller.cancel(mockApplicationEntity.uuid);
 
     expect(applicationService.cancel).toBeCalledTimes(1);
-    expect(emailService.sendApplicationStatusEmail).toBeCalledTimes(1);
-    expect(emailService.sendApplicationStatusEmail).toBeCalledWith({
+    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledWith({
       generateStatusHtml: generateCANCApplicationHtml,
       status: SUBMISSION_STATUS.CANCELLED,
       applicationSubmission: mockApplicationSubmission,

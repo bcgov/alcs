@@ -1,10 +1,8 @@
 import { MJMLParseResults } from 'mjml-core';
+import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/status-email.service';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { header, footer, notificationOnly, portalButton } from '../partials';
-import {
-  StatusUpdateEmail,
-  appFees,
-} from '../../../apps/alcs/src/providers/email/email.service';
+import { appFees } from '../submitted-to-lfng';
 
 const template = `<mjml>
   <mj-head>

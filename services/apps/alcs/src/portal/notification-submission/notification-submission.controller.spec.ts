@@ -8,6 +8,7 @@ import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { Notification } from '../../alcs/notification/notification.entity';
@@ -283,6 +284,9 @@ describe('NotificationSubmissionController', () => {
       localGovernmentUuid,
     });
 
+    mockNotificationSubmissionService.generateSrwEmailData.mockResolvedValue(
+      {} as any,
+    );
     mockNotificationSubmissionService.submitToAlcs.mockResolvedValue(
       new Notification(),
     );
@@ -297,8 +301,11 @@ describe('NotificationSubmissionController', () => {
         mockSubmission as ValidatedNotificationSubmission,
       errors: [],
     });
-    mockSrwDocumentService.generateAndAttach.mockResolvedValue();
+    mockSrwDocumentService.generateAndAttach.mockResolvedValue(
+      new NotificationDocument(),
+    );
     mockNotificationSubmissionService.updateStatus.mockResolvedValue();
+    mockEmailService.sendEmail.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -323,5 +330,9 @@ describe('NotificationSubmissionController', () => {
       undefined,
       NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
     );
+    expect(
+      mockNotificationSubmissionService.generateSrwEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
   });
 });

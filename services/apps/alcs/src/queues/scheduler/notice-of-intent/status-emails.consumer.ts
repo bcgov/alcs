@@ -8,7 +8,7 @@ import { PARENT_TYPE } from '../../../alcs/card/card-subtask/card-subtask.dto';
 import { NOI_SUBMISSION_STATUS } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentSubmissionStatusService } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
-import { EmailService } from '../../../providers/email/email.service';
+import { StatusEmailService } from '../../../providers/email/status-email.service';
 import { QUEUES } from '../scheduler.service';
 
 dayjs.extend(utc);
@@ -20,7 +20,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
 
   constructor(
     private submissionStatusService: NoticeOfIntentSubmissionStatusService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
   ) {}
 
   @Process()
@@ -39,12 +39,12 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer {
       for (const submissionStatus of submissionStatuses) {
         try {
           const { primaryContact, submissionGovernment } =
-            await this.emailService.getNoticeOfIntentEmailData(
+            await this.statusEmailService.getNoticeOfIntentEmailData(
               submissionStatus.submission,
             );
 
           if (primaryContact) {
-            await this.emailService.sendNoticeOfIntentStatusEmail({
+            await this.statusEmailService.sendNoticeOfIntentStatusEmail({
               generateStatusHtml: generateALCDNoticeOfIntentHtml,
               status: NOI_SUBMISSION_STATUS.ALC_DECISION,
               noticeOfIntentSubmission: submissionStatus.submission,
