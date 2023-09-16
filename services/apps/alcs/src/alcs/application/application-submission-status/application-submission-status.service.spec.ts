@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { In, IsNull, LessThanOrEqual, Repository } from 'typeorm';
+import { And, In, IsNull, LessThan, Not, Repository } from 'typeorm';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
 import { ApplicationSubmissionStatusService } from './application-submission-status.service';
 import { ApplicationSubmissionStatusType } from './submission-status-type.entity';
@@ -433,12 +433,18 @@ describe('ApplicationSubmissionStatusService', () => {
   });
 
   it('should call find to retrieve ALCD and REVA statuses', async () => {
+    const mockStatuses = [
+      new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.ALC_DECISION,
+      }),
+    ];
     mockApplicationSubmissionToSubmissionStatusRepository.find.mockResolvedValue(
-      [],
+      mockStatuses,
     );
     const date = new Date();
 
-    await service.getSubmissionToSubmissionStatusForSendingEmails(date);
+    const result =
+      await service.getSubmissionToSubmissionStatusForSendingEmails(date);
 
     expect(
       mockApplicationSubmissionToSubmissionStatusRepository.find,
@@ -452,12 +458,15 @@ describe('ApplicationSubmissionStatusService', () => {
           SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
         ]),
         emailSentDate: IsNull(),
-        effectiveDate: LessThanOrEqual(date),
+        effectiveDate: And(Not(IsNull()), LessThan(date)),
       },
       relations: {
-        submission: true,
+        submission: {
+          submissionStatuses: true,
+        },
       },
     });
+    expect(result).toEqual(mockStatuses);
   });
 
   it('should call save to save SubmissionToSubmissionStatus', async () => {
