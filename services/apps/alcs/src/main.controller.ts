@@ -1,17 +1,20 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
-import { MainService } from './main.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
+import { MainService } from './main.service';
 
 @Controller()
 export class MainController {
+  private logger = new Logger(MainController.name);
+
   constructor(private appService: MainService) {}
 
   @Get(['', 'health'])
   @Public()
   async getHealthStatus(): Promise<HealthCheckDto> {
+    this.logger.debug('Test of logger debug message');
     return await this.appService.getHealthStatus();
   }
 
