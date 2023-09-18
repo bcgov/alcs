@@ -168,7 +168,9 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
     this.calculateLotSize();
   }
 
-  onChangeLotSize() {
+  onChangeLotSize(i: number, event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.proposedLots[i].size = target.value;
     this.calculateLotSize();
   }
 

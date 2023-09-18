@@ -75,6 +75,7 @@ import { ApplicationDecisionV1Service } from './application-decision/application
   exports: [
     ApplicationModificationService,
     ApplicationDecisionV1Service,
+    ApplicationDecisionMeetingService,
     ApplicationReconsiderationService,
   ],
 })
