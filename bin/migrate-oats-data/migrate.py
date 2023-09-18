@@ -20,11 +20,20 @@ from noi import (
     process_nois,
     clean_nois,
 )
-from submissions import(
+from submissions import (
     process_alcs_app_submissions,
     clean_application_submission,
 )
 from constants import BATCH_UPLOAD_SIZE
+
+from applications.application_submission_status_email import (
+    process_application_submission_status_emails,
+    clean_notice_of_intent_submission_status_emails,
+)
+from noi.noi_submission_status_email import (
+    process_notice_of_intent_submission_status_emails,
+    clean_application_submission_status_emails,
+)
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
@@ -60,6 +69,7 @@ def document_import_command_parser(import_batch_size, subparsers):
     )
     document_import_command.set_defaults(func=process_documents)
 
+
 def document_noi_import_command_parser(import_batch_size, subparsers):
     document_noi_import_command = subparsers.add_parser(
         "document-noi-import",
@@ -88,6 +98,7 @@ def application_document_import_command_parser(import_batch_size, subparsers):
         help=f"batch size (default: {import_batch_size})",
     )
     application_document_import_command.set_defaults(func=import_batch_size)
+
 
 def noi_document_import_command_parser(import_batch_size, subparsers):
     noi_document_import_command = subparsers.add_parser(
@@ -118,6 +129,7 @@ def app_prep_import_command_parser(import_batch_size, subparsers):
     )
     app_prep_import_command.set_defaults(func=import_batch_size)
 
+
 def noi_import_command_parser(import_batch_size, subparsers):
     noi_import_command = subparsers.add_parser(
         "noi-import",
@@ -132,6 +144,7 @@ def noi_import_command_parser(import_batch_size, subparsers):
     )
     noi_import_command.set_defaults(func=import_batch_size)
 
+
 def import_command_parser(subparsers):
     import_command = subparsers.add_parser(
         "import",
@@ -145,6 +158,7 @@ def import_command_parser(subparsers):
         help=f"batch size (default: {import_batch_size})",
     )
     import_command.set_defaults(func=import_batch_size)
+
 
 def app_sub_import_command_parser(import_batch_size, subparsers):
     app_sub_import_command = subparsers.add_parser(
@@ -218,7 +232,7 @@ if __name__ == "__main__":
                     process_documents(batch_size=import_batch_size)
 
                     console.log("Processing NOI specific documents:")
-                    process_documents_noi(batch_size=import_batch_size)                    
+                    process_documents_noi(batch_size=import_batch_size)
 
                     console.log("Processing application documents:")
                     process_application_documents(batch_size=import_batch_size)
@@ -232,6 +246,11 @@ if __name__ == "__main__":
                     console.log("Processing application submission:")
                     process_alcs_app_submissions(batch_size=import_batch_size)
 
+                    # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
+                    #       must be the last ones in the migrate etl
+                    console.log("Processing submission status emails")
+                    process_application_submission_status_emails()
+                    process_notice_of_intent_submission_status_emails()
                     console.log("Done")
             case "clean":
                 with console.status("[bold green]Cleaning previous ETL...") as status:
@@ -244,6 +263,8 @@ if __name__ == "__main__":
                     clean_application_submission()
                     clean_applications()
                     clean_nois()
+                    clean_notice_of_intent_submission_status_emails(),
+                    clean_notice_of_intent_submission_status_emails(),
 
                     console.log("Done")
             case "document-import":

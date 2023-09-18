@@ -1,9 +1,6 @@
 from common import (
     ALRChangeCode,
     AlcsNfuTypeCode,
-    AlcsNfuSubTypeCode,
-    OatsCapabilitySourceCode,
-    OatsAgriCapabilityCodes,
     OATS_NFU_SUBTYPES,
     AlcsAgCap,
     AlcsAgCapSource,
@@ -47,11 +44,13 @@ class OatsToAlcsAgCap(Enum):
     S = AlcsAgCap.Secondary.value
     U = AlcsAgCap.Unclassified.value
 
+
 class OatsLegislationCodes(Enum):
     SEC_30_1 = AlcsApplicantType.Land_owner.value
     SEC_29_1 = AlcsApplicantType.LFNG.value
     SEC_17_3 = AlcsApplicantType.Land_owner.value
     SEC_17_1 = AlcsApplicantType.LFNG.value
+
 
 @inject_conn_pool
 def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
@@ -242,14 +241,15 @@ def mapOatsToAlcsAppPrep(data):
 
     return data
 
-def mapOatsToAlcsLegislationCode(data):
 
+def mapOatsToAlcsLegislationCode(data):
     if data["legislation_code"]:
         data["legislation_code"] = str(
             OatsLegislationCodes[data["legislation_code"]].value
         )
 
     return data
+
 
 def get_update_query(unique_fields):
     # unique_fields takes input from called function and appends to query
@@ -271,12 +271,14 @@ def get_update_query(unique_fields):
     """
     return query.format(unique_fields=unique_fields)
 
+
 def get_update_query_for_nfu():
     unique_fields = """,
             nfu_use_type = %(nonfarm_use_type_code)s,
             nfu_use_sub_type = %(nonfarm_use_subtype_code)s,
             proposal_end_date = %(nonfarm_use_end_date)s"""
     return get_update_query(unique_fields)
+
 
 def get_update_query_for_nar():
     # naruSubtype is a part of submission, import there
@@ -304,6 +306,7 @@ def get_update_query_for_other():
     # leaving blank insert for now
     unique_fields = """"""
     return get_update_query(unique_fields)
+
 
 def map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
     for dict_obj in OATS_NFU_SUBTYPES:
