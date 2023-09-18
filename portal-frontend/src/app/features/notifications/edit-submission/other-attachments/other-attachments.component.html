@@ -6,10 +6,20 @@
   </p>
 </div>
 <section>
-  <h4>Upload Optional Attachments (Max. 100 MB per attachment)</h4>
+  <span class='subheading2'>Upload Optional Attachments (Max. 100 MB per attachment)</span>
+  <div class="uploader">
+    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
+  </div>
   <form [formGroup]="form">
     <div class="scrollable">
       <table mat-table [dataSource]="otherFiles">
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef>File Name</th>
+          <td mat-cell *matCellDef="let element">
+            <a (click)="openFile(element.uuid)">{{ element.fileName }}</a>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="type">
           <th mat-header-cell *matHeaderCellDef>Type</th>
           <td mat-cell *matCellDef="let element">
@@ -64,13 +74,6 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="fileName">
-          <th mat-header-cell *matHeaderCellDef>File Name</th>
-          <td mat-cell *matCellDef="let element">
-            <a (click)="openFile(element.uuid)">{{ element.fileName }}</a>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Action</th>
           <td mat-cell class="actions" *matCellDef="let element">
@@ -87,9 +90,6 @@
       </table>
     </div>
   </form>
-  <div class="uploader">
-    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
-  </div>
 </section>
 <div class="button-container">
   <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>

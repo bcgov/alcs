@@ -10,11 +10,11 @@
   <div class="full-width transferee-table">
     <div class="subheading2">Type</div>
     <div class="subheading2">Full Name</div>
-    <div class="subheading2">Organization</div>
+    <div class="subheading2">Organization Name</div>
     <div class="subheading2">Phone</div>
     <div class="subheading2">Email</div>
     <ng-container *ngFor="let transferee of notificationSubmission.transferees">
-      <div>{{ transferee.type.label }}</div>
+      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
       <div>{{ transferee.displayName }}</div>
       <div>
         {{ transferee.organizationName }}
@@ -23,7 +23,7 @@
       <div>
         <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
       </div>
-      <div>{{ transferee.displayName }}</div>
+      <div>{{ transferee.email }}</div>
     </ng-container>
   </div>
   <app-no-data [showRequired]="showErrors" *ngIf="notificationSubmission.transferees.length === 0"></app-no-data>
@@ -62,7 +62,11 @@
     <div class="subheading2 grid-1">Email</div>
     <div class="grid-double">
       {{ notificationSubmission.contactEmail }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!notificationSubmission.contactEmail"></app-no-data>
+      <app-no-data
+        errorText="Required Field - Emails must match to be saved"
+        [showRequired]="showErrors"
+        *ngIf="!notificationSubmission.contactEmail"
+      ></app-no-data>
       <app-validation-error *ngIf="!(notificationSubmission.contactEmail || '' | emailValid)"
         >Invalid Format</app-validation-error
       >
@@ -92,7 +96,7 @@
   </div>
 </section>
 <section *ngIf="notificationSubmission">
-  <h3>5. Proposal</h3>
+  <h3>5. Purpose of SRW</h3>
   <app-proposal-details
     [showErrors]="showErrors"
     [showEdit]="showEdit"
@@ -104,20 +108,21 @@
   <h3>6. Optional Attachments</h3>
   <div *ngIf="notificationSubmission" class="review-table">
     <div class="other-attachments full-width">
-      <div class="grid-1 subheading2">Type</div>
-      <div class="grid-2 subheading2">Description</div>
-      <div class="grid-3 subheading2">File Name</div>
+      <div class="grid-1 subheading2">File Name</div>
+      <div class="grid-2 subheading2">Type</div>
+      <div class="grid-3 subheading2">Description</div>
+
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+        </div>
+        <div class="grid-2">
           {{ file.type?.label }}
           <app-no-data [showRequired]="showErrors" *ngIf="!file.type"></app-no-data>
         </div>
-        <div class="grid-2">
+        <div class="grid-3">
           {{ file.description }}
           <app-no-data [showRequired]="showErrors" *ngIf="!file.description"></app-no-data>
-        </div>
-        <div class="grid-3">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
       </ng-container>
       <div class="full-width">

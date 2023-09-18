@@ -50,6 +50,10 @@ export class PrimaryContactComponent extends StepComponent implements OnInit, On
         });
       }
     });
+
+    if (this.showErrors) {
+      this.form.markAllAsTouched();
+    }
   }
 
   async onSave() {

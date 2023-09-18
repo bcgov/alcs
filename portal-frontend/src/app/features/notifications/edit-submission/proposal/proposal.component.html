@@ -1,6 +1,6 @@
 <div class="step-description">
   <h2>Purpose of SRW</h2>
-  <p>All fields are required unless stated optional.</p>
+  <p>* All fields are required unless stated optional.</p>
 </div>
 <app-warning-banner>
   The information entered below will be reflected in the automatically generated notification response and must match
@@ -127,7 +127,7 @@
 </form>
 <form [formGroup]="surveyForm">
   <div class="scrollable">
-    <table mat-table [dataSource]="surveyPlans">
+    <table class='table' mat-table [dataSource]="surveyPlans">
       <ng-container matColumnDef="fileName">
         <th mat-header-cell *matHeaderCellDef>File Name</th>
         <td mat-cell *matCellDef="let element">
@@ -136,7 +136,10 @@
       </ng-container>
 
       <ng-container matColumnDef="surveyPlan">
-        <th mat-header-cell *matHeaderCellDef>Survey Plan Number</th>
+        <th mat-header-cell *matHeaderCellDef>
+          Survey Plan Number
+          <div class="subtext">As listed on the survey plan certification</div>
+        </th>
         <td mat-cell *matCellDef="let element">
           <mat-form-field appearance="outline">
             <input
@@ -165,7 +168,10 @@
       </ng-container>
 
       <ng-container matColumnDef="control">
-        <th mat-header-cell *matHeaderCellDef>Control Number</th>
+        <th mat-header-cell *matHeaderCellDef>
+          Control Number
+          <div class="subtext">The version of the plan, as listed on the survey plan certification</div>
+        </th>
         <td mat-cell *matCellDef="let element">
           <mat-form-field appearance="outline">
             <input
@@ -204,7 +210,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
       <tr class="mat-row" *matNoDataRow>
-        <td class="no-data-text" colspan="6">No attachments</td>
+        <td class="no-data-text" colspan="4">No documents. Upload a survey plan above to add a row to the table.</td>
       </tr>
     </table>
   </div>

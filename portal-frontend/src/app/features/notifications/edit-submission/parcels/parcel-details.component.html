@@ -1,7 +1,7 @@
 <div>
   <div class="step-description">
-    <h3>Identify Parcels Under SRW</h3>
-    <p>Provide parcel identification and registered ownership information for each parcel.</p>
+    <h3>Identify Parcel(s) Under the Statutory Right of Way</h3>
+    <p>Provide parcel identification information for each parcel under the SRW.</p>
     <p>*All fields are required unless stated optional.</p>
   </div>
   <mat-expansion-panel
@@ -12,7 +12,9 @@
     (opened)="openParcel(parcel.uuid)"
   >
     <mat-expansion-panel-header>
-      <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
+      <mat-panel-title>
+        <span class='subheading1'>Parcel #{{ parcelInd + 1 }} Details</span>
+      </mat-panel-title>
     </mat-expansion-panel-header>
 
     <app-notification-parcel-entry
@@ -26,7 +28,7 @@
     <div>
       <div class="flex-evenly-wrap parcel-buttons-wrappers">
         <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
-          Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+          Save Parcel #{{ parcelInd + 1 }} Details
         </button>
         <button
           class="margin-top-1-half"

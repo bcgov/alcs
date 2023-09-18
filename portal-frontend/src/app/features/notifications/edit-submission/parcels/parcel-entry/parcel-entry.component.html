@@ -1,7 +1,7 @@
 <form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
     <label>Select ownership type:</label>
-    <div class="warning">
+    <div class="subtext">
       The answer to the following question will change the rest of the notice of intent form. Do not change this answer
       once selected.
     </div>
@@ -114,7 +114,7 @@
       </div>
     </div>
 
-    <div *ngIf="isCrownLand">
+    <div class="full-row" *ngIf="isCrownLand">
       <label for="pin">PIN (optional)</label>
       <div class="subtext">Unique numeric identifier for Crown land parcels</div>
       <mat-form-field appearance="outline">
