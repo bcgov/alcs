@@ -50,7 +50,7 @@ const template = `<mjml>
     <mj-section background-color='white' padding='24px 0px 48px 0px'>
       <mj-column width='600px' css-class='line-height'>
         <mj-text font-size='16px'>
-          The ALC's attached PDF response is proof that the notification of statutory right of way has been provided for a s. 218 Statutory Right of Way of the Land Title Act as required by s.18.1(2) of the Agricultural Land Commission Act.
+          The ALC's attached PDF response is proof that the notification of statutory right of way has been provided for a s. 218 Statutory Right of Way of the <i>Land Title Act</i> as required by s.18.1(2) of the <i>Agricultural Land Commission Act</i>.
         </mj-text>
         <mj-text font-size='16px'>
           The ALC's attached PDF response must be appended as an additional document to the LTSA SRW application package.
