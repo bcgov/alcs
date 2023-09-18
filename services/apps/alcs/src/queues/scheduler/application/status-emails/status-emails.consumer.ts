@@ -30,6 +30,10 @@ export class ApplicationSubmissionStatusEmailConsumer {
   @Process()
   async processSubmissionStatusesAndSendEmails() {
     try {
+      this.logger.debug(
+        'Starting application submission status email consumer.',
+      );
+
       const tomorrow = dayjs(new Date())
         .tz('Canada/Pacific')
         .startOf('day')
