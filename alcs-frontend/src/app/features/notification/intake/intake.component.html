@@ -1,0 +1,49 @@
+<h3>ALC Intake</h3>
+<div class="intake">
+  <div>
+    <div class="subheading2">Submitted to ALC</div>
+    <app-inline-datepicker
+      [value]="notification?.dateSubmittedToAlc"
+      (save)="updateNotificationDate('dateSubmittedToAlc', $event)"
+      [required]="true"
+    ></app-inline-datepicker>
+  </div>
+  <div>
+    <div class="subheading2 left">
+      ALC Auto-email Response
+      <mat-icon
+        class="icon"
+        matTooltip='Portal status updated to "ALC Response Sent" when auto-email is successfully sent.'
+        >info_outline
+      </mat-icon>
+    </div>
+    <ng-container *ngIf="responseSent && responseDate">
+      <div class="left">
+        <mat-icon class="sent-text">check</mat-icon>
+        <span class="sent-text">
+          <strong>Sent</strong>
+        </span>
+        <span class='response-date'>{{ responseDate | momentFormat }}</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!responseSent">
+      <div class="failed-text">
+        <mat-icon>warning</mat-icon>Failed
+        <button mat-flat-button color="primary" (click)="resendResponse()">Resend</button>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="notification">
+    <div class="subheading2">Local / First Nation Government</div>
+    <app-inline-dropdown
+      [options]="localGovernments"
+      [value]="notification.localGovernment.uuid"
+      (save)="onSaveLocalGovernment($event)"
+    >
+    </app-inline-dropdown>
+  </div>
+  <div *ngIf="contactEmail">
+    <div class="subheading2">Primary Contact Email</div>
+    <app-inline-text [value]="contactEmail" (save)="updateSubmissionEmail($event)"></app-inline-text>
+  </div>
+</div>

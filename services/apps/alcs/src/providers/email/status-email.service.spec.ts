@@ -1,6 +1,5 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
-import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MJMLParseResults } from 'mjml-core';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
@@ -96,24 +95,6 @@ describe('StatusEmailService', () => {
       mockApplicationSubmission.localGovernmentUuid,
     );
     expect(res).toStrictEqual(mockGovernment);
-  });
-
-  it('should throw an exception if no submission government is found', async () => {
-    mockLocalGovernmentService.getByUuid.mockResolvedValue(null);
-
-    const mockApplicationSubmission = new ApplicationSubmission({
-      localGovernmentUuid: 'fake-uuid',
-    });
-    const promise = service.getSubmissionGovernmentOrFail(
-      mockApplicationSubmission,
-    );
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledTimes(1);
-    expect(mockLocalGovernmentService.getByUuid).toHaveBeenCalledWith(
-      mockApplicationSubmission.localGovernmentUuid,
-    );
-    await expect(promise).rejects.toMatchObject(
-      new Error('Submission local government not found'),
-    );
   });
 
   it('should call through services and return application data', async () => {

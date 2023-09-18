@@ -1,6 +1,7 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
@@ -90,7 +91,9 @@ describe('GenerateSrwDocumentService', () => {
     mockNotificationService.getByFileNumber.mockResolvedValue(
       new Notification(),
     );
-    mockLocalGovernmentService.getByUuid.mockResolvedValue(null);
+    mockLocalGovernmentService.getByUuid.mockResolvedValue(
+      new LocalGovernment(),
+    );
     const userEntity = new User({
       name: 'Bruce Wayne',
     });

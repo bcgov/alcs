@@ -81,12 +81,9 @@ export class StatusEmailService {
     submission: ApplicationSubmission | NoticeOfIntentSubmission,
   ) {
     if (submission.localGovernmentUuid) {
-      const localGovernment = await this.localGovernmentService.getByUuid(
+      return await this.localGovernmentService.getByUuid(
         submission.localGovernmentUuid,
       );
-      if (localGovernment) {
-        return localGovernment;
-      }
     }
     return undefined;
   }

@@ -64,7 +64,7 @@ export class Notification extends Base {
     type: 'timestamptz',
     nullable: true,
   })
-  dateSubmittedToAlc: Date | null;
+  dateSubmittedToAlc?: Date | null;
 
   @AutoMap(() => String)
   @Column({

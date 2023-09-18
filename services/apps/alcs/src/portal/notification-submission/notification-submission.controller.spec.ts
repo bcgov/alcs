@@ -13,7 +13,6 @@ import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submis
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
-import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { GenerateSrwDocumentService } from '../pdf-generation/generate-srw-document.service';
 import {
@@ -33,9 +32,6 @@ describe('NotificationSubmissionController', () => {
   let controller: NotificationSubmissionController;
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
   let mockNotificationValidationService: DeepMocked<NotificationSubmissionValidatorService>;
-  let mockDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
-  let mockLgService: DeepMocked<LocalGovernmentService>;
-  let mockEmailService: DeepMocked<EmailService>;
   let mockSrwDocumentService: DeepMocked<GenerateSrwDocumentService>;
 
   const primaryContactOwnerUuid = 'primary-contact';
@@ -45,9 +41,6 @@ describe('NotificationSubmissionController', () => {
 
   beforeEach(async () => {
     mockNotificationSubmissionService = createMock();
-    mockDocumentService = createMock();
-    mockLgService = createMock();
-    mockEmailService = createMock();
     mockNotificationValidationService = createMock();
     mockSrwDocumentService = createMock();
 
@@ -60,20 +53,8 @@ describe('NotificationSubmissionController', () => {
           useValue: mockNotificationSubmissionService,
         },
         {
-          provide: NoticeOfIntentDocumentService,
-          useValue: mockDocumentService,
-        },
-        {
           provide: NotificationSubmissionValidatorService,
           useValue: mockNotificationValidationService,
-        },
-        {
-          provide: LocalGovernmentService,
-          useValue: mockLgService,
-        },
-        {
-          provide: EmailService,
-          useValue: mockEmailService,
         },
         {
           provide: GenerateSrwDocumentService,
@@ -112,14 +93,6 @@ describe('NotificationSubmissionController', () => {
     );
 
     mockNotificationSubmissionService.mapToDTOs.mockResolvedValue([]);
-    mockLgService.list.mockResolvedValue([
-      new LocalGovernment({
-        uuid: localGovernmentUuid,
-        bceidBusinessGuid,
-        name: 'fake-name',
-        isFirstNation: false,
-      }),
-    ]);
   });
 
   it('should be defined', () => {
@@ -284,7 +257,7 @@ describe('NotificationSubmissionController', () => {
       localGovernmentUuid,
     });
 
-    mockNotificationSubmissionService.generateSrwEmailData.mockResolvedValue(
+    mockNotificationSubmissionService.sendAndRecordLTSAPackage.mockResolvedValue(
       {} as any,
     );
     mockNotificationSubmissionService.submitToAlcs.mockResolvedValue(
@@ -304,8 +277,6 @@ describe('NotificationSubmissionController', () => {
     mockSrwDocumentService.generateAndAttach.mockResolvedValue(
       new NotificationDocument(),
     );
-    mockNotificationSubmissionService.updateStatus.mockResolvedValue();
-    mockEmailService.sendEmail.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -324,15 +295,7 @@ describe('NotificationSubmissionController', () => {
     ).toHaveBeenCalledTimes(1);
     expect(mockSrwDocumentService.generateAndAttach).toHaveBeenCalledTimes(1);
     expect(
-      mockNotificationSubmissionService.updateStatus,
+      mockNotificationSubmissionService.sendAndRecordLTSAPackage,
     ).toHaveBeenCalledTimes(1);
-    expect(mockNotificationSubmissionService.updateStatus).toHaveBeenCalledWith(
-      undefined,
-      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
-    );
-    expect(
-      mockNotificationSubmissionService.generateSrwEmailData,
-    ).toHaveBeenCalledTimes(1);
-    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
   });
 });

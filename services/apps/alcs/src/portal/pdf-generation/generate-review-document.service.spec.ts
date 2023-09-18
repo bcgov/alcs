@@ -3,6 +3,7 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
@@ -96,7 +97,9 @@ describe('GenerateReviewDocumentService', () => {
       type: { portalLabel: 'fake-label' },
       localGovernmentUuid: 'cats',
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
+    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
+      new LocalGovernment(),
+    );
     const userEntity = new User({
       name: 'Bruce Wayne',
     });

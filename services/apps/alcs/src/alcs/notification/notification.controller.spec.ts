@@ -4,7 +4,9 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { NOI_SUBMISSION_STATUS } from '../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NotificationSubmissionService } from '../../portal/notification-submission/notification-submission.service';
+import { User } from '../../user/user.entity';
+import { NotificationDocumentService } from './notification-document/notification-document.service';
 import { NOTIFICATION_STATUS } from './notification-submission-status/notification-status.dto';
 import { NotificationSubmissionStatusService } from './notification-submission-status/notification-submission-status.service';
 import { NotificationController } from './notification.controller';
@@ -15,10 +17,14 @@ describe('NotificationController', () => {
   let controller: NotificationController;
   let mockService: DeepMocked<NotificationService>;
   let mockSubmissionStatusService: DeepMocked<NotificationSubmissionStatusService>;
+  let mockSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockDocumentService: DeepMocked<NotificationDocumentService>;
 
   beforeEach(async () => {
     mockService = createMock();
     mockSubmissionStatusService = createMock();
+    mockSubmissionService = createMock();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -35,6 +41,14 @@ describe('NotificationController', () => {
         {
           provide: NotificationSubmissionStatusService,
           useValue: mockSubmissionStatusService,
+        },
+        {
+          provide: NotificationDocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: NotificationSubmissionService,
+          useValue: mockSubmissionService,
         },
         {
           provide: ClsService,
@@ -75,7 +89,11 @@ describe('NotificationController', () => {
     mockService.update.mockResolvedValue(new Notification());
     mockService.mapToDtos.mockResolvedValue([]);
 
-    await controller.update({}, 'fileNumber');
+    await controller.update({}, 'fileNumber', {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(mockService.update).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);

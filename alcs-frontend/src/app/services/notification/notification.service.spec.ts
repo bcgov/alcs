@@ -84,4 +84,16 @@ describe('NotificationService', () => {
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
   });
+
+  it('should call post for resend', async () => {
+    httpClient.post.mockReturnValue(
+      of({
+        fileNumber: '1',
+      })
+    );
+
+    await service.resendResponse('file-number');
+
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
+  });
 });

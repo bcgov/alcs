@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
@@ -6,8 +14,8 @@ import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
+import { NotificationSubmissionService } from '../../../portal/notification-submission/notification-submission.service';
 import { NOTIFICATION_STATUS } from '../notification-submission-status/notification-status.dto';
-import { NotificationSubmissionService } from './notification-submission.service';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @UseGuards(RolesGuard)
@@ -20,10 +28,16 @@ export class NotificationSubmissionController {
 
   @UserRoles(...ANY_AUTH_ROLE)
   @Get('/:fileNumber')
-  async get(@Param('fileNumber') fileNumber: string) {
-    const submission = await this.notificationSubmissionService.get(fileNumber);
+  async get(@Param('fileNumber') fileNumber: string, @Req() req) {
+    const submission = await this.notificationSubmissionService.getByFileNumber(
+      fileNumber,
+      req.user.entity,
+    );
 
-    return await this.notificationSubmissionService.mapToDto(submission);
+    return await this.notificationSubmissionService.mapToDetailedDTO(
+      submission,
+      req.user.entity,
+    );
   }
 
   @UserRoles(...ANY_AUTH_ROLE)
@@ -39,6 +53,7 @@ export class NotificationSubmissionController {
   async updateStatus(
     @Param('fileNumber') fileNumber: string,
     @Body('statusCode') status: string,
+    @Req() req,
   ) {
     if (!fileNumber) {
       throw new ServiceValidationException('File number is required');
@@ -47,6 +62,6 @@ export class NotificationSubmissionController {
       fileNumber,
       status as NOTIFICATION_STATUS,
     );
-    return this.get(fileNumber);
+    return this.get(fileNumber, req);
   }
 }

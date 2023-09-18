@@ -51,7 +51,7 @@ export class LocalGovernmentService {
   }
 
   async getByUuid(uuid: string) {
-    return this.repository.findOne({
+    return this.repository.findOneOrFail({
       where: {
         uuid,
       },

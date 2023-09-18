@@ -1,10 +1,13 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
 import {
   ROLES_ALLOWED_APPLICATIONS,
   ROLES_ALLOWED_BOARDS,
 } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
@@ -18,7 +21,9 @@ import {
 } from './notice-of-intent.dto';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent')
+@UseGuards(RolesGuard)
 export class NoticeOfIntentController {
   constructor(
     private noticeOfIntentService: NoticeOfIntentService,

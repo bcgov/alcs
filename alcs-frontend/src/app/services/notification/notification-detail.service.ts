@@ -36,4 +36,12 @@ export class NotificationDetailService {
     await this.notificationService.uncancel(fileNumber);
     await this.load(fileNumber);
   }
+
+  async resendResponse(fileNumber: string) {
+    const updatedNotification = await this.notificationService.resendResponse(fileNumber);
+    if (updatedNotification) {
+      this.$notification.next(updatedNotification);
+    }
+    return updatedNotification;
+  }
 }

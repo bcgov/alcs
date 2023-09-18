@@ -99,9 +99,9 @@ export class DocumentService {
     });
     await this.dataStore.send(command);
     const document = await this.createDocumentRecord({
-      fileKey: fileKey,
-      fileSize: fileSize,
-      mimeType: mimeType,
+      fileKey,
+      fileSize,
+      mimeType,
       uploadedBy: user,
       fileName,
       source,
