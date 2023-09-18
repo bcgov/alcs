@@ -85,7 +85,6 @@ export class PagingRequestDto {
 export class SearchRequestDto extends PagingRequestDto {
   @IsString()
   @IsOptional()
-  @MinLength(3)
   fileNumber?: string;
 
   @IsString()
