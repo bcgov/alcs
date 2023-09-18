@@ -26,11 +26,11 @@ from submissions import (
 )
 from constants import BATCH_UPLOAD_SIZE
 
-from application_submission_status_email import (
+from applications.application_submission_status_email import (
     process_application_submission_status_emails,
     clean_notice_of_intent_submission_status_emails,
 )
-from noi_submission_status_email import (
+from noi.noi_submission_status_email import (
     process_notice_of_intent_submission_status_emails,
     clean_application_submission_status_emails,
 )
@@ -222,29 +222,29 @@ if __name__ == "__main__":
                     if args and args.batch_size:
                         import_batch_size = args.batch_size
 
-                    console.log("Batching applications:")
-                    process_applications(batch_size=import_batch_size)
+                    # console.log("Batching applications:")
+                    # process_applications(batch_size=import_batch_size)
 
-                    console.log("Processing NOIs:")
-                    process_nois(batch_size=import_batch_size)
+                    # console.log("Processing NOIs:")
+                    # process_nois(batch_size=import_batch_size)
 
-                    console.log("Processing documents:")
-                    process_documents(batch_size=import_batch_size)
+                    # console.log("Processing documents:")
+                    # process_documents(batch_size=import_batch_size)
 
-                    console.log("Processing NOI specific documents:")
-                    process_documents_noi(batch_size=import_batch_size)
+                    # console.log("Processing NOI specific documents:")
+                    # process_documents_noi(batch_size=import_batch_size)
 
-                    console.log("Processing application documents:")
-                    process_application_documents(batch_size=import_batch_size)
+                    # console.log("Processing application documents:")
+                    # process_application_documents(batch_size=import_batch_size)
 
-                    console.log("Processing NOI documents:")
-                    process_noi_documents(batch_size=import_batch_size)
+                    # console.log("Processing NOI documents:")
+                    # process_noi_documents(batch_size=import_batch_size)
 
-                    console.log("Processing application prep:")
-                    process_alcs_application_prep_fields(batch_size=import_batch_size)
+                    # console.log("Processing application prep:")
+                    # process_alcs_application_prep_fields(batch_size=import_batch_size)
 
-                    console.log("Processing application submission:")
-                    process_alcs_app_submissions(batch_size=import_batch_size)
+                    # console.log("Processing application submission:")
+                    # process_alcs_app_submissions(batch_size=import_batch_size)
 
                     # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
                     #       must be the last ones in the migrate etl
