@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionMeetingService } from '../../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { ApplicationModification } from '../../application-decision/application-modification/application-modification.entity';
 import { ApplicationReconsideration } from '../../application-decision/application-reconsideration/application-reconsideration.entity';
@@ -56,6 +57,7 @@ export class ApplicationTimelineService {
     private applicationDecisionRepo: Repository<ApplicationDecision>,
     private applicationService: ApplicationService,
     private applicationMeetingService: ApplicationMeetingService,
+    private appDecMeetingService: ApplicationDecisionMeetingService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
@@ -326,11 +328,11 @@ export class ApplicationTimelineService {
   }
 
   private async addMeetingEvents(
-    noticeOfIntent: Application,
+    application: Application,
     events: TimelineEvent[],
   ) {
     const meetings = await this.applicationMeetingService.getByAppFileNumber(
-      noticeOfIntent.fileNumber,
+      application.fileNumber,
     );
 
     meetings.sort(
@@ -372,6 +374,28 @@ export class ApplicationTimelineService {
 
       typeCount.set(meeting.type.code, count + 1);
     });
+
+    const discussionMeetings =
+      await this.appDecMeetingService.getByAppFileNumber(
+        application.fileNumber,
+      );
+
+    discussionMeetings.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    discussionMeetings.forEach((meeting, index) => {
+      let htmlText = `Review Discussion #${index + 1}`;
+
+      if (index === 0) {
+        htmlText += ' - <strong>Under Review by ALC</strong>';
+      }
+
+      events.push({
+        htmlText,
+        startDate: meeting.date.getTime() + SORTING_ORDER.VISIT_REPORTS,
+        fulfilledDate: null,
+        isFulfilled: true,
+      });
+    });
   }
 
   private async addStatusEvents(
@@ -388,7 +412,7 @@ export class ApplicationTimelineService {
         ![
           SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
           SUBMISSION_STATUS.ALC_DECISION,
-        ].includes(<SUBMISSION_STATUS.IN_REVIEW_BY_ALC>status.statusType.code),
+        ].includes(<SUBMISSION_STATUS>status.statusType.code),
     );
     for (const status of statusesToInclude) {
       if (status.effectiveDate) {

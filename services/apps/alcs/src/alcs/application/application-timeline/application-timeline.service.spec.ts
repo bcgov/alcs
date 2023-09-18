@@ -2,6 +2,8 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionMeeting } from '../../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecisionMeetingService } from '../../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.service';
 import { ApplicationDecision } from '../../application-decision/application-decision.entity';
 import { ApplicationModificationOutcomeType } from '../../application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
 import { ApplicationModification } from '../../application-decision/application-modification/application-modification.entity';
@@ -29,6 +31,7 @@ describe('ApplicationTimelineService', () => {
   let mockAppService: DeepMocked<ApplicationService>;
   let mockAppMeetingService: DeepMocked<ApplicationMeetingService>;
   let mockAppStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockAppDecMeetingService: DeepMocked<ApplicationDecisionMeetingService>;
   const mockSameDate = new Date();
 
   beforeEach(async () => {
@@ -39,6 +42,7 @@ describe('ApplicationTimelineService', () => {
     mockAppService = createMock();
     mockAppMeetingService = createMock();
     mockAppStatusService = createMock();
+    mockAppDecMeetingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -70,6 +74,10 @@ describe('ApplicationTimelineService', () => {
           provide: ApplicationSubmissionStatusService,
           useValue: mockAppStatusService,
         },
+        {
+          provide: ApplicationDecisionMeetingService,
+          useValue: mockAppDecMeetingService,
+        },
         ApplicationTimelineService,
       ],
     }).compile();
@@ -86,6 +94,7 @@ describe('ApplicationTimelineService', () => {
     mockAppDecisionRepo.find.mockResolvedValue([]);
     mockAppMeetingService.getByAppFileNumber.mockResolvedValue([]);
     mockAppStatusService.getStatusesByFileNumber.mockResolvedValue([]);
+    mockAppDecMeetingService.getByAppFileNumber.mockResolvedValue([]);
   });
 
   it('should be defined', () => {
@@ -253,6 +262,27 @@ describe('ApplicationTimelineService', () => {
     expect(res[2].htmlText).toEqual('CATS #1 Report Sent to Applicant');
     expect(res[1].htmlText).toEqual('CATS #2');
     expect(res[0].htmlText).toEqual('CATS #2 Report Sent to Applicant');
+  });
+
+  it('should map Decision Meeting Events', async () => {
+    const sameDate = new Date();
+    mockAppDecMeetingService.getByAppFileNumber.mockResolvedValue([
+      new ApplicationDecisionMeeting({
+        date: sameDate,
+      }),
+      new ApplicationDecisionMeeting({
+        date: new Date(sameDate.getTime() + 5),
+      }),
+    ]);
+
+    const res = await service.getTimelineEvents('file-number');
+
+    expect(res).toBeDefined();
+    expect(res.length).toEqual(2);
+    expect(res[1].htmlText).toEqual(
+      'Review Discussion #1 - <strong>Under Review by ALC</strong>',
+    );
+    expect(res[0].htmlText).toEqual('Review Discussion #2');
   });
 
   it('should map Status Events', async () => {
