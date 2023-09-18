@@ -7,12 +7,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { ValidatedNotificationSubmission } from './notification-submission-validator.service';
 import { NotificationSubmission } from './notification-submission.entity';
@@ -25,6 +27,8 @@ describe('NotificationSubmissionService', () => {
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockStatusService: DeepMocked<NotificationSubmissionStatusService>;
+  let mockDocumentService: DeepMocked<NotificationDocumentService>;
+  let mockEmailService: DeepMocked<EmailService>;
   let mockSubmission;
 
   beforeEach(async () => {
@@ -33,6 +37,8 @@ describe('NotificationSubmissionService', () => {
     mockLGService = createMock();
     mockFileNumberService = createMock();
     mockStatusService = createMock();
+    mockEmailService = createMock();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -62,6 +68,14 @@ describe('NotificationSubmissionService', () => {
         {
           provide: NotificationSubmissionStatusService,
           useValue: mockStatusService,
+        },
+        {
+          provide: EmailService,
+          useValue: mockEmailService,
+        },
+        {
+          provide: NotificationDocumentService,
+          useValue: mockDocumentService,
         },
       ],
     }).compile();

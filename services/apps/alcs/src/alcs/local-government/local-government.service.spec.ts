@@ -48,12 +48,12 @@ describe('LocalGovernmentService', () => {
 
   it('should call repository on getByUuId', async () => {
     const uuid = 'fake';
-    mockRepository.findOne.mockResolvedValue(new LocalGovernment());
+    mockRepository.findOneOrFail.mockResolvedValue(new LocalGovernment());
 
     await service.getByUuid(uuid);
 
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-    expect(mockRepository.findOne).toHaveBeenCalledWith({
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockRepository.findOneOrFail).toHaveBeenCalledWith({
       where: {
         uuid,
       },

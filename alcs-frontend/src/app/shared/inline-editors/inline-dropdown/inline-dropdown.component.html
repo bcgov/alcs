@@ -3,7 +3,7 @@
     <a (click)="startEdit()" class="add" *ngIf="!value"> Select an option </a>
     <a (click)="startEdit()" class="add" *ngIf="multiple && coerceArray(value)?.length === 0"> Select option(s) </a>
     <span *ngIf="!multiple">
-      {{ value }}
+      {{ displayValue }}
     </span>
     <span *ngIf="multiple">
       {{ coerceArray(value)?.join(', ') }}

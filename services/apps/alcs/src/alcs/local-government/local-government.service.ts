@@ -18,7 +18,7 @@ export class LocalGovernmentService {
   ) {}
 
   async list() {
-    return this.repository.find({
+    return await this.repository.find({
       order: {
         name: 'ASC',
       },
@@ -29,7 +29,7 @@ export class LocalGovernmentService {
   }
 
   async listActive() {
-    return this.repository.find({
+    return await this.repository.find({
       where: {
         isActive: true,
       },
@@ -43,7 +43,7 @@ export class LocalGovernmentService {
   }
 
   async getByName(name: string) {
-    return this.repository.findOne({
+    return await this.repository.findOne({
       where: {
         name,
       },
@@ -51,7 +51,7 @@ export class LocalGovernmentService {
   }
 
   async getByUuid(uuid: string) {
-    return this.repository.findOne({
+    return await this.repository.findOneOrFail({
       where: {
         uuid,
       },
@@ -114,7 +114,7 @@ export class LocalGovernmentService {
   }
 
   async getByGuid(bceidBusinessGuid: string) {
-    return this.repository.findOne({
+    return await this.repository.findOne({
       where: {
         bceidBusinessGuid,
       },

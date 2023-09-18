@@ -1,0 +1,40 @@
+@use '../../../../styles/colors' as colors;
+
+.intake {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-row-gap: 48px;
+  grid-column-gap: 48px;
+  width: 100%;
+  margin-top: 48px;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+  margin-left: 4px;
+}
+
+.failed-text {
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+
+  button {
+    margin-left: 16px !important;
+  }
+}
+
+.sent-text {
+  color: colors.$success-color;
+}
+
+.response-date {
+  margin-left: 12px;
+}
+
+.left {
+  margin-top: 3px;
+}

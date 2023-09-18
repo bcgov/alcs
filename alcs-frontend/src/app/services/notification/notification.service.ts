@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApplicationDto } from '../application/application.dto';
 import { ToastService } from '../toast/toast.service';
 import { NotificationDto, UpdateNotificationDto } from './notification.dto';
 
@@ -39,7 +38,7 @@ export class NotificationService {
       return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}`, updateDto));
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to create Notification');
+      this.toastService.showErrorToast('Failed to update Notification');
       return undefined;
     }
   }
@@ -56,7 +55,7 @@ export class NotificationService {
 
   async cancel(fileNumber: string) {
     try {
-      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/cancel`, {}));
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/cancel`, {}));
     } catch (e) {
       this.toastService.showErrorToast('Failed to cancel Notification');
     }
@@ -65,9 +64,18 @@ export class NotificationService {
 
   async uncancel(fileNumber: string) {
     try {
-      return await firstValueFrom(this.http.post<ApplicationDto>(`${this.url}/${fileNumber}/uncancel`, {}));
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/uncancel`, {}));
     } catch (e) {
       this.toastService.showErrorToast('Failed to uncancel Notification');
+    }
+    return;
+  }
+
+  async resendResponse(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/resend`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to resend response for Notification');
     }
     return;
   }

@@ -15,6 +15,7 @@ import {
   Repository,
 } from 'typeorm';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { filterUndefined } from '../../utils/undefined';
 import { Board } from '../board/board.entity';
 import { BoardService } from '../board/board.service';
@@ -210,12 +211,19 @@ export class NotificationService {
       notification.summary,
     );
     if (updateDto.localGovernmentUuid) {
-      notification.localGovernmentUuid = updateDto.localGovernmentUuid;
+      notification.localGovernment =
+        await this.localGovernmentService.getByUuid(
+          updateDto.localGovernmentUuid,
+        );
     }
 
     notification.staffObservations = filterUndefined(
       updateDto.staffObservations,
       notification.staffObservations,
+    );
+
+    notification.dateSubmittedToAlc = formatIncomingDate(
+      updateDto.dateSubmittedToAlc,
     );
 
     await this.repository.save(notification);

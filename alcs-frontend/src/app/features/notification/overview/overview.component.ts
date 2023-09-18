@@ -7,7 +7,6 @@ import { NotificationSubmissionStatusService } from '../../../services/notificat
 import { NotificationTimelineService } from '../../../services/notification/notification-timeline/notification-timeline.service';
 import { NOTIFICATION_STATUS, NotificationDto } from '../../../services/notification/notification.dto';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { UncancelApplicationDialogComponent } from '../../application/overview/uncancel-application-dialog/uncancel-application-dialog.component';
 import { UncancelNotificationDialogComponent } from './uncancel-notification-dialog/uncancel-notification-dialog.component';
 
 @Component({

@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
@@ -46,6 +47,10 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationParcelService = createMock();
     mockApplicationOwnerService = createMock();
     mockApplicationDocumentService = createMock();
+
+    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
+      new LocalGovernment(),
+    );
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -102,7 +107,6 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -130,7 +134,6 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -158,7 +161,6 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -197,7 +199,6 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };

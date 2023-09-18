@@ -6,6 +6,7 @@ import { ApplicantInfoComponent } from './applicant-info/applicant-info.componen
 import { NotificationDetailsModule } from './applicant-info/notification-details/notification-details.module';
 import { DocumentUploadDialogComponent } from './documents/document-upload-dialog/document-upload-dialog.component';
 import { NotificationDocumentsComponent } from './documents/documents.component';
+import { IntakeComponent } from './intake/intake.component';
 import { NotificationComponent, postSubmissionRoutes } from './notification.component';
 import { OverviewComponent } from './overview/overview.component';
 import { UncancelNotificationDialogComponent } from './overview/uncancel-notification-dialog/uncancel-notification-dialog.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
     DocumentUploadDialogComponent,
     ApplicantInfoComponent,
     UncancelNotificationDialogComponent,
+    IntakeComponent,
   ],
   imports: [SharedModule.forRoot(), RouterModule.forChild(routes), NotificationDetailsModule],
 })

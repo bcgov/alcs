@@ -6,8 +6,9 @@ import { Document } from '../../../document/document.entity';
 import { DocumentService } from '../../../document/document.service';
 import { NotificationSubmissionDetailedDto } from '../../../portal/notification-submission/notification-submission.dto';
 import { NotificationSubmission } from '../../../portal/notification-submission/notification-submission.entity';
+import { NotificationSubmissionService } from '../../../portal/notification-submission/notification-submission.service';
+import { User } from '../../../user/user.entity';
 import { NotificationSubmissionController } from './notification-submission.controller';
-import { NotificationSubmissionService } from './notification-submission.service';
 
 describe('NotificationSubmissionController', () => {
   let controller: NotificationSubmissionController;
@@ -50,19 +51,27 @@ describe('NotificationSubmissionController', () => {
   it('should call NotificationSubmissionService to get Notice of Intent Submission', async () => {
     const fakeFileNumber = 'fake';
 
-    mockNotificationSubmissionService.get.mockResolvedValue(
+    mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(
       new NotificationSubmission({
         fileNumber: fakeFileNumber,
       }),
     );
-    mockNotificationSubmissionService.mapToDto.mockResolvedValue(
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
       createMock<NotificationSubmissionDetailedDto>(),
     );
 
-    const result = await controller.get(fakeFileNumber);
+    const result = await controller.get(fakeFileNumber, {
+      user: {
+        entity: new User(),
+      },
+    });
 
-    expect(mockNotificationSubmissionService.get).toBeCalledTimes(1);
-    expect(mockNotificationSubmissionService.mapToDto).toBeCalledTimes(1);
+    expect(mockNotificationSubmissionService.getByFileNumber).toBeCalledTimes(
+      1,
+    );
+    expect(mockNotificationSubmissionService.mapToDetailedDTO).toBeCalledTimes(
+      1,
+    );
     expect(result).toBeDefined();
   });
 

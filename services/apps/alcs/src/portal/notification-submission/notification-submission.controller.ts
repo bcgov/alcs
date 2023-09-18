@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { EmailService } from '../../providers/email/email.service';
@@ -30,7 +29,6 @@ export class NotificationSubmissionController {
     private notificationSubmissionService: NotificationSubmissionService,
     private notificationValidationService: NotificationSubmissionValidatorService,
     private generateSrwDocumentService: GenerateSrwDocumentService,
-    private emailService: EmailService,
   ) {}
 
   @Get()
@@ -177,25 +175,10 @@ export class NotificationSubmissionController {
       );
 
     if (savedDocument) {
-      const templateData =
-        await this.notificationSubmissionService.generateSrwEmailData(
-          submission,
-          savedDocument,
-        );
-
-      await this.emailService.sendEmail({
-        to: [templateData.to],
-        body: templateData.html,
-        subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
-        parentType: PARENT_TYPE.NOTIFICATION,
-        parentId: templateData.parentId,
-        cc: templateData.cc,
-        attachments: [savedDocument.document],
-      });
-
-      await this.notificationSubmissionService.updateStatus(
-        submission.uuid,
-        NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+      await this.notificationSubmissionService.sendAndRecordLTSAPackage(
+        submission,
+        savedDocument,
+        user,
       );
     }
   }

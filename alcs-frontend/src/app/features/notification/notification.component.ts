@@ -8,6 +8,7 @@ import { NotificationSubmissionStatusService } from '../../services/notification
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { NotificationDocumentsComponent } from './documents/documents.component';
+import { IntakeComponent } from './intake/intake.component';
 import { OverviewComponent } from './overview/overview.component';
 
 export const preSubmissionRoutes = [
@@ -22,7 +23,6 @@ export const preSubmissionRoutes = [
     menuTitle: 'App Preview',
     icon: 'persons',
     component: ApplicantInfoComponent,
-    portalOnly: true,
   },
 ];
 
@@ -38,7 +38,12 @@ export const postSubmissionRoutes = [
     menuTitle: 'Applicant Info',
     icon: 'persons',
     component: ApplicantInfoComponent,
-    portalOnly: true,
+  },
+  {
+    path: 'intake',
+    menuTitle: 'ALC Intake',
+    icon: 'content_paste',
+    component: IntakeComponent,
   },
   {
     path: 'documents',

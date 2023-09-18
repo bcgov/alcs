@@ -127,7 +127,7 @@ export class NotificationDocumentService {
       visibilityFlags,
     });
 
-    return this.notificationDocumentRepository.save(appDocument);
+    return await this.notificationDocumentRepository.save(appDocument);
   }
 
   async get(uuid: string) {

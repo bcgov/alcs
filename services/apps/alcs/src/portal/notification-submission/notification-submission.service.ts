@@ -13,13 +13,21 @@ import {
 } from 'typeorm';
 import { generateSRWTemplate } from '../../../../../templates/emails/notifications/srw-notice.template';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
+import {
+  NotificationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/notification/notification-document/notification-document.entity';
+import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { FileNumberService } from '../../file-number/file-number.service';
+import { EmailService } from '../../providers/email/email.service';
 import { User } from '../../user/user.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
@@ -50,6 +58,8 @@ export class NotificationSubmissionService {
     private localGovernmentService: LocalGovernmentService,
     private fileNumberService: FileNumberService,
     private notificationSubmissionStatusService: NotificationSubmissionStatusService,
+    private notificationDocumentService: NotificationDocumentService,
+    private emailService: EmailService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -381,7 +391,44 @@ export class NotificationSubmissionService {
     });
   }
 
-  async generateSrwEmailData(
+  async sendAndRecordLTSAPackage(
+    submission: NotificationSubmission,
+    document: NotificationDocument,
+    user: User,
+  ) {
+    const templateData = await this.generateSrwEmailData(submission, document);
+
+    await this.emailService.sendEmail({
+      to: [templateData.to],
+      body: templateData.html,
+      subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
+      parentType: PARENT_TYPE.NOTIFICATION,
+      parentId: templateData.parentId,
+      cc: templateData.cc,
+      attachments: [document.document],
+    });
+
+    const fileBuffer = Buffer.from(templateData.html);
+    await this.notificationDocumentService.attachDocumentAsBuffer({
+      file: Buffer.from(templateData.html),
+      fileName: `SRW${submission.fileNumber}_ALC_Email_Response.html`,
+      source: DOCUMENT_SOURCE.ALC,
+      user,
+      system: DOCUMENT_SYSTEM.ALCS,
+      documentType: DOCUMENT_TYPE.ACKNOWLEDGEMENT_LETTER,
+      fileNumber: submission.fileNumber,
+      fileSize: fileBuffer.length,
+      mimeType: 'text/html',
+      visibilityFlags: [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT],
+    });
+
+    await this.updateStatus(
+      submission.uuid,
+      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+    );
+  }
+
+  private async generateSrwEmailData(
     submission: NotificationSubmission,
     pdfDocument: NotificationDocument,
   ) {
