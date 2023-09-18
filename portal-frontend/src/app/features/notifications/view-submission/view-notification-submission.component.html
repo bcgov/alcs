@@ -1,6 +1,6 @@
 <div aria-hidden="true" class="banner absolute">
   <div>
-    <h4 *ngIf="submission">SRW ID: {{ submission.fileNumber }}</h4>
+    <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }}</h4>
   </div>
   <div class="banner-status">
     <div>
@@ -8,14 +8,14 @@
       <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
     </div>
     <div>
-      <div class="subheading2">SRW Status</div>
+      <div class="subheading2">Notification Status</div>
       <span *ngIf="submission">{{ submission.status.label }}</span>
     </div>
   </div>
 </div>
 <div class="banner">
   <div>
-    <h4 *ngIf="submission">SRW ID: {{ submission.fileNumber }}</h4>
+    <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }}</h4>
   </div>
   <div class="banner-status">
     <div>
@@ -23,7 +23,7 @@
       <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
     </div>
     <div>
-      <div class="subheading2">SRW Status</div>
+      <div class="subheading2">Notification Status</div>
       <span *ngIf="submission">{{ submission.status.label }}</span>
     </div>
   </div>
@@ -82,7 +82,7 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="ALC Review and Decision">
+      <mat-tab label="ALC Review and Response">
         <div class="content">
           <app-alc-review
             [$notificationDocuments]="$notificationDocuments"

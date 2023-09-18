@@ -1,5 +1,20 @@
 @use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
 
 section {
   margin-top: rem(36);
+}
+
+.no-data-text {
+  color: colors.$grey;
+  text-align: center;
+  padding-top: rem(16);
+}
+
+.table {
+  margin-top: rem(24);
+}
+
+.scrollable {
+  overflow-x: auto;
 }

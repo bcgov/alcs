@@ -36,6 +36,13 @@ export class SubmissionDocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
+  async downloadFile(uuid: string) {
+    const res = await this.notificationDocumentService.downloadFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
+  }
+
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();

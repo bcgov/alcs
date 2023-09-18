@@ -24,7 +24,7 @@ const USER_CONTROLLED_TYPES = [DOCUMENT_TYPE.PHOTOGRAPH, DOCUMENT_TYPE.PROFESSIO
 export class OtherAttachmentsComponent extends FilesStepComponent implements OnInit, OnDestroy {
   currentStep = EditApplicationSteps.Attachments;
 
-  displayedColumns = ['type', 'description', 'fileName', 'actions'];
+  displayedColumns = ['fileName', 'type', 'description', 'actions'];
   selectableTypes: DocumentTypeDto[] = [];
   otherFiles: ApplicationDocumentDto[] = [];
 

@@ -25,6 +25,7 @@ export class TransfereeDialogComponent {
   email = new FormControl<string | null>('', [Validators.required, Validators.email]);
 
   isEdit = false;
+  isLoading = false;
   existingUuid: string | undefined;
 
   form = new FormGroup({
@@ -74,6 +75,7 @@ export class TransfereeDialogComponent {
       console.error('TransfereeDialogComponent misconfigured, needs submissionUuid for create');
       return;
     }
+    this.isLoading = true;
 
     const createDto: NotificationTransfereeCreateDto = {
       organizationName: this.organizationName.getRawValue() || undefined,
@@ -103,6 +105,7 @@ export class TransfereeDialogComponent {
       typeCode: this.type.getRawValue()!,
     };
     if (this.existingUuid) {
+      this.isLoading = true;
       await this.transfereeService.update(this.existingUuid, updateDto);
       this.dialogRef.close(true);
     }

@@ -8,7 +8,10 @@
   include confidential material within your application.
 </p>
 <section>
-  <h4>Optional Attachments (Max. 100 MB per attachment)</h4>
+  <div class='subheading2'>Optional Attachments (Max. 100 MB per attachment)</div>
+  <div class="uploader">
+    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
+  </div>
   <form [formGroup]="form">
     <div class="scrollable">
       <table mat-table [dataSource]="otherFiles">
@@ -89,9 +92,6 @@
       </table>
     </div>
   </form>
-  <div class="uploader">
-    <app-file-drag-drop (uploadFiles)="attachFile($event, null)"></app-file-drag-drop>
-  </div>
 </section>
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
