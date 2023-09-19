@@ -59,7 +59,26 @@ export class IntakeComponent implements OnInit {
   }
 
   async updateSubmissionEmail(email: string | null) {
-    //TODO: Implemented in ALCS-1074
+    if (!email) {
+      return;
+    }
+
+    this.confirmationDialogService
+      .openDialog({
+        title: 'Change Primary Contact Email',
+        body: 'Any changes made here will also be reflected in the portal. Do you want to continue?',
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
+          const notification = this.notification;
+          if (notification) {
+            const update = await this.notificationSubmissionService.setContactEmail(email, notification.fileNumber);
+            if (update) {
+              this.toastService.showSuccessToast('Notification updated');
+            }
+          }
+        }
+      });
   }
 
   private async loadGovernments() {

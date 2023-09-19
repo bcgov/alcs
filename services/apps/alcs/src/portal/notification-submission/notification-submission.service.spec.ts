@@ -278,4 +278,30 @@ describe('NotificationSubmissionService', () => {
 
     expect(app).toBe(noiSubmission);
   });
+
+  it('should call through to the repo for getFileNumber', async () => {
+    const fileNumber = 'file-number';
+    const noiSubmission = new NotificationSubmission({
+      fileNumber,
+    });
+    mockRepository.findOne.mockResolvedValue(noiSubmission);
+
+    const res = await service.getFileNumber('uuid');
+
+    expect(res).toBe(fileNumber);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through to the repo for getUuid', async () => {
+    const uuid = 'uuid';
+    const noiSubmission = new NotificationSubmission({
+      uuid,
+    });
+    mockRepository.findOne.mockResolvedValue(noiSubmission);
+
+    const res = await service.getUuid('file-number');
+
+    expect(res).toBe(uuid);
+    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
 });

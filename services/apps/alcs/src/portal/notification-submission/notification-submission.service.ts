@@ -169,6 +169,19 @@ export class NotificationSubmissionService {
     return submission?.fileNumber;
   }
 
+  async getUuid(fileNumber: string) {
+    const submission = await this.notificationSubmissionRepository.findOne({
+      where: {
+        fileNumber,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.uuid;
+  }
+
   async getAllByUser(user: User) {
     const whereClauses = await this.generateWhereClauses({}, user);
 

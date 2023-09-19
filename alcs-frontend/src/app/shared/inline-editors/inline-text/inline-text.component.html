@@ -30,7 +30,7 @@
     </form>
     <div class="button-container">
       <button mat-button (click)="cancelEdit()">CANCEL</button>
-      <button mat-button class="save" (click)="confirmEdit()">SAVE</button>
+      <button mat-button class="save" [disabled]="required && !pendingValue" (click)="confirmEdit()">SAVE</button>
     </div>
   </div>
 </div>

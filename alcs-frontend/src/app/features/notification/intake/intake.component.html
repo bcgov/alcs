@@ -23,7 +23,7 @@
         <span class="sent-text">
           <strong>Sent</strong>
         </span>
-        <span class='response-date'>{{ responseDate | momentFormat }}</span>
+        <span class="response-date">{{ responseDate | momentFormat }}</span>
       </div>
     </ng-container>
     <ng-container *ngIf="!responseSent">
@@ -44,6 +44,6 @@
   </div>
   <div *ngIf="contactEmail">
     <div class="subheading2">Primary Contact Email</div>
-    <app-inline-text [value]="contactEmail" (save)="updateSubmissionEmail($event)"></app-inline-text>
+    <app-inline-text [value]="contactEmail" [required]="true" (save)="updateSubmissionEmail($event)"></app-inline-text>
   </div>
 </div>

@@ -8,6 +8,7 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
 export class InlineTextComponent implements AfterContentChecked {
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
+  @Input() required = false;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;
