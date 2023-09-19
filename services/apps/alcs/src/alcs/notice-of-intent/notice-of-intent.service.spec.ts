@@ -249,7 +249,7 @@ describe('NoticeOfIntentService', () => {
     });
 
     const errors = [
-      '"Residential - Accessory Structures" must be selected',
+      '"Residential - Accessory Structure" must be selected',
       '"Residential - Additional Residence" must be selected',
       '"Residential - Principal Residence" must be selected',
       '"Farm Structure" must be selected',
@@ -262,16 +262,16 @@ describe('NoticeOfIntentService', () => {
       new NoticeOfIntentSubmission({
         soilProposedStructures: [
           {
-            type: 'Farm Structure',
-          },
-          {
-            type: 'Residential - Principal Residence',
+            type: 'Residential - Accessory Structure',
           },
           {
             type: 'Residential - Additional Residence',
           },
           {
-            type: 'Residential - Accessory Structure',
+            type: 'Residential - Principal Residence',
+          },
+          {
+            type: 'Farm Structure',
           },
         ],
         soilIsAreaWideFilling: true,

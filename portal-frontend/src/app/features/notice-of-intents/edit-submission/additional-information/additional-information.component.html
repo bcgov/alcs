@@ -66,7 +66,7 @@
   <ng-container *ngIf="confirmRemovalOfSoil">
     <div class="form-row">
       <div class="full-row">
-        <form [formGroup]="lotsForm">
+        <form [formGroup]="structuresForm">
           <label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
           <table mat-table [dataSource]="structuresSource">
             <ng-container matColumnDef="index">
@@ -91,13 +91,13 @@
                 </mat-form-field>
                 <div
                   *ngIf="
-                    lotsForm.controls[i + '-type']!.invalid &&
-                    (lotsForm.controls[i + '-type']!.dirty || lotsForm.controls[i + '-type']!.touched)
+                    structuresForm.controls[i + '-type']!.invalid &&
+                    (structuresForm.controls[i + '-type']!.dirty || structuresForm.controls[i + '-type']!.touched)
                   "
                   class="field-error"
                 >
                   <mat-icon>warning</mat-icon>
-                  <div *ngIf="lotsForm.controls[i + '-type']!.errors?.['required']">This field is required</div>
+                  <div *ngIf="structuresForm.controls[i + '-type']!.errors?.['required']">This field is required</div>
                 </div>
               </td>
             </ng-container>
@@ -120,13 +120,13 @@
                 </mat-form-field>
                 <div
                   *ngIf="
-                    lotsForm.controls[i + '-area']!.invalid &&
-                    (lotsForm.controls[i + '-area']!.dirty || lotsForm.controls[i + '-area']!.touched)
+                    structuresForm.controls[i + '-area']!.invalid &&
+                    (structuresForm.controls[i + '-area']!.dirty || structuresForm.controls[i + '-area']!.touched)
                   "
                   class="field-error"
                 >
                   <mat-icon>warning</mat-icon>
-                  <div *ngIf="lotsForm.controls[i + '-area']!.errors?.['required']">This field is required</div>
+                  <div *ngIf="structuresForm.controls[i + '-area']!.errors?.['required']">This field is required</div>
                 </div>
               </td>
             </ng-container>
@@ -273,6 +273,31 @@
           <div *ngIf="soilStructureResidentialAccessoryUseReason.errors?.['required']">This field is required</div>
         </div>
         <div class="subtext">Characters left: {{ 4000 - structureResidentialAccessoryUseReasonText.textLength }}</div>
+      </div>
+
+      <div class="full-row" *ngIf="isSoilOtherUseReasonVisible">
+        <label for="soilStructureOtherUseReason"> Describe the intended use of the 'Other' structure </label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="soilStructureOtherUseReason"
+            #soilStructureOtherUseReasonText
+            maxlength="4000"
+            id="soilStructureOtherUseReason"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="
+            soilStructureOtherUseReason.invalid &&
+            (soilStructureOtherUseReason.dirty || soilStructureOtherUseReason.touched)
+          "
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilStructureOtherUseReason.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - soilStructureOtherUseReasonText.textLength }}</div>
       </div>
 
       <div class="full-row">

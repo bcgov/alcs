@@ -62,6 +62,14 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="isSoilOtherStructureUseReasonVisible">
+      <div class="subheading2 grid-1">Describe the intended use of the 'Other' structure</div>
+      <div class="grid-double">
+        {{ _noiSubmission.soilStructureOtherUseReason }}
+        <app-no-data *ngIf="!_noiSubmission.soilStructureOtherUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
     <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
     <div class="grid-double multiple-documents">
       <a *ngFor="let file of buildingPlans" (click)="openFile(file)">

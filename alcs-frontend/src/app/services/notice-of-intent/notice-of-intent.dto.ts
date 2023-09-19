@@ -210,6 +210,7 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilStructureResidentialUseReason?: string | null;
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
+  soilStructureOtherUseReason?: string | null;
   soilProposedStructures: ProposedStructure[];
 }
 
@@ -273,6 +274,7 @@ export enum STRUCTURE_TYPES {
   PRINCIPAL_RESIDENCE = 'Residential - Principal Residence',
   ADDITIONAL_RESIDENCE = 'Residential - Additional Residence',
   ACCESSORY_STRUCTURE = 'Residential - Accessory Structure',
+  OTHER = 'Other Structure',
 }
 
 export interface NoticeOfIntentOwnerDto {

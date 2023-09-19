@@ -16,32 +16,16 @@ import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from './notice-of-intent-parcel/notice-of-intent-parcel.entity';
 
-export const PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING = {
-  RESIDENTIAL_PRINCIPAL_RESIDENCE: {
-    portalValue: 'Residential - Principal Residence',
-    alcsValueCode: 'RPRI',
-  },
-  RESIDENTIAL_ADDITIONAL_RESIDENCE: {
-    portalValue: 'Residential - Additional Residence',
-    alcsValueCode: 'RADD',
-  },
-  RESIDENTIAL_ACCESSORY_STRUCTURE: {
-    portalValue: 'Residential - Accessory Structure',
-    alcsValueCode: 'RACS',
-  },
-  FARM_STRUCTURE: {
-    portalValue: 'Farm Structure',
-    alcsValueCode: 'FRST',
-  },
+export const PORTAL_TO_ALCS_STRUCTURE_MAP = {
+  'Residential - Principal Residence': 'RPRI',
+  'Residential - Additional Residence': 'RADD',
+  'Residential - Accessory Structure': 'RACS',
+  'Farm Structure': 'FRST',
+  'Other Structure': 'OTHR',
 };
 
 export class ProposedStructure {
-  type:
-    | 'Farm Structure'
-    | 'Residential - Principal Residence'
-    | 'Residential - Additional Residence'
-    | 'Residential - Accessory Structure'
-    | null;
+  type: keyof typeof PORTAL_TO_ALCS_STRUCTURE_MAP | null;
   area?: number | null;
 }
 
@@ -433,6 +417,10 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilStructureResidentialAccessoryUseReason: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilStructureOtherUseReason: string | null;
 
   @AutoMap(() => ProposedStructure)
   @Column({

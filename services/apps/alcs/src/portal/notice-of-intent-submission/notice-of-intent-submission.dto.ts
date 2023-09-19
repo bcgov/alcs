@@ -167,6 +167,9 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
   @AutoMap(() => String)
   soilStructureResidentialAccessoryUseReason?: string | null;
 
+  @AutoMap(() => String)
+  soilStructureOtherUseReason?: string | null;
+
   @AutoMap(() => [ProposedStructure])
   soilProposedStructures: ProposedStructure[];
 }
@@ -368,6 +371,10 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilStructureResidentialAccessoryUseReason?: string | null;
+
+  @IsString()
+  @IsOptional()
+  soilStructureOtherUseReason?: string | null;
 
   @IsArray()
   @IsOptional()

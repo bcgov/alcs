@@ -70,7 +70,7 @@ export class NoticeOfIntentService {
       return await firstValueFrom(this.http.post<NoticeOfIntentDto>(`${this.url}/${fileNumber}`, updateDto));
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to create Notice of Intent');
+      this.toastService.showErrorToast('Failed to update Notice of Intent');
       return undefined;
     }
   }

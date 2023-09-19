@@ -24,6 +24,7 @@ export enum STRUCTURE_TYPES {
   PRINCIPAL_RESIDENCE = 'Residential - Principal Residence',
   ADDITIONAL_RESIDENCE = 'Residential - Additional Residence',
   ACCESSORY_STRUCTURE = 'Residential - Accessory Structure',
+  OTHER_STRUCTURE = 'Other Structure',
 }
 
 type FormProposedStructure = { type: STRUCTURE_TYPES | null; area: string | null };
@@ -48,6 +49,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     STRUCTURE_TYPES.PRINCIPAL_RESIDENCE,
     STRUCTURE_TYPES.ADDITIONAL_RESIDENCE,
     STRUCTURE_TYPES.ACCESSORY_STRUCTURE,
+    STRUCTURE_TYPES.OTHER_STRUCTURE,
   ];
 
   private submissionUuid = '';
@@ -63,12 +65,14 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   isSoilStructureResidentialUseReasonVisible = false;
   isSoilAgriParcelActivityVisible = false;
   isSoilStructureResidentialAccessoryUseReasonVisible = false;
+  isSoilOtherUseReasonVisible = false;
 
   isRemovingSoilForNewStructure = new FormControl<string | null>(null, [Validators.required]);
   soilStructureFarmUseReason = new FormControl<string | null>(null);
   soilStructureResidentialUseReason = new FormControl<string | null>(null);
   soilAgriParcelActivity = new FormControl<string | null>(null);
   soilStructureResidentialAccessoryUseReason = new FormControl<string | null>(null);
+  soilStructureOtherUseReason = new FormControl<string | null>(null);
 
   form = new FormGroup({
     isRemovingSoilForNewStructure: this.isRemovingSoilForNewStructure,
@@ -76,9 +80,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     soilStructureResidentialUseReason: this.soilStructureResidentialUseReason,
     soilAgriParcelActivity: this.soilAgriParcelActivity,
     soilStructureResidentialAccessoryUseReason: this.soilStructureResidentialAccessoryUseReason,
+    soilStructureOtherUseReason: this.soilStructureOtherUseReason,
   });
 
-  lotsForm = new FormGroup({} as any);
+  structuresForm = new FormGroup({} as any);
 
   firstQuestion: string = 'FIX THIS';
 
@@ -118,6 +123,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           soilStructureResidentialUseReason: noiSubmission.soilStructureResidentialUseReason,
           soilAgriParcelActivity: noiSubmission.soilAgriParcelActivity,
           soilStructureResidentialAccessoryUseReason: noiSubmission.soilStructureResidentialAccessoryUseReason,
+          soilStructureOtherUseReason: noiSubmission.soilStructureOtherUseReason,
         });
 
         this.proposedStructures = noiSubmission.soilProposedStructures.map((structure) => ({
@@ -130,13 +136,13 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
           newForm.addControl(`${index}-type`, new FormControl(lot.type, [Validators.required]));
           newForm.addControl(`${index}-area`, new FormControl(lot.area, [Validators.required]));
         }
-        this.lotsForm = newForm;
+        this.structuresForm = newForm;
 
         this.structuresSource = new MatTableDataSource(this.proposedStructures);
         this.prepareStructureSpecificTextInputs();
 
         if (this.showErrors) {
-          this.lotsForm.markAllAsTouched();
+          this.structuresForm.markAllAsTouched();
           this.form.markAllAsTouched();
         }
       }
@@ -151,6 +157,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.setVisibilityAndValidatorsForFarmFields();
     this.setVisibilityAndValidatorsForAccessoryFields();
     this.setVisibilityAndValidatorsForResidentialFields();
+    this.setVisibilityAndValidatorsForOtherFields();
   }
 
   private setVisibilityAndValidatorsForResidentialFields() {
@@ -165,6 +172,20 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
       this.isSoilStructureResidentialUseReasonVisible = false;
       this.soilStructureResidentialUseReason.removeValidators([Validators.required]);
       this.soilStructureResidentialUseReason.reset();
+    }
+  }
+
+  private setVisibilityAndValidatorsForOtherFields() {
+    const hasOtherStructure = this.proposedStructures.some(
+      (structure) => structure.type && structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE
+    );
+    if (hasOtherStructure) {
+      this.isSoilOtherUseReasonVisible = true;
+      this.setRequired(this.soilStructureOtherUseReason);
+    } else {
+      this.isSoilOtherUseReasonVisible = false;
+      this.soilStructureOtherUseReason.removeValidators([Validators.required]);
+      this.soilStructureOtherUseReason.reset();
     }
   }
 
@@ -200,17 +221,18 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   }
 
   protected async save(): Promise<void> {
-    if (this.fileId && (this.form.dirty || this.lotsForm.dirty)) {
-      const isRemovingSoilForNewStructure = this.isRemovingSoilForNewStructure.getRawValue();
-      const soilStructureFarmUseReason = this.soilStructureFarmUseReason.getRawValue();
-      const soilStructureResidentialUseReason = this.soilStructureResidentialUseReason.getRawValue();
-      const soilAgriParcelActivity = this.soilAgriParcelActivity.getRawValue();
-      const soilStructureResidentialAccessoryUseReason = this.soilStructureResidentialAccessoryUseReason.getRawValue();
+    if (this.fileId && (this.form.dirty || this.structuresForm.dirty)) {
+      const isRemovingSoilForNewStructure = this.isRemovingSoilForNewStructure.value;
+      const soilStructureFarmUseReason = this.soilStructureFarmUseReason.value;
+      const soilStructureResidentialUseReason = this.soilStructureResidentialUseReason.value;
+      const soilAgriParcelActivity = this.soilAgriParcelActivity.value;
+      const soilStructureResidentialAccessoryUseReason = this.soilStructureResidentialAccessoryUseReason.value;
+      const soilStructureOtherUseReason = this.soilStructureOtherUseReason.value;
 
       const updatedStructures: ProposedStructure[] = [];
       for (const [index, lot] of this.proposedStructures.entries()) {
-        const lotType = this.lotsForm.controls[`${index}-type`].value;
-        const lotArea = this.lotsForm.controls[`${index}-area`].value;
+        const lotType = this.structuresForm.controls[`${index}-type`].value;
+        const lotArea = this.structuresForm.controls[`${index}-area`].value;
         updatedStructures.push({
           type: lotType,
           area: lotArea ? parseFloat(lotArea) : null,
@@ -223,6 +245,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
         soilIsRemovingSoilForNewStructure: parseStringToBoolean(isRemovingSoilForNewStructure),
         soilAgriParcelActivity,
         soilStructureResidentialAccessoryUseReason,
+        soilStructureOtherUseReason,
         soilProposedStructures: updatedStructures,
       };
 
@@ -286,9 +309,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   private deleteStructure(index: number) {
     const deletedStructure: FormProposedStructure = this.proposedStructures.splice(index, 1)[0];
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
-    this.lotsForm.removeControl(`${index}-type`);
-    this.lotsForm.removeControl(`${index}-area`);
-    this.lotsForm.markAsDirty();
+    this.structuresForm.removeControl(`${index}-type`);
+    this.structuresForm.removeControl(`${index}-area`);
+    this.structuresForm.markAsDirty();
 
     if (deletedStructure.type === STRUCTURE_TYPES.FARM_STRUCTURE) {
       this.setVisibilityAndValidatorsForFarmFields();
@@ -301,6 +324,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     if (deletedStructure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(deletedStructure.type)) {
       this.setVisibilityAndValidatorsForResidentialFields();
     }
+
+    if (deletedStructure.type === STRUCTURE_TYPES.OTHER_STRUCTURE) {
+      this.setVisibilityAndValidatorsForOtherFields();
+    }
   }
 
   onStructureAdd() {
@@ -308,9 +335,9 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.structuresSource = new MatTableDataSource(this.proposedStructures);
 
     const index = this.proposedStructures.length - 1;
-    this.lotsForm.addControl(`${index}-type`, new FormControl(null, [Validators.required]));
-    this.lotsForm.addControl(`${index}-area`, new FormControl(null, [Validators.required]));
-    this.lotsForm.markAsDirty();
+    this.structuresForm.addControl(`${index}-type`, new FormControl(null, [Validators.required]));
+    this.structuresForm.addControl(`${index}-area`, new FormControl(null, [Validators.required]));
+    this.structuresForm.markAsDirty();
   }
 
   private setRequired(formControl: FormControl<any>) {
