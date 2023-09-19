@@ -1,4 +1,4 @@
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ApplicationSubmissionStatusModule } from '../../alcs/application/application-submission-status/application-submission-status.module';
 import { ApplicationModule } from '../../alcs/application/application.module';

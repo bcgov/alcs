@@ -1,5 +1,5 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { BullModule, getQueueToken } from '@nestjs/bull';
+import { BullModule, getQueueToken } from '@nestjs/bullmq';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BullConfigService } from '../bullConfig.service';
 import {
@@ -20,25 +20,25 @@ describe('SchedulerService', () => {
     mockAppExpiryQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      empty: jest.fn(),
+      drain: jest.fn(),
     };
 
     mockNotificationCleanUpQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      empty: jest.fn(),
+      drain: jest.fn(),
     };
 
     mockApplicationStatusEmailsQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      empty: jest.fn(),
+      drain: jest.fn(),
     };
 
     mockNoticeOfIntentStatusEmailsQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      empty: jest.fn(),
+      drain: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -80,41 +80,45 @@ describe('SchedulerService', () => {
   //Job Disabled for now
   // it('should call add for scheduleApplicationExpiry', async () => {
   //   await schedulerService.setup();
-  //   expect(mockAppExpiryQueue.empty).toBeCalledTimes(1);
+  //   expect(mockAppExpiryQueue.drain).toBeCalledTimes(1);
   //   expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
   //   expect(mockAppExpiryQueue.add).toBeCalledWith(
+  //     'applicationExpiry'
   //     {},
-  //     { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
+  //     { repeat: { pattern: MONDAY_TO_FRIDAY_AT_2AM } },
   //   );
   // });
 
   it('should call add for notification cleanup', async () => {
     await schedulerService.setup();
-    expect(mockNotificationCleanUpQueue.empty).toBeCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.drain).toBeCalledTimes(1);
     expect(mockNotificationCleanUpQueue.add).toBeCalledTimes(1);
     expect(mockNotificationCleanUpQueue.add).toBeCalledWith(
+      'cleanupNotifications',
       {},
-      { repeat: { cron: EVERYDAY_MIDNIGHT } },
+      { repeat: { pattern: EVERYDAY_MIDNIGHT } },
     );
   });
 
   it('should call add for application status email', async () => {
     await schedulerService.setup();
-    expect(mockApplicationStatusEmailsQueue.empty).toBeCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.drain).toBeCalledTimes(1);
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledWith(
+      'applicationSubmissionStatusEmails',
       {},
-      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
+      { repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   });
 
   it('should call add for notice of intent status email', async () => {
     await schedulerService.setup();
-    expect(mockNoticeOfIntentStatusEmailsQueue.empty).toBeCalledTimes(1);
+    expect(mockNoticeOfIntentStatusEmailsQueue.drain).toBeCalledTimes(1);
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledWith(
+      'noticeOfIntentSubmissionStatusEmails',
       {},
-      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
+      { repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   });
 });

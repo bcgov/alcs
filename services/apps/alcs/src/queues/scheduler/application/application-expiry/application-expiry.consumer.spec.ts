@@ -57,7 +57,7 @@ describe('SchedulerConsumerService', () => {
       subject: 'Applications near expiry',
     };
 
-    await applicationExpiryConsumer.applicationExpiry();
+    await applicationExpiryConsumer.process();
 
     expect(mockApplicationService.getAllNearExpiryDates).toBeCalledTimes(1);
     expect(mockEmailService.sendEmail).toBeCalledTimes(1);
@@ -69,7 +69,7 @@ describe('SchedulerConsumerService', () => {
   it('should not send email if no application near expiry', async () => {
     mockApplicationService.getAllNearExpiryDates.mockResolvedValue([]);
 
-    await applicationExpiryConsumer.applicationExpiry();
+    await applicationExpiryConsumer.process();
 
     expect(mockApplicationService.getAllNearExpiryDates).toBeCalledTimes(1);
     expect(mockEmailService.sendEmail).toBeCalledTimes(0);

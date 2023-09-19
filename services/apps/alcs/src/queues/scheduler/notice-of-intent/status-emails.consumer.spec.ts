@@ -66,7 +66,7 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
     });
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
-    await consumer.processSubmissionStatusesAndSendEmails();
+    await consumer.process();
 
     expect(
       mockNoticeOfIntentSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
@@ -119,7 +119,7 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
     });
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
-    await consumer.processSubmissionStatusesAndSendEmails();
+    await consumer.process();
 
     expect(
       mockNoticeOfIntentSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,

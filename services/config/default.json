@@ -55,7 +55,9 @@
     "MAX_FILE_SIZE": 104857600
   },
   "REDIS": {
-    "URL": "redis://:redis@redis:6379"
+    "HOST": "localhost",
+    "PORT": "6379",
+    "PASSWORD": ""
   },
   "EMAIL": {
     "DEFAULT_ADMINS": [""]

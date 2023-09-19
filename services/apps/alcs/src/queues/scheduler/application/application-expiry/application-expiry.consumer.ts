@@ -1,5 +1,5 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
-import { Process, Processor } from '@nestjs/bull';
+import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Inject, Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import {
@@ -10,17 +10,18 @@ import { EmailService } from '../../../../providers/email/email.service';
 import { QUEUES } from '../../scheduler.service';
 
 @Processor(QUEUES.APP_EXPIRY)
-export class ApplicationExpiryConsumer {
+export class ApplicationExpiryConsumer extends WorkerHost {
   private logger = new Logger(ApplicationExpiryConsumer.name);
 
   constructor(
     private applicationService: ApplicationService,
     private emailService: EmailService,
     @Inject(CONFIG_TOKEN) private config: IConfig,
-  ) {}
+  ) {
+    super();
+  }
 
-  @Process()
-  async applicationExpiry() {
+  async process() {
     try {
       this.logger.debug('starting applicationExpiry');
 
@@ -48,6 +49,11 @@ export class ApplicationExpiryConsumer {
     } catch (e) {
       this.logger.error(e);
     }
+  }
+
+  @OnWorkerEvent('completed')
+  onCompleted() {
+    this.logger.debug('Completed applicationExpiry job.');
   }
 
   private getApplicationsNearExpiryDates() {

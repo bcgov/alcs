@@ -68,7 +68,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
-    await consumer.processSubmissionStatusesAndSendEmails();
+    await consumer.process();
 
     expect(
       mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
@@ -119,7 +119,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
-    await consumer.processSubmissionStatusesAndSendEmails();
+    await consumer.process();
 
     expect(
       mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
@@ -169,7 +169,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
-    await consumer.processSubmissionStatusesAndSendEmails();
+    await consumer.process();
 
     expect(
       mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails,
