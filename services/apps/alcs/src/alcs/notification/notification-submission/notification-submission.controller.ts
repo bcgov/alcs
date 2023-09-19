@@ -64,4 +64,29 @@ export class NotificationSubmissionController {
     );
     return this.get(fileNumber, req);
   }
+
+  @UserRoles(...ANY_AUTH_ROLE)
+  @Patch('/:fileNumber')
+  async update(
+    @Param('fileNumber') fileNumber: string,
+    @Body('contactEmail') contactEmail: string,
+    @Req() req,
+  ) {
+    if (!contactEmail.trim()) {
+      throw new ServiceValidationException('Email is required');
+    }
+
+    const uuid = await this.notificationSubmissionService.getUuid(fileNumber);
+    if (uuid) {
+      await this.notificationSubmissionService.update(
+        uuid,
+        {
+          contactEmail,
+        },
+        req.user.entity,
+      );
+    }
+
+    return this.get(fileNumber, req);
+  }
 }

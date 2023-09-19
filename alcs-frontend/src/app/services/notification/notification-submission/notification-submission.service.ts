@@ -22,6 +22,19 @@ export class NotificationSubmissionService {
     }
   }
 
+  async setContactEmail(email: string, fileNumber: string): Promise<NotificationSubmissionDetailedDto> {
+    try {
+      return firstValueFrom(
+        this.http.patch<NotificationSubmissionDetailedDto>(`${this.baseUrl}/${fileNumber}`, {
+          contactEmail: email,
+        })
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to fetch Notification Submission');
+      throw e;
+    }
+  }
+
   async setSubmissionStatus(fileNumber: string, statusCode: string): Promise<NotificationSubmissionDto> {
     try {
       return firstValueFrom(

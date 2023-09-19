@@ -70,4 +70,13 @@ describe('NotificationSubmissionService', () => {
     expect(result).toEqual(mockSubmittedNOI);
     expect(mockHttpClient.get).toBeCalledTimes(1);
   });
+
+  it('should make a patch request for email', async () => {
+    mockHttpClient.patch.mockReturnValue(of(mockSubmittedNOI));
+
+    const result = await service.setContactEmail('1', '1');
+
+    expect(result).toEqual(mockSubmittedNOI);
+    expect(mockHttpClient.patch).toBeCalledTimes(1);
+  });
 });

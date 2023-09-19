@@ -93,4 +93,28 @@ describe('NotificationSubmissionController', () => {
     );
     expect(result).toEqual({ url: fakeDownloadUrl });
   });
+
+  it('should call through to service for updating email', async () => {
+    mockNotificationSubmissionService.getUuid.mockResolvedValue('uuid');
+    mockNotificationSubmissionService.update.mockResolvedValue(
+      new NotificationSubmission(),
+    );
+    mockNotificationSubmissionService.getByFileNumber.mockResolvedValue(
+      new NotificationSubmission({
+        fileNumber: 'fileNumber',
+      }),
+    );
+    mockNotificationSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      createMock<NotificationSubmissionDetailedDto>(),
+    );
+
+    await controller.update('fileNumber', 'email', {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    expect(mockNotificationSubmissionService.getUuid).toBeCalledTimes(1);
+    expect(mockNotificationSubmissionService.update).toBeCalledTimes(1);
+  });
 });
