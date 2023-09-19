@@ -8,8 +8,6 @@ export class RedisService {
   private client: ReturnType<typeof createClient>;
 
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {
-    // "redis://:redis@redis:6379",
-
     const url = `redis://:${this.config.get<string>(
       'REDIS.PASSWORD',
     )}@${this.config.get<string>('REDIS.HOST')}:${this.config.get<number>(

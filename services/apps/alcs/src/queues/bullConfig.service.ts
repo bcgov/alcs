@@ -10,7 +10,7 @@ import {
 export class BullConfigService implements SharedBullConfigurationFactory {
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
 
-  createSharedConfiguration(): QueueOptions | Promise<QueueOptions> {
+  createSharedConfiguration(): QueueOptions {
     return {
       connection: {
         host: this.config.get<string>('REDIS.HOST'),
