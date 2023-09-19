@@ -1,4 +1,4 @@
-<div *ngIf="_notificationSubmission" class="review-table">
+<div *ngIf="_notificationSubmission" class="review-table other-layout">
   <div class="subheading2 grid-1">Submitter’s File Number</div>
   <div class="grid-double">
     {{ _notificationSubmission.submittersFileNumber }}
@@ -33,29 +33,27 @@
     <app-no-data [showRequired]="showErrors" *ngIf="_notificationSubmission.hasSurveyPlan === null"></app-no-data>
   </div>
 
-  <ng-container *ngIf="_notificationSubmission.hasSurveyPlan">
-    <div class="survey-table">
-      <div><strong>File Name</strong></div>
-      <div><strong>Survey Plan Number</strong></div>
-      <div><strong>Control Number</strong></div>
-      <ng-container *ngFor="let file of surveyPlans">
-        <div>
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
-        </div>
-        <div>
-          {{ file.surveyPlanNumber }}
-          <app-no-data [showRequired]="showErrors" *ngIf="file.surveyPlanNumber === null"></app-no-data>
-        </div>
-        <div>
-          {{ file.controlNumber }}
-          <app-no-data [showRequired]="showErrors" *ngIf="file.controlNumber === null"></app-no-data>
-        </div>
-      </ng-container>
-      <app-no-data [showRequired]="showErrors" *ngIf="surveyPlans.length === 0"></app-no-data>
-    </div>
-  </ng-container>
+  <div *ngIf="_notificationSubmission.hasSurveyPlan" class="survey-table full-width">
+    <div><strong>File Name</strong></div>
+    <div><strong>Survey Plan Number</strong></div>
+    <div><strong>Control Number</strong></div>
+    <ng-container *ngFor="let file of surveyPlans">
+      <div>
+        <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+      </div>
+      <div>
+        {{ file.surveyPlanNumber }}
+        <app-no-data [showRequired]="showErrors" *ngIf="file.surveyPlanNumber === null"></app-no-data>
+      </div>
+      <div>
+        {{ file.controlNumber }}
+        <app-no-data [showRequired]="showErrors" *ngIf="file.controlNumber === null"></app-no-data>
+      </div>
+    </ng-container>
+    <app-no-data [showRequired]="showErrors" *ngIf="surveyPlans.length === 0"></app-no-data>
+  </div>
 
-  <div *ngIf="showEdit" class="edit-button">
+  <div *ngIf="showEdit" class="edit-button full-width">
     <button mat-flat-button (click)="onEditSection(4)" color="accent">Edit Section</button>
   </div>
 </div>

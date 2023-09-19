@@ -13,8 +13,20 @@ section {
 
 .table {
   margin-top: rem(24);
+
+  .mat-mdc-header-cell {
+    vertical-align: text-top;
+  }
+
+  td {
+    padding: rem(12) rem(10);
+  }
 }
 
 .scrollable {
   overflow-x: auto;
+}
+
+.full-width {
+  width: 100%;
 }

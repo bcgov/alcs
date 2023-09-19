@@ -87,6 +87,9 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
         newForm.addControl(`${file.uuid}-control`, new FormControl(file.controlNumber, [Validators.required]));
       }
       this.surveyForm = newForm;
+      if (this.showErrors) {
+        this.surveyForm.markAllAsTouched();
+      }
     });
   }
 

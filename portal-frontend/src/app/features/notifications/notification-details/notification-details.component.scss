@@ -97,6 +97,10 @@
     word-wrap: break-word;
     hyphens: auto;
 
+    &.other-layout {
+      grid-template-columns: 1fr 1fr;
+    }
+
     .edit-button {
       display: flex;
       justify-content: center;
