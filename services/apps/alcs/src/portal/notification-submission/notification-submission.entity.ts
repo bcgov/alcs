@@ -8,14 +8,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { NotificationParcel } from './notification-parcel/notification-parcel.entity';
-import { NotificationTransfereeDto } from './notification-transferee/notification-transferee.dto';
 import { NotificationTransferee } from './notification-transferee/notification-transferee.entity';
 
 @Entity()

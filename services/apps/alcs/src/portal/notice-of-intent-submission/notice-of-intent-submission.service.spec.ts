@@ -4,12 +4,17 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import {
+  NoticeOfIntentDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
@@ -21,7 +26,6 @@ import {
   PORTAL_TO_ALCS_STRUCTURE_MAP,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
-import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
 describe('NoticeOfIntentSubmissionService', () => {
   let service: NoticeOfIntentSubmissionService;
@@ -35,6 +39,7 @@ describe('NoticeOfIntentSubmissionService', () => {
   let mockFileNumberService: DeepMocked<FileNumberService>;
   let mockNoiStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
   let mockNoiSubmission;
+  let mockQueryBuilder;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -99,6 +104,20 @@ describe('NoticeOfIntentSubmissionService', () => {
         clientRoles: [],
       }),
     });
+
+    mockQueryBuilder =
+      createMock<SelectQueryBuilder<NoticeOfIntentSubmission>>();
+    mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.where.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.execute.mockResolvedValue([
+      {
+        user_uuid: 'user_uuid',
+        bceid_business_guid: 'bceid_business_guid',
+        localGovernment_bceid_business_guid:
+          'localGovernment_bceid_business_guid',
+      },
+    ]);
   });
 
   it('should be defined', () => {
@@ -353,5 +372,151 @@ describe('NoticeOfIntentSubmissionService', () => {
     const app = await service.getOrFailByFileNumber('');
 
     expect(app).toBe(noiSubmission);
+  });
+
+  it('should return true for access document if its public', async () => {
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.PUBLIC],
+      }),
+      new User(),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return true for access document if its applicant and requesting user owns it', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        uuid: 'user_uuid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its applicant and requesting user does not own it', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        uuid: 'NOT_user_uuid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for access document if its government and requesting user is in that government', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
+      }),
+      new User({
+        bceidBusinessGuid: 'localGovernment_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its government and requesting user is NOT in that government', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
+      }),
+      new User({
+        bceidBusinessGuid: 'NOT_localGovernment_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for access document if its applicant and requesting user is in same business', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        bceidBusinessGuid: 'bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its applicant and requesting user is NOT in same business account', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new NoticeOfIntentDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        bceidBusinessGuid: 'NOT_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for delete document if user is owner', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canDeleteDocument(
+      new NoticeOfIntentDocument({}),
+      new User({
+        uuid: 'user_uuid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for delete document if user is NOT owner', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new NoticeOfIntentSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canDeleteDocument(
+      new NoticeOfIntentDocument({}),
+      new User({
+        uuid: 'NOT_user_uuid',
+      }),
+    );
+
+    expect(res).toBe(false);
   });
 });

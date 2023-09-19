@@ -7,19 +7,23 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
+import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
@@ -43,6 +47,7 @@ describe('ApplicationSubmissionService', () => {
   let mockGenerateReviewDocumentService: DeepMocked<GenerateReviewDocumentService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockQueryBuilder;
 
   beforeEach(async () => {
     mockRepository = createMock();
@@ -118,6 +123,19 @@ describe('ApplicationSubmissionService', () => {
     service = module.get<ApplicationSubmissionService>(
       ApplicationSubmissionService,
     );
+
+    mockQueryBuilder = createMock<SelectQueryBuilder<ApplicationSubmission>>();
+    mockQueryBuilder.leftJoin.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.select.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.where.mockReturnValue(mockQueryBuilder);
+    mockQueryBuilder.execute.mockResolvedValue([
+      {
+        user_uuid: 'user_uuid',
+        bceid_business_guid: 'bceid_business_guid',
+        localGovernment_bceid_business_guid:
+          'localGovernment_bceid_business_guid',
+      },
+    ]);
   });
 
   it('should be defined', () => {
@@ -561,5 +579,151 @@ describe('ApplicationSubmissionService', () => {
     await service.listNaruSubtypes();
 
     expect(mockNaruSubtypeRepository.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return true for access document if its public', async () => {
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.PUBLIC],
+      }),
+      new User(),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return true for access document if its applicant and requesting user owns it', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        uuid: 'user_uuid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its applicant and requesting user does not own it', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        uuid: 'NOT_user_uuid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for access document if its government and requesting user is in that government', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
+      }),
+      new User({
+        bceidBusinessGuid: 'localGovernment_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its government and requesting user is NOT in that government', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.GOVERNMENT],
+      }),
+      new User({
+        bceidBusinessGuid: 'NOT_localGovernment_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for access document if its applicant and requesting user is in same business', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        bceidBusinessGuid: 'bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for access document if its applicant and requesting user is NOT in same business account', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canAccessDocument(
+      new ApplicationDocument({
+        visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
+      }),
+      new User({
+        bceidBusinessGuid: 'NOT_bceid_business_guid',
+      }),
+    );
+
+    expect(res).toBe(false);
+  });
+
+  it('should return true for delete document if user is owner', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canDeleteDocument(
+      new ApplicationDocument({}),
+      new User({
+        uuid: 'user_uuid',
+      }),
+    );
+
+    expect(res).toBe(true);
+  });
+
+  it('should return false for delete document if user is NOT owner', async () => {
+    mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    const noiSubmission = new ApplicationSubmission();
+    mockRepository.findOneOrFail.mockResolvedValue(noiSubmission);
+
+    const res = await service.canDeleteDocument(
+      new ApplicationDocument({}),
+      new User({
+        uuid: 'NOT_user_uuid',
+      }),
+    );
+
+    expect(res).toBe(false);
   });
 });
