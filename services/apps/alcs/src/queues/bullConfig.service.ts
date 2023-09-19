@@ -1,18 +1,22 @@
-import { CONFIG_TOKEN } from '@app/common/config/config.module';
-import {
-  BullModuleOptions,
-  SharedBullConfigurationFactory,
-} from '@nestjs/bull';
+import { SharedBullConfigurationFactory } from '@nestjs/bullmq';
 import { Inject, Injectable } from '@nestjs/common';
-import { IConfig } from 'config';
+import { QueueOptions } from 'bullmq';
+import {
+  CONFIG_TOKEN,
+  IConfig,
+} from '../../../../libs/common/src/config/config.module';
 
 @Injectable()
 export class BullConfigService implements SharedBullConfigurationFactory {
   constructor(@Inject(CONFIG_TOKEN) private config: IConfig) {}
 
-  createSharedConfiguration(): BullModuleOptions {
+  createSharedConfiguration(): QueueOptions {
     return {
-      url: this.config.get<string>('REDIS.URL'),
+      connection: {
+        host: this.config.get<string>('REDIS.HOST'),
+        port: this.config.get<number>('REDIS.PORT'),
+        password: this.config.get<string>('REDIS.PASSWORD'),
+      },
     };
   }
 }

@@ -1,10 +1,10 @@
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
-import { Queue } from 'bull';
+import { Queue } from 'bullmq';
 
 export const MONDAY_TO_FRIDAY_AT_2AM = '0 0 2 * * 1-5';
 export const EVERYDAY_MIDNIGHT = '0 0 0 * * *';
-export const EVERY_15_MINUTES_STARTING_FROM_8AM = '0/15 8-23 * * *';
+export const EVERY_15_MINUTES_STARTING_FROM_8AM = '0/1 8-23 * * *';
 
 export const QUEUES = {
   APP_EXPIRY: 'ApplicationExpiry',
@@ -27,7 +27,7 @@ export class SchedulerService {
 
   async setup() {
     //Job Disabled, clean queue but don't schedule it
-    await this.applicationExpiryQueue.empty();
+    await this.applicationExpiryQueue.drain();
     // await this.scheduleApplicationExpiry();
 
     await this.scheduleCleanupNotifications();
@@ -36,32 +36,42 @@ export class SchedulerService {
   }
 
   private async scheduleApplicationExpiry() {
-    await this.applicationExpiryQueue.empty();
+    await this.applicationExpiryQueue.drain();
     await this.applicationExpiryQueue.add(
+      'applicationExpiry',
       {},
-      { repeat: { cron: MONDAY_TO_FRIDAY_AT_2AM } },
+      {
+        repeat: { pattern: MONDAY_TO_FRIDAY_AT_2AM },
+      },
     );
   }
 
   private async scheduleCleanupNotifications() {
-    await this.cleanupNotificationsQueue.empty();
+    await this.cleanupNotificationsQueue.drain();
     await this.cleanupNotificationsQueue.add(
+      'cleanupNotifications',
       {},
-      { repeat: { cron: EVERYDAY_MIDNIGHT } },
+      {
+        repeat: { pattern: EVERYDAY_MIDNIGHT },
+      },
     );
   }
 
   private async scheduleSubmissionEmails() {
-    await this.applicationSubmissionStatusEmails.empty();
+    await this.applicationSubmissionStatusEmails.drain();
     await this.applicationSubmissionStatusEmails.add(
+      'applicationSubmissionStatusEmails',
       {},
-      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
+      {
+        repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM },
+      },
     );
 
-    await this.noticeOfIntentSubmissionStatusEmails.empty();
+    await this.noticeOfIntentSubmissionStatusEmails.drain();
     await this.noticeOfIntentSubmissionStatusEmails.add(
+      'noticeOfIntentSubmissionStatusEmails',
       {},
-      { repeat: { cron: EVERY_15_MINUTES_STARTING_FROM_8AM } },
+      { repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
   }
 }

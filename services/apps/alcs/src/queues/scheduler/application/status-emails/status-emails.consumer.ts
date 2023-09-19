@@ -1,4 +1,4 @@
-import { Process, Processor } from '@nestjs/bull';
+import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
@@ -19,16 +19,17 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 @Processor(QUEUES.APPLICATION_STATUS_EMAILS)
-export class ApplicationSubmissionStatusEmailConsumer {
+export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
   private logger = new Logger(ApplicationSubmissionStatusEmailConsumer.name);
 
   constructor(
     private submissionStatusService: ApplicationSubmissionStatusService,
     private statusEmailService: StatusEmailService,
-  ) {}
+  ) {
+    super();
+  }
 
-  @Process()
-  async processSubmissionStatusesAndSendEmails() {
+  async process() {
     try {
       this.logger.debug(
         'Starting application submission status email consumer.',
@@ -69,6 +70,13 @@ export class ApplicationSubmissionStatusEmailConsumer {
     } catch (e) {
       this.logger.error(e);
     }
+  }
+
+  @OnWorkerEvent('completed')
+  onCompleted() {
+    this.logger.debug(
+      'Completed ApplicationSubmissionStatusEmailConsumer job.',
+    );
   }
 
   private async sendEmailAndUpdateStatus(

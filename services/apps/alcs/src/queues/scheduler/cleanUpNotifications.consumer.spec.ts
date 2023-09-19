@@ -37,7 +37,7 @@ describe('SchedulerConsumerService', () => {
       affected: 1,
     } as DeleteResult);
 
-    await notificationCleanUpConsumer.cleanUpNotifications();
+    await notificationCleanUpConsumer.process();
 
     expect(mockNotificationService.cleanUp).toHaveBeenCalledTimes(2);
 
