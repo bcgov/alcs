@@ -87,6 +87,7 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilStructureResidentialUseReason: string | null;
   soilAgriParcelActivity: string | null;
   soilStructureResidentialAccessoryUseReason: string | null;
+  soilStructureOtherUseReason: string | null;
   soilProposedStructures: ProposedStructure[];
 }
 
@@ -138,6 +139,7 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilStructureResidentialUseReason?: string | null;
   soilAgriParcelActivity?: string | null;
   soilStructureResidentialAccessoryUseReason?: string | null;
+  soilStructureOtherUseReason?: string | null;
   soilProposedStructures?: ProposedStructure[];
 }
 

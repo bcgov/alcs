@@ -27,9 +27,10 @@ export class AdditionalInformationComponent {
   @Input() set noiSubmission(noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined) {
     if (noiSubmission) {
       this._noiSubmission = noiSubmission;
-      this.setVisibilityAndValidatorsForResidentialFields();
-      this.setVisibilityAndValidatorsForAccessoryFields();
-      this.setVisibilityAndValidatorsForFarmFields();
+      this.setVisibilityForResidentialFields();
+      this.setValidatorsForAccessoryFields();
+      this.setVisibilityForFarmFields();
+      this.setVisibilityForOtherFields();
 
       switch (noiSubmission.typeCode) {
         case 'ROSO':
@@ -55,34 +56,23 @@ export class AdditionalInformationComponent {
   isSoilStructureResidentialUseReasonVisible = false;
   isSoilAgriParcelActivityVisible = false;
   isSoilStructureResidentialAccessoryUseReasonVisible = false;
+  isSoilOtherStructureVisible = false;
 
   constructor(private router: Router, private noticeOfIntentDocumentService: NoticeOfIntentDocumentService) {}
 
-  private setVisibilityAndValidatorsForResidentialFields() {
-    if (
-      this._noiSubmission?.soilProposedStructures.some(
-        (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type)
-      )
-    ) {
-      this.isSoilStructureResidentialUseReasonVisible = true;
-    } else {
-      this.isSoilStructureResidentialUseReasonVisible = false;
-    }
+  private setVisibilityForResidentialFields() {
+    this.isSoilStructureResidentialUseReasonVisible = !!this._noiSubmission?.soilProposedStructures.some(
+      (structure) => structure.type && RESIDENTIAL_STRUCTURE_TYPES.includes(structure.type)
+    );
   }
 
-  private setVisibilityAndValidatorsForAccessoryFields() {
-    if (
-      this._noiSubmission?.soilProposedStructures.some(
-        (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
-      )
-    ) {
-      this.isSoilStructureResidentialAccessoryUseReasonVisible = true;
-    } else {
-      this.isSoilStructureResidentialAccessoryUseReasonVisible = false;
-    }
+  private setValidatorsForAccessoryFields() {
+    this.isSoilStructureResidentialAccessoryUseReasonVisible = !!this._noiSubmission?.soilProposedStructures.some(
+      (structure) => structure.type === STRUCTURE_TYPES.ACCESSORY_STRUCTURE
+    );
   }
 
-  private setVisibilityAndValidatorsForFarmFields() {
+  private setVisibilityForFarmFields() {
     if (
       this._noiSubmission?.soilProposedStructures.some((structure) => structure.type === STRUCTURE_TYPES.FARM_STRUCTURE)
     ) {
@@ -92,6 +82,12 @@ export class AdditionalInformationComponent {
       this.isSoilAgriParcelActivityVisible = false;
       this.isSoilStructureFarmUseReasonVisible = false;
     }
+  }
+
+  private setVisibilityForOtherFields() {
+    this.isSoilOtherStructureVisible = !!this._noiSubmission?.soilProposedStructures.some(
+      (structure) => structure.type === STRUCTURE_TYPES.OTHER_STRUCTURE
+    );
   }
 
   async onEditSection(step: number) {

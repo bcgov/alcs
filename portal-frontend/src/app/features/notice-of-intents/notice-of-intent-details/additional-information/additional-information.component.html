@@ -92,6 +92,19 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="isSoilOtherStructureVisible">
+      <div class="subheading2 grid-1">
+        Describe the intended use of the 'Other' structure
+        <app-updated-banner
+          *ngIf="updatedFields.includes('soilStructureResidentialAccessoryUseReason')"
+        ></app-updated-banner>
+      </div>
+      <div class="grid-double">
+        {{ _noiSubmission.soilStructureOtherUseReason }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilStructureOtherUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
     <div class="subheading2 grid-1">Detailed Building Plan(s)</div>
     <div class="grid-double multiple-documents">
       <a *ngFor="let file of buildingPlans" (click)="openFile(file.uuid)">

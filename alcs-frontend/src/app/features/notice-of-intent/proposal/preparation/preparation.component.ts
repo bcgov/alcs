@@ -107,6 +107,13 @@ export class PreparationComponent implements OnInit {
       return true;
     }
 
+    const isOther =
+      submission.soilProposedStructures?.some((struct) => struct.type === STRUCTURE_TYPES.OTHER) &&
+      subtype.code === 'OTHR';
+    if (isOther) {
+      return true;
+    }
+
     if (submission.soilIsAreaWideFilling && subtype.code === 'ARWF') {
       return true;
     }

@@ -18,7 +18,7 @@ import { User } from '../../user/user.entity';
 import { ValidatedNoticeOfIntentSubmission } from './notice-of-intent-submission-validator.service';
 import {
   NoticeOfIntentSubmission,
-  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
+  PORTAL_TO_ALCS_STRUCTURE_MAP,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from './notice-of-intent-submission.service';
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
@@ -93,6 +93,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       fileNumber: 'file-number',
       applicant: 'incognito',
       typeCode: 'fake',
+      soilProposedStructures: [],
       localGovernmentUuid: 'uuid',
       createdBy: new User({
         clientRoles: [],
@@ -273,16 +274,16 @@ describe('NoticeOfIntentSubmissionService', () => {
       localGovernmentUuid,
       soilProposedStructures: [
         {
-          type: 'Farm Structure',
-        },
-        {
-          type: 'Residential - Principal Residence',
+          type: 'Residential - Accessory Structure',
         },
         {
           type: 'Residential - Additional Residence',
         },
         {
-          type: 'Residential - Accessory Structure',
+          type: 'Residential - Principal Residence',
+        },
+        {
+          type: 'Farm Structure',
         },
       ],
       soilIsAreaWideFilling: true,
@@ -309,13 +310,10 @@ describe('NoticeOfIntentSubmissionService', () => {
       dateSubmittedToAlc: mockDate,
       typeCode,
       subtypes: [
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
-          .alcsValueCode,
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
-          .alcsValueCode,
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
-          .alcsValueCode,
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Accessory Structure'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Additional Residence'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Residential - Principal Residence'],
+        PORTAL_TO_ALCS_STRUCTURE_MAP['Farm Structure'],
         'ARWF',
         'AEPM',
       ],

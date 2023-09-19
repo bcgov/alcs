@@ -28,8 +28,8 @@ import {
   NoticeOfIntentSubmissionUpdateDto,
 } from './notice-of-intent-submission.dto';
 import {
+  PORTAL_TO_ALCS_STRUCTURE_MAP,
   NoticeOfIntentSubmission,
-  PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING,
 } from './notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 
@@ -341,58 +341,17 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission: ValidatedNoticeOfIntentSubmission,
   ) {
     const subtypes: string[] = [];
-    const isResidentialAccessory =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
-            .portalValue,
-      );
-    if (isResidentialAccessory) {
-      subtypes.push(
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ACCESSORY_STRUCTURE
-          .alcsValueCode,
-      );
-    }
 
-    const isResidentialAdditionalResidence =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING
-            .RESIDENTIAL_ADDITIONAL_RESIDENCE.portalValue,
-      );
-    if (isResidentialAdditionalResidence) {
-      subtypes.push(
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_ADDITIONAL_RESIDENCE
-          .alcsValueCode,
-      );
-    }
+    const structureTypes =
+      noticeOfIntentSubmission.soilProposedStructures.reduce((map, value) => {
+        if (value.type) {
+          map.add(value.type);
+        }
+        return map;
+      }, new Set<string>());
 
-    const isResidentialPrincipalResidence =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
-            .portalValue,
-      );
-    if (isResidentialPrincipalResidence) {
-      subtypes.push(
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.RESIDENTIAL_PRINCIPAL_RESIDENCE
-          .alcsValueCode,
-      );
-    }
-
-    const isFarmStructure =
-      noticeOfIntentSubmission.soilProposedStructures?.some(
-        (struct) =>
-          struct.type ===
-          PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.portalValue,
-      );
-    if (isFarmStructure) {
-      subtypes.push(
-        PORTAL_TO_ALCS_STRUCTURE_TYPES_MAPPING.FARM_STRUCTURE.alcsValueCode,
-      );
+    for (const type of structureTypes.values()) {
+      subtypes.push(PORTAL_TO_ALCS_STRUCTURE_MAP[type]);
     }
 
     if (noticeOfIntentSubmission.soilIsAreaWideFilling) {
@@ -616,6 +575,11 @@ export class NoticeOfIntentSubmissionService {
         updateDto.soilStructureResidentialAccessoryUseReason,
         noticeOfIntentSubmission.soilStructureResidentialAccessoryUseReason,
       );
+
+    noticeOfIntentSubmission.soilStructureOtherUseReason = filterUndefined(
+      updateDto.soilStructureOtherUseReason,
+      noticeOfIntentSubmission.soilStructureOtherUseReason,
+    );
 
     noticeOfIntentSubmission.soilProposedStructures = filterUndefined(
       updateDto.soilProposedStructures,
