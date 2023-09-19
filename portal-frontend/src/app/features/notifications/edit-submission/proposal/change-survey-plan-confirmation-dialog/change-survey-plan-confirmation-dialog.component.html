@@ -1,0 +1,13 @@
+<div mat-dialog-title>
+  <h4>Is there a survey plan associated with the SRW?</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <app-warning-banner>
+    <b>Warning:</b> Changing this answer will remove the uploaded survey plans. <br />
+  </app-warning-banner>
+  <div class="controls">
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="true">continue</button>
+  </div>
+</div>

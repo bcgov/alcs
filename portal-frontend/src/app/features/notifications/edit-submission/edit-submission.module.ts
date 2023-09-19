@@ -15,6 +15,7 @@ import { ParcelDetailsComponent } from './parcels/parcel-details.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcels/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcels/parcel-entry/parcel-entry.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { ChangeSurveyPlanConfirmationDialogComponent } from './proposal/change-survey-plan-confirmation-dialog/change-survey-plan-confirmation-dialog.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
@@ -52,6 +53,7 @@ const routes: Routes = [
     OtherAttachmentsComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
+    ChangeSurveyPlanConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,
