@@ -65,7 +65,10 @@ export class GenerateSrwDocumentService {
         documentType: DOCUMENT_TYPE.LTSA_LETTER,
         source: DOCUMENT_SOURCE.ALC,
         system: DOCUMENT_SYSTEM.PORTAL,
-        visibilityFlags: [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.PUBLIC],
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
       });
     }
   }
