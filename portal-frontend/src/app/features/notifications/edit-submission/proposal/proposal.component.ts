@@ -16,6 +16,7 @@ import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { ChangeSurveyPlanConfirmationDialogComponent } from './change-survey-plan-confirmation-dialog/change-survey-plan-confirmation-dialog.component';
 
 @Component({
   selector: 'app-proposal',
@@ -51,7 +52,6 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
     private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
-    private confirmationDialogService: ConfirmationDialogService,
     dialog: MatDialog
   ) {
     super(notificationDocumentService, dialog);
@@ -127,10 +127,9 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
 
   onChangeHasSurveyPlan(selectedValue: string) {
     if (selectedValue === 'false' && this.surveyPlans.length > 0) {
-      this.confirmationDialogService
-        .openDialog({
-          body: 'Warning: Changing this answer will remove the uploaded survey plans.',
-        })
+      this.dialog
+        .open(ChangeSurveyPlanConfirmationDialogComponent)
+        .beforeClosed()
         .subscribe(async (didConfirm) => {
           if (didConfirm) {
             for (const file of this.surveyPlans) {
