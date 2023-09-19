@@ -20,14 +20,15 @@ export class SchedulerService {
     @InjectQueue(QUEUES.CLEANUP_NOTIFICATIONS)
     private cleanupNotificationsQueue: Queue,
     @InjectQueue(QUEUES.APPLICATION_STATUS_EMAILS)
-    private applicationSubmissionStatusEmails: Queue,
+    private applicationSubmissionStatusEmailsQueue: Queue,
     @InjectQueue(QUEUES.NOTICE_OF_INTENTS_STATUS_EMAILS)
-    private noticeOfIntentSubmissionStatusEmails: Queue,
+    private noticeOfIntentSubmissionStatusEmailsQueue: Queue,
   ) {}
 
   async setup() {
     //Job Disabled, clean queue but don't schedule it
-    await this.applicationExpiryQueue.drain();
+    // TODO remove this once job is enabled
+    await this.removeRepeatJobs(this.applicationExpiryQueue);
     // await this.scheduleApplicationExpiry();
 
     await this.scheduleCleanupNotifications();
@@ -36,7 +37,7 @@ export class SchedulerService {
   }
 
   private async scheduleApplicationExpiry() {
-    await this.applicationExpiryQueue.drain();
+    await this.removeRepeatJobs(this.applicationExpiryQueue);
     await this.applicationExpiryQueue.add(
       'applicationExpiry',
       {},
@@ -47,7 +48,7 @@ export class SchedulerService {
   }
 
   private async scheduleCleanupNotifications() {
-    await this.cleanupNotificationsQueue.drain();
+    await this.removeRepeatJobs(this.cleanupNotificationsQueue);
     await this.cleanupNotificationsQueue.add(
       'cleanupNotifications',
       {},
@@ -58,8 +59,8 @@ export class SchedulerService {
   }
 
   private async scheduleSubmissionEmails() {
-    await this.applicationSubmissionStatusEmails.drain();
-    await this.applicationSubmissionStatusEmails.add(
+    await this.removeRepeatJobs(this.applicationSubmissionStatusEmailsQueue);
+    await this.applicationSubmissionStatusEmailsQueue.add(
       'applicationSubmissionStatusEmails',
       {},
       {
@@ -67,11 +68,19 @@ export class SchedulerService {
       },
     );
 
-    await this.noticeOfIntentSubmissionStatusEmails.drain();
-    await this.noticeOfIntentSubmissionStatusEmails.add(
+    await this.removeRepeatJobs(this.noticeOfIntentSubmissionStatusEmailsQueue);
+    await this.noticeOfIntentSubmissionStatusEmailsQueue.add(
       'noticeOfIntentSubmissionStatusEmails',
       {},
       { repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM } },
     );
+  }
+
+  private async removeRepeatJobs(queue: Queue) {
+    const repeatJobs = await queue.getRepeatableJobs();
+
+    repeatJobs.forEach(async (job) => {
+      await queue.removeRepeatableByKey(job.key);
+    });
   }
 }

@@ -20,25 +20,26 @@ describe('SchedulerService', () => {
     mockAppExpiryQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      drain: jest.fn(),
+      getRepeatableJobs: jest.fn().mockResolvedValue([]),
     };
 
     mockNotificationCleanUpQueue = {
       add: jest.fn(),
       process: jest.fn(),
       drain: jest.fn(),
+      getRepeatableJobs: jest.fn().mockResolvedValue([]),
     };
 
     mockApplicationStatusEmailsQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      drain: jest.fn(),
+      getRepeatableJobs: jest.fn().mockResolvedValue([]),
     };
 
     mockNoticeOfIntentStatusEmailsQueue = {
       add: jest.fn(),
       process: jest.fn(),
-      drain: jest.fn(),
+      getRepeatableJobs: jest.fn().mockResolvedValue([]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -80,7 +81,7 @@ describe('SchedulerService', () => {
   //Job Disabled for now
   // it('should call add for scheduleApplicationExpiry', async () => {
   //   await schedulerService.setup();
-  //   expect(mockAppExpiryQueue.drain).toBeCalledTimes(1);
+  //   expect(mockAppExpiryQueue.getRepeatableJobs).toBeCalledTimes(1);
   //   expect(mockAppExpiryQueue.add).toBeCalledTimes(1);
   //   expect(mockAppExpiryQueue.add).toBeCalledWith(
   //     'applicationExpiry'
@@ -91,7 +92,7 @@ describe('SchedulerService', () => {
 
   it('should call add for notification cleanup', async () => {
     await schedulerService.setup();
-    expect(mockNotificationCleanUpQueue.drain).toBeCalledTimes(1);
+    expect(mockNotificationCleanUpQueue.getRepeatableJobs).toBeCalledTimes(1);
     expect(mockNotificationCleanUpQueue.add).toBeCalledTimes(1);
     expect(mockNotificationCleanUpQueue.add).toBeCalledWith(
       'cleanupNotifications',
@@ -102,7 +103,9 @@ describe('SchedulerService', () => {
 
   it('should call add for application status email', async () => {
     await schedulerService.setup();
-    expect(mockApplicationStatusEmailsQueue.drain).toBeCalledTimes(1);
+    expect(mockApplicationStatusEmailsQueue.getRepeatableJobs).toBeCalledTimes(
+      1,
+    );
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockApplicationStatusEmailsQueue.add).toBeCalledWith(
       'applicationSubmissionStatusEmails',
@@ -113,7 +116,9 @@ describe('SchedulerService', () => {
 
   it('should call add for notice of intent status email', async () => {
     await schedulerService.setup();
-    expect(mockNoticeOfIntentStatusEmailsQueue.drain).toBeCalledTimes(1);
+    expect(
+      mockNoticeOfIntentStatusEmailsQueue.getRepeatableJobs,
+    ).toBeCalledTimes(1);
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledTimes(1);
     expect(mockNoticeOfIntentStatusEmailsQueue.add).toBeCalledWith(
       'noticeOfIntentSubmissionStatusEmails',
