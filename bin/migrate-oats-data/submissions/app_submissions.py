@@ -18,7 +18,7 @@ from .submap import (
     add_soil_field,
 )
 from db import inject_conn_pool
-from constants import BATCH_UPLOAD_SIZE
+from common import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 from enum import Enum

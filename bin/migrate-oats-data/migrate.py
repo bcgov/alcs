@@ -16,7 +16,7 @@ from applications import (
     clean_applications,
     process_alcs_application_prep_fields,
 )
-from noi import (
+from noi.notice_of_intent_init import (
     process_nois,
     clean_nois,
 )
@@ -24,7 +24,7 @@ from submissions import (
     process_alcs_app_submissions,
     clean_application_submission,
 )
-from constants import BATCH_UPLOAD_SIZE
+from common import BATCH_UPLOAD_SIZE
 
 from applications.application_submission_status_email import (
     process_application_submission_status_emails,
@@ -34,6 +34,7 @@ from noi.noi_submission_status_email import (
     process_notice_of_intent_submission_status_emails,
     clean_application_submission_status_emails,
 )
+from noi.notice_of_intent_base import process_alcs_notice_of_intent_base_fields
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
@@ -228,11 +229,12 @@ if __name__ == "__main__":
                     console.log("Processing NOIs:")
                     process_nois(batch_size=import_batch_size)
 
-                    console.log("Processing documents:")
-                    process_documents(batch_size=import_batch_size)
+                    # TODO Liam question which process_documents_noi or process_noi_documents is the correct one to keep?
+                    # console.log("Processing NOI specific documents:")
+                    # process_documents_noi(batch_size=import_batch_size)
 
-                    console.log("Processing NOI specific documents:")
-                    process_documents_noi(batch_size=import_batch_size)
+                    # console.log("Processing documents:")
+                    # process_documents(batch_size=import_batch_size)
 
                     console.log("Processing application documents:")
                     process_application_documents(batch_size=import_batch_size)
@@ -245,6 +247,11 @@ if __name__ == "__main__":
 
                     console.log("Processing application submission:")
                     process_alcs_app_submissions(batch_size=import_batch_size)
+
+                    console.log("Processing notice of intent fields")
+                    process_alcs_notice_of_intent_base_fields(
+                        batch_size=import_batch_size
+                    )
 
                     # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
                     #       must be the last ones in the migrate etl
@@ -264,7 +271,7 @@ if __name__ == "__main__":
                     clean_applications()
                     clean_nois()
                     clean_notice_of_intent_submission_status_emails(),
-                    clean_notice_of_intent_submission_status_emails(),
+                    clean_application_submission_status_emails(),
 
                     console.log("Done")
             case "document-import":
@@ -318,6 +325,9 @@ if __name__ == "__main__":
                     )
 
                     process_nois(batch_size=import_batch_size)
+                    process_alcs_notice_of_intent_base_fields(
+                        batch_size=import_batch_size
+                    )
             case "application-import":
                 console.log("Beginning OATS -> ALCS application import process")
                 with console.status(
