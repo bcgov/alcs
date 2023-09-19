@@ -5,4 +5,6 @@
   grid-column-gap: rem(16);
   grid-row-gap: rem(8);
   grid-template-columns: max-content max-content max-content;
+  overflow-x: auto;
+  grid-column: 1/3;
 }

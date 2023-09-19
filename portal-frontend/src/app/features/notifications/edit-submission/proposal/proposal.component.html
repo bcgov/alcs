@@ -127,7 +127,7 @@
 </form>
 <form [formGroup]="surveyForm">
   <div class="scrollable">
-    <table class='table' mat-table [dataSource]="surveyPlans">
+    <table class="table" mat-table [dataSource]="surveyPlans">
       <ng-container matColumnDef="fileName">
         <th mat-header-cell *matHeaderCellDef>File Name</th>
         <td mat-cell *matCellDef="let element">
@@ -141,7 +141,7 @@
           <div class="subtext">As listed on the survey plan certification</div>
         </th>
         <td mat-cell *matCellDef="let element">
-          <mat-form-field appearance="outline">
+          <mat-form-field class="full-width" appearance="outline">
             <input
               [formControlName]="element.uuid + '-surveyPlan'"
               (change)="onChangeSurveyPlan(element.uuid, $event)"
@@ -173,8 +173,9 @@
           <div class="subtext">The version of the plan, as listed on the survey plan certification</div>
         </th>
         <td mat-cell *matCellDef="let element">
-          <mat-form-field appearance="outline">
+          <mat-form-field class="full-width" appearance="outline">
             <input
+              class="full-width"
               [formControlName]="element.uuid + '-control'"
               (change)="onChangeControlNumber(element.uuid, $event)"
               id="fileType"
