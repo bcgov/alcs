@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../toast/toast.service';
-import { NotificationSubmissionToSubmissionStatusDto } from '../notification.dto';
+import { NotificationSubmissionStatusDto, NotificationSubmissionToSubmissionStatusDto } from '../notification.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,15 @@ export class NotificationSubmissionStatusService {
   private baseUrl = `${environment.apiUrl}/notification-submission-status`;
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
+
+  async list(): Promise<NotificationSubmissionStatusDto[]> {
+    try {
+      return await firstValueFrom(this.http.get<NotificationSubmissionStatusDto[]>(`${this.baseUrl}`));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to fetch Notification Submission Statuses');
+      return [];
+    }
+  }
 
   async fetchSubmissionStatusesByFileNumber(
     fileNumber: string

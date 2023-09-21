@@ -10,6 +10,7 @@ import {
   NonApplicationSearchResultDto,
   NonApplicationsSearchRequestDto,
   NoticeOfIntentSearchResultDto,
+  NotificationSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -77,6 +78,21 @@ export class SearchService {
       return await firstValueFrom(
         this.http.post<AdvancedSearchEntityResponseDto<NonApplicationSearchResultDto>>(
           `${this.baseUrl}/advanced/non-applications`,
+          searchDto
+        )
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast(`Search failed. Please refresh the page and try again`);
+      return undefined;
+    }
+  }
+
+  async advancedSearchNotificationsFetch(searchDto: NonApplicationsSearchRequestDto) {
+    try {
+      return await firstValueFrom(
+        this.http.post<AdvancedSearchEntityResponseDto<NotificationSearchResultDto>>(
+          `${this.baseUrl}/advanced/notifications`,
           searchDto
         )
       );

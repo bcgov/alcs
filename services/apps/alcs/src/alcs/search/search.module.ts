@@ -13,6 +13,8 @@ import { NonApplicationSearchView } from './non-applications/non-applications-vi
 import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
+import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
+import { NotificationSubmissionSearchView } from './notification/notification-search-view.entity';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 
@@ -28,6 +30,7 @@ import { SearchService } from './search.service';
       ApplicationSubmissionSearchView,
       NoticeOfIntentSubmissionSearchView,
       NonApplicationSearchView,
+      NotificationSubmissionSearchView,
     ]),
   ],
   providers: [
@@ -36,6 +39,7 @@ import { SearchService } from './search.service';
     ApplicationAdvancedSearchService,
     NoticeOfIntentAdvancedSearchService,
     NonApplicationsAdvancedSearchService,
+    NotificationAdvancedSearchService,
   ],
   controllers: [SearchController],
 })

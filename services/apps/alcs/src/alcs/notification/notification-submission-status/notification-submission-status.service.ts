@@ -123,4 +123,8 @@ export class NotificationSubmissionStatusService {
 
     return await this.statusesRepository.remove(statusesToRemove);
   }
+
+  async listStatuses() {
+    return this.submissionStatusTypeRepository.find();
+  }
 }

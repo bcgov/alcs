@@ -13,11 +13,16 @@ import { ApplicationLocalGovernmentDto } from '../../services/application/applic
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationStatusDto } from '../../services/application/application-submission-status/application-submission-status.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { NoticeOfIntentStatusDto } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationSubmissionStatusDto } from '../../services/notification/notification.dto';
 import {
   AdvancedSearchResponseDto,
   ApplicationSearchResultDto,
   NonApplicationSearchResultDto,
   NoticeOfIntentSearchResultDto,
+  NotificationSearchResultDto,
   SearchRequestDto,
 } from '../../services/search/search.dto';
 import { SearchService } from '../../services/search/search.service';
@@ -28,10 +33,6 @@ import { TableChange } from './search.interface';
 
 export const defaultStatusBackgroundColour = '#ffffff';
 export const defaultStatusColour = '#313132';
-
-const APPLICATION_TAB_INDEX = 0;
-const NOTICE_OF_INTENT_TAB_INDEX = 1;
-const NON_APPLICATION_TAB_INDEX = 2;
 
 @Component({
   selector: 'app-search',
@@ -54,6 +55,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   nonApplications: NonApplicationSearchResultDto[] = [];
   nonApplicationsTotal = 0;
+
+  notifications: NotificationSearchResultDto[] = [];
+  notificationTotal = 0;
 
   isSearchExpanded = false;
   pageIndex = 0;
@@ -89,17 +93,22 @@ export class SearchComponent implements OnInit, OnDestroy {
   localGovernments: ApplicationLocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<ApplicationLocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
-  statuses: ApplicationStatusDto[] = [];
+  applicationStatuses: ApplicationStatusDto[] = [];
+  allStatuses: (ApplicationStatusDto | NoticeOfIntentStatusDto | NotificationSubmissionStatusDto)[] = [];
 
   formEmpty = true;
   civicAddressInvalid = false;
   pidInvalid = false;
   searchResultsHidden = true;
+  notificationStatuses: NotificationSubmissionStatusDto[] = [];
+  noiStatuses: NoticeOfIntentStatusDto[] = [];
 
   constructor(
     private searchService: SearchService,
     private activatedRoute: ActivatedRoute,
     private localGovernmentService: ApplicationLocalGovernmentService,
+    private notificationStatusService: NotificationSubmissionStatusService,
+    private noiStatusService: NoticeOfIntentSubmissionStatusService,
     private applicationService: ApplicationService,
     private toastService: ToastService,
     private titleService: Title
@@ -115,7 +124,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       .pipe(combineLatestWith(this.applicationService.$applicationStatuses, this.activatedRoute.queryParamMap))
       .subscribe(([regions, statuses, queryParamMap]) => {
         this.regions = regions;
-        this.statuses = statuses;
+        this.applicationStatuses = statuses;
+        this.populateAllStatuses();
 
         const searchText = queryParamMap.get('searchText');
 
@@ -171,6 +181,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.resolutionYears.reverse();
     this.loadGovernments();
     this.applicationService.setup();
+    this.loadStatuses();
 
     this.filteredLocalGovernments = this.localGovernmentControl.valueChanges.pipe(
       startWith(''),
@@ -293,6 +304,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.nonApplicationsTotal = result?.total ?? 0;
   }
 
+  async onNotificationSearch() {
+    const searchParams = this.getSearchParams();
+    const result = await this.searchService.advancedSearchNotificationsFetch(searchParams);
+
+    this.notifications = result?.data ?? [];
+    this.notificationTotal = result?.total ?? 0;
+  }
+
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
@@ -304,10 +323,13 @@ export class SearchComponent implements OnInit, OnDestroy {
         await this.onApplicationSearch();
         break;
       case 'NOI':
-        await this.onApplicationSearch();
+        await this.onNoticeOfIntentSearch();
         break;
       case 'NONAPP':
         await this.onNonApplicationSearch();
+        break;
+      case 'NOTI':
+        await this.onNotificationSearch();
         break;
       default:
         this.toastService.showErrorToast('Not implemented');
@@ -339,9 +361,11 @@ export class SearchComponent implements OnInit, OnDestroy {
         applications: [],
         noticeOfIntents: [],
         nonApplications: [],
+        notifications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
         totalNonApplications: 0,
+        totalNotifications: 0,
       };
     }
 
@@ -353,17 +377,21 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.nonApplicationsTotal = searchResult.totalNonApplications;
     this.nonApplications = searchResult.nonApplications;
+
+    this.notifications = searchResult.notifications;
+    this.notificationTotal = searchResult.totalNotifications;
   }
 
   private setActiveTab() {
-    let maxVal = Math.max(this.applicationTotal, this.noticeOfIntentTotal, this.nonApplicationsTotal);
+    //Keep this in Tab Order
+    const searchCounts = [
+      this.applicationTotal,
+      this.noticeOfIntentTotal,
+      this.nonApplicationsTotal,
+      this.notificationTotal,
+    ];
 
-    this.tabGroup.selectedIndex =
-      maxVal === this.applicationTotal
-        ? APPLICATION_TAB_INDEX
-        : maxVal === this.noticeOfIntentTotal
-        ? NOTICE_OF_INTENT_TAB_INDEX
-        : NON_APPLICATION_TAB_INDEX;
+    this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));
   }
 
   private formatStringSearchParam(value: string | undefined | null) {
@@ -376,5 +404,26 @@ export class SearchComponent implements OnInit, OnDestroy {
     } else {
       return value.trim();
     }
+  }
+
+  private async loadStatuses() {
+    this.notificationStatuses = await this.notificationStatusService.list();
+    this.noiStatuses = await this.noiStatusService.listStatuses();
+    this.populateAllStatuses();
+  }
+
+  private populateAllStatuses() {
+    const statusCodes = new Set<string>();
+    const result = [];
+    const allStatuses = [...this.applicationStatuses, ...this.noiStatuses, ...this.notificationStatuses];
+    for (const status of allStatuses) {
+      if (!statusCodes.has(status.code)) {
+        result.push(status);
+        statusCodes.add(status.code);
+      }
+    }
+
+    this.allStatuses = result;
+    this.allStatuses.sort((a, b) => (a.label > b.label ? 1 : -1));
   }
 }

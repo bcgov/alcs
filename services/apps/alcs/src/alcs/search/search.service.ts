@@ -30,7 +30,7 @@ export class SearchService {
   ) {}
 
   async getApplication(fileNumber: string) {
-    const application = await this.applicationRepository.findOne({
+    return await this.applicationRepository.findOne({
       where: {
         fileNumber,
       },
@@ -40,12 +40,10 @@ export class SearchService {
         type: true,
       },
     });
-
-    return application;
   }
 
   async getNoi(fileNumber: string) {
-    const noi = await this.noiRepository.findOne({
+    return await this.noiRepository.findOne({
       where: {
         fileNumber,
       },
@@ -54,42 +52,34 @@ export class SearchService {
         localGovernment: true,
       },
     });
-
-    return noi;
   }
 
   async getPlanningReview(fileNumber: string) {
-    const planningReview = await this.planningReviewRepository.findOne({
+    return await this.planningReviewRepository.findOne({
       where: {
         fileNumber,
         card: { archived: false },
       },
       relations: CARD_RELATIONSHIP,
     });
-
-    return planningReview;
   }
 
   async getCovenant(fileNumber: string) {
-    const covenant = await this.covenantRepository.findOne({
+    return await this.covenantRepository.findOne({
       where: {
         fileNumber,
         card: { archived: false },
       },
       relations: CARD_RELATIONSHIP,
     });
-
-    return covenant;
   }
 
   async getNotification(fileNumber: string) {
-    const notification = await this.notificationRepository.findOne({
+    return await this.notificationRepository.findOne({
       where: {
         fileNumber,
       },
       relations: CARD_RELATIONSHIP,
     });
-
-    return notification;
   }
 }

@@ -7,6 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ApplicationRegionDto } from '../../services/application/application-code.dto';
 import { ApplicationLocalGovernmentService } from '../../services/application/application-local-government/application-local-government.service';
 import { ApplicationService } from '../../services/application/application.service';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { SearchService } from '../../services/search/search.service';
 import { ToastService } from '../../services/toast/toast.service';
 
@@ -19,12 +21,16 @@ describe('SearchComponent', () => {
   let mockToastService: DeepMocked<ToastService>;
   let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockNotificationStatusService: DeepMocked<NotificationSubmissionStatusService>;
+  let mockNOIStatusService: DeepMocked<NotificationSubmissionStatusService>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
     mockToastService = createMock();
     mockLocalGovernmentService = createMock();
     mockApplicationService = createMock();
+    mockNotificationStatusService = createMock();
+    mockNOIStatusService = createMock();
 
     mockApplicationService.$applicationRegions = new BehaviorSubject<ApplicationRegionDto[]>([]);
 
@@ -51,6 +57,14 @@ describe('SearchComponent', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: NotificationSubmissionStatusService,
+          useValue: mockNotificationStatusService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNOIStatusService,
         },
       ],
       declarations: [SearchComponent],

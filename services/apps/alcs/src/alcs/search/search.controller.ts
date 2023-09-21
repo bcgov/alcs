@@ -22,6 +22,8 @@ import { NonApplicationSearchView } from './non-applications/non-applications-vi
 import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
+import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
+import { NotificationSubmissionSearchView } from './notification/notification-search-view.entity';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
@@ -29,6 +31,7 @@ import {
   NonApplicationSearchResultDto,
   NonApplicationsSearchRequestDto,
   NoticeOfIntentSearchResultDto,
+  NotificationSearchResultDto,
   SearchRequestDto,
   SearchResultDto,
 } from './search.dto';
@@ -44,6 +47,7 @@ export class SearchController {
     private noticeOfIntentSearchService: NoticeOfIntentAdvancedSearchService,
     private applicationSearchService: ApplicationAdvancedSearchService,
     private nonApplicationsSearchService: NonApplicationsAdvancedSearchService,
+    private notificationSearchService: NotificationAdvancedSearchService,
   ) {}
 
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
@@ -100,8 +104,10 @@ export class SearchController {
     }
   }
 
-  private mapApplicationToSearchResult(application: Application) {
-    const result = {
+  private mapApplicationToSearchResult(
+    application: Application,
+  ): SearchResultDto {
+    return {
       type: CARD_TYPE.APP,
       referenceId: application.fileNumber,
       localGovernmentName: application.localGovernment?.name,
@@ -112,65 +118,65 @@ export class SearchController {
         ApplicationType,
         ApplicationTypeDto,
       ),
-    } as SearchResultDto;
-
-    return result;
+    };
   }
 
-  private mapNoticeOfIntentToSearchResult(noi: NoticeOfIntent) {
-    const result = {
+  private mapNoticeOfIntentToSearchResult(
+    noi: NoticeOfIntent,
+  ): SearchResultDto {
+    return {
       type: CARD_TYPE.NOI,
       referenceId: noi.fileNumber,
       localGovernmentName: noi.localGovernment?.name,
       applicant: noi.applicant,
       fileNumber: noi.fileNumber,
-    } as SearchResultDto;
-
-    return result;
+    };
   }
 
-  private mapPlanningReviewToSearchResult(planning: PlanningReview) {
-    const result = {
+  private mapPlanningReviewToSearchResult(
+    planning: PlanningReview,
+  ): SearchResultDto {
+    return {
       type: CARD_TYPE.PLAN,
       referenceId: planning.cardUuid,
       localGovernmentName: planning.localGovernment?.name,
       fileNumber: planning.fileNumber,
       boardCode: planning.card.board.code,
-    } as SearchResultDto;
-
-    return result;
+    };
   }
 
-  private mapCovenantToSearchResult(covenant: Covenant) {
-    const result = {
+  private mapCovenantToSearchResult(covenant: Covenant): SearchResultDto {
+    return {
       type: CARD_TYPE.COV,
       referenceId: covenant.cardUuid,
       localGovernmentName: covenant.localGovernment?.name,
       applicant: covenant.applicant,
       fileNumber: covenant.fileNumber,
       boardCode: covenant.card.board.code,
-    } as SearchResultDto;
-
-    return result;
+    };
   }
 
-  private mapNotificationToSearchResult(notification: Notification) {
-    const result = {
+  private mapNotificationToSearchResult(
+    notification: Notification,
+  ): SearchResultDto {
+    return {
       type: CARD_TYPE.NOTIFICATION,
       referenceId: notification.fileNumber,
       localGovernmentName: notification.localGovernment?.name,
       applicant: notification.applicant,
       fileNumber: notification.fileNumber,
-    } as SearchResultDto;
-
-    return result;
+    };
   }
 
   @Post('/advanced')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearch(@Body() searchDto: SearchRequestDto) {
-    const { searchApplications, searchNoi, searchNonApplications } =
-      this.getEntitiesTypeToSearch(searchDto);
+    const {
+      searchApplications,
+      searchNoi,
+      searchNonApplications,
+      searchNotifications,
+    } = this.getEntitiesTypeToSearch(searchDto);
 
     let applicationSearchResult: AdvancedSearchResultDto<
       ApplicationSubmissionSearchView[]
@@ -198,13 +204,19 @@ export class SearchController {
         );
     }
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
+    let notifications: AdvancedSearchResultDto<
+      NotificationSubmissionSearchView[]
+    > | null = null;
+    if (searchNotifications) {
+      notifications = await this.notificationSearchService.search(searchDto);
+    }
+
+    return this.mapAdvancedSearchResults(
       applicationSearchResult,
       noticeOfIntentSearchService,
       nonApplications,
+      notifications,
     );
-
-    return mappedSearchResult;
   }
 
   @Post('/advanced/application')
@@ -218,6 +230,7 @@ export class SearchController {
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applications,
+      null,
       null,
       null,
     );
@@ -240,6 +253,7 @@ export class SearchController {
       null,
       noticeOfIntents,
       null,
+      null,
     );
 
     return {
@@ -260,6 +274,29 @@ export class SearchController {
       null,
       null,
       nonApplications,
+      null,
+    );
+
+    return {
+      total: mappedSearchResult.totalNonApplications,
+      data: mappedSearchResult.nonApplications,
+    };
+  }
+
+  @Post('/advanced/notifications')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async advancedSearchNotifications(
+    @Body() searchDto: SearchRequestDto,
+  ): Promise<AdvancedSearchResultDto<NonApplicationSearchResultDto[]>> {
+    const notifications = await this.notificationSearchService.search(
+      searchDto,
+    );
+
+    const mappedSearchResult = this.mapAdvancedSearchResults(
+      null,
+      null,
+      null,
+      notifications,
     );
 
     return {
@@ -270,11 +307,10 @@ export class SearchController {
 
   private getEntitiesTypeToSearch(searchDto: SearchRequestDto) {
     let searchApplications = true;
-    let searchNoi = true;
-    let searchNonApplications = true;
 
     let nonApplicationTypeSpecified = false;
     let noiTypeSpecified = false;
+    let notificationTypeSpecified = false;
     if (searchDto.fileTypes.length > 0) {
       searchApplications =
         searchDto.fileTypes.filter((searchType) =>
@@ -287,47 +323,42 @@ export class SearchController {
 
       noiTypeSpecified = searchDto.fileTypes.includes('NOI');
 
-      nonApplicationTypeSpecified =
-        searchDto.fileTypes.filter((searchType) =>
-          ['COV', 'PLAN', 'SRW'].includes(searchType),
-        ).length > 0;
+      notificationTypeSpecified = searchDto.fileTypes.includes('SRW');
+
+      nonApplicationTypeSpecified = searchDto.fileTypes.some((searchType) =>
+        ['COV', 'PLAN'].includes(searchType),
+      );
     }
 
-    searchNoi =
-      noiTypeSpecified || this.areAnyNoiSearchFieldsSpecified(searchDto);
+    const searchNoi =
+      (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true) &&
+      !searchDto.isIncludeOtherParcels &&
+      !isStringSetAndNotEmpty(searchDto.legacyId);
 
-    searchNonApplications =
-      nonApplicationTypeSpecified ||
-      isStringSetAndNotEmpty(searchDto.fileNumber) ||
-      isStringSetAndNotEmpty(searchDto.governmentName) ||
-      isStringSetAndNotEmpty(searchDto.regionCode) ||
-      isStringSetAndNotEmpty(searchDto.name);
+    const searchNonApplications =
+      (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
+      !searchDto.dateDecidedFrom &&
+      !searchDto.dateDecidedTo &&
+      !searchDto.resolutionNumber &&
+      !searchDto.resolutionYear &&
+      !searchDto.isIncludeOtherParcels &&
+      !isStringSetAndNotEmpty(searchDto.legacyId);
 
-    return { searchApplications, searchNoi, searchNonApplications };
-  }
+    const searchNotifications =
+      (searchDto.fileTypes.length > 0 ? notificationTypeSpecified : true) &&
+      !searchDto.dateDecidedFrom &&
+      !searchDto.dateDecidedTo &&
+      !searchDto.resolutionNumber &&
+      !searchDto.resolutionYear &&
+      !searchDto.isIncludeOtherParcels &&
+      !isStringSetAndNotEmpty(searchDto.legacyId);
 
-  public areAnyNoiSearchFieldsSpecified(searchDto: SearchRequestDto): boolean {
-    for (const key in searchDto) {
-      if (
-        searchDto.hasOwnProperty(key) &&
-        ![
-          'legacyId',
-          'isIncludeOtherParcels',
-          'fileTypes',
-          'page',
-          'pageSize',
-          'sortField',
-          'sortDirection',
-        ].includes(key) &&
-        searchDto[key] !== undefined &&
-        searchDto[key] !== '' &&
-        searchDto[key] !== []
-      ) {
-        return true;
-      }
-    }
-
-    return false;
+    return {
+      searchApplications,
+      searchNoi,
+      searchNonApplications,
+      searchNotifications,
+    };
   }
 
   private mapAdvancedSearchResults(
@@ -338,6 +369,9 @@ export class SearchController {
       NoticeOfIntentSubmissionSearchView[]
     > | null,
     nonApplications: AdvancedSearchResultDto<NonApplicationSearchView[]> | null,
+    notifications: AdvancedSearchResultDto<
+      NotificationSubmissionSearchView[]
+    > | null,
   ) {
     const response = new AdvancedSearchResponseDto();
 
@@ -368,12 +402,23 @@ export class SearchController {
       );
     }
 
+    const mappedNotifications: NotificationSearchResultDto[] = [];
+    if (notifications && notifications.data && notifications.data.length > 0) {
+      mappedNotifications.push(
+        ...notifications.data.map((notification) =>
+          this.mapNotificationToAdvancedSearchResult(notification),
+        ),
+      );
+    }
+
     response.applications = mappedApplications;
     response.totalApplications = applications?.total ?? 0;
     response.noticeOfIntents = mappedNoticeOfIntents;
     response.totalNoticeOfIntents = noticeOfIntents?.total ?? 0;
     response.nonApplications = mappedNonApplications;
     response.totalNonApplications = nonApplications?.total ?? 0;
+    response.notifications = mappedNotifications;
+    response.totalNotifications = notifications?.total ?? 0;
 
     return response;
   }
@@ -427,6 +472,25 @@ export class SearchController {
       type: nonApplication.type,
       localGovernmentName: nonApplication.localGovernment?.name ?? null,
       class: nonApplication.class,
+    };
+  }
+
+  private mapNotificationToAdvancedSearchResult(
+    notification: NotificationSubmissionSearchView,
+  ): NoticeOfIntentSearchResultDto {
+    return {
+      referenceId: notification.fileNumber,
+      fileNumber: notification.fileNumber,
+      dateSubmitted: notification.dateSubmittedToAlc?.getTime(),
+      type: this.mapper.map(
+        notification.notificationType,
+        ApplicationType,
+        ApplicationTypeDto,
+      ),
+      localGovernmentName: notification.localGovernmentName,
+      ownerName: notification.applicant,
+      class: 'NOTI',
+      status: notification.status.status_type_code,
     };
   }
 }

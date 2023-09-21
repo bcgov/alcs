@@ -20,7 +20,7 @@
           <mat-label>Name</mat-label>
           <input id="name" matInput formControlName="name" minlength="3" />
         </mat-form-field>
-        <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Ministry or Department</div>
+        <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Transferee, Ministry or Department</div>
         <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
@@ -123,7 +123,7 @@
       <div class="column">
         <mat-form-field appearance="outline">
           <mat-select placeholder="Portal Status" [formControl]="portalStatusControl">
-            <mat-option *ngFor="let status of statuses" [value]="status.code">
+            <mat-option *ngFor="let status of allStatuses" [value]="status.code">
               {{ status.label }}
             </mat-option>
           </mat-select>
@@ -260,7 +260,7 @@
       <app-application-search-table
         [applications]="applications"
         [totalCount]="applicationTotal"
-        [statuses]="statuses"
+        [statuses]="applicationStatuses"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-application-search-table>
@@ -271,7 +271,7 @@
       <app-notice-of-intent-search-table
         [noticeOfIntents]="noticeOfIntents"
         [totalCount]="noticeOfIntentTotal"
-        [statuses]="statuses"
+        [statuses]="noiStatuses"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-notice-of-intent-search-table>
@@ -285,6 +285,17 @@
         (tableChange)="onTableChange($event)"
       >
       </app-non-application-search-table>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
+      <app-notification-search-table
+        [statuses]="notificationStatuses"
+        [notifications]="notifications"
+        [totalCount]="notificationTotal"
+        (tableChange)="onTableChange($event)"
+      >
+      </app-notification-search-table>
     </mat-tab>
   </mat-tab-group>
 </div>

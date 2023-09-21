@@ -310,7 +310,6 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
           government = await this.loadGovernment(this.applicationSubmission?.localGovernmentUuid);
         }
 
-        debugger;
         if (government && government.matchesUserGuid && submission.typeCode !== 'TURP') {
           const review = await this.applicationReviewService.startReview(submission.fileNumber);
           if (review) {

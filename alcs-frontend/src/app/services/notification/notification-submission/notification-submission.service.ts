@@ -34,17 +34,4 @@ export class NotificationSubmissionService {
       throw e;
     }
   }
-
-  async setSubmissionStatus(fileNumber: string, statusCode: string): Promise<NotificationSubmissionDto> {
-    try {
-      return firstValueFrom(
-        this.http.patch<NotificationSubmissionDto>(`${this.baseUrl}/${fileNumber}/update-status`, {
-          statusCode,
-        })
-      );
-    } catch (e) {
-      this.toastService.showErrorToast('Failed to update Notification Submission Status');
-      throw e;
-    }
-  }
 }

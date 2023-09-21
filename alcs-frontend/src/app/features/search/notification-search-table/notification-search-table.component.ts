@@ -1,13 +1,12 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
-import { ApplicationStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
-import { NoticeOfIntentStatusDto } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.dto';
-import { NoticeOfIntentTypeDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { NoticeOfIntentSearchResultDto } from '../../../services/search/search.dto';
+import { NotificationSubmissionStatusService } from '../../../services/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationSubmissionStatusDto, NotificationTypeDto } from '../../../services/notification/notification.dto';
+import { NotificationSearchResultDto } from '../../../services/search/search.dto';
 import { ApplicationSubmissionStatusPill } from '../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { TableChange } from '../search.interface';
 
@@ -15,7 +14,7 @@ interface SearchResult {
   fileNumber: string;
   dateSubmitted: number;
   ownerName: string;
-  type?: NoticeOfIntentTypeDto;
+  type?: NotificationTypeDto;
   government?: string;
   portalStatus?: string;
   referenceId: string;
@@ -25,20 +24,23 @@ interface SearchResult {
 }
 
 @Component({
-  selector: 'app-notice-of-intent-search-table',
-  templateUrl: './notice-of-intent-search-table.component.html',
-  styleUrls: ['./notice-of-intent-search-table.component.scss'],
+  selector: 'app-notification-search-table',
+  templateUrl: './notification-search-table.component.html',
+  styleUrls: ['./notification-search-table.component.scss'],
 })
-export class NoticeOfIntentSearchTableComponent implements OnDestroy {
+export class NotificationSearchTableComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  _noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
-  @Input() set noticeOfIntents(noticeOfIntents: NoticeOfIntentSearchResultDto[]) {
-    this._noticeOfIntents = noticeOfIntents;
-    this.dataSource = this.mapNoticeOfIntent(noticeOfIntents);
+  _notifications: NotificationSearchResultDto[] = [];
+
+  @Input() statuses: NotificationSubmissionStatusDto[] = [];
+
+  @Input() set notifications(notifications: NotificationSearchResultDto[]) {
+    this._notifications = notifications;
+    this.dataSource = this.mapNotifications(notifications);
   }
 
   _totalCount = 0;
@@ -47,9 +49,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
     this.initSorting();
   }
 
-  @Input() statuses: NoticeOfIntentStatusDto[] = [];
   @Input() regions: ApplicationRegionDto[] = [];
-
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
@@ -87,13 +87,13 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   }
 
   async onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/notice-of-intent/${record.referenceId}`]));
+    const url = this.router.serializeUrl(this.router.createUrlTree([`/notification/${record.referenceId}`]));
 
     window.open(url, '_blank');
   }
 
-  private mapNoticeOfIntent(applications: NoticeOfIntentSearchResultDto[]): SearchResult[] {
-    return applications.map((e) => {
+  private mapNotifications(notifications: NotificationSearchResultDto[]): SearchResult[] {
+    return notifications.map((e) => {
       const status = this.statuses.find((st) => st.code === e.status);
 
       return {

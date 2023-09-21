@@ -60,10 +60,16 @@ const TREE_DATA: TreeNode[] = [
         item: { label: 'Covenants', value: 'COV' },
       },
       {
-        item: { label: 'Notification of SRW', value: 'SRW' },
-      },
-      {
         item: { label: 'Planning Review', value: 'PLAN' },
+      },
+    ],
+  },
+  {
+    item: { label: 'Notifications', value: null },
+
+    children: [
+      {
+        item: { label: 'SRW', value: 'SRW' },
       },
     ],
   },
