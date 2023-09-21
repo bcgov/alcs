@@ -17,6 +17,7 @@ import { NonApplicationSearchView } from './non-applications/non-applications-vi
 import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
 import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
+import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
 import { SearchController } from './search.controller';
 import {
   AdvancedSearchResultDto,
@@ -31,12 +32,14 @@ describe('SearchController', () => {
   let mockNoticeOfIntentAdvancedSearchService: DeepMocked<NoticeOfIntentAdvancedSearchService>;
   let mockApplicationAdvancedSearchService: DeepMocked<ApplicationAdvancedSearchService>;
   let mockNonApplicationsAdvancedSearchService: DeepMocked<NonApplicationsAdvancedSearchService>;
+  let mockNotificationAdvancedSearchService: DeepMocked<NotificationAdvancedSearchService>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
     mockNoticeOfIntentAdvancedSearchService = createMock();
     mockApplicationAdvancedSearchService = createMock();
     mockNonApplicationsAdvancedSearchService = createMock();
+    mockNotificationAdvancedSearchService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -60,6 +63,10 @@ describe('SearchController', () => {
         {
           provide: NonApplicationsAdvancedSearchService,
           useValue: mockNonApplicationsAdvancedSearchService,
+        },
+        {
+          provide: NotificationAdvancedSearchService,
+          useValue: mockNotificationAdvancedSearchService,
         },
         {
           provide: ClsService,
@@ -94,32 +101,29 @@ describe('SearchController', () => {
       }),
     );
 
-    const mockNoiResult = new AdvancedSearchResultDto<
-      NoticeOfIntentSubmissionSearchView[]
-    >();
-    mockNoiResult.data = new Array<NoticeOfIntentSubmissionSearchView>();
-    mockNoiResult.total = 0;
     mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue(
-      mockNoiResult,
+      {
+        data: [],
+        total: 0,
+      },
     );
 
-    const mockApplicationResult = new AdvancedSearchResultDto<
-      ApplicationSubmissionSearchView[]
-    >();
-    mockApplicationResult.data = new Array<ApplicationSubmissionSearchView>();
-    mockApplicationResult.total = 0;
-    mockApplicationAdvancedSearchService.searchApplications.mockResolvedValue(
-      mockApplicationResult,
-    );
+    mockApplicationAdvancedSearchService.searchApplications.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
 
-    const mockNonApplicationResult = new AdvancedSearchResultDto<
-      NonApplicationSearchView[]
-    >();
-    mockNonApplicationResult.data = new Array<NonApplicationSearchView>();
-    mockNonApplicationResult.total = 0;
     mockNonApplicationsAdvancedSearchService.searchNonApplications.mockResolvedValue(
-      mockNonApplicationResult,
+      {
+        data: [],
+        total: 0,
+      },
     );
+
+    mockNotificationAdvancedSearchService.search.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
   });
 
   it('should be defined', () => {
@@ -144,7 +148,7 @@ describe('SearchController', () => {
     expect(result.length).toBe(5);
   });
 
-  it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants', async () => {
+  it('should call advanced search to retrieve Applications, NOIs, PlanningReviews, Covenants, Notifications', async () => {
     const mockSearchRequestDto = {
       pageSize: 1,
       page: 1,

@@ -1,0 +1,79 @@
+<ng-container *ngIf="_totalCount > 0">
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z2 table"
+    matSort
+    matSortActive="dateSubmitted"
+    matSortDirection="desc"
+    matSortDisableClear
+  >
+    <ng-container matColumnDef="fileId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>File ID</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.fileNumber | emptyColumn }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dateSubmitted">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Submitted</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.dateSubmitted | date | emptyColumn }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ownerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Owner Name</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.ownerName | emptyColumn }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+      <td mat-cell class="type-cell" *matCellDef="let element">
+        <app-application-type-pill *ngIf="element.type" [type]="element.type" [useShortLabel]="true">
+        </app-application-type-pill>
+        <ng-container *ngIf="element.type === null || element.type === undefined">-</ng-container>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="government">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Local/First Nation Government</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.localGovernmentName | emptyColumn }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="portalStatus">
+      <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Portal Status</th>
+      <td mat-cell class="type-cell" *matCellDef="let element">
+        <app-application-submission-status-type-pill
+          *ngIf="element.status"
+          [type]="element.status"
+        ></app-application-submission-status-type-pill>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr (click)="onSelectRecord(row)" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr class="mat-row no-data" *matNoDataRow>
+      <td class="text-center" colspan="6">
+        <div><b>No notice of intent found.</b></div>
+        <div>Please adjust criteria and try again.</div>
+      </td>
+    </tr>
+  </table>
+  <mat-paginator
+    [length]="_totalCount"
+    [pageSize]="20"
+    [pageSizeOptions]="[20, 50, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page"
+  ></mat-paginator>
+</ng-container>
+<div class="no-data" *ngIf="_totalCount === 0">
+  <div><b>No notifications found.</b></div>
+  <div>Please adjust criteria and try again.</div>
+</div>

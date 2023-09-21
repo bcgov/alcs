@@ -62,7 +62,7 @@ describe('NotificationSubmissionService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should successfully fetch noi submission', async () => {
+  it('should successfully fetch notification submission', async () => {
     mockHttpClient.get.mockReturnValue(of(mockSubmittedNOI));
 
     const result = await service.fetchSubmission('1');

@@ -15,6 +15,7 @@ export interface ApplicationSearchResultDto {
 }
 
 export interface NoticeOfIntentSearchResultDto extends ApplicationSearchResultDto {}
+export interface NotificationSearchResultDto extends ApplicationSearchResultDto {}
 
 export interface NonApplicationSearchResultDto {
   type: string | null;
@@ -30,9 +31,11 @@ export interface AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   nonApplications: NonApplicationSearchResultDto[];
+  notifications: NotificationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalNonApplications: number;
+  totalNotifications: number;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {

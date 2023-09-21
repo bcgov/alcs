@@ -12,13 +12,13 @@ export class SearchResultDto {
   type: string;
   referenceId: string;
   applicant?: string;
-  localGovernmentName: string;
+  localGovernmentName: string | undefined;
   fileNumber: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
 }
 
-export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV';
+export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV' | 'NOTI';
 
 export class ApplicationSearchResultDto {
   type: ApplicationTypeDto;
@@ -54,13 +54,27 @@ export class NonApplicationSearchResultDto {
   class: SearchEntityClass;
 }
 
+export class NotificationSearchResultDto {
+  type: ApplicationTypeDto;
+  referenceId: string;
+  ownerName?: string;
+  localGovernmentName?: string;
+  fileNumber: string;
+  boardCode?: string;
+  status: string;
+  dateSubmitted?: number;
+  class: SearchEntityClass;
+}
+
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
   noticeOfIntents: NoticeOfIntentSearchResultDto[];
   nonApplications: NonApplicationSearchResultDto[];
+  notifications: NotificationSearchResultDto[];
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalNonApplications: number;
+  totalNotifications: number;
 }
 
 export class AdvancedSearchResultDto<T> {

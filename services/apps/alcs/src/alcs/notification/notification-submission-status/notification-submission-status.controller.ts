@@ -3,7 +3,11 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param } from '@nestjs/common';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { NotificationSubmissionToSubmissionStatusDto } from './notification-status.dto';
+import { NotificationSubmissionStatusType } from './notification-status-type.entity';
+import {
+  NotificationStatusDto,
+  NotificationSubmissionToSubmissionStatusDto,
+} from './notification-status.dto';
 import { NotificationSubmissionToSubmissionStatus } from './notification-status.entity';
 import { NotificationSubmissionStatusService } from './notification-submission-status.service';
 
@@ -14,6 +18,18 @@ export class NotificationSubmissionStatusController {
     private notificationSubmissionStatusService: NotificationSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
+
+  @Get('')
+  async listStatuses() {
+    const statuses =
+      await this.notificationSubmissionStatusService.listStatuses();
+
+    return this.mapper.mapArrayAsync(
+      statuses,
+      NotificationSubmissionStatusType,
+      NotificationStatusDto,
+    );
+  }
 
   @Get('/:fileNumber')
   async getStatusesByFileNumber(@Param('fileNumber') fileNumber) {
