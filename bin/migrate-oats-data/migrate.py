@@ -20,7 +20,7 @@ from noi.notice_of_intent_init import (
     process_nois,
     clean_nois,
 )
-from submissions import (
+from applications.submissions import (
     process_alcs_app_submissions,
     clean_application_submission,
 )
