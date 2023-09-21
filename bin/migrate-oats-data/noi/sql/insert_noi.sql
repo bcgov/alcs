@@ -13,8 +13,8 @@ WITH
         HAVING
             count(oaac.alr_application_id) < 2
     ),
-    -- Step 2: get applicant 
-    applicant_lookup AS (
+    -- Step 2: get noi 
+    noi_lookup AS (
         SELECT DISTINCT
             oaap.alr_application_id AS application_id,
             string_agg (DISTINCT oo.organization_name, ', ') FILTER (
@@ -145,8 +145,8 @@ WITH
 SELECT
     ng.noi_application_id :: text AS file_number,
     CASE
-        WHEN applicant_lookup.orgs IS NOT NULL THEN applicant_lookup.orgs
-        WHEN applicant_lookup.persons IS NOT NULL THEN applicant_lookup.persons
+        WHEN noi_lookup.orgs IS NOT NULL THEN noi_lookup.orgs
+        WHEN noi_lookup.persons IS NOT NULL THEN noi_lookup.persons
         ELSE 'Unknown'
     END AS applicant,
     ar.code AS region_code,
@@ -163,7 +163,7 @@ SELECT
     END AS type_code
 FROM
     noi_grouped AS ng
-    LEFT JOIN applicant_lookup ON ng.noi_application_id = applicant_lookup.application_id
+    LEFT JOIN noi_lookup ON ng.noi_application_id = noi_lookup.application_id
     LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
     LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON ng.noi_application_id = alcs_gov.application_id

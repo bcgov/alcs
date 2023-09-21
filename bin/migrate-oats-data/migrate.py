@@ -34,7 +34,9 @@ from noi.noi_submission_status_email import (
     process_notice_of_intent_submission_status_emails,
     clean_application_submission_status_emails,
 )
-from noi.notice_of_intent_base import process_alcs_notice_of_intent_base_fields
+from noi.oats_to_alcs_notice_of_intent_table_etl import (
+    process_alcs_notice_of_intent_fee_fields,
+)
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
@@ -249,7 +251,7 @@ if __name__ == "__main__":
                     process_alcs_app_submissions(batch_size=import_batch_size)
 
                     console.log("Processing notice of intent fields")
-                    process_alcs_notice_of_intent_base_fields(
+                    process_alcs_notice_of_intent_fee_fields(
                         batch_size=import_batch_size
                     )
 
@@ -325,7 +327,7 @@ if __name__ == "__main__":
                     )
 
                     process_nois(batch_size=import_batch_size)
-                    process_alcs_notice_of_intent_base_fields(
+                    process_alcs_notice_of_intent_fee_fields(
                         batch_size=import_batch_size
                     )
             case "application-import":
