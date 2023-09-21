@@ -58,14 +58,6 @@
     overflow-x: auto;
   }
 
-  .soil-table {
-    display: grid;
-    grid-template-columns: max-content max-content;
-    overflow-x: auto;
-    grid-column-gap: rem(36);
-    grid-row-gap: rem(12);
-  }
-
   .other-attachments {
     display: grid;
     grid-template-columns: max-content max-content max-content;
@@ -99,6 +91,10 @@
 
     &.other-layout {
       grid-template-columns: 1fr 1fr;
+
+      .edit-button {
+        grid-column: 1/3;
+      }
     }
 
     .edit-button {
