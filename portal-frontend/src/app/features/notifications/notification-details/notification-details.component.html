@@ -5,32 +5,38 @@
     [showEdit]="showEdit"
   ></app-parcel>
 </section>
-<h3>2. Identify Transferee(s)</h3>
-<div *ngIf="notificationSubmission" class="review-table">
-  <div class="full-width transferee-table">
-    <div class="subheading2">Type</div>
-    <div class="subheading2">Full Name</div>
-    <div class="subheading2">Organization Name</div>
-    <div class="subheading2">Phone</div>
-    <div class="subheading2">Email</div>
-    <ng-container *ngFor="let transferee of notificationSubmission.transferees">
-      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
-      <div>{{ transferee.displayName }}</div>
-      <div>
-        {{ transferee.organizationName }}
-        <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
-      </div>
-      <div>
-        <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
-      </div>
-      <div>{{ transferee.email }}</div>
-    </ng-container>
+<section>
+  <h3>2. Identify Transferee(s)</h3>
+  <div *ngIf="notificationSubmission" class="review-table">
+    <div class="full-width transferee-table">
+      <div class="subheading2">Type</div>
+      <div class="subheading2">Full Name</div>
+      <div class="subheading2">Organization Name</div>
+      <div class="subheading2">Phone</div>
+      <div class="subheading2">Email</div>
+      <ng-container *ngFor="let transferee of notificationSubmission.transferees">
+        <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+        <div>{{ transferee.displayName }}</div>
+        <div>
+          {{ transferee.organizationName }}
+          <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
+        </div>
+        <div>
+          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
+        </div>
+        <div>{{ transferee.email }}</div>
+      </ng-container>
+    </div>
+    <app-no-data
+      class="full-width"
+      [showRequired]="showErrors"
+      *ngIf="notificationSubmission.transferees.length === 0"
+    ></app-no-data>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
+    </div>
   </div>
-  <app-no-data [showRequired]="showErrors" *ngIf="notificationSubmission.transferees.length === 0"></app-no-data>
-  <div *ngIf="showEdit" class="edit-button">
-    <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
-  </div>
-</div>
+</section>
 <section>
   <h3>3. Primary Contact</h3>
   <div *ngIf="notificationSubmission" class="review-table other-layout">
