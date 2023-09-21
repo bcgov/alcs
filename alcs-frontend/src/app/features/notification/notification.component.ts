@@ -20,7 +20,7 @@ export const preSubmissionRoutes = [
   },
   {
     path: 'applicant-info',
-    menuTitle: 'App Preview',
+    menuTitle: 'SRW Preview',
     icon: 'persons',
     component: ApplicantInfoComponent,
   },

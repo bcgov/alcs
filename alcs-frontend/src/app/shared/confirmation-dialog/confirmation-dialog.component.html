@@ -1,5 +1,5 @@
-<div class="card-title" *ngIf="data.title" mat-dialog-title>
-  <h2>{{ data.title }}</h2>
+<div *ngIf="data.title" mat-dialog-title>
+  <span class="subheading2">{{ data.title }}</span>
 </div>
 <div mat-dialog-content>
   <p>{{ data.body }}</p>
