@@ -145,11 +145,7 @@ export class NotificationDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
-        [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.GOVERNMENT,
-          VISIBILITY_FLAG.COMMISSIONER,
-        ],
+        [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT],
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);

@@ -2,16 +2,16 @@
   <app-parcel *ngIf="files && submission" [notificationSubmission]="submission"></app-parcel>
 </section>
 <section>
-  <h3>Transferees</h3>
+  <h3>Transferee(s)</h3>
   <div *ngIf="submission" class="review-table">
     <div class="transferee-table full-width">
       <div class="subheading2">Type</div>
       <div class="subheading2">Full Name</div>
-      <div class="subheading2">Organization</div>
+      <div class="subheading2">Organization Name</div>
       <div class="subheading2">Phone</div>
       <div class="subheading2">Email</div>
       <ng-container *ngFor="let transferee of submission.transferees">
-        <div>{{ transferee.type.label }}</div>
+        <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
         <div>{{ transferee.displayName }}</div>
         <div>
           {{ transferee.organizationName }}
@@ -28,7 +28,7 @@
 <section>
   <h3>Primary Contact Information</h3>
   <div *ngIf="submission" class="review-table">
-    <div class="subheading2 grid-1">Type</div>
+    <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
       {{ submission.contactFirstName }}
       <app-no-data *ngIf="!submission.contactFirstName"></app-no-data>
@@ -56,7 +56,7 @@
   </div>
 </section>
 <section *ngIf="showFullApp">
-  <h3>Proposal</h3>
+  <h3>Purpose of SRW</h3>
   <div *ngIf="submission" class="review-table">
     <div class="subheading2 grid-1">Submitter’s File Number</div>
     <div class="grid-double">
@@ -109,18 +109,19 @@
   <h3>Optional Documents</h3>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
-      <div class="grid-1 subheading2">Type</div>
-      <div class="grid-2 subheading2">Description</div>
-      <div class="grid-3 subheading2">File Name</div>
+      <div class="grid-1 subheading2">File Name</div>
+      <div class="grid-2 subheading2">Type</div>
+      <div class="grid-3 subheading2">Description</div>
+
       <ng-container *ngFor="let file of otherFiles">
         <div class="grid-1">
-          {{ file.type?.label }}
+          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
         <div class="grid-2">
-          {{ file.description }}
+          {{ file.type?.label }}
         </div>
         <div class="grid-3">
-          <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
+          {{ file.description }}
         </div>
       </ng-container>
       <div *ngIf="otherFiles.length === 0" class="full-width">No optional attachments</div>

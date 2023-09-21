@@ -38,7 +38,7 @@ export class NotificationDocumentService {
     }
     let formData = this.convertDtoToFormData(createDto);
 
-    const res = await firstValueFrom(this.http.post(`${this.url}/noi/${fileNumber}`, formData));
+    const res = await firstValueFrom(this.http.post(`${this.url}/notification/${fileNumber}`, formData));
     this.toastService.showSuccessToast('Document uploaded');
     return res;
   }

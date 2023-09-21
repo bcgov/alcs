@@ -72,13 +72,16 @@ export class NotificationController {
     ]);
 
     if (updateDto.localGovernmentUuid) {
-      await this.notificationSubmissionService.update(
-        fileNumber,
-        {
-          localGovernmentUuid: updateDto.localGovernmentUuid,
-        },
-        req.user.entity,
-      );
+      const uuid = await this.notificationSubmissionService.getUuid(fileNumber);
+      if (uuid) {
+        await this.notificationSubmissionService.update(
+          uuid,
+          {
+            localGovernmentUuid: updateDto.localGovernmentUuid,
+          },
+          req.user.entity,
+        );
+      }
     }
 
     return mapped[0];
