@@ -1,10 +1,18 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
+import { isDST } from '../../utils/pacific-date-time-helper';
 
-export const MONDAY_TO_FRIDAY_AT_2AM = '0 0 2 * * 1-5';
-export const EVERYDAY_MIDNIGHT = '0 0 0 * * *';
-export const EVERY_15_MINUTES_STARTING_FROM_8AM = '0/15 8-23 * * *';
+export const MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC = '0 0 10 * * 1-5';
+export const MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC = '0 0 9 * * 1-5';
+
+export const EVERYDAY_MIDNIGHT_PST_IN_UTC = '0 0 8 * * *';
+export const EVERYDAY_MIDNIGHT_PDT_IN_UTC = '0 0 7 * * *';
+
+export const EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC =
+  '0/15 16-23,0-7 * * *';
+export const EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC =
+  '0/15 15-23,0-6 * * *';
 
 export const QUEUES = {
   APP_EXPIRY: 'ApplicationExpiry',
@@ -42,7 +50,12 @@ export class SchedulerService {
       'applicationExpiry',
       {},
       {
-        repeat: { pattern: MONDAY_TO_FRIDAY_AT_2AM },
+        repeat: {
+          pattern: this.getCronExpressionBasedOnDst(
+            MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC,
+            MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC,
+          ),
+        },
       },
     );
   }
@@ -53,18 +66,29 @@ export class SchedulerService {
       'cleanupNotifications',
       {},
       {
-        repeat: { pattern: EVERYDAY_MIDNIGHT },
+        repeat: {
+          pattern: this.getCronExpressionBasedOnDst(
+            EVERYDAY_MIDNIGHT_PST_IN_UTC,
+            EVERYDAY_MIDNIGHT_PDT_IN_UTC,
+          ),
+        },
       },
     );
   }
 
   private async scheduleSubmissionEmails() {
+    const cronExpression = this.getCronExpressionBasedOnDst(
+      EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
+      EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC,
+    );
     await this.removeRepeatJobs(this.applicationSubmissionStatusEmailsQueue);
     await this.applicationSubmissionStatusEmailsQueue.add(
       'applicationSubmissionStatusEmails',
       {},
       {
-        repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM },
+        repeat: {
+          pattern: cronExpression,
+        },
       },
     );
 
@@ -72,7 +96,7 @@ export class SchedulerService {
     await this.noticeOfIntentSubmissionStatusEmailsQueue.add(
       'noticeOfIntentSubmissionStatusEmails',
       {},
-      { repeat: { pattern: EVERY_15_MINUTES_STARTING_FROM_8AM } },
+      { repeat: { pattern: cronExpression } },
     );
   }
 
@@ -82,5 +106,12 @@ export class SchedulerService {
     repeatJobs.forEach(async (job) => {
       await queue.removeRepeatableByKey(job.key);
     });
+  }
+
+  private getCronExpressionBasedOnDst(
+    pstCronExpression: string,
+    pdtCronExpression: string,
+  ) {
+    return isDST() ? pstCronExpression : pdtCronExpression;
   }
 }
