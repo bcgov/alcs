@@ -44,8 +44,8 @@
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
-        Include why you are applying for removal of soil, what the proposal will achieve, and any benefits to
-        agriculture that the proposal provides.
+        Include why you are applying for non-adhering residential use, what the proposal will achieve, and any benefits
+        to agriculture that the proposal provides.
       </div>
       <mat-form-field appearance="outline">
         <textarea formControlName="purpose" #purposeText maxlength="4000" id="purpose" matInput></textarea>
@@ -441,9 +441,9 @@
 
     <div class="full-row">
       <label for="will-import-fill">
-        Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought
-        onto the property, including gravel for construction.
+        Do you need to import any fill to construct or conduct the proposed Non-farm use?
       </label>
+      <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
       <mat-button-toggle-group
         (change)="onChangeFill($event.value)"
         class="input"
@@ -519,6 +519,7 @@
     <div class="form-row">
       <div>
         <label for="projectDurationUnit">Duration</label>
+        <div class="subtext">Days, Months, or Years</div>
         <mat-form-field appearance="outline">
           <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
             <mat-option value="days">Days</mat-option>
@@ -536,6 +537,9 @@
       </div>
       <div>
         <label for="projectDurationAmount">Length</label>
+        <div class='subtext'>
+          Decimals can be used - e.g. 3.5 months or 1.5 years
+        </div>
         <mat-form-field appearance="outline">
           <input
             id="projectDurationAmount"
@@ -545,7 +549,7 @@
             min="0.01"
             matInput
             formControlName="projectDurationAmount"
-            placeholder="Type length as a decimal number"
+            placeholder="Type length"
           />
         </mat-form-field>
         <div

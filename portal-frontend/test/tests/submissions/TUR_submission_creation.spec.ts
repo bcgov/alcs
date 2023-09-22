@@ -75,27 +75,17 @@ test('test', async ({ page }) => {
   await page.getByPlaceholder('Type government').fill('peace');
   await page.getByText('Peace River Regional District').click();
   await page.getByText('5').first().click();
-  await page
-    .getByLabel('Quantify and describe in detail all agriculture that currently takes place on the parcel(s).')
-    .click();
-  await page
-    .getByLabel('Quantify and describe in detail all agriculture that currently takes place on the parcel(s).')
-    .fill('1');
+  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').click();
+  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').fill('1');
   await page
     .locator(
       'div:nth-child(2) > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix'
     )
     .first()
     .click();
-  await page
-    .getByLabel('Quantify and describe in detail all agricultural improvements made to the parcel(s).')
-    .fill('2');
-  await page
-    .getByLabel('Quantify and describe all non-agricultural uses that currently take place on the parcel(s).')
-    .click();
-  await page
-    .getByLabel('Quantify and describe all non-agricultural uses that currently take place on the parcel(s).')
-    .fill('3');
+  await page.getByLabel('Describe all agricultural improvements made to the parcel(s).').fill('2');
+  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').click();
+  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').fill('3');
   await page
     .locator(
       '.land-use-type > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix'

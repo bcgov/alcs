@@ -42,8 +42,7 @@
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
-        Be clear and concise in describing the proposal. Include why you are applying for inclusion and what the
-        proposal will achieve.
+        Include why you are applying for an inclusion, what the proposal will achieve, and any benefits to agriculture that the proposal provides.
       </div>
       <mat-form-field appearance="outline">
         <textarea
@@ -62,7 +61,10 @@
       <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label for="agSupport">Does the proposal support agriculture in the short or long term? Please explain.</label>
+      <label for="agSupport">Does the proposal support agriculture in the short or long term?</label>
+      <div class="subtext">
+        Please explain
+      </div>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="agSupport"

@@ -103,22 +103,12 @@ test('test', async ({ page }) => {
   await page.getByPlaceholder('Type government').fill('Peace');
   await page.getByText('Peace River Regional District').click();
   await page.getByRole('button', { name: 'Next Step' }).click();
-  await page
-    .getByLabel('Quantify and describe in detail all agriculture that currently takes place on the parcel(s).')
-    .click();
-  await page
-    .getByLabel('Quantify and describe in detail all agriculture that currently takes place on the parcel(s).')
-    .fill('5');
-  await page.getByLabel('Quantify and describe in detail all agricultural improvements made to the parcel(s).').click();
-  await page
-    .getByLabel('Quantify and describe in detail all agricultural improvements made to the parcel(s).')
-    .fill('5');
-  await page
-    .getByLabel('Quantify and describe all non-agricultural uses that currently take place on the parcel(s).')
-    .click();
-  await page
-    .getByLabel('Quantify and describe all non-agricultural uses that currently take place on the parcel(s).')
-    .fill('5');
+  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').click();
+  await page.getByLabel('Describe all agriculture that currently takes place on the parcel(s).').fill('5');
+  await page.getByLabel('Describe all agricultural improvements made to the parcel(s).').click();
+  await page.getByLabel('Describe all agricultural improvements made to the parcel(s).').fill('5');
+  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').click();
+  await page.getByLabel('Describe all other uses that currently take place on the parcel(s).').fill('5');
   await page.locator('#northLandUseType svg').click();
   await page.getByText('Agricultural / Farm').click();
   await page.locator('#northLandUseTypeDescription').click();
@@ -140,20 +130,10 @@ test('test', async ({ page }) => {
   await page.getByPlaceholder('Type size in hectares').fill('6');
   await page.getByLabel('What is the purpose of the proposal?').click();
   await page.getByLabel('What is the purpose of the proposal?').fill('no purpose');
-  await page
-    .getByLabel(
-      'Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried out on lands outside the ALR.'
-    )
-    .click();
-  await page
-    .getByLabel(
-      'Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried out on lands outside the ALR.'
-    )
-    .fill('nope');
-  await page.getByLabel('Does the proposal support agriculture in the short or long term? Please explain.').click();
-  await page
-    .getByLabel('Does the proposal support agriculture in the short or long term? Please explain.')
-    .fill('nope');
+  await page.getByLabel('Could this proposal be accommodated on lands outside of the ALR?').click();
+  await page.getByLabel('Could this proposal be accommodated on lands outside of the ALR?').fill('nope');
+  await page.getByLabel('Does the proposal support agriculture in the short or long term?').click();
+  await page.getByLabel('Does the proposal support agriculture in the short or long term?').fill('nope');
   await page.getByRole('button', { name: 'Yes' }).click();
   await page.getByLabel('Describe the type and amount of fill proposed to be placed.').click();
   await page.getByLabel('Describe the type and amount of fill proposed to be placed.').fill('6');
