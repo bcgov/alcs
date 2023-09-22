@@ -1,5 +1,6 @@
 from db import inject_conn_pool
 
+
 def noi_insert_query(number_of_rows_to_insert):
     nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
@@ -16,13 +17,11 @@ def noi_insert_query(number_of_rows_to_insert):
             type_code = EXCLUDED.type_code
     """
 
-@inject_conn_pool
-def process_nois(conn=None, batch_size=10000):
-    with conn.cursor() as cursor:
 
-        with open(
-            "noi/sql/insert_noi_count.sql", "r", encoding="utf-8"
-        ) as sql_file:
+@inject_conn_pool
+def init_notice_of_intents(conn=None, batch_size=10000):
+    with conn.cursor() as cursor:
+        with open("noi/sql/insert_noi_count.sql", "r", encoding="utf-8") as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
@@ -38,19 +37,17 @@ def process_nois(conn=None, batch_size=10000):
                 cursor.execute(
                     f"{application_sql} WHERE ng.noi_application_id > {last_application_id} ORDER by ng.noi_application_id;"
                 )
-                
+
                 rows = cursor.fetchmany(batch_size)
                 if not rows:
                     break
-                try: 
+                try:
                     applications_to_be_inserted_count = len(rows)
 
-                    insert_query = noi_insert_query(
-                        applications_to_be_inserted_count
-                    ) 
+                    insert_query = noi_insert_query(applications_to_be_inserted_count)
                     cursor.execute(insert_query, rows)
                     conn.commit()
- 
+
                     last_application_id = rows[-1][0]
                     successful_inserts_count = (
                         successful_inserts_count + applications_to_be_inserted_count
@@ -58,20 +55,19 @@ def process_nois(conn=None, batch_size=10000):
 
                     print(
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_applidation_id: {last_application_id}"
-
                     )
                 except Exception as e:
                     conn.rollback()
                     print("Error", e)
-                    failed_inserts  = count_total - successful_inserts_count
-                    last_application_id = last_application_id +1
-
+                    failed_inserts = count_total - successful_inserts_count
+                    last_application_id = last_application_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
-    print("Total failed inserts:", failed_inserts)        
+    print("Total failed inserts:", failed_inserts)
+
 
 @inject_conn_pool
-def clean_nois(conn=None):
+def clean_notice_of_intents(conn=None):
     print("Start NOI cleaning")
     with conn.cursor() as cursor:
         cursor.execute(

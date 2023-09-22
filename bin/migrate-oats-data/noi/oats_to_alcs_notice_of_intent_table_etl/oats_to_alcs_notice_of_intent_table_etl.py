@@ -26,7 +26,7 @@ class OatsToAlcsAgCap(Enum):
 
 
 @inject_conn_pool
-def process_alcs_notice_of_intent_fee_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     decision_date is imported separately
     """
