@@ -11,7 +11,6 @@ def document_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # document_import_command.set_defaults(func=process_documents)
 
 
 def document_noi_import_command_parser(import_batch_size, subparsers):
@@ -26,7 +25,6 @@ def document_noi_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # document_noi_import_command.set_defaults(func=process_documents_noi)
 
 
 def application_document_import_command_parser(import_batch_size, subparsers):
@@ -41,7 +39,6 @@ def application_document_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # application_document_import_command.set_defaults(func=import_batch_size)
 
 
 def noi_document_import_command_parser(import_batch_size, subparsers):
@@ -56,4 +53,3 @@ def noi_document_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # noi_document_import_command.set_defaults(func=import_batch_size)

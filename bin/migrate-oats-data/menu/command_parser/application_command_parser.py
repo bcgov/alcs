@@ -10,7 +10,6 @@ def application_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # application_import_command.set_defaults(func=import_batch_size)
 
 
 def app_prep_import_command_parser(import_batch_size, subparsers):
@@ -25,7 +24,6 @@ def app_prep_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # app_prep_import_command.set_defaults(func=import_batch_size)
 
 
 def app_sub_import_command_parser(import_batch_size, subparsers):
@@ -40,4 +38,3 @@ def app_sub_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # app_sub_import_command.set_defaults(func=import_batch_size)

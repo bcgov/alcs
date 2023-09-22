@@ -10,4 +10,3 @@ def noi_import_command_parser(import_batch_size, subparsers):
         metavar="",
         help=f"batch size (default: {import_batch_size})",
     )
-    # noi_import_command.set_defaults(func=import_batch_size)
