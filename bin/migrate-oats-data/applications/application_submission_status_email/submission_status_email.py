@@ -23,7 +23,7 @@ def process_application_submission_status_emails(conn=None):
 
 
 @inject_conn_pool
-def clean_notice_of_intent_submission_status_emails(conn=None):
+def clean_application_submission_status_emails(conn=None):
     update_query = f"""
                         UPDATE alcs.application_submission_to_submission_status status
                         SET email_sent_date = NULL
