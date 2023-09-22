@@ -10,7 +10,7 @@ from common import (
     AlcsApplicantType,
 )
 from db import inject_conn_pool
-from constants import BATCH_UPLOAD_SIZE
+from common import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 from enum import Enum
@@ -288,7 +288,6 @@ def get_update_query_for_nar():
 
 
 def get_update_query_for_exc():
-    # TODO Will be finalized in ALCS-834.
     # exclsn_app_type_code is out of scope. It is a part of submission
     unique_fields = """,
             incl_excl_applicant_type = %(legislation_code)s"""
@@ -296,7 +295,6 @@ def get_update_query_for_exc():
 
 
 def get_update_query_for_inc():
-    # TODO Will be finalized in ALCS-834.
     unique_fields = """,
             incl_excl_applicant_type = %(legislation_code)s"""
     return get_update_query(unique_fields)
