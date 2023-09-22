@@ -16,8 +16,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.purpose"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
-    Could this proposal be accommodated on lands outside of the ALR? Please justify why the proposal cannot be carried
-    out on lands outside the ALR.
+    Could this proposal be accommodated on lands outside of the ALR?
     <app-updated-banner *ngIf="updatedFields.includes('nfuOutsideLands')"></app-updated-banner>
   </div>
   <div class="grid-double">
@@ -25,7 +24,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuOutsideLands"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
-    Does the proposal support agriculture in the short or long term? Please explain
+    Does the proposal support agriculture in the short or long term?
     <app-updated-banner *ngIf="updatedFields.includes('nfuAgricultureSupport')"></app-updated-banner>
   </div>
   <div class="grid-double">
@@ -40,8 +39,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
-    Do you need to import any fill to construct or conduct the proposed Non-farm use? Fill is any material brought onto
-    the property, including gravel for construction.
+    Do you need to import any fill to construct or conduct the proposed non-farm use?
     <app-updated-banner *ngIf="updatedFields.includes('nfuWillImportFill')"></app-updated-banner>
   </div>
   <div class="grid-double">

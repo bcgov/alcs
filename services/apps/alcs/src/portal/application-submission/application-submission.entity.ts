@@ -79,7 +79,7 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'text',
     comment:
-      'Quantify and describe in detail all agriculture that currently takes place on the parcel(s).',
+      'Describe all agriculture that currently takes place on the parcel(s).',
     nullable: true,
   })
   parcelsAgricultureDescription?: string | null;
@@ -87,8 +87,7 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Quantify and describe in detail all agricultural improvements made to the parcel(s).',
+    comment: 'Describe all agricultural improvements made to the parcel(s).',
     nullable: true,
   })
   parcelsAgricultureImprovementDescription?: string | null;
@@ -97,7 +96,7 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'text',
     comment:
-      'Quantify and describe all non-agricultural uses that currently take place on the parcel(s).',
+      'Describe all other uses that currently take place on the parcel(s).',
     nullable: true,
   })
   parcelsNonAgricultureUseDescription?: string | null;

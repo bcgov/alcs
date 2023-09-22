@@ -142,6 +142,10 @@
     </div>
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Include why you are applying for a subdivision, what the proposal will achieve, and any benefits to agriculture
+        that the proposal provides.
+      </div>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="purpose"
@@ -181,9 +185,8 @@
       <div class="subtext">Characters left: {{ 4000 - suitabilityText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label for="agricultural-support"
-        >Does the proposal support agriculture in the short or long term? Please explain.</label
-      >
+      <label for="agricultural-support">Does the proposal support agriculture in the short or long term?</label>
+      <div class="subtext">Please explain</div>
       <mat-form-field appearance="outline">
         <textarea
           [formControl]="agriculturalSupport"

@@ -155,6 +155,7 @@
       <div class="form-row">
         <div>
           <label for="projectDurationUnit">Duration</label>
+          <div class="subtext">Days, Months, or Years</div>
           <mat-form-field appearance="outline">
             <mat-select placeholder="Select one" id="projectDurationUnit" [formControl]="projectDurationUnit">
               <mat-option value="days">Days</mat-option>
@@ -172,6 +173,7 @@
         </div>
         <div>
           <label for="projectDurationAmount">Length</label>
+          <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
           <mat-form-field appearance="outline">
             <input
               id="projectDurationAmount"
@@ -181,7 +183,7 @@
               min="0.01"
               matInput
               [formControl]="projectDurationAmount"
-              placeholder="Type length as a decimal number"
+              placeholder="Type length"
             />
           </mat-form-field>
           <div
