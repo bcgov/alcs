@@ -5,9 +5,12 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
+import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { NotificationSubmissionStatusService } from '../../alcs/notification/notification-submission-status/notification-submission-status.service';
 import { Notification } from '../../alcs/notification/notification.entity';
@@ -19,6 +22,7 @@ import { User } from '../../user/user.entity';
 import { ValidatedNotificationSubmission } from './notification-submission-validator.service';
 import { NotificationSubmission } from './notification-submission.entity';
 import { NotificationSubmissionService } from './notification-submission.service';
+import { Document } from '../../document/document.entity';
 
 describe('NotificationSubmissionService', () => {
   let service: NotificationSubmissionService;
@@ -303,5 +307,90 @@ describe('NotificationSubmissionService', () => {
 
     expect(res).toBe(uuid);
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+  });
+
+  it('should change the status when sending the email was successfull', async () => {
+    const uuid = 'uuid';
+    const noiSubmission = new NotificationSubmission({
+      uuid,
+      localGovernmentUuid: 'uuid',
+      contactEmail: 'contact@contact',
+    });
+    const document = new NotificationDocument({
+      document: new Document(),
+    });
+
+    mockLGService.getByUuid.mockResolvedValue(
+      new LocalGovernment({
+        emails: ['gov@gov'],
+      }),
+    );
+    mockNotificationService.getByFileNumber.mockResolvedValue(
+      new Notification(),
+    );
+    mockEmailService.sendEmail.mockResolvedValue(true);
+    mockDocumentService.attachDocumentAsBuffer.mockResolvedValue(
+      new NotificationDocument(),
+    );
+    mockStatusService.setStatusDate.mockResolvedValue(
+      new NotificationSubmissionToSubmissionStatus(),
+    );
+
+    await service.sendAndRecordLTSAPackage(noiSubmission, document, new User());
+
+    expect(mockLGService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.getByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: ['contact@contact'],
+        cc: ['gov@gov'],
+      }),
+    );
+
+    expect(mockDocumentService.attachDocumentAsBuffer).toHaveBeenCalledTimes(1);
+    expect(mockStatusService.setStatusDate).toHaveBeenCalledTimes(1);
+    expect(mockStatusService.setStatusDate).toHaveBeenCalledWith(
+      uuid,
+      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+      undefined,
+    );
+  });
+
+  it('should not change the status if the email fails', async () => {
+    const uuid = 'uuid';
+    const noiSubmission = new NotificationSubmission({
+      uuid,
+      localGovernmentUuid: 'uuid',
+      contactEmail: 'contact@contact',
+    });
+    const document = new NotificationDocument({
+      document: new Document(),
+    });
+
+    mockLGService.getByUuid.mockResolvedValue(
+      new LocalGovernment({
+        emails: ['gov@gov'],
+      }),
+    );
+    mockNotificationService.getByFileNumber.mockResolvedValue(
+      new Notification(),
+    );
+    mockEmailService.sendEmail.mockResolvedValue(false);
+
+    await service.sendAndRecordLTSAPackage(noiSubmission, document, new User());
+
+    expect(mockLGService.getByUuid).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.getByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledTimes(1);
+    expect(mockEmailService.sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: ['contact@contact'],
+        cc: ['gov@gov'],
+      }),
+    );
+
+    expect(mockDocumentService.attachDocumentAsBuffer).toHaveBeenCalledTimes(0);
+    expect(mockStatusService.setStatusDate).toHaveBeenCalledTimes(0);
   });
 });

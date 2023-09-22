@@ -70,7 +70,7 @@ describe('StatusEmailService', () => {
 
     service = module.get<StatusEmailService>(StatusEmailService);
 
-    mockEmailService.sendEmail.mockResolvedValue();
+    mockEmailService.sendEmail.mockResolvedValue(true);
   });
 
   it('should be defined', () => {

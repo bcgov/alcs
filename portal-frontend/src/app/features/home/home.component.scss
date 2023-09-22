@@ -7,6 +7,14 @@
   }
 }
 
+:host::ng-deep {
+  .no-data {
+    color: colors.$grey;
+    text-align: center;
+    padding: rem(8);
+  }
+}
+
 .header-row {
   .learn-more-wrapper {
     margin-top: rem(24);
