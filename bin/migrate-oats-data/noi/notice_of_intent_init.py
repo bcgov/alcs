@@ -1,4 +1,6 @@
+import traceback
 from db import inject_conn_pool
+from common import log_end, log_start
 
 
 def noi_insert_query(number_of_rows_to_insert):
@@ -20,6 +22,8 @@ def noi_insert_query(number_of_rows_to_insert):
 
 @inject_conn_pool
 def init_notice_of_intents(conn=None, batch_size=10000):
+    etl_name = "init_notice_of_intents"
+    log_start(etl_name)
     with conn.cursor() as cursor:
         with open("noi/sql/insert_noi_count.sql", "r", encoding="utf-8") as sql_file:
             count_query = sql_file.read()
@@ -56,9 +60,17 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                     print(
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_applidation_id: {last_application_id}"
                     )
-                except Exception as e:
+                except Exception as error:
                     conn.rollback()
-                    print("Error", e)
+                    error_trace = "".join(
+                        traceback.format_exception(None, error, error.__traceback__)
+                    )
+                    print("Error", error_trace)
+                    log_end(
+                        etl_name,
+                        str(error),
+                        error_trace,
+                    )
                     failed_inserts = count_total - successful_inserts_count
                     last_application_id = last_application_id + 1
 
