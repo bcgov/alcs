@@ -15,3 +15,9 @@ export const getStartOfDayToPacific = (timestamp: number) => {
   const date = formatIncomingDate(timestamp);
   return dayjs(date).tz('Canada/Pacific').startOf('day').toDate();
 };
+
+export const isDST = () => {
+  const timezone = 'America/Vancouver';
+  const jul = dayjs('2021-07-01').tz(timezone).utcOffset();
+  return jul === dayjs().tz(timezone).utcOffset();
+};
