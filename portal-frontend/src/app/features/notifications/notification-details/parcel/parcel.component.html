@@ -36,7 +36,7 @@
     <div class="grid-double">
       <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
       <app-no-data
-        [showRequired]="showErrors && parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE"
+        [showRequired]="showErrors && parcel.ownershipType?.code !== PARCEL_OWNERSHIP_TYPES.CROWN"
         *ngIf="!parcel.pid"
       ></app-no-data>
       <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
