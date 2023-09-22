@@ -12,18 +12,11 @@ import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { ApplicationAdvancedSearchService } from './application/application-advanced-search.service';
-import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
-import { NonApplicationSearchView } from './non-applications/non-applications-view.entity';
 import { NonApplicationsAdvancedSearchService } from './non-applications/non-applications.service';
 import { NoticeOfIntentAdvancedSearchService } from './notice-of-intent/notice-of-intent-advanced-search.service';
-import { NoticeOfIntentSubmissionSearchView } from './notice-of-intent/notice-of-intent-search-view.entity';
 import { NotificationAdvancedSearchService } from './notification/notification-advanced-search.service';
 import { SearchController } from './search.controller';
-import {
-  AdvancedSearchResultDto,
-  NonApplicationsSearchRequestDto,
-  SearchRequestDto,
-} from './search.dto';
+import { SearchRequestDto } from './search.dto';
 import { SearchService } from './search.service';
 
 describe('SearchController', () => {
@@ -240,7 +233,8 @@ describe('SearchController', () => {
   });
 
   it('should call non-applications advanced search to retrieve Non-Applications', async () => {
-    const mockSearchRequestDto: NonApplicationsSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
+      isIncludeOtherParcels: false,
       pageSize: 1,
       page: 1,
       sortField: '1',

@@ -164,24 +164,3 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsArray()
   fileTypes: string[];
 }
-
-export class NonApplicationsSearchRequestDto extends PagingRequestDto {
-  @IsString()
-  @IsOptional()
-  fileNumber?: string;
-
-  @IsString()
-  @IsOptional()
-  governmentName?: string;
-
-  @IsString()
-  @IsOptional()
-  regionCode?: string;
-
-  @IsString()
-  @IsOptional()
-  name?: string;
-
-  @IsArray()
-  fileTypes: string[];
-}

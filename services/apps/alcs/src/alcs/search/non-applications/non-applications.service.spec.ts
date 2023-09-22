@@ -2,7 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NonApplicationsSearchRequestDto } from '../search.dto';
+import { SearchRequestDto } from '../search.dto';
 import { NonApplicationSearchView } from './non-applications-view.entity';
 import { NonApplicationsAdvancedSearchService } from './non-applications.service';
 
@@ -14,7 +14,7 @@ describe('NonApplicationsService', () => {
 
   let mockQuery: any = {};
 
-  const mockSearchRequestDto: NonApplicationsSearchRequestDto = {
+  const mockSearchRequestDto: SearchRequestDto = {
     fileNumber: '123',
     governmentName: 'B',
     regionCode: 'C',
@@ -24,6 +24,7 @@ describe('NonApplicationsService', () => {
     sortField: 'applicant',
     sortDirection: 'ASC',
     fileTypes: [],
+    isIncludeOtherParcels: false,
   };
 
   beforeEach(async () => {

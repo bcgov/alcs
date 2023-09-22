@@ -20,7 +20,9 @@
           <mat-label>Name</mat-label>
           <input id="name" matInput formControlName="name" minlength="3" />
         </mat-form-field>
-        <div class="subtext">Search by Primary Contact, Parcel Owner, Organization, Transferee, Ministry or Department</div>
+        <div class="subtext">
+          Search by Primary Contact, Parcel Owner, Organization, SRW Transferee, Ministry or Department
+        </div>
         <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
           <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>

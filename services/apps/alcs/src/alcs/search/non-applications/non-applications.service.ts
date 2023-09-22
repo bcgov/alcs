@@ -3,10 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
 import { LocalGovernment } from '../../local-government/local-government.entity';
-import {
-  AdvancedSearchResultDto,
-  NonApplicationsSearchRequestDto,
-} from '../search.dto';
+import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
 import { NonApplicationSearchView } from './non-applications-view.entity';
 
 @Injectable()
@@ -17,7 +14,7 @@ export class NonApplicationsAdvancedSearchService {
   ) {}
 
   async searchNonApplications(
-    searchDto: NonApplicationsSearchRequestDto,
+    searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NonApplicationSearchView[]>> {
     let query = await this.compileSearchQuery(searchDto);
 
@@ -36,7 +33,7 @@ export class NonApplicationsAdvancedSearchService {
     };
   }
 
-  private compileSortQuery(searchDto: NonApplicationsSearchRequestDto) {
+  private compileSortQuery(searchDto: SearchRequestDto) {
     switch (searchDto.sortField) {
       case 'applicant':
         return '"nonApp"."applicant"';
@@ -53,7 +50,7 @@ export class NonApplicationsAdvancedSearchService {
     }
   }
 
-  private async compileSearchQuery(searchDto: NonApplicationsSearchRequestDto) {
+  private async compileSearchQuery(searchDto: SearchRequestDto) {
     let query = this.nonApplicationSearchRepository
       .createQueryBuilder('nonApp')
       .leftJoinAndMapOne(

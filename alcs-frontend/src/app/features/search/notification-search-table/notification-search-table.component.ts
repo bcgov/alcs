@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationRegionDto } from '../../../services/application/application-code.dto';
-import { NotificationSubmissionStatusService } from '../../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationSubmissionStatusDto, NotificationTypeDto } from '../../../services/notification/notification.dto';
 import { NotificationSearchResultDto } from '../../../services/search/search.dto';
 import { ApplicationSubmissionStatusPill } from '../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
