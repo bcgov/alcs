@@ -380,9 +380,8 @@ export class NotificationSubmissionService {
     statusCode: NOTIFICATION_STATUS,
     effectiveDate?: Date | null,
   ) {
-    const submission = await this.loadBarebonesSubmission(uuid);
     await this.notificationSubmissionStatusService.setStatusDate(
-      submission.uuid,
+      uuid,
       statusCode,
       effectiveDate,
     );
@@ -411,7 +410,7 @@ export class NotificationSubmissionService {
   ) {
     const templateData = await this.generateSrwEmailData(submission, document);
 
-    await this.emailService.sendEmail({
+    const didSend = await this.emailService.sendEmail({
       to: [templateData.to],
       body: templateData.html,
       subject: `Agricultural Land Commission SRW${submission.fileNumber} (${submission.applicant})`,
@@ -421,24 +420,29 @@ export class NotificationSubmissionService {
       attachments: [document.document],
     });
 
-    const fileBuffer = Buffer.from(templateData.html);
-    await this.notificationDocumentService.attachDocumentAsBuffer({
-      file: Buffer.from(templateData.html),
-      fileName: `SRW${submission.fileNumber}_ALC_Email_Response.html`,
-      source: DOCUMENT_SOURCE.ALC,
-      user,
-      system: DOCUMENT_SYSTEM.ALCS,
-      documentType: DOCUMENT_TYPE.ACKNOWLEDGEMENT_LETTER,
-      fileNumber: submission.fileNumber,
-      fileSize: fileBuffer.length,
-      mimeType: 'text/html',
-      visibilityFlags: [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT],
-    });
+    if (didSend) {
+      const fileBuffer = Buffer.from(templateData.html);
+      await this.notificationDocumentService.attachDocumentAsBuffer({
+        file: Buffer.from(templateData.html),
+        fileName: `SRW${submission.fileNumber}_ALC_Email_Response.html`,
+        source: DOCUMENT_SOURCE.ALC,
+        user,
+        system: DOCUMENT_SYSTEM.ALCS,
+        documentType: DOCUMENT_TYPE.ACKNOWLEDGEMENT_LETTER,
+        fileNumber: submission.fileNumber,
+        fileSize: fileBuffer.length,
+        mimeType: 'text/html',
+        visibilityFlags: [
+          VISIBILITY_FLAG.APPLICANT,
+          VISIBILITY_FLAG.GOVERNMENT,
+        ],
+      });
 
-    await this.updateStatus(
-      submission.uuid,
-      NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
-    );
+      await this.updateStatus(
+        submission.uuid,
+        NOTIFICATION_STATUS.ALC_RESPONSE_SENT,
+      );
+    }
   }
 
   private async generateSrwEmailData(
@@ -471,15 +475,11 @@ export class NotificationSubmissionService {
       }
     }
 
-    const parentId = await this.notificationService.getUuid(
-      submission.fileNumber,
-    );
-
     return {
       html: emailTemplate.html,
       cc: ccEmails,
       to: submission.contactEmail!,
-      parentId,
+      parentId: notification.uuid,
     };
   }
 }

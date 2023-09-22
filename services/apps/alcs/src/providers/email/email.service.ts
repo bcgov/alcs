@@ -164,7 +164,7 @@ export class EmailService {
         ),
       );
       this.logger.debug({ to, from, subject }, `Email sent`);
-      this.repository.save(
+      await this.repository.save(
         new EmailStatus({
           recipients: [...to, ...cc, ...bcc].join(', '),
           status: 'success',
@@ -174,6 +174,7 @@ export class EmailService {
           triggerStatus,
         }),
       );
+      return true;
     } catch (e) {
       this.logger.error(e, 'Failed to Send Email');
 
@@ -192,6 +193,8 @@ export class EmailService {
           triggerStatus,
         }),
       );
+
+      return false;
     }
   }
 }

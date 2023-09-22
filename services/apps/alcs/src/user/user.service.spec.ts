@@ -62,7 +62,7 @@ describe('UserService', () => {
     mockUserRepository.find.mockResolvedValue([mockUser]);
     mockUserRepository.softRemove.mockResolvedValue(mockUser);
 
-    emailServiceMock.sendEmail.mockResolvedValue();
+    emailServiceMock.sendEmail.mockResolvedValue(true);
   });
 
   it('should return the users from the repository', async () => {

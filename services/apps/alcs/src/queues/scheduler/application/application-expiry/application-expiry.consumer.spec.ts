@@ -37,7 +37,7 @@ describe('SchedulerConsumerService', () => {
       ApplicationExpiryConsumer,
     );
 
-    mockEmailService.sendEmail.mockResolvedValue();
+    mockEmailService.sendEmail.mockResolvedValue(true);
   });
 
   it('should be defined', () => {
