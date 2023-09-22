@@ -29,7 +29,6 @@ import {
   AdvancedSearchResultDto,
   ApplicationSearchResultDto,
   NonApplicationSearchResultDto,
-  NonApplicationsSearchRequestDto,
   NoticeOfIntentSearchResultDto,
   NotificationSearchResultDto,
   SearchRequestDto,
@@ -102,70 +101,6 @@ export class SearchController {
     if (notification) {
       result.push(this.mapNotificationToSearchResult(notification));
     }
-  }
-
-  private mapApplicationToSearchResult(
-    application: Application,
-  ): SearchResultDto {
-    return {
-      type: CARD_TYPE.APP,
-      referenceId: application.fileNumber,
-      localGovernmentName: application.localGovernment?.name,
-      applicant: application.applicant,
-      fileNumber: application.fileNumber,
-      label: this.mapper.map(
-        application.type,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
-    };
-  }
-
-  private mapNoticeOfIntentToSearchResult(
-    noi: NoticeOfIntent,
-  ): SearchResultDto {
-    return {
-      type: CARD_TYPE.NOI,
-      referenceId: noi.fileNumber,
-      localGovernmentName: noi.localGovernment?.name,
-      applicant: noi.applicant,
-      fileNumber: noi.fileNumber,
-    };
-  }
-
-  private mapPlanningReviewToSearchResult(
-    planning: PlanningReview,
-  ): SearchResultDto {
-    return {
-      type: CARD_TYPE.PLAN,
-      referenceId: planning.cardUuid,
-      localGovernmentName: planning.localGovernment?.name,
-      fileNumber: planning.fileNumber,
-      boardCode: planning.card.board.code,
-    };
-  }
-
-  private mapCovenantToSearchResult(covenant: Covenant): SearchResultDto {
-    return {
-      type: CARD_TYPE.COV,
-      referenceId: covenant.cardUuid,
-      localGovernmentName: covenant.localGovernment?.name,
-      applicant: covenant.applicant,
-      fileNumber: covenant.fileNumber,
-      boardCode: covenant.card.board.code,
-    };
-  }
-
-  private mapNotificationToSearchResult(
-    notification: Notification,
-  ): SearchResultDto {
-    return {
-      type: CARD_TYPE.NOTIFICATION,
-      referenceId: notification.fileNumber,
-      localGovernmentName: notification.localGovernment?.name,
-      applicant: notification.applicant,
-      fileNumber: notification.fileNumber,
-    };
   }
 
   @Post('/advanced')
@@ -265,7 +200,7 @@ export class SearchController {
   @Post('/advanced/non-applications')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearchNonApplications(
-    @Body() searchDto: NonApplicationsSearchRequestDto,
+    @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NonApplicationSearchResultDto[]>> {
     const nonApplications =
       await this.nonApplicationsSearchService.searchNonApplications(searchDto);
@@ -339,6 +274,8 @@ export class SearchController {
       (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
       !searchDto.dateDecidedFrom &&
       !searchDto.dateDecidedTo &&
+      !searchDto.dateSubmittedFrom &&
+      !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
@@ -351,6 +288,7 @@ export class SearchController {
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
+      !isStringSetAndNotEmpty(searchDto.civicAddress) &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {
@@ -421,6 +359,70 @@ export class SearchController {
     response.totalNotifications = notifications?.total ?? 0;
 
     return response;
+  }
+
+  private mapApplicationToSearchResult(
+    application: Application,
+  ): SearchResultDto {
+    return {
+      type: CARD_TYPE.APP,
+      referenceId: application.fileNumber,
+      localGovernmentName: application.localGovernment?.name,
+      applicant: application.applicant,
+      fileNumber: application.fileNumber,
+      label: this.mapper.map(
+        application.type,
+        ApplicationType,
+        ApplicationTypeDto,
+      ),
+    };
+  }
+
+  private mapNoticeOfIntentToSearchResult(
+    noi: NoticeOfIntent,
+  ): SearchResultDto {
+    return {
+      type: CARD_TYPE.NOI,
+      referenceId: noi.fileNumber,
+      localGovernmentName: noi.localGovernment?.name,
+      applicant: noi.applicant,
+      fileNumber: noi.fileNumber,
+    };
+  }
+
+  private mapPlanningReviewToSearchResult(
+    planning: PlanningReview,
+  ): SearchResultDto {
+    return {
+      type: CARD_TYPE.PLAN,
+      referenceId: planning.cardUuid,
+      localGovernmentName: planning.localGovernment?.name,
+      fileNumber: planning.fileNumber,
+      boardCode: planning.card.board.code,
+    };
+  }
+
+  private mapCovenantToSearchResult(covenant: Covenant): SearchResultDto {
+    return {
+      type: CARD_TYPE.COV,
+      referenceId: covenant.cardUuid,
+      localGovernmentName: covenant.localGovernment?.name,
+      applicant: covenant.applicant,
+      fileNumber: covenant.fileNumber,
+      boardCode: covenant.card.board.code,
+    };
+  }
+
+  private mapNotificationToSearchResult(
+    notification: Notification,
+  ): SearchResultDto {
+    return {
+      type: CARD_TYPE.NOTIFICATION,
+      referenceId: notification.fileNumber,
+      localGovernmentName: notification.localGovernment?.name,
+      applicant: notification.applicant,
+      fileNumber: notification.fileNumber,
+    };
   }
 
   private mapApplicationToAdvancedSearchResult(
