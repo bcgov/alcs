@@ -279,6 +279,7 @@ export class SearchController {
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
+      !searchDto.portalStatusCode &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     const searchNotifications =
