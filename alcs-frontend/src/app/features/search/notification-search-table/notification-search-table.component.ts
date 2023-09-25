@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
@@ -74,7 +74,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
       itemsPerPage: this.itemsPerPage,
       sortDirection: this.sortDirection,
       sortField: this.sortField,
-      tableType: 'APP',
+      tableType: 'NOTI',
     });
   }
 
