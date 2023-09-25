@@ -24,4 +24,8 @@ export class LoginComponent implements OnInit {
       window.location.href = `${res.loginUrl}${idpHint}`;
     }
   }
+
+  async navigateToPublicSearch() {
+    await this.router.navigateByUrl('/public');
+  }
 }
