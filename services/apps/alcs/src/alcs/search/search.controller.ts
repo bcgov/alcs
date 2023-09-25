@@ -222,7 +222,7 @@ export class SearchController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async advancedSearchNotifications(
     @Body() searchDto: SearchRequestDto,
-  ): Promise<AdvancedSearchResultDto<NonApplicationSearchResultDto[]>> {
+  ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
     const notifications = await this.notificationSearchService.search(
       searchDto,
     );
@@ -235,8 +235,8 @@ export class SearchController {
     );
 
     return {
-      total: mappedSearchResult.totalNonApplications,
-      data: mappedSearchResult.nonApplications,
+      total: mappedSearchResult.totalNotifications,
+      data: mappedSearchResult.notifications,
     };
   }
 
@@ -280,7 +280,8 @@ export class SearchController {
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
       !searchDto.portalStatusCode &&
-      !isStringSetAndNotEmpty(searchDto.legacyId);
+      !isStringSetAndNotEmpty(searchDto.legacyId) &&
+      !isStringSetAndNotEmpty(searchDto.civicAddress);
 
     const searchNotifications =
       (searchDto.fileTypes.length > 0 ? notificationTypeSpecified : true) &&
@@ -289,7 +290,6 @@ export class SearchController {
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
-      !isStringSetAndNotEmpty(searchDto.civicAddress) &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {

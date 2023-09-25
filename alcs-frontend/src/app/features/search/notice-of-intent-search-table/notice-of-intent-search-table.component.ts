@@ -75,7 +75,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
       itemsPerPage: this.itemsPerPage,
       sortDirection: this.sortDirection,
       sortField: this.sortField,
-      tableType: 'APP',
+      tableType: 'NOI',
     });
   }
 
