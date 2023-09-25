@@ -1,4 +1,17 @@
 <header>
+  <div class="top-nav">
+    <ul>
+      <li>
+        <a href="https://www.alc.gov.bc.ca/">ALC Website</a>
+      </li>
+      <li *ngIf="showPublicSearchLink">
+        <a routerLink="/public">Public Search</a>
+      </li>
+      <li *ngIf="showPortalLink">
+        <a routerLink="/">Portal</a>
+      </li>
+    </ul>
+  </div>
   <div class="title-wrapper">
     <div class="title">
       <img class="logo" src="assets/alc_logo.svg" alt="ALC Portal" />

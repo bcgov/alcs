@@ -1,8 +1,43 @@
 @use '../../../styles/functions' as *;
+@use '../../../styles/colors' as colors;
+
+.top-nav {
+  background-color: colors.$primary-color-dark;
+  padding: rem(8) rem(24);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(8) rem(36);
+  }
+
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    padding: rem(8) rem(80);
+  }
+
+  a {
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    line-height: rem(16);
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin-right: rem(20);
+    font-size: rem(14);
+    letter-spacing: rem(0.14);
+  }
+}
 
 header {
   .title-wrapper {
-    margin: rem(8) rem(24);
+    margin: rem(16) rem(24);
 
     .title {
       .logo {
@@ -38,7 +73,6 @@ header {
   }
 
   @media screen and (min-width: $tabletBreakpoint) {
-    margin: rem(12) rem(36) !important;
     justify-content: space-between;
 
     .burger-menu {
@@ -46,8 +80,8 @@ header {
     }
 
     .title-wrapper {
+      margin: rem(12) rem(36) !important;
       display: flex;
-      margin: 0;
       justify-content: space-between;
       align-items: center;
 
@@ -85,6 +119,8 @@ header {
   }
 
   @media screen and (min-width: $desktopBreakpoint) {
-    margin: rem(18) rem(80) !important;
+    .title-wrapper {
+      margin: rem(18) rem(80) !important;
+    }
   }
 }

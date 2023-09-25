@@ -3,3 +3,27 @@
 .login-wrapper {
   min-height: rem(250);
 }
+
+.icon {
+  margin-left: rem(2);
+}
+
+section {
+  margin: rem(24) 0;
+}
+
+.subheading2 {
+  margin-bottom: rem(8) !important;
+}
+
+.login {
+  margin-bottom: rem(12) !important;
+}
+
+button {
+  width: 100%;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    width: unset;
+  }
+}

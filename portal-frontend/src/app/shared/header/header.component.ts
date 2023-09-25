@@ -12,6 +12,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
   isAuthenticated = false;
   isMenuOpen = false;
+  showPublicSearchLink = true;
+  showPortalLink = false;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -23,6 +25,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authenticationService.$currentTokenUser.pipe(takeUntil(this.$destroy)).subscribe((user) => {
       this.isAuthenticated = !!user;
       this.changeDetectorRef.detectChanges();
+    });
+    this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
+      const url = window.location.href;
+      const isPublic = url.includes('public');
+      this.showPortalLink = isPublic;
+      this.showPublicSearchLink = !isPublic;
     });
   }
 

@@ -104,6 +104,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/notifications/edit-submission/edit-submission.module').then((m) => m.EditSubmissionModule),
   },
+  {
+    title: 'Public Search',
+    path: 'public',
+    loadChildren: () => import('./features/public/public.module').then((m) => m.PublicModule),
+  },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 
