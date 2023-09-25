@@ -115,7 +115,14 @@ export class AssignedComponent implements OnInit {
     ];
 
     this.notifications = [
-      ...notifications.map((r) => this.mapNotifications(r)).sort((e) => (e.highPriority === true ? 1 : 0)),
+      ...notifications
+        .filter((r) => r.card.highPriority)
+        .map((r) => this.mapNotifications(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...notifications
+        .filter((r) => !r.card.highPriority)
+        .map((r) => this.mapNotifications(r))
+        .sort((a, b) => a.date! - b.date!),
     ];
 
     this.totalFiles =
@@ -208,6 +215,7 @@ export class AssignedComponent implements OnInit {
       title: `${a.fileNumber} (${a.applicant})`,
       type: a.card!.type,
       card: a.card,
+      date: a.dateSubmittedToAlc,
       highPriority: a.card!.highPriority,
       labels: [NOTIFICATION_LABEL],
     };
