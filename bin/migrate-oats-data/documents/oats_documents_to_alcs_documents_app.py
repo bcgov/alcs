@@ -37,7 +37,9 @@ def process_documents(conn=None, batch_size=10000):
     """
     with conn.cursor() as cursor:
         with open(
-            "sql/documents_app/oats_documents_to_alcs_documents_app_total_count.sql", "r", encoding="utf-8"
+            "sql/documents_app/oats_documents_to_alcs_documents_app_total_count.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -48,7 +50,11 @@ def process_documents(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_document_id = 0
 
-        with open("sql/documents_app/oats_documents_to_alcs_documents_app.sql", "r", encoding="utf-8") as sql_file:
+        with open(
+            "sql/documents_app/oats_documents_to_alcs_documents_app.sql",
+            "r",
+            encoding="utf-8",
+        ) as sql_file:
             documents_to_insert_sql = sql_file.read()
             while True:
                 cursor.execute(
@@ -91,3 +97,5 @@ def clean_documents(conn=None):
         cursor.execute("DELETE FROM alcs.document WHERE audit_created_by = 'oats_etl';")
         conn.commit()
         print(f"Deleted items count = {cursor.rowcount}")
+
+    conn.commit()

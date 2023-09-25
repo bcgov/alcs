@@ -1,8 +1,4 @@
-from common import (
-    ALRChangeCode,
-    log_end,
-    log_start,
-)
+from common import ALRChangeCode, log_end, log_start, OATS_ETL_USER
 from .submap import (
     add_direction_field,
     map_direction_values,
@@ -21,7 +17,6 @@ from db import inject_conn_pool
 from common import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
-from enum import Enum
 import json
 
 etl_name = "alcs_app_sub"
@@ -304,6 +299,8 @@ def clean_application_submission(conn=None):
     print("Start application_submission cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.application_submission a WHERE a.audit_created_by = 'oats_etl'"
+            f"DELETE FROM alcs.application_submission a WHERE a.audit_created_by = '{OATS_ETL_USER}'"
         )
         print(f"Deleted items count = {cursor.rowcount}")
+
+    conn.commit()

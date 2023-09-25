@@ -1,6 +1,6 @@
 import traceback
 from db import inject_conn_pool
-from common import log_end, log_start
+from common import log_end, log_start, OATS_ETL_USER
 
 
 def noi_insert_query(number_of_rows_to_insert):
@@ -58,7 +58,7 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                     )
 
                     print(
-                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_applidation_id: {last_application_id}"
+                        f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_id: {last_application_id}"
                     )
                 except Exception as error:
                     conn.rollback()
@@ -83,6 +83,8 @@ def clean_notice_of_intents(conn=None):
     print("Start NOI cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.notice_of_intent a WHERE a.audit_created_by = 'oats_etl'"
+            f"DELETE FROM alcs.notice_of_intent noi WHERE noi.audit_created_by = '{OATS_ETL_USER}'"
         )
         print(f"Deleted items count = {cursor.rowcount}")
+
+    conn.commit()

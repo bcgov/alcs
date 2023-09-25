@@ -5,9 +5,8 @@ from applications.application_submission_status_email import (
     clean_application_submission_status_emails,
 )
 from noi.noi_submission_status_email import (
-    clean_application_submission_status_emails,
+    clean_notice_of_intent_submission_status_emails,
 )
-from noi import clean_notice_of_intents
 from documents import (
     clean_application_documents,
     clean_documents,
@@ -25,8 +24,8 @@ def clean_all(console, args):
         clean_documents()
         clean_application_submission()
         clean_applications()
-        clean_notice_of_intents()
+        clean_notice_of_intent()
         clean_application_submission_status_emails(),
-        clean_application_submission_status_emails(),
+        clean_notice_of_intent_submission_status_emails(),
 
         console.log("Done")
