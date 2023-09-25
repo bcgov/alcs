@@ -15,6 +15,7 @@ import { ApplicationSubtaskProfile } from '../../common/automapper/application-s
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { CardProfile } from '../../common/automapper/card.automapper.profile';
 import { CovenantProfile } from '../../common/automapper/covenant.automapper.profile';
+import { NotificationProfile } from '../../common/automapper/notification.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
 import { ApplicationModificationService } from '../application-decision/application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../application-decision/application-reconsideration/application-reconsideration.service';
@@ -30,6 +31,8 @@ import { NoticeOfIntentModification } from '../notice-of-intent-decision/notice-
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
+import { Notification } from '../notification/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { HomeController } from './home.controller';
@@ -45,6 +48,7 @@ describe('HomeController', () => {
   let mockApplicationTimeTrackingService: DeepMocked<ApplicationTimeTrackingService>;
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let mockNoticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let mockNotificationService: DeepMocked<NotificationService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -56,6 +60,7 @@ describe('HomeController', () => {
     mockCovenantService = createMock();
     mockNoticeOfIntentService = createMock();
     mockNoticeOfIntentModificationService = createMock();
+    mockNotificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -109,11 +114,16 @@ describe('HomeController', () => {
           provide: NoticeOfIntentModificationService,
           useValue: mockNoticeOfIntentModificationService,
         },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
+        },
         ApplicationProfile,
         ApplicationSubtaskProfile,
         CovenantProfile,
         UserProfile,
         CardProfile,
+        NotificationProfile,
         ...mockKeyCloakProviders,
       ],
     }).compile();
@@ -134,6 +144,8 @@ describe('HomeController', () => {
     mockNoticeOfIntentService.mapToDtos.mockResolvedValue([]);
     mockNoticeOfIntentModificationService.getBy.mockResolvedValue([]);
     mockNoticeOfIntentModificationService.mapToDtos.mockResolvedValue([]);
+    mockNotificationService.getBy.mockResolvedValue([]);
+    mockNotificationService.mapToDtos.mockResolvedValue([]);
 
     mockApplicationTimeTrackingService.fetchActiveTimes.mockResolvedValue(
       new Map(),
@@ -159,6 +171,9 @@ describe('HomeController', () => {
     mockNoticeOfIntentModificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
       [],
     );
+    mockNotificationService.getWithIncompleteSubtaskByType.mockResolvedValue(
+      [],
+    );
   });
 
   it('should be defined', () => {
@@ -166,7 +181,7 @@ describe('HomeController', () => {
   });
 
   describe('Assigned To Me', () => {
-    it('should call ApplicationService with the correct filter for assigned', async () => {
+    it('should call Application, NOI, Notification services with the correct filter for assigned', async () => {
       const userId = 'fake-user-id';
       await controller.getAssignedToMe({
         user: {
@@ -199,6 +214,23 @@ describe('HomeController', () => {
 
       expect(mockPlanningReviewService.getBy).toHaveBeenCalledTimes(1);
       expect(mockPlanningReviewService.getBy.mock.calls[0][0]).toEqual(
+        filterCondition,
+      );
+
+      expect(mockNoticeOfIntentService.getBy).toHaveBeenCalledTimes(1);
+      expect(mockNoticeOfIntentService.getBy.mock.calls[0][0]).toEqual(
+        filterCondition,
+      );
+
+      expect(mockNoticeOfIntentModificationService.getBy).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(
+        mockNoticeOfIntentModificationService.getBy.mock.calls[0][0],
+      ).toEqual(filterCondition);
+
+      expect(mockNotificationService.getBy).toHaveBeenCalledTimes(1);
+      expect(mockNotificationService.getBy.mock.calls[0][0]).toEqual(
         filterCondition,
       );
     });
@@ -381,6 +413,29 @@ describe('HomeController', () => {
       expect(res[0].title).toContain(
         mockNoiModification.noticeOfIntent.applicant,
       );
+    });
+
+    it('should call Notification Service and map it', async () => {
+      const mockNotification = new Notification({
+        applicant: 'fake-applicant',
+        fileNumber: 'fileNumber',
+        card: initCardMockEntity('222'),
+      });
+      mockNotificationService.getWithIncompleteSubtaskByType.mockResolvedValue([
+        mockNotification,
+      ]);
+
+      const res = await controller.getIncompleteSubtasksByType(
+        CARD_SUBTASK_TYPE.PEER_REVIEW,
+      );
+
+      expect(res.length).toEqual(1);
+      expect(
+        mockNotificationService.getWithIncompleteSubtaskByType,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(res[0].title).toContain(mockNotification.fileNumber);
+      expect(res[0].title).toContain(mockNotification.applicant);
     });
   });
 });

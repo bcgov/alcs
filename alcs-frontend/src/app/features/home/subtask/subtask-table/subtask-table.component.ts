@@ -6,6 +6,7 @@ import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
+  NOTIFICATION_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
@@ -25,6 +26,7 @@ export class SubtaskTableComponent {
   PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
   COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
+  NOTIFICATION_LABEL = NOTIFICATION_LABEL;
 
   constructor(private router: Router, private cardSubtaskService: CardSubtaskService) {}
 

@@ -13,4 +13,8 @@
     <div class="subheading2">Non-Applications</div>
     <app-subtask-table [subtasks]="nonApplicationSubtasks" [users]="users"></app-subtask-table>
   </section>
+  <section *ngIf="notificationSubtasks.length">
+    <div class="subheading2">Notifications</div>
+    <app-subtask-table [subtasks]="notificationSubtasks" [users]="users"></app-subtask-table>
+  </section>
 </div>

@@ -89,3 +89,11 @@ export const DECISION_CONDITION_SUPERSEDED_LABEL = {
   borderColor: '#C08106',
   textColor: '#000',
 };
+
+export const NOTIFICATION_LABEL = {
+  label: 'Statutory Right of Way',
+  shortLabel: 'SRW',
+  backgroundColor: '#fff',
+  borderColor: '#59ADFA',
+  textColor: '#313132',
+};

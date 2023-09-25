@@ -36,6 +36,8 @@ import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
+import { Notification } from '../notification/notification.entity';
+import { NotificationService } from '../notification/notification.service';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 import { PlanningReview } from '../planning-review/planning-review.entity';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
@@ -59,6 +61,7 @@ export class HomeController {
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
+    private notificationService: NotificationService,
   ) {}
 
   @Get('/assigned')
@@ -107,6 +110,10 @@ export class HomeController {
       const noticeOfIntentModifications =
         await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
 
+      const notifications = await this.notificationService.getBy(
+        assignedFindOptions,
+      );
+
       const result = {
         noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
           noticeOfIntents,
@@ -124,6 +131,7 @@ export class HomeController {
         ),
         modifications: await this.modificationService.mapToDtos(modifications),
         covenants: await this.covenantService.mapToDtos(covenants),
+        notifications: await this.notificationService.mapToDtos(notifications),
       };
 
       return result;
@@ -191,6 +199,15 @@ export class HomeController {
       noiModificationsWithSubtasks,
     );
 
+    const notificationsWithSubtasks =
+      await this.notificationService.getWithIncompleteSubtaskByType(
+        subtaskType,
+      );
+
+    const notificationSubtasks = this.mapNotificationsToDtos(
+      notificationsWithSubtasks,
+    );
+
     return [
       ...noticeOfIntentSubtasks,
       ...applicationSubtasks,
@@ -199,6 +216,7 @@ export class HomeController {
       ...planningReviewSubtasks,
       ...covenantReviewSubtasks,
       ...noiModificationsSubtasks,
+      ...notificationSubtasks,
     ];
   }
 
@@ -365,6 +383,28 @@ export class HomeController {
           title: `${modification.noticeOfIntent.fileNumber} (${modification.noticeOfIntent.applicant})`,
           parentType: PARENT_TYPE.MODIFICATION,
         });
+      }
+    }
+    return result;
+  }
+
+  private mapNotificationsToDtos(notifications: Notification[]) {
+    const result: HomepageSubtaskDTO[] = [];
+    for (const notification of notifications) {
+      if (notification.card) {
+        for (const subtask of notification.card.subtasks) {
+          result.push({
+            type: subtask.type,
+            createdAt: subtask.createdAt.getTime(),
+            assignee: this.mapper.map(subtask.assignee, User, AssigneeDto),
+            uuid: subtask.uuid,
+            card: this.mapper.map(notification.card, Card, CardDto),
+            completedAt: subtask.completedAt?.getTime(),
+            paused: false,
+            title: `${notification.fileNumber} (${notification.applicant})`,
+            parentType: PARENT_TYPE.NOTIFICATION,
+          });
+        }
       }
     }
     return result;
