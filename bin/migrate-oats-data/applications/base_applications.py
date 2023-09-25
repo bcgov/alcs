@@ -127,3 +127,5 @@ def clean_applications(conn=None):
         cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_exclude")
         cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate")
         print(f"Tempory tables dropped")
+
+    conn.commit()

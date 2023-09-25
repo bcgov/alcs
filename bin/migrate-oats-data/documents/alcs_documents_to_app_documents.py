@@ -38,7 +38,9 @@ def process_application_documents(conn=None, batch_size=10000):
     """
     with conn.cursor() as cursor:
         with open(
-            "sql/documents_app/alcs_documents_to_app_documents_total_count.sql", "r", encoding="utf-8"
+            "sql/documents_app/alcs_documents_to_app_documents_total_count.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -50,7 +52,9 @@ def process_application_documents(conn=None, batch_size=10000):
         last_document_id = 0
 
         with open(
-            "sql/documents_app/alcs_documents_to_app_documents.sql", "r", encoding="utf-8"
+            "sql/documents_app/alcs_documents_to_app_documents.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             documents_to_insert_sql = sql_file.read()
             while True:
@@ -97,3 +101,5 @@ def clean_application_documents(conn=None):
         )
         conn.commit()
         print(f"Deleted items count = {cursor.rowcount}")
+
+    conn.commit()

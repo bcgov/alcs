@@ -14,7 +14,11 @@ connection_pool = psycopg2.pool.SimpleConnectionPool(1, 10, **db_config)
 
 def inject_conn_pool(func):
     def wrapper(*args, **kwargs):
-        with connection_pool.getconn() as conn:
-            return func(conn, *args, **kwargs)
+        conn = connection_pool.getconn()
+        try:
+            result = func(conn, *args, **kwargs)
+        finally:
+            connection_pool.putconn(conn)
+        return result
 
     return wrapper

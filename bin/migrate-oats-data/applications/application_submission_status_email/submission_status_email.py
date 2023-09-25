@@ -38,3 +38,5 @@ def clean_application_submission_status_emails(conn=None):
         print("".join(traceback.format_exception(None, error, error.__traceback__)))
         cursor.close()
         conn.close()
+
+    conn.commit()

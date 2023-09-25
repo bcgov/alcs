@@ -94,10 +94,10 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
 
 def _update_fee_fields_records(conn, batch_size, cursor, rows):
     query = _get_update_query_from_oats_alr_applications_fields()
-    parsed_fee_data_list = _prepare_oats_alr_applications_data(rows)
+    parsed_data_list = _prepare_oats_alr_applications_data(rows)
 
-    if len(parsed_fee_data_list) > 0:
-        execute_batch(cursor, query, parsed_fee_data_list, page_size=batch_size)
+    if len(parsed_data_list) > 0:
+        execute_batch(cursor, query, parsed_data_list, page_size=batch_size)
 
     conn.commit()
 

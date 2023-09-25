@@ -5,14 +5,18 @@ from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date imp
     process_alcs_notice_of_intent_decision_date,
 )
 from .notice_of_intent_init import init_notice_of_intents, clean_notice_of_intents
+from .notice_of_intent_submissions import (
+    clean_notice_of_intent_submissions,
+    init_notice_of_intent_submissions,
+)
 
 
 def init_notice_of_intent(batch_size):
-    
     init_notice_of_intents(batch_size=batch_size)
 
 
 def clean_notice_of_intent():
+    clean_notice_of_intent_submissions()
     clean_notice_of_intents()
 
 
@@ -21,3 +25,5 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_base_fields(batch_size=batch_size)
 
     process_alcs_notice_of_intent_decision_date(batch_size=batch_size)
+
+    init_notice_of_intent_submissions(batch_size=batch_size)
