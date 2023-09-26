@@ -4,6 +4,7 @@ import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { CodeService } from '../../alcs/code/code.service';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
@@ -23,6 +24,7 @@ describe('CodeController', () => {
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockNoiService: DeepMocked<NoticeOfIntentService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
@@ -31,6 +33,7 @@ describe('CodeController', () => {
     mockAppDocService = createMock();
     mockAppSubmissionService = createMock();
     mockNoiService = createMock();
+    mockCodeService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -66,6 +69,10 @@ describe('CodeController', () => {
           useValue: mockNoiService,
         },
         {
+          provide: CodeService,
+          useValue: mockCodeService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -95,6 +102,15 @@ describe('CodeController', () => {
     mockAppDocService.fetchTypes.mockResolvedValue([]);
     mockAppSubmissionService.listNaruSubtypes.mockResolvedValue([]);
     mockNoiService.listTypes.mockResolvedValue([]);
+    mockCodeService.getAll.mockResolvedValue({
+      region: [],
+      decisionMakers: [],
+      applicationStatusTypes: [],
+      status: [],
+      meetingTypes: [],
+      type: [],
+      reconsiderationTypes: [],
+    });
   });
 
   it('should call out to local government service for fetching codes', async () => {

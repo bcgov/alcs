@@ -9,8 +9,8 @@ import { ApplicationTypeDto } from '../../code/code.dto';
 
 export type SearchEntityClass = 'APP' | 'NOI' | 'NOTI';
 
-export class ApplicationSearchResultDto {
-  type: ApplicationTypeDto;
+export class BaseSearchResultDto {
+  type: string;
   referenceId: string;
   ownerName?: string;
   localGovernmentName?: string;
@@ -22,31 +22,9 @@ export class ApplicationSearchResultDto {
   class: SearchEntityClass;
 }
 
-export class NoticeOfIntentSearchResultDto {
-  type: ApplicationTypeDto;
-  referenceId: string;
-  ownerName?: string;
-  localGovernmentName?: string;
-  fileNumber: string;
-  boardCode?: string;
-  status: string;
-  dateSubmitted?: number;
-  lastUpdate?: number;
-  class: SearchEntityClass;
-}
-
-export class NotificationSearchResultDto {
-  type: ApplicationTypeDto;
-  referenceId: string;
-  ownerName?: string;
-  localGovernmentName?: string;
-  fileNumber: string;
-  boardCode?: string;
-  status: string;
-  dateSubmitted?: number;
-  lastUpdate?: number;
-  class: SearchEntityClass;
-}
+export class ApplicationSearchResultDto extends BaseSearchResultDto {}
+export class NoticeOfIntentSearchResultDto extends BaseSearchResultDto {}
+export class NotificationSearchResultDto extends BaseSearchResultDto {}
 
 export class AdvancedSearchResponseDto {
   applications: ApplicationSearchResultDto[];
@@ -108,6 +86,10 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsOptional()
   regionCode?: string;
 
+  @IsString()
+  @IsOptional()
+  decisionMakerCode?: string;
+
   @IsNumber()
   @IsOptional()
   dateDecidedFrom?: number;
@@ -124,6 +106,6 @@ export class SearchRequestDto extends PagingRequestDto {
 export class LinkedStatusType {
   submission_uuid: string;
   status_type_code: string;
-  effective_date: Date;
+  effective_date: number;
   label: string;
 }

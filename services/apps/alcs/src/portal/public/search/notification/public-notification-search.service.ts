@@ -62,8 +62,8 @@ export class PublicNotificationSearchService {
         return `"notificationSearch"."status" ->> 'label' `;
 
       default:
-      case 'dateSubmitted':
-        return '"notificationSearch"."date_submitted_to_alc"';
+      case 'lastUpdate':
+        return `"notificationSearch"."status" ->> 'effectiveDate' `;
     }
   }
 

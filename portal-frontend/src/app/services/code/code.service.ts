@@ -4,7 +4,14 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { DocumentTypeDto } from '../../shared/dto/document.dto';
 import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
-import { ApplicationTypeDto, LocalGovernmentDto, NoticeOfIntentTypeDto, SubmissionTypeDto } from './code.dto';
+import {
+  ApplicationRegionDto,
+  ApplicationTypeDto,
+  DecisionMakerDto,
+  LocalGovernmentDto,
+  NoticeOfIntentTypeDto,
+  SubmissionTypeDto,
+} from './code.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +30,8 @@ export class CodeService {
         documentTypes: DocumentTypeDto[];
         submissionTypes: SubmissionTypeDto[];
         naruSubtypes: NaruSubtypeDto[];
+        regions: ApplicationRegionDto[];
+        decisionMakers: DecisionMakerDto[];
       }>(`${this.baseUrl}`)
     );
   }
