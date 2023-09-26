@@ -90,12 +90,12 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _noiSubmission.soilToRemoveArea }}
-      <span *ngIf="_noiSubmission.soilToRemoveArea !== null">ha</span>
+      <span *ngIf="_noiSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilToRemoveArea === null"></app-no-data>
     </div>
     <div>
       {{ _noiSubmission.soilToPlaceArea }}
-      <span *ngIf="_noiSubmission.soilToPlaceArea !== null">ha</span>
+      <span *ngIf="_noiSubmission.soilToPlaceArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilToPlaceArea === null"></app-no-data>
     </div>
 
@@ -168,12 +168,12 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _noiSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">ha</span>
+      <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilAlreadyRemovedArea === null"></app-no-data>
     </div>
     <div>
       {{ _noiSubmission.soilAlreadyPlacedArea }}
-      <span *ngIf="_noiSubmission.soilAlreadyPlacedArea !== null">ha</span>
+      <span *ngIf="_noiSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilAlreadyPlacedArea === null"></app-no-data>
     </div>
 

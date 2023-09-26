@@ -84,7 +84,7 @@
       <div class="grid-1"><strong>Area</strong></div>
       <div class="grid-2">
         {{ applicationSubmission.nfuTotalFillArea }}
-        <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">ha</span>
+        <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">m<sup>2</sup></span>
         <app-no-data
           [showRequired]="showErrors"
           *ngIf="applicationSubmission.nfuTotalFillArea === null"

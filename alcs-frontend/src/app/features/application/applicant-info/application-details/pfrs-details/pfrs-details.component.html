@@ -32,7 +32,7 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _applicationSubmission.soilToRemoveArea }}
-      <span *ngIf="_applicationSubmission.soilToRemoveArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
     </div>
     <div>
       {{ _applicationSubmission.soilToPlaceArea }}
@@ -78,11 +78,11 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
     </div>
     <div>
       {{ _applicationSubmission.soilAlreadyPlacedArea }}
-      <span *ngIf="_applicationSubmission.soilAlreadyPlacedArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
     </div>
 
     <div><strong>Maximum Depth</strong></div>
