@@ -7,10 +7,12 @@ import { CovenantDto } from '../../../services/covenant/covenant.dto';
 import { HomeService } from '../../../services/home/home.service';
 import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
+import { NotificationDto } from '../../../services/notification/notification.dto';
 import { PlanningReviewDto } from '../../../services/planning-review/planning-review.dto';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
+  NOTIFICATION_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
@@ -26,6 +28,7 @@ export class AssignedComponent implements OnInit {
   noticeOfIntents: AssignedToMeFile[] = [];
   applications: AssignedToMeFile[] = [];
   nonApplications: AssignedToMeFile[] = [];
+  notifications: AssignedToMeFile[] = [];
   totalFiles = 0;
 
   constructor(private homeService: HomeService, private applicationService: ApplicationService) {}
@@ -44,6 +47,7 @@ export class AssignedComponent implements OnInit {
       covenants,
       noticeOfIntents,
       noticeOfIntentModifications,
+      notifications,
     } = await this.homeService.fetchAssignedToMe();
 
     this.noticeOfIntents = [
@@ -110,7 +114,19 @@ export class AssignedComponent implements OnInit {
         .sort((a, b) => a.date! - b.date!),
     ];
 
-    this.totalFiles = this.applications.length + this.nonApplications.length + this.noticeOfIntents.length;
+    this.notifications = [
+      ...notifications
+        .filter((r) => r.card.highPriority)
+        .map((r) => this.mapNotifications(r))
+        .sort((a, b) => a.date! - b.date!),
+      ...notifications
+        .filter((r) => !r.card.highPriority)
+        .map((r) => this.mapNotifications(r))
+        .sort((a, b) => a.date! - b.date!),
+    ];
+
+    this.totalFiles =
+      this.applications.length + this.nonApplications.length + this.noticeOfIntents.length + this.notifications.length;
   }
 
   private mapCovenant(c: CovenantDto): AssignedToMeFile {
@@ -191,6 +207,17 @@ export class AssignedComponent implements OnInit {
       labels: a.noticeOfIntent.retroactive
         ? [MODIFICATION_TYPE_LABEL, RETROACTIVE_TYPE_LABEL]
         : [MODIFICATION_TYPE_LABEL],
+    };
+  }
+
+  private mapNotifications(a: NotificationDto) {
+    return {
+      title: `${a.fileNumber} (${a.applicant})`,
+      type: a.card!.type,
+      card: a.card,
+      date: a.dateSubmittedToAlc,
+      highPriority: a.card!.highPriority,
+      labels: [NOTIFICATION_LABEL],
     };
   }
 }

@@ -9,6 +9,7 @@ import { CARD_SUBTASK_TYPE, HomepageSubtaskDto } from '../card/card-subtask/card
 import { CovenantDto } from '../covenant/covenant.dto';
 import { NoticeOfIntentModificationDto } from '../notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
 import { NoticeOfIntentDto } from '../notice-of-intent/notice-of-intent.dto';
+import { NotificationDto } from '../notification/notification.dto';
 import { PlanningReviewDto } from '../planning-review/planning-review.dto';
 
 @Injectable({
@@ -27,6 +28,7 @@ export class HomeService {
         covenants: CovenantDto[];
         noticeOfIntents: NoticeOfIntentDto[];
         noticeOfIntentModifications: NoticeOfIntentModificationDto[];
+        notifications: NotificationDto[];
       }>(`${environment.apiUrl}/home/assigned`)
     );
   }

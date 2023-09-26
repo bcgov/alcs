@@ -24,6 +24,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
   applicationSubtasks: HomepageSubtaskDto[] = [];
   noticeOfIntentSubtasks: HomepageSubtaskDto[] = [];
   nonApplicationSubtasks: HomepageSubtaskDto[] = [];
+  notificationSubtasks: HomepageSubtaskDto[] = [];
 
   showNoi = true;
   showAppAndNonApp = true;
@@ -59,6 +60,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     const covenants = allSubtasks.filter((s) => s.card.type === CardType.COV);
     const nois = allSubtasks.filter((s) => s.card.type === CardType.NOI);
     const noiModifications = allSubtasks.filter((s) => s.card.type === CardType.NOI_MODI);
+    const notifications = allSubtasks.filter((s) => s.card.type === CardType.NOTIFICATION);
 
     this.applicationSubtasks = [
       ...applications.filter((a) => a.card.highPriority).sort((a, b) => b.activeDays! - a.activeDays!),
@@ -81,6 +83,10 @@ export class SubtaskComponent implements OnInit, OnDestroy {
       ...covenants.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...planningReviews.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...covenants.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
+    ];
+
+    this.notificationSubtasks = [
+      ...notifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
     if (this.showNoi) {

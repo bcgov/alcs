@@ -280,6 +280,7 @@ export class SearchController {
       !searchDto.resolutionYear &&
       !searchDto.isIncludeOtherParcels &&
       !searchDto.portalStatusCode &&
+      !searchDto.pid &&
       !isStringSetAndNotEmpty(searchDto.legacyId) &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 

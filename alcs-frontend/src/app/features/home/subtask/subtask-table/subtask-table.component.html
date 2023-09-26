@@ -42,6 +42,13 @@
         [type]="PLANNING_TYPE_LABEL"
       >
       </app-application-type-pill>
+      <app-application-type-pill
+      [useShortLabel]="true"
+      *ngIf="element.parentType === 'notification'"
+      [type]="NOTIFICATION_LABEL"
+    >
+    </app-application-type-pill>
+      
     </td>
   </ng-container>
 
