@@ -20,6 +20,7 @@ import { PortalNotificationDocumentModule } from './notification-document/notifi
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 import { NotificationSubmissionModule } from './notification-submission/notification-submission.module';
+import { PublicModule } from './public/public.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { NotificationSubmissionModule } from './notification-submission/notifica
     PortalNoticeOfIntentDecisionModule,
     NotificationSubmissionModule,
     PortalNotificationDocumentModule,
+    PublicModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
