@@ -26,7 +26,6 @@ export class PublicApplicationSearchService {
     searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<PublicApplicationSubmissionSearchView[]>> {
     let query = await this.compileApplicationSearchQuery(searchDto);
-
     query = this.compileApplicationGroupBySearchQuery(query);
 
     const sortQuery = this.compileSortQuery(searchDto);
@@ -62,8 +61,8 @@ export class PublicApplicationSearchService {
         return `"appSearch"."status" ->> 'label' `;
 
       default:
-      case 'dateSubmitted':
-        return '"appSearch"."date_submitted_to_alc"';
+      case 'lastUpdate':
+        return '"appSearch"."last_update"';
     }
   }
 
@@ -87,6 +86,7 @@ export class PublicApplicationSearchService {
             , "appSearch"."status"
             , "appSearch"."date_submitted_to_alc"
             , "appSearch"."decision_date"
+            , "appSearch"."last_update"
             , "applicationType"."audit_deleted_date_at"
             , "applicationType"."audit_created_at"
             , "applicationType"."audit_updated_by"
@@ -105,18 +105,17 @@ export class PublicApplicationSearchService {
   }
 
   private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
-    let query = this.applicationSearchRepository
-      .createQueryBuilder('appSearch')
-      .where('appSearch.is_draft = false');
+    const query =
+      this.applicationSearchRepository.createQueryBuilder('appSearch');
 
     if (searchDto.fileNumber) {
-      query = query
+      query
         .andWhere('appSearch.file_number = :fileNumber')
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
     if (searchDto.portalStatusCode) {
-      query = query.andWhere(
+      query.andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' = :status",
         {
           status: searchDto.portalStatusCode,
@@ -129,7 +128,7 @@ export class PublicApplicationSearchService {
         name: searchDto.governmentName,
       });
 
-      query = query.andWhere(
+      query.andWhere(
         'appSearch.local_government_uuid = :local_government_uuid',
         {
           local_government_uuid: government.uuid,
@@ -138,7 +137,7 @@ export class PublicApplicationSearchService {
     }
 
     if (searchDto.regionCode) {
-      query = query.andWhere(
+      query.andWhere(
         'appSearch.application_region_code = :application_region_code',
         {
           application_region_code: searchDto.regionCode,
@@ -146,38 +145,42 @@ export class PublicApplicationSearchService {
       );
     }
 
-    query = this.compileApplicationSearchByNameQuery(searchDto, query);
-    query = this.compileApplicationParcelSearchQuery(searchDto, query);
-    query = this.compileApplicationDecisionSearchQuery(searchDto, query);
-    query = this.compileApplicationFileTypeSearchQuery(searchDto, query);
+    this.compileSearchByNameQuery(searchDto, query);
+    this.compileParcelSearchQuery(searchDto, query);
+    this.compileDecisionSearchQuery(searchDto, query);
+    this.compileFileTypeSearchQuery(searchDto, query);
 
     return query;
   }
 
-  private compileApplicationDecisionSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
     if (
       searchDto.dateDecidedTo !== undefined ||
-      searchDto.dateDecidedFrom !== undefined
+      searchDto.dateDecidedFrom !== undefined ||
+      searchDto.decisionMakerCode !== undefined
     ) {
       query = this.joinApplicationDecision(query);
-      // TODO
-      // if (searchDto.resolutionNumber !== undefined) {
-      //   query = query.andWhere(
-      //     'decision.resolution_number = :resolution_number',
-      //     {
-      //       resolution_number: searchDto.resolutionNumber,
-      //     },
-      //   );
-      // }
-      //
-      // if (searchDto.resolutionYear !== undefined) {
-      //   query = query.andWhere('decision.resolution_year = :resolution_year', {
-      //     resolution_year: searchDto.resolutionYear,
-      //   });
-      // }
+
+      if (searchDto.dateDecidedFrom !== undefined) {
+        query = query.andWhere('decision.date >= :dateDecidedFrom', {
+          dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
+        });
+      }
+
+      if (searchDto.dateDecidedTo !== undefined) {
+        query = query.andWhere('decision.date <= :dateDecidedTo', {
+          dateDecidedTo: new Date(searchDto.dateDecidedTo),
+        });
+      }
+
+      if (searchDto.decisionMakerCode !== undefined) {
+        query = query.andWhere(
+          'decision.decision_maker_code = :decisionMakerCode',
+          {
+            decisionMakerCode: searchDto.decisionMakerCode,
+          },
+        );
+      }
     }
     return query;
   }
@@ -191,10 +194,7 @@ export class PublicApplicationSearchService {
     return query;
   }
 
-  private compileApplicationParcelSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.pid || searchDto.civicAddress) {
       query = query.leftJoin(
         ApplicationParcel,
@@ -221,10 +221,7 @@ export class PublicApplicationSearchService {
     return query;
   }
 
-  private compileApplicationSearchByNameQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.name) {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
@@ -265,15 +262,13 @@ export class PublicApplicationSearchService {
     return query;
   }
 
-  private compileApplicationFileTypeSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileFileTypeSearchQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.fileTypes.length > 0) {
       // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
       if (
         searchDto.dateDecidedFrom === undefined &&
-        searchDto.dateDecidedTo === undefined
+        searchDto.dateDecidedTo === undefined &&
+        searchDto.decisionMakerCode === undefined
       ) {
         query = this.joinApplicationDecision(query);
       }

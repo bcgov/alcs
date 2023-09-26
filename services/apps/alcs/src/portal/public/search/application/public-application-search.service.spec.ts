@@ -88,8 +88,7 @@ describe('PublicApplicationSearchService', () => {
     expect(
       mockApplicationSubmissionSearchViewRepository.createQueryBuilder,
     ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(8);
-    expect(mockQuery.where).toBeCalledTimes(1);
+    expect(mockQuery.andWhere).toBeCalledTimes(10);
   });
 
   it('should call compileApplicationSearchQuery method correctly', async () => {

@@ -17,15 +17,15 @@ import { PublicSearchService } from './public-search.service';
 describe('PublicSearchController', () => {
   let controller: PublicSearchController;
   let mockSearchService: DeepMocked<PublicSearchService>;
-  let mockNoticeOfIntentAdvancedSearchService: DeepMocked<PublicNoticeOfIntentSearchService>;
-  let mockApplicationAdvancedSearchService: DeepMocked<PublicApplicationSearchService>;
-  let mockNotificationAdvancedSearchService: DeepMocked<PublicNotificationSearchService>;
+  let mockNOIPublicSearchService: DeepMocked<PublicNoticeOfIntentSearchService>;
+  let mockAppPublicSearchService: DeepMocked<PublicApplicationSearchService>;
+  let mockNotiPublicSearchService: DeepMocked<PublicNotificationSearchService>;
 
   beforeEach(async () => {
     mockSearchService = createMock();
-    mockNoticeOfIntentAdvancedSearchService = createMock();
-    mockApplicationAdvancedSearchService = createMock();
-    mockNotificationAdvancedSearchService = createMock();
+    mockNOIPublicSearchService = createMock();
+    mockAppPublicSearchService = createMock();
+    mockNotiPublicSearchService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -40,15 +40,15 @@ describe('PublicSearchController', () => {
         },
         {
           provide: PublicNoticeOfIntentSearchService,
-          useValue: mockNoticeOfIntentAdvancedSearchService,
+          useValue: mockNOIPublicSearchService,
         },
         {
           provide: PublicApplicationSearchService,
-          useValue: mockApplicationAdvancedSearchService,
+          useValue: mockAppPublicSearchService,
         },
         {
           provide: PublicNotificationSearchService,
-          useValue: mockNotificationAdvancedSearchService,
+          useValue: mockNotiPublicSearchService,
         },
         {
           provide: ClsService,
@@ -65,19 +65,17 @@ describe('PublicSearchController', () => {
     mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
     mockSearchService.getNotification.mockResolvedValue(new Notification());
 
-    mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents.mockResolvedValue(
-      {
-        data: [],
-        total: 0,
-      },
-    );
-
-    mockApplicationAdvancedSearchService.searchApplications.mockResolvedValue({
+    mockNOIPublicSearchService.searchNoticeOfIntents.mockResolvedValue({
       data: [],
       total: 0,
     });
 
-    mockNotificationAdvancedSearchService.search.mockResolvedValue({
+    mockAppPublicSearchService.searchApplications.mockResolvedValue({
+      data: [],
+      total: 0,
+    });
+
+    mockNotiPublicSearchService.search.mockResolvedValue({
       data: [],
       total: 0,
     });
@@ -87,66 +85,54 @@ describe('PublicSearchController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should call search to retrieve Applications, NOIs, PlanningReviews, Covenants, Notifications', async () => {
-    const mockSearchRequestDto = {
+  it('should call search to retrieve Applications, NOIs, Notifications', async () => {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
-      isIncludeOtherParcels: false,
       name: 'test',
       fileTypes: [],
     };
 
-    const result = await controller.search(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.search(mockSearchRequestDto);
 
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
 
   it('should call applications advanced search to retrieve Applications', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
       sortDirection: 'ASC',
-      isIncludeOtherParcels: false,
       fileTypes: [],
     };
 
-    const result = await controller.advancedSearchApplications(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.searchApplications(mockSearchRequestDto);
 
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
 
   it('should call NOI advanced search to retrieve NOIs', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
@@ -154,22 +140,18 @@ describe('PublicSearchController', () => {
       fileTypes: [],
     };
 
-    const result = await controller.advancedSearchNoticeOfIntents(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.searchNoticeOfIntents(mockSearchRequestDto);
 
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.data).toBeDefined();
     expect(result.total).toBe(0);
   });
 
   it('should call search to retrieve Applications only when application file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
@@ -177,22 +159,18 @@ describe('PublicSearchController', () => {
       fileTypes: ['NFUP'],
     };
 
-    const result = await controller.search(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.search(mockSearchRequestDto);
 
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
   });
 
   it('should call search to retrieve NOIs only when NOI file type selected', async () => {
-    const mockSearchRequestDto = {
+    const mockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
       sortField: '1',
@@ -200,16 +178,12 @@ describe('PublicSearchController', () => {
       fileTypes: ['NOI'],
     };
 
-    const result = await controller.search(
-      mockSearchRequestDto as SearchRequestDto,
-    );
+    const result = await controller.search(mockSearchRequestDto);
 
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(1);
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(1);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });
@@ -225,18 +199,14 @@ describe('PublicSearchController', () => {
 
     const result = await controller.search(mockSearchRequestDto);
 
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledTimes(1);
-    expect(
-      mockApplicationAdvancedSearchService.searchApplications,
-    ).toBeCalledWith(mockSearchRequestDto);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledTimes(1);
+    expect(mockAppPublicSearchService.searchApplications).toBeCalledWith(
+      mockSearchRequestDto,
+    );
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
 
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(0);
+    expect(mockNOIPublicSearchService.searchNoticeOfIntents).toBeCalledTimes(0);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
   });

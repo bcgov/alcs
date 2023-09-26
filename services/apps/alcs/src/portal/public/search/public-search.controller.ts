@@ -1,16 +1,15 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
+import { Public } from 'nest-keycloak-connect';
 import { isStringSetAndNotEmpty } from '../../../utils/string-helper';
-import { ApplicationTypeDto } from '../../code/code.dto';
 import { APPLICATION_SUBMISSION_TYPES } from '../../pdf-generation/generate-submission-document.service';
-import { PublicApplicationSearchService } from './application/public-application-search.service';
 import { PublicApplicationSubmissionSearchView } from './application/public-application-search-view.entity';
-import { PublicNoticeOfIntentSearchService } from './notice-of-intent/public-notice-of-intent-search.service';
+import { PublicApplicationSearchService } from './application/public-application-search.service';
 import { PublicNoticeOfIntentSubmissionSearchView } from './notice-of-intent/public-notice-of-intent-search-view.entity';
-import { PublicNotificationSearchService } from './notification/public-notification-search.service';
+import { PublicNoticeOfIntentSearchService } from './notice-of-intent/public-notice-of-intent-search.service';
 import { PublicNotificationSubmissionSearchView } from './notification/public-notification-search-view.entity';
+import { PublicNotificationSearchService } from './notification/public-notification-search.service';
 import {
   AdvancedSearchResponseDto,
   AdvancedSearchResultDto,
@@ -21,6 +20,7 @@ import {
 } from './public-search.dto';
 import { PublicSearchService } from './public-search.service';
 
+@Public()
 @Controller('search')
 export class PublicSearchController {
   constructor(
@@ -59,7 +59,7 @@ export class PublicSearchController {
       notifications = await this.notificationSearchService.search(searchDto);
     }
 
-    return this.mapAdvancedSearchResults(
+    return this.mapSearchResults(
       applicationSearchResult,
       noticeOfIntentResults,
       notifications,
@@ -67,18 +67,14 @@ export class PublicSearchController {
   }
 
   @Post('/application')
-  async advancedSearchApplications(
+  async searchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
     const applications = await this.applicationSearchService.searchApplications(
       searchDto,
     );
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
-      applications,
-      null,
-      null,
-    );
+    const mappedSearchResult = this.mapSearchResults(applications, null, null);
 
     return {
       total: mappedSearchResult.totalApplications,
@@ -87,13 +83,13 @@ export class PublicSearchController {
   }
 
   @Post('/notice-of-intent')
-  async advancedSearchNoticeOfIntents(
+  async searchNoticeOfIntents(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NoticeOfIntentSearchResultDto[]>> {
     const noticeOfIntents =
       await this.noticeOfIntentSearchService.searchNoticeOfIntents(searchDto);
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
+    const mappedSearchResult = this.mapSearchResults(
       null,
       noticeOfIntents,
       null,
@@ -106,18 +102,14 @@ export class PublicSearchController {
   }
 
   @Post('/notifications')
-  async advancedSearchNotifications(
+  async searchNotifications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
     const notifications = await this.notificationSearchService.search(
       searchDto,
     );
 
-    const mappedSearchResult = this.mapAdvancedSearchResults(
-      null,
-      null,
-      notifications,
-    );
+    const mappedSearchResult = this.mapSearchResults(null, null, notifications);
 
     return {
       total: mappedSearchResult.totalNotifications,
@@ -144,12 +136,17 @@ export class PublicSearchController {
       notificationTypeSpecified = searchDto.fileTypes.includes('SRW');
     }
 
-    const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;
+    const searchNoi =
+      (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true) &&
+      (searchDto.decisionMakerCode
+        ? searchDto.decisionMakerCode === 'CEOP'
+        : true);
 
     const searchNotifications =
       (searchDto.fileTypes.length > 0 ? notificationTypeSpecified : true) &&
       !searchDto.dateDecidedFrom &&
       !searchDto.dateDecidedTo &&
+      !searchDto.decisionMakerCode &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
     return {
@@ -159,7 +156,7 @@ export class PublicSearchController {
     };
   }
 
-  private mapAdvancedSearchResults(
+  private mapSearchResults(
     applications: AdvancedSearchResultDto<
       PublicApplicationSubmissionSearchView[]
     > | null,
@@ -176,7 +173,7 @@ export class PublicSearchController {
     if (applications && applications.data.length > 0) {
       mappedApplications.push(
         ...applications.data.map((app) =>
-          this.mapApplicationToAdvancedSearchResult(app),
+          this.mapApplicationToSearchResult(app),
         ),
       );
     }
@@ -185,7 +182,7 @@ export class PublicSearchController {
     if (noticeOfIntents && noticeOfIntents.data.length > 0) {
       mappedNoticeOfIntents.push(
         ...noticeOfIntents.data.map((noi) =>
-          this.mapNoticeOfIntentToAdvancedSearchResult(noi),
+          this.mapNoticeOfIntentToSearchResult(noi),
         ),
       );
     }
@@ -194,7 +191,7 @@ export class PublicSearchController {
     if (notifications && notifications.data && notifications.data.length > 0) {
       mappedNotifications.push(
         ...notifications.data.map((notification) =>
-          this.mapNotificationToAdvancedSearchResult(notification),
+          this.mapNotificationToSearchResult(notification),
         ),
       );
     }
@@ -209,18 +206,14 @@ export class PublicSearchController {
     return response;
   }
 
-  private mapApplicationToAdvancedSearchResult(
+  private mapApplicationToSearchResult(
     application: PublicApplicationSubmissionSearchView,
   ): ApplicationSearchResultDto {
     return {
       referenceId: application.fileNumber,
       fileNumber: application.fileNumber,
       dateSubmitted: application.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        application.applicationType,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: application.applicationType.label,
       lastUpdate: application.lastUpdate?.getTime(),
       localGovernmentName: application.localGovernmentName,
       ownerName: application.applicant,
@@ -229,7 +222,7 @@ export class PublicSearchController {
     };
   }
 
-  private mapNoticeOfIntentToAdvancedSearchResult(
+  private mapNoticeOfIntentToSearchResult(
     noi: PublicNoticeOfIntentSubmissionSearchView,
   ): NoticeOfIntentSearchResultDto {
     return {
@@ -237,11 +230,7 @@ export class PublicSearchController {
       fileNumber: noi.fileNumber,
       lastUpdate: noi.lastUpdate?.getTime(),
       dateSubmitted: noi.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        noi.noticeOfIntentType,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: noi.noticeOfIntentType.label,
       localGovernmentName: noi.localGovernmentName,
       ownerName: noi.applicant,
       class: 'NOI',
@@ -249,19 +238,15 @@ export class PublicSearchController {
     };
   }
 
-  private mapNotificationToAdvancedSearchResult(
+  private mapNotificationToSearchResult(
     notification: PublicNotificationSubmissionSearchView,
-  ): NoticeOfIntentSearchResultDto {
+  ): NotificationSearchResultDto {
     return {
       referenceId: notification.fileNumber,
       fileNumber: notification.fileNumber,
-      lastUpdate: notification.status.effective_date.getTime(),
+      lastUpdate: notification.status.effective_date,
       dateSubmitted: notification.dateSubmittedToAlc?.getTime(),
-      type: this.mapper.map(
-        notification.notificationType,
-        ApplicationType,
-        ApplicationTypeDto,
-      ),
+      type: notification.notificationType.label,
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',

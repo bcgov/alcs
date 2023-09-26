@@ -24,6 +24,10 @@ export class ApplicationSubmissionStatusService {
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
   ) {}
 
+  listStatuses() {
+    return this.submissionStatusTypeRepository.find();
+  }
+
   async setInitialStatuses(submissionUuid: string, persist = true) {
     const statuses = await this.submissionStatusTypeRepository.find();
     const newStatuses: ApplicationSubmissionToSubmissionStatus[] = [];

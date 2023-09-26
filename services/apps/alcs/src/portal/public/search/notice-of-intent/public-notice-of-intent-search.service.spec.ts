@@ -88,8 +88,7 @@ describe('PublicNoticeOfIntentSearchService', () => {
     expect(
       mockNoticeOfIntentSubmissionSearchViewRepository.createQueryBuilder,
     ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(7);
-    expect(mockQuery.where).toBeCalledTimes(1);
+    expect(mockQuery.andWhere).toBeCalledTimes(9);
   });
 
   it('should call compileNoticeOfIntentSearchQuery method correctly', async () => {

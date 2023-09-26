@@ -26,13 +26,13 @@ export class PublicNoticeOfIntentSearchService {
   ): Promise<
     AdvancedSearchResultDto<PublicNoticeOfIntentSubmissionSearchView[]>
   > {
-    let query = await this.compileNoticeOfIntentSearchQuery(searchDto);
+    const query = await this.compileNoticeOfIntentSearchQuery(searchDto);
 
-    query = this.compileGroupBySearchQuery(query);
+    this.compileGroupBySearchQuery(query);
 
     const sortQuery = this.compileSortQuery(searchDto);
 
-    query = query
+    query
       .orderBy(sortQuery, searchDto.sortDirection)
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
@@ -63,8 +63,8 @@ export class PublicNoticeOfIntentSearchService {
         return `"noiSearch"."status" ->> 'label' `;
 
       default:
-      case 'dateSubmitted':
-        return '"noiSearch"."date_submitted_to_alc"';
+      case 'lastUpdate':
+        return '"noiSearch"."last_update"';
     }
   }
 
@@ -88,6 +88,7 @@ export class PublicNoticeOfIntentSearchService {
         , "noiSearch"."status"
         , "noiSearch"."date_submitted_to_alc"
         , "noiSearch"."decision_date"
+        , "noiSearch"."last_update"      
         , "noticeOfIntentType"."audit_deleted_date_at"
         , "noticeOfIntentType"."audit_created_at"
         , "noticeOfIntentType"."audit_updated_by"
@@ -98,25 +99,22 @@ export class PublicNoticeOfIntentSearchService {
         , "noticeOfIntentType"."code"
         , "noticeOfIntentType"."html_description"
         , "noticeOfIntentType"."portal_label"
-        , "noiSearch"."is_draft"
         `,
       );
     return query;
   }
 
   private async compileNoticeOfIntentSearchQuery(searchDto: SearchRequestDto) {
-    let query = this.noiSearchRepository
-      .createQueryBuilder('noiSearch')
-      .where('noiSearch.is_draft = false');
+    const query = this.noiSearchRepository.createQueryBuilder('noiSearch');
 
     if (searchDto.fileNumber) {
-      query = query
+      query
         .andWhere('noiSearch.file_number = :fileNumber')
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
     if (searchDto.portalStatusCode) {
-      query = query.andWhere(
+      query.andWhere(
         "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSearch.uuid) ->> 'status_type_code' = :status",
         {
           status: searchDto.portalStatusCode,
@@ -129,7 +127,7 @@ export class PublicNoticeOfIntentSearchService {
         name: searchDto.governmentName,
       });
 
-      query = query.andWhere(
+      query.andWhere(
         'noiSearch.local_government_uuid = :local_government_uuid',
         {
           local_government_uuid: government.uuid,
@@ -138,7 +136,7 @@ export class PublicNoticeOfIntentSearchService {
     }
 
     if (searchDto.regionCode) {
-      query = query.andWhere(
+      query.andWhere(
         'noiSearch.notice_of_intent_region_code = :noi_region_code',
         {
           noi_region_code: searchDto.regionCode,
@@ -146,9 +144,9 @@ export class PublicNoticeOfIntentSearchService {
       );
     }
 
-    query = this.compileSearchByNameQuery(searchDto, query);
-    query = this.compileParcelSearchQuery(searchDto, query);
-    query = this.compileDecisionSearchQuery(searchDto, query);
+    this.compileSearchByNameQuery(searchDto, query);
+    this.compileParcelSearchQuery(searchDto, query);
+    this.compileDecisionSearchQuery(searchDto, query);
 
     return query;
   }
@@ -156,24 +154,26 @@ export class PublicNoticeOfIntentSearchService {
   private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
     if (
       searchDto.dateDecidedTo !== undefined ||
-      searchDto.dateDecidedFrom !== undefined
+      searchDto.dateDecidedFrom !== undefined ||
+      searchDto.decisionMakerCode !== undefined
     ) {
       query = this.joinDecision(query);
 
-      // if (searchDto.resolutionNumber !== undefined) {
-      //   query = query.andWhere(
-      //     'decision.resolution_number = :resolution_number',
-      //     {
-      //       resolution_number: searchDto.resolutionNumber,
-      //     },
-      //   );
-      // }
-      //
-      // if (searchDto.resolutionYear !== undefined) {
-      //   query = query.andWhere('decision.resolution_year = :resolution_year', {
-      //     resolution_year: searchDto.resolutionYear,
-      //   });
-      // }
+      if (searchDto.dateDecidedFrom !== undefined) {
+        query = query.andWhere('decision.date >= :dateDecidedFrom', {
+          dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
+        });
+      }
+
+      if (searchDto.dateDecidedTo !== undefined) {
+        query = query.andWhere('decision.date <= :dateDecidedTo', {
+          dateDecidedTo: new Date(searchDto.dateDecidedTo),
+        });
+      }
+
+      if (searchDto.decisionMakerCode !== undefined) {
+        query = query.andWhere('decision.decision_maker IS NOT NULL');
+      }
     }
     return query;
   }
