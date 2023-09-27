@@ -12,6 +12,7 @@ from menu.commands import (
     application_submission_import,
     noi_document_import,
     notice_of_intent_import,
+    notice_of_intent_clean,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE
@@ -42,6 +43,8 @@ if __name__ == "__main__":
                 app_prep_import(console, args)
             case "noi-import":
                 notice_of_intent_import(console, args)
+            case "noi-clean":
+                notice_of_intent_clean(console)
             case "application-import":
                 application_import(console, args)
             case "noi-document-import":

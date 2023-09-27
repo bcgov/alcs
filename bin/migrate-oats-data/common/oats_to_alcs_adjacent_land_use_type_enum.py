@@ -11,3 +11,10 @@ class AlcsAdjacentLandUseType(Enum):
     RES = "Residential"
     TRA = "Transportation / Utilities"
     UNU = "Unused"
+
+
+class AdjacentLandUseDirections(Enum):
+    NORTH = "NORTH"
+    SOUTH = "SOUTH"
+    WEST = "WEST"
+    EAST = "EAST"

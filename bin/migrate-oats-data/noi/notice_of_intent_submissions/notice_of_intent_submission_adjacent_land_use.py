@@ -1,8 +1,14 @@
-from common import log, log_start, OATS_ETL_USER, AlcsAdjacentLandUseType
+from common import log, log_start, AlcsAdjacentLandUseType
 from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE
+from common import (
+    BATCH_UPLOAD_SIZE,
+    NO_DATA_IN_OATS,
+    DateTimeEncoder,
+    AdjacentLandUseDirections,
+)
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
+import json
 
 etl_name = "process_notice_of_intent_adjacent_land_use"
 
@@ -54,7 +60,9 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                 try:
                     submissions_to_be_updated_count = len(rows)
 
-                    _update_notice_of_intent_submissions(conn, batch_size, cursor, rows)
+                    (parsed_data, raw_data) = _update_notice_of_intent_submissions(
+                        conn, batch_size, cursor, rows
+                    )
 
                     successful_updates_count = (
                         successful_updates_count + submissions_to_be_updated_count
@@ -70,68 +78,118 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                     trace_err = traceback.format_exc()
                     print(str_err)
                     print(trace_err)
-                    log(etl_name, str_err, trace_err)
                     failed_updates = count_total - successful_updates_count
                     last_submission_id = last_submission_id + 1
+                    log(
+                        etl_name,
+                        str_err,
+                        trace_err,
+                        {
+                            "parsed_data": json.dumps(parsed_data, cls=DateTimeEncoder),
+                            "raw_data": json.dumps(raw_data, cls=DateTimeEncoder),
+                            "last_submission_id": last_submission_id,
+                        },
+                    )
 
-    print("Total amount of successful updated:", successful_updates_count)
+    print(
+        "Total amount of successfully processed adjacent land uses:",
+        successful_updates_count,
+    )
     print("Total failed updates:", failed_updates)
     log(etl_name)
 
 
 def _update_notice_of_intent_submissions(conn, batch_size, cursor, rows):
-    """ """
-    query = _get_update_query()
-    parsed_data_list = _prepare_oats_alr_land_use_data(rows)
+    land_use_data = _prepare_oats_alr_land_use_data(rows)
+    directions = [
+        AdjacentLandUseDirections.NORTH.value,
+        AdjacentLandUseDirections.SOUTH.value,
+        AdjacentLandUseDirections.EAST.value,
+        AdjacentLandUseDirections.WEST.value,
+    ]
 
-    if len(parsed_data_list) > 0:
-        execute_batch(cursor, query, parsed_data_list, page_size=batch_size)
+    for direction in directions:
+        if len(land_use_data[direction]) > 0:
+            execute_batch(
+                cursor,
+                _land_use_update_queries[direction],
+                land_use_data[direction],
+                page_size=batch_size,
+            )
+        conn.commit()
 
-    conn.commit()
+    return land_use_data, rows
 
 
-def _get_update_query():
-    query = """
+_land_use_update_queries = {
+    AdjacentLandUseDirections.NORTH.value: """
                 UPDATE alcs.notice_of_intent_submission
                 SET 
                     north_land_use_type = %(north_type)s,
-                    north_land_use_type_description = %(north_type_description)s,
-                    east_land_use_type = %(east_type)s,
-                    east_land_use_type_description = %(east_type_description)s,
+                    north_land_use_type_description = %(north_type_description)s
+                WHERE
+                    alcs.notice_of_intent_submission.file_number = %(alr_application_id)s::TEXT;
+    """,
+    AdjacentLandUseDirections.SOUTH.value: """
+                UPDATE alcs.notice_of_intent_submission
+                SET 
                     south_land_use_type = %(south_type)s,
-                    south_land_use_type_description = %(south_type_description)s,
+                    south_land_use_type_description = %(south_type_description)s     
+                WHERE
+                    alcs.notice_of_intent_submission.file_number = %(alr_application_id)s::TEXT;
+    """,
+    AdjacentLandUseDirections.EAST.value: """
+                UPDATE alcs.notice_of_intent_submission
+                SET 
+                    east_land_use_type = %(east_type)s,
+                    east_land_use_type_description = %(east_type_description)s           
+                WHERE
+                    alcs.notice_of_intent_submission.file_number = %(alr_application_id)s::TEXT;
+    """,
+    AdjacentLandUseDirections.WEST.value: """
+                UPDATE alcs.notice_of_intent_submission
+                SET 
                     west_land_use_type = %(west_type)s,
                     west_land_use_type_description = %(west_type_description)s                
                 WHERE
                     alcs.notice_of_intent_submission.file_number = %(alr_application_id)s::TEXT;
-    """
-    return query
+    """,
+}
 
 
 def _prepare_oats_alr_land_use_data(row_data_list):
-    data_list = []
+    land_use_data = {
+        AdjacentLandUseDirections.NORTH.value: [],
+        AdjacentLandUseDirections.SOUTH.value: [],
+        AdjacentLandUseDirections.EAST.value: [],
+        AdjacentLandUseDirections.WEST.value: [],
+    }
+    compass_key = "cardinal_direction"
+
     for row in row_data_list:
-        data = _map_adjacent_land_use_data(dict(row))
-        if data:
-            data_list.append(data)
-    return data_list
+        land_use_data[row[compass_key]].append(_map_adjacent_land_use_data(dict(row)))
+
+    return land_use_data
 
 
 def _map_adjacent_land_use_data(oats_row):
     """
     creates data input compatible with ALCS notice_of_intent_submission
     """
-    compass = "cardinal_direction"
-    description = "description"
-    type_code = "nonfarm_use_type_code"
-    alr_id = "alr_application_id"
+    compass_key = "cardinal_direction"
+    description_key = "description"
+    type_code_key = "nonfarm_use_type_code"
+    alr_id_key = "alr_application_id"
     default_type = "OTH"
 
-    data = {}
-    type_value = AlcsAdjacentLandUseType[oats_row.get(type_code) or default_type].value
-    if oats_row.get(type_code):
-        data["alr_application_id"] = oats_row[alr_id]
-        data[f"{oats_row[compass].lower()}_type"] = type_value
-        data[f"{oats_row[compass].lower()}_type_description"] = oats_row[description]
+    direction = oats_row[compass_key].lower()
+    direction_type_key = f"{direction}_type"
+    direction_type_desc_key = f"{direction}_type_description"
 
-    return data if data else None
+    return {
+        "alr_application_id": oats_row[alr_id_key],
+        direction_type_key: AlcsAdjacentLandUseType[
+            oats_row[type_code_key] or default_type
+        ].value,
+        direction_type_desc_key: oats_row[description_key] or NO_DATA_IN_OATS,
+    }

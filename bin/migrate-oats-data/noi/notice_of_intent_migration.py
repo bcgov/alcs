@@ -8,7 +8,7 @@ from .notice_of_intent_init import init_notice_of_intents, clean_notice_of_inten
 from .notice_of_intent_submissions import (
     clean_notice_of_intent_submissions,
     init_notice_of_intent_submissions,
-    process_notice_of_intent_adjacent_land_use
+    process_notice_of_intent_adjacent_land_use,
 )
 
 
