@@ -47,11 +47,10 @@
       <tr>
         <td class="soil-table-label">
           Area
-          <div class="subtext">Note: 0.01 ha is 100m2</div>
         </td>
         <td>
           <span *ngIf="component.soilToRemoveArea !== null && component.soilToRemoveArea !== undefined">
-            {{ component.soilToRemoveArea }} ha</span
+            {{ component.soilToRemoveArea }} m<sup>2</sup></span
           >
           <app-no-data
             *ngIf="component.soilToRemoveArea === null || component.soilToRemoveArea === undefined"
@@ -60,7 +59,7 @@
 
         <td>
           <span *ngIf="component.soilToPlaceArea !== null && component.soilToPlaceArea !== undefined"
-            >{{ component.soilToPlaceArea }} ha</span
+            >{{ component.soilToPlaceArea }} m<sup>2</sup></span
           >
           <app-no-data
             *ngIf="component.soilToPlaceArea === null || component.soilToPlaceArea === undefined"

@@ -61,7 +61,6 @@
 
       <div class="label">
         <label for="area">Area</label>
-        <div class="subtext">Note: 0.01 ha is 100m2</div>
       </div>
       <div>
         <mat-form-field appearance="outline">
@@ -74,7 +73,7 @@
             matInput
             formControlName="area"
           />
-          <span matTextSuffix>ha</span>
+          <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
         <div *ngIf="area.invalid && (area.dirty || area.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
@@ -92,7 +91,7 @@
             matInput
             formControlName="area2"
           />
-          <span matTextSuffix>ha</span>
+          <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
         <div *ngIf="area2.invalid && (area2.dirty || area2.touched)" class="field-error">
           <mat-icon>warning</mat-icon>

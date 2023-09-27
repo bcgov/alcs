@@ -43,8 +43,8 @@
           <div *ngIf="parcelsAgricultureDescription.errors?.['required']">This field is required</div>
         </div>
         <mat-hint class="subtext"
-          >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. Example 2: Parcel 1: 10%
-          blueberry crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
+          >Example 1: PID 001-002-003: 60 ha hay crop, 40 ha grazing, 200 sheep. Example 2: Parcel 1: 10% blueberry
+          crop, 30% vegetables, 60% hay. Parcel 2: 100% hay.
         </mat-hint>
         <div class="subtext">Characters left: {{ 4000 - parcelsAgricultureDescriptionText.textLength }}</div>
       </div>
@@ -88,7 +88,8 @@
           Describe all other uses that currently take place on the parcel(s).
         </label>
         <div class="subtext">
-          Describe other uses such as residential, home-based businesses, commercial, recreational, institutional, industrial, etc.
+          Describe other uses such as residential, home-based businesses, commercial, recreational, institutional,
+          industrial, etc.
         </div>
         <mat-form-field class="display-block" appearance="outline">
           <textarea
@@ -111,14 +112,14 @@
           <mat-icon>warning</mat-icon>
           <div *ngIf="parcelsNonAgricultureUseDescription.errors?.['required']">This field is required</div>
         </div>
-        <mat-hint class="subtext">Example: House and 100 square metre detached auto repair shop.</mat-hint>
+        <mat-hint class="subtext"
+          >Example: 100m<sup>2</sup> house and 50m<sup>2</sup> detached auto repair shop</mat-hint
+        >
         <div class="subtext">Characters left: {{ 4000 - parcelsNonAgricultureUseDescriptionText.textLength }}</div>
       </div>
     </div>
     <h5>Choose and describe neighbouring land uses.</h5>
-    <div class="subtext">
-      Choose the main land use type from the drop-down and describe the specific activities.
-    </div>
+    <div class="subtext">Choose the main land use type from the drop-down and describe the specific activities.</div>
     <div class="form-row">
       <div class="full-row">
         <label for="northLandUseType">North</label>

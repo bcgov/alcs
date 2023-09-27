@@ -48,12 +48,12 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _applicationSubmission.soilToRemoveArea }}
-      <span *ngIf="_applicationSubmission.soilToRemoveArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilToRemoveArea === null"></app-no-data>
     </div>
     <div>
       {{ _applicationSubmission.soilToPlaceArea }}
-      <span *ngIf="_applicationSubmission.soilToPlaceArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilToPlaceArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilToPlaceArea === null"></app-no-data>
     </div>
 
@@ -120,7 +120,7 @@
     <div><strong>Area</strong></div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
       <app-no-data
         [showRequired]="showErrors"
         *ngIf="_applicationSubmission.soilAlreadyRemovedArea === null"
@@ -128,7 +128,7 @@
     </div>
     <div>
       {{ _applicationSubmission.soilAlreadyPlacedArea }}
-      <span *ngIf="_applicationSubmission.soilAlreadyPlacedArea !== null">ha</span>
+      <span *ngIf="_applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
       <app-no-data
         [showRequired]="showErrors"
         *ngIf="_applicationSubmission.soilAlreadyPlacedArea === null"
