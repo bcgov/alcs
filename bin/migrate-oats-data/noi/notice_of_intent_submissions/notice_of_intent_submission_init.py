@@ -59,7 +59,7 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_submission_id = dict(rows[-1])["alr_application_id"]
 
                     print(
-                        f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_submission_id}"
+                        f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted alr_application_id: {last_submission_id}"
                     )
                 except Exception as e:
                     conn.rollback()
