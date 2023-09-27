@@ -33,6 +33,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.notificationDetailService.$notification.pipe(takeUntil(this.$destroy)).subscribe(async (notification) => {
       if (notification) {
         this.notification = notification;
+        this.summary = notification.summary ?? '';
         this.events = await this.notificationTimelineService.fetchByFileNumber(notification.fileNumber);
         this.loadStatusHistory(this.notification.fileNumber);
       }
