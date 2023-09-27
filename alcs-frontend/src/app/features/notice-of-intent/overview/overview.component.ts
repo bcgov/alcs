@@ -39,6 +39,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .subscribe(async (noticeOfIntent) => {
         if (noticeOfIntent) {
           this.noticeOfIntent = noticeOfIntent;
+          this.summary = noticeOfIntent.summary ?? '';
           this.events = await this.noticeOfIntentTimelineService.fetchByFileNumber(noticeOfIntent.fileNumber);
           this.loadStatusHistory(this.noticeOfIntent.fileNumber);
         }

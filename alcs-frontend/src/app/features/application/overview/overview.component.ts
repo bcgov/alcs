@@ -34,6 +34,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.applicationDetailService.$application.pipe(takeUntil(this.$destroy)).subscribe(async (application) => {
       if (application) {
         this.application = application;
+        this.summary = application.summary ?? '';
         this.events = await this.applicationTimelineService.fetchByFileNumber(application.fileNumber);
         this.loadStatusHistory(this.application.fileNumber);
       }
