@@ -8,6 +8,7 @@ from .notice_of_intent_init import init_notice_of_intents, clean_notice_of_inten
 from .notice_of_intent_submissions import (
     clean_notice_of_intent_submissions,
     init_notice_of_intent_submissions,
+    process_notice_of_intent_adjacent_land_use,
 )
 
 
@@ -27,3 +28,5 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_decision_date(batch_size=batch_size)
 
     init_notice_of_intent_submissions(batch_size=batch_size)
+
+    process_notice_of_intent_adjacent_land_use(batch_size=batch_size)

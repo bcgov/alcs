@@ -1,4 +1,4 @@
-from common import ALRChangeCode, log_end, log_start, OATS_ETL_USER
+from common import ALRChangeCode, log, log_start, OATS_ETL_USER
 from .submap import (
     add_direction_field,
     map_direction_values,
@@ -31,7 +31,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
-
+    etl_name = "process_alcs_app_submissions"
     log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -94,13 +94,13 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     trace_err = traceback.format_exc()
                     print(str_err)
                     print(trace_err)
-                    log_end(etl_name, str_err, trace_err)
+                    log(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_inserts_count
                     last_submission_id = last_submission_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
-    log_end(etl_name)
+    log(etl_name)
 
 
 def insert_app_sub_records(

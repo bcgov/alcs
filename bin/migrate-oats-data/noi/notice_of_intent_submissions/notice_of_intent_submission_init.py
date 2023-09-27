@@ -1,4 +1,4 @@
-from common import log_end, log_start, OATS_ETL_USER
+from common import log, log_start, OATS_ETL_USER
 from db import inject_conn_pool
 from common import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -59,7 +59,7 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_submission_id = dict(rows[-1])["alr_application_id"]
 
                     print(
-                        f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_submission_id}"
+                        f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted alr_application_id: {last_submission_id}"
                     )
                 except Exception as e:
                     conn.rollback()
@@ -67,13 +67,13 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     trace_err = traceback.format_exc()
                     print(str_err)
                     print(trace_err)
-                    log_end(etl_name, str_err, trace_err)
+                    log(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_inserts_count
                     last_submission_id = last_submission_id + 1
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total failed inserts:", failed_inserts)
-    log_end(etl_name)
+    log(etl_name)
 
 
 def _insert_notice_of_intent_submissions(conn, batch_size, cursor, rows):

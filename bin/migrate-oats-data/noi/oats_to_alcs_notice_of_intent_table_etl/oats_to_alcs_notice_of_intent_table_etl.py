@@ -1,10 +1,10 @@
 from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE, log_end, log_start
+from common import BATCH_UPLOAD_SIZE, log, log_start
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 from common import (
     AlcsAgCapSource,
-    log_end,
+    log,
     log_start,
     AlcsAgCap,
 )
@@ -32,7 +32,7 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
     """
 
     etl_name = "process_alcs_notice_of_intent_base_fields"
-    log_start(etl_name, etl_name)
+    log_start(etl_name)
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "noi/sql/notice_of_intent_base/notice_of_intent_base.count.sql",
@@ -83,13 +83,13 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
                         traceback.format_exception(None, error, error.__traceback__)
                     )
                     print(error_str)
-                    log_end(etl_name, str(error), error_str)
+                    log(etl_name, str(error), error_str)
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
 
     print("Total amount of successful updates:", successful_updates_count)
     print("Total failed updates:", failed_inserts)
-    log_end(etl_name, etl_name)
+    log(etl_name)
 
 
 def _update_fee_fields_records(conn, batch_size, cursor, rows):

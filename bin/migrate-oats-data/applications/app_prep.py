@@ -4,7 +4,7 @@ from common import (
     OATS_NFU_SUBTYPES,
     AlcsAgCap,
     AlcsAgCapSource,
-    log_end,
+    log,
     log_start,
     OatsLegislationCodes,
     AlcsApplicantType,
@@ -61,8 +61,9 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
-
+    etl_name = "process_alcs_application_prep_fields"
     log_start(etl_name)
+
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "applications/sql/application-prep/application_prep.count.sql",
@@ -113,13 +114,13 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
                     trace_err = traceback.format_exc()
                     print(str_err)
                     print(trace_err)
-                    log_end(etl_name, str_err, trace_err)
+                    log(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
 
     print("Total amount of successful updates:", successful_updates_count)
     print("Total failed updates:", failed_inserts)
-    log_end(etl_name)
+    log(etl_name)
 
 
 def update_app_prep_records(conn, batch_size, cursor, rows):

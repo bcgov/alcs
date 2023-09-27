@@ -1,6 +1,7 @@
 from noi.notice_of_intent_migration import (
     init_notice_of_intents,
     process_notice_of_intent,
+    clean_notice_of_intent,
 )
 
 
@@ -16,3 +17,9 @@ def notice_of_intent_import(console, args):
 
         init_notice_of_intents(batch_size=import_batch_size)
         process_notice_of_intent(batch_size=import_batch_size)
+
+
+def notice_of_intent_clean(console):
+    console.log("Beginning OATS -> ALCS NOI import clean process")
+    with console.status("[bold green]NOI clean import...") as status:
+        clean_notice_of_intent()
