@@ -71,7 +71,7 @@
     <div *ngIf="showCertificateOfTitle" class="subheading2 grid-1">Certificate Of Title</div>
     <div *ngIf="showCertificateOfTitle" class="grid-double">
       <div *ngIf="parcel.certificateOfTitle">
-        <a (click)="onOpenFile(parcel.certificateOfTitle.documentUuid)">{{ parcel.certificateOfTitle.fileName }}</a>
+        <a (click)="openFile(parcel.certificateOfTitle)">{{ parcel.certificateOfTitle.fileName }}</a>
       </div>
     </div>
     <div class="full-width subheading1">Owner Information</div>
@@ -92,7 +92,7 @@
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
         <div>
-          <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
+          <a *ngIf="owner.corporateSummary" (click)="openFile(owner.corporateSummary)">{{
             owner.corporateSummary.fileName
           }}</a>
         </div>
