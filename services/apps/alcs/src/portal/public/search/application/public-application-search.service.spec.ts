@@ -16,9 +16,9 @@ describe('PublicApplicationSearchService', () => {
 
   const mockSearchRequestDto: SearchRequestDto = {
     fileNumber: '123',
-    portalStatusCode: 'A',
+    portalStatusCodes: ['A'],
     governmentName: 'B',
-    regionCode: 'C',
+    regionCodes: ['C'],
     name: 'D',
     pid: 'E',
     civicAddress: 'F',

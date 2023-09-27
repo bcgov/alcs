@@ -12,7 +12,7 @@
       <div>
         <label for="fileNumber">ALC ID</label>
         <mat-form-field appearance="outline">
-          <input id="fileNumber" matInput formControlName="fileNumber" />
+          <input mask="0*" id="fileNumber" matInput formControlName="fileNumber" />
         </mat-form-field>
       </div>
       <div>
@@ -66,7 +66,7 @@
       <div>
         <label for="status">Region</label>
         <mat-form-field appearance="outline">
-          <mat-select id="region" formControlName="region">
+          <mat-select multiple="true" id="region" formControlName="region">
             <mat-option *ngFor="let region of regions" [value]="region.code">{{ region.label }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -89,7 +89,7 @@
       <div>
         <label for="status">Status</label>
         <mat-form-field appearance="outline">
-          <mat-select id="status" [formControl]="portalStatusControl">
+          <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
             <mat-option *ngFor="let status of STATUS_MAP" [value]="status[1]">
               {{ status[0] }}
             </mat-option>
@@ -99,7 +99,7 @@
       <div class="full-width">
         <label for="status">Decision Dates</label>
         <mat-form-field appearance="outline">
-          <mat-date-range-input [rangePicker]="decisionDatePicker">
+          <mat-date-range-input [max]="today" [rangePicker]="decisionDatePicker">
             <input matStartDate formControlName="dateDecidedFrom" />
             <input matEndDate formControlName="dateDecidedTo" />
           </mat-date-range-input>
@@ -115,12 +115,28 @@
     </div>
   </form>
 
+  <div *ngIf="isLoading && searchResultsHidden" class="center">
+    <mat-spinner></mat-spinner>
+  </div>
   <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
     <h2 class="search-title">Search Results</h2>
-    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
+    <div *ngIf="isLoading && !searchResultsHidden" class="center">
+      <mat-spinner></mat-spinner>
+    </div>
+    <mat-tab-group *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
       <mat-tab>
         <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          [results]="applications"
+          [totalCount]="applicationTotal"
+          [statuses]="statuses"
+          [regions]="regions"
+          (loadMore)="onLoadMore('APP')"
+        >
+        </app-search-list>
         <app-application-search-table
+          *ngIf="!isMobile"
           [applications]="applications"
           [totalCount]="applicationTotal"
           [statuses]="statuses"
@@ -131,7 +147,17 @@
 
       <mat-tab>
         <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          [results]="noticeOfIntents"
+          [totalCount]="noticeOfIntentTotal"
+          [statuses]="statuses"
+          [regions]="regions"
+          (loadMore)="onLoadMore('NOI')"
+        >
+        </app-search-list>
         <app-notice-of-intent-search-table
+          *ngIf="!isMobile"
           [noticeOfIntents]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           [statuses]="statuses"
@@ -142,7 +168,17 @@
 
       <mat-tab>
         <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          [results]="notifications"
+          [totalCount]="notificationTotal"
+          [statuses]="statuses"
+          [regions]="regions"
+          (loadMore)="onLoadMore('NOTI')"
+        >
+        </app-search-list>
         <app-notification-search-table
+          *ngIf="!isMobile"
           [statuses]="statuses"
           [notifications]="notifications"
           [totalCount]="notificationTotal"

@@ -42,9 +42,9 @@ export interface SearchRequestDto extends PagingRequestDto {
   name?: string;
   pid?: string;
   civicAddress?: string;
-  portalStatusCode?: string;
+  portalStatusCodes?: string[];
   governmentName?: string;
-  regionCode?: string;
+  regionCodes?: string[];
   decisionMakerCode?: string;
   dateDecidedFrom?: number;
   dateDecidedTo?: number;

@@ -71,9 +71,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
   }
 
   async onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/notification/${record.referenceId}`]));
-
-    window.open(url, '_blank');
+    await this.router.navigateByUrl(`/public/notification/${record.referenceId}`);
   }
 
   private mapNotifications(notifications: NotificationSearchResultDto[]): SearchResult[] {

@@ -4,18 +4,21 @@
       <li>
         <a href="https://www.alc.gov.bc.ca/">ALC Website</a>
       </li>
-      <li *ngIf="showPublicSearchLink">
+      <li *ngIf="!isOnSearch">
         <a routerLink="/public">Public Search</a>
       </li>
-      <li *ngIf="showPortalLink">
+      <li *ngIf="isOnSearch">
         <a routerLink="/">Portal</a>
       </li>
     </ul>
   </div>
   <div class="title-wrapper">
     <div class="title">
-      <img class="logo" src="assets/alc_logo.svg" alt="ALC Portal" />
-      <h5 class="center">Provincial Agricultural Land Commission Portal</h5>
+      <img class="logo" (click)="onClickLogo()" src="assets/alc_logo.svg" alt="ALC Portal" />
+      <h5 class="center">
+        <span *ngIf="isOnSearch">Provincial Agricultural Land Commission Public Search</span>
+        <span *ngIf="!isOnSearch">Provincial Agricultural Land Commission Portal</span>
+      </h5>
       <div *ngIf="isAuthenticated" class="burger-menu">
         <mat-icon (click)="onMenuToggle()">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </div>

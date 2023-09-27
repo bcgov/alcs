@@ -113,11 +113,11 @@ export class PublicNoticeOfIntentSearchService {
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       query.andWhere(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSearch.uuid) ->> 'status_type_code' = :status",
+        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noiSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
         {
-          status: searchDto.portalStatusCode,
+          statuses: searchDto.portalStatusCodes,
         },
       );
     }
@@ -135,13 +135,10 @@ export class PublicNoticeOfIntentSearchService {
       );
     }
 
-    if (searchDto.regionCode) {
-      query.andWhere(
-        'noiSearch.notice_of_intent_region_code = :noi_region_code',
-        {
-          noi_region_code: searchDto.regionCode,
-        },
-      );
+    if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
+      query.andWhere('noiSearch.notice_of_intent_region_code IN(:...regions)', {
+        regions: searchDto.regionCodes,
+      });
     }
 
     this.compileSearchByNameQuery(searchDto, query);

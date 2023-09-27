@@ -12,8 +12,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
   isAuthenticated = false;
   isMenuOpen = false;
-  showPublicSearchLink = true;
-  showPortalLink = false;
+  isOnSearch = false;
+
+  title = 'Provincial Agricultural Land Commission Portal';
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -26,11 +27,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isAuthenticated = !!user;
       this.changeDetectorRef.detectChanges();
     });
+
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
       const url = window.location.href;
-      const isPublic = url.includes('public');
-      this.showPortalLink = isPublic;
-      this.showPublicSearchLink = !isPublic;
+      this.isOnSearch = url.includes('public');
     });
   }
 
@@ -56,9 +56,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     footer?.classList.toggle(hidden);
   }
 
-  onMenuClicked(url: string) {
+  async onMenuClicked(url: string) {
     this.isMenuOpen = false;
-    this.router.navigate([url]);
+    await this.router.navigate([url]);
     this.toggleContent();
+  }
+
+  async onClickLogo() {
+    let targetUrl = '/home';
+
+    const isOnLogin = window.location.href.endsWith('/login');
+    if (isOnLogin) {
+      targetUrl = '/login';
+    }
+    if (this.isOnSearch) {
+      targetUrl = '/public';
+    }
+
+    await this.router.navigateByUrl(targetUrl);
   }
 }

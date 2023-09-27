@@ -111,11 +111,11 @@ export class PublicNotificationSearchService {
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       query = query.andWhere(
-        "alcs.get_current_status_for_notification_submission_by_uuid(notificationSearch.uuid) ->> 'status_type_code' = :status",
+        "alcs.get_current_status_for_notification_submission_by_uuid(notificationSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
         {
-          status: searchDto.portalStatusCode,
+          statuses: searchDto.portalStatusCodes,
         },
       );
     }
@@ -133,11 +133,11 @@ export class PublicNotificationSearchService {
       );
     }
 
-    if (searchDto.regionCode) {
+    if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
       query = query.andWhere(
-        'notificationSearch.notification_region_code = :region_code',
+        'notificationSearch.notification_region_code IN(:...regions)',
         {
-          region_code: searchDto.regionCode,
+          regions: searchDto.regionCodes,
         },
       );
     }

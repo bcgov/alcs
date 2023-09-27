@@ -1,0 +1,26 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+.result-list {
+  margin-top: rem(16);
+}
+
+.result {
+  border-radius: rem(4);
+  box-shadow: 0 rem(2) rem(6) 0 rgba(0, 0, 0, 0.2);
+  margin: rem(4) rem(4) rem(20); //BOX SHADOWS
+  padding: rem(12) rem(8);
+  font-size: 14px !important;
+
+  div {
+    margin: rem(4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: colors.$grey-light;
+  }
+}
