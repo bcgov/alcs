@@ -86,6 +86,7 @@ export class SubtaskComponent implements OnInit, OnDestroy {
     ];
 
     this.notificationSubtasks = [
+      ...notifications.filter((r) => r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
       ...notifications.filter((r) => !r.card.highPriority).sort((a, b) => a.createdAt! - b.createdAt!),
     ];
 
