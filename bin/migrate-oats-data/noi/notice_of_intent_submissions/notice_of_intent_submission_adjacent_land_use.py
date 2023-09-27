@@ -118,25 +118,20 @@ def _prepare_oats_alr_land_use_data(row_data_list):
 
 
 def _map_adjacent_land_use_data(oats_row):
-    """"""
+    """
+    creates data input compatible with ALCS notice_of_intent_submission
+    """
     compass = "cardinal_direction"
     description = "description"
     type_code = "nonfarm_use_type_code"
     alr_id = "alr_application_id"
+    default_type = "OTH"
 
-    data = None
-    if oats_row[type_code]:
-        data = {"alr_application_id": oats_row[alr_id]}
-        if oats_row[compass] == "EAST":
-            data["east_type"] = AlcsAdjacentLandUseType[oats_row[type_code]].value
-            data["east_type_description"] = oats_row[description]
-        if oats_row[compass] == "WEST":
-            data["west_type"] = AlcsAdjacentLandUseType[oats_row[type_code]].value
-            data["west_type_description"] = oats_row[description]
-        if oats_row[compass] == "SOUTH":
-            data["south_type"] = AlcsAdjacentLandUseType[oats_row[type_code]].value
-            data["south_type_description"] = oats_row[description]
-        if oats_row[compass] == "NORTH":
-            data["north_type"] = AlcsAdjacentLandUseType[oats_row[type_code]].value
-            data["north_type_description"] = oats_row[description]
-    return data
+    data = {}
+    type_value = AlcsAdjacentLandUseType[oats_row.get(type_code) or default_type].value
+    if oats_row.get(type_code):
+        data["alr_application_id"] = oats_row[alr_id]
+        data[f"{oats_row[compass].lower()}_type"] = type_value
+        data[f"{oats_row[compass].lower()}_type_description"] = oats_row[description]
+
+    return data if data else None
