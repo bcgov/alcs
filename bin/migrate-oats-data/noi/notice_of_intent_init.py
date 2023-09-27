@@ -1,6 +1,6 @@
 import traceback
 from db import inject_conn_pool
-from common import log_end, log_start, OATS_ETL_USER
+from common import log, log_start, OATS_ETL_USER
 
 
 def noi_insert_query(number_of_rows_to_insert):
@@ -66,7 +66,7 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                         traceback.format_exception(None, error, error.__traceback__)
                     )
                     print("Error", error_trace)
-                    log_end(
+                    log(
                         etl_name,
                         str(error),
                         error_trace,

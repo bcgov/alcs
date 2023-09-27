@@ -1,8 +1,7 @@
 .env
 out
 tmp
-*.pickle
-*etl_log.txt
+*.log.txt
 __pycache__
 *last_imported_application_file.txt
 last_imported_planning_file.txt

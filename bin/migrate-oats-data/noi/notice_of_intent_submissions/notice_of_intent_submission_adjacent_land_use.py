@@ -1,4 +1,4 @@
-from common import log_end, log_start, OATS_ETL_USER, AlcsAdjacentLandUseType
+from common import log, log_start, OATS_ETL_USER, AlcsAdjacentLandUseType
 from db import inject_conn_pool
 from common import BATCH_UPLOAD_SIZE
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -70,13 +70,13 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                     trace_err = traceback.format_exc()
                     print(str_err)
                     print(trace_err)
-                    log_end(etl_name, str_err, trace_err)
+                    log(etl_name, str_err, trace_err)
                     failed_updates = count_total - successful_updates_count
                     last_submission_id = last_submission_id + 1
 
     print("Total amount of successful updated:", successful_updates_count)
     print("Total failed updates:", failed_updates)
-    log_end(etl_name)
+    log(etl_name)
 
 
 def _update_notice_of_intent_submissions(conn, batch_size, cursor, rows):
