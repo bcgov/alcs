@@ -72,9 +72,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   }
 
   async onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/notice-of-intent/${record.referenceId}`]));
-
-    window.open(url, '_blank');
+    await this.router.navigateByUrl(`/public/notice-of-intent/${record.referenceId}`);
   }
 
   private mapNoticeOfIntent(applications: NoticeOfIntentSearchResultDto[]): SearchResult[] {

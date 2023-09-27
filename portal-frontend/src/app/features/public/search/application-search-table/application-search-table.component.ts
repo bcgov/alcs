@@ -73,9 +73,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   }
 
   async onSelectRecord(record: SearchResult) {
-    const url = this.router.serializeUrl(this.router.createUrlTree([`/application/${record.referenceId}`]));
-
-    window.open(url, '_blank');
+    await this.router.navigateByUrl(`/public/application/${record.referenceId}`);
   }
 
   private mapApplications(applications: ApplicationSearchResultDto[]): SearchResult[] {

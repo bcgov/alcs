@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatPaginator } from '@angular/material/paginator';
@@ -19,6 +19,7 @@ import {
 import { SearchService } from '../../../services/search/search.service';
 import { StatusService } from '../../../services/status/status.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from './file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from './search.interface';
 
@@ -57,7 +58,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   sortField = 'dateSubmitted';
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
-  portalStatusControl = new FormControl<string | undefined>(undefined);
+  portalStatusControl = new FormControl<string[]>([]);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
@@ -71,7 +72,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     componentType: this.componentTypeControl,
     government: this.localGovernmentControl,
     decisionMaker: new FormControl<string | undefined>(undefined),
-    region: new FormControl<string | undefined>(undefined),
+    region: new FormControl<string[]>([]),
     dateDecidedFrom: new FormControl(undefined),
     dateDecidedTo: new FormControl(undefined),
   });
@@ -86,6 +87,29 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   searchResultsHidden = true;
   decisionMakers: DecisionMakerDto[] = [];
   STATUS_MAP = Object.entries(STATUS_MAP);
+  isMobile = false;
+  isLoading = false;
+  today = new Date();
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+    if (this.isMobile !== isMobile) {
+      if (isMobile) {
+        this.itemsPerPage = 5;
+        this.pageIndex = 0;
+      } else {
+        this.itemsPerPage = 20;
+        this.pageIndex = 0;
+      }
+      if (!this.searchResultsHidden) {
+        this.onSubmit();
+      }
+    }
+
+    this.isMobile = isMobile;
+  }
 
   constructor(
     private searchService: SearchService,
@@ -98,6 +122,11 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    if (this.isMobile) {
+      this.itemsPerPage = 5;
+    }
+
     this.setup();
 
     this.searchForm.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
@@ -139,8 +168,10 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     const searchParams = this.getSearchParams();
+    this.isLoading = true;
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
+    this.isLoading = false;
 
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
@@ -176,6 +207,8 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   onReset() {
     this.searchForm.reset();
+    this.isLoading = false;
+    this.searchResultsHidden = true;
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
@@ -197,9 +230,9 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       name: this.formatStringSearchParam(searchControls.name.value),
       civicAddress: this.formatStringSearchParam(searchControls.civicAddress.value),
       pid: this.formatStringSearchParam(searchControls.pid.value),
-      portalStatusCode: searchControls.portalStatus.value ?? undefined,
+      portalStatusCodes: searchControls.portalStatus.value ?? undefined,
       governmentName: this.formatStringSearchParam(searchControls.government.value),
-      regionCode: searchControls.region.value ?? undefined,
+      regionCodes: searchControls.region.value ?? undefined,
       decisionMakerCode: searchControls.decisionMaker.value ?? undefined,
       dateDecidedFrom: searchControls.dateDecidedFrom.value
         ? new Date(searchControls.dateDecidedFrom.value).getTime()
@@ -233,6 +266,38 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
     this.notifications = result?.data ?? [];
     this.notificationTotal = result?.total ?? 0;
+  }
+
+  async onLoadMore(table: string) {
+    this.pageIndex += 1;
+    const searchParams = this.getSearchParams();
+
+    let result;
+    switch (table) {
+      case 'APP':
+        result = await this.searchService.searchApplications(searchParams);
+        if (result) {
+          this.applications = [...this.applications, ...result?.data];
+          this.applicationTotal = result?.total ?? 0;
+        }
+        break;
+      case 'NOI':
+        result = await this.searchService.searchNoticeOfIntents(searchParams);
+        if (result) {
+          this.noticeOfIntents = [...this.noticeOfIntents, ...result?.data];
+          this.noticeOfIntentTotal = result?.total ?? 0;
+        }
+        break;
+      case 'NOTI':
+        result = await this.searchService.searchNotifications(searchParams);
+        if (result) {
+          this.notifications = [...this.notifications, ...result?.data];
+          this.notificationTotal = result?.total ?? 0;
+        }
+        break;
+      default:
+        this.toastService.showErrorToast('Not implemented');
+    }
   }
 
   async onTableChange(event: TableChange) {

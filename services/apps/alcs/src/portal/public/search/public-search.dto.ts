@@ -74,17 +74,17 @@ export class SearchRequestDto extends PagingRequestDto {
   @MinLength(3)
   civicAddress?: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  portalStatusCode?: string;
+  portalStatusCodes?: string[];
 
   @IsString()
   @IsOptional()
   governmentName?: string;
 
-  @IsString()
+  @IsArray()
   @IsOptional()
-  regionCode?: string;
+  regionCodes?: string[];
 
   @IsString()
   @IsOptional()

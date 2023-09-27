@@ -114,11 +114,11 @@ export class PublicApplicationSearchService {
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
-    if (searchDto.portalStatusCode) {
+    if (searchDto.portalStatusCodes && searchDto.portalStatusCodes.length > 0) {
       query.andWhere(
-        "alcs.get_current_status_for_application_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' = :status",
+        "alcs.get_current_status_for_application_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' IN(:...statuses)",
         {
-          status: searchDto.portalStatusCode,
+          statuses: searchDto.portalStatusCodes,
         },
       );
     }
@@ -136,13 +136,10 @@ export class PublicApplicationSearchService {
       );
     }
 
-    if (searchDto.regionCode) {
-      query.andWhere(
-        'appSearch.application_region_code = :application_region_code',
-        {
-          application_region_code: searchDto.regionCode,
-        },
-      );
+    if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {
+      query.andWhere('appSearch.application_region_code IN(:...regions)', {
+        regions: searchDto.regionCodes,
+      });
     }
 
     this.compileSearchByNameQuery(searchDto, query);

@@ -11,6 +11,7 @@ import { FileTypeFilterDropDownComponent } from './search/file-type-filter-drop-
 import { NoticeOfIntentSearchTableComponent } from './search/notice-of-intent-search-table/notice-of-intent-search-table.component';
 import { NotificationSearchTableComponent } from './search/notification-search-table/notification-search-table.component';
 import { PublicSearchComponent } from './search/public-search.component';
+import { SearchListComponent } from './search/search-list/search-list.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
     NoticeOfIntentSearchTableComponent,
     ApplicationSearchTableComponent,
     FileTypeFilterDropDownComponent,
+    SearchListComponent,
   ],
   imports: [
     CommonModule,
