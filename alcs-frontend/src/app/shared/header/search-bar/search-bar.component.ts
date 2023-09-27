@@ -56,6 +56,11 @@ export class SearchBarComponent implements AfterViewInit {
     this.showInput = !this.showInput;
   }
 
+  resetInput() {
+    this.toggleInput();
+    this.searchText = '';
+  }
+
   async onSearch() {
     if (!this.searchText) {
       this.toastService.showErrorToast(`File not found, try again`);
@@ -92,20 +97,29 @@ export class SearchBarComponent implements AfterViewInit {
           default:
             this.toastService.showErrorToast(`Unable to navigate to ${result.referenceId}`);
         }
-        this.toggleInput();
       }
 
       if (searchResult?.length > 1) {
         await this.router.navigateByUrl(`/search?searchText=${this.searchText}`);
-        this.toggleInput();
       }
 
-      this.searchText = '';
+      this.resetInput();
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
         this.selectInput();
       }
     }
+  }
+
+  async navigateToAdvancedSearch() {
+    let url = '/search';
+
+    if (this.searchText) {
+      url += `?searchText=${this.searchText}`;
+    }
+
+    await this.router.navigateByUrl(url);
+    this.resetInput();
   }
 }
