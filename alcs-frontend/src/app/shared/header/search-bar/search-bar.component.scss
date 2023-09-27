@@ -82,14 +82,6 @@
   }
 }
 
-input {
-  color: colors.$primary-color;
-}
-
-.mat-mdc-input-element {
-  color: colors.$primary-color !important;
-}
-
 :host ::ng-deep .mat-form-field-wrapper {
   margin: 0 !important;
   padding: 0;
