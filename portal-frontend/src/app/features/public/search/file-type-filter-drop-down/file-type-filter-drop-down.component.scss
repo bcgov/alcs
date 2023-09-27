@@ -1,0 +1,9 @@
+@use '../../../../../styles/functions' as *;
+
+.file-type-input {
+  width: 100%;
+}
+
+.tall-autocomplete {
+  max-height: rem(600) !important;
+}

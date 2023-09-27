@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
+import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationSubmissionStatusType } from '../application/application-submission-status/submission-status-type.entity';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
@@ -24,6 +25,8 @@ export class CodeService {
     private reconsiderationTypesRepository: Repository<ApplicationReconsiderationType>,
     @InjectRepository(ApplicationSubmissionStatusType)
     private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
+    @InjectRepository(ApplicationDecisionMakerCode)
+    private applicationDecisionMakerCodeRepository: Repository<ApplicationDecisionMakerCode>,
   ) {}
 
   async getAll() {
@@ -40,6 +43,7 @@ export class CodeService {
       this.meetingTypesRepository.find(alphabeticalFindOptions),
       this.reconsiderationTypesRepository.find(alphabeticalFindOptions),
       this.applicationStatusRepository.find(alphabeticalFindOptions),
+      this.applicationDecisionMakerCodeRepository.find(alphabeticalFindOptions),
     ]);
 
     return {
@@ -49,6 +53,7 @@ export class CodeService {
       meetingTypes: values[3],
       reconsiderationTypes: values[4],
       applicationStatusTypes: values[5],
+      decisionMakers: values[6],
     };
   }
 

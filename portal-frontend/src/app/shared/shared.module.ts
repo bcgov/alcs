@@ -39,6 +39,7 @@ import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
+import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
 import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
 import { SoilTableComponent } from './soil-table/soil-table.component';
 import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
@@ -93,6 +94,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     AllOwnersDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
+    TableColumnNoDataPipe,
   ],
   exports: [
     CommonModule,
@@ -140,6 +142,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     AllOwnersDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
+    TableColumnNoDataPipe,
   ],
 })
 export class SharedModule {

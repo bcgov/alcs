@@ -1,34 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-
 import { Brackets, Repository } from 'typeorm';
-import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
+import { ApplicationDecisionComponent } from '../../../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
+import { ApplicationDecision } from '../../../../alcs/application-decision/application-decision.entity';
+import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
+import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../../utils/search-helper';
+import { ApplicationOwner } from '../../../application-submission/application-owner/application-owner.entity';
+import { ApplicationParcel } from '../../../application-submission/application-parcel/application-parcel.entity';
 import {
-  getNextDayToPacific,
-  getStartOfDayToPacific,
-} from '../../../utils/pacific-date-time-helper';
-import { formatStringToPostgresSearchStringArrayWithWildCard } from '../../../utils/search-helper';
-import { ApplicationDecisionComponent } from '../../application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
-import { ApplicationDecision } from '../../application-decision/application-decision.entity';
-import { LocalGovernment } from '../../local-government/local-government.entity';
-import { AdvancedSearchResultDto, SearchRequestDto } from '../search.dto';
-import { ApplicationSubmissionSearchView } from './application-search-view.entity';
+  AdvancedSearchResultDto,
+  SearchRequestDto,
+} from '../public-search.dto';
+import { PublicApplicationSubmissionSearchView } from './public-application-search-view.entity';
 
 @Injectable()
-export class ApplicationAdvancedSearchService {
+export class PublicApplicationSearchService {
   constructor(
-    @InjectRepository(ApplicationSubmissionSearchView)
-    private applicationSearchRepository: Repository<ApplicationSubmissionSearchView>,
+    @InjectRepository(PublicApplicationSubmissionSearchView)
+    private applicationSearchRepository: Repository<PublicApplicationSubmissionSearchView>,
     @InjectRepository(LocalGovernment)
     private governmentRepository: Repository<LocalGovernment>,
   ) {}
 
   async searchApplications(
     searchDto: SearchRequestDto,
-  ): Promise<AdvancedSearchResultDto<ApplicationSubmissionSearchView[]>> {
+  ): Promise<AdvancedSearchResultDto<PublicApplicationSubmissionSearchView[]>> {
     let query = await this.compileApplicationSearchQuery(searchDto);
-
     query = this.compileApplicationGroupBySearchQuery(query);
 
     const sortQuery = this.compileSortQuery(searchDto);
@@ -64,8 +61,8 @@ export class ApplicationAdvancedSearchService {
         return `"appSearch"."status" ->> 'label' `;
 
       default:
-      case 'dateSubmitted':
-        return '"appSearch"."date_submitted_to_alc"';
+      case 'lastUpdate':
+        return '"appSearch"."last_update"';
     }
   }
 
@@ -86,10 +83,10 @@ export class ApplicationAdvancedSearchService {
             , "appSearch"."local_government_uuid"
             , "appSearch"."local_government_name"
             , "appSearch"."application_type_code"
-            , "appSearch"."legacy_id"
             , "appSearch"."status"
             , "appSearch"."date_submitted_to_alc"
             , "appSearch"."decision_date"
+            , "appSearch"."last_update"
             , "applicationType"."audit_deleted_date_at"
             , "applicationType"."audit_created_at"
             , "applicationType"."audit_updated_by"
@@ -102,31 +99,23 @@ export class ApplicationAdvancedSearchService {
             , "applicationType"."text_color"
             , "applicationType"."html_description"
             , "applicationType"."portal_label"
-            , "appSearch"."is_draft"
             `,
       );
     return query;
   }
 
   private async compileApplicationSearchQuery(searchDto: SearchRequestDto) {
-    let query = this.applicationSearchRepository
-      .createQueryBuilder('appSearch')
-      .where('appSearch.is_draft = false');
+    const query =
+      this.applicationSearchRepository.createQueryBuilder('appSearch');
 
     if (searchDto.fileNumber) {
-      query = query
+      query
         .andWhere('appSearch.file_number = :fileNumber')
         .setParameters({ fileNumber: searchDto.fileNumber ?? null });
     }
 
-    if (searchDto.legacyId) {
-      query = query.andWhere('appSearch.legacy_id = :legacyId', {
-        legacyId: searchDto.legacyId,
-      });
-    }
-
     if (searchDto.portalStatusCode) {
-      query = query.andWhere(
+      query.andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(appSearch.uuid) ->> 'status_type_code' = :status",
         {
           status: searchDto.portalStatusCode,
@@ -139,7 +128,7 @@ export class ApplicationAdvancedSearchService {
         name: searchDto.governmentName,
       });
 
-      query = query.andWhere(
+      query.andWhere(
         'appSearch.local_government_uuid = :local_government_uuid',
         {
           local_government_uuid: government.uuid,
@@ -148,7 +137,7 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.regionCode) {
-      query = query.andWhere(
+      query.andWhere(
         'appSearch.application_region_code = :application_region_code',
         {
           application_region_code: searchDto.regionCode,
@@ -156,86 +145,41 @@ export class ApplicationAdvancedSearchService {
       );
     }
 
-    query = this.compileApplicationSearchByNameQuery(searchDto, query);
-
-    query = this.compileApplicationParcelSearchQuery(searchDto, query);
-
-    query = this.compileApplicationDecisionSearchQuery(searchDto, query);
-
-    query = this.compileApplicationFileTypeSearchQuery(searchDto, query);
-
-    query = this.compileApplicationDateRangeSearchQuery(searchDto, query);
+    this.compileSearchByNameQuery(searchDto, query);
+    this.compileParcelSearchQuery(searchDto, query);
+    this.compileDecisionSearchQuery(searchDto, query);
+    this.compileFileTypeSearchQuery(searchDto, query);
 
     return query;
   }
 
-  private compileApplicationDateRangeSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
-    if (searchDto.dateSubmittedFrom) {
-      query = query.andWhere(
-        'appSearch.date_submitted_to_alc >= :date_submitted_from_alc',
-        {
-          date_submitted_from_alc: getStartOfDayToPacific(
-            searchDto.dateSubmittedFrom,
-          ).toISOString(),
-        },
-      );
-    }
-
-    if (searchDto.dateSubmittedTo) {
-      query = query.andWhere(
-        'appSearch.date_submitted_to_alc < :date_submitted_to_alc',
-        {
-          date_submitted_to_alc: getNextDayToPacific(
-            searchDto.dateSubmittedTo,
-          ).toISOString(),
-        },
-      );
-    }
-
-    if (searchDto.dateDecidedFrom) {
-      query = query.andWhere('appSearch.decision_date >= :decision_date', {
-        decision_date: getStartOfDayToPacific(
-          searchDto.dateDecidedFrom,
-        ).toISOString(),
-      });
-    }
-
-    if (searchDto.dateDecidedTo) {
-      query = query.andWhere('appSearch.decision_date < :decision_date_to', {
-        decision_date_to: getNextDayToPacific(
-          searchDto.dateDecidedTo,
-        ).toISOString(),
-      });
-    }
-    return query;
-  }
-
-  private compileApplicationDecisionSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
     if (
-      searchDto.resolutionNumber !== undefined ||
-      searchDto.resolutionYear !== undefined
+      searchDto.dateDecidedTo !== undefined ||
+      searchDto.dateDecidedFrom !== undefined ||
+      searchDto.decisionMakerCode !== undefined
     ) {
       query = this.joinApplicationDecision(query);
 
-      if (searchDto.resolutionNumber !== undefined) {
-        query = query.andWhere(
-          'decision.resolution_number = :resolution_number',
-          {
-            resolution_number: searchDto.resolutionNumber,
-          },
-        );
+      if (searchDto.dateDecidedFrom !== undefined) {
+        query = query.andWhere('decision.date >= :dateDecidedFrom', {
+          dateDecidedFrom: new Date(searchDto.dateDecidedFrom),
+        });
       }
 
-      if (searchDto.resolutionYear !== undefined) {
-        query = query.andWhere('decision.resolution_year = :resolution_year', {
-          resolution_year: searchDto.resolutionYear,
+      if (searchDto.dateDecidedTo !== undefined) {
+        query = query.andWhere('decision.date <= :dateDecidedTo', {
+          dateDecidedTo: new Date(searchDto.dateDecidedTo),
         });
+      }
+
+      if (searchDto.decisionMakerCode !== undefined) {
+        query = query.andWhere(
+          'decision.decision_maker_code = :decisionMakerCode',
+          {
+            decisionMakerCode: searchDto.decisionMakerCode,
+          },
+        );
       }
     }
     return query;
@@ -250,14 +194,8 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private compileApplicationParcelSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
-    if (
-      (searchDto.pid || searchDto.civicAddress) &&
-      searchDto.isIncludeOtherParcels
-    ) {
+  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
+    if (searchDto.pid || searchDto.civicAddress) {
       query = query.leftJoin(
         ApplicationParcel,
         'parcel',
@@ -283,10 +221,7 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private compileApplicationSearchByNameQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.name) {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
@@ -327,15 +262,13 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private compileApplicationFileTypeSearchQuery(
-    searchDto: SearchRequestDto,
-    query,
-  ) {
+  private compileFileTypeSearchQuery(searchDto: SearchRequestDto, query) {
     if (searchDto.fileTypes.length > 0) {
       // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery
       if (
-        searchDto.resolutionNumber === undefined &&
-        searchDto.resolutionYear === undefined
+        searchDto.dateDecidedFrom === undefined &&
+        searchDto.dateDecidedTo === undefined &&
+        searchDto.decisionMakerCode === undefined
       ) {
         query = this.joinApplicationDecision(query);
       }

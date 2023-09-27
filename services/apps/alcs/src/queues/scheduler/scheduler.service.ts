@@ -10,9 +10,9 @@ export const EVERYDAY_MIDNIGHT_PST_IN_UTC = '0 0 8 * * *';
 export const EVERYDAY_MIDNIGHT_PDT_IN_UTC = '0 0 7 * * *';
 
 export const EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC =
-  '0/15 16-23,0-7 * * *';
+  '0/15 16-23,0-6 * * *';
 export const EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC =
-  '0/15 15-23,0-6 * * *';
+  '0/15 15-23,0-5 * * *';
 
 export const QUEUES = {
   APP_EXPIRY: 'ApplicationExpiry',

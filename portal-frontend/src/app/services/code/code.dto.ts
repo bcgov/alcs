@@ -7,6 +7,9 @@ export interface LocalGovernmentDto {
   matchesUserGuid: boolean;
 }
 
+export interface ApplicationRegionDto extends BaseCodeDto {}
+export interface DecisionMakerDto extends BaseCodeDto {}
+
 export interface SubmissionTypeDto extends BaseCodeDto {
   portalHtmlDescription: string;
 }

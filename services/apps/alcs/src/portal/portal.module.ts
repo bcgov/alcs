@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { ApplicationModule } from '../alcs/application/application.module';
 import { CardModule } from '../alcs/card/card.module';
+import { CodeModule } from '../alcs/code/code.module';
 import { NoticeOfIntentModule } from '../alcs/notice-of-intent/notice-of-intent.module';
 import { DocumentModule } from '../document/document.module';
 import { PortalApplicationDecisionModule } from './application-decision/application-decision.module';
@@ -20,6 +21,7 @@ import { PortalNotificationDocumentModule } from './notification-document/notifi
 import { ParcelModule } from './parcel/parcel.module';
 import { PdfGenerationModule } from './pdf-generation/pdf-generation.module';
 import { NotificationSubmissionModule } from './notification-submission/notification-submission.module';
+import { PublicModule } from './public/public.module';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { NotificationSubmissionModule } from './notification-submission/notifica
     PortalNoticeOfIntentDecisionModule,
     NotificationSubmissionModule,
     PortalNotificationDocumentModule,
+    PublicModule,
+    CodeModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },

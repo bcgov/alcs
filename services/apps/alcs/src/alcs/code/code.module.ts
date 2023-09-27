@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationSubmissionStatusType } from '../application/application-submission-status/submission-status-type.entity';
 import { ReconsiderationProfile } from '../../common/automapper/reconsideration.automapper.profile';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
@@ -20,6 +21,7 @@ import { CodeService } from './code.service';
       ApplicationMeetingType,
       ApplicationReconsiderationType,
       ApplicationSubmissionStatusType,
+      ApplicationDecisionMakerCode,
     ]),
   ],
   providers: [CodeService, ReconsiderationProfile],

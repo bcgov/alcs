@@ -2,6 +2,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationSubmissionStatusType } from '../application/application-submission-status/submission-status-type.entity';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { CardStatus } from '../card/card-status/card-status.entity';
@@ -21,18 +22,20 @@ describe('CodeService', () => {
   let mockApplicationStatusRepository: DeepMocked<
     Repository<ApplicationSubmissionStatusType>
   >;
+  let mockDecisionMakerCodeRepository: DeepMocked<
+    Repository<ApplicationDecisionMakerCode>
+  >;
 
   let service: CodeService;
 
   beforeEach(async () => {
-    mockTypeRepository = createMock<Repository<ApplicationType>>();
-    mockStatusRepository = createMock<Repository<CardStatus>>();
-    mockRegionRepository = createMock<Repository<ApplicationRegion>>();
-    mockMeetingRepository = createMock<Repository<ApplicationMeetingType>>();
-    mockReconsiderationTypeRepository =
-      createMock<Repository<ApplicationReconsiderationType>>();
-    mockApplicationStatusRepository =
-      createMock<Repository<ApplicationSubmissionStatusType>>();
+    mockTypeRepository = createMock();
+    mockStatusRepository = createMock();
+    mockRegionRepository = createMock();
+    mockMeetingRepository = createMock();
+    mockReconsiderationTypeRepository = createMock();
+    mockApplicationStatusRepository = createMock();
+    mockDecisionMakerCodeRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -61,6 +64,10 @@ describe('CodeService', () => {
           provide: getRepositoryToken(ApplicationSubmissionStatusType),
           useValue: mockApplicationStatusRepository,
         },
+        {
+          provide: getRepositoryToken(ApplicationDecisionMakerCode),
+          useValue: mockDecisionMakerCodeRepository,
+        },
       ],
     }).compile();
 
@@ -78,6 +85,7 @@ describe('CodeService', () => {
     mockMeetingRepository.find.mockResolvedValue([]);
     mockReconsiderationTypeRepository.find.mockResolvedValue([]);
     mockApplicationStatusRepository.find.mockResolvedValue([]);
+    mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
 
     await service.getAll();
 
@@ -87,6 +95,7 @@ describe('CodeService', () => {
     expect(mockMeetingRepository.find).toHaveBeenCalledTimes(1);
     expect(mockReconsiderationTypeRepository.find).toHaveBeenCalledTimes(1);
     expect(mockApplicationStatusRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockDecisionMakerCodeRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should map the repos to the right response keys', async () => {
@@ -140,6 +149,15 @@ describe('CodeService', () => {
       mockApplicationStatusTypes as any[],
     );
 
+    const mockDecisionMakers = [
+      {
+        code: '7',
+      },
+    ];
+    mockDecisionMakerCodeRepository.find.mockResolvedValue(
+      mockDecisionMakers as any[],
+    );
+
     const res = await service.getAll();
 
     expect(res.type).toEqual(mockTypes);
@@ -148,6 +166,7 @@ describe('CodeService', () => {
     expect(res.meetingTypes).toEqual(mockMeetingTypes);
     expect(res.reconsiderationTypes).toEqual(mockReconsiderationTypes);
     expect(res.applicationStatusTypes).toEqual(mockApplicationStatusTypes);
+    expect(res.decisionMakers).toEqual(mockDecisionMakers);
   });
 
   it('should call the type repo for types', async () => {
