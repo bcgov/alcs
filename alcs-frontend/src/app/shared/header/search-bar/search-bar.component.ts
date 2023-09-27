@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, QueryList, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -13,11 +13,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
     trigger('inAnimation', [transition(':enter', [style({ height: 0, opacity: 0 }), animate('100ms ease-out')])]),
   ],
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements AfterViewInit {
   searchText = '';
   showInput = false;
   wasInside = false;
-  @ViewChild('searchInput') input!: ElementRef;
+  @ViewChildren('searchInput') input!: QueryList<ElementRef>;
 
   constructor(private toastService: ToastService, private router: Router, private searchService: SearchService) {}
 
@@ -34,13 +34,37 @@ export class SearchBarComponent {
     this.wasInside = false;
   }
 
-  async toggleInput() {
+  ngAfterViewInit(): void {
+    this.input.changes.subscribe(() => {
+      this.focusInput();
+    });
+  }
+
+  focusInput() {
+    if (this.input.length > 0) {
+      this.input.first.nativeElement.focus();
+    }
+  }
+
+  selectInput() {
+    if (this.input.length > 0) {
+      this.input.first.nativeElement.select();
+    }
+  }
+
+  toggleInput() {
     this.showInput = !this.showInput;
+  }
+
+  resetInput() {
+    this.toggleInput();
+    this.searchText = '';
   }
 
   async onSearch() {
     if (!this.searchText) {
       this.toastService.showErrorToast(`File not found, try again`);
+      this.focusInput();
       return;
     }
 
@@ -48,6 +72,7 @@ export class SearchBarComponent {
       const searchResult = await this.searchService.fetch(this.searchText);
       if (!searchResult || searchResult.length < 1) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
+        this.selectInput();
         return;
       }
 
@@ -72,21 +97,29 @@ export class SearchBarComponent {
           default:
             this.toastService.showErrorToast(`Unable to navigate to ${result.referenceId}`);
         }
-        this.toggleInput();
       }
 
       if (searchResult?.length > 1) {
         await this.router.navigateByUrl(`/search?searchText=${this.searchText}`);
-        this.toggleInput();
       }
 
-      this.searchText = '';
+      this.resetInput();
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
         this.toastService.showWarningToast(`File ID ${this.searchText} not found, try again`);
-        const inputElem = <HTMLInputElement>this.input.nativeElement;
-        inputElem.select();
+        this.selectInput();
       }
     }
+  }
+
+  async navigateToAdvancedSearch() {
+    let url = '/search';
+
+    if (this.searchText) {
+      url += `?searchText=${this.searchText}`;
+    }
+
+    await this.router.navigateByUrl(url);
+    this.resetInput();
   }
 }

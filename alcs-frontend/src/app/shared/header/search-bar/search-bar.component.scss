@@ -24,12 +24,6 @@
   border-radius: 0 0 4px 4px;
   z-index: 9999;
 
-  a {
-    display: flex;
-    height: fit-content;
-    text-decoration: none;
-  }
-
   button {
     width: 100%;
     background: colors.$white;
@@ -80,14 +74,6 @@
     display: flex;
     height: 100%;
   }
-}
-
-input {
-  color: colors.$primary-color;
-}
-
-.mat-mdc-input-element {
-  color: colors.$primary-color !important;
 }
 
 :host ::ng-deep .mat-form-field-wrapper {
