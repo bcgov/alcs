@@ -9,7 +9,7 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
 
-etl_name = "process_notice_of_intent_adjacent_land_use"
+etl_name = "process_notice_of_intent_empty_adjacent_land_use"
 
 
 @inject_conn_pool
