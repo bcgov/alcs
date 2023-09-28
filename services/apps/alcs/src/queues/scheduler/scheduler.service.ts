@@ -112,6 +112,6 @@ export class SchedulerService {
     pstCronExpression: string,
     pdtCronExpression: string,
   ) {
-    return isDST() ? pstCronExpression : pdtCronExpression;
+    return isDST() ? pdtCronExpression : pstCronExpression;
   }
 }
