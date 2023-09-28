@@ -56,7 +56,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
               ccGovernment: true,
             });
 
-            await this.updateSubmissionStatus(submissionStatus, tomorrow);
+            await this.updateSubmissionStatus(submissionStatus);
             this.logger.debug(
               `Status email sent for NOI {submissionStatus.submissionUuid}`,
             );
@@ -79,8 +79,12 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
 
   private async updateSubmissionStatus(
     submissionStatus: NoticeOfIntentSubmissionToSubmissionStatus,
-    today: Date,
   ) {
+    const today = dayjs(new Date())
+      .tz('Canada/Pacific')
+      .startOf('day')
+      .toDate();
+
     submissionStatus.emailSentDate = today;
     await this.submissionStatusService.saveSubmissionToSubmissionStatus(
       submissionStatus,

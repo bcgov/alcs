@@ -92,8 +92,8 @@ describe('SchedulerService', () => {
   //     {
   //       repeat: {
   //         pattern: isDST()
-  //           ? MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC
-  //           : MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC,
+  //           ? MONDAY_TO_FRIDAY_AT_2AM_PDT_IN_UTC 
+  //           : MONDAY_TO_FRIDAY_AT_2AM_PST_IN_UTC,
   //       },
   //     },
   //   );
@@ -109,8 +109,8 @@ describe('SchedulerService', () => {
       {
         repeat: {
           pattern: isDST()
-            ? EVERYDAY_MIDNIGHT_PST_IN_UTC
-            : EVERYDAY_MIDNIGHT_PDT_IN_UTC,
+            ? EVERYDAY_MIDNIGHT_PDT_IN_UTC
+            :  EVERYDAY_MIDNIGHT_PST_IN_UTC,
         },
       },
     );
@@ -128,8 +128,8 @@ describe('SchedulerService', () => {
       {
         repeat: {
           pattern: isDST()
-            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC
-            : EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC,
+            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
+            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
         },
       },
     );
@@ -147,8 +147,8 @@ describe('SchedulerService', () => {
       {
         repeat: {
           pattern: isDST()
-            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC
-            : EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC,
+            ? EVERY_15_MINUTES_STARTING_FROM_8AM_PDT_IN_UTC
+            : EVERY_15_MINUTES_STARTING_FROM_8AM_PST_IN_UTC,
         },
       },
     );
