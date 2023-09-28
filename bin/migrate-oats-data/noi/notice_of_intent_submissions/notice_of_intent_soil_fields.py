@@ -1,16 +1,7 @@
-from db import inject_conn_pool
-from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
-from common import (
-    log,
-    log_start,
-    NO_DATA_IN_OATS,
-    BATCH_UPLOAD_SIZE,
-    log,
-    log_start,
-    SoilChangeCode,
-)
-
+from common import BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS, SoilChangeCode, log, log_start
+from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_alcs_notice_of_intent_soil_fields"
 
