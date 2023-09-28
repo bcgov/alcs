@@ -4,3 +4,4 @@ from .etl_logger import log_start, log
 from .constants import *
 from .oats_to_alcs_adjacent_land_use_type_enum import *
 from .json_encoder import *
+from .oats_to_alcs_soil_change_code_enum import *
