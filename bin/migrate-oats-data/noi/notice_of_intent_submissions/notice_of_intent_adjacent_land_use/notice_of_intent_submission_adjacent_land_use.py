@@ -1,14 +1,10 @@
-from common import log, log_start, AlcsAdjacentLandUseType
-from db import inject_conn_pool
-from common import (
-    BATCH_UPLOAD_SIZE,
-    NO_DATA_IN_OATS,
-    DateTimeEncoder,
-    AdjacentLandUseDirections,
-)
-from psycopg2.extras import execute_batch, RealDictCursor
-import traceback
 import json
+import traceback
+from common import (BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS,
+                    AdjacentLandUseDirections, AlcsAdjacentLandUseType,
+                    DateTimeEncoder, log, log_start)
+from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_notice_of_intent_adjacent_land_use"
 
@@ -193,3 +189,4 @@ def _map_adjacent_land_use_data(oats_row):
         ].value,
         direction_type_desc_key: oats_row[description_key] or NO_DATA_IN_OATS,
     }
+
