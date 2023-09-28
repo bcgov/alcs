@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-export const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+$/;
+export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$/;
 
 @Pipe({
   name: 'emailValid',
