@@ -61,7 +61,6 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
             submissionGovernment,
             primaryContact,
             submissionStatus,
-            tomorrow,
           );
         } catch (e) {
           this.logger.error(e);
@@ -84,7 +83,6 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
     submissionGovernment: LocalGovernment | null,
     primaryContact: ApplicationOwner | undefined,
     submissionStatus: ApplicationSubmissionToSubmissionStatus,
-    today: Date,
   ) {
     if (
       primaryContact &&
@@ -108,7 +106,7 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
       });
 
-      await this.updateSubmissionStatus(submissionStatus, today);
+      await this.updateSubmissionStatus(submissionStatus);
       this.logger.debug(
         `Status email sent for Application {submissionStatus.submissionUuid} status code: {submissionStatus.statusTypeCode}`,
       );
@@ -117,8 +115,12 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
 
   private async updateSubmissionStatus(
     submissionStatus: ApplicationSubmissionToSubmissionStatus,
-    today: Date,
   ) {
+    const today = dayjs(new Date())
+      .tz('Canada/Pacific')
+      .startOf('day')
+      .toDate();
+
     submissionStatus.emailSentDate = today;
     await this.submissionStatusService.saveSubmissionToSubmissionStatus(
       submissionStatus,
