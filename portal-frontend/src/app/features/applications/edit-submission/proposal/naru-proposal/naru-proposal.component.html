@@ -510,6 +510,7 @@
       [disabled]="willImportFill.value === 'false'"
       tableHeader="Fill to be Placed"
       [(data)]="fillTableData"
+      (dataChange)="markDirty()"
     ></app-soil-table>
   </section>
 
@@ -537,9 +538,7 @@
       </div>
       <div>
         <label for="projectDurationAmount">Length</label>
-        <div class='subtext'>
-          Decimals can be used - e.g. 3.5 months or 1.5 years
-        </div>
+        <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
         <mat-form-field appearance="outline">
           <input
             id="projectDurationAmount"
