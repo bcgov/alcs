@@ -1,14 +1,15 @@
-from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_table_etl import (
-    process_alcs_notice_of_intent_base_fields,
-)
-from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
-    process_alcs_notice_of_intent_decision_date,
-)
-from .notice_of_intent_init import init_notice_of_intents, clean_notice_of_intents
+from .notice_of_intent_init import clean_notice_of_intents, init_notice_of_intents
 from .notice_of_intent_submissions import (
     clean_notice_of_intent_submissions,
     init_notice_of_intent_submissions,
     process_notice_of_intent_adjacent_land_use,
+    process_notice_of_intent_empty_adjacent_land_use,
+)
+from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
+    process_alcs_notice_of_intent_decision_date,
+)
+from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_table_etl import (
+    process_alcs_notice_of_intent_base_fields,
 )
 
 
@@ -30,3 +31,5 @@ def process_notice_of_intent(batch_size):
     init_notice_of_intent_submissions(batch_size=batch_size)
 
     process_notice_of_intent_adjacent_land_use(batch_size=batch_size)
+
+    process_notice_of_intent_empty_adjacent_land_use()
