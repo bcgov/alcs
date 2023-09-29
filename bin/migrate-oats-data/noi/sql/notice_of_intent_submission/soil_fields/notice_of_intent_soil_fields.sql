@@ -7,7 +7,8 @@ osce.material_desc,
 osce.material_origin_desc,
 osce.volume,
 osce.project_area ,
-osce."depth" 
+osce."depth",
+osce.project_duration
 FROM
     oats.oats_soil_change_elements osce
 JOIN oats.oats_alr_appl_components oaac ON oaac.alr_appl_component_id = osce.alr_appl_component_id 

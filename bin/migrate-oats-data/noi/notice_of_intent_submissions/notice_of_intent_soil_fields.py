@@ -9,7 +9,7 @@ etl_name = "process_alcs_notice_of_intent_soil_fields"
 @inject_conn_pool
 def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for setting soil fields of the notice_of_intent_submission in ALCS.
+    This function is responsible for populating soil fields of the notice_of_intent_submission in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -105,6 +105,8 @@ _soil_fill_query = """
                         , soil_to_place_maximum_depth = %(depth)s
                         , soil_to_place_average_depth = %(depth)s
                         , soil_fill_type_to_place  = %(type)s
+                        , soil_project_duration_amount = %(project_duration)s
+                        , soil_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
                         , soil_already_placed_volume = 0
                         , soil_already_placed_area  = 0
                         , soil_already_placed_maximum_depth  = 0
@@ -119,6 +121,8 @@ _soil_remove_query = """
                         , soil_to_remove_maximum_depth = %(depth)s
                         , soil_to_remove_average_depth = %(depth)s
                         , soil_type_removed  = %(type)s
+                        , soil_project_duration_amount = %(project_duration)s
+                        , soil_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
                         , soil_already_removed_volume = 0
                         , soil_already_removed_area = 0
                         , soil_already_removed_maximum_depth = 0
