@@ -1,5 +1,5 @@
 import traceback
-from common import BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS, SoilChangeCode, log, log_start
+from common import BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS, log, log_start
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
@@ -11,7 +11,7 @@ def process_alcs_notice_of_intent_proposal_fields(
     conn=None, batch_size=BATCH_UPLOAD_SIZE
 ):
     """
-    This function is responsible for populating proposal fields of the notice_of_intent_submission in ALCS.
+    This function is responsible for populating of the notice_of_intent_submission in ALCS: proposal fields and soil fields populated with default values.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
