@@ -14,6 +14,10 @@ from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_tabl
     process_alcs_notice_of_intent_base_fields,
 )
 
+from .noi_submission_status_email.submission_status_email import (
+    process_notice_of_intent_submission_status_emails,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
@@ -39,3 +43,5 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_soil_fields(batch_size)
 
     process_alcs_notice_of_intent_proposal_fields(batch_size)
+
+    process_notice_of_intent_submission_status_emails()
