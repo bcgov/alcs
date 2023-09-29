@@ -9,3 +9,5 @@ from .notice_of_intent_adjacent_land_use.notice_of_intent_empty_adjacent_land_us
     process_notice_of_intent_empty_adjacent_land_use,
 )
 from .notice_of_intent_soil_fields import process_alcs_notice_of_intent_soil_fields
+
+from .notice_of_intent_proposal_fields import process_alcs_notice_of_intent_proposal_fields

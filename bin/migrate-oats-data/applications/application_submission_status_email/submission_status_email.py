@@ -16,6 +16,7 @@ def process_application_submission_status_emails(conn=None):
     try:
         with conn.cursor() as cursor:
             cursor.execute(update_query)
+        conn.commit()
     except Exception as error:
         print("".join(traceback.format_exception(None, error, error.__traceback__)))
         cursor.close()
