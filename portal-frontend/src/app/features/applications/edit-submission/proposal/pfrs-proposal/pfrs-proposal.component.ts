@@ -88,10 +88,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         this.submissionUuid = applicationSubmission.uuid;
 
         this.alreadyRemovedTableData = {
-          volume: applicationSubmission.soilAlreadyRemovedVolume ?? 0,
-          area: applicationSubmission.soilAlreadyRemovedArea ?? 0,
-          averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? 0,
-          maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? 0,
+          volume: applicationSubmission.soilAlreadyRemovedVolume ?? undefined,
+          area: applicationSubmission.soilAlreadyRemovedArea ?? undefined,
+          averageDepth: applicationSubmission.soilAlreadyRemovedAverageDepth ?? undefined,
+          maximumDepth: applicationSubmission.soilAlreadyRemovedMaximumDepth ?? undefined,
         };
 
         this.removalTableData = {
@@ -102,10 +102,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         };
 
         this.alreadyFilledTableData = {
-          volume: applicationSubmission.soilAlreadyPlacedVolume ?? 0,
-          area: applicationSubmission.soilAlreadyPlacedArea ?? 0,
-          averageDepth: applicationSubmission.soilAlreadyPlacedAverageDepth ?? 0,
-          maximumDepth: applicationSubmission.soilAlreadyPlacedMaximumDepth ?? 0,
+          volume: applicationSubmission.soilAlreadyPlacedVolume ?? undefined,
+          area: applicationSubmission.soilAlreadyPlacedArea ?? undefined,
+          averageDepth: applicationSubmission.soilAlreadyPlacedAverageDepth ?? undefined,
+          maximumDepth: applicationSubmission.soilAlreadyPlacedMaximumDepth ?? undefined,
         };
 
         this.fillTableData = {

@@ -32,6 +32,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="volume"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>
@@ -50,6 +51,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="volume2"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>
@@ -73,6 +75,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="area"
+            onfocus="this.select()"
           />
           <span matTextSuffix>ha</span>
         </mat-form-field>
@@ -91,6 +94,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="area2"
+            onfocus="this.select()"
           />
           <span matTextSuffix>ha</span>
         </mat-form-field>
@@ -113,6 +117,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="maximumDepth"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -131,6 +136,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="maximumDepth2"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -153,6 +159,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="averageDepth"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -161,7 +168,7 @@
           <div *ngIf="averageDepth.errors?.['required']">This field is required</div>
         </div>
       </div>
-      <div *ngIf='!!data2'>
+      <div *ngIf="!!data2">
         <mat-form-field appearance="outline">
           <input
             min="0.01"
@@ -171,6 +178,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="averageDepth2"
+            onfocus="this.select()"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
