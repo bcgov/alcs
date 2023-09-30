@@ -1,35 +1,22 @@
 import traceback
 from db import inject_conn_pool
-from common import log, log_start, OATS_ETL_USER
+from common import log, log_start, OATS_ETL_USER, setup_and_get_logger
 
-
-def noi_insert_query(number_of_rows_to_insert):
-    nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
-    return f"""
-        INSERT INTO alcs.notice_of_intent (file_number, 
-                                      applicant, region_code, local_government_uuid, audit_created_by, type_code)
-
-        VALUES{nois_to_insert}
-        ON CONFLICT (file_number) DO UPDATE SET
-            file_number = EXCLUDED.file_number,
-            applicant = EXCLUDED.applicant,
-            region_code = EXCLUDED.region_code,
-            local_government_uuid = EXCLUDED.local_government_uuid,
-            audit_created_by = EXCLUDED.audit_created_by,
-            type_code = EXCLUDED.type_code
-    """
+etl_name = "init_notice_of_intents"
+logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
 def init_notice_of_intents(conn=None, batch_size=10000):
-    etl_name = "init_notice_of_intents"
-    log_start(etl_name)
+    logger.info(f"Start {etl_name}")
     with conn.cursor() as cursor:
         with open("noi/sql/insert_noi_count.sql", "r", encoding="utf-8") as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
-        print("- NOIs to insert: ", count_total)
+        logger.info(
+            f"NOIs to insert: {count_total}",
+        )
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -48,7 +35,7 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                 try:
                     applications_to_be_inserted_count = len(rows)
 
-                    insert_query = noi_insert_query(applications_to_be_inserted_count)
+                    insert_query = _noi_insert_query(applications_to_be_inserted_count)
                     cursor.execute(insert_query, rows)
                     conn.commit()
 
@@ -57,34 +44,44 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                         successful_inserts_count + applications_to_be_inserted_count
                     )
 
-                    print(
+                    logger.debug(
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_id: {last_application_id}"
                     )
                 except Exception as error:
                     conn.rollback()
-                    error_trace = "".join(
-                        traceback.format_exception(None, error, error.__traceback__)
-                    )
-                    print("Error", error_trace)
-                    log(
-                        etl_name,
-                        str(error),
-                        error_trace,
-                    )
+                    logger.exception(error)
                     failed_inserts = count_total - successful_inserts_count
                     last_application_id = last_application_id + 1
 
-    print("Total amount of successful inserts:", successful_inserts_count)
-    print("Total failed inserts:", failed_inserts)
+    logger.info(
+        f"Finished {etl_name}: total amount of successful inserts: {successful_inserts_count}, total failed inserts {failed_inserts}"
+    )
 
 
 @inject_conn_pool
 def clean_notice_of_intents(conn=None):
-    print("Start NOI cleaning")
+    logger.info("Start NOI cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             f"DELETE FROM alcs.notice_of_intent noi WHERE noi.audit_created_by = '{OATS_ETL_USER}'"
         )
-        print(f"Deleted items count = {cursor.rowcount}")
+        logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()
+
+
+def _noi_insert_query(number_of_rows_to_insert):
+    nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
+    return f"""
+        INSERT INTO alcs.notice_of_intent (file_number, 
+                                      applicant, region_code, local_government_uuid, audit_created_by, type_code)
+
+        VALUES{nois_to_insert}
+        ON CONFLICT (file_number) DO UPDATE SET
+            file_number = EXCLUDED.file_number,
+            applicant = EXCLUDED.applicant,
+            region_code = EXCLUDED.region_code,
+            local_government_uuid = EXCLUDED.local_government_uuid,
+            audit_created_by = EXCLUDED.audit_created_by,
+            type_code = EXCLUDED.type_code
+    """

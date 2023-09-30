@@ -3,13 +3,14 @@ from common import (
     OATS_ETL_USER,
     NO_DATA_IN_OATS,
     log,
-    log_start,
     AlcsAdjacentLandUseType,
+    setup_and_get_logger,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
 
 etl_name = "process_notice_of_intent_empty_adjacent_land_use"
+logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
@@ -22,7 +23,7 @@ def process_notice_of_intent_empty_adjacent_land_use(conn=None):
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     """
 
-    log_start(etl_name)
+    logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "noi/sql/notice_of_intent_submission/adjacent_land_use/empty_notice_of_intent_adjacent_land_use_count.sql",
@@ -32,13 +33,10 @@ def process_notice_of_intent_empty_adjacent_land_use(conn=None):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        print(
-            "- Total Notice of Intent Submission Empty Adjacent Land use data to update: ",
-            count_total,
-        )
 
-        successful_updates_count = 0
-        last_submission_id = 0
+        logger.info(
+            f"Total Notice of Intent Submission Empty Adjacent Land use data to update: {count_total}"
+        )
 
         try:
             cursor.execute(
@@ -51,23 +49,11 @@ def process_notice_of_intent_empty_adjacent_land_use(conn=None):
             )
 
             updated_row_count = cursor.rowcount
+            logger.info(f"Finished {etl_name}: total updated items {updated_row_count}")
 
-            print(f"updated items count: {updated_row_count}")
-        except Exception as e:
+        except Exception as err:
             conn.rollback()
-            str_err = str(e)
-            trace_err = traceback.format_exc()
-            print(str_err)
-            print(trace_err)
-            failed_updates = count_total - successful_updates_count
-            last_submission_id = last_submission_id + 1
-            log(
-                etl_name,
-                str_err,
-                trace_err,
-            )
-
-    log(etl_name)
+            logger.error(err)
 
 
 _update_query = """

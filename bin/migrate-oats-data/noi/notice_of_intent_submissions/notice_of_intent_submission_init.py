@@ -1,10 +1,16 @@
-from common import log, log_start, OATS_ETL_USER
 from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE
+from common import (
+    BATCH_UPLOAD_SIZE,
+    setup_and_get_logger,
+    log,
+    log_start,
+    OATS_ETL_USER,
+)
 from psycopg2.extras import execute_batch, RealDictCursor
 import traceback
 
 etl_name = "init_notice_of_intent_submissions"
+logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
@@ -17,7 +23,7 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
 
-    log_start(etl_name)
+    logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "noi/sql/notice_of_intent_submission/notice_of_intent_submission_init_count.sql",
@@ -27,7 +33,7 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        print("- Total Notice of Intent Submission data to insert: ", count_total)
+        logger.info(f"Total Notice of Intent Submission data to insert: {count_total}")
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -58,22 +64,18 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
                     last_submission_id = dict(rows[-1])["alr_application_id"]
 
-                    print(
+                    logger.debug(
                         f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted alr_application_id: {last_submission_id}"
                     )
-                except Exception as e:
+                except Exception as err:
                     conn.rollback()
-                    str_err = str(e)
-                    trace_err = traceback.format_exc()
-                    print(str_err)
-                    print(trace_err)
-                    log(etl_name, str_err, trace_err)
+                    logger.exception(err)
                     failed_inserts = count_total - successful_inserts_count
                     last_submission_id = last_submission_id + 1
 
-    print("Total amount of successful inserts:", successful_inserts_count)
-    print("Total failed inserts:", failed_inserts)
-    log(etl_name)
+    logger.info(
+        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts}"
+    )
 
 
 def _insert_notice_of_intent_submissions(conn, batch_size, cursor, rows):
@@ -118,11 +120,11 @@ def _prepare_oats_alr_applications_data(row_data_list):
 
 @inject_conn_pool
 def clean_notice_of_intent_submissions(conn=None):
-    print("Start notice_of_intent_submissions cleaning")
+    logger.info("Start notice_of_intent_submissions cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             f"DELETE FROM alcs.notice_of_intent_submission nois WHERE nois.audit_created_by = '{OATS_ETL_USER}'"
         )
-        print(f"Deleted items count = {cursor.rowcount}")
+        logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()

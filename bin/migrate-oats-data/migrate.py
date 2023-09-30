@@ -1,5 +1,8 @@
 import logging
+from rich.logging import RichHandler
+from rich.traceback import install
 from rich.console import Console
+from logging.handlers import RotatingFileHandler
 
 from menu import setup_menu_args_parser
 from menu.commands import (
@@ -15,17 +18,24 @@ from menu.commands import (
     notice_of_intent_clean,
 )
 from db import connection_pool
-from common import BATCH_UPLOAD_SIZE
+from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
 
 
 import_batch_size = BATCH_UPLOAD_SIZE
 
+
 if __name__ == "__main__":
     args = setup_menu_args_parser(import_batch_size)
 
-    # Setup
-    logging.basicConfig(level=logging.INFO)
-    # Console for UI
+    logger = setup_and_get_logger("migrate")
+    # logger.info("test info")
+    # logger.debug("test debug")
+    # logger.error("test error")
+    # try:
+    #     1 / 0
+    # except Exception as e:
+    #     logger.exception(e)
+
     console = Console()
 
     try:
