@@ -5,6 +5,8 @@ from common import (
     OATS_ETL_USER,
     ALRChangeCode,
     setup_and_get_logger,
+    AlcsNaruTypeCode,
+    OatsNarCode,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -125,6 +127,7 @@ def insert_app_sub_records(
         nfu_data_list,
         other_data_list,
         inc_exc_data_list,
+        naru_data_list,
     ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
 
     if len(nfu_data_list) > 0:
@@ -139,6 +142,14 @@ def insert_app_sub_records(
         execute_batch(
             cursor,
             get_insert_query_for_inc_exc(),
+            inc_exc_data_list,
+            page_size=batch_size,
+        )
+
+    if len(naru_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_naru(),
             inc_exc_data_list,
             page_size=batch_size,
         )
@@ -196,10 +207,12 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
             or data["alr_change_code"] == ALRChangeCode.INC.value
         ):
             inc_exc_data_list.append(data)
+        elif data["alr_change_code"] == ALRChangeCode.NAR.value:
+            naru_data_list.append(data)
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, other_data_list, inc_exc_data_list
+    return nfu_data_list, other_data_list, inc_exc_data_list, naru_data_list
 
 
 def get_insert_query(unique_fields, unique_values):
@@ -246,6 +259,30 @@ def get_insert_query(unique_fields, unique_values):
 
 
 def get_insert_query_for_nfu():
+    unique_fields = """, nfu_hectares,
+                        nfu_will_import_fill,
+                        nfu_fill_volume,
+                        nfu_max_fill_depth,
+                        nfu_project_duration_amount,
+                        nfu_fill_type_description,
+                        nfu_fill_origin_description,
+                        nfu_project_duration_unit,
+                        nfu_total_fill_area
+                        """
+    unique_values = """, %(alr_area)s,
+                        %(import_fill)s,
+                        %(total_fill)s,
+                        %(max_fill_depth)s,
+                        %(fill_duration)s,
+                        %(fill_type)s,
+                        %(fill_origin)s,
+                        %(fill_duration_unit)s,
+                        %(fill_area)s
+                    """
+    return get_insert_query(unique_fields, unique_values)
+
+
+def get_insert_query_for_naru():
     unique_fields = """, nfu_hectares,
                         nfu_will_import_fill,
                         nfu_fill_volume,

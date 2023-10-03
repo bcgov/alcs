@@ -49,6 +49,13 @@ class AlcsAgCapSource(Enum):
     CLI = "CLI"
     On_site = "On-site"
 
+
 class AlcsApplicantType(Enum):
     Land_owner = "Land Owner"
     LFNG = "L/FNG Initiated"
+
+
+class AlcsNaruTypeCode(Enum):
+    Principal_Residence = "PRIN"  # Principal Residence More Than 500m²
+    Additional_Residence = "ARFU"  # Additional Residence for Farm Use
+    Tourism_Accomodation = "TOUR"  # Non-Adhering Tourism Accommodation
