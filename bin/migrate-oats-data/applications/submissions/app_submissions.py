@@ -4,8 +4,6 @@ from common import (
     BATCH_UPLOAD_SIZE,
     OATS_ETL_USER,
     ALRChangeCode,
-    log,
-    log_start,
     setup_and_get_logger,
 )
 from db import inject_conn_pool
