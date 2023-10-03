@@ -220,4 +220,8 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     const subtypes = await this.codeService.loadCodes();
     this.naruSubtypes = subtypes.naruSubtypes;
   }
+
+  markDirty() {
+    this.form.markAsDirty();
+  }
 }
