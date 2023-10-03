@@ -1,13 +1,6 @@
+from common import BATCH_UPLOAD_SIZE, OATS_ETL_USER, setup_and_get_logger
 from db import inject_conn_pool
-from common import (
-    BATCH_UPLOAD_SIZE,
-    setup_and_get_logger,
-    log,
-    log_start,
-    OATS_ETL_USER,
-)
-from psycopg2.extras import execute_batch, RealDictCursor
-import traceback
+from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "init_notice_of_intent_submissions"
 logger = setup_and_get_logger(etl_name)
@@ -68,8 +61,8 @@ def init_notice_of_intent_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                         f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted alr_application_id: {last_submission_id}"
                     )
                 except Exception as err:
+                    logger.exception()
                     conn.rollback()
-                    logger.exception(err)
                     failed_inserts = count_total - successful_inserts_count
                     last_submission_id = last_submission_id + 1
 

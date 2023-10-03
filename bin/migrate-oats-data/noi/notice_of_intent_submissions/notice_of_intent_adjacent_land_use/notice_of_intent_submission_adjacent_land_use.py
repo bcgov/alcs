@@ -1,13 +1,8 @@
-import json
-import traceback
 from common import (
     BATCH_UPLOAD_SIZE,
     NO_DATA_IN_OATS,
     AdjacentLandUseDirections,
     AlcsAdjacentLandUseType,
-    DateTimeEncoder,
-    log,
-    log_start,
     setup_and_get_logger,
 )
 from db import inject_conn_pool
@@ -26,8 +21,6 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
-
-    log_start(etl_name)
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -69,8 +62,8 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                         conn, batch_size, cursor, rows
                     )
 
-                    successful_updates_count = (
-                        successful_updates_count + submissions_to_be_updated_count
+                    successful_updates_count = successful_updates_count + len(
+                        parsed_data
                     )
                     last_submission_id = dict(rows[-1])["alr_application_id"]
 
@@ -78,8 +71,8 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                         f"retrieved/updated items count: {submissions_to_be_updated_count}; total successfully processed submissions so far {successful_updates_count}; last update alr_application_id: {last_submission_id}"
                     )
                 except Exception as err:
+                    logger.exception()
                     conn.rollback()
-                    logger.exception(err)
                     failed_updates = count_total - successful_updates_count
                     last_submission_id = last_submission_id + 1
 

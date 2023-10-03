@@ -1,4 +1,3 @@
-import traceback
 from common import (
     BATCH_UPLOAD_SIZE,
     NO_DATA_IN_OATS,
@@ -9,7 +8,6 @@ from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_alcs_notice_of_intent_soil_fields"
-
 logger = setup_and_get_logger(etl_name)
 
 
@@ -67,10 +65,10 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
                     logger.debug(
                         f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
                     )
-                except Exception as error:
+                except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
+                    logger.exception()
                     conn.rollback()
-                    logger.exception(error)
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
 

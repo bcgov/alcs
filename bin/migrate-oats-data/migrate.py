@@ -28,14 +28,6 @@ if __name__ == "__main__":
     args = setup_menu_args_parser(import_batch_size)
 
     logger = setup_and_get_logger("migrate")
-    # logger.info("test info")
-    # logger.debug("test debug")
-    # logger.error("test error")
-    # try:
-    #     1 / 0
-    # except Exception as e:
-    #     logger.exception(e)
-
     console = Console()
 
     try:

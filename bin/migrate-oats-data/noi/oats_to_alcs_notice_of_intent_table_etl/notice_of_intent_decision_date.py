@@ -1,7 +1,6 @@
+from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
 from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE, log, log_start, setup_and_get_logger
-from psycopg2.extras import execute_batch, RealDictCursor
-
+from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_alcs_notice_of_intent_decision_date"
 logger = setup_and_get_logger(etl_name)
@@ -61,9 +60,9 @@ def process_alcs_notice_of_intent_decision_date(
                     logger.debug(
                         f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated application_id: {last_application_id}"
                     )
-                except Exception as error:
+                except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception(error)
+                    logger.exception()
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1

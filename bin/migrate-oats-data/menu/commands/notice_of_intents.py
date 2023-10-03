@@ -1,4 +1,3 @@
-import logging
 from noi.notice_of_intent_migration import (
     init_notice_of_intents,
     process_notice_of_intent,

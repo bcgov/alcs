@@ -1,8 +1,6 @@
-import traceback
 from common import (
     OATS_ETL_USER,
     NO_DATA_IN_OATS,
-    log,
     AlcsAdjacentLandUseType,
     setup_and_get_logger,
 )
@@ -52,8 +50,8 @@ def process_notice_of_intent_empty_adjacent_land_use(conn=None):
             logger.info(f"Finished {etl_name}: total updated items {updated_row_count}")
 
         except Exception as err:
+            logger.exception()
             conn.rollback()
-            logger.error(err)
 
 
 _update_query = """

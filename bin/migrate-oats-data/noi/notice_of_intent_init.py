@@ -1,6 +1,5 @@
-import traceback
+from common import OATS_ETL_USER, setup_and_get_logger
 from db import inject_conn_pool
-from common import log, log_start, OATS_ETL_USER, setup_and_get_logger
 
 etl_name = "init_notice_of_intents"
 logger = setup_and_get_logger(etl_name)
@@ -14,9 +13,7 @@ def init_notice_of_intents(conn=None, batch_size=10000):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = cursor.fetchone()[0]
-        logger.info(
-            f"NOIs to insert: {count_total}",
-        )
+        logger.info(f"NOIs to insert: {count_total}")
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -47,9 +44,9 @@ def init_notice_of_intents(conn=None, batch_size=10000):
                     logger.debug(
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_id: {last_application_id}"
                     )
-                except Exception as error:
+                except Exception as err:
+                    logger.exception()
                     conn.rollback()
-                    logger.exception(error)
                     failed_inserts = count_total - successful_inserts_count
                     last_application_id = last_application_id + 1
 

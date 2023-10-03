@@ -1,9 +1,13 @@
-from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE, log, log_start
-from psycopg2.extras import execute_batch, RealDictCursor
-import traceback
-from common import AlcsAgCapSource, log, log_start, AlcsAgCap, setup_and_get_logger
 from enum import Enum
+
+from common import (
+    BATCH_UPLOAD_SIZE,
+    AlcsAgCap,
+    AlcsAgCapSource,
+    setup_and_get_logger,
+)
+from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_alcs_notice_of_intent_base_fields"
 logger = setup_and_get_logger(etl_name)
@@ -28,8 +32,6 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
     """
     Import data into ALCS.notice_of_intent from OATS. ALCS.notice_of_intent.decision_date and ALCS.notice_of_intent.proposal_end_date imported separately
     """
-
-    log_start(etl_name)
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -77,7 +79,7 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception(err)
+                    logger.exception()
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1

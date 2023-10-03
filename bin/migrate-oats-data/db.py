@@ -18,6 +18,7 @@ def inject_conn_pool(func):
         try:
             result = func(conn, *args, **kwargs)
         finally:
+            conn.close()
             connection_pool.putconn(conn)
         return result
 

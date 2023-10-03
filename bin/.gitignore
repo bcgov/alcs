@@ -1,6 +1,7 @@
 .env
 out
 tmp
+logs
 *.log.txt
 __pycache__
 *last_imported_application_file.txt
