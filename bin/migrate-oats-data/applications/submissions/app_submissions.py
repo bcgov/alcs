@@ -175,6 +175,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
     """
     nfu_data_list = []
     inc_exc_data_list = []
+    naru_data_list = []
     other_data_list = []
 
     for row in app_sub_raw_data_list:
