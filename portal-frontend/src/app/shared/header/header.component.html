@@ -25,6 +25,20 @@
     </div>
 
     <div *ngIf="isAuthenticated" class="controls">
+      <button
+        mat-button
+        color="primary"
+        [class.open]="menuTrigger.menuOpen"
+        #menuTrigger="matMenuTrigger"
+        [matMenuTriggerFor]="userMenu"
+      >
+        <div class="center">{{ user?.name }} <mat-icon> arrow_drop_down </mat-icon></div>
+      </button>
+      <mat-menu class="user-menu" #userMenu="matMenu">
+        <div class="item">User ID: {{ user?.bceidUserName }}</div>
+        <div class="item">Business: {{ user?.businessName }}</div>
+        <div class="item">Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
+      </mat-menu>
       <button class="inbox-btn" routerLink="/home" mat-flat-button color="primary">Portal Inbox</button>
       <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
     </div>

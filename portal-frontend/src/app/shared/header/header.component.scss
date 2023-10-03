@@ -1,6 +1,12 @@
 @use '../../../styles/functions' as *;
 @use '../../../styles/colors' as colors;
 
+::ng-deep {
+  .user-menu {
+    max-width: unset !important;
+  }
+}
+
 .top-nav {
   background-color: colors.$primary-color-dark;
   padding: rem(8) rem(24);
@@ -124,4 +130,9 @@ header {
       margin: rem(18) rem(80) !important;
     }
   }
+}
+
+.item {
+  padding: rem(12) rem(16);
+  min-width: rem(212);
 }
