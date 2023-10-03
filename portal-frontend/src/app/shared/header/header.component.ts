@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { UserDto } from '../../services/authentication/authentication.dto';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isOnSearch = false;
 
   title = 'Provincial Agricultural Land Commission Portal';
+  user: UserDto | undefined;
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -23,8 +25,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authenticationService.$currentTokenUser.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
       this.isAuthenticated = !!user;
+      this.user = user;
       this.changeDetectorRef.detectChanges();
     });
 
