@@ -667,7 +667,10 @@ export class ApplicationSubmissionValidatorService {
     const noticeOfWork = applicationDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
     );
-    if (applicationSubmission.soilIsFollowUp && noticeOfWork.length === 0) {
+    if (
+      applicationSubmission.soilHasSubmittedNotice &&
+      noticeOfWork.length === 0
+    ) {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,
