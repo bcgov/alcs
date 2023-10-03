@@ -15,7 +15,7 @@ from documents import (
 
 
 def clean_all(console, args):
-    with console.status("[bold green]Cleaning previous ETL...") as status:
+    with console.status("[bold green]Cleaning previous ETL...\n") as status:
         console.log("Cleaning data:")
         # this will be enabled once application import is ready
 

@@ -8,7 +8,7 @@ from applications import (
 def app_prep_import(console, args):
     console.log("Beginning OATS -> ALCS app-prep import process")
     with console.status(
-        "[bold green]App prep import (applications table update in ALCS)..."
+        "[bold green]App prep import (applications table update in ALCS)...\n"
     ) as status:
         if args.batch_size:
             import_batch_size = args.batch_size
@@ -21,7 +21,7 @@ def app_prep_import(console, args):
 def application_import(console, args):
     console.log("Beginning OATS -> ALCS application import process")
     with console.status(
-        "[bold green]application import (application table update in ALCS)..."
+        "[bold green]application import (application table update in ALCS)...\n"
     ) as status:
         if args.batch_size:
             import_batch_size = args.batch_size
@@ -36,7 +36,7 @@ def application_import(console, args):
 def application_submission_import(console, args):
     console.log("Beginning OATS -> ALCS app-sub import process")
     with console.status(
-        "[bold green]App submission import (application_submission table update in ALCS)..."
+        "[bold green]App submission import (application_submission table update in ALCS)...\n"
     ) as status:
         if args.batch_size:
             import_batch_size = args.batch_size

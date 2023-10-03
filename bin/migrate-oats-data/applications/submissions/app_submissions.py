@@ -1,25 +1,31 @@
-from common import ALRChangeCode, log, log_start, OATS_ETL_USER
-from .submap import (
-    add_direction_field,
-    map_direction_values,
-    create_direction_dict,
-    get_directions_rows,
-    get_subdiv_rows,
-    create_subdiv_dict,
-    add_subdiv,
-    map_subdiv_lots,
-    get_soil_rows,
-    create_soil_dict,
-    map_soil_data,
-    add_soil_field,
-)
-from db import inject_conn_pool
-from common import BATCH_UPLOAD_SIZE
-from psycopg2.extras import execute_batch, RealDictCursor
-import traceback
 import json
 
-etl_name = "alcs_app_sub"
+from common import (
+    BATCH_UPLOAD_SIZE,
+    OATS_ETL_USER,
+    ALRChangeCode,
+    setup_and_get_logger,
+)
+from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor, execute_batch
+
+from .submap import (
+    add_direction_field,
+    add_soil_field,
+    add_subdiv,
+    create_direction_dict,
+    create_soil_dict,
+    create_subdiv_dict,
+    get_directions_rows,
+    get_soil_rows,
+    get_subdiv_rows,
+    map_direction_values,
+    map_soil_data,
+    map_subdiv_lots,
+)
+
+etl_name = "process_alcs_app_submissions"
+logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
@@ -31,8 +37,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
-    etl_name = "process_alcs_app_submissions"
-    log_start(etl_name)
+    logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "applications/submissions/sql/app_submission_count.sql",
@@ -42,7 +47,7 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        print("- Total Application Submission data to insert: ", count_total)
+        logger.info(f"Total Application Submission data to insert: {count_total}")
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -85,22 +90,17 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     )
                     last_submission_id = dict(rows[-1])["alr_application_id"]
 
-                    print(
+                    logger.debug(
                         f"retrieved/inserted items count: {submissions_to_be_inserted_count}; total successfully inserted submissions so far {successful_inserts_count}; last inserted application_id: {last_submission_id}"
                     )
-                except Exception as e:
+                except Exception as err:
+                    logger.exception()
                     conn.rollback()
-                    str_err = str(e)
-                    trace_err = traceback.format_exc()
-                    print(str_err)
-                    print(trace_err)
-                    log(etl_name, str_err, trace_err)
                     failed_inserts = count_total - successful_inserts_count
                     last_submission_id = last_submission_id + 1
 
-    print("Total amount of successful inserts:", successful_inserts_count)
-    print("Total failed inserts:", failed_inserts)
-    log(etl_name)
+    logger.info(f"Total amount of successful inserts: {successful_inserts_count}")
+    logger.info(f"Total failed inserts: {failed_inserts}")
 
 
 def insert_app_sub_records(
@@ -296,11 +296,11 @@ def get_soil_data(rows, cursor):
 
 @inject_conn_pool
 def clean_application_submission(conn=None):
-    print("Start application_submission cleaning")
+    logger.info("Start application_submission cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             f"DELETE FROM alcs.application_submission a WHERE a.audit_created_by = '{OATS_ETL_USER}'"
         )
-        print(f"Deleted items count = {cursor.rowcount}")
+        logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()

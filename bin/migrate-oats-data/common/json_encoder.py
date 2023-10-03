@@ -12,3 +12,14 @@ class DateTimeEncoder(json.JSONEncoder):
             return super().default(obj)
         except TypeError:
             return str(obj)
+
+
+def to_json(obj):
+    try:
+        obj = json.dumps(obj)
+    except TypeError:
+        try:
+            obj = str(obj)
+        except Exception:
+            obj = repr(obj)
+    return obj

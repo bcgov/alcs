@@ -25,7 +25,7 @@ from documents import (
 def import_all(console, args):
     console.log("Beginning OATS -> ALCS import process")
 
-    with console.status("[bold green]Import OATS into ALCS...") as status:
+    with console.status("[bold green]Import OATS into ALCS...\n") as status:
         console.log("Init applications:")
         # this will be enabled once application import is ready
 

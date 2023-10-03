@@ -1,9 +1,14 @@
-import traceback
-from common import BATCH_UPLOAD_SIZE, NO_DATA_IN_OATS, SoilChangeCode, log, log_start
+from common import (
+    BATCH_UPLOAD_SIZE,
+    NO_DATA_IN_OATS,
+    SoilChangeCode,
+    setup_and_get_logger,
+)
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
 etl_name = "process_alcs_notice_of_intent_soil_fields"
+logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
@@ -16,7 +21,7 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
 
-    log_start(etl_name)
+    logger.info("Start process_alcs_notice_of_intent_soil_fields")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "noi/sql/notice_of_intent_submission/soil_fields/notice_of_intent_soil_fields_count.sql",
@@ -26,7 +31,7 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        print("- Total Notice of Intents data to update: ", count_total)
+        logger.info(f"Total Notice of Intents data to update: {count_total}")
 
         failed_inserts = 0
         successful_updates_count = 0
@@ -57,23 +62,19 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
                     )
                     last_application_id = dict(rows[-1])["alr_application_id"]
 
-                    print(
-                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
+                    logger.debug(
+                        f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
                     )
-                except Exception as error:
+                except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
+                    logger.exception()
                     conn.rollback()
-                    error_str = "".join(
-                        traceback.format_exception(None, error, error.__traceback__)
-                    )
-                    print(error_str)
-                    log(etl_name, str(error), error_str)
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
 
-    print("Total amount of successful updates:", successful_updates_count)
-    print("Total failed updates:", failed_inserts)
-    log(etl_name)
+    logger.info(
+        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
+    )
 
 
 def _update_fee_fields_records(conn, batch_size, cursor, rows):

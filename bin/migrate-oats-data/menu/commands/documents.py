@@ -8,7 +8,7 @@ from documents import (
 
 def document_import(console, args):
     console.log("Beginning OATS -> ALCS document-import process")
-    with console.status("[bold green]Import OATS into ALCS...") as status:
+    with console.status("[bold green]Import OATS into ALCS...\n") as status:
         if args.batch_size:
             import_batch_size = args.batch_size
 
@@ -20,7 +20,7 @@ def document_import(console, args):
 
 def app_document_import(console, args):
     console.log("Beginning OATS -> ALCS app-document-import process")
-    with console.status("[bold green]Link application documents in ALCS...") as status:
+    with console.status("[bold green]Link application documents in ALCS...\n") as status:
         if args.batch_size:
             import_batch_size = args.batch_size
 
@@ -33,7 +33,7 @@ def app_document_import(console, args):
 
 def noi_document_import(console, args):
     console.log("Beginning OATS -> ALCS noi-document-import process")
-    with console.status("[bold green]Link application documents in ALCS...") as status:
+    with console.status("[bold green]Link application documents in ALCS...\n") as status:
         if args.batch_size:
             import_batch_size = args.batch_size
 
