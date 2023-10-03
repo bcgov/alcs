@@ -1,5 +1,8 @@
 <div>
   <div class="header-row">
+    <div *ngIf="profile && (profile.government || profile.businessName)">
+      <h6>{{ profile.government || profile.businessName }}</h6>
+    </div>
     <diV class="title">
       <h3>Portal Inbox</h3>
       <div>
