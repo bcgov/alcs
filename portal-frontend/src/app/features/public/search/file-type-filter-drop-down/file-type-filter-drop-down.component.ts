@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { AfterViewInit, Component, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { Observable } from 'rxjs';
@@ -21,19 +21,25 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
 
   /** Map from nested node to flattened node. This helps us to keep the same object for selection */
   nestedNodeMap = new Map<TreeNode, FlatTreeNode>();
-
   treeControl: FlatTreeControl<FlatTreeNode>;
-
   treeFlattener: MatTreeFlattener<TreeNode, FlatTreeNode>;
-
   dataSource: MatTreeFlatDataSource<TreeNode, FlatTreeNode>;
 
   /** The selection for checklist */
   checklistSelection = new SelectionModel<FlatTreeNode>(true);
 
   filteredOptions = new Observable<string[]>();
-  componentTypeControl = new FormControl<string[] | undefined>(undefined);
+  componentTypeControl = new FormControl<string | undefined>(undefined);
   @Output() fileTypeChange = new EventEmitter<string[]>();
+
+  @Input() set setFileTypes(fileTypes: string[]) {
+    this.treeControl.dataNodes.forEach((node) => {
+      if (fileTypes.includes(node.item.value!)) {
+        this.itemSelectionToggle(node);
+      }
+    });
+    this.populateSelectedItems();
+  }
 
   constructor(private fileTypeData: FileTypeDataSourceService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -85,8 +91,8 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  todoItemSelectionToggle(node: FlatTreeNode): void {
+  /** Toggle the item selection. Select/deselect all the descendants node */
+  itemSelectionToggle(node: FlatTreeNode): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
     this.checklistSelection.isSelected(node)
@@ -98,8 +104,8 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     this.checkAllParentsSelection(node);
   }
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  todoLeafItemSelectionToggle(node: FlatTreeNode): void {
+  /** Toggle a leaf item selection. Check all the parents to see if they changed */
+  leafItemSelectionToggle(node: FlatTreeNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
   }
@@ -111,6 +117,7 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNodeAndChange(parent);
     }
+    this.populateSelectedItems();
   }
 
   /** Check root node checked state and change it accordingly */
@@ -147,15 +154,13 @@ export class FileTypeFilterDropDownComponent implements AfterViewInit {
     return null;
   }
 
-  getSelectedItems(): string {
-    if (!this.checklistSelection.selected.length) {
-      return '';
-    }
-
-    return this.checklistSelection.selected
+  populateSelectedItems() {
+    const selectedItems = this.checklistSelection.selected
       .filter((selectedItem) => selectedItem.item.value !== null)
       .map((selectedItem) => selectedItem.item?.label)
       .join(', ');
+
+    this.componentTypeControl.setValue(selectedItems);
   }
 
   filterChanged($event: any) {

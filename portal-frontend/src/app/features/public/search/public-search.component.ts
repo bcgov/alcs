@@ -30,6 +30,8 @@ const STATUS_MAP = {
   'ALC Response Sent (SRW only)': 'ALCR',
 };
 
+const SEARCH_SESSION_STORAGE_KEY = 'search';
+
 @Component({
   selector: 'app-public',
   templateUrl: './public-search.component.html',
@@ -73,13 +75,14 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     government: this.localGovernmentControl,
     decisionMaker: new FormControl<string | undefined>(undefined),
     region: new FormControl<string[]>([]),
-    dateDecidedFrom: new FormControl(undefined),
-    dateDecidedTo: new FormControl(undefined),
+    dateDecidedFrom: new FormControl(),
+    dateDecidedTo: new FormControl(),
   });
   localGovernments: LocalGovernmentDto[] = [];
   filteredLocalGovernments!: Observable<LocalGovernmentDto[]>;
   regions: ApplicationRegionDto[] = [];
   statuses: ApplicationStatusDto[] = [];
+  previousFileTypes: string[] = [];
 
   formEmpty = true;
   civicAddressInvalid = false;
@@ -159,6 +162,13 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       startWith(''),
       map((value) => this.filterLocalGovernment(value || ''))
     );
+
+    const storedSearch = sessionStorage.getItem(SEARCH_SESSION_STORAGE_KEY);
+    if (storedSearch) {
+      const searchRequest: SearchRequestDto = JSON.parse(storedSearch);
+      this.populateForm(searchRequest);
+      this.onSubmit();
+    }
   }
 
   ngOnDestroy(): void {
@@ -168,6 +178,10 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     const searchParams = this.getSearchParams();
+
+    const searchDto = JSON.stringify(searchParams);
+    sessionStorage.setItem(SEARCH_SESSION_STORAGE_KEY, searchDto);
+
     this.isLoading = true;
     const result = await this.searchService.search(searchParams);
     this.searchResultsHidden = false;
@@ -205,8 +219,9 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  onReset() {
+  onClear() {
     this.searchForm.reset();
+    sessionStorage.removeItem(SEARCH_SESSION_STORAGE_KEY);
     this.isLoading = false;
     this.searchResultsHidden = true;
 
@@ -394,5 +409,40 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   private populateAllStatuses(statuses: ApplicationStatusDto[]) {
     this.statuses = statuses;
     this.statuses.sort((a, b) => (a.label > b.label ? 1 : -1));
+  }
+
+  private populateForm(storedSearch: SearchRequestDto) {
+    const {
+      componentType,
+      decisionMaker,
+      dateDecidedFrom,
+      pid,
+      fileNumber,
+      name,
+      dateDecidedTo,
+      region,
+      civicAddress,
+      government,
+      portalStatus,
+    } = this.searchForm.controls;
+
+    decisionMaker.setValue(storedSearch.decisionMakerCode);
+    pid.setValue(storedSearch.pid);
+    fileNumber.setValue(storedSearch.fileNumber);
+    name.setValue(storedSearch.name);
+    region.setValue(storedSearch.regionCodes ?? null);
+    civicAddress.setValue(storedSearch.civicAddress);
+    government.setValue(storedSearch.governmentName);
+    portalStatus.setValue(storedSearch.portalStatusCodes ?? null);
+
+    if (storedSearch.dateDecidedTo) {
+      dateDecidedTo.setValue(new Date(storedSearch.dateDecidedTo));
+    }
+    if (storedSearch.dateDecidedFrom) {
+      dateDecidedFrom.setValue(new Date(storedSearch.dateDecidedFrom));
+    }
+    this.previousFileTypes = storedSearch.fileTypes;
+    this.componentTypeControl.setValue(storedSearch.fileTypes);
+    this.formEmpty = false;
   }
 }

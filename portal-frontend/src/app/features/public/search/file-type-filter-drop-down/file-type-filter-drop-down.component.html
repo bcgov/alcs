@@ -1,6 +1,5 @@
 <mat-form-field appearance="outline" class="file-type-input">
   <input
-    value="{{ getSelectedItems() }}"
     id="type"
     type="text"
     matInput
@@ -16,7 +15,7 @@
         <mat-checkbox
           class="checklist-leaf-node"
           [checked]="checklistSelection.isSelected(node)"
-          (change)="todoLeafItemSelectionToggle(node)"
+          (change)="leafItemSelectionToggle(node)"
           >{{ node.item?.label ?? node.item }}</mat-checkbox
         >
       </mat-tree-node>
@@ -30,7 +29,7 @@
         <mat-checkbox
           [checked]="descendantsAllSelected(node)"
           [indeterminate]="descendantsPartiallySelected(node)"
-          (change)="todoItemSelectionToggle(node)"
+          (change)="itemSelectionToggle(node)"
         >
           {{ node.item?.label ?? node.item }}</mat-checkbox
         >
