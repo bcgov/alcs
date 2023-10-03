@@ -24,8 +24,6 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() originalSubmissionUuid = '';
-  @Input() updatedFields: string[] = [];
 
   parcelType = PARCEL_TYPE;
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

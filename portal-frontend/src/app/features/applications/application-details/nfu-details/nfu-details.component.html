@@ -1,14 +1,12 @@
 <div *ngIf="applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     How many hectares are proposed for non-farm use? (hectares)
-    <app-updated-banner *ngIf="updatedFields.includes('nfuHectares')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ applicationSubmission.nfuHectares }}
   </div>
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ applicationSubmission.purpose }}
@@ -17,7 +15,6 @@
   </div>
   <div class="subheading2 grid-1">
     Could this proposal be accommodated on lands outside of the ALR?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuOutsideLands')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ applicationSubmission.nfuOutsideLands }}
@@ -25,7 +22,6 @@
   </div>
   <div class="subheading2 grid-1">
     Does the proposal support agriculture in the short or long term?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuAgricultureSupport')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ applicationSubmission.nfuAgricultureSupport }}
@@ -40,7 +36,6 @@
   </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-farm use?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuWillImportFill')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="applicationSubmission.nfuWillImportFill !== null">{{
@@ -57,7 +52,6 @@
     </div>
     <div class="subheading2 grid-1">
       Describe the type and amount of fill proposed to be placed.
-      <app-updated-banner *ngIf="updatedFields.includes('nfuFillTypeDescription')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ applicationSubmission.nfuFillTypeDescription }}
@@ -65,14 +59,13 @@
     </div>
     <div class="subheading2 grid-1">
       Briefly describe the origin and quality of fill.
-      <app-updated-banner *ngIf="updatedFields.includes('nfuFillOriginDescription')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ applicationSubmission.nfuFillOriginDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillOriginDescription"></app-no-data>
     </div>
     <div class="subheading1 full-width">
-      Fill to be Placed <app-updated-banner *ngIf="updatedFields.includes('nfuToPlaceVolume')"></app-updated-banner>
+      Fill to be Placed
     </div>
     <div class="full-width soil-table">
       <div class="grid-1"><strong>Volume</strong></div>
@@ -110,14 +103,14 @@
       <span class="subheading1">Project Duration</span>
     </div>
     <div class="subheading2 grid-1">
-      Duration <app-updated-banner *ngIf="updatedFields.includes('nfuProjectDurationUnit')"></app-updated-banner>
+      Duration
     </div>
     <div class="grid-double">
       {{ applicationSubmission.nfuProjectDurationUnit }}
       <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuProjectDurationUnit"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
-      Length <app-updated-banner *ngIf="updatedFields.includes('nfuProjectDurationAmount')"></app-updated-banner>
+      Length
     </div>
     <div class="grid-double">
       {{ applicationSubmission.nfuProjectDurationAmount }}

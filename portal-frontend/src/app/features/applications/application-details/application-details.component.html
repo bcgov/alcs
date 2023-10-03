@@ -4,7 +4,6 @@
     [$applicationSubmission]="$application"
     [showErrors]="showErrors"
     [showEdit]="showEdit"
-    [originalSubmissionUuid]="originalSubmissionUuid"
   ></app-parcel>
 </section>
 <section>
@@ -14,14 +13,12 @@
     [showEdit]="showEdit"
     [parcelType]="parcelType.OTHER"
     [draftMode]="draftMode"
-    [originalSubmissionUuid]="originalSubmissionUuid"
   ></app-parcel>
 </section>
 <section>
   <h3>3. Primary Contact</h3>
   <app-warning-banner *ngIf="draftMode" class="full-row">
     Changes made to this section will not be flagged as
-    <app-updated-banner></app-updated-banner> - ensure accuracy before saving.
   </app-warning-banner>
   <div *ngIf="applicationSubmission" class="review-table">
     <div class="subheading2 grid-1">Type</div>
@@ -91,10 +88,7 @@
 <section>
   <h3>4. Government</h3>
   <div *ngIf="applicationSubmission" class="review-table">
-    <div class="subheading2 grid-1">
-      Local or First Nation Government
-      <app-updated-banner *ngIf="updatedFields.includes('localGovernmentUuid')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Local or First Nation Government</div>
     <div class="grid-double">
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
@@ -126,10 +120,7 @@
     <div class="full-width">
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agriculture that currently takes place on the parcel(s).
-      <app-updated-banner *ngIf="updatedFields.includes('parcelsAgricultureDescription')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double">
       {{ applicationSubmission.parcelsAgricultureDescription }}
       <app-no-data
@@ -137,12 +128,7 @@
         *ngIf="!applicationSubmission.parcelsAgricultureDescription"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agricultural improvements made to the parcel(s).
-      <app-updated-banner
-        *ngIf="updatedFields.includes('parcelsAgricultureImprovementDescription')"
-      ></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
     <div class="grid-double">
       {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
@@ -150,10 +136,7 @@
         *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all other uses that currently take place on the parcel(s).
-      <app-updated-banner *ngIf="updatedFields.includes('parcelsNonAgricultureUseDescription')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
     <div class="grid-double">
       {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
       <app-no-data
@@ -162,21 +145,7 @@
       ></app-no-data>
     </div>
     <div class="full-width">
-      <h4>
-        Land Use of Adjacent Parcels
-        <app-updated-banner
-          *ngIf="
-            updatedFields.includes('northLandUseType') ||
-            updatedFields.includes('northLandUseTypeDescription') ||
-            updatedFields.includes('eastLandUseType') ||
-            updatedFields.includes('eastLandUseTypeDescription') ||
-            updatedFields.includes('southLandUseType') ||
-            updatedFields.includes('southLandUseTypeDescription') ||
-            updatedFields.includes('westLandUseType') ||
-            updatedFields.includes('westLandUseTypeDescription')
-          "
-        ></app-updated-banner>
-      </h4>
+      <h4>Land Use of Adjacent Parcels</h4>
     </div>
     <div class="adjacent-parcels full-width">
       <div class="grid-1 subheading2"></div>
@@ -245,7 +214,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-nfu-details>
   <app-tur-details
     *ngIf="applicationSubmission.typeCode === 'TURP'"
@@ -254,7 +222,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-tur-details>
   <app-subd-details
     *ngIf="applicationSubmission.typeCode === 'SUBD'"
@@ -263,7 +230,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-subd-details>
   <app-roso-details
     *ngIf="applicationSubmission.typeCode === 'ROSO'"
@@ -272,7 +238,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-roso-details>
   <app-pofo-details
     *ngIf="applicationSubmission.typeCode === 'POFO'"
@@ -281,7 +246,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-pofo-details>
   <app-pfrs-details
     *ngIf="applicationSubmission.typeCode === 'PFRS'"
@@ -290,7 +254,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-pfrs-details>
   <app-naru-details
     *ngIf="applicationSubmission.typeCode === 'NARU'"
@@ -299,7 +262,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-naru-details>
   <app-excl-details
     *ngIf="applicationSubmission.typeCode === 'EXCL'"
@@ -308,7 +270,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-excl-details>
   <app-incl-details
     *ngIf="applicationSubmission.typeCode === 'INCL'"
@@ -317,7 +278,6 @@
     [draftMode]="draftMode"
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
-    [updatedFields]="updatedFields"
   ></app-incl-details>
 </section>
 <section>

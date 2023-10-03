@@ -14,8 +14,6 @@ import { StepComponent } from '../step.partial';
 })
 export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $noiDocuments!: BehaviorSubject<NoticeOfIntentDocumentDto[]>;
-  @Input() updatedFields: string[] = [];
-  @Input() originalSubmissionUuid = '';
   @Output() submit = new EventEmitter<void>();
 
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;

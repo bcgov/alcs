@@ -1,7 +1,6 @@
 <div *ngIf="_noiSubmission" class="review-table">
   <div class="subheading2 grid-1">
     {{ firstQuestion }}
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsRemovingSoilForNewStructure')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure !== null">
@@ -16,7 +15,6 @@
   <ng-container *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure">
     <div class="full-width subheading2">
       The total floor area (m<sup>2</sup>) of the proposed structure(s)
-      <app-updated-banner *ngIf="updatedFields.includes('soilProposedStructures')"></app-updated-banner>
     </div>
     <div class="full-width soil-table">
       <div class="grid-1 subheading2">#</div>
@@ -43,7 +41,6 @@
     <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
       <div class="subheading2 grid-1">
         Describe how the structure is necessary for farm use
-        <app-updated-banner *ngIf="updatedFields.includes('soilStructureFarmUseReason')"></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureFarmUseReason }}
@@ -54,7 +51,6 @@
     <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
       <div class="subheading2 grid-1">
         Describe how the structure is necessary for residential use
-        <app-updated-banner *ngIf="updatedFields.includes('soilStructureResidentialUseReason')"></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialUseReason }}
@@ -68,7 +64,6 @@
     <ng-container *ngIf="isSoilAgriParcelActivityVisible">
       <div class="subheading2 grid-1">
         Describe the current agricultural activity on the parcel(s)
-        <app-updated-banner *ngIf="updatedFields.includes('soilAgriParcelActivity')"></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilAgriParcelActivity }}
@@ -79,9 +74,6 @@
     <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
       <div class="subheading2 grid-1">
         Describe the intended use of the residential accessory structure
-        <app-updated-banner
-          *ngIf="updatedFields.includes('soilStructureResidentialAccessoryUseReason')"
-        ></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialAccessoryUseReason }}
@@ -95,9 +87,6 @@
     <ng-container *ngIf="isSoilOtherStructureVisible">
       <div class="subheading2 grid-1">
         Describe the intended use of the 'Other' structure
-        <app-updated-banner
-          *ngIf="updatedFields.includes('soilStructureResidentialAccessoryUseReason')"
-        ></app-updated-banner>
       </div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureOtherUseReason }}

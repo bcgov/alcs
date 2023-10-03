@@ -18,7 +18,6 @@ import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/
 })
 export class ReviewAndSubmitComponent extends StepComponent implements OnInit, OnDestroy {
   @Input() $applicationDocuments!: BehaviorSubject<ApplicationDocumentDto[]>;
-  @Input() updatedFields: string[] = [];
   @Input() originalSubmissionUuid = '';
   @Output() submit = new EventEmitter<void>();
 

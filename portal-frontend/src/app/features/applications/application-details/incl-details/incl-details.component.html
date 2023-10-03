@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     How many hectares are you proposing to include? (hectares)
-    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.inclExclHectares }}
@@ -10,7 +9,6 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -19,7 +17,6 @@
 
   <div class="subheading2 grid-1">
     Does the proposal support agriculture in the short or long term?
-    <app-updated-banner *ngIf="updatedFields.includes('inclAgricultureSupport')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.inclAgricultureSupport }}
@@ -28,7 +25,6 @@
 
   <div class="subheading2 grid-1">
     Describe any improvements that have been made to, or are planned for the parcel proposed for inclusion.
-    <app-updated-banner *ngIf="updatedFields.includes('inclImprovements')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.inclImprovements }}
@@ -46,7 +42,6 @@
   <ng-container *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null || isGovernmentCreator">
     <div class="subheading2 grid-1">
       Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?
-      <app-updated-banner *ngIf="updatedFields.includes('inclGovernmentOwnsAllParcels')"></app-updated-banner>
     </div>
     <div class="grid-double">
       <span *ngIf="_applicationSubmission.inclGovernmentOwnsAllParcels !== null">

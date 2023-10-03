@@ -2,7 +2,6 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getDiff } from 'recursive-diff';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
@@ -39,13 +38,11 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
   $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
-  originalSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 
   steps = EditNoiSteps;
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
-  updatedFields: string[] = [];
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -76,7 +73,6 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     this.$noiSubmission.pipe(takeUntil(this.$destroy)).subscribe((submission) => {
       if (submission) {
         this.noiSubmission = submission;
-        this.calculateUpdatedFields();
       }
     });
   }
@@ -115,19 +111,10 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     this.$destroy.complete();
   }
 
-  private async loadOriginalSubmission(fileId: string) {
-    const originalSubmission = await this.noticeOfIntentSubmissionService.getByFileId(fileId);
-    if (originalSubmission) {
-      this.originalSubmission = originalSubmission;
-      this.calculateUpdatedFields();
-    }
-  }
-
   private async loadDraftSubmission(fileId: string) {
     if (!this.noiSubmission) {
       this.overlayService.showSpinner();
       this.noiSubmission = await this.noticeOfIntentSubmissionDraftService.getByFileId(fileId);
-      await this.loadOriginalSubmission(fileId);
       const documents = await this.noticeOfIntentDocumentService.getByFileId(fileId);
       if (documents) {
         this.$noiDocuments.next(documents);
@@ -223,18 +210,5 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
           window.location.href = `${environment.alcsUrl}/notice-of-intent/${this.fileId}/applicant-info`;
         }
       });
-  }
-
-  private calculateUpdatedFields() {
-    const diffResult = getDiff(this.originalSubmission, this.noiSubmission);
-    const changedFields = new Set<string>();
-    for (const diff of diffResult) {
-      const fullPath = diff.path.join('.');
-      if (!fullPath.toLowerCase().includes('uuid') || fullPath === 'localGovernmentUuid') {
-        changedFields.add(diff.path.join('.'));
-        changedFields.add(diff.path[0].toString());
-      }
-    }
-    this.updatedFields = [...changedFields.keys()];
   }
 }

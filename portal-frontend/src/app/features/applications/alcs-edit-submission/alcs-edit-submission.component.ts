@@ -2,7 +2,6 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getDiff } from 'recursive-diff';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, takeUntil } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
@@ -51,7 +50,6 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
-  updatedFields: string[] = [];
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -124,17 +122,6 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     const originalSubmission = await this.applicationSubmissionService.getByFileId(fileId);
     if (originalSubmission) {
       this.originalSubmissionUuid = originalSubmission?.uuid;
-
-      const diffResult = getDiff(originalSubmission, this.applicationSubmission);
-      const changedFields = new Set<string>();
-      for (const diff of diffResult) {
-        const fullPath = diff.path.join('.');
-        if (!fullPath.toLowerCase().includes('uuid') || fullPath === 'localGovernmentUuid') {
-          changedFields.add(diff.path.join('.'));
-          changedFields.add(diff.path[0].toString());
-        }
-      }
-      this.updatedFields = [...changedFields.keys()];
     }
   }
 
