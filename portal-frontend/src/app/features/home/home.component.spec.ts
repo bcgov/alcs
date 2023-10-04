@@ -27,10 +27,6 @@ describe('HomeComponent', () => {
           provide: AuthenticationService,
           useValue: mockAuthService,
         },
-        {
-          provide: ApplicationSubmissionService,
-          useValue: {},
-        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
