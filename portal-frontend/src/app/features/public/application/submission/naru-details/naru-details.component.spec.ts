@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
+import { PublicService } from '../../../../../services/public/public.service';
 
 import { NaruDetailsComponent } from './naru-details.component';
 
 describe('NaruDetailsComponent', () => {
   let component: NaruDetailsComponent;
   let fixture: ComponentFixture<NaruDetailsComponent>;
-  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockPublicService: DeepMocked<PublicService>;
 
   beforeEach(async () => {
-    mockAppDocumentService = createMock();
+    mockPublicService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [NaruDetailsComponent],
       providers: [
         {
-          provide: ApplicationDocumentService,
-          useValue: mockAppDocumentService,
+          provide: PublicService,
+          useValue: mockPublicService,
         },
       ],
     }).compileComponents();

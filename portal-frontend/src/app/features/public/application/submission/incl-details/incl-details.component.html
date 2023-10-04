@@ -1,0 +1,58 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">How many hectares are you proposing to include? (hectares)</div>
+  <div class="grid-double">
+    {{ applicationSubmission.inclExclHectares }}
+    <app-no-data *ngIf="!applicationSubmission.inclExclHectares"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.inclAgricultureSupport }}
+    <app-no-data *ngIf="!applicationSubmission.inclAgricultureSupport"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Describe any improvements that have been made to, or are planned for the parcel proposed for inclusion.
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.inclImprovements }}
+    <app-no-data *ngIf="!applicationSubmission.inclImprovements"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="applicationSubmission.inclGovernmentOwnsAllParcels !== null">
+    <div class="subheading2 grid-1">
+      Is the applying government the registered land owner of all parcels under this inclusion application?
+    </div>
+    <div class="grid-double">
+      <span>
+        {{ applicationSubmission.inclGovernmentOwnsAllParcels ? 'Yes' : 'No' }}
+      </span>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="applicationSubmission.inclGovernmentOwnsAllParcels === false">
+    <div class="subheading2 grid-1">Report of Public Hearing</div>
+    <div class="grid-double">
+      <div *ngFor="let file of reportOfPublicHearing">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+        <app-no-data *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+      </div>
+    </div>
+  </ng-container>
+</div>
