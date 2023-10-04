@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
+import { PublicService } from '../../../../../services/public/public.service';
 
 import { TurDetailsComponent } from './tur-details.component';
 
 describe('TurDetailsComponent', () => {
   let component: TurDetailsComponent;
   let fixture: ComponentFixture<TurDetailsComponent>;
-  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockPublicService: DeepMocked<PublicService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TurDetailsComponent],
       providers: [
         {
-          provide: ApplicationDocumentService,
-          useValue: mockAppDocumentService,
+          provide: PublicService,
+          useValue: mockPublicService,
         },
       ],
     }).compileComponents();

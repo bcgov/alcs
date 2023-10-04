@@ -1,0 +1,26 @@
+<div *ngFor="let decision of decisions; let index = index">
+  <h4>Decision #{{ decisions.length - index }}</h4>
+  <div class="decision-table">
+    <div>
+      <div class="subheading2">Decision Date</div>
+      {{ decision.date | momentFormat }}
+    </div>
+
+    <div>
+      <div class="subheading2">Resolution Number</div>
+      #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+    </div>
+
+    <div>
+      <div class="subheading2">Decision Outcome</div>
+      {{ decision.outcome.label }} {{ decision.isSubjectToConditions ? '- Subject to Conditions' : '' }}
+    </div>
+
+    <div>
+      <div class="subheading2">Decision Document</div>
+      <div *ngFor="let document of decision.documents">
+        <a (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+      </div>
+    </div>
+  </div>
+</div>

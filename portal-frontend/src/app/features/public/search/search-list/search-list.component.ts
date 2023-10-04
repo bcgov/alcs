@@ -40,7 +40,7 @@ export class SearchListComponent implements OnDestroy {
 
   async onSelectRecord(record: SearchResult) {
     const targetUrl = CLASS_TO_URL_MAP[record.class];
-    await this.router.navigateByUrl(`/${targetUrl}/${record.referenceId}`);
+    await this.router.navigateByUrl(`/public/${targetUrl}/${record.referenceId}`);
   }
 
   private mapResults(applications: ApplicationSearchResultDto[]): SearchResult[] {

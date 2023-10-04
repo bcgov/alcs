@@ -1,0 +1,160 @@
+<section>
+  <app-parcel [applicationSubmission]="applicationSubmission" [parcels]="applicationParcels"></app-parcel>
+</section>
+<section>
+  <h3>Primary Contact</h3>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">Type</div>
+    <div class="grid-double">
+      {{ primaryContact?.type?.label }}
+      <app-no-data *ngIf="!primaryContact?.type?.label"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.firstName }}
+      <app-no-data *ngIf="!primaryContact?.firstName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ primaryContact?.lastName }}
+      <app-no-data *ngIf="!primaryContact?.lastName"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">
+      <span
+        *ngIf="primaryContact?.type?.code !== OWNER_TYPE.CROWN && primaryContact?.type?.code !== OWNER_TYPE.GOVERNMENT"
+        >Organization (optional)</span
+      >
+      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.CROWN">Ministry/Department Responsible</span>
+      <span *ngIf="primaryContact?.type?.code === OWNER_TYPE.GOVERNMENT">Department</span>
+    </div>
+    <div class="grid-double">
+      {{ primaryContact?.organizationName }}
+      <app-no-data *ngIf="!primaryContact?.organizationName"></app-no-data>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Government</h3>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">Local or First Nation Government</div>
+    <div class="grid-double">
+      {{ localGovernment?.name }}
+      <app-no-data *ngIf="!localGovernment"></app-no-data>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Land Use</h3>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="full-width">
+      <h4>Land Use of Parcel(s) under Application</h4>
+    </div>
+    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
+    <div class="grid-double">
+      {{ applicationSubmission.parcelsAgricultureDescription }}
+      <app-no-data *ngIf="!applicationSubmission.parcelsAgricultureDescription"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
+    <div class="grid-double">
+      {{ applicationSubmission.parcelsAgricultureImprovementDescription }}
+      <app-no-data *ngIf="!applicationSubmission.parcelsAgricultureImprovementDescription"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
+    <div class="grid-double">
+      {{ applicationSubmission.parcelsNonAgricultureUseDescription }}
+      <app-no-data *ngIf="!applicationSubmission.parcelsNonAgricultureUseDescription"></app-no-data>
+    </div>
+    <div class="full-width">
+      <h4>Land Use of Adjacent Parcels</h4>
+    </div>
+    <div class="adjacent-parcels full-width">
+      <div class="grid-1 subheading2"></div>
+      <div class="grid-2 subheading2">Main Land Use Type</div>
+      <div class="grid-3 subheading2">Specific Activity</div>
+      <div class="grid-1 subheading2">North</div>
+      <div class="grid-2">
+        {{ applicationSubmission.northLandUseType }}
+        <app-no-data *ngIf="!applicationSubmission.northLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ applicationSubmission.northLandUseTypeDescription }}
+        <app-no-data *ngIf="!applicationSubmission.northLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">East</div>
+      <div class="grid-2">
+        {{ applicationSubmission.eastLandUseType }}
+        <app-no-data *ngIf="!applicationSubmission.eastLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ applicationSubmission.eastLandUseTypeDescription }}
+        <app-no-data *ngIf="!applicationSubmission.eastLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">South</div>
+      <div class="grid-2">
+        {{ applicationSubmission.southLandUseType }}
+        <app-no-data *ngIf="!applicationSubmission.southLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ applicationSubmission.southLandUseTypeDescription }}
+        <app-no-data *ngIf="!applicationSubmission.southLandUseTypeDescription"></app-no-data>
+      </div>
+      <div class="grid-1 subheading2">West</div>
+      <div class="grid-2">
+        {{ applicationSubmission.westLandUseType }}
+        <app-no-data *ngIf="!applicationSubmission.westLandUseType"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ applicationSubmission.westLandUseTypeDescription }}
+        <app-no-data *ngIf="!applicationSubmission.westLandUseTypeDescription"></app-no-data>
+      </div>
+    </div>
+  </div>
+</section>
+<section *ngIf="applicationSubmission">
+  <h3>Proposal</h3>
+  <app-nfu-details
+    *ngIf="applicationSubmission.typeCode === 'NFUP'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-nfu-details>
+  <app-tur-details
+    *ngIf="applicationSubmission.typeCode === 'TURP'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-tur-details>
+  <app-subd-details
+    *ngIf="applicationSubmission.typeCode === 'SUBD'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-subd-details>
+  <app-roso-details
+    *ngIf="applicationSubmission.typeCode === 'ROSO'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-roso-details>
+  <app-pofo-details
+    *ngIf="applicationSubmission.typeCode === 'POFO'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-pofo-details>
+  <app-pfrs-details
+    *ngIf="applicationSubmission.typeCode === 'PFRS'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-pfrs-details>
+  <app-naru-details
+    *ngIf="applicationSubmission.typeCode === 'NARU'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-naru-details>
+  <app-excl-details
+    *ngIf="applicationSubmission.typeCode === 'EXCL'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-excl-details>
+  <app-incl-details
+    *ngIf="applicationSubmission.typeCode === 'INCL'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+  ></app-incl-details>
+</section>

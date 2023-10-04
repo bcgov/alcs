@@ -190,6 +190,7 @@ export class ApplicationSubmission extends Base {
   })
   typeCode: string;
 
+  @AutoMap(() => [ApplicationOwner])
   @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
 

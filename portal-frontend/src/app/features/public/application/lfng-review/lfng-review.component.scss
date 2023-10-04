@@ -1,0 +1,74 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+.warning {
+  align-items: center;
+  background-color: rgba(colors.$accent-color-light, 0.5);
+  border-radius: rem(4);
+  display: flex;
+  padding: rem(16);
+  margin-bottom: rem(24);
+
+  mat-icon {
+    margin-right: 12px;
+  }
+}
+
+.comment-container {
+  align-items: flex-start;
+  background-color: rgba(colors.$accent-color-light, 0.5);
+  border-radius: rem(4);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: rem(24);
+  padding: rem(16);
+
+  div {
+    margin-bottom: rem(4);
+  }
+}
+
+.no-comment {
+  color: colors.$grey-dark;
+  font-style: italic;
+}
+
+.link {
+  color: colors.$link-color;
+  cursor: pointer;
+}
+
+.review-table {
+  padding: rem(8);
+  margin: rem(12) 0 rem(20) 0;
+  background-color: colors.$grey-light;
+  display: grid;
+  grid-row-gap: rem(24);
+  grid-column-gap: rem(16);
+  grid-template-columns: 1fr;
+  word-wrap: break-word;
+  hyphens: auto;
+
+  .edit-button {
+    display: flex;
+    justify-content: center;
+  }
+
+  .subheading2 {
+    margin-bottom: rem(4) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(16);
+    margin: rem(24) 0 rem(40) 0;
+    grid-template-columns: 1fr 1fr;
+
+    .full-width {
+      grid-column: 1/3;
+    }
+
+    .edit-button {
+      grid-column: 1/3;
+    }
+  }
+}

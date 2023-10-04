@@ -1,0 +1,52 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">The governmental or prescribed public body that is applying to exclude land</div>
+  <div class="grid-double">
+    {{ applicationSubmission.prescribedBody }}
+  </div>
+
+  <div class="subheading2 grid-1">How many hectares are you proposing to exclude? (hectares)</div>
+  <div class="grid-double">
+    {{ applicationSubmission.inclExclHectares }}
+    <app-no-data *ngIf="!applicationSubmission.inclExclHectares"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Does any land under application share a common property line with land in another Local or First Nation Government?
+  </div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.exclShareGovernmentBorders !== null">
+      {{ applicationSubmission.exclShareGovernmentBorders ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="applicationSubmission.exclShareGovernmentBorders === null"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Explain why you believe that the parcel(s) should be excluded from the ALR</div>
+  <div class="grid-double">
+    {{ applicationSubmission.exclWhyLand }}
+    <app-no-data *ngIf="!applicationSubmission.exclWhyLand"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Report of Public Hearing</div>
+  <div class="grid-double">
+    <div *ngFor="let file of reportOfPublicHearing">
+      <a (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+    </div>
+    <app-no-data *ngIf="reportOfPublicHearing.length === 0"></app-no-data>
+  </div>
+</div>
