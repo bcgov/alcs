@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 full-width">
     Proposed Lot Areas
-    <app-updated-banner *ngIf="updatedFields.includes('subdProposedLots')"></app-updated-banner>
   </div>
   <div class="full-width parcel-table">
     <div class="grid-1 subheading2">#</div>
@@ -30,7 +29,6 @@
   </div>
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -38,7 +36,6 @@
   </div>
   <div class="subheading2 grid-1">
     Why do you believe this parcel is suitable for subdivision?
-    <app-updated-banner *ngIf="updatedFields.includes('subdSuitability')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.subdSuitability }}
@@ -46,7 +43,6 @@
   </div>
   <div class="subheading2 grid-1">
     Does the proposal support agriculture in the short or long term?
-    <app-updated-banner *ngIf="updatedFields.includes('subdAgricultureSupport')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.subdAgricultureSupport }}
@@ -61,7 +57,6 @@
   </div>
   <div class="subheading2 grid-1">
     Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?
-    <app-updated-banner *ngIf="updatedFields.includes('subdIsHomeSiteSeverance')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.subdIsHomeSiteSeverance !== null">

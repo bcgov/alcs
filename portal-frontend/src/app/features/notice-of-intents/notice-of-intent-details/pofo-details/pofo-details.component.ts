@@ -14,7 +14,6 @@ export class PofoDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
 
   _noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
 

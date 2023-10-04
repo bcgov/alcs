@@ -16,7 +16,6 @@ export class SubdDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
 
   _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   totalTargetAcres: string | undefined;

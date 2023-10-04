@@ -1,7 +1,6 @@
 <div *ngIf="_noiSubmission" class="review-table">
   <div class="subheading2 grid-1">
     Has the ALC previously received an application or Notice of Intent for this proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsFollowUp')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsFollowUp !== null">
@@ -12,7 +11,6 @@
 
   <div *ngIf="_noiSubmission.soilIsFollowUp" class="subheading2 grid-1">
     Application or NOI ID
-    <app-updated-banner *ngIf="updatedFields.includes('soilFollowUpIDs')"></app-updated-banner>
   </div>
   <div *ngIf="_noiSubmission.soilIsFollowUp" class="grid-double">
     {{ _noiSubmission.soilFollowUpIDs }}
@@ -21,7 +19,6 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _noiSubmission.purpose }}
@@ -30,7 +27,6 @@
 
   <div class="subheading2 grid-1">
     Describe the type, origin and quality of fill proposed to be placed.
-    <app-updated-banner *ngIf="updatedFields.includes('soilFillTypeToPlace')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _noiSubmission.soilFillTypeToPlace }}
@@ -41,14 +37,6 @@
     <div class="grid-1"></div>
     <div class="grid-2">
       <strong> Fill to be Placed</strong>
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilToPlaceVolume') ||
-          updatedFields.includes('soilToPlaceArea') ||
-          updatedFields.includes('soilToPlaceMaximumDepth') ||
-          updatedFields.includes('soilToPlaceAverageDepth')
-        "
-      ></app-updated-banner>
     </div>
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
@@ -79,14 +67,6 @@
     <div class="grid-1"></div>
     <div class="grid-2">
       <strong> Fill already Placed</strong>
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilAlreadyPlacedVolume') ||
-          updatedFields.includes('soilAlreadyPlacedArea') ||
-          updatedFields.includes('soilAlreadyPlacedMaximumDepth') ||
-          updatedFields.includes('soilAlreadyPlacedAverageDepth')
-        "
-      ></app-updated-banner>
     </div>
     <div class="grid-1"><strong>Volume</strong></div>
     <div class="grid-2">
@@ -125,7 +105,6 @@
   </div>
   <div class="subheading2 grid-1">
     Duration
-    <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationUnit')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _noiSubmission.soilProjectDurationUnit }}
@@ -133,7 +112,6 @@
   </div>
   <div class="subheading2 grid-1">
     Length
-    <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationAmount')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _noiSubmission.soilProjectDurationAmount }}
@@ -150,7 +128,6 @@
 
   <div class="subheading2 grid-1">
     Is your proposal for area-wide filling?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsAreaWideFilling')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsAreaWideFilling !== null">

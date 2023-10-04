@@ -24,7 +24,6 @@ export class ParcelComponent {
   submissionUuid = '';
   parcels: NotificationParcelDto[] = [];
   noticeOfIntentSubmission!: NotificationSubmissionDetailedDto;
-  updatedFields: string[] = [];
 
   constructor(private noticeOfIntentParcelService: NotificationParcelService, private router: Router) {}
 
