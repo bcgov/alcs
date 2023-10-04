@@ -33,8 +33,6 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   }
 
   @Input() statuses: ApplicationStatusDto[] = [];
-  @Input() regions: ApplicationRegionDto[] = [];
-
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];

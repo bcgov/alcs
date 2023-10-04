@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationRegionDto } from '../../../../services/code/code.dto';
 import { ApplicationSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
 
@@ -34,8 +33,6 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   }
 
   @Input() statuses: ApplicationStatusDto[] = [];
-  @Input() regions: ApplicationRegionDto[] = [];
-
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];

@@ -1,0 +1,33 @@
+<div class="result-list" *ngIf="totalCount > 0">
+  <div
+    *ngFor="let result of _items"
+    [routerLink]="result.routerLink"
+    class="result"
+    [ngClass]="{
+      hoverable: result.routerLink
+    }"
+  >
+    <div class="subheading2">{{ result.fileNumber }} - {{ result.applicant ?? '(Unknown)' }}</div>
+    <div>Created: {{ result.createdAt | momentFormat }}</div>
+    <div [title]="result.type">{{ result.type }}</div>
+    <div
+      *ngIf="result.status"
+      class="label"
+      [style]="{ 'background-color': result.status.portalBackgroundColor, color: result.status.portalColor }"
+    >
+      {{ result.status.label }}
+    </div>
+    <div>Last Updated: {{ result.lastStatusUpdate | momentFormat }}</div>
+  </div>
+</div>
+<div *ngIf="totalCount !== 0">
+  <div class="center">Showing results 1-{{ visibleCount }} of {{ totalCount }}</div>
+  <div class="center">
+    <a *ngIf="visibleCount < totalCount" (click)="onLoadMore()"> View more results </a>
+  </div>
+</div>
+
+<div class="no-data" *ngIf="totalCount === 0">
+  <div><b>No applications found.</b></div>
+  <div>Please adjust search criteria and try again.</div>
+</div>

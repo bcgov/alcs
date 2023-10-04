@@ -1,8 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { NotificationSubmissionDto } from '../../../services/notification-submission/notification-submission.dto';
+import { NOI_SUBMISSION_STATUS } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import {
+  NOTIFICATION_STATUS,
+  NotificationSubmissionDto,
+} from '../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
+import { InboxListItem } from '../inbox-list/inbox-list.component';
 
 @Component({
   selector: 'app-notification-list',
@@ -21,7 +26,10 @@ export class NotificationListComponent implements OnInit {
     'actions',
   ];
 
+  listItems: InboxListItem[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @Input() isMobile = false;
 
   constructor(private notificationSubmissionService: NotificationSubmissionService) {}
 
@@ -33,5 +41,13 @@ export class NotificationListComponent implements OnInit {
     const notifications = await this.notificationSubmissionService.getNotifications();
     this.dataSource = new MatTableDataSource(notifications);
     this.dataSource.paginator = this.paginator;
+
+    this.listItems = notifications.map((notification) => ({
+      ...notification,
+      routerLink:
+        notification.status.code !== NOTIFICATION_STATUS.CANCELLED
+          ? `/notification/${notification.fileNumber}`
+          : undefined,
+    }));
   }
 }

@@ -32,8 +32,6 @@ export class NotificationSearchTableComponent implements OnDestroy {
     this._totalCount = count;
     this.initSorting();
   }
-
-  @Input() regions: string[] = [];
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
