@@ -10,4 +10,11 @@ from .notice_of_intent_adjacent_land_use.notice_of_intent_empty_adjacent_land_us
 )
 from .notice_of_intent_soil_fields import process_alcs_notice_of_intent_soil_fields
 
-from .notice_of_intent_proposal_fields import process_alcs_notice_of_intent_proposal_fields
+from .notice_of_intent_proposal_fields import (
+    process_alcs_notice_of_intent_proposal_fields,
+)
+
+from .statuses.notice_of_intent_statuses_base_insert import (
+    init_notice_of_intent_statuses,
+    clean_notice_of_intent_submission_statuses,
+)
