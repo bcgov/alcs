@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
+import { UserDto } from '../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
 import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
 
 @Component({
@@ -9,21 +10,22 @@ import { CreateSubmissionDialogComponent } from '../create-submission-dialog/cre
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  public name = '';
+export class HomeComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   public isLearnMoreOpen = false;
+  profile: UserDto | undefined;
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private dialog: MatDialog,
-    private spinnerService: OverlaySpinnerService
-  ) {}
+  constructor(private authenticationService: AuthenticationService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    const user = this.authenticationService.currentUser;
-    if (user) {
-      this.name = user.name;
-    }
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async onCreateApplication() {
