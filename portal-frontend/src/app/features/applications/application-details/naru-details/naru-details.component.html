@@ -204,25 +204,44 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFillOrigin"></app-no-data>
     </div>
 
-    <div class="grid-1"></div>
+    <div class="subheading2 grid-1">Fill Project Duration</div>
     <div class="grid-double">
-      <strong> Fill to be Placed </strong>
+      <div *ngIf="_applicationSubmission.naruProjectDurationAmount && _applicationSubmission.naruProjectDurationUnit">
+        {{ _applicationSubmission.naruProjectDurationAmount }}
+        <ng-container [ngPlural]="_applicationSubmission.naruProjectDurationAmount">
+          <ng-template ngPluralCase="=1">
+            {{ _applicationSubmission.naruProjectDurationUnit.slice(0, -1) | titlecase }}
+          </ng-template>
+          <ng-template ngPluralCase="other">
+            {{ _applicationSubmission.naruProjectDurationUnit | titlecase }}
+          </ng-template>
+        </ng-container>
+      </div>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!_applicationSubmission.naruProjectDurationAmount || !_applicationSubmission.naruProjectDurationUnit"
+      ></app-no-data>
+    </div>
+
+    <div class="grid-1"></div>
+    <div class="subheading2 grid-double">
+      Fill to be Placed
       <app-updated-banner *ngIf="updatedFields.includes('naruToPlaceVolume')"></app-updated-banner>
     </div>
 
-    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="subheading2 grid-1">Volume</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruToPlaceVolume }}
       <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceVolume === null"></app-no-data>
     </div>
-    <div class="grid-1"><strong>Area</strong></div>
+    <div class="subheading2 grid-1">Area</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruToPlaceArea }}
       <span *ngIf="_applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceArea === null"></app-no-data>
     </div>
-    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="subheading2 grid-1">Maximum Depth</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruToPlaceMaximumDepth }}
       <span *ngIf="_applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
@@ -231,7 +250,7 @@
         *ngIf="_applicationSubmission.naruToPlaceMaximumDepth === null"
       ></app-no-data>
     </div>
-    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="subheading2 grid-1">Average Depth</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruToPlaceAverageDepth }}
       <span *ngIf="_applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
@@ -239,24 +258,6 @@
         [showRequired]="showErrors"
         *ngIf="_applicationSubmission.naruToPlaceAverageDepth === null"
       ></app-no-data>
-    </div>
-
-    <div class="full-width">
-      <span class="subheading1">Project Duration</span>
-    </div>
-    <div class="subheading2 grid-1">
-      Duration <app-updated-banner *ngIf="updatedFields.includes('naruProjectDurationUnit')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationUnit }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDurationUnit"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      Length <app-updated-banner *ngIf="updatedFields.includes('naruProjectDurationAmount')"></app-updated-banner>
-    </div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationAmount }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDurationAmount"></app-no-data>
     </div>
   </ng-container>
 
