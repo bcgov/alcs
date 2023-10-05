@@ -37,6 +37,30 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">
+    Project Duration
+    <app-updated-banner
+      *ngIf="updatedFields.includes('soilProjectDurationAmount') || updatedFields.includes('soilProjectDurationUnit')"
+    ></app-updated-banner>
+  </div>
+  <div class="grid-double">
+    <div *ngIf="_noiSubmission.soilProjectDurationAmount && _noiSubmission.soilProjectDurationUnit">
+      {{ _noiSubmission.soilProjectDurationAmount }}
+      <ng-container [ngPlural]="_noiSubmission.soilProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ _noiSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ _noiSubmission.soilProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      [showRequired]="showErrors"
+      *ngIf="!_noiSubmission.soilProjectDurationAmount || !_noiSubmission.soilProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
   <div class="full-width soil-table">
     <div class="grid-1"></div>
     <div class="grid-2">
@@ -118,26 +142,6 @@
         *ngIf="_noiSubmission.soilAlreadyPlacedAverageDepth === null"
       ></app-no-data>
     </div>
-  </div>
-
-  <div class="full-width">
-    <h4>Project Duration</h4>
-  </div>
-  <div class="subheading2 grid-1">
-    Duration
-    <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationUnit')"></app-updated-banner>
-  </div>
-  <div class="grid-double">
-    {{ _noiSubmission.soilProjectDurationUnit }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilProjectDurationUnit"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">
-    Length
-    <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationAmount')"></app-updated-banner>
-  </div>
-  <div class="grid-double">
-    {{ _noiSubmission.soilProjectDurationAmount }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilProjectDurationAmount"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>

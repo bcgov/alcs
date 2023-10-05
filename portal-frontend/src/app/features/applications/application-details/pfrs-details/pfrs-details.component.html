@@ -28,7 +28,12 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="subheading2 grid-1">
+    Project Duration
+    <app-updated-banner
+      *ngIf="updatedFields.includes('soilProjectDurationAmount') || updatedFields.includes('soilProjectDurationUnit')"
+    ></app-updated-banner>
+  </div>
   <div class="grid-double">
     <div *ngIf="_applicationSubmission.soilProjectDurationAmount && _applicationSubmission.soilProjectDurationUnit">
       {{ _applicationSubmission.soilProjectDurationAmount }}
