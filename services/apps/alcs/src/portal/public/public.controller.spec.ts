@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -14,6 +15,8 @@ import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PublicAutomapperProfile } from '../../common/automapper/public.automapper.profile';
+import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
+import { ApplicationSubmissionReviewService } from '../application-submission-review/application-submission-review.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
@@ -25,12 +28,16 @@ describe('PublicSearchController', () => {
   let mockAppSubService: DeepMocked<ApplicationSubmissionService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
+  let mockAppDecService: DeepMocked<ApplicationDecisionV2Service>;
 
   beforeEach(async () => {
     mockAppService = createMock();
     mockAppSubService = createMock();
     mockAppParcelService = createMock();
     mockAppDocService = createMock();
+    mockAppReviewService = createMock();
+    mockAppDecService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -55,6 +62,14 @@ describe('PublicSearchController', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocService,
+        },
+        {
+          provide: ApplicationSubmissionReviewService,
+          useValue: mockAppReviewService,
+        },
+        {
+          provide: ApplicationDecisionV2Service,
+          useValue: mockAppDecService,
         },
         {
           provide: ClsService,
@@ -87,6 +102,10 @@ describe('PublicSearchController', () => {
     );
     mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockAppDocService.list.mockResolvedValue([]);
+    mockAppReviewService.getForPublicReview.mockResolvedValue(
+      new ApplicationSubmissionReview(),
+    );
+    mockAppDecService.getByAppFileNumber.mockResolvedValue([]);
 
     const fileId = 'file-id';
     await controller.getApplication(fileId);
@@ -100,6 +119,8 @@ describe('PublicSearchController', () => {
     expect(mockAppDocService.list).toHaveBeenCalledWith(fileId, [
       VISIBILITY_FLAG.PUBLIC,
     ]);
+    expect(mockAppReviewService.getForPublicReview).toHaveBeenCalledTimes(1);
+    expect(mockAppDecService.getByAppFileNumber).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to document service for getting files', async () => {

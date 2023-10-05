@@ -1,6 +1,7 @@
+import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { DocumentTypeDto } from '../../shared/dto/document.dto';
 import { OwnerTypeDto } from '../../shared/dto/owner.dto';
-import { ApplicationDocumentDto } from '../application-document/application-document.dto';
-import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
+import { ApplicationPortalDecisionDto } from '../application-decision/application-decision.dto';
 import {
   ApplicationStatusDto,
   NaruSubtypeDto,
@@ -9,8 +10,10 @@ import {
 
 export interface GetPublicApplicationResponseDto {
   submission: PublicApplicationSubmissionDto;
-  parcels: ApplicationParcelDto[];
-  documents: ApplicationDocumentDto[];
+  parcels: PublicApplicationParcelDto[];
+  documents: PublicDocumentDto[];
+  review?: PublicApplicationSubmissionReviewDto;
+  decisions: ApplicationPortalDecisionDto[];
 }
 
 export interface PublicOwnerDto {
@@ -130,4 +133,51 @@ export interface PublicApplicationSubmissionDto {
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
   inclGovernmentOwnsAllParcels?: boolean | null;
+}
+
+export interface PublicApplicationSubmissionReviewDto {
+  applicationFileNumber: string;
+  localGovernmentFileNumber: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  position: string | null;
+  department: string | null;
+  isOCPDesignation: boolean | null;
+  OCPBylawName: string | null;
+  OCPDesignation: string | null;
+  OCPConsistent: boolean | null;
+  isSubjectToZoning: boolean | null;
+  zoningBylawName: string | null;
+  zoningDesignation: string | null;
+  zoningMinimumLotSize: string | null;
+  isZoningConsistent: boolean | null;
+  isAuthorized: boolean | null;
+}
+
+export interface PublicApplicationParcelDto {
+  uuid: string;
+  pid?: string | null;
+  pin?: string | null;
+  legalDescription?: string | null;
+  civicAddress?: string | null;
+  mapAreaHectares?: number | null;
+  purchasedDate?: number | null;
+  isFarm?: boolean | null;
+  ownershipTypeCode?: string | null;
+  crownLandOwnerType?: string | null;
+  ownershipType?: BaseCodeDto;
+  parcelType: string;
+  alrArea: number | null;
+  owners: PublicOwnerDto[];
+}
+
+export interface PublicDocumentDto {
+  description?: string;
+  uuid: string;
+  type?: DocumentTypeDto;
+  documentUuid: string;
+  fileName: string;
+  fileSize?: number;
+  mimeType: string;
+  uploadedAt: number;
 }

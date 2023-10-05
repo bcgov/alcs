@@ -18,20 +18,6 @@
   .full-width {
     grid-column: 1/3;
   }
-
-  .edit-button {
-    grid-column: 1/3;
-  }
-
-  @media screen and (min-width: $tabletBreakpoint) {
-    .full-width {
-      grid-column: 1/5;
-    }
-
-    .edit-button {
-      grid-column: 1/5;
-    }
-  }
 }
 
 .crown-land {
