@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationRegionDto } from '../../../../services/code/code.dto';
 import { ApplicationSearchResultDto, BaseSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult } from '../search.interface';
 
@@ -22,7 +21,6 @@ export class SearchListComponent implements OnDestroy {
 
   @Input() totalCount = 0;
   @Input() statuses: ApplicationStatusDto[] = [];
-  @Input() regions: ApplicationRegionDto[] = [];
 
   _results: SearchResult[] = [];
   @Input() set results(results: BaseSearchResultDto[]) {
@@ -42,7 +40,7 @@ export class SearchListComponent implements OnDestroy {
 
   async onSelectRecord(record: SearchResult) {
     const targetUrl = CLASS_TO_URL_MAP[record.class];
-    await this.router.navigateByUrl(`/${targetUrl}/${record.referenceId}`);
+    await this.router.navigateByUrl(`/public/${targetUrl}/${record.referenceId}`);
   }
 
   private mapResults(applications: ApplicationSearchResultDto[]): SearchResult[] {

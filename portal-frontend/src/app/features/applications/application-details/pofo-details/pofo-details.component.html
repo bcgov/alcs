@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     Has the ALC previously received an application or Notice of Intent for this proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsFollowUp')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.soilIsFollowUp !== null">
@@ -12,7 +11,6 @@
 
   <div *ngIf="_applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">
     Application or NOI ID
-    <app-updated-banner *ngIf="updatedFields.includes('soilFollowUpIDs')"></app-updated-banner>
   </div>
   <div *ngIf="_applicationSubmission.soilIsFollowUp" class="grid-double">
     {{ _applicationSubmission.soilFollowUpIDs }}
@@ -21,7 +19,6 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -30,7 +27,6 @@
 
   <div class="subheading1 full-width">
     Fill to be Placed
-    <app-updated-banner *ngIf="updatedFields.includes('soilToPlaceVolume')"></app-updated-banner>
   </div>
   <div class="full-width soil-table">
     <div class="grid-1"><strong>Volume</strong></div>
@@ -60,7 +56,6 @@
 
   <div class="subheading1 full-width">
     Fill already Placed
-    <app-updated-banner *ngIf="updatedFields.includes('subdProposedLots')"></app-updated-banner>
   </div>
   <div class="full-width soil-table">
     <div class="grid-1"><strong>Volume</strong></div>
@@ -105,14 +100,14 @@
     <span class="subheading1">Project Duration</span>
   </div>
   <div class="subheading2 grid-1">
-    Duration <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationUnit')"></app-updated-banner>
+    Duration
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilProjectDurationUnit }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilProjectDurationUnit"></app-no-data>
   </div>
   <div class="subheading2 grid-1">
-    Length <app-updated-banner *ngIf="updatedFields.includes('soilProjectDurationAmount')"></app-updated-banner>
+    Length
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilProjectDurationAmount }}
@@ -121,7 +116,6 @@
 
   <div class="subheading2 grid-1">
     What alternative measures have you considered or attempted before proposing to place fill?
-    <app-updated-banner *ngIf="updatedFields.includes('soilAlternativeMeasures')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilAlternativeMeasures }}
@@ -130,7 +124,6 @@
 
   <div class="subheading2 grid-1">
     Describe the type, origin and quality of fill proposed to be placed.
-    <app-updated-banner *ngIf="updatedFields.includes('soilFillTypeToPlace')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilFillTypeToPlace }}
@@ -139,7 +132,6 @@
 
   <div class="subheading2 grid-1">
     What steps will be taken to reduce impacts to surrounding agricultural land?
-    <app-updated-banner *ngIf="updatedFields.includes('soilReduceNegativeImpacts')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.soilReduceNegativeImpacts }}

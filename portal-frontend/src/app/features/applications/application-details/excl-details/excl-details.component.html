@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     The governmental or prescribed public body that is applying to exclude land
-    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.prescribedBody }}
@@ -9,7 +8,6 @@
 
   <div class="subheading2 grid-1">
     How many hectares are you proposing to exclude? (hectares)
-    <app-updated-banner *ngIf="updatedFields.includes('inclExclHectares')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.inclExclHectares }}
@@ -18,7 +16,6 @@
 
   <div class="subheading2 grid-1">
     Does any land under application share a common property line with land in another Local or First Nation Government?
-    <app-updated-banner *ngIf="updatedFields.includes('exclShareGovernmentBorders')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.exclShareGovernmentBorders !== null">
@@ -32,7 +29,6 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -41,7 +37,6 @@
 
   <div class="subheading2 grid-1">
     Explain why you believe that the parcel(s) should be excluded from the ALR
-    <app-updated-banner *ngIf="updatedFields.includes('exclWhyLand')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.exclWhyLand }}

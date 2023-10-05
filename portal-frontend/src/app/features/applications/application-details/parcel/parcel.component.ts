@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { getDiff } from 'recursive-diff';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
@@ -53,7 +52,6 @@ export class ParcelComponent {
   $destroy = new Subject<void>();
 
   @Input() $applicationSubmission!: BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>;
-  @Input() originalSubmissionUuid: string | undefined;
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
@@ -70,7 +68,6 @@ export class ParcelComponent {
   submissionUuid = '';
   parcels: ApplicationParcelExtended[] = [];
   application!: ApplicationSubmissionDetailedDto;
-  updatedFields: string[] = [];
 
   constructor(
     private applicationParcelService: ApplicationParcelService,
@@ -106,37 +103,6 @@ export class ParcelComponent {
     this.parcels = parcels
       .filter((p) => p.parcelType === this.parcelType)
       .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
-
-    if (this.originalSubmissionUuid) {
-      await this.calculateParcelDiffs(this.originalSubmissionUuid);
-    }
-  }
-
-  private async calculateParcelDiffs(originalSubmissionUuid: string) {
-    const oldParcels = await this.applicationParcelService.fetchBySubmissionUuid(originalSubmissionUuid);
-    if (oldParcels) {
-      const oldTypedParcels = oldParcels.filter((p) => p.parcelType === this.parcelType);
-      const diffResult = getDiff(oldTypedParcels, this.parcels);
-      const changedFields = new Set<string>();
-      for (const diff of diffResult) {
-        const partialPath = [];
-        const fullPath = diff.path.join('.');
-        if (!fullPath.toLowerCase().includes('uuid')) {
-          for (const path of diff.path) {
-            if (typeof path !== 'string' || !path.includes('Uuid')) {
-              partialPath.push(path);
-              changedFields.add(partialPath.join('.'));
-            }
-          }
-          if ((diff.op = 'add') && typeof diff.val === 'object') {
-            for (const key of Object.keys(diff.val)) {
-              changedFields.add(`${diff.path.join('.')}.${key}`);
-            }
-          }
-        }
-      }
-      this.updatedFields = [...changedFields.keys()];
-    }
   }
 
   private async validateParcelDetails() {

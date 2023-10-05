@@ -15,7 +15,6 @@ export class NfuDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
 
   @Input() set applicationDocuments(documents: ApplicationDocumentDto[]) {

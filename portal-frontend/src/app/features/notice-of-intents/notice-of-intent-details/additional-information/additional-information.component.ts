@@ -18,7 +18,6 @@ export class AdditionalInformationComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
 
   firstQuestion = 'FIX THIS';
 

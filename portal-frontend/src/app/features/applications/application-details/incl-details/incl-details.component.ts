@@ -18,7 +18,6 @@ export class InclDetailsComponent implements OnInit, OnDestroy {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
 
   governmentName = 'applying government';
 

@@ -14,7 +14,6 @@ export class PfrsDetailsComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() updatedFields: string[] = [];
 
   _applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
 

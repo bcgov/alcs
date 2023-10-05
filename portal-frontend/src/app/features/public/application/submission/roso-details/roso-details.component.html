@@ -1,0 +1,120 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    Has the ALC previously received an application or Notice of Intent for this proposal?
+  </div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.soilIsFollowUp !== null">
+      {{ applicationSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="applicationSubmission.soilIsFollowUp === null"></app-no-data>
+  </div>
+
+  <div *ngIf="applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
+  <div *ngIf="applicationSubmission.soilIsFollowUp" class="grid-double">
+    {{ applicationSubmission.soilFollowUpIDs }}
+    <app-no-data *ngIf="!applicationSubmission.soilFollowUpIDs"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading1 full-width">Soil to be Removed</div>
+  <div class="full-width soil-table">
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilToRemoveVolume }}
+      <span *ngIf="applicationSubmission.soilToRemoveVolume">m<sup>3</sup></span>
+      <app-no-data *ngIf="!applicationSubmission.soilToRemoveVolume"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilToRemoveArea }} <span *ngIf="applicationSubmission.soilToRemoveArea">ha</span>
+      <app-no-data *ngIf="!applicationSubmission.soilToRemoveArea"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilToRemoveMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilToRemoveMaximumDepth">m</span>
+      <app-no-data *ngIf="!applicationSubmission.soilToRemoveMaximumDepth"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilToRemoveAverageDepth }}
+      <span *ngIf="applicationSubmission.soilToRemoveAverageDepth">m</span>
+      <app-no-data *ngIf="!applicationSubmission.soilToRemoveAverageDepth"></app-no-data>
+    </div>
+  </div>
+
+  <div class="subheading1 full-width">Soil already Removed</div>
+  <div class="full-width soil-table">
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilAlreadyRemovedVolume }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilAlreadyRemovedArea }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedArea !== null">ha</span>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
+      <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
+    </div>
+  </div>
+
+  <div class="full-width">
+    <span class="subheading1">Project Duration</span>
+  </div>
+  <div class="subheading2 grid-1">Duration</div>
+  <div class="grid-double">
+    {{ applicationSubmission.soilProjectDurationUnit }}
+    <app-no-data *ngIf="!applicationSubmission.soilProjectDurationUnit"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Length</div>
+  <div class="grid-double">
+    {{ applicationSubmission.soilProjectDurationAmount }}
+    <app-no-data *ngIf="!applicationSubmission.soilProjectDurationAmount"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
+  <div class="grid-double">
+    {{ applicationSubmission.soilTypeRemoved }}
+    <app-no-data *ngIf="!applicationSubmission.soilTypeRemoved"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.soilReduceNegativeImpacts }}
+    <app-no-data *ngIf="!applicationSubmission.soilReduceNegativeImpacts"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Cross Sections</div>
+  <div class="grid-double">
+    <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+      {{ file.fileName }}
+    </a>
+    <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
+  </div>
+</div>

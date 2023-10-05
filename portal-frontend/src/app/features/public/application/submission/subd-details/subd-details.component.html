@@ -1,0 +1,53 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 full-width">Proposed Lot Areas</div>
+  <div class="full-width parcel-table">
+    <div class="grid-1 subheading2">#</div>
+    <div class="grid-2 subheading2">Type</div>
+    <div class="grid-3 subheading2">Size</div>
+    <ng-container *ngFor="let lot of applicationSubmission.subdProposedLots; let i = index">
+      <div class="grid-1">
+        {{ i + 1 }}
+      </div>
+      <div class="grid-2">
+        {{ lot.type }}
+        <app-no-data *ngIf="!lot.type"></app-no-data>
+      </div>
+      <div class="grid-3">
+        {{ lot.size }}
+        <app-no-data *ngIf="!lot.size"></app-no-data>
+      </div>
+    </ng-container>
+    <div *ngIf="applicationSubmission.subdProposedLots.length === 0" class="full-width">
+      <app-no-data></app-no-data>
+    </div>
+  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Why do you believe this parcel is suitable for subdivision?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.subdSuitability }}
+    <app-no-data *ngIf="!applicationSubmission.subdSuitability"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.subdAgricultureSupport }}
+    <app-no-data *ngIf="!applicationSubmission.subdAgricultureSupport"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?</div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.subdIsHomeSiteSeverance !== null">
+      {{ applicationSubmission.subdIsHomeSiteSeverance ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="applicationSubmission.subdIsHomeSiteSeverance === null"></app-no-data>
+  </div>
+</div>

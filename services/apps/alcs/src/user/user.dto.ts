@@ -39,6 +39,9 @@ export class UserDto extends UpdateUserDto {
   @AutoMap()
   prettyName?: string | null;
 
+  @AutoMap(() => String)
+  businessName?: string | null;
+
   government?: string;
   isLocalGovernment: boolean;
   isFirstNationGovernment: boolean;
@@ -58,6 +61,7 @@ export class CreateUserDto {
   idirUserGuid?: string;
   bceidGuid?: string;
   bceidBusinessGuid?: string | null;
+  businessName?: string | null;
 }
 
 export class AssigneeDto {
