@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -10,7 +9,6 @@
   <div class="subheading2 grid-1">
     Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in
     proximity to the proposal.
-    <app-updated-banner *ngIf="updatedFields.includes('turAgriculturalActivities')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.turAgriculturalActivities }}
@@ -18,7 +16,6 @@
   </div>
   <div class="subheading2 grid-1">
     What steps will you take to reduce potential negative impacts on surrounding agricultural lands?
-    <app-updated-banner *ngIf="updatedFields.includes('turReduceNegativeImpacts')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.turReduceNegativeImpacts }}
@@ -26,7 +23,6 @@
   </div>
   <div class="subheading2 grid-1">
     Could this proposal be accommodated on lands outside of the ALR?
-    <app-updated-banner *ngIf="updatedFields.includes('turOutsideLands')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.turOutsideLands }}

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
+import { UserDto } from '../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
+import { MOBILE_BREAKPOINT } from '../../shared/utils/breakpoints';
 import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
 
 @Component({
@@ -9,21 +11,29 @@ import { CreateSubmissionDialogComponent } from '../create-submission-dialog/cre
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  public name = '';
-  public isLearnMoreOpen = false;
+export class HomeComponent implements OnInit, OnDestroy {
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private dialog: MatDialog,
-    private spinnerService: OverlaySpinnerService
-  ) {}
+  $destroy = new Subject<void>();
+  isLearnMoreOpen = false;
+  isMobile = false;
+  profile: UserDto | undefined;
+
+  constructor(private authenticationService: AuthenticationService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    const user = this.authenticationService.currentUser;
-    if (user) {
-      this.name = user.name;
-    }
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
+    });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 
   async onCreateApplication() {

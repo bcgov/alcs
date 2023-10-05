@@ -84,7 +84,11 @@
       </div>
       <div>
         <label for="type">Type</label>
-        <app-file-type-filter-drop-down #fileTypeDropDown [setFileTypes]='previousFileTypes' (fileTypeChange)="onFileTypeChange($event)" />
+        <app-file-type-filter-drop-down
+          #fileTypeDropDown
+          [setFileTypes]="previousFileTypes"
+          (fileTypeChange)="onFileTypeChange($event)"
+        />
       </div>
       <div>
         <label for="status">Status</label>
@@ -131,7 +135,6 @@
           [results]="applications"
           [totalCount]="applicationTotal"
           [statuses]="statuses"
-          [regions]="regions"
           (loadMore)="onLoadMore('APP')"
         >
         </app-search-list>
@@ -140,7 +143,6 @@
           [applications]="applications"
           [totalCount]="applicationTotal"
           [statuses]="statuses"
-          [regions]="regions"
           (tableChange)="onTableChange($event)"
         ></app-application-search-table>
       </mat-tab>
@@ -152,7 +154,6 @@
           [results]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           [statuses]="statuses"
-          [regions]="regions"
           (loadMore)="onLoadMore('NOI')"
         >
         </app-search-list>
@@ -161,7 +162,6 @@
           [noticeOfIntents]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           [statuses]="statuses"
-          [regions]="regions"
           (tableChange)="onTableChange($event)"
         ></app-notice-of-intent-search-table>
       </mat-tab>
@@ -173,7 +173,6 @@
           [results]="notifications"
           [totalCount]="notificationTotal"
           [statuses]="statuses"
-          [regions]="regions"
           (loadMore)="onLoadMore('NOTI')"
         >
         </app-search-list>

@@ -1,7 +1,6 @@
 <div *ngIf="_applicationSubmission" class="review-table">
   <div class="subheading2 grid-1">
     Selected Subtype:
-    <app-updated-banner *ngIf="updatedFields.includes('naruSubtype')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.naruSubtype !== null">
@@ -12,7 +11,6 @@
 
   <div class="subheading2 grid-1">
     What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
@@ -22,7 +20,6 @@
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'ARFU'">
     <div class="subheading2 grid-1">
       What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
-      <app-updated-banner *ngIf="updatedFields.includes('naruFloorArea')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFloorArea }}
@@ -32,7 +29,6 @@
     <div class="subheading2 grid-1">
       Describe the necessity for an additional residence for farm use and how it will support agriculture in the short
       or long term.
-      <app-updated-banner *ngIf="updatedFields.includes('naruResidenceNecessity')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruResidenceNecessity }}
@@ -41,7 +37,6 @@
 
     <div class="subheading2 grid-1">
       Describe the rationale for the proposed location of the additional residence.
-      <app-updated-banner *ngIf="updatedFields.includes('naruLocationRationale')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
@@ -51,7 +46,6 @@
     <div class="subheading2 grid-1">
       Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
       residence.
-      <app-updated-banner *ngIf="updatedFields.includes('naruInfrastructure')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruInfrastructure }}
@@ -62,7 +56,6 @@
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'PRIN'">
     <div class="subheading2 grid-1">
       What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
-      <app-updated-banner *ngIf="updatedFields.includes('naruFloorArea')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFloorArea }}
@@ -72,7 +65,6 @@
     <div class="subheading2 grid-1">
       Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
       short or long term.
-      <app-updated-banner *ngIf="updatedFields.includes('naruResidenceNecessity')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruResidenceNecessity }}
@@ -81,7 +73,6 @@
 
     <div class="subheading2 grid-1">
       Describe the rationale for the proposed location of the principal residence.
-      <app-updated-banner *ngIf="updatedFields.includes('naruLocationRationale')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
@@ -91,7 +82,6 @@
     <div class="subheading2 grid-1">
       Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
       residence.
-      <app-updated-banner *ngIf="updatedFields.includes('naruInfrastructure')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruInfrastructure }}
@@ -102,7 +92,6 @@
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
     <div class="subheading2 grid-1">
       What is the total floor area (m<sup>2</sup>) of the proposed accommodation?
-      <app-updated-banner *ngIf="updatedFields.includes('naruFloorArea')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFloorArea }}
@@ -111,7 +100,6 @@
 
     <div class="subheading2 grid-1">
       How many "sleeping units" in total are proposed?
-      <app-updated-banner *ngIf="updatedFields.includes('naruSleepingUnits')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruSleepingUnits }}
@@ -120,7 +108,6 @@
 
     <div class="subheading2 grid-1">
       Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
-      <app-updated-banner *ngIf="updatedFields.includes('naruResidenceNecessity')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruResidenceNecessity }}
@@ -129,7 +116,6 @@
 
     <div class="subheading2 grid-1">
       Describe the rationale for the proposed location of the tourism accommodation.
-      <app-updated-banner *ngIf="updatedFields.includes('naruLocationRationale')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
@@ -139,7 +125,6 @@
     <div class="subheading2 grid-1">
       Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
       accommodation.
-      <app-updated-banner *ngIf="updatedFields.includes('naruInfrastructure')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruInfrastructure }}
@@ -148,7 +133,6 @@
 
     <div class="subheading2 grid-1">
       Describe any agri-tourism that is currently taking place on the property.
-      <app-updated-banner *ngIf="updatedFields.includes('naruAgriTourism')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruAgriTourism }}
@@ -159,7 +143,6 @@
   <div class="subheading2 grid-1">
     Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
     located on the property.
-    <app-updated-banner *ngIf="updatedFields.includes('naruExistingStructures')"></app-updated-banner>
   </div>
   <div class="grid-double">
     {{ _applicationSubmission.naruExistingStructures }}
@@ -176,7 +159,6 @@
 
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
-    <app-updated-banner *ngIf="updatedFields.includes('naruWillImportFill')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.naruWillImportFill !== null">{{
@@ -188,7 +170,6 @@
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
     <div class="subheading2 grid-1">
       Describe the type and amount of fill proposed to be placed.
-      <app-updated-banner *ngIf="updatedFields.includes('naruFillType')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFillType }}
@@ -197,7 +178,6 @@
 
     <div class="subheading2 grid-1">
       Briefly describe the origin and quality of fill.
-      <app-updated-banner *ngIf="updatedFields.includes('naruFillOrigin')"></app-updated-banner>
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFillOrigin }}
@@ -205,7 +185,7 @@
     </div>
 
     <div class="subheading1 full-width">
-      Fill to be Placed <app-updated-banner *ngIf="updatedFields.includes('naruToPlaceVolume')"></app-updated-banner>
+      Fill to be Placed
     </div>
     <div class="full-width soil-table">
       <div class="grid-1"><strong>Volume</strong></div>
@@ -247,14 +227,14 @@
       <span class="subheading1">Project Duration</span>
     </div>
     <div class="subheading2 grid-1">
-      Duration <app-updated-banner *ngIf="updatedFields.includes('naruProjectDurationUnit')"></app-updated-banner>
+      Duration
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruProjectDurationUnit }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDurationUnit"></app-no-data>
     </div>
     <div class="subheading2 grid-1">
-      Length <app-updated-banner *ngIf="updatedFields.includes('naruProjectDurationAmount')"></app-updated-banner>
+      Length
     </div>
     <div class="grid-double">
       {{ _applicationSubmission.naruProjectDurationAmount }}

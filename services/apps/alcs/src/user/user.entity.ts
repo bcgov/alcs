@@ -46,6 +46,10 @@ export class User extends Base {
   @Column({ nullable: true })
   familyName: string;
 
+  @AutoMap(() => String)
+  @Column({ type: 'varchar', nullable: true })
+  businessName: string | null;
+
   @AutoMap()
   @Index({ unique: true })
   @Column({ nullable: true })

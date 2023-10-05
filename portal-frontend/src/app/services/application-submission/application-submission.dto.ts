@@ -39,8 +39,8 @@ export interface ProposedLot {
 export interface ApplicationSubmissionDto {
   uuid: string;
   fileNumber: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   lastStatusUpdate: number;
   applicant: string;
   purpose: string | null;

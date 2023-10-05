@@ -1,5 +1,8 @@
 <div>
   <div class="header-row">
+    <div *ngIf="profile && (profile.government || profile.businessName)">
+      <h6>{{ profile.government || profile.businessName }}</h6>
+    </div>
     <diV class="title">
       <h3>Portal Inbox</h3>
       <div>
@@ -29,7 +32,7 @@
           fee of $1,500 fee, except for inclusion of land (no fee). Application fees are split equally between the local
           government and the ALC.
         </app-warning-banner>
-        <app-application-list></app-application-list>
+        <app-application-list [isMobile]="isMobile"></app-application-list>
       </mat-tab>
       <mat-tab label="Notice of Intent">
         <app-warning-banner>
@@ -37,7 +40,7 @@
           exemption under Section 35 of the Agricultural Land Reserve Use Regulation. All notices are subject to a $150
           fee.
         </app-warning-banner>
-        <app-noi-list></app-noi-list>
+        <app-noi-list [isMobile]="isMobile"></app-noi-list>
       </mat-tab>
       <mat-tab label="Notification of SRW">
         <app-warning-banner>
@@ -47,7 +50,7 @@
           >
           in the ALR.
         </app-warning-banner>
-        <app-notification-list></app-notification-list>
+        <app-notification-list [isMobile]="isMobile"></app-notification-list>
       </mat-tab>
     </mat-tab-group>
   </div>

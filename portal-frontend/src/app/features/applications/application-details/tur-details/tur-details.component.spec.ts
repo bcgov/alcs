@@ -4,7 +4,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 
 import { TurDetailsComponent } from './tur-details.component';
 
-describe('NfuDetailsComponent', () => {
+describe('TurDetailsComponent', () => {
   let component: TurDetailsComponent;
   let fixture: ComponentFixture<TurDetailsComponent>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
