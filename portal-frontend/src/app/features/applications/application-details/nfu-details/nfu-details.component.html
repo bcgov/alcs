@@ -1,32 +1,20 @@
 <div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    How many hectares are proposed for non-farm use? (hectares)
-    <app-updated-banner *ngIf="updatedFields.includes('nfuHectares')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use? (hectares)</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuHectares }}
   </div>
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ applicationSubmission.purpose }}
 
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.purpose"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Could this proposal be accommodated on lands outside of the ALR?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuOutsideLands')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuOutsideLands }}
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuOutsideLands"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Does the proposal support agriculture in the short or long term?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuAgricultureSupport')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ applicationSubmission.nfuAgricultureSupport }}
     <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuAgricultureSupport"></app-no-data>
@@ -40,7 +28,6 @@
   </div>
   <div class="subheading2 grid-1">
     Do you need to import any fill to construct or conduct the proposed non-farm use?
-    <app-updated-banner *ngIf="updatedFields.includes('nfuWillImportFill')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="applicationSubmission.nfuWillImportFill !== null">{{
@@ -55,18 +42,12 @@
     <div class="full-width">
       <h4>Soil and Fill Components</h4>
     </div>
-    <div class="subheading2 grid-1">
-      Describe the type and amount of fill proposed to be placed.
-      <app-updated-banner *ngIf="updatedFields.includes('nfuFillTypeDescription')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
       {{ applicationSubmission.nfuFillTypeDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillTypeDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Briefly describe the origin and quality of fill.
-      <app-updated-banner *ngIf="updatedFields.includes('nfuFillOriginDescription')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
     <div class="grid-double">
       {{ applicationSubmission.nfuFillOriginDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuFillOriginDescription"></app-no-data>
@@ -92,10 +73,7 @@
     </div>
 
     <div class="grid-1"></div>
-    <div class="subheading2 grid-double">
-      Fill to be Placed
-      <app-updated-banner *ngIf="updatedFields.includes('nfuToPlaceVolume')"></app-updated-banner>
-    </div>
+    <div class="subheading2 grid-double">Fill to be Placed</div>
 
     <div class="subheading2 grid-1">Volume</div>
     <div class="grid-double">

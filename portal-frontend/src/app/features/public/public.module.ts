@@ -6,6 +6,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { PublicApplicationComponent } from './application/public-application.component';
+import { SubmissionDetailsModule } from './application/submission/submission-details.module';
 import { ApplicationSearchTableComponent } from './search/application-search-table/application-search-table.component';
 import { FileTypeFilterDropDownComponent } from './search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { NoticeOfIntentSearchTableComponent } from './search/notice-of-intent-search-table/notice-of-intent-search-table.component';
@@ -18,6 +20,10 @@ const routes: Routes = [
     path: '',
     component: PublicSearchComponent,
   },
+  {
+    path: 'application/:fileId',
+    component: PublicApplicationComponent,
+  },
 ];
 
 @NgModule({
@@ -28,6 +34,7 @@ const routes: Routes = [
     ApplicationSearchTableComponent,
     FileTypeFilterDropDownComponent,
     SearchListComponent,
+    PublicApplicationComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +44,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatAutocompleteModule,
     MatTreeModule,
+    SubmissionDetailsModule,
   ],
 })
 export class PublicModule {}

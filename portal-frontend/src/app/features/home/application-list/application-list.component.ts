@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { ApplicationSubmissionDto } from '../../../services/application-submission/application-submission.dto';
+import {
+  ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
+} from '../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
+import { InboxListItem } from '../inbox-list/inbox-list.component';
 
 @Component({
   selector: 'app-application-list',
@@ -21,7 +25,10 @@ export class ApplicationListComponent implements OnInit {
     'actions',
   ];
 
+  listItems: InboxListItem[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @Input() isMobile = false;
 
   constructor(private applicationService: ApplicationSubmissionService) {}
 
@@ -33,5 +40,10 @@ export class ApplicationListComponent implements OnInit {
     const applications = await this.applicationService.getApplications();
     this.dataSource = new MatTableDataSource(applications);
     this.dataSource.paginator = this.paginator;
+
+    this.listItems = applications.map((app) => ({
+      ...app,
+      routerLink: app.status.code !== SUBMISSION_STATUS.CANCELLED ? `/application/${app.fileNumber}` : undefined,
+    }));
   }
 }

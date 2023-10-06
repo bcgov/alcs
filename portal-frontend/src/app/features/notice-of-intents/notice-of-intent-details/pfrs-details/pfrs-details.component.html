@@ -1,7 +1,6 @@
 <div *ngIf="_noiSubmission" class="review-table">
   <div class="subheading2 grid-1">
     Has the ALC previously received an application or Notice of Intent for this proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsFollowUp')"></app-updated-banner>
   </div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsFollowUp !== null">
@@ -10,48 +9,31 @@
     <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilIsFollowUp === null"></app-no-data>
   </div>
 
-  <div *ngIf="_noiSubmission.soilIsFollowUp" class="subheading2 grid-1">
-    Application or NOI ID
-    <app-updated-banner *ngIf="updatedFields.includes('soilFollowUpIDs')"></app-updated-banner>
-  </div>
+  <div *ngIf="_noiSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
   <div *ngIf="_noiSubmission.soilIsFollowUp" class="grid-double">
     {{ _noiSubmission.soilFollowUpIDs }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilFollowUpIDs"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-    <app-updated-banner *ngIf="updatedFields.includes('purpose')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _noiSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Describe the type of soil proposed to be removed.
-    <app-updated-banner *ngIf="updatedFields.includes('soilTypeRemoved')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
   <div class="grid-double">
     {{ _noiSubmission.soilTypeRemoved }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilTypeRemoved"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Describe the type, origin and quality of fill proposed to be placed.
-    <app-updated-banner *ngIf="updatedFields.includes('soilFillTypeToPlace')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
   <div class="grid-double">
     {{ _noiSubmission.soilFillTypeToPlace }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Project Duration
-    <app-updated-banner
-      *ngIf="updatedFields.includes('soilProjectDurationAmount') || updatedFields.includes('soilProjectDurationUnit')"
-    ></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Project Duration</div>
   <div class="grid-double">
     <div *ngIf="_noiSubmission.soilProjectDurationAmount && _noiSubmission.soilProjectDurationUnit">
       {{ _noiSubmission.soilProjectDurationAmount }}
@@ -72,28 +54,8 @@
 
   <div *ngIf="_noiSubmission" class="full-width soil-table">
     <div></div>
-    <div class="subheading2">
-      Soil to be Removed
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilToRemoveVolume') ||
-          updatedFields.includes('soilToRemoveArea') ||
-          updatedFields.includes('soilToRemoveMaximumDepth') ||
-          updatedFields.includes('soilToRemoveAverageDepth')
-        "
-      ></app-updated-banner>
-    </div>
-    <div class="subheading2">
-      Fill to be Placed
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilToPlaceVolume') ||
-          updatedFields.includes('soilToPlaceArea') ||
-          updatedFields.includes('soilToPlaceMaximumDepth') ||
-          updatedFields.includes('soilToPlaceAverageDepth')
-        "
-      ></app-updated-banner>
-    </div>
+    <div class="subheading2">Soil to be Removed</div>
+    <div class="subheading2">Fill to be Placed</div>
 
     <div class="subheading2">Volume</div>
     <div>
@@ -146,28 +108,8 @@
     <div class="spacer-row"></div>
 
     <div></div>
-    <div class="subheading2">
-      Soil already Removed
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilAlreadyRemovedVolume') ||
-          updatedFields.includes('soilAlreadyRemovedArea') ||
-          updatedFields.includes('soilAlreadyRemovedMaximumDepth') ||
-          updatedFields.includes('soilAlreadyPlacedAverageDepth')
-        "
-      ></app-updated-banner>
-    </div>
-    <div class="subheading2">
-      Fill already Placed
-      <app-updated-banner
-        *ngIf="
-          updatedFields.includes('soilAlreadyPlacedVolume') ||
-          updatedFields.includes('soilAlreadyPlacedArea') ||
-          updatedFields.includes('soilAlreadyPlacedMaximumDepth') ||
-          updatedFields.includes('soilAlreadyPlacedAverageDepth')
-        "
-      ></app-updated-banner>
-    </div>
+    <div class="subheading2">Soil already Removed</div>
+    <div class="subheading2">Fill already Placed</div>
 
     <div class="subheading2">Volume</div>
     <div>
@@ -238,10 +180,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Is your proposal for area-wide filling?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsAreaWideFilling')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Is your proposal for area-wide filling?</div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsAreaWideFilling !== null">
       {{ _noiSubmission.soilIsAreaWideFilling ? 'Yes' : 'No' }}
@@ -249,10 +188,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilIsAreaWideFilling === null"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Is your proposal for aggregate extraction or placer mining?
-    <app-updated-banner *ngIf="updatedFields.includes('soilIsExtractionOrMining')"></app-updated-banner>
-  </div>
+  <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
   <div class="grid-double">
     <span *ngIf="_noiSubmission.soilIsExtractionOrMining !== null">
       {{ _noiSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}
@@ -280,7 +216,6 @@
     <ng-container *ngIf="_noiSubmission.soilIsExtractionOrMining">
       <div class="subheading2 grid-1">
         Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
-        <app-updated-banner *ngIf="updatedFields.includes('soilHasSubmittedNotice')"></app-updated-banner>
       </div>
       <div class="grid-double">
         <span *ngIf="_noiSubmission.soilHasSubmittedNotice !== null">

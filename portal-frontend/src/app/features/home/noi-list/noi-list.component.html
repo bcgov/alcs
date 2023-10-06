@@ -1,4 +1,4 @@
-<div class="table-wrapper">
+<div *ngIf="!isMobile" class="table-wrapper">
   <div class="table-container">
     <table mat-table [dataSource]="dataSource">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -64,3 +64,5 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of notice of intents"></mat-paginator>
   </div>
 </div>
+
+<app-inbox-list *ngIf="isMobile" [items]="listItems"></app-inbox-list>

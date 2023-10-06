@@ -42,7 +42,6 @@ import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
 import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
 import { SoilTableComponent } from './soil-table/soil-table.component';
-import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
@@ -84,7 +83,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     WarningBannerComponent,
     InfoBannerComponent,
     NoDataComponent,
-    UpdatedBannerComponent,
     ValidationErrorComponent,
     CustomStepperComponent,
     MomentPipe,
@@ -123,7 +121,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PhoneValidPipe,
     WarningBannerComponent,
     InfoBannerComponent,
-    UpdatedBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,

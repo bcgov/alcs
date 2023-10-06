@@ -4,7 +4,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 
 import { NaruDetailsComponent } from './naru-details.component';
 
-describe('PofoDetailsComponent', () => {
+describe('NaruDetailsComponent', () => {
   let component: NaruDetailsComponent;
   let fixture: ComponentFixture<NaruDetailsComponent>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;

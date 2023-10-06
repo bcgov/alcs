@@ -1,0 +1,209 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 grid-1">Selected Subtype:</div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.naruSubtype !== null">
+      {{ applicationSubmission.naruSubtype.label }}
+    </span>
+    <app-no-data *ngIf="applicationSubmission.naruSubtype === null"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+    <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="applicationSubmission.naruSubtype?.code === 'ARFU'">
+    <div class="subheading2 grid-1">
+      What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruFloorArea }}
+      <app-no-data *ngIf="!applicationSubmission.naruFloorArea"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe the necessity for an additional residence for farm use and how it will support agriculture in the short
+      or long term.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruResidenceNecessity }}
+      <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the additional residence.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruLocationRationale }}
+      <app-no-data *ngIf="!applicationSubmission.naruLocationRationale"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
+      residence.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruInfrastructure }}
+      <app-no-data *ngIf="!applicationSubmission.naruInfrastructure"></app-no-data>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="applicationSubmission.naruSubtype?.code === 'PRIN'">
+    <div class="subheading2 grid-1">
+      What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruFloorArea }}
+      <app-no-data *ngIf="!applicationSubmission.naruFloorArea"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
+      short or long term.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruResidenceNecessity }}
+      <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the principal residence.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruLocationRationale }}
+      <app-no-data *ngIf="!applicationSubmission.naruLocationRationale"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the additional
+      residence.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruInfrastructure }}
+      <app-no-data *ngIf="!applicationSubmission.naruInfrastructure"></app-no-data>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="applicationSubmission.naruSubtype?.code === 'TOUR'">
+    <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruFloorArea }}
+      <app-no-data *ngIf="!applicationSubmission.naruFloorArea"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruSleepingUnits }}
+      <app-no-data *ngIf="!applicationSubmission.naruSleepingUnits"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Describe how the proposal for tourism accommodation will support agriculture in the short or long term.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruResidenceNecessity }}
+      <app-no-data *ngIf="!applicationSubmission.naruResidenceNecessity"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the tourism accommodation.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruLocationRationale }}
+      <app-no-data *ngIf="!applicationSubmission.naruLocationRationale"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">
+      Provide the total area (m<sup>2</sup>) and a description of infrastructure necessary to support the tourism
+      accommodation.
+    </div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruInfrastructure }}
+      <app-no-data *ngIf="!applicationSubmission.naruInfrastructure"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Describe any agri-tourism that is currently taking place on the property.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruAgriTourism }}
+      <app-no-data *ngIf="!applicationSubmission.naruAgriTourism"></app-no-data>
+    </div>
+  </ng-container>
+
+  <div class="subheading2 grid-1">
+    Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures currently
+    located on the property.
+  </div>
+  <div class="grid-double">
+    {{ applicationSubmission.naruExistingStructures }}
+    <app-no-data *ngIf="!applicationSubmission.naruExistingStructures"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">
+    Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
+  </div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.naruWillImportFill !== null">{{
+      applicationSubmission.naruWillImportFill ? 'Yes' : 'No'
+    }}</span>
+    <app-no-data *ngIf="applicationSubmission.naruWillImportFill === null"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="applicationSubmission.naruWillImportFill">
+    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruFillType }}
+      <app-no-data *ngIf="!applicationSubmission.naruFillType"></app-no-data>
+    </div>
+
+    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruFillOrigin }}
+      <app-no-data *ngIf="!applicationSubmission.naruFillOrigin"></app-no-data>
+    </div>
+
+    <div class="subheading1 full-width">Fill to be Placed</div>
+    <div class="full-width soil-table">
+      <div class="grid-1"><strong>Volume</strong></div>
+      <div class="grid-2">
+        {{ applicationSubmission.naruToPlaceVolume }}
+        <span *ngIf="applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
+        <app-no-data *ngIf="applicationSubmission.naruToPlaceVolume === null"></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Area</strong></div>
+      <div class="grid-2">
+        {{ applicationSubmission.naruToPlaceArea }}
+        <span *ngIf="applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
+        <app-no-data *ngIf="applicationSubmission.naruToPlaceArea === null"></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Maximum Depth</strong></div>
+      <div class="grid-2">
+        {{ applicationSubmission.naruToPlaceMaximumDepth }}
+        <span *ngIf="applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
+        <app-no-data *ngIf="applicationSubmission.naruToPlaceMaximumDepth === null"></app-no-data>
+      </div>
+      <div class="grid-1"><strong>Average Depth</strong></div>
+      <div class="grid-2">
+        {{ applicationSubmission.naruToPlaceAverageDepth }}
+        <span *ngIf="applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
+        <app-no-data *ngIf="applicationSubmission.naruToPlaceAverageDepth === null"></app-no-data>
+      </div>
+    </div>
+
+    <div class="full-width">
+      <span class="subheading1">Project Duration</span>
+    </div>
+    <div class="subheading2 grid-1">Duration</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruProjectDurationUnit }}
+      <app-no-data *ngIf="!applicationSubmission.naruProjectDurationUnit"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Length</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruProjectDurationAmount }}
+      <app-no-data *ngIf="!applicationSubmission.naruProjectDurationAmount"></app-no-data>
+    </div>
+  </ng-container>
+</div>
