@@ -120,14 +120,8 @@ export class OwnerDialogComponent {
       const res = await this.data.ownerService.create(createDto);
       this.dialogRef.close(res);
     } else {
-      this.markFormGroupTouched(this.form)
+      this.form.markAllAsTouched()
     }
-  }
-
-  private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsTouched()
-    })
   }
 
   async onClose() {
@@ -135,19 +129,23 @@ export class OwnerDialogComponent {
   }
 
   async onSave() {
-    const document = await this.uploadPendingFile(this.pendingFile);
-    const updateDto: ApplicationOwnerUpdateDto = {
-      organizationName: this.organizationName.getRawValue(),
-      firstName: this.firstName.getRawValue(),
-      lastName: this.lastName.getRawValue(),
-      corporateSummaryUuid: document?.uuid,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-    };
-    if (this.existingUuid) {
-      const res = await this.data.ownerService.update(this.existingUuid, updateDto);
-      this.dialogRef.close(res);
+    if (this.form.valid) {
+      const document = await this.uploadPendingFile(this.pendingFile);
+      const updateDto: ApplicationOwnerUpdateDto = {
+        organizationName: this.organizationName.getRawValue(),
+        firstName: this.firstName.getRawValue(),
+        lastName: this.lastName.getRawValue(),
+        corporateSummaryUuid: document?.uuid,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+      };
+      if (this.existingUuid) {
+        const res = await this.data.ownerService.update(this.existingUuid, updateDto);
+        this.dialogRef.close(res);
+      }
+    } else {
+      this.form.markAllAsTouched()
     }
   }
 
