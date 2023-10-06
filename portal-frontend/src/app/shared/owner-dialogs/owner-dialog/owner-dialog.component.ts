@@ -98,26 +98,30 @@ export class OwnerDialogComponent {
   }
 
   async onCreate() {
-    if (!this.data.submissionUuid) {
-      console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
-      return;
+    if (this.form.valid) {
+      if (!this.data.submissionUuid) {
+        console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
+        return;
+      }
+  
+      const documentUuid = await this.uploadPendingFile(this.pendingFile);
+      const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
+        organizationName: this.organizationName.getRawValue() || undefined,
+        firstName: this.firstName.getRawValue() || undefined,
+        lastName: this.lastName.getRawValue() || undefined,
+        corporateSummaryUuid: documentUuid?.uuid,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+        applicationSubmissionUuid: this.data.submissionUuid,
+        noticeOfIntentSubmissionUuid: this.data.submissionUuid,
+      };
+  
+      const res = await this.data.ownerService.create(createDto);
+      this.dialogRef.close(res);
+    } else {
+      this.form.markAllAsTouched()
     }
-
-    const documentUuid = await this.uploadPendingFile(this.pendingFile);
-    const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
-      organizationName: this.organizationName.getRawValue() || undefined,
-      firstName: this.firstName.getRawValue() || undefined,
-      lastName: this.lastName.getRawValue() || undefined,
-      corporateSummaryUuid: documentUuid?.uuid,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-      applicationSubmissionUuid: this.data.submissionUuid,
-      noticeOfIntentSubmissionUuid: this.data.submissionUuid,
-    };
-
-    const res = await this.data.ownerService.create(createDto);
-    this.dialogRef.close(res);
   }
 
   async onClose() {
@@ -125,19 +129,23 @@ export class OwnerDialogComponent {
   }
 
   async onSave() {
-    const document = await this.uploadPendingFile(this.pendingFile);
-    const updateDto: ApplicationOwnerUpdateDto = {
-      organizationName: this.organizationName.getRawValue(),
-      firstName: this.firstName.getRawValue(),
-      lastName: this.lastName.getRawValue(),
-      corporateSummaryUuid: document?.uuid,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-    };
-    if (this.existingUuid) {
-      const res = await this.data.ownerService.update(this.existingUuid, updateDto);
-      this.dialogRef.close(res);
+    if (this.form.valid) {
+      const document = await this.uploadPendingFile(this.pendingFile);
+      const updateDto: ApplicationOwnerUpdateDto = {
+        organizationName: this.organizationName.getRawValue(),
+        firstName: this.firstName.getRawValue(),
+        lastName: this.lastName.getRawValue(),
+        corporateSummaryUuid: document?.uuid,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+      };
+      if (this.existingUuid) {
+        const res = await this.data.ownerService.update(this.existingUuid, updateDto);
+        this.dialogRef.close(res);
+      }
+    } else {
+      this.form.markAllAsTouched()
     }
   }
 
