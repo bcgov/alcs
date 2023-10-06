@@ -1,7 +1,5 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    Selected Subtype:
-  </div>
+  <div class="subheading2 grid-1">Selected Subtype:</div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.naruSubtype !== null">
       {{ _applicationSubmission.naruSubtype.label }}
@@ -9,9 +7,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruSubtype === null"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
@@ -35,9 +31,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      Describe the rationale for the proposed location of the additional residence.
-    </div>
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the additional residence.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruLocationRationale"></app-no-data>
@@ -71,9 +65,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      Describe the rationale for the proposed location of the principal residence.
-    </div>
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the principal residence.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruLocationRationale"></app-no-data>
@@ -90,17 +82,13 @@
   </ng-container>
 
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
-    <div class="subheading2 grid-1">
-      What is the total floor area (m<sup>2</sup>) of the proposed accommodation?
-    </div>
+    <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFloorArea }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      How many "sleeping units" in total are proposed?
-    </div>
+    <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruSleepingUnits }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruSleepingUnits"></app-no-data>
@@ -114,9 +102,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruResidenceNecessity"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      Describe the rationale for the proposed location of the tourism accommodation.
-    </div>
+    <div class="subheading2 grid-1">Describe the rationale for the proposed location of the tourism accommodation.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruLocationRationale }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruLocationRationale"></app-no-data>
@@ -131,9 +117,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruInfrastructure"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      Describe any agri-tourism that is currently taking place on the property.
-    </div>
+    <div class="subheading2 grid-1">Describe any agri-tourism that is currently taking place on the property.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruAgriTourism }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruAgriTourism"></app-no-data>
@@ -168,77 +152,69 @@
   </div>
 
   <ng-container *ngIf="_applicationSubmission.naruWillImportFill">
-    <div class="subheading2 grid-1">
-      Describe the type and amount of fill proposed to be placed.
-    </div>
+    <div class="subheading2 grid-1">Describe the type and amount of fill proposed to be placed.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFillType }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFillType"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">
-      Briefly describe the origin and quality of fill.
-    </div>
+    <div class="subheading2 grid-1">Briefly describe the origin and quality of fill.</div>
     <div class="grid-double">
       {{ _applicationSubmission.naruFillOrigin }}
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFillOrigin"></app-no-data>
     </div>
 
-    <div class="subheading1 full-width">
-      Fill to be Placed
-    </div>
-    <div class="full-width soil-table">
-      <div class="grid-1"><strong>Volume</strong></div>
-      <div class="grid-2">
-        {{ _applicationSubmission.naruToPlaceVolume }}
-        <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="_applicationSubmission.naruToPlaceVolume === null"
-        ></app-no-data>
+    <div class="subheading2 grid-1">Fill Project Duration</div>
+    <div class="grid-double">
+      <div *ngIf="_applicationSubmission.naruProjectDurationAmount && _applicationSubmission.naruProjectDurationUnit">
+        {{ _applicationSubmission.naruProjectDurationAmount }}
+        <ng-container [ngPlural]="_applicationSubmission.naruProjectDurationAmount">
+          <ng-template ngPluralCase="=1">
+            {{ _applicationSubmission.naruProjectDurationUnit.slice(0, -1) | titlecase }}
+          </ng-template>
+          <ng-template ngPluralCase="other">
+            {{ _applicationSubmission.naruProjectDurationUnit | titlecase }}
+          </ng-template>
+        </ng-container>
       </div>
-      <div class="grid-1"><strong>Area</strong></div>
-      <div class="grid-2">
-        {{ _applicationSubmission.naruToPlaceArea }}
-        <span *ngIf="_applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
-        <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceArea === null"></app-no-data>
-      </div>
-      <div class="grid-1"><strong>Maximum Depth</strong></div>
-      <div class="grid-2">
-        {{ _applicationSubmission.naruToPlaceMaximumDepth }}
-        <span *ngIf="_applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="_applicationSubmission.naruToPlaceMaximumDepth === null"
-        ></app-no-data>
-      </div>
-      <div class="grid-1"><strong>Average Depth</strong></div>
-      <div class="grid-2">
-        {{ _applicationSubmission.naruToPlaceAverageDepth }}
-        <span *ngIf="_applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
-        <app-no-data
-          [showRequired]="showErrors"
-          *ngIf="_applicationSubmission.naruToPlaceAverageDepth === null"
-        ></app-no-data>
-      </div>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="!_applicationSubmission.naruProjectDurationAmount || !_applicationSubmission.naruProjectDurationUnit"
+      ></app-no-data>
     </div>
 
-    <div class="full-width">
-      <span class="subheading1">Project Duration</span>
-    </div>
-    <div class="subheading2 grid-1">
-      Duration
-    </div>
+    <div class="grid-1"></div>
+    <div class="subheading2 grid-double">Fill to be Placed</div>
+
+    <div class="subheading2 grid-1">Volume</div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationUnit }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDurationUnit"></app-no-data>
+      {{ _applicationSubmission.naruToPlaceVolume }}
+      <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
+      <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceVolume === null"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Length
-    </div>
+    <div class="subheading2 grid-1">Area</div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationAmount }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDurationAmount"></app-no-data>
+      {{ _applicationSubmission.naruToPlaceArea }}
+      <span *ngIf="_applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
+      <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceArea === null"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Maximum Depth</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruToPlaceMaximumDepth }}
+      <span *ngIf="_applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="_applicationSubmission.naruToPlaceMaximumDepth === null"
+      ></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Average Depth</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruToPlaceAverageDepth }}
+      <span *ngIf="_applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="_applicationSubmission.naruToPlaceAverageDepth === null"
+      ></app-no-data>
     </div>
   </ng-container>
 

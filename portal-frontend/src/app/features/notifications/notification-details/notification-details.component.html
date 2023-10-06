@@ -39,7 +39,7 @@
 </section>
 <section>
   <h3>3. Primary Contact</h3>
-  <div *ngIf="notificationSubmission" class="review-table other-layout">
+  <div *ngIf="notificationSubmission" class="review-table">
     <div class="subheading2 grid-1">First Name</div>
     <div class="grid-double">
       {{ notificationSubmission.contactFirstName }}
@@ -84,7 +84,7 @@
 </section>
 <section>
   <h3>4. Government</h3>
-  <div *ngIf="notificationSubmission" class="review-table other-layout">
+  <div *ngIf="notificationSubmission" class="review-table">
     <div class="subheading2 grid-1">Local or First Nation Government</div>
     <div class="grid-double">
       {{ localGovernment?.name }}

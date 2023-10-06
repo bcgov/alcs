@@ -1,15 +1,15 @@
 <div aria-hidden="true" class="banner absolute">
   <div>
-    <h4 *ngIf="application">Application ID: {{ application.fileNumber }}</h4>
+    <h4 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h4>
   </div>
   <div class="banner-status">
     <div>
-      <div class="subheading2">Status Date</div>
-      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
-    </div>
-    <div>
       <div class="subheading2">Application Status</div>
       <span *ngIf="application">{{ application.status.label }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
     </div>
   </div>
 </div>
@@ -28,9 +28,7 @@
     </div>
   </div>
 </div>
-<button (click)="onNavigateHome()" mat-button color="accent">
-  <mat-icon>chevron_left</mat-icon>Return to Inbox
-</button>
+<button (click)="onNavigateHome()" mat-button color="accent"><mat-icon>chevron_left</mat-icon>Return to Inbox</button>
 <div>
   <div class="navigation">
     <mat-tab-group>

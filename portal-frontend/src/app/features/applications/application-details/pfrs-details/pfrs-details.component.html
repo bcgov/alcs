@@ -9,28 +9,43 @@
     <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilIsFollowUp === null"></app-no-data>
   </div>
 
-  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">
-    Application or NOI ID
-  </div>
+  <div *ngIf="_applicationSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
   <div *ngIf="_applicationSubmission.soilIsFollowUp" class="grid-double">
     {{ _applicationSubmission.soilFollowUpIDs }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFollowUpIDs"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="_applicationSubmission.soilProjectDurationAmount && _applicationSubmission.soilProjectDurationUnit">
+      {{ _applicationSubmission.soilProjectDurationAmount }}
+      <ng-container [ngPlural]="_applicationSubmission.soilProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ _applicationSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ _applicationSubmission.soilProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      [showRequired]="showErrors"
+      *ngIf="!_applicationSubmission.soilProjectDurationAmount || !_applicationSubmission.soilProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
   <div class="full-width soil-table">
     <div></div>
-    <div><strong>Soil to be Removed</strong></div>
-    <div><strong>Fill to be Placed</strong></div>
+    <div class="subheading2">Soil to be Removed</div>
+    <div class="subheading2">Fill to be Placed</div>
 
-    <div><strong>Volume</strong></div>
+    <div class="subheading2">Volume</div>
     <div>
       {{ _applicationSubmission.soilToRemoveVolume }}
       <span *ngIf="_applicationSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
@@ -42,7 +57,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilToPlaceVolume === null"></app-no-data>
     </div>
 
-    <div><strong>Area</strong></div>
+    <div class="subheading2">Area</div>
     <div>
       {{ _applicationSubmission.soilToRemoveArea }}
       <span *ngIf="_applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
@@ -54,7 +69,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.soilToPlaceArea === null"></app-no-data>
     </div>
 
-    <div><strong>Maximum Depth</strong></div>
+    <div class="subheading2">Maximum Depth</div>
     <div>
       {{ _applicationSubmission.soilToRemoveMaximumDepth }}
       <span *ngIf="_applicationSubmission.soilToRemoveMaximumDepth !== null">m</span>
@@ -72,7 +87,7 @@
       ></app-no-data>
     </div>
 
-    <div><strong>Average Depth</strong></div>
+    <div class="subheading2">Average Depth</div>
     <div>
       {{ _applicationSubmission.soilToRemoveAverageDepth }}
       <span *ngIf="_applicationSubmission.soilToRemoveAverageDepth !== null">m</span>
@@ -93,10 +108,10 @@
     <div class="spacer-row"></div>
 
     <div></div>
-    <div><strong>Soil already Removed</strong></div>
-    <div><strong>Fill already Placed</strong></div>
+    <div class="subheading2">Soil already Removed</div>
+    <div class="subheading2">Fill already Placed</div>
 
-    <div><strong>Volume</strong></div>
+    <div class="subheading2">Volume</div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedVolume }}
       <span *ngIf="_applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
@@ -114,7 +129,7 @@
       ></app-no-data>
     </div>
 
-    <div><strong>Area</strong></div>
+    <div class="subheading2">Area</div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedArea }}
       <span *ngIf="_applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
@@ -132,7 +147,7 @@
       ></app-no-data>
     </div>
 
-    <div><strong>Maximum Depth</strong></div>
+    <div class="subheading2">Maximum Depth</div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedMaximumDepth }}
       <span *ngIf="_applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
@@ -150,7 +165,7 @@
       ></app-no-data>
     </div>
 
-    <div><strong>Average Depth</strong></div>
+    <div class="subheading2">Average Depth</div>
     <div>
       {{ _applicationSubmission.soilAlreadyRemovedAverageDepth }}
       <span *ngIf="_applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
@@ -169,35 +184,13 @@
     </div>
   </div>
 
-  <div class="full-width">
-    <span class="subheading1">Project Duration</span>
-  </div>
-  <div class="subheading2 grid-1">
-    Duration
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilProjectDurationUnit }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilProjectDurationUnit"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">
-    Length
-  </div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilProjectDurationAmount }}
-    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilProjectDurationAmount"></app-no-data>
-  </div>
-
-  <div class="subheading2 grid-1">
-    Describe the type, origin and quality of fill proposed to be placed.
-  </div>
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
   <div class="grid-double">
     {{ _applicationSubmission.soilFillTypeToPlace }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Describe the type of soil proposed to be removed.
-  </div>
+  <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
   <div class="grid-double">
     {{ _applicationSubmission.soilTypeRemoved }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilTypeRemoved"></app-no-data>
@@ -211,9 +204,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilAlternativeMeasures"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What steps will be taken to reduce impacts to surrounding agricultural land?
-  </div>
+  <div class="subheading2 grid-1">What steps will be taken to reduce impacts to surrounding agricultural land?</div>
   <div class="grid-double">
     {{ _applicationSubmission.soilReduceNegativeImpacts }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.soilReduceNegativeImpacts"></app-no-data>
@@ -243,9 +234,7 @@
     <app-no-data [showRequired]="showErrors" *ngIf="crossSections.length === 0"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Is your proposal for aggregate extraction or placer mining?
-  </div>
+  <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.soilIsExtractionOrMining !== null">
       {{ _applicationSubmission.soilIsExtractionOrMining ? 'Yes' : 'No' }}

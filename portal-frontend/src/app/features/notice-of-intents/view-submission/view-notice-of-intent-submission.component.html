@@ -1,15 +1,15 @@
 <div aria-hidden="true" class="banner absolute">
   <div>
-    <h4 *ngIf="submission">NOI ID: {{ submission.fileNumber }}</h4>
+    <h4 *ngIf="submission">NOI ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
   </div>
   <div class="banner-status">
     <div>
-      <div class="subheading2">Status Date</div>
-      <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
-    </div>
-    <div>
       <div class="subheading2">NOI Status</div>
       <span *ngIf="submission">{{ submission.status.label }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
     </div>
   </div>
 </div>
