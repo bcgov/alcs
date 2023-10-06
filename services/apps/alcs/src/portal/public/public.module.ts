@@ -7,6 +7,7 @@ import { NotificationSubmissionStatusModule } from '../../alcs/notification/noti
 import { PublicAutomapperProfile } from '../../common/automapper/public.automapper.profile';
 import { ApplicationSubmissionReviewModule } from '../application-submission-review/application-submission-review.module';
 import { ApplicationSubmissionModule } from '../application-submission/application-submission.module';
+import { PublicApplicationService } from './public-application.service';
 import { PublicController } from './public.controller';
 import { PublicSearchModule } from './search/public-search.module';
 import { PublicStatusController } from './status/public-status.controller';
@@ -23,7 +24,7 @@ import { PublicStatusController } from './status/public-status.controller';
     RouterModule.register([{ path: 'public', module: PublicSearchModule }]),
   ],
   controllers: [PublicStatusController, PublicController],
-  providers: [PublicAutomapperProfile],
+  providers: [PublicAutomapperProfile, PublicApplicationService],
   exports: [],
 })
 export class PublicModule {}
