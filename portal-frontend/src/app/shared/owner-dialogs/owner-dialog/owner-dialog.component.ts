@@ -98,26 +98,36 @@ export class OwnerDialogComponent {
   }
 
   async onCreate() {
-    if (!this.data.submissionUuid) {
-      console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
-      return;
+    if (this.form.valid) {
+      if (!this.data.submissionUuid) {
+        console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
+        return;
+      }
+  
+      const documentUuid = await this.uploadPendingFile(this.pendingFile);
+      const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
+        organizationName: this.organizationName.getRawValue() || undefined,
+        firstName: this.firstName.getRawValue() || undefined,
+        lastName: this.lastName.getRawValue() || undefined,
+        corporateSummaryUuid: documentUuid?.uuid,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+        applicationSubmissionUuid: this.data.submissionUuid,
+        noticeOfIntentSubmissionUuid: this.data.submissionUuid,
+      };
+  
+      const res = await this.data.ownerService.create(createDto);
+      this.dialogRef.close(res);
+    } else {
+      this.markFormGroupTouched(this.form)
     }
+  }
 
-    const documentUuid = await this.uploadPendingFile(this.pendingFile);
-    const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
-      organizationName: this.organizationName.getRawValue() || undefined,
-      firstName: this.firstName.getRawValue() || undefined,
-      lastName: this.lastName.getRawValue() || undefined,
-      corporateSummaryUuid: documentUuid?.uuid,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-      applicationSubmissionUuid: this.data.submissionUuid,
-      noticeOfIntentSubmissionUuid: this.data.submissionUuid,
-    };
-
-    const res = await this.data.ownerService.create(createDto);
-    this.dialogRef.close(res);
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched()
+    })
   }
 
   async onClose() {

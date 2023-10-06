@@ -102,6 +102,6 @@
 </div>
 <div mat-dialog-actions class="actions">
   <button mat-stroked-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="!isEdit" (click)="onCreate()">Add</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="isEdit" (click)="onSave()">Save</button>
+  <button mat-flat-button color="primary" *ngIf="!isEdit" (click)="onCreate()">Add</button>
+  <button mat-flat-button color="primary" *ngIf="isEdit" (click)="onSave()">Save</button>
 </div>
