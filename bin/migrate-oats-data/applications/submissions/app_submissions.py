@@ -5,12 +5,10 @@ from common import (
     OATS_ETL_USER,
     ALRChangeCode,
     setup_and_get_logger,
-    AlcsNaruTypeCode,
-    OatsNarCode,
+    OatsToAlcsNaruType,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
-from enum import Enum
 
 from .submap import (
     add_direction_field,
@@ -293,6 +291,7 @@ def get_insert_query_for_naru():
                         naru_will_import_fill,
                         naru_to_place_volume,
                         naru_to_place_maximum_depth,
+                        naru_to_place_average_depth,
                         naru_project_duration_amount,
                         naru_fill_type,
                         naru_fill_origin,
@@ -310,6 +309,7 @@ def get_insert_query_for_naru():
     unique_values = """,
                         %(import_fill)s,
                         %(total_fill)s,
+                        %(max_fill_depth)s,
                         %(max_fill_depth)s,
                         %(fill_duration)s,
                         %(fill_type)s,
@@ -365,9 +365,3 @@ def clean_application_submission(conn=None):
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()
-
-
-class OatsToAlcsNaruType(Enum):
-    PRL = AlcsNaruTypeCode.Principal_Residence.value
-    ADF = AlcsNaruTypeCode.Additional_Residence.value
-    ATA = AlcsNaruTypeCode.Tourism_Accomodation.value
