@@ -237,7 +237,8 @@ def get_insert_query(unique_fields, unique_values):
                     west_land_use_type,
                     north_land_use_type,
                     south_land_use_type,
-                    subd_proposed_lots
+                    subd_proposed_lots,
+                    purpose
                     {unique_fields}
                 )
                 VALUES (
@@ -255,7 +256,8 @@ def get_insert_query(unique_fields, unique_values):
                     %(west_land_use_type)s,
                     %(north_land_use_type)s,
                     %(south_land_use_type)s,
-                    %(subd_proposed_lots)s
+                    %(subd_proposed_lots)s,
+                    %(proposal_summary_desc)s
                     {unique_values}
                 )
     """
@@ -302,7 +304,8 @@ def get_insert_query_for_naru():
                         naru_sleeping_units,
                         naru_residence_necessity,
                         naru_agri_tourism,
-                        naru_floor_area
+                        naru_floor_area,
+                        naru_location_rationale
                         """
     unique_values = """,
                         %(import_fill)s,
@@ -319,7 +322,8 @@ def get_insert_query_for_naru():
                         %(sleeping_units)s,
                         %(support_desc)s,
                         %(tour_env_desc)s,
-                        %(component_area)s
+                        %(component_area)s,
+                        %(proposal_background_desc)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
@@ -354,6 +358,7 @@ def get_soil_data(rows, cursor):
 def clean_application_submission(conn=None):
     logger.info("Start application_submission cleaning")
     with conn.cursor() as cursor:
+        logger.debug("Start application_submission cleaning")
         cursor.execute(
             f"DELETE FROM alcs.application_submission a WHERE a.audit_created_by = '{OATS_ETL_USER}'"
         )

@@ -27,7 +27,9 @@ SELECT
     oc.support_desc,
     oc.tour_env_desc,
     oc.sleeping_units,
-    oc.component_area
+    oc.component_area,
+    oa.proposal_summary_desc,
+    oa.proposal_background_desc
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
