@@ -4,12 +4,8 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
-import {
-  PublicApplicationParcelDto,
-  PublicApplicationSubmissionDto,
-  PublicDocumentDto,
-  PublicOwnerDto,
-} from '../../../../services/public/public.dto';
+import { PublicApplicationSubmissionDto } from '../../../../services/public/public-application.dto';
+import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../services/public/public.dto';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -22,7 +18,7 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
 
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;
   @Input() applicationDocuments: PublicDocumentDto[] = [];
-  @Input() applicationParcels: PublicApplicationParcelDto[] = [];
+  @Input() applicationParcels: PublicParcelDto[] = [];
 
   parcelType = PARCEL_TYPE;
   primaryContact: PublicOwnerDto | undefined;

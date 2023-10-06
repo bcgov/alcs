@@ -2,7 +2,8 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
-import { PublicApplicationSubmissionDto, PublicDocumentDto } from '../../../../../services/public/public.dto';
+import { PublicApplicationSubmissionDto } from '../../../../../services/public/public-application.dto';
+import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 
 @Component({
@@ -29,14 +30,14 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.publicService.getApplicationFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getApplicationFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
       const downloadLink = document.createElement('a');
       downloadLink.href = res.url;

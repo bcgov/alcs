@@ -52,22 +52,17 @@ export class NoticeOfIntentDecisionV2Service {
   ) {}
 
   async getForPortal(fileNumber: string) {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      fileNumber,
-    );
+    const uuid = await this.noticeOfIntentService.getUuid(fileNumber);
 
     return await this.noticeOfIntentDecisionRepository.find({
       where: {
-        noticeOfIntentUuid: noticeOfIntent.uuid,
+        noticeOfIntentUuid: uuid,
         isDraft: false,
       },
       relations: {
         outcome: true,
         documents: {
           document: true,
-        },
-        modifies: {
-          modifiesDecisions: true,
         },
       },
       order: {
@@ -77,13 +72,11 @@ export class NoticeOfIntentDecisionV2Service {
   }
 
   async getByFileNumber(number: string) {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      number,
-    );
+    const noticeOfIntentUuid = await this.noticeOfIntentService.getUuid(number);
 
     const decisions = await this.noticeOfIntentDecisionRepository.find({
       where: {
-        noticeOfIntentUuid: noticeOfIntent.uuid,
+        noticeOfIntentUuid,
       },
       order: {
         createdAt: 'DESC',
@@ -107,7 +100,7 @@ export class NoticeOfIntentDecisionV2Service {
     const decisionsWithModifiedBy =
       await this.noticeOfIntentDecisionRepository.find({
         where: {
-          noticeOfIntentUuid: noticeOfIntent.uuid,
+          noticeOfIntentUuid,
           modifiedBy: {
             resultingDecision: {
               isDraft: false,

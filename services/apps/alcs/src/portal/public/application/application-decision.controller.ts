@@ -1,17 +1,14 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
-import { ApiOAuth2 } from '@nestjs/swagger';
-import * as config from 'config';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
-import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Public } from 'nest-keycloak-connect';
+import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
+import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import { ApplicationPortalDecisionDto } from './application-decision.dto';
 
-@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-@UseGuards(PortalAuthGuard)
-@Controller('application-decision')
+@Public()
+@Controller('application/decision')
 export class ApplicationDecisionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
@@ -24,11 +21,6 @@ export class ApplicationDecisionController {
     @Param('fileNumber') fileNumber: string,
     @Req() req,
   ): Promise<ApplicationPortalDecisionDto[]> {
-    await this.applicationSubmissionService.verifyAccessByFileId(
-      fileNumber,
-      req.user.entity,
-    );
-
     const decisions = await this.decisionService.getForPortal(fileNumber);
 
     return this.mapper.mapArray(

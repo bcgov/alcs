@@ -3,21 +3,22 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
-} from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
-import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { PublicAutomapperProfile } from '../../common/automapper/public.automapper.profile';
-import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
-import { ApplicationSubmissionReviewService } from '../application-submission-review/application-submission-review.service';
-import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+} from '../../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionToSubmissionStatus } from '../../../alcs/application/application-submission-status/submission-status.entity';
+import { Application } from '../../../alcs/application/application.entity';
+import { ApplicationService } from '../../../alcs/application/application.service';
+import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
+import { PublicAutomapperProfile } from '../../../common/automapper/public.automapper.profile';
+import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
+import { ApplicationSubmissionReviewService } from '../../application-submission-review/application-submission-review.service';
+import { ApplicationParcelService } from '../../application-submission/application-parcel/application-parcel.service';
+import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
+import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import { PublicApplicationService } from './public-application.service';
 
 describe('PublicApplicationService', () => {
@@ -84,6 +85,7 @@ describe('PublicApplicationService', () => {
     mockAppService.get.mockResolvedValue(
       new Application({
         dateReceivedAllItems: new Date(),
+        type: new ApplicationType(),
       }),
     );
     mockAppSubService.getOrFailByFileNumber.mockResolvedValue(
@@ -101,7 +103,7 @@ describe('PublicApplicationService', () => {
     mockAppDecService.getByAppFileNumber.mockResolvedValue([]);
 
     const fileId = 'file-id';
-    await service.getPublicApplicationData(fileId);
+    await service.getPublicData(fileId);
 
     expect(mockAppService.get).toHaveBeenCalledTimes(1);
     expect(mockAppSubService.getOrFailByFileNumber).toHaveBeenCalledTimes(1);

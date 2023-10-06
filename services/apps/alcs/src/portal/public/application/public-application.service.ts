@@ -2,27 +2,27 @@ import { ServiceNotFoundException } from '@app/common/exceptions/base.exception'
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
+import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
-} from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationPortalDecisionDto } from '../application-decision/application-decision.dto';
-import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
-import { ApplicationSubmissionReviewService } from '../application-submission-review/application-submission-review.service';
-import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
-import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+} from '../../../alcs/application/application-document/application-document.entity';
+import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../../alcs/application/application.service';
+import { ApplicationPortalDecisionDto } from './application-decision.dto';
+import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
+import { ApplicationSubmissionReviewService } from '../../application-submission-review/application-submission-review.service';
+import { ApplicationParcel } from '../../application-submission/application-parcel/application-parcel.entity';
+import { ApplicationParcelService } from '../../application-submission/application-parcel/application-parcel.service';
+import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
+import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import {
-  PublicApplicationParcelDto,
+  PublicParcelDto,
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
   PublicDocumentDto,
-} from './public.dto';
+} from './public-application.dto';
 
 @Injectable()
 export class PublicApplicationService {
@@ -36,7 +36,7 @@ export class PublicApplicationService {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  async getPublicApplicationData(fileNumber: string) {
+  async getPublicData(fileNumber: string) {
     const application = await this.applicationService.get(fileNumber);
 
     //Easy way to check if its public
@@ -55,7 +55,7 @@ export class PublicApplicationService {
     const mappedParcels = this.mapper.mapArray(
       parcels,
       ApplicationParcel,
-      PublicApplicationParcelDto,
+      PublicParcelDto,
     );
 
     const mappedSubmission = this.mapper.map(
@@ -63,6 +63,7 @@ export class PublicApplicationService {
       ApplicationSubmission,
       PublicApplicationSubmissionDto,
     );
+    mappedSubmission.type = application.type.label;
 
     const documents = await this.applicationDocumentService.list(fileNumber, [
       VISIBILITY_FLAG.PUBLIC,

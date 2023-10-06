@@ -1,10 +1,10 @@
 import { AutoMap } from '@automapper/classes';
-import { ApplicationStatusDto } from '../../alcs/application/application-submission-status/submission-status.dto';
-import { OwnerTypeDto } from '../../common/owner-type/owner-type.entity';
-import { DocumentTypeDto } from '../../document/document.dto';
-import { ApplicationParcelOwnershipTypeDto } from '../application-submission/application-parcel/application-parcel.dto';
-import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
-import { ProposedLot } from '../application-submission/application-submission.entity';
+import { ApplicationStatusDto } from '../../../alcs/application/application-submission-status/submission-status.dto';
+import { OwnerTypeDto } from '../../../common/owner-type/owner-type.entity';
+import { DocumentTypeDto } from '../../../document/document.dto';
+import { ApplicationParcelOwnershipTypeDto } from '../../application-submission/application-parcel/application-parcel.dto';
+import { NaruSubtypeDto } from '../../application-submission/application-submission.dto';
+import { ProposedLot } from '../../application-submission/application-submission.entity';
 
 export class PublicOwnerDto {
   @AutoMap()
@@ -368,7 +368,7 @@ export class PublicApplicationSubmissionReviewDto {
   isAuthorized: boolean | null;
 }
 
-export class PublicApplicationParcelDto {
+export class PublicParcelDto {
   @AutoMap()
   uuid: string;
 

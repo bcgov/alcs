@@ -171,7 +171,6 @@
       ></app-no-data>
     </div>
   </div>
-
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
@@ -207,10 +206,10 @@
 
     <div class="subheading2 grid-1">Reclamation Plan</div>
     <div class="grid-double">
-      <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+      <a *ngFor="let file of reclamationPlans" (click)="openFile(file.uuid)">
         {{ file.fileName }}
       </a>
-      <app-no-data [showRequired]="showErrors" *ngIf="crossSections.length === 0"></app-no-data>
+      <app-no-data [showRequired]="showErrors" *ngIf="reclamationPlans.length === 0"></app-no-data>
     </div>
 
     <ng-container *ngIf="_noiSubmission.soilIsExtractionOrMining">
