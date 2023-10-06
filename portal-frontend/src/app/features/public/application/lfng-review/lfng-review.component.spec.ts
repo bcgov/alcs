@@ -1,52 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { BehaviorSubject } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
-import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
-import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
-import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
+import { PublicService } from '../../../../services/public/public.service';
 
-import { LfngReviewComponent } from './lfng-review.component';
+import { PublicLfngReviewComponent } from './lfng-review.component';
 
-describe('LfngReviewComponent', () => {
-  let component: LfngReviewComponent;
-  let fixture: ComponentFixture<LfngReviewComponent>;
+describe('PublicLfngReviewComponent', () => {
+  let component: PublicLfngReviewComponent;
+  let fixture: ComponentFixture<PublicLfngReviewComponent>;
 
-  let mockAppSubReviewService: DeepMocked<ApplicationSubmissionReviewService>;
-  let mockPdfGenerationService: DeepMocked<PdfGenerationService>;
-  let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockPublicService: DeepMocked<PublicService>;
 
   beforeEach(async () => {
-    mockAppSubReviewService = createMock();
-    mockPdfGenerationService = createMock();
-    mockAppDocumentService = createMock();
-
-    mockAppSubReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
-      undefined
-    );
+    mockPublicService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
         {
-          provide: ApplicationSubmissionReviewService,
-          useValue: mockAppSubReviewService,
-        },
-        {
-          provide: PdfGenerationService,
-          useValue: mockPdfGenerationService,
-        },
-        {
-          provide: ApplicationDocumentService,
-          useValue: mockAppDocumentService,
+          provide: PublicService,
+          useValue: mockPublicService,
         },
       ],
-      declarations: [LfngReviewComponent],
+      declarations: [PublicLfngReviewComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LfngReviewComponent);
+    fixture = TestBed.createComponent(PublicLfngReviewComponent);
     component = fixture.componentInstance;
+    component.applicationDocuments = [];
 
     fixture.detectChanges();
   });

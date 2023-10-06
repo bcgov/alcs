@@ -1,6 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { ApplicationStatusDto } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { OwnerTypeDto } from '../../common/owner-type/owner-type.entity';
+import { DocumentTypeDto } from '../../document/document.dto';
+import { ApplicationParcelOwnershipTypeDto } from '../application-submission/application-parcel/application-parcel.dto';
 import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
 import { ProposedLot } from '../application-submission/application-submission.entity';
 
@@ -314,4 +316,114 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   inclGovernmentOwnsAllParcels?: boolean | null;
+}
+
+export class PublicApplicationSubmissionReviewDto {
+  @AutoMap()
+  applicationFileNumber: string;
+
+  @AutoMap(() => String)
+  localGovernmentFileNumber: string | null;
+
+  @AutoMap(() => String)
+  firstName: string | null;
+
+  @AutoMap(() => String)
+  lastName: string | null;
+
+  @AutoMap(() => String)
+  position: string | null;
+
+  @AutoMap(() => String)
+  department: string | null;
+
+  @AutoMap(() => Boolean)
+  isOCPDesignation: boolean | null;
+
+  @AutoMap(() => String)
+  OCPBylawName: string | null;
+
+  @AutoMap(() => String)
+  OCPDesignation: string | null;
+
+  @AutoMap(() => Boolean)
+  OCPConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
+  isSubjectToZoning: boolean | null;
+
+  @AutoMap(() => String)
+  zoningBylawName: string | null;
+
+  @AutoMap(() => String)
+  zoningDesignation: string | null;
+
+  @AutoMap(() => String)
+  zoningMinimumLotSize: string | null;
+
+  @AutoMap(() => Boolean)
+  isZoningConsistent: boolean | null;
+
+  @AutoMap(() => Boolean)
+  isAuthorized: boolean | null;
+}
+
+export class PublicApplicationParcelDto {
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap(() => String)
+  pid?: string | null;
+
+  @AutoMap(() => String)
+  pin?: string | null;
+
+  @AutoMap(() => String)
+  legalDescription?: string | null;
+
+  @AutoMap(() => String)
+  civicAddress?: string | null;
+
+  @AutoMap(() => Number)
+  mapAreaHectares?: number | null;
+
+  @AutoMap(() => Number)
+  purchasedDate?: number | null;
+
+  @AutoMap(() => Boolean)
+  isFarm?: boolean | null;
+
+  @AutoMap(() => String)
+  ownershipTypeCode?: string | null;
+
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
+
+  ownershipType?: ApplicationParcelOwnershipTypeDto;
+
+  @AutoMap(() => String)
+  parcelType: string;
+
+  @AutoMap(() => Number)
+  alrArea: number | null;
+
+  owners: PublicOwnerDto[];
+}
+
+export class PublicDocumentDto {
+  @AutoMap(() => String)
+  description?: string;
+
+  @AutoMap()
+  uuid: string;
+
+  @AutoMap(() => DocumentTypeDto)
+  type?: DocumentTypeDto;
+
+  //Document Fields
+  documentUuid: string;
+  fileName: string;
+  fileSize?: number;
+  mimeType: string;
+  uploadedAt: number;
 }

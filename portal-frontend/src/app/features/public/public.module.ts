@@ -6,6 +6,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
+import { PublicAlcReviewComponent } from './application/alc-review/alc-review.component';
+import { PublicDecisionsComponent } from './application/alc-review/decisions/decisions.component';
+import { PublicSubmissionDocumentsComponent } from './application/alc-review/submission-documents/submission-documents.component';
+import { PublicLfngReviewComponent } from './application/lfng-review/lfng-review.component';
 import { PublicApplicationComponent } from './application/public-application.component';
 import { SubmissionDetailsModule } from './application/submission/submission-details.module';
 import { ApplicationSearchTableComponent } from './search/application-search-table/application-search-table.component';
@@ -35,6 +39,10 @@ const routes: Routes = [
     FileTypeFilterDropDownComponent,
     SearchListComponent,
     PublicApplicationComponent,
+    PublicLfngReviewComponent,
+    PublicAlcReviewComponent,
+    PublicSubmissionDocumentsComponent,
+    PublicDecisionsComponent,
   ],
   imports: [
     CommonModule,

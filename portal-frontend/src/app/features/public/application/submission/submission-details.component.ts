@@ -1,11 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { ApplicationParcelDto, PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
+import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
-import { PublicApplicationSubmissionDto, PublicOwnerDto } from '../../../../services/public/public.dto';
+import {
+  PublicApplicationParcelDto,
+  PublicApplicationSubmissionDto,
+  PublicDocumentDto,
+  PublicOwnerDto,
+} from '../../../../services/public/public.dto';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -17,8 +21,8 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;
-  @Input() applicationDocuments: ApplicationDocumentDto[] = [];
-  @Input() applicationParcels: ApplicationParcelDto[] = [];
+  @Input() applicationDocuments: PublicDocumentDto[] = [];
+  @Input() applicationParcels: PublicApplicationParcelDto[] = [];
 
   parcelType = PARCEL_TYPE;
   primaryContact: PublicOwnerDto | undefined;
