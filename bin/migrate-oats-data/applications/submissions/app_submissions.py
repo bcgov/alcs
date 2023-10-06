@@ -301,7 +301,8 @@ def get_insert_query_for_naru():
                         naru_existing_structures,
                         naru_sleeping_units,
                         naru_residence_necessity,
-                        naru_agri_tourism
+                        naru_agri_tourism,
+                        naru_floor_area
                         """
     unique_values = """,
                         %(import_fill)s,
@@ -317,7 +318,8 @@ def get_insert_query_for_naru():
                         %(cur_struc_desc)s,
                         %(sleeping_units)s,
                         %(support_desc)s,
-                        %(tour_env_desc)s
+                        %(tour_env_desc)s,
+                        %(component_area)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
