@@ -1,14 +1,15 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { UserDto } from '../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
-import { PresribedBodyComponent } from './presribed-body.component';
+import { PrescribedBodyComponent } from './prescribed-body.component';
 
-describe('PresribedBodyComponent', () => {
-  let component: PresribedBodyComponent;
-  let fixture: ComponentFixture<PresribedBodyComponent>;
+describe('PrescribedBodyComponent', () => {
+  let component: PrescribedBodyComponent;
+  let fixture: ComponentFixture<PrescribedBodyComponent>;
   let mockAuthService: DeepMocked<AuthenticationService>;
 
   beforeEach(async () => {
@@ -16,16 +17,17 @@ describe('PresribedBodyComponent', () => {
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
     await TestBed.configureTestingModule({
-      declarations: [PresribedBodyComponent],
+      declarations: [PrescribedBodyComponent],
       providers: [
         {
           provide: AuthenticationService,
           useValue: mockAuthService,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PresribedBodyComponent);
+    fixture = TestBed.createComponent(PrescribedBodyComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

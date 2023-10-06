@@ -5,11 +5,11 @@ const FIRST_NATION = 'First Nation Government';
 const LOCAL = 'Local Government';
 
 @Component({
-  selector: 'app-presribed-body',
-  templateUrl: './presribed-body.component.html',
-  styleUrls: ['./presribed-body.component.scss'],
+  selector: 'app-prescribed-body',
+  templateUrl: './prescribed-body.component.html',
+  styleUrls: ['./prescribed-body.component.scss'],
 })
-export class PresribedBodyComponent implements OnInit {
+export class PrescribedBodyComponent implements OnInit {
   @Input() value: string | undefined;
   @Output() select = new EventEmitter<string>();
 

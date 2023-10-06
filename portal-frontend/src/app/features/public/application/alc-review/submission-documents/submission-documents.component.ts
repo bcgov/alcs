@@ -55,6 +55,4 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
     this.$destroy.next();
     this.$destroy.complete();
   }
-
-  protected readonly open = open;
 }

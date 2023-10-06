@@ -40,7 +40,7 @@ import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
 import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
-import { PresribedBodyComponent } from './presribed-body/presribed-body.component';
+import { PrescribedBodyComponent } from './prescribed-body/prescribed-body.component';
 import { SoilTableComponent } from './soil-table/soil-table.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
@@ -86,7 +86,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     ValidationErrorComponent,
     CustomStepperComponent,
     MomentPipe,
-    PresribedBodyComponent,
+    PrescribedBodyComponent,
     OwnerDialogComponent,
     CrownOwnerDialogComponent,
     AllOwnersDialogComponent,
@@ -133,7 +133,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NgxMaskDirective,
     NgxMaskPipe,
     MomentPipe,
-    PresribedBodyComponent,
+    PrescribedBodyComponent,
     OwnerDialogComponent,
     CrownOwnerDialogComponent,
     AllOwnersDialogComponent,

@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -9,10 +10,10 @@ describe('DeleteStructureConfirmationDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DeleteStructureConfirmationDialogComponent ],
+      declarations: [DeleteStructureConfirmationDialogComponent],
       providers: [{ provide: MatDialogRef, useValue: {} }],
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DeleteStructureConfirmationDialogComponent);
     component = fixture.componentInstance;
