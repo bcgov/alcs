@@ -1,3 +1,67 @@
+from psycopg2.extras import execute_batch
+from .data_prep import prepare_app_sub_data
+
+
+def insert_app_sub_records(
+    conn, batch_size, cursor, rows, direction_data, subdiv_data, soil_data
+):
+    """
+    Function to insert submission records in batches.
+
+    Args:
+    conn (obj): Connection to the database.
+    batch_size (int): Number of rows to execute at one time.
+    cursor (obj): Cursor object to execute queries.
+    rows (list): Rows of data to insert in the database.
+    direction_data (dict): Dictionary of adjacent parcel data
+    subdiv_data: dictionary of subdivision data lists
+    soil_data: dictionary of soil element data.
+
+    Returns:
+    None: Commits the changes to the database.
+    """
+    (
+        nfu_data_list,
+        other_data_list,
+        inc_exc_data_list,
+        naru_data_list,
+    ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
+
+    if len(nfu_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_nfu(),
+            nfu_data_list,
+            page_size=batch_size,
+        )
+
+    if len(inc_exc_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_inc_exc(),
+            inc_exc_data_list,
+            page_size=batch_size,
+        )
+
+    if len(naru_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_naru(),
+            naru_data_list,
+            page_size=batch_size,
+        )
+
+    if len(other_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query("", ""),
+            other_data_list,
+            page_size=batch_size,
+        )
+
+    conn.commit()
+
+
 def get_insert_query(unique_fields, unique_values):
     # unique_fields takes input from called function and appends to query
     query = """
