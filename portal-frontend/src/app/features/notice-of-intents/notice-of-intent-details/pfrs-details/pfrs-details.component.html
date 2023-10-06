@@ -72,34 +72,30 @@
 
   <div *ngIf="_noiSubmission" class="full-width soil-table">
     <div></div>
-    <div>
-      <strong
-        >Soil to be Removed
-        <app-updated-banner
-          *ngIf="
-            updatedFields.includes('soilToRemoveVolume') ||
-            updatedFields.includes('soilToRemoveArea') ||
-            updatedFields.includes('soilToRemoveMaximumDepth') ||
-            updatedFields.includes('soilToRemoveAverageDepth')
-          "
-        ></app-updated-banner>
-      </strong>
+    <div class="subheading2">
+      Soil to be Removed
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilToRemoveVolume') ||
+          updatedFields.includes('soilToRemoveArea') ||
+          updatedFields.includes('soilToRemoveMaximumDepth') ||
+          updatedFields.includes('soilToRemoveAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
-    <div>
-      <strong
-        >Fill to be Placed
-        <app-updated-banner
-          *ngIf="
-            updatedFields.includes('soilToPlaceVolume') ||
-            updatedFields.includes('soilToPlaceArea') ||
-            updatedFields.includes('soilToPlaceMaximumDepth') ||
-            updatedFields.includes('soilToPlaceAverageDepth')
-          "
-        ></app-updated-banner>
-      </strong>
+    <div class="subheading2">
+      Fill to be Placed
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilToPlaceVolume') ||
+          updatedFields.includes('soilToPlaceArea') ||
+          updatedFields.includes('soilToPlaceMaximumDepth') ||
+          updatedFields.includes('soilToPlaceAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
 
-    <div><strong>Volume</strong></div>
+    <div class="subheading2">Volume</div>
     <div>
       {{ _noiSubmission.soilToRemoveVolume }}
       <span *ngIf="_noiSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
@@ -111,7 +107,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilToPlaceVolume === null"></app-no-data>
     </div>
 
-    <div><strong>Area</strong></div>
+    <div class="subheading2">Area</div>
     <div>
       {{ _noiSubmission.soilToRemoveArea }}
       <span *ngIf="_noiSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
@@ -123,7 +119,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilToPlaceArea === null"></app-no-data>
     </div>
 
-    <div><strong>Maximum Depth</strong></div>
+    <div class="subheading2">Maximum Depth</div>
     <div>
       {{ _noiSubmission.soilToRemoveMaximumDepth }}
       <span *ngIf="_noiSubmission.soilToRemoveMaximumDepth !== null">m</span>
@@ -135,7 +131,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilToPlaceMaximumDepth === null"></app-no-data>
     </div>
 
-    <div><strong>Average Depth</strong></div>
+    <div class="subheading2">Average Depth</div>
     <div>
       {{ _noiSubmission.soilToRemoveAverageDepth }}
       <span *ngIf="_noiSubmission.soilToRemoveAverageDepth !== null">m</span>
@@ -150,34 +146,30 @@
     <div class="spacer-row"></div>
 
     <div></div>
-    <div>
-      <strong
-        >Soil already Removed
-        <app-updated-banner
-          *ngIf="
-            updatedFields.includes('soilAlreadyRemovedVolume') ||
-            updatedFields.includes('soilAlreadyRemovedArea') ||
-            updatedFields.includes('soilAlreadyRemovedMaximumDepth') ||
-            updatedFields.includes('soilAlreadyPlacedAverageDepth')
-          "
-        ></app-updated-banner>
-      </strong>
+    <div class="subheading2">
+      Soil already Removed
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilAlreadyRemovedVolume') ||
+          updatedFields.includes('soilAlreadyRemovedArea') ||
+          updatedFields.includes('soilAlreadyRemovedMaximumDepth') ||
+          updatedFields.includes('soilAlreadyPlacedAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
-    <div>
-      <strong
-        >Fill already Placed
-        <app-updated-banner
-          *ngIf="
-            updatedFields.includes('soilAlreadyPlacedVolume') ||
-            updatedFields.includes('soilAlreadyPlacedArea') ||
-            updatedFields.includes('soilAlreadyPlacedMaximumDepth') ||
-            updatedFields.includes('soilAlreadyPlacedAverageDepth')
-          "
-        ></app-updated-banner>
-      </strong>
+    <div class="subheading2">
+      Fill already Placed
+      <app-updated-banner
+        *ngIf="
+          updatedFields.includes('soilAlreadyPlacedVolume') ||
+          updatedFields.includes('soilAlreadyPlacedArea') ||
+          updatedFields.includes('soilAlreadyPlacedMaximumDepth') ||
+          updatedFields.includes('soilAlreadyPlacedAverageDepth')
+        "
+      ></app-updated-banner>
     </div>
 
-    <div><strong>Volume</strong></div>
+    <div class="subheading2">Volume</div>
     <div>
       {{ _noiSubmission.soilAlreadyRemovedVolume }}
       <span *ngIf="_noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
@@ -189,7 +181,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilAlreadyPlacedVolume === null"></app-no-data>
     </div>
 
-    <div><strong>Area</strong></div>
+    <div class="subheading2">Area</div>
     <div>
       {{ _noiSubmission.soilAlreadyRemovedArea }}
       <span *ngIf="_noiSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
@@ -201,7 +193,7 @@
       <app-no-data [showRequired]="showErrors" *ngIf="_noiSubmission.soilAlreadyPlacedArea === null"></app-no-data>
     </div>
 
-    <div><strong>Maximum Depth</strong></div>
+    <div class="subheading2">Maximum Depth</div>
     <div>
       {{ _noiSubmission.soilAlreadyRemovedMaximumDepth }}
       <span *ngIf="_noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
@@ -219,7 +211,7 @@
       ></app-no-data>
     </div>
 
-    <div><strong>Average Depth</strong></div>
+    <div class="subheading2">Average Depth</div>
     <div>
       {{ _noiSubmission.soilAlreadyRemovedAverageDepth }}
       <span *ngIf="_noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
