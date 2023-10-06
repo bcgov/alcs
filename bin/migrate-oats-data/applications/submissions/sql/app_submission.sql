@@ -20,7 +20,13 @@ SELECT
     acg.alr_application_id,
     aa.applicant,
     aa.alr_area,
-    oc.alr_appl_component_id
+    oc.alr_appl_component_id,
+    oc.rsdntl_use_type_code,
+    oc.infra_desc,
+    oc.cur_struc_desc,
+    oc.support_desc,
+    oc.tour_env_desc,
+    oc.sleeping_units
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT

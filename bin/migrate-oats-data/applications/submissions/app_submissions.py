@@ -10,6 +10,7 @@ from common import (
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
+from enum import Enum
 
 from .submap import (
     add_direction_field,
@@ -150,7 +151,7 @@ def insert_app_sub_records(
         execute_batch(
             cursor,
             get_insert_query_for_naru(),
-            inc_exc_data_list,
+            naru_data_list,
             page_size=batch_size,
         )
 
@@ -208,6 +209,9 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
         ):
             inc_exc_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.NAR.value:
+            data["rsdntl_use_type_code"] = str(
+                OatsToAlcsNaruType[data["rsdntl_use_type_code"]].value
+            )
             naru_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -283,17 +287,23 @@ def get_insert_query_for_nfu():
 
 
 def get_insert_query_for_naru():
-    unique_fields = """, nfu_hectares,
-                        nfu_will_import_fill,
-                        nfu_fill_volume,
-                        nfu_max_fill_depth,
-                        nfu_project_duration_amount,
-                        nfu_fill_type_description,
-                        nfu_fill_origin_description,
-                        nfu_project_duration_unit,
-                        nfu_total_fill_area
+    unique_fields = """,
+                        naru_will_import_fill,
+                        naru_to_place_volume,
+                        naru_to_place_maximum_depth,
+                        naru_project_duration_amount,
+                        naru_fill_type,
+                        naru_fill_origin,
+                        naru_project_duration_unit,  
+                        naru_to_place_area,
+                        naru_subtype_code,
+                        naru_infrastructure,
+                        naru_existing_structures,
+                        naru_sleeping_units,
+                        naru_residence_necessity,
+                        naru_agri_tourism
                         """
-    unique_values = """, %(alr_area)s,
+    unique_values = """,
                         %(import_fill)s,
                         %(total_fill)s,
                         %(max_fill_depth)s,
@@ -301,7 +311,13 @@ def get_insert_query_for_naru():
                         %(fill_type)s,
                         %(fill_origin)s,
                         %(fill_duration_unit)s,
-                        %(fill_area)s
+                        %(fill_area)s,
+                        %(rsdntl_use_type_code)s,
+                        %(infra_desc)s,
+                        %(cur_struc_desc)s,
+                        %(sleeping_units)s,
+                        %(support_desc)s,
+                        %(tour_env_desc)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
@@ -342,3 +358,9 @@ def clean_application_submission(conn=None):
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
     conn.commit()
+
+
+class OatsToAlcsNaruType(Enum):
+    PRL = AlcsNaruTypeCode.Principal_Residence.value
+    ADF = AlcsNaruTypeCode.Additional_Residence.value
+    ATA = AlcsNaruTypeCode.Tourism_Accomodation.value
