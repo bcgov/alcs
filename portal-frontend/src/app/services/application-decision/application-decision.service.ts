@@ -9,7 +9,7 @@ import { ApplicationPortalDecisionDto } from './application-decision.dto';
   providedIn: 'root',
 })
 export class ApplicationDecisionService {
-  private serviceUrl = `${environment.apiUrl}/public/application/decision`;
+  private serviceUrl = `${environment.authUrl}/public/application/decision`;
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 

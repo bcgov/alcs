@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
@@ -21,7 +22,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   _applications: ApplicationSearchResultDto[] = [];
   @Input() set applications(applications: ApplicationSearchResultDto[]) {
     this._applications = applications;
-    this.dataSource = this.mapApplications(applications);
+    this.dataSource = new MatTableDataSource<SearchResult>(this.mapApplications(applications));
   }
 
   _totalCount = 0;
@@ -36,7 +37,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
-  dataSource: SearchResult[] = [];
+  dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;
   total = 0;

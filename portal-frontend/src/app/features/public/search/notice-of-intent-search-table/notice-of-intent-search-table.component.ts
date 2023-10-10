@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationRegionDto, NoticeOfIntentTypeDto } from '../../../../services/code/code.dto';
-import { NoticeOfIntentSubmissionStatusDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSearchResultDto } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
 
@@ -23,7 +22,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   _noticeOfIntents: NoticeOfIntentSearchResultDto[] = [];
   @Input() set noticeOfIntents(noticeOfIntents: NoticeOfIntentSearchResultDto[]) {
     this._noticeOfIntents = noticeOfIntents;
-    this.dataSource = this.mapNoticeOfIntent(noticeOfIntents);
+    this.dataSource = new MatTableDataSource<SearchResult>(this.mapNoticeOfIntent(noticeOfIntents));
   }
 
   _totalCount = 0;
@@ -36,7 +35,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
-  dataSource: SearchResult[] = [];
+  dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;
   total = 0;

@@ -8,7 +8,7 @@ import { ApplicationSubmissionService } from '../../application-submission/appli
 import { ApplicationPortalDecisionDto } from './application-decision.dto';
 
 @Public()
-@Controller('application/decision')
+@Controller('public/application/decision')
 export class ApplicationDecisionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
@@ -16,10 +16,9 @@ export class ApplicationDecisionController {
     @InjectMapper() private mapper: Mapper,
   ) {}
 
-  @Get('/application/:fileNumber')
+  @Get('/:fileNumber')
   async listDecisions(
     @Param('fileNumber') fileNumber: string,
-    @Req() req,
   ): Promise<ApplicationPortalDecisionDto[]> {
     const decisions = await this.decisionService.getForPortal(fileNumber);
 
@@ -31,10 +30,8 @@ export class ApplicationDecisionController {
   }
 
   @Get('/:uuid/open')
-  async openFile(@Param('uuid') fileUuid: string, @Req() req) {
+  async openFile(@Param('uuid') fileUuid: string) {
     const url = await this.decisionService.getDownloadUrl(fileUuid);
-
-    //TODO: How do we know which documents applicant can access?
 
     return { url };
   }

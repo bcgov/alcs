@@ -7,7 +7,6 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentDecisionV2Service } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDecision } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionProfile } from '../../../common/automapper/notice-of-intent-decision.automapper.profile';
-import { User } from '../../../user/user.entity';
 import { NoticeOfIntentSubmission } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../../notice-of-intent-submission/notice-of-intent-submission.service';
 import { NoticeOfIntentDecisionController } from './notice-of-intent-decision.controller';
@@ -63,11 +62,7 @@ describe('NoticeOfIntentDecisionController', () => {
       new NoticeOfIntentDecision(),
     ]);
 
-    const res = await controller.listDecisions('', {
-      user: {
-        entity: new User(),
-      },
-    });
+    const res = await controller.listDecisions('');
 
     expect(res.length).toEqual(1);
     expect(mockDecisionService.getForPortal).toHaveBeenCalledTimes(1);
@@ -76,11 +71,7 @@ describe('NoticeOfIntentDecisionController', () => {
   it('should call through for loading files', async () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue('Mock Url');
 
-    const res = await controller.openFile('', {
-      user: {
-        entity: new User(),
-      },
-    });
+    const res = await controller.openFile('');
 
     expect(res.url).toBeTruthy();
     expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);

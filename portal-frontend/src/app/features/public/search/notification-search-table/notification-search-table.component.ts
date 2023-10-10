@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
@@ -24,7 +25,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
 
   @Input() set notifications(notifications: NotificationSearchResultDto[]) {
     this._notifications = notifications;
-    this.dataSource = this.mapNotifications(notifications);
+    this.dataSource = new MatTableDataSource<SearchResult>(this.mapNotifications(notifications));
   }
 
   _totalCount = 0;
@@ -35,7 +36,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
-  dataSource: SearchResult[] = [];
+  dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;
   total = 0;
