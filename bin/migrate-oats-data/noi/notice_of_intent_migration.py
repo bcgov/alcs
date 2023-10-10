@@ -10,6 +10,7 @@ from .notice_of_intent_submissions import (
     process_notice_of_intent_adjacent_land_use,
     process_notice_of_intent_empty_adjacent_land_use,
     init_notice_of_intent_statuses,
+    process_alcs_notice_of_intent_in_progress_status,
     clean_notice_of_intent_submission_statuses,
 )
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
@@ -47,6 +48,8 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_proposal_fields(batch_size)
 
     init_notice_of_intent_statuses()
+
+    process_alcs_notice_of_intent_in_progress_status(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

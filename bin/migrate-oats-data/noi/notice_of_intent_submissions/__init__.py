@@ -18,3 +18,7 @@ from .statuses.notice_of_intent_statuses_base_insert import (
     init_notice_of_intent_statuses,
     clean_notice_of_intent_submission_statuses,
 )
+
+from .statuses.notice_of_intent_status_in_progress import (
+    process_alcs_notice_of_intent_in_progress_status,
+)
