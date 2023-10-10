@@ -7,7 +7,7 @@ import { PublicService } from '../../../services/public/public.service';
 
 import { PublicNoticeOfIntentComponent } from './public-notice-of-intent.component';
 
-describe('PublicApplicationComponent', () => {
+describe('PublicNoticeOfIntentComponent', () => {
   let component: PublicNoticeOfIntentComponent;
   let fixture: ComponentFixture<PublicNoticeOfIntentComponent>;
 
