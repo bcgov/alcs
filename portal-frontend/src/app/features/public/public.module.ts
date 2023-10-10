@@ -27,6 +27,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./notice-of-intent/public-notice-of-intent.module').then((m) => m.PublicNoticeOfIntentModule),
   },
+  {
+    path: 'notification',
+    loadChildren: () => import('./notification/public-notification.module').then((m) => m.PublicNotificationModule),
+  },
 ];
 
 @NgModule({

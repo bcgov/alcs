@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { NoticeOfIntentStatusDto } from '../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { ProposedStructure } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
-import { PublicOwnerDto } from '../application/public-application.dto';
+import { PublicOwnerDto } from '../public.dto';
 
 export class PublicNoticeOfIntentSubmissionDto {
   @AutoMap()

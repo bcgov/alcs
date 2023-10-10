@@ -10,6 +10,7 @@ import {
 } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../../alcs/application/application.service';
+import { PublicDocumentDto, PublicParcelDto } from '../public.dto';
 import { ApplicationPortalDecisionDto } from './application-decision.dto';
 import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from '../../application-submission-review/application-submission-review.service';
@@ -18,10 +19,8 @@ import { ApplicationParcelService } from '../../application-submission/applicati
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import {
-  PublicParcelDto,
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
-  PublicDocumentDto,
 } from './public-application.dto';
 
 @Injectable()

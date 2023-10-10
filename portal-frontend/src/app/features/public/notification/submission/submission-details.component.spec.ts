@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { CodeService } from '../../../../services/code/code.service';
 
 import { SubmissionDetailsComponent } from './submission-details.component';

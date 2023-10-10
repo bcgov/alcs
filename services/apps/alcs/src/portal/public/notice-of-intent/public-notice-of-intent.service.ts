@@ -8,15 +8,12 @@ import { NoticeOfIntentDecision } from '../../../alcs/notice-of-intent-decision/
 import { NoticeOfIntentDocument } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentService } from '../../../alcs/notice-of-intent/notice-of-intent.service';
+import { PublicDocumentDto, PublicParcelDto } from '../public.dto';
 import { NoticeOfIntentPortalDecisionDto } from './notice-of-intent-decision.dto';
 import { NoticeOfIntentParcel } from '../../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentParcelService } from '../../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../../notice-of-intent-submission/notice-of-intent-submission.entity';
 import { NoticeOfIntentSubmissionService } from '../../notice-of-intent-submission/notice-of-intent-submission.service';
-import {
-  PublicDocumentDto,
-  PublicParcelDto,
-} from '../application/public-application.dto';
 import { PublicNoticeOfIntentSubmissionDto } from './public-notice-of-intent.dto';
 
 @Injectable()

@@ -1,0 +1,56 @@
+<div aria-hidden="true" class="banner absolute">
+  <div>
+    <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Status</div>
+      <span *ngIf="submission">{{ submission.status.label }}</span>
+    </div>
+  </div>
+</div>
+<div class="banner">
+  <div>
+    <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }}</h4>
+  </div>
+  <div class="banner-status">
+    <div>
+      <div class="subheading2">Status Date</div>
+      <span *ngIf="submission">{{ submission.lastStatusUpdate | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Status</div>
+      <span *ngIf="submission">{{ submission.status.label }}</span>
+    </div>
+  </div>
+</div>
+<button routerLink="/public" mat-button color="accent">
+  <mat-icon>chevron_left</mat-icon>
+  Return to Search Results
+</button>
+<div>
+  <div class="navigation">
+    <mat-tab-group>
+      <mat-tab label="Applicant Submission">
+        <div *ngIf="submission" class="content">
+          <section>
+            <div class="header">
+              <h3>Applicant Submission</h3>
+            </div>
+            <app-public-app-submission-details [documents]="documents" [submission]="submission" [parcels]="parcels">
+            </app-public-app-submission-details>
+          </section>
+        </div>
+      </mat-tab>
+      <mat-tab label="ALC Review and Decision">
+        <div *ngIf="submission" class="content">
+          <app-public-alc-review [documents]="documents"></app-public-alc-review>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

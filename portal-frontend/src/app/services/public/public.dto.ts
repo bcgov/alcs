@@ -19,6 +19,7 @@ export interface PublicDocumentDto {
   fileName: string;
   fileSize?: number;
   mimeType: string;
+  source: string;
   uploadedAt: number;
 }
 
