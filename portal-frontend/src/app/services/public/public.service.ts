@@ -39,6 +39,18 @@ export class PublicService {
     }
   }
 
+  async getApplicationDownloadFileUrl(fileId: string, uuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/application/${fileId}/${uuid}/download`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Application File, please try again later');
+      return undefined;
+    }
+  }
+
   async getNoticeOfIntent(fileId: string) {
     try {
       return await firstValueFrom(
@@ -63,6 +75,18 @@ export class PublicService {
     }
   }
 
+  async getNoticeOfIntentDownloadFileUrl(fileId: string, uuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notice-of-intent/${fileId}/${uuid}/download`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notice of Intent File, please try again later');
+      return undefined;
+    }
+  }
+
   async getNotification(fileId: string) {
     try {
       return await firstValueFrom(
@@ -79,6 +103,18 @@ export class PublicService {
     try {
       return await firstValueFrom(
         this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notification/${fileId}/${uuid}/open`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notification, please try again later');
+      return undefined;
+    }
+  }
+
+  async getNotificationDownloadFileUrl(fileId: string, uuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notification/${fileId}/${uuid}/download`)
       );
     } catch (e) {
       console.error(e);

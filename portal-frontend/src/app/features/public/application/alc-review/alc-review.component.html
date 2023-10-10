@@ -4,6 +4,9 @@
   </div>
   <div>
     <app-public-decisions [applicationDecisions]="applicationDecisions"></app-public-decisions>
-    <app-submission-documents [applicationDocuments]="applicationDocuments"></app-submission-documents>
+    <app-submission-documents
+      [applicationSubmission]="applicationSubmission"
+      [applicationDocuments]="applicationDocuments"
+    ></app-submission-documents>
   </div>
 </div>

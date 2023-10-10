@@ -48,7 +48,7 @@
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
         <div *ngIf="submission" class="content">
-          <app-public-alc-review [documents]="documents"></app-public-alc-review>
+          <app-public-alc-review [submission]="submission" [documents]="documents"></app-public-alc-review>
         </div>
       </mat-tab>
     </mat-tab-group>

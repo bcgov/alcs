@@ -35,7 +35,7 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, uuid);
+    const res = await this.publicService.getNoticeOfIntentDownloadFileUrl(this.submission.fileNumber, uuid);
     if (res) {
       const downloadLink = document.createElement('a');
       downloadLink.href = res.url;

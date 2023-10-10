@@ -46,5 +46,6 @@ const routes: Routes = [
     MatAutocompleteModule,
     MatTreeModule,
   ],
+  exports: [PublicAlcReviewComponent],
 })
 export class PublicNoticeOfIntentModule {}
