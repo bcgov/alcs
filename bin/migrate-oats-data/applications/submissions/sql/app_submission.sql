@@ -20,8 +20,18 @@ SELECT
     acg.alr_application_id,
     aa.applicant,
     aa.alr_area,
-    oc.alr_appl_component_id
+    oc.alr_appl_component_id,
+    oc.rsdntl_use_type_code,
+    oc.infra_desc,
+    oc.cur_struc_desc,
+    oc.support_desc,
+    oc.tour_env_desc,
+    oc.sleeping_units,
+    oc.component_area,
+    oa.proposal_summary_desc,
+    oa.proposal_background_desc
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
     JOIN oats.oats_alr_appl_components oc ON acg.alr_application_id = oc.alr_application_id
+    JOIN oats.oats_alr_applications oa ON acg.alr_application_id = oa.alr_application_id
