@@ -40,6 +40,13 @@ export enum DOCUMENT_TYPE {
 
 export const DOCUMENT_TYPES = Object.values(DOCUMENT_TYPE);
 
+export const DEFAULT_PUBLIC_TYPES = [
+  DOCUMENT_TYPE.PROPOSAL_MAP,
+  DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
+  DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+  DOCUMENT_TYPE.CROSS_SECTIONS,
+];
+
 @Entity()
 export class DocumentCode extends BaseCodeEntity {
   constructor(data?: Partial<DocumentCode>) {
