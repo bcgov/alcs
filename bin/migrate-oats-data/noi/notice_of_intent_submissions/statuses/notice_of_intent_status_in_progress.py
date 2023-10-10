@@ -98,12 +98,12 @@ _update_query = """
 def _prepare_oats_data(row_data_list):
     data_list = []
     for row in row_data_list:
-        data = map_fields(dict(row))
+        data = _map_fields(dict(row))
         data_list.append(data)
     return data_list
 
 
-def map_fields(data):
+def _map_fields(data):
     status_effective_date = None
 
     if data:
