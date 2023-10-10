@@ -7,7 +7,7 @@ import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 
 @Component({
-  selector: 'app-submission-documents',
+  selector: 'app-submission-documents[applicationSubmission]',
   templateUrl: './submission-documents.component.html',
   styleUrls: ['./submission-documents.component.scss'],
 })
@@ -30,14 +30,14 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationDownloadFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationDownloadFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
       const downloadLink = document.createElement('a');
       downloadLink.href = res.url;

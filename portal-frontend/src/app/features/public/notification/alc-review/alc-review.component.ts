@@ -10,6 +10,7 @@ import { PublicDocumentDto } from '../../../../services/public/public.dto';
   styleUrls: ['./alc-review.component.scss'],
 })
 export class PublicAlcReviewComponent {
+  @Input() submission!: PublicNotificationSubmissionDto;
   @Input() documents!: PublicDocumentDto[];
 
   constructor() {}

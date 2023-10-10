@@ -23,11 +23,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicAppService.getDownloadUrl(documentUuid);
-
-    return {
-      url,
-    };
+    return await this.publicAppService.getDownloadUrl(documentUuid);
   }
 
   @Get('/application/:fileId/:uuid/open')
@@ -35,11 +31,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicAppService.getInlineUrl(documentUuid);
-
-    return {
-      url,
-    };
+    return await this.publicAppService.getInlineUrl(documentUuid);
   }
 
   @Get('/notice-of-intent/:fileId')
@@ -52,13 +44,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicNoticeOfIntentService.getDownloadUrl(
-      documentUuid,
-    );
-
-    return {
-      url,
-    };
+    return await this.publicNoticeOfIntentService.getDownloadUrl(documentUuid);
   }
 
   @Get('/notice-of-intent/:fileId/:uuid/open')
@@ -66,13 +52,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicNoticeOfIntentService.getInlineUrl(
-      documentUuid,
-    );
-
-    return {
-      url,
-    };
+    return await this.publicNoticeOfIntentService.getInlineUrl(documentUuid);
   }
 
   @Get('/notification/:fileId')
@@ -85,13 +65,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicNotificationService.getDownloadUrl(
-      documentUuid,
-    );
-
-    return {
-      url,
-    };
+    return await this.publicNotificationService.getDownloadUrl(documentUuid);
   }
 
   @Get('/notification/:fileId/:uuid/open')
@@ -99,10 +73,6 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const url = await this.publicNotificationService.getInlineUrl(documentUuid);
-
-    return {
-      url,
-    };
+    return await this.publicNotificationService.getInlineUrl(documentUuid);
   }
 }
