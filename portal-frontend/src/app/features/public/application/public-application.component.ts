@@ -4,11 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApplicationPortalDecisionDto } from '../../../services/application-decision/application-decision.dto';
 import { SUBMISSION_STATUS } from '../../../services/application-submission/application-submission.dto';
 import {
-  PublicApplicationParcelDto,
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
-  PublicDocumentDto,
-} from '../../../services/public/public.dto';
+} from '../../../services/public/public-application.dto';
+import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/public.dto';
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
@@ -24,7 +23,7 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   submission: PublicApplicationSubmissionDto | undefined;
   review: PublicApplicationSubmissionReviewDto | undefined;
   documents: PublicDocumentDto[] = [];
-  parcels: PublicApplicationParcelDto[] = [];
+  parcels: PublicParcelDto[] = [];
   decisions: ApplicationPortalDecisionDto[] = [];
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}

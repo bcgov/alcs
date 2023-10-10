@@ -5,7 +5,7 @@ import { NoticeOfIntentParcelService } from '../../../../services/notice-of-inte
 
 import { PofoDetailsComponent } from './pofo-details.component';
 
-describe('RosoDetailsComponent', () => {
+describe('PofoDetailsComponent', () => {
   let component: PofoDetailsComponent;
   let fixture: ComponentFixture<PofoDetailsComponent>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;

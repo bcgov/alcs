@@ -135,6 +135,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     );
     mockNoticeOfIntentService.update.mockResolvedValue({} as any);
     mockNoticeOfIntentService.updateByUuid.mockResolvedValue({} as any);
+    mockNoticeOfIntentService.getUuid.mockResolvedValue('uuid');
 
     mockDecisionOutcomeRepository.find.mockResolvedValue([]);
     mockDecisionOutcomeRepository.findOneOrFail.mockResolvedValue({} as any);
@@ -436,6 +437,7 @@ describe('NoticeOfIntentDecisionV2Service', () => {
     it('should call through for get for applicant', async () => {
       await service.getForPortal('');
       expect(mockDecisionRepository.find).toHaveBeenCalledTimes(1);
+      expect(mockNoticeOfIntentService.getUuid).toHaveBeenCalledTimes(1);
     });
   });
 

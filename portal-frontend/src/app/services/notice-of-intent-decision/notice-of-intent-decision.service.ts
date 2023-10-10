@@ -9,14 +9,14 @@ import { NoticeOfIntentPortalDecisionDto } from './notice-of-intent-decision.dto
   providedIn: 'root',
 })
 export class NoticeOfIntentDecisionService {
-  private serviceUrl = `${environment.apiUrl}/notice-of-intent-decision`;
+  private serviceUrl = `${environment.apiUrl}/public/notice-of-intent/decision`;
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 
   async getByFileId(fileNumber: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<NoticeOfIntentPortalDecisionDto[]>(`${this.serviceUrl}/notice-of-intent/${fileNumber}`)
+        this.httpClient.get<NoticeOfIntentPortalDecisionDto[]>(`${this.serviceUrl}/${fileNumber}`)
       );
     } catch (e) {
       console.error(e);

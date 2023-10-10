@@ -1,0 +1,9 @@
+<div *ngIf="submission">
+  <div class="header">
+    <h3>ALC Review and Decision</h3>
+  </div>
+  <div>
+    <app-public-decisions [decisions]="decisions"></app-public-decisions>
+    <app-submission-documents [documents]="documents"></app-submission-documents>
+  </div>
+</div>

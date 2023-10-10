@@ -77,12 +77,6 @@ export class ApplicationDecisionV2Service {
         documents: {
           document: true,
         },
-        modifies: {
-          modifiesDecisions: true,
-        },
-        reconsiders: {
-          reconsidersDecisions: true,
-        },
       },
       order: {
         auditCreatedAt: 'DESC',

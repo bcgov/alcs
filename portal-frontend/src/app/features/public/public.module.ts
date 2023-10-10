@@ -6,12 +6,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { PublicAlcReviewComponent } from './application/alc-review/alc-review.component';
-import { PublicDecisionsComponent } from './application/alc-review/decisions/decisions.component';
-import { PublicSubmissionDocumentsComponent } from './application/alc-review/submission-documents/submission-documents.component';
-import { PublicLfngReviewComponent } from './application/lfng-review/lfng-review.component';
-import { PublicApplicationComponent } from './application/public-application.component';
-import { SubmissionDetailsModule } from './application/submission/submission-details.module';
 import { ApplicationSearchTableComponent } from './search/application-search-table/application-search-table.component';
 import { FileTypeFilterDropDownComponent } from './search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { NoticeOfIntentSearchTableComponent } from './search/notice-of-intent-search-table/notice-of-intent-search-table.component';
@@ -25,8 +19,13 @@ const routes: Routes = [
     component: PublicSearchComponent,
   },
   {
-    path: 'application/:fileId',
-    component: PublicApplicationComponent,
+    path: 'application',
+    loadChildren: () => import('./application/public-application.module').then((m) => m.PublicApplicationModule),
+  },
+  {
+    path: 'notice-of-intent',
+    loadChildren: () =>
+      import('./notice-of-intent/public-notice-of-intent.module').then((m) => m.PublicNoticeOfIntentModule),
   },
 ];
 
@@ -38,11 +37,6 @@ const routes: Routes = [
     ApplicationSearchTableComponent,
     FileTypeFilterDropDownComponent,
     SearchListComponent,
-    PublicApplicationComponent,
-    PublicLfngReviewComponent,
-    PublicAlcReviewComponent,
-    PublicSubmissionDocumentsComponent,
-    PublicDecisionsComponent,
   ],
   imports: [
     CommonModule,
@@ -52,7 +46,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatAutocompleteModule,
     MatTreeModule,
-    SubmissionDetailsModule,
   ],
 })
 export class PublicModule {}

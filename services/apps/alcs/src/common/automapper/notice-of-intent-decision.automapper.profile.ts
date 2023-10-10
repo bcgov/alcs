@@ -35,7 +35,7 @@ import { NoticeOfIntentModification } from '../../alcs/notice-of-intent-decision
 import { NoticeOfIntentSubmissionStatusType } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status-type.entity';
 import { NoticeOfIntentStatusDto } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
-import { NoticeOfIntentPortalDecisionDto } from '../../portal/notice-of-intent-decision/notice-of-intent-decision.dto';
+import { NoticeOfIntentPortalDecisionDto } from '../../portal/public/notice-of-intent/notice-of-intent-decision.dto';
 
 @Injectable()
 export class NoticeOfIntentDecisionProfile extends AutomapperProfile {

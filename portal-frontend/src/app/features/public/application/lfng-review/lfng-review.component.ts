@@ -3,8 +3,8 @@ import { SUBMISSION_STATUS } from '../../../../services/application-submission/a
 import {
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
-  PublicDocumentDto,
-} from '../../../../services/public/public.dto';
+} from '../../../../services/public/public-application.dto';
+import { PublicDocumentDto } from '../../../../services/public/public.dto';
 import { PublicService } from '../../../../services/public/public.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 
@@ -30,7 +30,7 @@ export class PublicLfngReviewComponent implements OnInit {
   }
 
   async openFile(uuid: string) {
-    const res = await this.publicService.getApplicationFileUrl(this.applicationSubmission.fileNumber, uuid);
+    const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
