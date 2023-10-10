@@ -1,10 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
-import { PublicNoticeOfIntentSubmissionDto } from '../../../../services/public/public-notice-of-intent.dto';
+import { PublicNotificationSubmissionDto } from '../../../../services/public/public-notification.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../services/public/public.dto';
+import { PublicService } from '../../../../services/public/public.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -15,7 +17,7 @@ import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() submission!: PublicNoticeOfIntentSubmissionDto;
+  @Input() submission!: PublicNotificationSubmissionDto;
   @Input() documents: PublicDocumentDto[] = [];
   @Input() parcels: PublicParcelDto[] = [];
 
@@ -31,9 +33,6 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadGovernments();
     if (this.submission) {
-      this.primaryContact = this.submission.owners.find(
-        (owner) => owner.uuid === this.submission.primaryContactOwnerUuid
-      );
       this.populateLocalGovernment(this.submission.localGovernmentUuid);
     }
   }

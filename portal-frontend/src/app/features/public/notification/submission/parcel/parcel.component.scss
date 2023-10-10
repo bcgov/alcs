@@ -1,0 +1,13 @@
+@use '../../../../../../styles/functions' as *;
+
+.review-table {
+  grid-template-columns: 1fr 1fr !important;
+
+  .full-width {
+    grid-column: 1/3;
+  }
+}
+
+.crown-land {
+  text-transform: capitalize;
+}

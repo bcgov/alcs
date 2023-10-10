@@ -1,29 +1,36 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DeepMocked } from '@golevelup/ts-jest';
+import { Router } from '@angular/router';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { PublicService } from '../../../../../services/public/public.service';
+import { ParcelComponent } from './parcel.component';
 
-import { AdditionalInformationComponent } from './additional-information.component';
+describe('ParcelComponent', () => {
+  let component: ParcelComponent;
+  let fixture: ComponentFixture<ParcelComponent>;
 
-describe('AdditionalInformationComponent', () => {
-  let component: AdditionalInformationComponent;
-  let fixture: ComponentFixture<AdditionalInformationComponent>;
   let mockPublicService: DeepMocked<PublicService>;
 
   beforeEach(async () => {
+    mockPublicService = createMock();
     await TestBed.configureTestingModule({
-      declarations: [AdditionalInformationComponent],
+      declarations: [ParcelComponent],
       providers: [
         {
           provide: PublicService,
           useValue: mockPublicService,
         },
+        {
+          provides: Router,
+          useValue: {},
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AdditionalInformationComponent);
+    fixture = TestBed.createComponent(ParcelComponent);
     component = fixture.componentInstance;
+    component.submission = {} as any;
     fixture.detectChanges();
   });
 

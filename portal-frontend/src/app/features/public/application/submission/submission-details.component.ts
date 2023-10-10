@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
 import { PublicApplicationSubmissionDto } from '../../../../services/public/public-application.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../services/public/public.dto';
+import { PublicService } from '../../../../services/public/public.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -27,7 +27,7 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
 
   private localGovernments: LocalGovernmentDto[] = [];
 
-  constructor(private codeService: CodeService, private applicationDocumentService: ApplicationDocumentService) {}
+  constructor(private codeService: CodeService) {}
 
   ngOnInit(): void {
     this.loadGovernments();
@@ -42,11 +42,6 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  async openFile(uuid: string) {
-    const res = await this.applicationDocumentService.openFile(uuid);
-    window.open(res?.url, '_blank');
   }
 
   private async loadGovernments() {
