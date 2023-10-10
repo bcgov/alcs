@@ -42,6 +42,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
     nfu_data_list = []
     inc_exc_data_list = []
     naru_data_list = []
+    tur_data_list = []
     other_data_list = []
 
     for row in app_sub_raw_data_list:
@@ -67,10 +68,18 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
                 OatsToAlcsNaruType[data["rsdntl_use_type_code"]].value
             )
             naru_data_list.append(data)
+        elif data["alr_change_code"] == ALRChangeCode.TUR.value:
+            tur_data_list.append(data)
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, other_data_list, inc_exc_data_list, naru_data_list
+    return (
+        nfu_data_list,
+        other_data_list,
+        inc_exc_data_list,
+        naru_data_list,
+        tur_data_list,
+    )
 
 
 def get_direction_data(rows, cursor):

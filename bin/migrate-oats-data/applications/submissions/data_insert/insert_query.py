@@ -25,6 +25,7 @@ def insert_app_sub_records(
         other_data_list,
         inc_exc_data_list,
         naru_data_list,
+        tur_data_list,
     ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
 
     if len(nfu_data_list) > 0:
@@ -48,6 +49,14 @@ def insert_app_sub_records(
             cursor,
             get_insert_query_for_naru(),
             naru_data_list,
+            page_size=batch_size,
+        )
+
+    if len(tur_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_tur(),
+            tur_data_list,
             page_size=batch_size,
         )
 
@@ -176,4 +185,22 @@ def get_insert_query_for_naru():
 def get_insert_query_for_inc_exc():
     unique_fields = ", incl_excl_hectares"
     unique_values = ", %(alr_area)s"
+    return get_insert_query(unique_fields, unique_values)
+
+
+def get_insert_query_for_tur():
+    unique_fields = """, 
+                        tur_agricultural_activities,
+                        tur_reduce_negative_impacts,
+                        tur_outside_lands,
+                        tur_total_corridor_area,
+                        tur_all_owners_notified
+                    """
+    unique_values = """, 
+                        %(agricultural_activities_desc)s,
+                        %(impact_reduction_desc)s,
+                        %(proposal_background_desc)s,
+                        %(component_area)s,
+                        %(owners_notified_ind)s
+                    """
     return get_insert_query(unique_fields, unique_values)
