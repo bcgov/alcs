@@ -66,7 +66,7 @@ describe('PublicNotificationService', () => {
     expect(service).toBeDefined();
   });
 
-  it('load a Notice of Intent and its related data for get NOI', async () => {
+  it('load a Notification and its related data for get notification', async () => {
     mockNOIService.getByFileNumber.mockResolvedValue(
       new Notification({
         type: new NotificationType(),

@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked } from '@golevelup/ts-jest';
 import { PublicService } from '../../../../../services/public/public.service';
@@ -18,6 +19,7 @@ describe('AdditionalInformationComponent', () => {
           useValue: mockPublicService,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdditionalInformationComponent);
