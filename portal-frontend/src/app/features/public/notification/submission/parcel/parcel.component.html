@@ -1,0 +1,42 @@
+<h3 class="flex-item">
+  {{ pageTitle }}
+</h3>
+<div class="review-table">
+  <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
+    <div class="full-width flex-space-between-wrap">
+      <h4>Parcel {{ parcelInd + 1 }}: Parcel and Owner Information</h4>
+    </div>
+    <div class="subheading2 grid-1">Ownership Type</div>
+    <div class="grid-double">
+      {{ parcel.ownershipType?.label }}
+      <app-no-data *ngIf="!parcel.ownershipType"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Legal Description</div>
+    <div class="grid-double">
+      {{ parcel.legalDescription }}
+    </div>
+    <div class="subheading2 grid-1">Area (Hectares)</div>
+    <div class="grid-double">
+      {{ parcel.mapAreaHectares }}
+    </div>
+    <div class="subheading2 grid-1">
+      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
+    </div>
+    <div class="grid-double">
+      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+      <app-no-data *ngIf="!parcel.pid"></app-no-data>
+    </div>
+    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
+      <div class="subheading2 grid-1">PIN (optional)</div>
+      <div class="grid-double">
+        {{ parcel.pin }}
+        <app-no-data *ngIf="!parcel.pin"></app-no-data>
+      </div>
+    </ng-container>
+    <div class="subheading2 grid-1">Civic Address</div>
+    <div class="grid-double">
+      {{ parcel.civicAddress }}
+      <app-no-data *ngIf="!parcel.civicAddress"></app-no-data>
+    </div>
+  </ng-container>
+</div>

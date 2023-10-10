@@ -2,18 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { createMock } from '@golevelup/ts-jest';
 import { ApplicationDecisionService } from '../../../../../services/application-decision/application-decision.service';
 
-import { DecisionsComponent } from './decisions.component';
+import { PublicDecisionsComponent } from './decisions.component';
 
-describe('DecisionsComponent', () => {
-  let component: DecisionsComponent;
-  let fixture: ComponentFixture<DecisionsComponent>;
+describe('PublicDecisionsComponent', () => {
+  let component: PublicDecisionsComponent;
+  let fixture: ComponentFixture<PublicDecisionsComponent>;
   let mockDecisionService: ApplicationDecisionService;
 
   beforeEach(async () => {
     mockDecisionService = createMock();
 
     await TestBed.configureTestingModule({
-      declarations: [DecisionsComponent],
+      declarations: [PublicDecisionsComponent],
       providers: [
         {
           provide: ApplicationDecisionService,
@@ -22,7 +22,7 @@ describe('DecisionsComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DecisionsComponent);
+    fixture = TestBed.createComponent(PublicDecisionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

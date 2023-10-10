@@ -92,6 +92,7 @@ def process_applications(conn=None, batch_size=10000):
 def clean_applications(conn=None):
     logger.info("Start applications cleaning")
     with conn.cursor() as cursor:
+        logger.debug("Start applications cleaning")
         cursor.execute(
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )

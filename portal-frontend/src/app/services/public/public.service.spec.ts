@@ -45,7 +45,7 @@ describe('PublicService', () => {
   it('should call get for loading application files', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
-    const res = await service.getApplicationFileUrl('fileId', 'documentUuid');
+    const res = await service.getApplicationOpenFileUrl('fileId', 'documentUuid');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();

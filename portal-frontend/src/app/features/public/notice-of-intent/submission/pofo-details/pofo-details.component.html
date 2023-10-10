@@ -1,0 +1,130 @@
+<div *ngIf="noiSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    Has the ALC previously received an application or Notice of Intent for this proposal?
+  </div>
+  <div class="grid-double">
+    <span *ngIf="noiSubmission.soilIsFollowUp !== null">
+      {{ noiSubmission.soilIsFollowUp ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="noiSubmission.soilIsFollowUp === null"></app-no-data>
+  </div>
+
+  <div *ngIf="noiSubmission.soilIsFollowUp" class="subheading2 grid-1">Application or NOI ID</div>
+  <div *ngIf="noiSubmission.soilIsFollowUp" class="grid-double">
+    {{ noiSubmission.soilFollowUpIDs }}
+    <app-no-data *ngIf="!noiSubmission.soilFollowUpIDs"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
+  <div class="grid-double">
+    {{ noiSubmission.purpose }}
+    <app-no-data *ngIf="!noiSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Describe the type, origin and quality of fill proposed to be placed.</div>
+  <div class="grid-double">
+    {{ noiSubmission.soilFillTypeToPlace }}
+    <app-no-data *ngIf="!noiSubmission.soilFillTypeToPlace"></app-no-data>
+  </div>
+
+  <div class="full-width soil-table">
+    <div class="grid-1"></div>
+    <div class="grid-2">
+      <strong> Fill to be Placed</strong>
+    </div>
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilToPlaceVolume }}
+      <span *ngIf="noiSubmission.soilToPlaceVolume">m<sup>3</sup></span>
+      <app-no-data *ngIf="!noiSubmission.soilToPlaceVolume"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilToPlaceArea }} <span *ngIf="noiSubmission.soilToPlaceArea">m<sup>2</sup></span>
+      <app-no-data *ngIf="!noiSubmission.soilToPlaceArea"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilToPlaceMaximumDepth }}
+      <span *ngIf="noiSubmission.soilToPlaceMaximumDepth">m</span>
+      <app-no-data *ngIf="!noiSubmission.soilToPlaceMaximumDepth"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilToPlaceAverageDepth }}
+      <span *ngIf="noiSubmission.soilToPlaceAverageDepth">m</span>
+      <app-no-data *ngIf="!noiSubmission.soilToPlaceAverageDepth"></app-no-data>
+    </div>
+  </div>
+
+  <div class="full-width soil-table">
+    <div class="grid-1"></div>
+    <div class="grid-2">
+      <strong> Fill already Placed</strong>
+    </div>
+    <div class="grid-1"><strong>Volume</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilAlreadyPlacedVolume }}
+      <span *ngIf="noiSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyPlacedVolume === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Area</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilAlreadyPlacedArea }}
+      <span *ngIf="noiSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyPlacedArea === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Maximum Depth</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilAlreadyPlacedMaximumDepth }}
+      <span *ngIf="noiSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyPlacedMaximumDepth === null"></app-no-data>
+    </div>
+    <div class="grid-1"><strong>Average Depth</strong></div>
+    <div class="grid-2">
+      {{ noiSubmission.soilAlreadyPlacedAverageDepth }}
+      <span *ngIf="noiSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
+      <app-no-data *ngIf="noiSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
+    </div>
+  </div>
+
+  <div class="full-width">
+    <h4>Project Duration</h4>
+  </div>
+  <div class="subheading2 grid-1">Duration</div>
+  <div class="grid-double">
+    {{ noiSubmission.soilProjectDurationUnit }}
+    <app-no-data *ngIf="!noiSubmission.soilProjectDurationUnit"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Length</div>
+  <div class="grid-double">
+    {{ noiSubmission.soilProjectDurationAmount }}
+    <app-no-data *ngIf="!noiSubmission.soilProjectDurationAmount"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Is your proposal for area-wide filling?</div>
+  <div class="grid-double">
+    <span *ngIf="noiSubmission.soilIsAreaWideFilling !== null">
+      {{ noiSubmission.soilIsAreaWideFilling ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="noiSubmission.soilIsAreaWideFilling === null"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="noiSubmission.soilIsAreaWideFilling">
+    <div class="subheading2 grid-1">Cross Sections</div>
+    <div class="grid-double">
+      <a *ngFor="let file of crossSections" (click)="openFile(file.uuid)">
+        {{ file.fileName }}
+      </a>
+      <app-no-data *ngIf="crossSections.length === 0"></app-no-data>
+    </div>
+  </ng-container>
+</div>

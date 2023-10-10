@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
-import { ApplicationParcelDto } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationPortalDecisionDto } from '../../../services/application-decision/application-decision.dto';
 import { SUBMISSION_STATUS } from '../../../services/application-submission/application-submission.dto';
-import { PublicApplicationSubmissionDto } from '../../../services/public/public.dto';
+import {
+  PublicApplicationSubmissionDto,
+  PublicApplicationSubmissionReviewDto,
+} from '../../../services/public/public-application.dto';
+import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/public.dto';
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
@@ -18,8 +21,10 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   SUBMISSION_STATUS = SUBMISSION_STATUS;
 
   submission: PublicApplicationSubmissionDto | undefined;
-  documents: ApplicationDocumentDto[] = [];
-  parcels: ApplicationParcelDto[] = [];
+  review: PublicApplicationSubmissionReviewDto | undefined;
+  documents: PublicDocumentDto[] = [];
+  parcels: PublicParcelDto[] = [];
+  decisions: ApplicationPortalDecisionDto[] = [];
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}
 
@@ -35,11 +40,13 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   private async loadApplication(fileId: string) {
     const res = await this.publicService.getApplication(fileId);
     if (res) {
-      const { submission, documents, parcels } = res;
+      const { submission, documents, parcels, review, decisions } = res;
 
       this.submission = submission;
       this.documents = documents;
       this.parcels = parcels;
+      this.review = review;
+      this.decisions = decisions;
     }
   }
 

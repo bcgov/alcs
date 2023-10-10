@@ -1,0 +1,27 @@
+<div *ngIf="submission" class="review-table other-layout">
+  <div class="subheading2 grid-1">Submitter’s File Number</div>
+  <div class="grid-double">
+    {{ submission.submittersFileNumber }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!submission.submittersFileNumber"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of the SRW?</div>
+  <div class="grid-double">
+    {{ submission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!submission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Total area of the SRW</div>
+  <div class="grid-double">
+    {{ submission.totalArea }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!submission.totalArea"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Is there a survey plan associated with the SRW?</div>
+  <div class="grid-double">
+    <span *ngIf="submission.hasSurveyPlan !== null">
+      {{ submission.hasSurveyPlan ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data [showRequired]="showErrors" *ngIf="submission.hasSurveyPlan === null"></app-no-data>
+  </div>
+</div>

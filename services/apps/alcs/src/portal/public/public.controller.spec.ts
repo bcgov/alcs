@@ -1,60 +1,36 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import {
-  ApplicationDocument,
-  VISIBILITY_FLAG,
-} from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
-import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { PublicAutomapperProfile } from '../../common/automapper/public.automapper.profile';
-import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { PublicApplicationService } from './application/public-application.service';
+import { PublicNoticeOfIntentService } from './notice-of-intent/public-notice-of-intent.service';
+import { PublicNotificationService } from './notification/public-notification.service';
 import { PublicController } from './public.controller';
 
-describe('PublicSearchController', () => {
+describe('PublicController', () => {
   let controller: PublicController;
-  let mockAppService: DeepMocked<ApplicationService>;
-  let mockAppSubService: DeepMocked<ApplicationSubmissionService>;
-  let mockAppParcelService: DeepMocked<ApplicationParcelService>;
-  let mockAppDocService: DeepMocked<ApplicationDocumentService>;
+  let mockAppService: DeepMocked<PublicApplicationService>;
+  let mockNOIService: DeepMocked<PublicNoticeOfIntentService>;
+  let mockNotificationService: DeepMocked<PublicNotificationService>;
 
   beforeEach(async () => {
     mockAppService = createMock();
-    mockAppSubService = createMock();
-    mockAppParcelService = createMock();
-    mockAppDocService = createMock();
+    mockNOIService = createMock();
+    mockNotificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        AutomapperModule.forRoot({
-          strategyInitializer: classes(),
-        }),
-      ],
       providers: [
-        PublicAutomapperProfile,
         {
-          provide: ApplicationService,
+          provide: PublicApplicationService,
           useValue: mockAppService,
         },
         {
-          provide: ApplicationSubmissionService,
-          useValue: mockAppSubService,
+          provide: PublicNoticeOfIntentService,
+          useValue: mockNOIService,
         },
         {
-          provide: ApplicationParcelService,
-          useValue: mockAppParcelService,
-        },
-        {
-          provide: ApplicationDocumentService,
-          useValue: mockAppDocService,
+          provide: PublicNotificationService,
+          useValue: mockNotificationService,
         },
         {
           provide: ClsService,
@@ -72,67 +48,30 @@ describe('PublicSearchController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('load an Application and its related data for get application', async () => {
-    mockAppService.get.mockResolvedValue(
-      new Application({
-        dateReceivedAllItems: new Date(),
-      }),
-    );
-    mockAppSubService.getOrFailByFileNumber.mockResolvedValue(
-      new ApplicationSubmission({
-        get status(): ApplicationSubmissionToSubmissionStatus {
-          return new ApplicationSubmissionToSubmissionStatus();
-        },
-      }),
-    );
-    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([]);
-    mockAppDocService.list.mockResolvedValue([]);
+  it('should call through to service for loading an application', async () => {
+    mockAppService.getPublicData.mockResolvedValue({} as any);
 
     const fileId = 'file-id';
     await controller.getApplication(fileId);
 
-    expect(mockAppService.get).toHaveBeenCalledTimes(1);
-    expect(mockAppSubService.getOrFailByFileNumber).toHaveBeenCalledTimes(1);
-    expect(mockAppParcelService.fetchByApplicationFileId).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(mockAppDocService.list).toHaveBeenCalledTimes(1);
-    expect(mockAppDocService.list).toHaveBeenCalledWith(fileId, [
-      VISIBILITY_FLAG.PUBLIC,
-    ]);
+    expect(mockAppService.getPublicData).toHaveBeenCalledTimes(1);
   });
 
-  it('should call through to document service for getting files', async () => {
-    const mockDoc = new ApplicationDocument({
-      visibilityFlags: [VISIBILITY_FLAG.PUBLIC],
-    });
-    mockAppDocService.get.mockResolvedValue(mockDoc);
-    mockAppDocService.getInlineUrl.mockResolvedValue('');
+  it('should call through to service for loading a notice of intent', async () => {
+    mockNOIService.getPublicData.mockResolvedValue({} as any);
 
     const fileId = 'file-id';
-    const documentUuid = 'document-uuid';
-    await controller.getApplicationDocumentOpen(fileId, documentUuid);
+    await controller.getNoticeOfIntent(fileId);
 
-    expect(mockAppDocService.get).toHaveBeenCalledTimes(1);
-    expect(mockAppDocService.getInlineUrl).toHaveBeenCalledTimes(1);
-    expect(mockAppDocService.getInlineUrl).toHaveBeenCalledWith(mockDoc);
+    expect(mockNOIService.getPublicData).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw an exception when the document is not public', async () => {
-    const mockDoc = new ApplicationDocument({
-      visibilityFlags: [VISIBILITY_FLAG.APPLICANT],
-    });
-    mockAppDocService.get.mockResolvedValue(mockDoc);
+  it('should call through to service for loading a notification', async () => {
+    mockNotificationService.getPublicData.mockResolvedValue({} as any);
 
     const fileId = 'file-id';
-    const documentUuid = 'document-uuid';
-    const promise = controller.getApplicationDocumentOpen(fileId, documentUuid);
+    await controller.getNotification(fileId);
 
-    await expect(promise).rejects.toMatchObject(
-      new ServiceNotFoundException('Failed to find document'),
-    );
-
-    expect(mockAppDocService.get).toHaveBeenCalledTimes(1);
-    expect(mockAppDocService.getInlineUrl).toHaveBeenCalledTimes(0);
+    expect(mockNotificationService.getPublicData).toHaveBeenCalledTimes(1);
   });
 });

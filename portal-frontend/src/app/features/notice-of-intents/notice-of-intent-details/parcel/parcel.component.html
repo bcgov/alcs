@@ -15,17 +15,12 @@
         </button>
       </div>
     </div>
-    <div class="full-width subheading1">Parcel Information</div>
-    <div class="subheading2 grid-1">
-      Ownership Type
-    </div>
+    <div class="subheading2 grid-1">Ownership Type</div>
     <div class="grid-double">
       {{ parcel.ownershipType?.label }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Legal Description
-    </div>
+    <div class="subheading2 grid-1">Legal Description</div>
     <div class="grid-double">
       {{ parcel.legalDescription }}
       <app-no-data
@@ -33,9 +28,7 @@
         *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Area (Hectares)
-    </div>
+    <div class="subheading2 grid-1">Area (Hectares)</div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
       <app-no-data
@@ -54,9 +47,7 @@
       </app-validation-error>
     </div>
     <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <div class="subheading2 grid-1">
-        PIN (optional)
-      </div>
+      <div class="subheading2 grid-1">PIN (optional)</div>
       <div class="grid-double">
         {{ parcel.pin }}
         <app-no-data
@@ -66,9 +57,7 @@
       </div>
     </ng-container>
     <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
-      <div class="subheading2 grid-1">
-        Purchase Date
-      </div>
+      <div class="subheading2 grid-1">Purchase Date</div>
       <div class="grid-double">
         {{ parcel.purchasedDate | date }}
         <app-no-data
@@ -78,16 +67,12 @@
         </app-no-data>
       </div>
     </ng-container>
-    <div class="subheading2 grid-1">
-      Farm Classification
-    </div>
+    <div class="subheading2 grid-1">Farm Classification</div>
     <div class="grid-double">
       <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
       <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Civic Address
-    </div>
+    <div class="subheading2 grid-1">Civic Address</div>
     <div class="grid-double">
       {{ parcel.civicAddress }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
@@ -99,9 +84,7 @@
         <app-no-data [showRequired]="showErrors" *ngIf="parcel.crownLandOwnerType === null"></app-no-data>
       </div>
     </ng-container>
-    <div class="subheading2 grid-1">
-      Certificate Of Title
-    </div>
+    <div class="subheading2 grid-1">Certificate Of Title</div>
     <div class="grid-double">
       <div *ngIf="parcel.certificateOfTitle">
         <a (click)="onOpenFile(parcel.certificateOfTitle.uuid)">{{ parcel.certificateOfTitle.fileName }}</a>
@@ -111,21 +94,21 @@
         *ngIf="!parcel.validation?.isCertificateUploaded"
       ></app-no-data>
     </div>
-    <div class="full-width subheading1">
-      Owner Information
-    </div>
-    <div class="full-width owner-information">
-      <div class="subheading2">Type</div>
-      <div class="subheading2">Full Name</div>
+
+    <div
+      class="full-width owner-information"
+      [ngClass]="{ 'crown-owner-information': parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN }"
+    >
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Land Owner(s)</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Contact(s)</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-        Ministry/ Department
+        Ministry/Department
       </div>
       <div class="subheading2">Phone</div>
       <div class="subheading2">Email</div>
-      <div class="subheading2">Corporate Summary</div>
+      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Corporate Summary</div>
       <ng-container *ngFor="let owner of parcel.owners">
-        <div>{{ owner.type.label }}</div>
         <div>{{ owner.displayName }}</div>
         <div>
           <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
@@ -133,7 +116,7 @@
         </div>
         <div>{{ owner.phoneNumber }}</div>
         <div>{{ owner.email }}</div>
-        <div>
+        <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
           <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
             owner.corporateSummary.fileName
           }}</a>

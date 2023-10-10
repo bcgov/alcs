@@ -256,6 +256,14 @@ export class ApplicationSubmissionReviewService {
     };
   }
 
+  getForPublicReview(fileNumber: string) {
+    return this.applicationSubmissionReviewRepository.findOne({
+      where: {
+        applicationFileNumber: fileNumber,
+      },
+    });
+  }
+
   async delete(applicationReview: ApplicationSubmissionReview) {
     await this.applicationSubmissionReviewRepository.remove(applicationReview);
   }

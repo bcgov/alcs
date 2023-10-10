@@ -1,0 +1,10 @@
+@use '../../../../../../styles/functions' as *;
+
+.soil-table {
+  grid-template-columns: max-content max-content max-content;
+
+  .spacer-row {
+    grid-column: 1/4;
+    height: rem(16);
+  }
+}

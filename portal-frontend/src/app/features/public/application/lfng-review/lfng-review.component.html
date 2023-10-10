@@ -1,70 +1,11 @@
-<div *ngIf="application">
+<div *ngIf="applicationSubmission">
   <div class="header">
     <h3>Local/First Nation Gov Review</h3>
-    <div class="btns-wrapper">
-      <button
-        *ngIf="application.canEdit || application.canReview"
-        mat-stroked-button
-        color="warn"
-        (click)="onCancelClicked(application.uuid)"
-      >
-        Cancel Application
-      </button>
-      <button
-        [routerLink]="'/application/' + application.fileNumber + '/edit'"
-        *ngIf="application.canEdit"
-        mat-flat-button
-        color="primary"
-      >
-        Edit Application
-      </button>
-      <button *ngIf="application.canReview" (click)="onReview(application.fileNumber)" mat-flat-button color="primary">
-        Review Application
-      </button>
-      <button
-        [disabled]="
-          !applicationReview ||
-          (!application.canReview && application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG)
-        "
-        (click)="onDownloadReviewPdf(application.fileNumber)"
-        mat-flat-button
-        color="accent"
-      >
-        Download PDF
-      </button>
-    </div>
   </div>
-  <div *ngIf="application.status.code === SUBMISSION_STATUS.IN_PROGRESS" class="warning">
-    <mat-icon>info</mat-icon>This section will update after the application is submitted.
-  </div>
-  <div *ngIf="!applicationReview && submittedToAlcStatus" class="warning">
+  <div *ngIf="!applicationReview" class="warning">
     <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
   </div>
-  <div
-    *ngIf="
-      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG ||
-      (application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && (!applicationReview || !application.canReview))
-    "
-    class="warning"
-  >
-    <mat-icon>info</mat-icon>Pending Local/First Nation Government review.
-  </div>
-  <div
-    *ngIf="
-      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-      application.status.code === SUBMISSION_STATUS.INCOMPLETE
-    "
-    class="comment-container"
-  >
-    <div><strong>Comment for Applicant</strong></div>
-    {{ application.returnedComment }}
-    <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
-  </div>
-  <div
-    *ngIf="
-      applicationReview && (application.canReview || application.status.code !== SUBMISSION_STATUS.IN_REVIEW_BY_LG)
-    "
-  >
+  <div *ngIf="applicationReview">
     <section>
       <h4>Contact Information</h4>
       <div class="review-table">
@@ -103,32 +44,17 @@
             <app-no-data *ngIf="!applicationReview.department"></app-no-data>
           </div>
         </div>
-        <div>
-          <div class="subheading2">Phone Number</div>
-          <div>
-            {{ applicationReview.phoneNumber }}
-            <app-no-data *ngIf="!applicationReview.phoneNumber"></app-no-data>
-          </div>
-        </div>
-        <div>
-          <div class="subheading2">Email</div>
-          <div>
-            {{ applicationReview.email }}
-            <app-no-data *ngIf="!applicationReview.email"></app-no-data>
-          </div>
-        </div>
       </div>
     </section>
-    <section *ngIf="!applicationReview.isFirstNationGovernment">
+    <section *ngIf="applicationReview.isOCPDesignation !== null">
       <h4>Plans & Bylaws: OCP</h4>
       <div class="review-table">
         <div class="full-width">
-          <div class="subheading2">Is the application parcel(s) subject to a Local Government OCP designation?</div>
+          <div class="subheading2">
+            Is the applicationSubmission parcel(s) subject to a Local Government OCP designation?
+          </div>
           <div>
-            <span *ngIf="applicationReview.isOCPDesignation !== null">{{
-              applicationReview.isOCPDesignation ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data *ngIf="applicationReview.isOCPDesignation === null"></app-no-data>
+            {{ applicationReview.isOCPDesignation ? 'Yes' : 'No' }}
           </div>
         </div>
         <div *ngIf="applicationReview.isOCPDesignation">
@@ -156,16 +82,15 @@
         </div>
       </div>
     </section>
-    <section *ngIf="!applicationReview.isFirstNationGovernment">
+    <section *ngIf="applicationReview.isSubjectToZoning !== null">
       <h4>Plans & Bylaws: Zoning</h4>
       <div class="review-table">
         <div class="full-width">
-          <div class="subheading2">Is the application parcel(s) subject to a Local Government zoning designation?</div>
+          <div class="subheading2">
+            Is the applicationSubmission parcel(s) subject to a Local Government zoning designation?
+          </div>
           <div>
-            <span *ngIf="applicationReview.isSubjectToZoning !== null">{{
-              applicationReview.isSubjectToZoning ? 'Yes' : 'No'
-            }}</span>
-            <app-no-data *ngIf="applicationReview.isSubjectToZoning === null"></app-no-data>
+            {{ applicationReview.isSubjectToZoning ? 'Yes' : 'No' }}
           </div>
         </div>
         <div *ngIf="applicationReview.isSubjectToZoning">
@@ -203,80 +128,26 @@
     <section>
       <h4>Resolution</h4>
       <div class="review-table">
-        <div
-          class="full-width"
-          *ngIf="
-            !applicationReview.isFirstNationGovernment &&
-            (applicationReview.isOCPDesignation === null || applicationReview.isSubjectToZoning === null)
-          "
-        >
-          Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
+        <div class="full-width" *ngIf="applicationReview.isAuthorized === null">
+          Parcels not subject to OCP or Zoning do not require local government authorization
         </div>
-        <div
-          class="full-width"
-          *ngIf="
-            !applicationReview.isFirstNationGovernment &&
-            applicationReview.isOCPDesignation === false &&
-            applicationReview.isSubjectToZoning === false
-          "
-        >
-          By indicating that the parcel(s) is not subject to Local Government OCP or Zoning,
-          <strong>no authorizing resolution is required</strong> as per S. 25 (3) or S. 29 (4) of the <em>ALC Act</em>.
-          The only option available is to forward this application on to the ALC.
-        </div>
-        <div *ngIf="hasCompletedStepsBeforeResolution" class="full-width">
+        <div *ngIf="applicationReview.isAuthorized !== null" class="full-width">
           <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
           <div>
-            <span *ngIf="applicationReview.isAuthorized !== null">{{
-              applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
-            }}</span>
-            <app-no-data *ngIf="applicationReview.isAuthorized === null"></app-no-data>
+            <span>{{ applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize' }}</span>
           </div>
         </div>
       </div>
     </section>
-    <section>
+    <section *ngIf="resolutionDocument.length > 0">
       <h4>Attachments</h4>
-      <div *ngIf="!hasCompletedStepsBeforeDocuments" class="review-table">
-        <div class="full-width">
-          Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue
-          with this step.
-        </div>
-      </div>
-      <div *ngIf="hasCompletedStepsBeforeDocuments" class="review-table">
-        <div
-          *ngIf="
-            applicationReview.isFirstNationGovernment ||
-            applicationReview.isOCPDesignation ||
-            applicationReview.isSubjectToZoning
-          "
-        >
+      <div class="review-table">
+        <div>
           <div class="subheading2">Resolution Document</div>
           <div>
             <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
               document.fileName
             }}</a>
-          </div>
-          <app-no-data *ngIf="resolutionDocument.length === 0"></app-no-data>
-        </div>
-        <div *ngIf="applicationReview.isOCPDesignation || applicationReview.isSubjectToZoning">
-          <div class="subheading2">
-            Staff Report <span *ngIf="applicationReview.isAuthorized === false">(optional)</span>
-          </div>
-          <div>
-            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of staffReport">{{
-              document.fileName
-            }}</a>
-          </div>
-          <app-no-data *ngIf="staffReport.length === 0"></app-no-data>
-        </div>
-        <div class="full-width">
-          <div class="subheading2">Other Attachments (optional):</div>
-          <div>
-            <div class="document" *ngFor="let document of governmentOtherAttachments">
-              <a class="link" (click)="openFile(document.uuid)">{{ document.fileName }}</a>
-            </div>
-            <app-no-data *ngIf="governmentOtherAttachments.length === 0"></app-no-data>
           </div>
         </div>
       </div>

@@ -9,14 +9,14 @@ import { ApplicationPortalDecisionDto } from './application-decision.dto';
   providedIn: 'root',
 })
 export class ApplicationDecisionService {
-  private serviceUrl = `${environment.apiUrl}/application-decision`;
+  private serviceUrl = `${environment.apiUrl}/public/application/decision`;
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 
   async getByFileId(fileNumber: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<ApplicationPortalDecisionDto[]>(`${this.serviceUrl}/application/${fileNumber}`)
+        this.httpClient.get<ApplicationPortalDecisionDto[]>(`${this.serviceUrl}/${fileNumber}`)
       );
     } catch (e) {
       console.error(e);

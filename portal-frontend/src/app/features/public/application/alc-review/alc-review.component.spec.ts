@@ -1,28 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { createMock, DeepMocked } from '@golevelup/ts-jest';
-import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 
-import { AlcReviewComponent } from './alc-review.component';
+import { PublicAlcReviewComponent } from './alc-review.component';
 
-describe('AlcsReviewComponent', () => {
-  let component: AlcReviewComponent;
-  let fixture: ComponentFixture<AlcReviewComponent>;
-  let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
+describe('PublicAlcReviewComponent', () => {
+  let component: PublicAlcReviewComponent;
+  let fixture: ComponentFixture<PublicAlcReviewComponent>;
 
   beforeEach(async () => {
-    mockAppReviewService = createMock();
-
     await TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: ApplicationSubmissionReviewService,
-          useValue: mockAppReviewService,
-        },
-      ],
-      declarations: [AlcReviewComponent],
+      providers: [],
+      declarations: [PublicAlcReviewComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AlcReviewComponent);
+    fixture = TestBed.createComponent(PublicAlcReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

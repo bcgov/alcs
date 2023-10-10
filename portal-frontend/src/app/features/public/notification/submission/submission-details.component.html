@@ -1,0 +1,52 @@
+<section>
+  <app-parcel [submission]="submission" [parcels]="parcels"></app-parcel>
+</section>
+<section>
+  <h3>Identify Transferee(s)</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="full-width transferee-table">
+      <div class="subheading2">Name</div>
+      <div class="subheading2">Organization Name</div>
+      <ng-container *ngFor="let transferee of submission.transferees">
+        <div>{{ transferee.displayName }}</div>
+        <div>
+          {{ transferee.organizationName }}
+          <app-no-data *ngIf="!transferee.organizationName"></app-no-data>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Primary Contact</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">First Name</div>
+    <div class="grid-double">
+      {{ submission.contactFirstName }}
+    </div>
+    <div class="subheading2 grid-1">Last Name</div>
+    <div class="grid-double">
+      {{ submission.contactLastName }}
+    </div>
+    <div class="subheading2 grid-1">
+      <span>Organization (optional)</span>
+    </div>
+    <div class="grid-double">
+      {{ submission.contactOrganization }}
+      <app-no-data *ngIf="!submission.contactOrganization"></app-no-data>
+    </div>
+  </div>
+</section>
+<section>
+  <h3>Government</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">Local or First Nation Government</div>
+    <div class="grid-double">
+      {{ localGovernment?.name }}
+    </div>
+  </div>
+</section>
+<section *ngIf="submission">
+  <h3>5. Purpose of SRW</h3>
+  <app-proposal-details [submission]="submission"></app-proposal-details>
+</section>

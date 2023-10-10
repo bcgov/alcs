@@ -1,75 +1,21 @@
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Controller, Get, Param } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
-import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
-import {
-  ApplicationDocument,
-  VISIBILITY_FLAG,
-} from '../../alcs/application/application-document/application-document.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { ApplicationParcelDto } from '../application-submission/application-parcel/application-parcel.dto';
-import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
-import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
-import { ApplicationSubmission } from '../application-submission/application-submission.entity';
-import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { PublicApplicationSubmissionDto } from './public.dto';
+import { PublicApplicationService } from './application/public-application.service';
+import { PublicNoticeOfIntentService } from './notice-of-intent/public-notice-of-intent.service';
+import { PublicNotificationService } from './notification/public-notification.service';
 
 @Public()
 @Controller('/public')
 export class PublicController {
   constructor(
-    @InjectMapper() private mapper: Mapper,
-    private applicationService: ApplicationService,
-    private applicationSubmissionService: ApplicationSubmissionService,
-    private applicationParcelService: ApplicationParcelService,
-    private applicationDocumentService: ApplicationDocumentService,
+    private publicAppService: PublicApplicationService,
+    private publicNoticeOfIntentService: PublicNoticeOfIntentService,
+    private publicNotificationService: PublicNotificationService,
   ) {}
 
   @Get('/application/:fileId')
-  async getApplication(@Param('fileId') fileId: string) {
-    const application = await this.applicationService.get(fileId);
-    if (!application?.dateReceivedAllItems) {
-      throw new ServiceNotFoundException(
-        `Failed to find application with File ID ${fileId}`,
-      );
-    }
-
-    const submission =
-      await this.applicationSubmissionService.getOrFailByFileNumber(fileId);
-
-    const parcels =
-      await this.applicationParcelService.fetchByApplicationFileId(fileId);
-
-    const mappedParcels = this.mapper.mapArray(
-      parcels,
-      ApplicationParcel,
-      ApplicationParcelDto,
-    );
-
-    const mappedSubmission = this.mapper.map(
-      submission,
-      ApplicationSubmission,
-      PublicApplicationSubmissionDto,
-    );
-
-    const documents = await this.applicationDocumentService.list(fileId, [
-      VISIBILITY_FLAG.PUBLIC,
-    ]);
-
-    const mappedDocuments = this.mapper.mapArray(
-      documents,
-      ApplicationDocument,
-      ApplicationDocumentDto,
-    );
-
-    return {
-      submission: mappedSubmission,
-      parcels: mappedParcels,
-      documents: mappedDocuments,
-    };
+  async getApplication(@Param('fileId') fileNumber: string) {
+    return await this.publicAppService.getPublicData(fileNumber);
   }
 
   @Get('/application/:fileId/:uuid/download')
@@ -77,13 +23,7 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const document = await this.applicationDocumentService.get(documentUuid);
-
-    if (!document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
-      throw new ServiceNotFoundException('Failed to find document');
-    }
-
-    const url = await this.applicationDocumentService.getDownloadUrl(document);
+    const url = await this.publicAppService.getDownloadUrl(documentUuid);
 
     return {
       url,
@@ -95,13 +35,71 @@ export class PublicController {
     @Param('fileId') fileId: string,
     @Param('uuid') documentUuid: string,
   ) {
-    const document = await this.applicationDocumentService.get(documentUuid);
+    const url = await this.publicAppService.getInlineUrl(documentUuid);
 
-    if (!document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
-      throw new ServiceNotFoundException('Failed to find document');
-    }
+    return {
+      url,
+    };
+  }
 
-    const url = await this.applicationDocumentService.getInlineUrl(document);
+  @Get('/notice-of-intent/:fileId')
+  async getNoticeOfIntent(@Param('fileId') fileNumber: string) {
+    return await this.publicNoticeOfIntentService.getPublicData(fileNumber);
+  }
+
+  @Get('/notice-of-intent/:fileId/:uuid/download')
+  async getNoticeOfIntentDocumentDownload(
+    @Param('fileId') fileId: string,
+    @Param('uuid') documentUuid: string,
+  ) {
+    const url = await this.publicNoticeOfIntentService.getDownloadUrl(
+      documentUuid,
+    );
+
+    return {
+      url,
+    };
+  }
+
+  @Get('/notice-of-intent/:fileId/:uuid/open')
+  async getNoticeOfIntentDocumentOpen(
+    @Param('fileId') fileId: string,
+    @Param('uuid') documentUuid: string,
+  ) {
+    const url = await this.publicNoticeOfIntentService.getInlineUrl(
+      documentUuid,
+    );
+
+    return {
+      url,
+    };
+  }
+
+  @Get('/notification/:fileId')
+  async getNotification(@Param('fileId') fileNumber: string) {
+    return await this.publicNotificationService.getPublicData(fileNumber);
+  }
+
+  @Get('/notification/:fileId/:uuid/download')
+  async getNotificationDocumentDownload(
+    @Param('fileId') fileId: string,
+    @Param('uuid') documentUuid: string,
+  ) {
+    const url = await this.publicNotificationService.getDownloadUrl(
+      documentUuid,
+    );
+
+    return {
+      url,
+    };
+  }
+
+  @Get('/notification/:fileId/:uuid/open')
+  async getNotificationDocumentOpen(
+    @Param('fileId') fileId: string,
+    @Param('uuid') documentUuid: string,
+  ) {
+    const url = await this.publicNotificationService.getInlineUrl(documentUuid);
 
     return {
       url,

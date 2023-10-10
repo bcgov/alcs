@@ -28,8 +28,9 @@
     </div>
   </div>
 </div>
-<button routerLink="/search" mat-button color="accent">
-  <mat-icon>chevron_left</mat-icon>Return to Search Results
+<button routerLink="/public" mat-button color="accent">
+  <mat-icon>chevron_left</mat-icon>
+  Return to Search Results
 </button>
 <div>
   <div class="navigation">
@@ -50,10 +51,23 @@
         </div>
       </mat-tab>
       <mat-tab label="Local/First Nation Gov Review">
-        <div class="content">//TODO</div>
+        <div *ngIf="submission" class="content">
+          <app-public-lfng-review
+            [applicationSubmission]="submission"
+            [applicationDocuments]="documents"
+            [applicationReview]="review"
+          >
+          </app-public-lfng-review>
+        </div>
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
-        <div class="content">//TODO</div>
+        <div *ngIf="submission" class="content">
+          <app-public-alc-review
+            [applicationDocuments]="documents"
+            [applicationSubmission]="submission"
+            [applicationDecisions]="decisions"
+          ></app-public-alc-review>
+        </div>
       </mat-tab>
     </mat-tab-group>
   </div>

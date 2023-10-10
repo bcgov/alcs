@@ -1,7 +1,7 @@
 @use '../../../../../styles/functions' as *;
 
 .soil-table {
-  grid-template-columns: max-content max-content max-content;
+  grid-template-columns: 0.625fr 1fr 1fr;
 
   .spacer-row {
     grid-column: 1/4;

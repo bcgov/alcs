@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { GetPublicApplicationResponseDto } from './public.dto';
+import { GetPublicApplicationResponseDto } from './public-application.dto';
+import { GetPublicNoticeOfIntentResponseDto } from './public-notice-of-intent.dto';
+import { GetPublicNotificationResponseDto } from './public-notification.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +27,7 @@ export class PublicService {
     }
   }
 
-  async getApplicationFileUrl(fileId: string, uuid: string) {
+  async getApplicationOpenFileUrl(fileId: string, uuid: string) {
     try {
       return await firstValueFrom(
         this.httpClient.get<{ url: string }>(`${this.serviceUrl}/application/${fileId}/${uuid}/open`)
@@ -33,6 +35,54 @@ export class PublicService {
     } catch (e) {
       console.error(e);
       this.toastService.showErrorToast('Failed to load Application File, please try again later');
+      return undefined;
+    }
+  }
+
+  async getNoticeOfIntent(fileId: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<GetPublicNoticeOfIntentResponseDto>(`${this.serviceUrl}/notice-of-intent/${fileId}`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notice of Intent, please try again later');
+      return undefined;
+    }
+  }
+
+  async getNoticeOfIntentOpenFileUrl(fileId: string, uuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notice-of-intent/${fileId}/${uuid}/open`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notice of Intent File, please try again later');
+      return undefined;
+    }
+  }
+
+  async getNotification(fileId: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<GetPublicNotificationResponseDto>(`${this.serviceUrl}/notification/${fileId}`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notification, please try again later');
+      return undefined;
+    }
+  }
+
+  async getNotificationOpenFileUrl(fileId: string, uuid: string) {
+    try {
+      return await firstValueFrom(
+        this.httpClient.get<{ url: string }>(`${this.serviceUrl}/notification/${fileId}/${uuid}/open`)
+      );
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to load Notification, please try again later');
       return undefined;
     }
   }
