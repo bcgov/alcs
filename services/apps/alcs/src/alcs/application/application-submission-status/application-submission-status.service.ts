@@ -111,6 +111,7 @@ export class ApplicationSubmissionStatusService {
   private async getSubmission(fileNumber: string) {
     const submission = await this.applicationSubmissionRepository.findOneBy({
       fileNumber,
+      isDraft: false,
     });
 
     if (!submission) {

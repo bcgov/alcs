@@ -166,6 +166,7 @@ describe('ApplicationSubmissionStatusService', () => {
     );
     expect(mockApplicationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 
@@ -321,6 +322,7 @@ describe('ApplicationSubmissionStatusService', () => {
     );
     expect(mockApplicationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 
@@ -349,6 +351,7 @@ describe('ApplicationSubmissionStatusService', () => {
     );
     expect(mockApplicationSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 
