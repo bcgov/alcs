@@ -82,6 +82,7 @@
               matInput
               placeholder="Enter Email"
               formControlName="confirmEmail"
+              autocomplete="off"
             />
           </mat-form-field>
           <div *ngIf="confirmEmail.invalid && (confirmEmail.dirty || confirmEmail.touched)" class="field-error">
