@@ -42,10 +42,73 @@ describe('PublicService', () => {
     expect(res).toBeDefined();
   });
 
-  it('should call get for loading application files', async () => {
+  it('should call get for opening application files', async () => {
     mockHttpClient.get.mockReturnValue(of({}));
 
     const res = await service.getApplicationOpenFileUrl('fileId', 'documentUuid');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for download application files', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getApplicationDownloadFileUrl('fileId', 'documentUuid');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for loading Notice of Intent', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNoticeOfIntent('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for opening Notice of Intent files', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNoticeOfIntentOpenFileUrl('fileId', 'documentUuid');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for download Notice of Intent files', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNoticeOfIntentDownloadFileUrl('fileId', 'documentUuid');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for loading Notification', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNotification('fileId');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for opening Notification files', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNotificationOpenFileUrl('fileId', 'documentUuid');
+
+    expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
+    expect(res).toBeDefined();
+  });
+
+  it('should call get for download Notification files', async () => {
+    mockHttpClient.get.mockReturnValue(of({}));
+
+    const res = await service.getNotificationDownloadFileUrl('fileId', 'documentUuid');
 
     expect(mockHttpClient.get).toHaveBeenCalledTimes(1);
     expect(res).toBeDefined();

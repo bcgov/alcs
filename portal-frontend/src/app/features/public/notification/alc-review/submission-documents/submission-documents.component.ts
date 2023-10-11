@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
-import { PublicNoticeOfIntentSubmissionDto } from '../../../../../services/public/public-notice-of-intent.dto';
+import { PublicNotificationSubmissionDto } from '../../../../../services/public/public-notification.dto';
 import { PublicDocumentDto } from '../../../../../services/public/public.dto';
 import { PublicService } from '../../../../../services/public/public.service';
 
@@ -16,7 +16,7 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['type', 'fileName', 'source', 'uploadedAt', 'actions'];
   @Input() documents!: PublicDocumentDto[];
-  @Input() submission!: PublicNoticeOfIntentSubmissionDto;
+  @Input() submission!: PublicNotificationSubmissionDto;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<PublicDocumentDto> = new MatTableDataSource<PublicDocumentDto>();
@@ -28,14 +28,14 @@ export class PublicSubmissionDocumentsComponent implements OnInit, OnDestroy {
   }
 
   async openFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, uuid);
+    const res = await this.publicService.getNotificationOpenFileUrl(this.submission.fileNumber, uuid);
     if (res) {
       window.open(res.url, '_blank');
     }
   }
 
   async downloadFile(uuid: string) {
-    const res = await this.publicService.getNoticeOfIntentOpenFileUrl(this.submission.fileNumber, uuid);
+    const res = await this.publicService.getNotificationDownloadFileUrl(this.submission.fileNumber, uuid);
     if (res) {
       const downloadLink = document.createElement('a');
       downloadLink.href = res.url;
