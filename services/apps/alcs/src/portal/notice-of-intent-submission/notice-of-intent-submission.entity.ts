@@ -481,7 +481,8 @@ export class NoticeOfIntentSubmission extends Base {
       if (
         effectiveDate &&
         effectiveDate <= now &&
-        status.statusType.weight > this.status.statusType.weight
+        (!this.status ||
+          status.statusType.weight > this.status.statusType.weight)
       ) {
         this.status = status;
       }

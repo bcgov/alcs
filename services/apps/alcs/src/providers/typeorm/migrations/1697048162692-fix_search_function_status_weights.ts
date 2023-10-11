@@ -12,7 +12,6 @@ export class fixSearchFunctionStatusWeights1697048162692
                       utc_timestamp_tomorrow timestamptz;
                       result RECORD;
                   BEGIN
-                      -- TODO adjust the date according to api
                       utc_timestamp_tomorrow = timezone('utc', (now() - INTERVAL '-1 DAY'));
                       
                       SELECT
@@ -40,7 +39,6 @@ export class fixSearchFunctionStatusWeights1697048162692
             utc_timestamp_tomorrow timestamptz;
             result RECORD;
         BEGIN
-            -- TODO adjust the date according to api
             utc_timestamp_tomorrow = timezone('utc', (now() - INTERVAL '-1 DAY'));
             
             SELECT
@@ -69,7 +67,6 @@ export class fixSearchFunctionStatusWeights1697048162692
         utc_timestamp_tomorrow timestamptz;
         result RECORD;
       BEGIN
-        -- TODO adjust the date according to api
         utc_timestamp_tomorrow = timezone('utc', (now() - INTERVAL '-1 DAY'));
         SELECT
           notistss.submission_uuid,
