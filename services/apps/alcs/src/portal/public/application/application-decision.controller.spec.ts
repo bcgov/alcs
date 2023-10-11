@@ -7,7 +7,6 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
 import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v2.automapper.profile';
-import { User } from '../../../user/user.entity';
 import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import { ApplicationDecisionController } from './application-decision.controller';
 
@@ -58,11 +57,7 @@ describe('ApplicationDecisionController', () => {
       new ApplicationDecision(),
     ]);
 
-    const res = await controller.listDecisions('', {
-      user: {
-        entity: new User(),
-      },
-    });
+    const res = await controller.listDecisions('');
 
     expect(res.length).toEqual(1);
     expect(mockDecisionService.getForPortal).toHaveBeenCalledTimes(1);
@@ -71,11 +66,7 @@ describe('ApplicationDecisionController', () => {
   it('should call through for loading files', async () => {
     mockDecisionService.getDownloadUrl.mockResolvedValue('Mock Url');
 
-    const res = await controller.openFile('', {
-      user: {
-        entity: new User(),
-      },
-    });
+    const res = await controller.openFile('');
 
     expect(res.url).toBeTruthy();
     expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);

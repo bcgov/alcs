@@ -9,7 +9,7 @@ import { NoticeOfIntentPortalDecisionDto } from './notice-of-intent-decision.dto
   providedIn: 'root',
 })
 export class NoticeOfIntentDecisionService {
-  private serviceUrl = `${environment.apiUrl}/public/notice-of-intent/decision`;
+  private serviceUrl = `${environment.authUrl}/public/notice-of-intent/decision`;
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 

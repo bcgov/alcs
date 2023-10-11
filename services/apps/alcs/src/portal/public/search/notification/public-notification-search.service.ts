@@ -63,7 +63,7 @@ export class PublicNotificationSearchService {
 
       default:
       case 'lastUpdate':
-        return `"notificationSearch"."status" ->> 'effectiveDate' `;
+        return `"notificationSearch"."status" ->> 'effective_date' `;
     }
   }
 
