@@ -110,11 +110,11 @@ _update_query = """
 def _prepare_oats_data(row_data_list):
     data_list = []
     for row in row_data_list:
-        data_list.append(map_fields(dict(row)))
+        data_list.append(_map_fields(dict(row)))
     return data_list
 
 
-def map_fields(data):
+def _map_fields(data):
     summery = data.get("proposal_summary_desc", "")
     background_description = data.get("proposal_background_desc", "")
 
