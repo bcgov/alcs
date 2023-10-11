@@ -8,6 +8,7 @@ import { ApplicationModificationService } from '../../application-decision/appli
 import { ApplicationReconsiderationService } from '../../application-decision/application-reconsideration/application-reconsideration.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../../notification/notification.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';
 import { UnarchiveCardService } from './unarchive-card.service';
 
@@ -21,6 +22,7 @@ describe('UnarchiveCardService', () => {
   let mockCovenantService: DeepMocked<CovenantService>;
   let mockNOIService: DeepMocked<NoticeOfIntentService>;
   let mockNOIModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let mockNotificationService: DeepMocked<NoticeOfIntentService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
@@ -30,6 +32,7 @@ describe('UnarchiveCardService', () => {
     mockCovenantService = createMock();
     mockNOIService = createMock();
     mockNOIModificationService = createMock();
+    mockNotificationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -67,6 +70,10 @@ describe('UnarchiveCardService', () => {
           provide: NoticeOfIntentModificationService,
           useValue: mockNOIModificationService,
         },
+        {
+          provide: NotificationService,
+          useValue: mockNotificationService,
+        },
       ],
     }).compile();
 
@@ -85,6 +92,7 @@ describe('UnarchiveCardService', () => {
     mockCovenantService.getDeletedCards.mockResolvedValue([]);
     mockNOIService.getDeletedCards.mockResolvedValue([]);
     mockNOIModificationService.getDeletedCards.mockResolvedValue([]);
+    mockNotificationService.getDeletedCards.mockResolvedValue([]);
 
     const res = await service.fetchByFileId('uuid');
 
@@ -95,5 +103,6 @@ describe('UnarchiveCardService', () => {
     expect(mockCovenantService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockNOIService.getDeletedCards).toHaveBeenCalledTimes(1);
     expect(mockNOIModificationService.getDeletedCards).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.getDeletedCards).toHaveBeenCalledTimes(1);
   });
 });
