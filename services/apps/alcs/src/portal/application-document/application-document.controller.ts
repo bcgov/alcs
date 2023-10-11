@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,
@@ -22,6 +21,10 @@ import {
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import {
+  DEFAULT_PUBLIC_TYPES,
+  DOCUMENT_TYPE,
+} from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
@@ -139,6 +142,16 @@ export class ApplicationDocumentController {
       system: DOCUMENT_SYSTEM.PORTAL,
     });
 
+    const visibilityFlags = [
+      VISIBILITY_FLAG.APPLICANT,
+      VISIBILITY_FLAG.GOVERNMENT,
+      VISIBILITY_FLAG.COMMISSIONER,
+    ];
+
+    if (data.documentType && DEFAULT_PUBLIC_TYPES.includes(data.documentType)) {
+      visibilityFlags.push(VISIBILITY_FLAG.PUBLIC);
+    }
+
     const savedDocument =
       await this.applicationDocumentService.attachExternalDocument(
         submission.fileNumber,
@@ -146,11 +159,7 @@ export class ApplicationDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
-        [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.GOVERNMENT,
-          VISIBILITY_FLAG.COMMISSIONER,
-        ],
+        visibilityFlags,
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);

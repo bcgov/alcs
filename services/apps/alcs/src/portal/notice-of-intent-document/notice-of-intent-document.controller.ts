@@ -20,7 +20,10 @@ import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-in
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import {
+  DEFAULT_PUBLIC_TYPES,
+  DOCUMENT_TYPE,
+} from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
@@ -139,6 +142,16 @@ export class NoticeOfIntentDocumentController {
       system: DOCUMENT_SYSTEM.PORTAL,
     });
 
+    const visibilityFlags = [
+      VISIBILITY_FLAG.APPLICANT,
+      VISIBILITY_FLAG.GOVERNMENT,
+      VISIBILITY_FLAG.COMMISSIONER,
+    ];
+
+    if (data.documentType && DEFAULT_PUBLIC_TYPES.includes(data.documentType)) {
+      visibilityFlags.push(VISIBILITY_FLAG.PUBLIC);
+    }
+
     const savedDocument =
       await this.noticeOfIntentDocumentService.attachExternalDocument(
         submission.fileNumber,
@@ -146,11 +159,7 @@ export class NoticeOfIntentDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
-        [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.GOVERNMENT,
-          VISIBILITY_FLAG.COMMISSIONER,
-        ],
+        visibilityFlags,
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);

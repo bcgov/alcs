@@ -21,7 +21,10 @@ import {
 import { NotificationDocumentService } from '../../alcs/notification/notification-document/notification-document.service';
 import { NotificationService } from '../../alcs/notification/notification.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import {
+  DEFAULT_PUBLIC_TYPES,
+  DOCUMENT_TYPE,
+} from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
 import { NotificationSubmissionService } from '../notification-submission/notification-submission.service';
@@ -138,6 +141,15 @@ export class NotificationDocumentController {
       system: DOCUMENT_SYSTEM.PORTAL,
     });
 
+    const visibilityFlags = [
+      VISIBILITY_FLAG.APPLICANT,
+      VISIBILITY_FLAG.COMMISSIONER,
+    ];
+
+    if (data.documentType && DEFAULT_PUBLIC_TYPES.includes(data.documentType)) {
+      visibilityFlags.push(VISIBILITY_FLAG.PUBLIC);
+    }
+
     const savedDocument =
       await this.notificationDocumentService.attachExternalDocument(
         submission.fileNumber,
@@ -145,7 +157,7 @@ export class NotificationDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
-        [VISIBILITY_FLAG.APPLICANT, VISIBILITY_FLAG.GOVERNMENT],
+        visibilityFlags,
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);
