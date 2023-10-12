@@ -29,7 +29,11 @@ SELECT
     oc.sleeping_units,
     oc.component_area,
     oa.proposal_summary_desc,
-    oa.proposal_background_desc
+    oa.proposal_background_desc,
+    oc.agricultural_activities_desc,
+    oc.impact_reduction_desc,
+    oc.owners_notified_ind
+
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
