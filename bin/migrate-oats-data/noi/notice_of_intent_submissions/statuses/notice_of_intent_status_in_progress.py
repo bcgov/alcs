@@ -113,6 +113,8 @@ def _map_fields(data):
             status_effective_date = data["created_date"]
         elif data["submitted_to_alc_date"]:
             status_effective_date = data["submitted_to_alc_date"]
+        else:
+            status_effective_date = data["when_created"]
 
     if status_effective_date:
         date = convert_timezone(status_effective_date, "US/Pacific")
