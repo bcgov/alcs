@@ -1,4 +1,9 @@
-from common import OATS_ETL_USER, setup_and_get_logger
+from common import (
+    OATS_ETL_USER,
+    setup_and_get_logger,
+    exclusion_table_create,
+    exclusion_table_count,
+)
 from db import inject_conn_pool
 
 etl_name = "init_notice_of_intents"
@@ -9,6 +14,8 @@ logger = setup_and_get_logger(etl_name)
 def init_notice_of_intents(conn=None, batch_size=10000):
     logger.info(f"Start {etl_name}")
     with conn.cursor() as cursor:
+        exclusion_table_create(cursor, conn)
+        exclusion_table_count(cursor, logger)
         with open("noi/sql/insert_noi_count.sql", "r", encoding="utf-8") as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)

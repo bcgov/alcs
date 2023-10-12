@@ -1,5 +1,9 @@
 from db import inject_conn_pool
-from common import setup_and_get_logger
+from common import (
+    setup_and_get_logger,
+    exclusion_table_create,
+    exclusion_table_count,
+)
 
 etl_name = "process_applications"
 logger = setup_and_get_logger(etl_name)
@@ -12,12 +16,7 @@ def process_applications(conn=None, batch_size=10000):
     """
     logger.info(f"Start {etl_name}")
     with conn.cursor() as cursor:
-        with open(
-            "applications/sql/application-etl-table-create.sql", "r", encoding="utf-8"
-        ) as sql_file:
-            create_tables = sql_file.read()
-            cursor.execute(create_tables)
-        conn.commit()
+        exclusion_table_create(cursor, conn)
 
         with open(
             "applications/sql/insert_batch_application_count.sql", "r", encoding="utf-8"
@@ -27,14 +26,7 @@ def process_applications(conn=None, batch_size=10000):
             count_total = cursor.fetchone()[0]
         logger.info(f"Applications to insert: {count_total}")
 
-        with open(
-            "applications/sql/application_exclude_count.sql", "r", encoding="utf-8"
-        ) as sql_file:
-            count_exclude = sql_file.read()
-            cursor.execute(count_exclude)
-            count_total_exclude = cursor.fetchone()[0]
-        logger.info(f"Applications with excluded components: {count_total_exclude}")
-        logger.debug("Component ids stored in oats.alcs_etl_application_exclude")
+        exclusion_table_count(cursor, logger)
 
         failed_inserts = 0
         successful_inserts_count = 0
