@@ -173,6 +173,7 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 
@@ -324,6 +325,7 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 
@@ -350,6 +352,7 @@ describe('NoticeOfIntentSubmissionStatusService', () => {
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionRepository.findOneBy).toHaveBeenCalledWith({
       fileNumber: fakeFileNumber,
+      isDraft: false,
     });
   });
 

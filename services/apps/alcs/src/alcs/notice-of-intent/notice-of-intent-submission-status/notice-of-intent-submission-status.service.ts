@@ -109,6 +109,7 @@ export class NoticeOfIntentSubmissionStatusService {
   private async getSubmission(fileNumber: string) {
     const submission = await this.noticeOfIntentSubmissionRepository.findOneBy({
       fileNumber,
+      isDraft: false,
     });
 
     if (!submission) {

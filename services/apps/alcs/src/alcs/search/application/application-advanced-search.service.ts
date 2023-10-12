@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { Brackets, Repository } from 'typeorm';
+import {
+  Brackets,
+  QueryBuilder,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../../portal/application-submission/application-parcel/application-parcel.entity';
 import {
@@ -171,7 +176,7 @@ export class ApplicationAdvancedSearchService {
 
   private compileApplicationDateRangeSearchQuery(
     searchDto: SearchRequestDto,
-    query,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
@@ -215,7 +220,7 @@ export class ApplicationAdvancedSearchService {
 
   private compileApplicationDecisionSearchQuery(
     searchDto: SearchRequestDto,
-    query,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
     if (
       searchDto.resolutionNumber !== undefined ||
@@ -241,18 +246,20 @@ export class ApplicationAdvancedSearchService {
     return query;
   }
 
-  private joinApplicationDecision(query: any) {
+  private joinApplicationDecision(
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
+  ) {
     query = query.leftJoin(
       ApplicationDecision,
       'decision',
-      'decision.application_uuid = "appSearch"."application_uuid"',
+      'decision.application_uuid = "appSearch"."application_uuid" AND decision.is_draft = false',
     );
     return query;
   }
 
   private compileApplicationParcelSearchQuery(
     searchDto: SearchRequestDto,
-    query,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
     if (
       (searchDto.pid || searchDto.civicAddress) &&
@@ -285,7 +292,7 @@ export class ApplicationAdvancedSearchService {
 
   private compileApplicationSearchByNameQuery(
     searchDto: SearchRequestDto,
-    query,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
     if (searchDto.name) {
       const formattedSearchString =
@@ -329,7 +336,7 @@ export class ApplicationAdvancedSearchService {
 
   private compileApplicationFileTypeSearchQuery(
     searchDto: SearchRequestDto,
-    query,
+    query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
     if (searchDto.fileTypes.length > 0) {
       // if decision is not joined yet -> join it. The join of decision happens in compileApplicationDecisionSearchQuery

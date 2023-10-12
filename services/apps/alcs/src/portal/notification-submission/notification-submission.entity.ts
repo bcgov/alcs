@@ -181,15 +181,12 @@ export class NotificationSubmission extends Base {
 
     for (const status of this.submissionStatuses) {
       const effectiveDate = status.effectiveDate?.getTime();
-      const currentEffectiveDate = this.status?.effectiveDate?.getTime();
 
       if (
         effectiveDate &&
         effectiveDate <= now &&
-        (!currentEffectiveDate ||
-          effectiveDate > currentEffectiveDate ||
-          (effectiveDate === currentEffectiveDate &&
-            status.statusType.weight > this.status.statusType.weight))
+        (!this.status ||
+          status.statusType.weight > this.status.statusType.weight)
       ) {
         this.status = status;
       }

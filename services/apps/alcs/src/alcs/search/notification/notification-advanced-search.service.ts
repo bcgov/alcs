@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import { NotificationParcel } from '../../../portal/notification-submission/notification-parcel/notification-parcel.entity';
 import { NotificationTransferee } from '../../../portal/notification-submission/notification-transferee/notification-transferee.entity';
 import {
@@ -66,7 +66,9 @@ export class NotificationAdvancedSearchService {
     }
   }
 
-  private compileGroupBySearchQuery(query) {
+  private compileGroupBySearchQuery(
+    query: SelectQueryBuilder<NotificationSubmissionSearchView>,
+  ) {
     query = query
       .innerJoinAndMapOne(
         'notificationSearch.notificationType',
@@ -174,7 +176,10 @@ export class NotificationAdvancedSearchService {
     return query;
   }
 
-  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
+  private compileParcelSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NotificationSubmissionSearchView>,
+  ) {
     if (searchDto.pid || searchDto.civicAddress) {
       query = query.leftJoin(
         NotificationParcel,
@@ -195,7 +200,10 @@ export class NotificationAdvancedSearchService {
     return query;
   }
 
-  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
+  private compileSearchByNameQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NotificationSubmissionSearchView>,
+  ) {
     if (searchDto.name) {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Repository } from 'typeorm';
+import { Brackets, Repository, SelectQueryBuilder } from 'typeorm';
 import { NoticeOfIntentOwner } from '../../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from '../../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import {
@@ -67,7 +67,9 @@ export class NoticeOfIntentAdvancedSearchService {
     }
   }
 
-  private compileGroupBySearchQuery(query) {
+  private compileGroupBySearchQuery(
+    query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
+  ) {
     query = query
       .innerJoinAndMapOne(
         'noiSearch.noticeOfIntentType',
@@ -156,7 +158,10 @@ export class NoticeOfIntentAdvancedSearchService {
     return query;
   }
 
-  private compileDateRangeSearchQuery(searchDto: SearchRequestDto, query) {
+  private compileDateRangeSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
+  ) {
     // TODO check dates toIsoString
     if (searchDto.dateSubmittedFrom) {
       query = query.andWhere(
@@ -198,7 +203,10 @@ export class NoticeOfIntentAdvancedSearchService {
     return query;
   }
 
-  private compileDecisionSearchQuery(searchDto: SearchRequestDto, query) {
+  private compileDecisionSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
+  ) {
     if (
       searchDto.resolutionNumber !== undefined ||
       searchDto.resolutionYear !== undefined
@@ -207,7 +215,7 @@ export class NoticeOfIntentAdvancedSearchService {
 
       if (searchDto.resolutionNumber !== undefined) {
         query = query.andWhere(
-          'decision.resolution_number = :resolution_number',
+          'decision.resolution_number = :resolution_number AND decision.is_draft = false',
           {
             resolution_number: searchDto.resolutionNumber,
           },
@@ -232,7 +240,10 @@ export class NoticeOfIntentAdvancedSearchService {
     return query;
   }
 
-  private compileParcelSearchQuery(searchDto: SearchRequestDto, query) {
+  private compileParcelSearchQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
+  ) {
     if (searchDto.pid || searchDto.civicAddress) {
       query = query.leftJoin(
         NoticeOfIntentParcel,
@@ -253,7 +264,10 @@ export class NoticeOfIntentAdvancedSearchService {
     return query;
   }
 
-  private compileSearchByNameQuery(searchDto: SearchRequestDto, query) {
+  private compileSearchByNameQuery(
+    searchDto: SearchRequestDto,
+    query: SelectQueryBuilder<NoticeOfIntentSubmissionSearchView>,
+  ) {
     if (searchDto.name) {
       const formattedSearchString =
         formatStringToPostgresSearchStringArrayWithWildCard(searchDto.name!);
