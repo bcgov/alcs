@@ -5,6 +5,7 @@ import { ApplicationService } from '../../application/application.service';
 import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../../notification/notification.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class UnarchiveCardService {
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
+    private notificationService: NotificationService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -41,6 +43,7 @@ export class UnarchiveCardService {
     await this.fetchAndMapModifications(fileId, result);
     await this.fetchAndMapCovenants(fileId, result);
     await this.fetchAndMapNOIs(fileId, result);
+    await this.fetchAndMapNotifications(fileId, result);
 
     return result;
   }
@@ -161,6 +164,28 @@ export class UnarchiveCardService {
         createdAt: noi.auditCreatedAt.getTime(),
         type: 'NOI MODI',
         status: noi.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapNotifications(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const notifications = await this.notificationService.getDeletedCards(
+      fileId,
+    );
+    for (const notification of notifications) {
+      result.push({
+        cardUuid: notification.cardUuid,
+        createdAt: notification.auditCreatedAt.getTime(),
+        type: 'NOTI',
+        status: notification.card!.status.label,
       });
     }
   }

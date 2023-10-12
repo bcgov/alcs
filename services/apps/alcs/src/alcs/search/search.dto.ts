@@ -103,7 +103,6 @@ export class SearchRequestDto extends PagingRequestDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(3)
   legacyId?: string;
 
   @IsString()
