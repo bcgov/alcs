@@ -85,7 +85,7 @@ def _update_fee_fields_records(conn, batch_size, cursor, rows):
 def _get_update_query_from_oats_alr_applications_fields():
     query = """
                 UPDATE alcs.notice_of_intent
-                SET decision_date = %(decision_date)s
+                SET decision_date = COALESCE(%(decision_date)s, decision_date)
                 WHERE
                     alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;
             """
