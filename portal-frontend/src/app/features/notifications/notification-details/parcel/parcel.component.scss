@@ -1,22 +1,16 @@
 @use '../../../../../styles/functions' as *;
 
-.review-table {
-  .full-width {
-    grid-column: 1/3;
-  }
-
-  .edit-button {
-    grid-column: 1/3;
-  }
+.parcel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: rem(12);
 
   @media screen and (min-width: $tabletBreakpoint) {
-    .full-width {
-      grid-column: 1/5;
-    }
-
-    .edit-button {
-      grid-column: 1/5;
-    }
+    flex-wrap: wrap;
+    column-gap: rem(12);
+    row-gap: rem(12);
+    margin-bottom: unset;
   }
 }
 
