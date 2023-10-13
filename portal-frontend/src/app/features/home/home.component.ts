@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   $destroy = new Subject<void>();
-  isLearnMoreOpen = false;
   isMobile = false;
   profile: UserDto | undefined;
 
@@ -36,15 +35,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  async onCreateApplication() {
+  async onCreateSubmission() {
     this.dialog.open(CreateSubmissionDialogComponent, {
       panelClass: 'no-padding',
       disableClose: true,
       autoFocus: false,
     });
-  }
-
-  onLearnMoreClick() {
-    this.isLearnMoreOpen = !this.isLearnMoreOpen;
   }
 }

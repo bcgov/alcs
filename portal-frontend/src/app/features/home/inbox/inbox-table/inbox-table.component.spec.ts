@@ -1,17 +1,17 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ApplicationSubmissionService } from '../../../services/application-submission/application-submission.service';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
+import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
-import { ApplicationListComponent } from './application-list.component';
+import { InboxTableComponent } from './inbox-table.component';
 
 describe('ApplicationListComponent', () => {
-  let component: ApplicationListComponent;
-  let fixture: ComponentFixture<ApplicationListComponent>;
+  let component: InboxTableComponent;
+  let fixture: ComponentFixture<InboxTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ApplicationListComponent],
+      declarations: [InboxTableComponent],
       providers: [
         {
           provide: ApplicationSubmissionService,
@@ -25,7 +25,7 @@ describe('ApplicationListComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ApplicationListComponent);
+    fixture = TestBed.createComponent(InboxTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

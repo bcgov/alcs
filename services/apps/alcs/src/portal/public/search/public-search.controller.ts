@@ -18,13 +18,11 @@ import {
   NotificationSearchResultDto,
   SearchRequestDto,
 } from './public-search.dto';
-import { PublicSearchService } from './public-search.service';
 
 @Public()
 @Controller('search')
 export class PublicSearchController {
   constructor(
-    private searchService: PublicSearchService,
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentSearchService: PublicNoticeOfIntentSearchService,
     private applicationSearchService: PublicApplicationSearchService,

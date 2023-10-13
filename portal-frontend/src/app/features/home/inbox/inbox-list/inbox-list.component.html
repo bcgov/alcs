@@ -13,11 +13,11 @@
     <div
       *ngIf="result.status"
       class="label"
-      [style]="{ 'background-color': result.status.portalBackgroundColor, color: result.status.portalColor }"
+      [style]="{ 'background-color': result.statusType.portalBackgroundColor, color: result.statusType.portalColor }"
     >
-      {{ result.status.label }}
+      {{ result.statusType.label }}
     </div>
-    <div>Last Updated: {{ result.lastStatusUpdate | momentFormat }}</div>
+    <div>Last Updated: {{ result.lastUpdate | momentFormat }}</div>
   </div>
 </div>
 <div *ngIf="totalCount !== 0">

@@ -21,11 +21,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTreeModule } from '@angular/material/tree';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { FileTypeFilterDropDownComponent } from '../features/public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
@@ -73,6 +76,8 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatButtonToggleModule,
     MatCheckboxModule,
     MatIconModule,
+    MatAutocompleteModule,
+    MatTreeModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -93,6 +98,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     ParcelOwnersComponent,
     SoilTableComponent,
     TableColumnNoDataPipe,
+    FileTypeFilterDropDownComponent,
   ],
   exports: [
     CommonModule,
@@ -140,6 +146,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     ParcelOwnersComponent,
     SoilTableComponent,
     TableColumnNoDataPipe,
+    FileTypeFilterDropDownComponent,
   ],
 })
 export class SharedModule {

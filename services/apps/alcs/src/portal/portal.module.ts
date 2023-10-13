@@ -12,6 +12,7 @@ import { ApplicationSubmissionReviewModule } from './application-submission-revi
 import { ApplicationSubmissionModule } from './application-submission/application-submission.module';
 import { CodeController } from './code/code.controller';
 import { PortalDocumentModule } from './document/document.module';
+import { InboxModule } from './inbox/inbox.module';
 import { PortalNoticeOfIntentDocumentModule } from './notice-of-intent-document/notice-of-intent-document.module';
 import { NoticeOfIntentSubmissionDraftModule } from './notice-of-intent-submission-draft/notice-of-intent-submission-draft.module';
 import { NoticeOfIntentSubmissionModule } from './notice-of-intent-submission/notice-of-intent-submission.module';
@@ -42,6 +43,7 @@ import { PublicModule } from './public/public.module';
     PortalNotificationDocumentModule,
     PublicModule,
     CodeModule,
+    InboxModule,
     RouterModule.register([
       { path: 'portal', module: ApplicationSubmissionModule },
       { path: 'portal', module: NoticeOfIntentSubmissionModule },
@@ -55,6 +57,7 @@ import { PublicModule } from './public/public.module';
       { path: 'portal', module: NoticeOfIntentSubmissionDraftModule },
       { path: 'portal', module: NotificationSubmissionModule },
       { path: 'portal', module: PortalNotificationDocumentModule },
+      { path: 'portal', module: InboxModule },
     ]),
   ],
   controllers: [CodeController],
