@@ -16,6 +16,7 @@ from menu.commands import (
     noi_document_import,
     notice_of_intent_import,
     notice_of_intent_clean,
+    start_obfuscation,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -53,6 +54,8 @@ if __name__ == "__main__":
                 noi_document_import(console, args)
             case "app-sub-import":
                 application_submission_import(console, args)
+            case "obfuscate":
+                start_obfuscation(console)
 
     finally:
         if connection_pool:

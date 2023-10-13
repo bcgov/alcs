@@ -51,6 +51,8 @@ def setup_menu_args_parser(import_batch_size):
 
     subparsers.add_parser("clean", help="Clean all imported data")
 
+    subparsers.add_parser("obfuscate", help="Obfuscate PROD data")
+
     # Print help message if user specifies --help or -h flag
     if "-h" in sys.argv or "--help" in sys.argv:
         parser.print_help()

@@ -32,6 +32,9 @@ def setup_and_get_logger(logger_name):
 
     file_handler.setLevel(logging.INFO)
 
+    while logger.hasHandlers():
+        logger.removeHandler(logger.handlers[0])
+
     # Add handlers to the logger
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
