@@ -83,7 +83,7 @@
     margin: rem(12) 0 rem(20) 0;
     background-color: colors.$grey-light;
     display: grid;
-    grid-row-gap: rem(24);
+    grid-row-gap: rem(4);
     grid-column-gap: rem(16);
     grid-template-columns: 1fr;
     word-wrap: break-word;
@@ -102,6 +102,10 @@
       }
     }
 
+    .grid-double {
+      margin-bottom: rem(16);
+    }
+
     .subheading2 {
       margin-bottom: rem(4) !important;
     }
@@ -110,6 +114,7 @@
       padding: rem(16);
       margin: rem(24) 0 rem(40) 0;
       grid-template-columns: minmax(rem(60), 1fr) minmax(rem(60), 1fr) minmax(rem(60), 1fr) minmax(rem(60), 1fr);
+      grid-row-gap: rem(24);
 
       .full-width {
         grid-column: 1/5;
@@ -117,6 +122,7 @@
 
       .grid-double {
         grid-column: 2/5;
+        margin-bottom: unset;
       }
 
       .grid-1 {

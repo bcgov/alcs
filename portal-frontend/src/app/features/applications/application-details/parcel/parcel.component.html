@@ -1,6 +1,4 @@
-<h3 class="flex-item">
-  {{ pageTitle }}
-</h3>
+<h3 class="flex-item">{{ pageTitle }}</h3>
 <div class="review-table">
   <div class="subheading2 grid-1" *ngIf="parcelType === PARCEL_TYPES.OTHER">
     Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within the
@@ -14,7 +12,7 @@
   </div>
 
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
-    <div class="full-width flex-space-between-wrap">
+    <div class="full-width parcel-header">
       <h4>
         Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}: Parcel and Owner
         Information
@@ -28,6 +26,15 @@
           (click)="onEditParcelClick(parcel.uuid)"
         >
           Edit Parcel {{ parcelType === PARCEL_TYPES.OTHER ? getLetterIndex(parcelInd) : parcelInd + 1 }}
+        </button>
+        <button
+          *ngIf="showEdit"
+          class="tablet-hidden"
+          mat-icon-button
+          color="accent"
+          (click)="onEditParcelClick(parcel.uuid)"
+        >
+          <mat-icon>edit</mat-icon>
         </button>
       </div>
     </div>
@@ -149,11 +156,6 @@
     <div class="grid-double" *ngIf="parcelType !== PARCEL_TYPES.OTHER">
       <span *ngIf="parcel.isConfirmedByApplicant">Yes</span>
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.isConfirmedByApplicant"></app-no-data>
-    </div>
-    <div *ngIf="showEdit" class="edit-button tablet-hidden">
-      <button mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
-        Edit Parcel {{ parcelInd + 1 }}
-      </button>
     </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">

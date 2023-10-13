@@ -1,7 +1,7 @@
 <h3 class="flex-item">1. Identify Parcel(s) Under The Statutory Right of Way</h3>
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
-    <div class="full-width flex-space-between-wrap">
+    <div class="full-width parcel-header">
       <h4>Parcel {{ parcelInd + 1 }} Information</h4>
       <div>
         <button
@@ -12,6 +12,15 @@
           (click)="onEditParcelClick(parcel.uuid)"
         >
           Edit Parcel {{ parcelInd + 1 }}
+        </button>
+        <button
+          *ngIf="showEdit"
+          class="tablet-hidden"
+          mat-icon-button
+          color="accent"
+          (click)="onEditParcelClick(parcel.uuid)"
+        >
+          <mat-icon>edit</mat-icon>
         </button>
       </div>
     </div>
@@ -54,11 +63,6 @@
     <div class="grid-double">
       {{ parcel.civicAddress }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
-    </div>
-    <div *ngIf="showEdit" class="edit-button tablet-hidden">
-      <button mat-flat-button color="accent" (click)="onEditParcelClick(parcel.uuid)">
-        Edit Parcel {{ parcelInd + 1 }}
-      </button>
     </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">
