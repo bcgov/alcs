@@ -183,8 +183,20 @@ def get_insert_query_for_naru():
 
 
 def get_insert_query_for_inc_exc():
-    unique_fields = ", incl_excl_hectares"
-    unique_values = ", %(alr_area)s"
+    unique_fields = """, 
+                        incl_excl_hectares,
+                        excl_why_land,
+                        incl_agriculture_support,
+                        incl_improvements,
+                        excl_share_government_borders
+                        """
+    unique_values = """, 
+                        %(component_area)s,
+                        %(proposal_background_desc)s,
+                        %(support_desc)s,
+                        %(improvements_desc)s,
+                        %(applicationshare_ind)s
+                        """
     return get_insert_query(unique_fields, unique_values)
 
 

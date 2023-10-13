@@ -32,7 +32,9 @@ SELECT
     oa.proposal_background_desc,
     oc.agricultural_activities_desc,
     oc.impact_reduction_desc,
-    oc.owners_notified_ind
+    oc.owners_notified_ind,
+    oc.applicationshare_ind,
+    oc.improvements_desc
 
 FROM
     appl_components_grouped acg
