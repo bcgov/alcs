@@ -34,7 +34,11 @@ SELECT
     oc.impact_reduction_desc,
     oc.owners_notified_ind,
     oc.applicationshare_ind,
-    oc.improvements_desc
+    oc.improvements_desc,
+    oc.homesite_severance_ind,
+    oa.current_land_use_desc,
+    oa.non_agricultural_uses_desc,
+    oa.agricultural_improvement_desc
 
 FROM
     appl_components_grouped acg

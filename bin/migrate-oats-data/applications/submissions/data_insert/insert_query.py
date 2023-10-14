@@ -26,6 +26,7 @@ def insert_app_sub_records(
         inc_exc_data_list,
         naru_data_list,
         tur_data_list,
+        subd_data_list,
     ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
 
     if len(nfu_data_list) > 0:
@@ -60,6 +61,14 @@ def insert_app_sub_records(
             page_size=batch_size,
         )
 
+    if len(subd_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_subd(),
+            subd_data_list,
+            page_size=batch_size,
+        )
+
     if len(other_data_list) > 0:
         execute_batch(
             cursor,
@@ -90,7 +99,10 @@ def get_insert_query(unique_fields, unique_values):
                     north_land_use_type,
                     south_land_use_type,
                     subd_proposed_lots,
-                    purpose
+                    purpose,
+                    parcels_agriculture_improvement_description,
+                    parcels_agriculture_description,
+                    parcels_non_agriculture_use_description
                     {unique_fields}
                 )
                 VALUES (
@@ -109,7 +121,10 @@ def get_insert_query(unique_fields, unique_values):
                     %(north_land_use_type)s,
                     %(south_land_use_type)s,
                     %(subd_proposed_lots)s,
-                    %(proposal_summary_desc)s
+                    %(proposal_summary_desc)s,
+                    %(agricultural_improvement_desc)s,
+                    %(current_land_use_desc)s,
+                    %(non_agricultural_uses_desc)s
                     {unique_values}
                 )
     """
@@ -215,4 +230,18 @@ def get_insert_query_for_tur():
                         %(component_area)s,
                         %(owners_notified_ind)s
                     """
+    return get_insert_query(unique_fields, unique_values)
+
+
+def get_insert_query_for_subd():
+    unique_fields = """, 
+                        subd_suitability,
+                        subd_agriculture_support,
+                        subd_is_home_site_severance
+                        """
+    unique_values = """, 
+                        %(proposal_background_desc)s,
+                        %(support_desc)s,
+                        %(homesite_severance_ind)s
+                        """
     return get_insert_query(unique_fields, unique_values)
