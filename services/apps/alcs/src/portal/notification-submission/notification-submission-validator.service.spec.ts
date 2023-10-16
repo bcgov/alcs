@@ -255,4 +255,31 @@ describe('NotificationSubmissionValidatorService', () => {
       ),
     ).toBe(true);
   });
+
+  it('should report an error when survey plan is missing numbers', async () => {
+    const incompleteDocument = new NotificationDocument({
+      type: new DocumentCode({
+        code: DOCUMENT_TYPE.SURVEY_PLAN,
+      }),
+    });
+    const noticeOfIntentSubmission = new NotificationSubmission({
+      hasSurveyPlan: true,
+    });
+
+    const documents = [incompleteDocument];
+    mockNotificationDocumentService.getApplicantDocuments.mockResolvedValue(
+      documents,
+    );
+
+    const res = await service.validateSubmission(noticeOfIntentSubmission);
+
+    expect(
+      includesError(
+        res.errors,
+        new Error(
+          `${incompleteDocument.uuid} proposal has survey plans missing survey/control plan numbers`,
+        ),
+      ),
+    ).toBe(true);
+  });
 });

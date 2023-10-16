@@ -207,7 +207,7 @@ export class NotificationSubmissionValidatorService {
     }
 
     const srwTerms = applicantDocuments.filter(
-      (document) => document.typeCode === DOCUMENT_TYPE.SRW_TERMS,
+      (document) => document.type?.code === DOCUMENT_TYPE.SRW_TERMS,
     );
     if (srwTerms.length === 0) {
       errors.push(
@@ -219,7 +219,7 @@ export class NotificationSubmissionValidatorService {
 
     if (notificationSubmission.hasSurveyPlan) {
       const surveyPlans = applicantDocuments.filter(
-        (document) => document.typeCode === DOCUMENT_TYPE.SURVEY_PLAN,
+        (document) => document.type?.code === DOCUMENT_TYPE.SURVEY_PLAN,
       );
       if (surveyPlans.length === 0) {
         errors.push(
@@ -227,6 +227,16 @@ export class NotificationSubmissionValidatorService {
             `${notificationSubmission.typeCode} proposal missing Survey Plans`,
           ),
         );
+      }
+
+      for (const plan of surveyPlans) {
+        if (!plan.surveyPlanNumber || !plan.controlNumber) {
+          errors.push(
+            new ServiceValidationException(
+              `${notificationSubmission.typeCode} proposal has survey plans missing survey/control plan numbers`,
+            ),
+          );
+        }
       }
     }
   }
