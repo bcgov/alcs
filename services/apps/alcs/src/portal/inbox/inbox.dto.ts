@@ -40,11 +40,7 @@ export class InboxRequestDto extends PagingRequestDto {
 
   @IsString()
   @IsOptional()
-  createdByGovernment?: boolean;
-
-  @IsString()
-  @IsOptional()
-  submittedToGovernment?: boolean;
+  filterBy?: string;
 
   @IsString()
   @IsOptional()

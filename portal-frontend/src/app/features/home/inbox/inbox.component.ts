@@ -9,6 +9,8 @@ import {
   ApplicationStatusDto,
   SUBMISSION_STATUS,
 } from '../../../services/application-submission/application-submission.dto';
+import { UserDto } from '../../../services/authentication/authentication.dto';
+import { AuthenticationService } from '../../../services/authentication/authentication.service';
 import { CodeService } from '../../../services/code/code.service';
 import { BaseInboxResultDto, InboxRequestDto, InboxSearchResponseDto } from '../../../services/inbox/inbox.dto';
 import { InboxService } from '../../../services/inbox/inbox.service';
@@ -61,6 +63,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
   civicAddressControl = new FormControl<string | undefined>(undefined);
+  filterBy = new FormControl<string | undefined>(undefined);
   searchForm = new FormGroup({
     fileNumber: new FormControl<string | undefined>(undefined),
     name: this.nameControl,
@@ -69,6 +72,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     portalStatus: this.portalStatusControl,
     componentType: this.componentTypeControl,
     governmentFileNumber: this.governmentFileNumber,
+    filterBy: this.filterBy,
   });
   previousFileTypes: string[] = [];
 
@@ -81,6 +85,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   noticeOfIntentStatuses: ApplicationStatusDto[] = [];
   notificationStatuses: ApplicationStatusDto[] = [];
   allStatuses: ApplicationStatusDto[] = [];
+  profile: UserDto | undefined;
 
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
@@ -104,7 +109,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private inboxService: InboxService,
     private codeService: CodeService,
     private toastService: ToastService,
-    private titleService: Title
+    private titleService: Title,
+    private authenticationService: AuthenticationService
   ) {
     this.titleService.setTitle('ALC Portal | Inbox');
   }
@@ -116,6 +122,10 @@ export class InboxComponent implements OnInit, OnDestroy {
     }
 
     this.setup();
+
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
+    });
 
     this.civicAddressControl.valueChanges.pipe(takeUntil(this.$destroy)).subscribe(() => {
       this.civicAddressInvalid =
@@ -179,6 +189,7 @@ export class InboxComponent implements OnInit, OnDestroy {
       portalStatusCodes: searchControls.portalStatus.value ?? undefined,
       governmentFileNumber: this.formatStringSearchParam(searchControls.governmentFileNumber.value),
       fileTypes: searchControls.componentType.value ? searchControls.componentType.value : [],
+      filterBy: searchControls.filterBy.value ?? undefined,
     };
   }
 

@@ -1,9 +1,0 @@
-<p class="color-accent-dark">Create and manage your Applications, Notice of Intent, and Notification of SRW.</p>
-
-<ul>
-  <li *ngFor="let item of submissionTypes" innerHtml="{{ item.label + ': ' + item.portalHtmlDescription }}"></li>
-</ul>
-
-<div *ngIf="isControlsVisible" class="center inbox-btn-wrapper">
-  <button routerLink="/home" mat-flat-button color="primary">Continue to inbox</button>
-</div>

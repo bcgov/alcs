@@ -15,6 +15,21 @@
 
     <mat-expansion-panel #panel>
       <div class="search-form">
+        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
+          <label for="filterBy">Filter By</label>
+          <mat-form-field appearance="outline">
+            <mat-select id="filterBy" formControlName="filterBy">
+              <mat-option value="created">Created By {{ profile.government }}</mat-option>
+              <mat-option value="submitted">Submitted To {{ profile.government }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
+          <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
+          <mat-form-field appearance="outline">
+            <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />
+          </mat-form-field>
+        </div>
         <div>
           <label for="name">Name</label>
           <mat-form-field appearance="outline">
@@ -35,7 +50,11 @@
             <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
           </div>
         </div>
-        <div>
+        <div
+          [ngClass]="{
+            'full-width': profile && (profile.isLocalGovernment || profile.isFirstNationGovernment)
+          }"
+        >
           <label for="civicAddress">Civic Address</label>
           <mat-form-field appearance="outline">
             <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
@@ -63,7 +82,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div>
+        <div *ngIf="profile && !profile.isFirstNationGovernment && !profile.isLocalGovernment">
           <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
           <mat-form-field appearance="outline">
             <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />

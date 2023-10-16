@@ -113,14 +113,27 @@ export class InboxApplicationService {
       this.applicationInboxRepository.createQueryBuilder('appSearch');
 
     //User Permissions
-    query.andWhere(
-      '(appSearch.created_by_uuid = :userUuid OR appSearch.bceid_business_guid = :bceidBusinessGuid OR appSearch.local_government_uuid = :governmentUuid)',
-      {
-        userUuid,
-        bceidBusinessGuid: bceidBusinessGuid ?? 'NEVER',
-        governmentUuid: governmentUuid ?? 'NEVER',
-      },
-    );
+    let where = 'appSearch.created_by_uuid = :userUuid';
+    if (!searchDto.filterBy) {
+      if (bceidBusinessGuid) {
+        where += ' OR appSearch.bceid_business_guid = :bceidBusinessGuid';
+      }
+      if (governmentUuid) {
+        where += ' OR appSearch.local_government_uuid = :governmentUuid';
+      }
+    } else {
+      if (searchDto.filterBy === 'submitted') {
+        where = 'appSearch.local_government_uuid = :governmentUuid';
+      } else {
+        where =
+          '(appSearch.created_by_uuid = :userUuid OR appSearch.bceid_business_guid = :bceidBusinessGuid)';
+      }
+    }
+    query.andWhere(`(${where})`, {
+      userUuid,
+      bceidBusinessGuid,
+      governmentUuid,
+    });
 
     if (searchDto.fileNumber) {
       query

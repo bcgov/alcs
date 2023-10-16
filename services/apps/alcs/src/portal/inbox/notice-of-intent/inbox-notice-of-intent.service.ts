@@ -112,14 +112,27 @@ export class InboxNoticeOfIntentService {
     const query = this.noiSearchRepository.createQueryBuilder('noiSearch');
 
     //User Permissions
-    query.andWhere(
-      '(noiSearch.created_by_uuid = :userUuid OR noiSearch.bceid_business_guid = :bceidBusinessGuid OR noiSearch.local_government_uuid = :governmentUuid)',
-      {
-        userUuid,
-        bceidBusinessGuid: bceidBusinessGuid ?? 'NEVER',
-        governmentUuid: governmentUuid ?? 'NEVER',
-      },
-    );
+    let where = 'noiSearch.created_by_uuid = :userUuid';
+    if (!searchDto.filterBy) {
+      if (bceidBusinessGuid) {
+        where += ' OR noiSearch.bceid_business_guid = :bceidBusinessGuid';
+      }
+      if (governmentUuid) {
+        where += ' OR noiSearch.local_government_uuid = :governmentUuid';
+      }
+    } else {
+      if (searchDto.filterBy === 'submitted') {
+        where = 'noiSearch.local_government_uuid = :governmentUuid';
+      } else {
+        where =
+          '(noiSearch.created_by_uuid = :userUuid OR noiSearch.bceid_business_guid = :bceidBusinessGuid)';
+      }
+    }
+    query.andWhere(`(${where})`, {
+      userUuid,
+      bceidBusinessGuid,
+      governmentUuid,
+    });
 
     if (searchDto.fileNumber) {
       query

@@ -111,14 +111,29 @@ export class InboxNotificationService {
       this.notificationSearchViewRepo.createQueryBuilder('notificationSearch');
 
     //User Permissions
-    query.andWhere(
-      '(notificationSearch.created_by_uuid = :userUuid OR notificationSearch.bceid_business_guid = :bceidBusinessGuid OR notificationSearch.local_government_uuid = :governmentUuid)',
-      {
-        userUuid,
-        bceidBusinessGuid: bceidBusinessGuid ?? false,
-        governmentUuid: governmentUuid ?? false,
-      },
-    );
+    let where = 'notificationSearch.created_by_uuid = :userUuid';
+    if (!searchDto.filterBy) {
+      if (bceidBusinessGuid) {
+        where +=
+          ' OR notificationSearch.bceid_business_guid = :bceidBusinessGuid';
+      }
+      if (governmentUuid) {
+        where +=
+          ' OR notificationSearch.local_government_uuid = :governmentUuid';
+      }
+    } else {
+      if (searchDto.filterBy === 'submitted') {
+        where = 'notificationSearch.local_government_uuid = :governmentUuid';
+      } else {
+        where =
+          '(notificationSearch.created_by_uuid = :userUuid OR notificationSearch.bceid_business_guid = :bceidBusinessGuid)';
+      }
+    }
+    query.andWhere(`(${where})`, {
+      userUuid,
+      bceidBusinessGuid,
+      governmentUuid,
+    });
 
     if (searchDto.fileNumber) {
       query = query
