@@ -96,11 +96,13 @@ export class UserService {
       return await this.localGovernmentRepository.findOne({
         where: { bceidBusinessGuid: user.bceidBusinessGuid },
         select: {
+          uuid: true,
           name: true,
           isFirstNation: true,
         },
       });
     }
+    return null;
   }
 
   async sendNewUserRequestEmail(email: string, userIdentifier: string) {

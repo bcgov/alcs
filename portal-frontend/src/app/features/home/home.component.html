@@ -6,52 +6,14 @@
     <diV class="title">
       <h3>Portal Inbox</h3>
       <div>
-        <button mat-flat-button class="btn" (click)="onCreateApplication()" color="accent">+ Create New</button>
+        <button mat-flat-button class="btn" (click)="onCreateSubmission()" color="accent">+ Create New</button>
       </div>
     </diV>
-    <p>Create and manage your Applications, Notice of Intent, and Notification of SRW.</p>
-    <div class="learn-more-wrapper">
-      <div class="learn-more-ctr button-text" color="accent" (click)="onLearnMoreClick()">
-        Learn more<mat-icon>{{ isLearnMoreOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-      </div>
-      <div *ngIf="isLearnMoreOpen">
-        <app-landing-page [isControlsVisible]="false"></app-landing-page>
-      </div>
-    </div>
     <div>
-      <button class="mobile-btn" (click)="onCreateApplication()" color="accent" mat-flat-button>+ Create New</button>
+      <button class="mobile-btn" (click)="onCreateSubmission()" color="accent" mat-flat-button>+ Create New</button>
     </div>
   </div>
   <div class="navigation">
-    <mat-tab-group>
-      <mat-tab label="Application">
-        <app-warning-banner>
-          Create an Application if you are proposing to exclude, include, subdivide, conduct a non-farm use activity,
-          conduct a non-adhering residential use, conduct a transportation/utility/recreational trail use, or conduct a
-          soil or fill use. Non-adhering residential use applications have a fee of $750. All other applications have a
-          fee of $1,500 fee, except for inclusion of land (no fee). Application fees are split equally between the local
-          government and the ALC.
-        </app-warning-banner>
-        <app-application-list [isMobile]="isMobile"></app-application-list>
-      </mat-tab>
-      <mat-tab label="Notice of Intent">
-        <app-warning-banner>
-          Create a Notice of Intent if you are proposing to remove soil and/or place fill that does not qualify for
-          exemption under Section 35 of the Agricultural Land Reserve Use Regulation. All notices are subject to a $150
-          fee.
-        </app-warning-banner>
-        <app-noi-list [isMobile]="isMobile"></app-noi-list>
-      </mat-tab>
-      <mat-tab label="Notification of SRW">
-        <app-warning-banner>
-          Create a Notification of Statutory Right of Way to the ALC if you plan to register a SRW under
-          <a href="https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/96250_00_multi#section218"
-            >s. 218 of the Land Title Act</a
-          >
-          in the ALR.
-        </app-warning-banner>
-        <app-notification-list [isMobile]="isMobile"></app-notification-list>
-      </mat-tab>
-    </mat-tab-group>
+    <app-inbox></app-inbox>
   </div>
 </div>

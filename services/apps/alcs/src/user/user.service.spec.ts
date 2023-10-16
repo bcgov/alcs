@@ -154,7 +154,7 @@ describe('UserService', () => {
 
     const res = await service.getUserLocalGovernment(new User());
 
-    expect(res).toBeUndefined();
+    expect(res).toBeNull();
     expect(mockGovernmentRepository.findOne).toHaveBeenCalledTimes(0);
   });
 

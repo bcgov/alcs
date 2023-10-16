@@ -9,12 +9,6 @@ import { provideNgxMask } from 'ngx-mask';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
-import { CreateSubmissionDialogComponent } from './features/create-submission-dialog/create-submission-dialog.component';
-import { ApplicationListComponent } from './features/home/application-list/application-list.component';
-import { HomeComponent } from './features/home/home.component';
-import { InboxListComponent } from './features/home/inbox-list/inbox-list.component';
-import { NoiListComponent } from './features/home/noi-list/noi-list.component';
-import { NotificationListComponent } from './features/home/notification-list/notification-list.component';
 import { LandingPageComponent } from './features/landing-page/landing-page.component';
 import { LoginComponent } from './features/login/login.component';
 import { AuthInterceptorService } from './services/authentication/auth-interceptor.service';
@@ -31,15 +25,9 @@ import { SharedModule } from './shared/shared.module';
     HeaderComponent,
     FooterComponent,
     LoginComponent,
-    HomeComponent,
     AuthorizationComponent,
-    ApplicationListComponent,
-    NoiListComponent,
-    NotificationListComponent,
-    CreateSubmissionDialogComponent,
     LandingPageComponent,
     ConfirmationDialogComponent,
-    InboxListComponent,
   ],
   imports: [
     BrowserModule,

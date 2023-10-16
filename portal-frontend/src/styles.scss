@@ -62,6 +62,13 @@ a {
   align-items: center;
 }
 
+.right {
+  display: flex;
+  align-content: center;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .no-padding .mat-dialog-container {
   padding: 0;
 }

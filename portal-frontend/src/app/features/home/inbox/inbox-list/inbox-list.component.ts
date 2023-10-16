@@ -1,20 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { BaseCodeDto } from '../../../shared/dto/base.dto';
-
-export interface InboxListItem {
-  applicant?: string;
-  fileNumber: string;
-  lastStatusUpdate: number;
-  createdAt: number;
-  status?: BaseCodeDto & {
-    portalBackgroundColor: string;
-    portalColor: string;
-  };
-  type: string;
-  routerLink?: string;
-}
+import { BaseInboxResultDto } from '../../../../services/inbox/inbox.dto';
+import { BaseCodeDto } from '../../../../shared/dto/base.dto';
+import { SearchResult } from '../../../public/search/search.interface';
+import { InboxResultDto } from '../inbox.component';
 
 @Component({
   selector: 'app-inbox-list',
@@ -26,8 +16,8 @@ export class InboxListComponent implements OnDestroy {
 
   @Input() totalCount = 0;
 
-  _items: InboxListItem[] = [];
-  @Input() set items(items: InboxListItem[]) {
+  _items: InboxResultDto[] = [];
+  @Input() set items(items: InboxResultDto[]) {
     this._items = items;
     this.visibleCount = items.length;
     this.totalCount = items.length;
@@ -42,10 +32,6 @@ export class InboxListComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  async onSelectRecord(record: InboxListItem) {
-    this.selectRecord.emit(record.fileNumber);
   }
 
   onLoadMore() {

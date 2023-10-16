@@ -39,17 +39,8 @@ const routes: Routes = [
     NotificationSearchTableComponent,
     NoticeOfIntentSearchTableComponent,
     ApplicationSearchTableComponent,
-    FileTypeFilterDropDownComponent,
     SearchListComponent,
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MatPaginatorModule,
-    MatSortModule,
-    RouterModule.forChild(routes),
-    MatAutocompleteModule,
-    MatTreeModule,
-  ],
+  imports: [CommonModule, SharedModule, MatPaginatorModule, MatSortModule, RouterModule.forChild(routes)],
 })
 export class PublicModule {}

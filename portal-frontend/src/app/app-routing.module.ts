@@ -20,8 +20,8 @@ const routes: Routes = [
   {
     title: 'Home',
     path: 'home',
-    component: HomeComponent,
     canActivate: [AuthGuard],
+    loadChildren: () => import('./features/home/home.module').then((m) => m.HomeModule),
   },
   {
     title: 'Landing page',
