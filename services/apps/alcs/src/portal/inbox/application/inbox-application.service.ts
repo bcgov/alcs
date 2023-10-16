@@ -30,10 +30,8 @@ export class InboxApplicationService {
     );
     query = this.compileApplicationGroupBySearchQuery(query);
 
-    const sortQuery = this.compileSortQuery(searchDto);
-
     query = query
-      .orderBy(sortQuery, searchDto.sortDirection)
+      .orderBy('"appSearch"."last_update"', 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -43,26 +41,6 @@ export class InboxApplicationService {
       data: result[0],
       total: result[1],
     };
-  }
-
-  private compileSortQuery(searchDto: InboxRequestDto) {
-    switch (searchDto.sortField) {
-      case 'fileId':
-        return '"appSearch"."file_number"';
-
-      case 'ownerName':
-        return '"appSearch"."applicant"';
-
-      case 'type':
-        return '"appSearch"."application_type_code"';
-
-      case 'portalStatus':
-        return `"appSearch"."status" ->> 'label' `;
-
-      default:
-      case 'lastUpdate':
-        return '"appSearch"."last_update"';
-    }
   }
 
   private compileApplicationGroupBySearchQuery(query) {

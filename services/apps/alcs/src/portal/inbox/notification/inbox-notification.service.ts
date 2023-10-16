@@ -29,10 +29,8 @@ export class InboxNotificationService {
 
     query = this.compileGroupBySearchQuery(query);
 
-    const sortQuery = this.compileSortQuery(searchDto);
-
     query = query
-      .orderBy(sortQuery, searchDto.sortDirection)
+      .orderBy(`("notificationSearch"."status" ->> 'effective_date')`, 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -42,29 +40,6 @@ export class InboxNotificationService {
       data: result[0],
       total: result[1],
     };
-  }
-
-  private compileSortQuery(searchDto: InboxRequestDto) {
-    switch (searchDto.sortField) {
-      case 'fileId':
-        return '"notificationSearch"."file_number"';
-
-      case 'ownerName':
-        return '"notificationSearch"."applicant"';
-
-      case 'type':
-        return '"notificationSearch"."notification_type_code"';
-
-      case 'government':
-        return '"notificationSearch"."local_government_name"';
-
-      case 'portalStatus':
-        return `"notificationSearch"."status" ->> 'label' `;
-
-      default:
-      case 'lastUpdate':
-        return `"notificationSearch"."status" ->> 'effectiveDate' `;
-    }
   }
 
   private compileGroupBySearchQuery(query) {

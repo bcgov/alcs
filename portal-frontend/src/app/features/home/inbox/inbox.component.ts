@@ -54,8 +54,6 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   pageIndex = 0;
   itemsPerPage = 20;
-  sortDirection = 'DESC';
-  sortField = 'dateSubmitted';
 
   governmentFileNumber = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);
@@ -178,9 +176,6 @@ export class InboxComponent implements OnInit, OnDestroy {
       // pagination
       pageSize: this.itemsPerPage,
       page: this.pageIndex + 1,
-      // sorting
-      sortField: this.sortField,
-      sortDirection: this.sortDirection,
       // search parameters
       fileNumber: this.formatStringSearchParam(searchControls.fileNumber.value),
       name: this.formatStringSearchParam(searchControls.name.value),
@@ -278,8 +273,6 @@ export class InboxComponent implements OnInit, OnDestroy {
   async onTableChange(event: TableChange) {
     this.pageIndex = event.pageIndex;
     this.itemsPerPage = event.itemsPerPage;
-    this.sortDirection = event.sortDirection;
-    this.sortField = event.sortField;
 
     switch (event.tableType) {
       case 'APP':

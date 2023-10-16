@@ -31,8 +31,6 @@ export interface InboxResponseDto<T> {
 export interface PagingRequestDto {
   pageSize: number;
   page: number;
-  sortField: string;
-  sortDirection: string;
 }
 
 export interface InboxRequestDto extends PagingRequestDto {

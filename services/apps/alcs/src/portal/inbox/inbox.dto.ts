@@ -1,4 +1,10 @@
-import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { PagingRequestDto } from '../public/search/public-search.dto';
 
 export type SearchEntityClass = 'APP' | 'NOI' | 'NOTI';
@@ -33,7 +39,13 @@ export class AdvancedSearchResultDto<T> {
   total: number;
 }
 
-export class InboxRequestDto extends PagingRequestDto {
+export class InboxRequestDto {
+  @IsNumber()
+  page: number;
+
+  @IsNumber()
+  pageSize: number;
+
   @IsString()
   @IsOptional()
   fileNumber?: string;
