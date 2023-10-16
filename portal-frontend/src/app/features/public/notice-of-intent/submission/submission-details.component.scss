@@ -51,9 +51,7 @@
       gap: rem(16);
     }
   }
-}
 
-:host::ng-deep {
   .scrollable {
     overflow-x: auto;
   }

@@ -27,67 +27,61 @@
     <app-no-data *ngIf="!noiSubmission.soilTypeRemoved"></app-no-data>
   </div>
 
-  <div class="subheading1 full-width"></div>
-  <div class="full-width soil-table">
-    <div class="grid-1"></div>
-    <div class="grid-2">
-      <strong>Soil to be Removed</strong>
-    </div>
-    <div class="grid-1"><strong>Volume</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToRemoveVolume }}
-      <span *ngIf="noiSubmission.soilToRemoveVolume">m<sup>3</sup></span>
-      <app-no-data *ngIf="!noiSubmission.soilToRemoveVolume"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Area</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToRemoveArea }} <span *ngIf="noiSubmission.soilToRemoveArea">ha</span>
-      <app-no-data *ngIf="!noiSubmission.soilToRemoveArea"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Maximum Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToRemoveMaximumDepth }}
-      <span *ngIf="noiSubmission.soilToRemoveMaximumDepth">m</span>
-      <app-no-data *ngIf="!noiSubmission.soilToRemoveMaximumDepth"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Average Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToRemoveAverageDepth }}
-      <span *ngIf="noiSubmission.soilToRemoveAverageDepth">m</span>
-      <app-no-data *ngIf="!noiSubmission.soilToRemoveAverageDepth"></app-no-data>
-    </div>
+  <div class="grid-1"></div>
+  <div class="grid-2">
+    <strong>Soil to be Removed</strong>
+  </div>
+  <div class="grid-1"><strong>Volume</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToRemoveVolume }}
+    <span *ngIf="noiSubmission.soilToRemoveVolume">m<sup>3</sup></span>
+    <app-no-data *ngIf="!noiSubmission.soilToRemoveVolume"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Area</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToRemoveArea }} <span *ngIf="noiSubmission.soilToRemoveArea">ha</span>
+    <app-no-data *ngIf="!noiSubmission.soilToRemoveArea"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Maximum Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToRemoveMaximumDepth }}
+    <span *ngIf="noiSubmission.soilToRemoveMaximumDepth">m</span>
+    <app-no-data *ngIf="!noiSubmission.soilToRemoveMaximumDepth"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Average Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToRemoveAverageDepth }}
+    <span *ngIf="noiSubmission.soilToRemoveAverageDepth">m</span>
+    <app-no-data *ngIf="!noiSubmission.soilToRemoveAverageDepth"></app-no-data>
   </div>
 
-  <div class="subheading1 full-width"></div>
-  <div class="full-width soil-table">
-    <div class="grid-1"></div>
-    <div class="grid-2">
-      <strong>Soil already Removed</strong>
-    </div>
-    <div class="grid-1"><strong>Volume</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilAlreadyRemovedVolume }}
-      <span *ngIf="noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
-      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Area</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilAlreadyRemovedArea }}
-      <span *ngIf="noiSubmission.soilAlreadyRemovedArea !== null">ha</span>
-      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedArea === null"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Maximum Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilAlreadyRemovedMaximumDepth }}
-      <span *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
-      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Average Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilAlreadyRemovedAverageDepth }}
-      <span *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
-      <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
-    </div>
+  <div class="grid-1"></div>
+  <div class="grid-2">
+    <strong>Soil already Removed</strong>
+  </div>
+  <div class="grid-1"><strong>Volume</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilAlreadyRemovedVolume }}
+    <span *ngIf="noiSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
+    <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedVolume === null"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Area</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilAlreadyRemovedArea }}
+    <span *ngIf="noiSubmission.soilAlreadyRemovedArea !== null">ha</span>
+    <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedArea === null"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Maximum Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilAlreadyRemovedMaximumDepth }}
+    <span *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
+    <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedMaximumDepth === null"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Average Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilAlreadyRemovedAverageDepth }}
+    <span *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
+    <app-no-data *ngIf="noiSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
   </div>
 
   <div class="full-width">
