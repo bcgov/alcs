@@ -30,10 +30,8 @@ export class InboxNoticeOfIntentService {
 
     this.compileGroupBySearchQuery(query);
 
-    const sortQuery = this.compileSortQuery(searchDto);
-
     query
-      .orderBy(sortQuery, searchDto.sortDirection)
+      .orderBy('"noiSearch"."last_update"', 'DESC')
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -43,29 +41,6 @@ export class InboxNoticeOfIntentService {
       data: result[0],
       total: result[1],
     };
-  }
-
-  private compileSortQuery(searchDto: InboxRequestDto) {
-    switch (searchDto.sortField) {
-      case 'fileId':
-        return '"noiSearch"."file_number"';
-
-      case 'ownerName':
-        return '"noiSearch"."applicant"';
-
-      case 'type':
-        return '"noiSearch"."notice_of_intent_type_code"';
-
-      case 'government':
-        return '"noiSearch"."local_government_name"';
-
-      case 'portalStatus':
-        return `"noiSearch"."status" ->> 'label' `;
-
-      default:
-      case 'lastUpdate':
-        return '"noiSearch"."last_update"';
-    }
   }
 
   private compileGroupBySearchQuery(query) {

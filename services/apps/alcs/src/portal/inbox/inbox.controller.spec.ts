@@ -118,8 +118,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       name: 'test',
       fileTypes: [],
     };
@@ -151,8 +149,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       fileTypes: [],
     };
 
@@ -176,8 +172,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       fileTypes: [],
     };
 
@@ -201,8 +195,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       fileTypes: ['NFUP'],
     };
 
@@ -223,8 +215,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       fileTypes: ['NOI'],
     };
 
@@ -245,8 +235,6 @@ describe('InboxController', () => {
     const mockSearchRequestDto: InboxRequestDto = {
       pageSize: 1,
       page: 1,
-      sortField: '1',
-      sortDirection: 'ASC',
       fileTypes: ['NFUP'],
     };
 

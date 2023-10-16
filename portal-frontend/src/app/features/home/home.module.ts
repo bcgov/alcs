@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
@@ -26,14 +27,7 @@ const routes: Routes = [
     InboxListComponent,
     InboxComponent,
   ],
-  imports: [
-    SharedModule,
-    RouterModule.forChild(routes),
-    MatPaginatorModule,
-    MatOptionModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-  ],
+  imports: [SharedModule, RouterModule.forChild(routes), MatPaginatorModule, MatOptionModule],
   providers: [],
 })
 export class HomeModule {}
