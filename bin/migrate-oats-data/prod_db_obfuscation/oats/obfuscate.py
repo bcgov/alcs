@@ -2,36 +2,49 @@ from common import setup_and_get_logger
 from db import inject_conn_pool
 from ..lorem_ipsum import lorem_ipsum_string
 from faker import Faker
+import functools
 
 logger = setup_and_get_logger("prod_data_obfuscation")
 
 
 def process_oats_data():
     logger.info("Start oats obfuscation.")
-    update_person_identification_info()
-    delete_data_from_tables()
-    update_note_columns()
-    update_with_random_names_oats_persons()
-    update_with_random_names_oats_alcs_staff()
-    update_with_random_names_oats_compliance_inspector()
-    update_description_columns()
-    update_desc_columns()
-    update_with_random_names_oats_agri_cap_consultant()
-    update_term_columns()
-    update_with_random_oats_issues()
-    update_with_random_oats_documents()
-    update_with_random_oats_organization()
-    update_with_random_oats_planning_review()
-    update_comment_columns()
-    update_with_random_oats_alr_application()
-    replace_audit_columns()
-    
+    _update_person_identification_info()
+    _delete_data_from_tables()
+    _update_note_columns()
+    _update_with_random_names_oats_persons()
+    _update_with_random_names_oats_alcs_staff()
+    _update_with_random_names_oats_compliance_inspector()
+    _update_description_columns()
+    _update_desc_columns()
+    _update_with_random_names_oats_agri_cap_consultant()
+    _update_term_columns()
+    _update_with_random_oats_issues()
+    _update_with_random_oats_documents()
+    _update_with_random_oats_organization()
+    _update_with_random_oats_planning_review()
+    _update_comment_columns()
+    _update_with_random_oats_alr_application()
+    _replace_audit_columns()
 
 
+def log_process(proc_name):
+    def decorator_log_process(func):
+        @functools.wraps(func)
+        def wrapper_log_process(*args, **kwargs):
+            logger.info(f"Start '{proc_name}'")
+            result = func(*args, **kwargs)
+            logger.info(f"Finished '{proc_name}'")
+            return result
+
+        return wrapper_log_process
+
+    return decorator_log_process
+
+
+@log_process("replace_audit_columns")
 @inject_conn_pool
-def replace_audit_columns(conn=None):
-    proc_name = "replace_audit_columns"
-    logger.info(f"Start '{proc_name}'")
+def _replace_audit_columns(conn=None):
     generate_update_query = """
         SELECT 'UPDATE ' || table_schema || '.' || table_name || ' SET who_created = ''obfuscated'', who_updated = ''obfuscated'';'
         FROM information_schema.columns
@@ -50,14 +63,10 @@ def replace_audit_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_person_identification_info")
 @inject_conn_pool
-def update_person_identification_info(conn=None):
-    proc_name = "update_person_identification_info"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_person_identification_info(conn=None):
     create_proc_sql = """
         CREATE OR REPLACE FUNCTION update_info_oats_schema() RETURNS VOID AS $$
         DECLARE r RECORD;
@@ -95,14 +104,10 @@ def update_person_identification_info(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("delete_data_from_tables")
 @inject_conn_pool
-def delete_data_from_tables(conn=None):
-    proc_name = "delete_data_from_tables"
-    logger.info(f"Start '{proc_name}'")
-
+def _delete_data_from_tables(conn=None):
     # List of tables from which you want to delete data
     table_names = [
         "oats.oats_alr_unvalidated_app_data",
@@ -129,38 +134,16 @@ def delete_data_from_tables(conn=None):
                     logger.info(f"'{table_name}' does not exist.")
 
             conn.commit()
-        logger.info(f"Finished '{proc_name}'.")
 
     except Exception as err:
         logger.exception(err)
 
 
+@log_process("update_note_columns")
 @inject_conn_pool
-def update_note_columns(conn=None):
-    proc_name = "update_note_columns"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_note_columns(conn=None):
     create_proc_sql = f"""
-    CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
-    DECLARE
-        lorem_ipsum_str text = '{lorem_ipsum_string}';
-
-        words text[];
-        i INT;
-        output text = '';
-        
-    BEGIN
-
-        words := string_to_array(lorem_ipsum_str, ' ');
-
-        FOR i IN 1..50 LOOP
-            output := output || ' ' || words[1 + floor(random() * array_length(words, 1))];
-        END LOOP;
-
-        RETURN output;
-        
-    END;
-    $$ LANGUAGE plpgsql;
+    {_lorem_ipsum_function_query}
 
     CREATE OR REPLACE FUNCTION update_note_schema() RETURNS VOID AS $$
     DECLARE
@@ -184,11 +167,10 @@ def update_note_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_with_random_names_oats_persons")
 @inject_conn_pool
-def update_with_random_names_oats_persons(conn=None):
+def _update_with_random_names_oats_persons(conn=None):
     # Set Faker for generating random names
     fake = Faker()
 
@@ -214,8 +196,9 @@ def update_with_random_names_oats_persons(conn=None):
         logger.exception(err)
 
 
+@log_process("update_with_random_names_oats_alcs_staff")
 @inject_conn_pool
-def update_with_random_names_oats_alcs_staff(conn=None):
+def _update_with_random_names_oats_alcs_staff(conn=None):
     # Set Faker for generating random names
     fake = Faker()
 
@@ -241,8 +224,9 @@ def update_with_random_names_oats_alcs_staff(conn=None):
         logger.exception(err)
 
 
+@log_process("update_with_random_names_oats_compliance_inspector")
 @inject_conn_pool
-def update_with_random_names_oats_compliance_inspector(conn=None):
+def _update_with_random_names_oats_compliance_inspector(conn=None):
     fake = Faker()
 
     try:
@@ -269,11 +253,9 @@ def update_with_random_names_oats_compliance_inspector(conn=None):
         logger.exception(err)
 
 
+@log_process("update_description_columns")
 @inject_conn_pool
-def update_description_columns(conn=None):
-    proc_name = "update_description_columns"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_description_columns(conn=None):
     create_proc_sql = f"""
     CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
     DECLARE
@@ -318,35 +300,12 @@ def update_description_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_desc_columns")
 @inject_conn_pool
-def update_desc_columns(conn=None):
-    proc_name = "update_desc_columns"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_desc_columns(conn=None):
     create_proc_sql = f"""
-    CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
-    DECLARE
-        lorem_ipsum_str text = '{lorem_ipsum_string}';-- put your full string here
-
-        words text[];
-        i INT;
-        output text = '';
-        
-    BEGIN
-
-        words := string_to_array(lorem_ipsum_str, ' ');
-
-        FOR i IN 1..50 LOOP
-            output := output || ' ' || words[1 + floor(random() * array_length(words, 1))];
-        END LOOP;
-
-        RETURN output;
-        
-    END;
-    $$ LANGUAGE plpgsql;
+    {_lorem_ipsum_function_query}
 
     CREATE OR REPLACE FUNCTION update_desc_schema() RETURNS VOID AS $$
     DECLARE
@@ -370,11 +329,10 @@ def update_desc_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_with_random_names_oats_agri_cap_consultant")
 @inject_conn_pool
-def update_with_random_names_oats_agri_cap_consultant(conn=None):
+def _update_with_random_names_oats_agri_cap_consultant(conn=None):
     fake = Faker()
 
     try:
@@ -401,32 +359,11 @@ def update_with_random_names_oats_agri_cap_consultant(conn=None):
         logger.exception(err)
 
 
+@log_process("update_term_columns")
 @inject_conn_pool
-def update_term_columns(conn=None):
-    proc_name = "update_term_columns"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_term_columns(conn=None):
     create_proc_sql = f"""
-    CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
-    DECLARE
-        lorem_ipsum_str text = '{lorem_ipsum_string}';-- put your full string here
-
-        words text[];
-        i INT;
-        output text = '';
-        
-    BEGIN
-
-        words := string_to_array(lorem_ipsum_str, ' ');
-
-        FOR i IN 1..50 LOOP
-            output := output || ' ' || words[1 + floor(random() * array_length(words, 1))];
-        END LOOP;
-
-        RETURN output;
-        
-    END;
-    $$ LANGUAGE plpgsql;
+    {_lorem_ipsum_function_query}
 
     CREATE OR REPLACE FUNCTION update_term_schema() RETURNS VOID AS $$
     DECLARE
@@ -450,11 +387,10 @@ def update_term_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_with_random_oats_issues")
 @inject_conn_pool
-def update_with_random_oats_issues(conn=None):
+def _update_with_random_oats_issues(conn=None):
     fake = Faker()
     fake_latin = Faker("la")
 
@@ -481,8 +417,9 @@ def update_with_random_oats_issues(conn=None):
         logger.exception(err)
 
 
+@log_process("update_with_random_oats_documents")
 @inject_conn_pool
-def update_with_random_oats_documents(conn=None):
+def _update_with_random_oats_documents(conn=None):
     fake = Faker()
 
     try:
@@ -507,8 +444,9 @@ def update_with_random_oats_documents(conn=None):
         logger.exception(err)
 
 
+@log_process("update_with_random_oats_organization")
 @inject_conn_pool
-def update_with_random_oats_organization(conn=None):
+def _update_with_random_oats_organization(conn=None):
     fake = Faker()
 
     try:
@@ -534,8 +472,9 @@ def update_with_random_oats_organization(conn=None):
         logger.exception(err)
 
 
+@log_process("update_with_random_oats_planning_review")
 @inject_conn_pool
-def update_with_random_oats_planning_review(conn=None):
+def _update_with_random_oats_planning_review(conn=None):
     fake = Faker()
 
     try:
@@ -560,32 +499,11 @@ def update_with_random_oats_planning_review(conn=None):
         logger.exception(err)
 
 
+@log_process("update_comment_columns")
 @inject_conn_pool
-def update_comment_columns(conn=None):
-    proc_name = "update_comment_columns"
-    logger.info(f"Start '{proc_name}'")
-
+def _update_comment_columns(conn=None):
     create_proc_sql = f"""
-    CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
-    DECLARE
-        lorem_ipsum_str text = '{lorem_ipsum_string}';-- put your full string here
-
-        words text[];
-        i INT;
-        output text = '';
-        
-    BEGIN
-
-        words := string_to_array(lorem_ipsum_str, ' ');
-
-        FOR i IN 1..50 LOOP
-            output := output || ' ' || words[1 + floor(random() * array_length(words, 1))];
-        END LOOP;
-
-        RETURN output;
-        
-    END;
-    $$ LANGUAGE plpgsql;
+    {_lorem_ipsum_function_query}
 
     CREATE OR REPLACE FUNCTION update_comment_columns() RETURNS VOID AS $$
     DECLARE
@@ -609,11 +527,10 @@ def update_comment_columns(conn=None):
         conn.rollback()
         logger.exception(err)
 
-    logger.info(f"Finished '{proc_name}'")
 
-
+@log_process("update_with_random_oats_alr_application")
 @inject_conn_pool
-def update_with_random_oats_alr_application(conn=None):
+def _update_with_random_oats_alr_application(conn=None):
     fake = Faker()
 
     try:
@@ -641,3 +558,26 @@ def update_with_random_oats_alr_application(conn=None):
     except Exception as err:
         conn.rollback()
         logger.exception(err)
+
+
+_lorem_ipsum_function_query = f"""
+CREATE OR REPLACE FUNCTION random_lorem_ipsum() RETURNS text AS $$
+    DECLARE
+        lorem_ipsum_str text = '{lorem_ipsum_string}';-- put your full string here
+
+        words text[];
+        i INT;
+        output text = '';
+        
+    BEGIN
+
+        words := string_to_array(lorem_ipsum_str, ' ');
+
+        FOR i IN 1..50 LOOP
+            output := output || ' ' || words[1 + floor(random() * array_length(words, 1))];
+        END LOOP;
+
+        RETURN output;
+        
+END;
+$$ LANGUAGE plpgsql;"""
