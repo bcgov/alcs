@@ -43,4 +43,5 @@ export interface InboxRequestDto extends PagingRequestDto {
   portalStatusCodes?: string[];
   governmentFileNumber?: string;
   fileTypes: string[];
+  filterBy?: string;
 }

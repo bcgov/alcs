@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
@@ -23,7 +26,14 @@ const routes: Routes = [
     InboxListComponent,
     InboxComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(routes), MatPaginatorModule],
+  imports: [
+    SharedModule,
+    RouterModule.forChild(routes),
+    MatPaginatorModule,
+    MatOptionModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+  ],
   providers: [],
 })
 export class HomeModule {}
