@@ -27,34 +27,32 @@
     <app-no-data *ngIf="!noiSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
-  <div class="full-width soil-table">
-    <div class="grid-1"></div>
-    <div class="grid-2">
-      <strong> Fill to be Placed</strong>
-    </div>
-    <div class="grid-1"><strong>Volume</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToPlaceVolume }}
-      <span *ngIf="noiSubmission.soilToPlaceVolume">m<sup>3</sup></span>
-      <app-no-data *ngIf="!noiSubmission.soilToPlaceVolume"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Area</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToPlaceArea }} <span *ngIf="noiSubmission.soilToPlaceArea">m<sup>2</sup></span>
-      <app-no-data *ngIf="!noiSubmission.soilToPlaceArea"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Maximum Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToPlaceMaximumDepth }}
-      <span *ngIf="noiSubmission.soilToPlaceMaximumDepth">m</span>
-      <app-no-data *ngIf="!noiSubmission.soilToPlaceMaximumDepth"></app-no-data>
-    </div>
-    <div class="grid-1"><strong>Average Depth</strong></div>
-    <div class="grid-2">
-      {{ noiSubmission.soilToPlaceAverageDepth }}
-      <span *ngIf="noiSubmission.soilToPlaceAverageDepth">m</span>
-      <app-no-data *ngIf="!noiSubmission.soilToPlaceAverageDepth"></app-no-data>
-    </div>
+  <div class="grid-1"></div>
+  <div class="grid-2">
+    <strong> Fill to be Placed</strong>
+  </div>
+  <div class="grid-1"><strong>Volume</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToPlaceVolume }}
+    <span *ngIf="noiSubmission.soilToPlaceVolume">m<sup>3</sup></span>
+    <app-no-data *ngIf="!noiSubmission.soilToPlaceVolume"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Area</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToPlaceArea }} <span *ngIf="noiSubmission.soilToPlaceArea">m<sup>2</sup></span>
+    <app-no-data *ngIf="!noiSubmission.soilToPlaceArea"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Maximum Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToPlaceMaximumDepth }}
+    <span *ngIf="noiSubmission.soilToPlaceMaximumDepth">m</span>
+    <app-no-data *ngIf="!noiSubmission.soilToPlaceMaximumDepth"></app-no-data>
+  </div>
+  <div class="grid-1"><strong>Average Depth</strong></div>
+  <div class="grid-2">
+    {{ noiSubmission.soilToPlaceAverageDepth }}
+    <span *ngIf="noiSubmission.soilToPlaceAverageDepth">m</span>
+    <app-no-data *ngIf="!noiSubmission.soilToPlaceAverageDepth"></app-no-data>
   </div>
 
   <div class="full-width soil-table">

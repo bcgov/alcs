@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { doc } from 'prettier';
 import { Subject } from 'rxjs';
 import { NotificationDocumentDto } from '../../../../services/notification/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../../services/notification/notification-document/notification-document.service';
@@ -58,6 +57,4 @@ export class NotificationDetailsComponent implements OnInit, OnChanges, OnDestro
     );
     this.files = documents;
   }
-
-  protected readonly doc = doc;
 }
