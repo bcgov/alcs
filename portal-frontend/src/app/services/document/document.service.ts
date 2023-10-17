@@ -59,7 +59,7 @@ export class DocumentService {
     }
 
     try {
-      this.overlayService.showSpinner();
+      this.overlayService.showFileSpinner();
       const fileKey = await this.uploadFileToStorage(fileId, file, documentType);
 
       return await firstValueFrom(

@@ -33,6 +33,7 @@ import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { FileOverlaySpinnerComponent } from './overlay-spinner/file-overlay-spinner/file-overlay-spinner.component';
 import { CrownOwnerDialogComponent } from './owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from './owner-dialogs/owner-dialog/owner-dialog.component';
 import { AllOwnersDialogComponent } from './owner-dialogs/owners-dialog/all-owners-dialog.component';
@@ -77,6 +78,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatIconModule,
     MatAutocompleteModule,
     MatTreeModule,
+    MatProgressSpinnerModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -98,6 +100,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     SoilTableComponent,
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
+    FileOverlaySpinnerComponent,
   ],
   exports: [
     CommonModule,
