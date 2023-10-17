@@ -42,3 +42,15 @@ Where [action] is one of the following:
 - clean: Cleans up previous ETL operations
 
 If you want to see a detailed description of the available arguments and options, run the script with the -h or --help flag.
+
+
+## Prod data obfuscation  
+Prerequisites:  
+- prod OATS postgres DB restored on local
+- prod ALCS postgres DB restores on local
+- python
+
+### How to run: 
+- activate virtual env, the same way you would do it for starting etl,
+- install python requirements `pip install -r requirements.txt`
+- run data obfuscation `python migrate.py obfuscate`

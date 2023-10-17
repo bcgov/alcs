@@ -4,3 +4,4 @@ python-dotenv==0.21.0
 pyyaml==6.0
 rich==13.3.1
 pytz==2023.3
+faker==19.10.0
