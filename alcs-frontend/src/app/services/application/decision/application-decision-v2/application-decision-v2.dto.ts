@@ -23,7 +23,6 @@ export interface UpdateApplicationDecisionDto {
   reconsidersUuid?: string | null;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
@@ -65,7 +64,6 @@ export interface ApplicationDecisionDto {
   isDraft: boolean;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   modifies?: LinkedResolutionDto;

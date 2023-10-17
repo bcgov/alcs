@@ -109,14 +109,6 @@
             ></app-no-data>
           </div>
 
-          <div>
-            <div class="subheading2">Stats Required</div>
-            <app-inline-boolean
-              [selectedValue]="decision.isStatsRequired ?? null"
-              (save)="onStatsRequiredUpdate(decision.uuid, $event)"
-            ></app-inline-boolean>
-          </div>
-
           <div *ngIf="decision.outcome?.code === 'RESC'">
             <div class="subheading2">Rescinded Date</div>
             <ng-container *ngIf="decision.rescindedDate">{{ decision.rescindedDate | momentFormat }}</ng-container>

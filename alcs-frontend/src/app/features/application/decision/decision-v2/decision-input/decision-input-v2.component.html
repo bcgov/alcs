@@ -170,22 +170,6 @@
       </mat-form-field>
     </div>
 
-    <div>
-      <mat-label class="toggle-label">Stats required*</mat-label>
-      <mat-button-toggle-group
-        id="isStatsRequired"
-        formControlName="isStatsRequired"
-        name="isStatsRequired"
-        [ngClass]="{
-          'error-field-outlined ng-invalid':
-            !form.controls.isStatsRequired.valid && form.controls.isStatsRequired.touched
-        }"
-      >
-        <mat-button-toggle value="true">Yes</mat-button-toggle>
-        <mat-button-toggle value="false">No</mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-
     <ng-container *ngIf="form.controls.outcome.value === 'RESC'">
       <mat-form-field appearance="outline" class="date-picker">
         <mat-label>Rescinded Date</mat-label>

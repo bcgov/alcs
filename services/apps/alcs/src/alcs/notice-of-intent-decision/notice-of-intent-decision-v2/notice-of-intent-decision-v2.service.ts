@@ -206,7 +206,6 @@ export class NoticeOfIntentDecisionV2Service {
     existingDecision.resolutionYear = updateDto.resolutionYear;
     existingDecision.isSubjectToConditions = updateDto.isSubjectToConditions;
     existingDecision.decisionDescription = updateDto.decisionDescription;
-    existingDecision.isStatsRequired = updateDto.isStatsRequired;
     existingDecision.isDraft = updateDto.isDraft;
     existingDecision.rescindedDate = formatIncomingDate(
       updateDto.rescindedDate,
@@ -289,7 +288,6 @@ export class NoticeOfIntentDecisionV2Service {
       isDraft: true,
       isSubjectToConditions: createDto.isSubjectToConditions,
       decisionDescription: createDto.decisionDescription,
-      isStatsRequired: createDto.isStatsRequired,
       rescindedDate: createDto.rescindedDate
         ? new Date(createDto.rescindedDate)
         : null,

@@ -11,7 +11,6 @@ export interface UpdateNoticeOfIntentDecisionDto {
   modifiesUuid?: string | null;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   isDraft?: boolean;
@@ -45,7 +44,6 @@ export interface NoticeOfIntentDecisionDto {
   isDraft: boolean;
   wasReleased: boolean;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   fileNumber: string;
