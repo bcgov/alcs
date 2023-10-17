@@ -37,6 +37,7 @@ export class OwnerDialogComponent {
   isEdit = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
+  showFileErrors = false
 
   form = new FormGroup({
     type: this.type,
@@ -121,6 +122,7 @@ export class OwnerDialogComponent {
       this.dialogRef.close(res);
     } else {
       this.form.markAllAsTouched()
+      this.showFileErrors = true
     }
   }
 
