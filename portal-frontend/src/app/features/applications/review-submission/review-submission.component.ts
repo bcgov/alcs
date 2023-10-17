@@ -208,7 +208,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onStepChange($event: StepperSelectionEvent) {
-    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
+    scrollToElement({ id: `siteLayout`, center: false });
   }
 
   private async loadApplicationDocuments(fileId: any) {
