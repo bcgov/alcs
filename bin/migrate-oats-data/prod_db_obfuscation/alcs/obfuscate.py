@@ -45,7 +45,7 @@ def _update_description_columns(conn=None):
     DECLARE
         r RECORD;
     BEGIN
-        FOR r IN (SELECT * FROM information_schema.columns WHERE column_name LIKE '%description%' and (data_type='text' or data_type like 'character varying') AND table_schema = 'alcs' AND table_name NOT LIKE '%code' AND table_name NOT LIKE '%type') LOOP
+        FOR r IN (SELECT * FROM information_schema.columns WHERE column_name LIKE '%description%' and (data_type='text' or data_type like 'character varying') AND table_schema = 'alcs' AND table_name NOT LIKE '%code' AND table_name NOT LIKE '%type' and table_name not in ('application_status', 'card_status')) LOOP
             EXECUTE format('UPDATE alcs.%s SET %s = random_lorem_ipsum() WHERE %s IS NOT NULL', r.table_name, r.column_name, r.column_name);
         END LOOP;
     END;
@@ -301,6 +301,7 @@ def _update_with_random_alcs_documents(conn=None):
 def _update_with_random_alcs_notice_of_intent(conn=None):
     # Set Faker for generating random names
     fake = Faker()
+    fake_latin = Faker("la")
 
     try:
         with conn.cursor() as cursor:
@@ -310,13 +311,15 @@ def _update_with_random_alcs_notice_of_intent(conn=None):
             for r_id in record_ids:
                 sql_query = """
                             UPDATE alcs.notice_of_intent 
-                            SET applicant = CASE WHEN applicant IS NOT NULL THEN %s ELSE applicant END
+                            SET applicant = CASE WHEN applicant IS NOT NULL THEN %s ELSE applicant END,
+                                summary = CASE WHEN summary IS NOT NULL THEN %s ELSE summary END
                             WHERE uuid = %s;
                 """
                 cursor.execute(
                     sql_query,
                     (
                         fake.name(),
+                        fake_latin.sentence(nb_words=10),
                         r_id[0],
                     ),
                 )

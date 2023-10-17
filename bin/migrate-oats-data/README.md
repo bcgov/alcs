@@ -43,14 +43,15 @@ Where [action] is one of the following:
 
 If you want to see a detailed description of the available arguments and options, run the script with the -h or --help flag.
 
+## Prod data obfuscation
 
-## Prod data obfuscation  
-Prerequisites:  
+Prerequisites:
+
 - prod OATS postgres DB restored on local
-- prod ALCS postgres DB restores on local
-- python
+- prod ALCS postgres DB restores on local. NOTE! The ALCS DB obfuscation covers only MVP BD structure, which is deployed at the time of the creation of alcs script!
 
-### How to run: 
+### How to run:
+
 - activate virtual env, the same way you would do it for starting etl,
 - install python requirements `pip install -r requirements.txt`
 - run data obfuscation `python migrate.py obfuscate`
