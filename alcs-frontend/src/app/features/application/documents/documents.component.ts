@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../services/application/application.dto';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
@@ -22,6 +25,9 @@ export class DocumentsComponent implements OnInit {
 
   DOCUMENT_SYSTEM = DOCUMENT_SYSTEM;
 
+  hasBeenReceived = false;
+  hasBeenSetForDiscussion = false;
+
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDocumentDto> = new MatTableDataSource<ApplicationDocumentDto>();
 
@@ -29,6 +35,7 @@ export class DocumentsComponent implements OnInit {
     private applicationDocumentService: ApplicationDocumentService,
     private applicationDetailService: ApplicationDetailService,
     private confirmationDialogService: ConfirmationDialogService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private toastService: ToastService,
     public dialog: MatDialog
   ) {}
@@ -38,6 +45,7 @@ export class DocumentsComponent implements OnInit {
       if (application) {
         this.fileId = application.fileNumber;
         this.loadDocuments(application.fileNumber);
+        this.loadStatusHistory(application.fileNumber);
       }
     });
   }
@@ -113,5 +121,27 @@ export class DocumentsComponent implements OnInit {
           this.toastService.showSuccessToast('Document deleted');
         }
       });
+  }
+
+  private async loadStatusHistory(fileNumber: string) {
+    let statusHistory: ApplicationSubmissionToSubmissionStatusDto[] = [];
+    try {
+      statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
+        fileNumber,
+        false
+      );
+    } catch (e) {
+      console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
+    }
+
+    this.hasBeenReceived =
+      statusHistory.filter(
+        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.RECEIVED_BY_ALC
+      ).length > 0;
+
+    this.hasBeenSetForDiscussion =
+      statusHistory.filter(
+        (status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_ALC
+      ).length > 0;
   }
 }

@@ -40,10 +40,9 @@
       <div class="subheading">* = Pending</div>
     </th>
     <td mat-cell *matCellDef="let element">
-      <span matTooltip="Applicant">A*, </span>
-      <span matTooltip="Commissioner">C*, </span>
-      <span matTooltip="L/FNG">G*, </span>
-      <span matTooltip="Public">P*</span>
+      <span matTooltip="Applicant">A<span *ngIf="!areDocumentsReleased">*</span>, </span>
+      <span matTooltip="L/FNG">G<span *ngIf="!areDocumentsReleased">*</span>, </span>
+      <span matTooltip="Public">P<span *ngIf="!areDocumentsReleased">*</span></span>
     </td>
   </ng-container>
 

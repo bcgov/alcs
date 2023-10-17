@@ -2,6 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
+import { SUBMISSION_STATUS } from '../../../services/application/application.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import {
+  NOI_SUBMISSION_STATUS,
+  NoticeOfIntentSubmissionToSubmissionStatusDto,
+} from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { DOCUMENT_SYSTEM } from '../../../shared/document/document.dto';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent/noi-document/noi-document.dto';
@@ -23,6 +30,8 @@ export class NoiDocumentsComponent implements OnInit {
 
   DOCUMENT_SYSTEM = DOCUMENT_SYSTEM;
 
+  hasBeenReceived = false;
+
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<NoticeOfIntentDocumentDto> = new MatTableDataSource<NoticeOfIntentDocumentDto>();
 
@@ -30,6 +39,7 @@ export class NoiDocumentsComponent implements OnInit {
     private noiDocumentService: NoiDocumentService,
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private confirmationDialogService: ConfirmationDialogService,
+    private noiSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private toastService: ToastService,
     public dialog: MatDialog
   ) {}
@@ -39,6 +49,7 @@ export class NoiDocumentsComponent implements OnInit {
       if (noticeOfIntent) {
         this.fileId = noticeOfIntent.fileNumber;
         this.loadDocuments(noticeOfIntent.fileNumber);
+        this.loadStatusHistory(noticeOfIntent.fileNumber);
       }
     });
   }
@@ -67,20 +78,6 @@ export class NoiDocumentsComponent implements OnInit {
 
   async downloadFile(uuid: string, fileName: string) {
     await this.noiDocumentService.download(uuid, fileName, false);
-  }
-
-  private async loadDocuments(fileNumber: string) {
-    this.documents = await this.noiDocumentService.listAll(fileNumber);
-    this.dataSource = new MatTableDataSource(this.documents);
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'type':
-          return item.type?.oatsCode;
-        default: // @ts-ignore Does not like using String for Key access, but that's what Angular provides
-          return item[property];
-      }
-    };
-    this.dataSource.sort = this.sort;
   }
 
   onEditFile(element: NoticeOfIntentDocumentDto) {
@@ -114,5 +111,33 @@ export class NoiDocumentsComponent implements OnInit {
           this.toastService.showSuccessToast('Document deleted');
         }
       });
+  }
+
+  private async loadDocuments(fileNumber: string) {
+    this.documents = await this.noiDocumentService.listAll(fileNumber);
+    this.dataSource = new MatTableDataSource(this.documents);
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'type':
+          return item.type?.oatsCode;
+        default: // @ts-ignore Does not like using String for Key access, but that's what Angular provides
+          return item[property];
+      }
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  private async loadStatusHistory(fileNumber: string) {
+    let statusHistory: NoticeOfIntentSubmissionToSubmissionStatusDto[] = [];
+    try {
+      statusHistory = await this.noiSubmissionStatusService.fetchSubmissionStatusesByFileNumber(fileNumber, false);
+    } catch (e) {
+      console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
+    }
+
+    this.hasBeenReceived =
+      statusHistory.filter(
+        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.RECEIVED_BY_ALC
+      ).length > 0;
   }
 }

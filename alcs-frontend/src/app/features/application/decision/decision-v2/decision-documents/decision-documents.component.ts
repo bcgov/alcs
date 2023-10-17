@@ -27,6 +27,7 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['type', 'fileName', 'source', 'visibilityFlags', 'uploadedAt', 'actions'];
   documents: ApplicationDecisionDocumentDto[] = [];
   private fileId = '';
+  areDocumentsReleased = false;
 
   @ViewChild(MatSort) sort!: MatSort;
   dataSource: MatTableDataSource<ApplicationDecisionDocumentDto> =
@@ -42,11 +43,13 @@ export class DecisionDocumentsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.decision && !this.loadData) {
       this.dataSource = new MatTableDataSource(this.decision.documents);
+      this.areDocumentsReleased = !this.decision.isDraft && !!this.decision.date && Date.now() >= this.decision.date;
     }
     this.decisionService.$decision.pipe(takeUntil(this.$destroy)).subscribe((decision) => {
       if (decision) {
         this.dataSource = new MatTableDataSource(decision.documents);
         this.decision = decision;
+        this.areDocumentsReleased = !decision.isDraft && !!decision.date && Date.now() >= decision.date;
       }
     });
   }

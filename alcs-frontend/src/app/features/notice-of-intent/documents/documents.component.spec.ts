@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NoiDocumentService } from '../../../services/notice-of-intent/noi-document/noi-document.service';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
+import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -17,6 +18,7 @@ describe('NoiDocumentsComponent', () => {
   let mockNoiDetailService: DeepMocked<NoticeOfIntentDetailService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockNoiSubStatusService: DeepMocked<NoticeOfIntentSubmissionStatusService>;
 
   beforeEach(async () => {
     mockNoiDocService = createMock();
@@ -24,6 +26,7 @@ describe('NoiDocumentsComponent', () => {
     mockDialog = createMock();
     mockToastService = createMock();
     mockNoiDetailService.$noticeOfIntent = new BehaviorSubject<NoticeOfIntentDto | undefined>(undefined);
+    mockNoiSubStatusService = createMock();
 
     await TestBed.configureTestingModule({
       declarations: [NoiDocumentsComponent],
@@ -43,6 +46,10 @@ describe('NoiDocumentsComponent', () => {
         {
           provide: ToastService,
           useValue: mockToastService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: mockNoiSubStatusService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
