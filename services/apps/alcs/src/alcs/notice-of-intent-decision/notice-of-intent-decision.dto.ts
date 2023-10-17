@@ -60,10 +60,6 @@ export class UpdateNoticeOfIntentDecisionDto {
   @IsOptional()
   decisionDescription?: string | null;
 
-  @IsBoolean()
-  @IsOptional()
-  isStatsRequired?: boolean | null;
-
   @IsNumber()
   @IsOptional()
   rescindedDate?: number | null;
@@ -128,9 +124,6 @@ export class NoticeOfIntentDecisionDto {
 
   @AutoMap(() => String)
   decisionDescription?: string | null;
-
-  @AutoMap(() => Boolean)
-  isStatsRequired?: boolean | null;
 
   @AutoMap(() => Number)
   rescindedDate?: number | null;

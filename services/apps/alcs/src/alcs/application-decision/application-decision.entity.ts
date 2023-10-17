@@ -121,14 +121,6 @@ export class ApplicationDecision extends Base {
   })
   decisionDescription?: string | null;
 
-  @AutoMap(() => Boolean)
-  @Column({
-    comment: 'Indicates whether the stats are required for the decision',
-    nullable: true,
-    type: 'boolean',
-  })
-  isStatsRequired?: boolean | null;
-
   @AutoMap(() => Date)
   @Column({
     type: 'timestamptz',

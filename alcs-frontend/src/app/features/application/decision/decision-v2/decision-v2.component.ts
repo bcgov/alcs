@@ -210,14 +210,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  async onStatsRequiredUpdate(decisionUuid: string, value: boolean) {
-    await this.decisionService.update(decisionUuid, {
-      isStatsRequired: value,
-      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
-    });
-    await this.loadDecisions(this.fileNumber);
-  }
-
   ngOnDestroy(): void {
     this.decisionService.clearDecisions();
     this.$destroy.next();

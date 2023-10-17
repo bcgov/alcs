@@ -78,7 +78,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     auditDate: new FormControl<Date | null>(null),
     isSubjectToConditions: new FormControl<string | undefined>(undefined, [Validators.required]),
     decisionDescription: new FormControl<string | undefined>(undefined, [Validators.required]),
-    isStatsRequired: new FormControl<string | undefined>(undefined, [Validators.required]),
     rescindedDate: new FormControl<Date | null>(null),
     rescindedComment: new FormControl<string | null>(null),
   });
@@ -234,7 +233,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       postDecision: existingDecision.modifies?.uuid,
       isSubjectToConditions: parseBooleanToString(existingDecision.isSubjectToConditions),
       decisionDescription: existingDecision.decisionDescription,
-      isStatsRequired: parseBooleanToString(existingDecision.isStatsRequired),
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
     });
@@ -310,7 +308,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       postDecision,
       isSubjectToConditions,
       decisionDescription,
-      isStatsRequired,
       rescindedDate,
       rescindedComment,
     } = this.form.getRawValue();
@@ -327,7 +324,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       isDraft,
       isSubjectToConditions: parseStringToBoolean(isSubjectToConditions),
       decisionDescription: decisionDescription,
-      isStatsRequired: parseStringToBoolean(isStatsRequired),
       rescindedDate: rescindedDate ? formatDateForApi(rescindedDate) : rescindedDate,
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
