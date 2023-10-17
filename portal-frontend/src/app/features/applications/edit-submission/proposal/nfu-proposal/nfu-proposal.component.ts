@@ -7,7 +7,9 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { SoilTableData } from '../../../../../shared/soil-table/soil-table.component';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
@@ -22,6 +24,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   currentStep = EditApplicationSteps.Proposal;
 
   fillTableData: SoilTableData = {};
+  showProposalMapVirus = false;
 
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
@@ -51,9 +54,10 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     private router: Router,
     private applicationSubmissionService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -98,6 +102,11 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
 
   async onSave() {
     await this.save();
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
   }
 
   protected async save() {

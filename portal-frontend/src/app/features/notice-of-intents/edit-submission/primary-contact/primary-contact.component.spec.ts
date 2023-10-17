@@ -10,6 +10,7 @@ import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-in
 import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { PrimaryContactComponent } from './primary-contact.component';
 
@@ -52,6 +53,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: AuthenticationService,
           useValue: mockAuthService,
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
       ],
       declarations: [PrimaryContactComponent],

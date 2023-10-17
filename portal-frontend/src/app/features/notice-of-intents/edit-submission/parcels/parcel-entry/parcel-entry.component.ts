@@ -70,6 +70,7 @@ export class ParcelEntryComponent implements OnInit {
   searchBy = new FormControl<string | null>(null);
   isCrownLand: boolean | null = null;
   isCertificateOfTitleRequired = true;
+  showVirusError = false;
 
   pidPin = new FormControl<string>('');
   legalDescription = new FormControl<string | null>(null, [Validators.required]);
@@ -243,11 +244,18 @@ export class ParcelEntryComponent implements OnInit {
   async attachFile(file: FileHandle, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
-      this.parcel.certificateOfTitle = await this.noticeOfIntentParcelService.attachCertificateOfTitle(
-        this.fileId,
-        parcelUuid,
-        mappedFiles
-      );
+
+      try {
+        this.parcel.certificateOfTitle = await this.noticeOfIntentParcelService.attachCertificateOfTitle(
+          this.fileId,
+          parcelUuid,
+          mappedFiles
+        );
+      } catch (e) {
+        this.showVirusError = true;
+        return;
+      }
+      this.showVirusError = false;
     }
   }
 

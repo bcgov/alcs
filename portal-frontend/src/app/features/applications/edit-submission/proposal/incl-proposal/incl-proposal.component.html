@@ -42,7 +42,8 @@
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
-        Include why you are applying for an inclusion, what the proposal will achieve, and any benefits to agriculture that the proposal provides.
+        Include why you are applying for an inclusion, what the proposal will achieve, and any benefits to agriculture
+        that the proposal provides.
       </div>
       <mat-form-field appearance="outline">
         <textarea
@@ -62,9 +63,7 @@
     </div>
     <div class="full-row">
       <label for="agSupport">Does the proposal support agriculture in the short or long term?</label>
-      <div class="subtext">
-        Please explain
-      </div>
+      <div class="subtext">Please explain</div>
       <mat-form-field appearance="outline">
         <textarea
           formControlName="agSupport"
@@ -113,11 +112,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (uploadFiles)="attachProposalMap($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
     <div class="full-row" *ngIf="showGovernmentQuestions">
@@ -192,13 +192,14 @@
         <app-file-drag-drop
           id="advertising"
           [uploadedFiles]="noticeOfPublicHearing"
-          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_ADVERTISING)"
+          (uploadFiles)="attachProofOfAdvertising($event)"
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
+          [showVirusError]="showProofOfAdvertisingVirus"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -210,13 +211,14 @@
         <app-file-drag-drop
           id="signage"
           [uploadedFiles]="proofOfSignage"
-          (uploadFiles)="attachFile($event, DOCUMENT.PROOF_OF_SIGNAGE)"
+          (uploadFiles)="attachProofOfSignage($event)"
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
           [allowMultiple]="true"
+          [showVirusError]="showProofOfSignageVirus"
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
@@ -225,12 +227,13 @@
         <app-file-drag-drop
           id="report"
           [uploadedFiles]="reportOfPublicHearing"
-          (uploadFiles)="attachFile($event, DOCUMENT.REPORT_OF_PUBLIC_HEARING)"
+          (uploadFiles)="attachReportOfPublicHearing($event)"
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
           [isRequired]="!disableNotificationFileUploads"
           [disabled]="disableNotificationFileUploads"
+          [showVirusError]="showReportOfPublicHearingVirus"
           [allowMultiple]="true"
         ></app-file-drag-drop>
       </div>

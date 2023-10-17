@@ -7,7 +7,9 @@ import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-int
 import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionUpdateDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
@@ -32,6 +34,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   allowMiningUploads = false;
   requiresNoticeOfWork = false;
+  showProposalMapVirus = false;
+  showCrossSectionVirus = false;
+  showReclamationPlanVirus = false;
+  showNoticeOfWorkVirus = false;
 
   proposalMap: NoticeOfIntentDocumentDto[] = [];
   crossSections: NoticeOfIntentDocumentDto[] = [];
@@ -74,9 +80,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     private router: Router,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(noticeOfIntentDocumentService, dialog);
+    super(noticeOfIntentDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -148,6 +155,26 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   async onSave() {
     await this.save();
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
+  }
+
+  async attachCrossSection(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+    this.showCrossSectionVirus = !res;
+  }
+
+  async attachReclamationPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+    this.showReclamationPlanVirus = !res;
+  }
+
+  async attachNoticeOfWork(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.NOTICE_OF_WORK);
+    this.showNoticeOfWorkVirus = !res;
   }
 
   protected async save() {

@@ -7,7 +7,9 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { EditApplicationSteps } from '../../edit-submission.component';
@@ -27,6 +29,10 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   proposalMap: ApplicationDocumentDto[] = [];
   crossSections: ApplicationDocumentDto[] = [];
   reclamationPlan: ApplicationDocumentDto[] = [];
+
+  showProposalMapVirus = false;
+  showCrossSectionVirus = false;
+  showReclamationPlanVirus = false;
 
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
   followUpIds = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
@@ -55,9 +61,10 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -108,6 +115,21 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
 
   async onSave() {
     await this.save();
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
+  }
+
+  async attachCrossSection(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+    this.showCrossSectionVirus = !res;
+  }
+
+  async attachReclamationPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+    this.showReclamationPlanVirus = !res;
   }
 
   protected async save() {

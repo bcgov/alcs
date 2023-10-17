@@ -10,6 +10,7 @@ import { ApplicationSubmissionDetailedDto } from '../../../../services/applicati
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { UserDto } from '../../../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { PrimaryContactComponent } from './primary-contact.component';
 
@@ -52,6 +53,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: AuthenticationService,
           useValue: mockAuthService,
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
       ],
       declarations: [PrimaryContactComponent],

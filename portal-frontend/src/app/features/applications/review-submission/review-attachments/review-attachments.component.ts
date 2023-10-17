@@ -31,6 +31,9 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   isAuthorized = false;
   showMandatoryUploads = false;
   hasCompletedPreviousSteps = false;
+  showResolutionVirusError = false;
+  showStaffReportVirusError = false;
+  showOtherVirusError = false;
 
   constructor(
     private router: Router,
@@ -87,16 +90,36 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  async attachFile(fileHandle: FileHandle, documentType: DOCUMENT_TYPE) {
+  async attachStaffReport(fileHandle: FileHandle) {
+    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.STAFF_REPORT);
+    this.showStaffReportVirusError = !res;
+  }
+
+  async attachResolutionDocument(fileHandle: FileHandle) {
+    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
+    this.showResolutionVirusError = !res;
+  }
+
+  async attachOtherDocument(fileHandle: FileHandle) {
+    const res = await this.attachFile(fileHandle, DOCUMENT_TYPE.OTHER);
+    this.showOtherVirusError = !res;
+  }
+
+  private async attachFile(fileHandle: FileHandle, documentType: DOCUMENT_TYPE) {
     if (this.fileId) {
-      await this.applicationDocumentService.attachExternalFile(
-        this.fileId,
-        fileHandle.file,
-        documentType,
-        DOCUMENT_SOURCE.LFNG
-      );
+      try {
+        await this.applicationDocumentService.attachExternalFile(
+          this.fileId,
+          fileHandle.file,
+          documentType,
+          DOCUMENT_SOURCE.LFNG
+        );
+      } catch (e) {
+        return false;
+      }
       await this.loadApplicationDocuments(this.fileId);
     }
+    return true;
   }
 
   async deleteFile($event: ApplicationDocumentDto) {

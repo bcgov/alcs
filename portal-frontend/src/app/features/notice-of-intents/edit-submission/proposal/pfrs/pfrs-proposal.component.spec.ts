@@ -8,6 +8,7 @@ import { NoticeOfIntentDocumentDto } from '../../../../../services/notice-of-int
 import { NoticeOfIntentDocumentService } from '../../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { PfrsProposalComponent } from './pfrs-proposal.component';
 
@@ -41,6 +42,10 @@ describe('RosoProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

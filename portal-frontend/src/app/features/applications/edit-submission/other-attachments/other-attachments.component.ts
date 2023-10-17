@@ -10,7 +10,9 @@ import {
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../services/code/code.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -29,6 +31,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   otherFiles: ApplicationDocumentDto[] = [];
 
   private isDirty = false;
+  showVirusError = false;
 
   form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
@@ -38,9 +41,10 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
     private applicationService: ApplicationSubmissionService,
     private codeService: CodeService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -73,6 +77,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   async onSave() {
     await this.save();
+  }
+
+  async attachDocument(file: FileHandle) {
+    const res = await this.attachFile(file, null);
+    this.showVirusError = !res;
   }
 
   protected async save() {

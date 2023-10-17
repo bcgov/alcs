@@ -107,11 +107,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+        (uploadFiles)="attachProposalMap($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -224,9 +225,7 @@
       </div>
       <div>
         <label for="projectDurationAmount">Length</label>
-        <div class='subtext'>
-          Decimals can be used - e.g. 3.5 months or 1.5 years
-        </div>
+        <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
         <mat-form-field appearance="outline">
           <input
             id="projectDurationAmount"

@@ -7,7 +7,9 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../../edit-submission.component';
 import { FilesStepComponent } from '../../files-step.partial';
 
@@ -23,6 +25,9 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
 
   servingNotice: ApplicationDocumentDto[] = [];
   proposalMap: ApplicationDocumentDto[] = [];
+
+  showServingNoticeVirus = false;
+  showProposalMapVirus = false;
 
   purpose = new FormControl<string | null>(null, [Validators.required]);
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
@@ -45,9 +50,10 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -75,6 +81,16 @@ export class TurProposalComponent extends FilesStepComponent implements OnInit, 
       this.servingNotice = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE);
       this.proposalMap = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP);
     });
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
+  }
+
+  async attachServinceNotice(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.SERVING_NOTICE);
+    this.showServingNoticeVirus = !res;
   }
 
   async onSave() {

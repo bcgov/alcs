@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -38,6 +38,9 @@ export class NoticeOfIntentDocumentService {
       this.toastService.showSuccessToast('Document uploaded');
       return res;
     } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 403) {
+        throw e;
+      }
       console.error(e);
       this.toastService.showErrorToast('Failed to attach document, please try again');
     }

@@ -57,6 +57,8 @@ export class ParcelEntryComponent implements OnInit {
   @Input() _disabled = false;
   @Input() isDraft = false;
 
+  showVirusError = false;
+
   @Input()
   public set disabled(disabled: boolean) {
     this._disabled = disabled;
@@ -247,11 +249,17 @@ export class ParcelEntryComponent implements OnInit {
   async attachFile(file: FileHandle, parcelUuid: string) {
     if (parcelUuid) {
       const mappedFiles = file.file;
-      this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
-        this.fileId,
-        parcelUuid,
-        mappedFiles
-      );
+      try {
+        this.parcel.certificateOfTitle = await this.applicationParcelService.attachCertificateOfTitle(
+          this.fileId,
+          parcelUuid,
+          mappedFiles
+        );
+      } catch (e) {
+        this.showVirusError = true;
+        return;
+      }
+      this.showVirusError = false;
     }
   }
 

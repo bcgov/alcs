@@ -8,6 +8,7 @@ import { NotificationDocumentDto } from '../../../../services/notification-docum
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { ProposalComponent } from './proposal.component';
 
@@ -41,6 +42,10 @@ describe('ProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

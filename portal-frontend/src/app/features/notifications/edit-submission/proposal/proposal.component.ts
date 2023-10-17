@@ -10,8 +10,9 @@ import {
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionUpdateDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
-import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditNotificationSteps } from '../edit-submission.component';
@@ -47,14 +48,17 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
   private submissionUuid = '';
   private isDirty = false;
   surveyForm = new FormGroup({} as any);
+  showSRWTermsVirus = false;
+  showSurveyPlanVirus = false;
 
   constructor(
     private router: Router,
     private notificationSubmissionService: NotificationSubmissionService,
     notificationDocumentService: NotificationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(notificationDocumentService, dialog);
+    super(notificationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -91,6 +95,16 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
         this.surveyForm.markAllAsTouched();
       }
     });
+  }
+
+  async attachSRWTerms(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.SRW_TERMS);
+    this.showSRWTermsVirus = !res;
+  }
+
+  async attachSurveyPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.SURVEY_PLAN);
+    this.showSurveyPlanVirus = !res;
   }
 
   async onSave() {

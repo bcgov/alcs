@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { AuthenticationService } from '../../../../../services/authentication/authentication.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
 import { FilesStepComponent } from '../../files-step.partial';
@@ -35,6 +37,11 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
   governmentName? = '';
   disableNotificationFileUploads = false;
 
+  showProposalMapVirus = false;
+  showProofOfAdvertisingVirus = false;
+  showProofOfSignageVirus = false;
+  showReportOfPublicHearingVirus = false;
+
   hectares = new FormControl<string | null>(null, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   agSupport = new FormControl<string | null>(null, [Validators.required]);
@@ -57,9 +64,10 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
     private applicationSubmissionService: ApplicationSubmissionService,
     private authenticationService: AuthenticationService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -118,6 +126,26 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
 
   async onSave() {
     await this.save();
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
+  }
+
+  async attachProofOfAdvertising(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_ADVERTISING);
+    this.showProofOfAdvertisingVirus = !res;
+  }
+
+  async attachProofOfSignage(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROOF_OF_SIGNAGE);
+    this.showProofOfSignageVirus = !res;
+  }
+
+  async attachReportOfPublicHearing(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING);
+    this.showReportOfPublicHearingVirus = !res;
   }
 
   protected async save() {

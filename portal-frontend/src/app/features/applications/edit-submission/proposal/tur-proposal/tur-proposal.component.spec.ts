@@ -8,6 +8,7 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { TurProposalComponent } from './tur-proposal.component';
 
@@ -41,6 +42,10 @@ describe('TurProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

@@ -157,11 +157,12 @@
     <app-file-drag-drop
       [allowMultiple]="true"
       [uploadedFiles]="files"
-      (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
+      (uploadFiles)="attachAuthorizationLetter($event)"
       (deleteFile)="onDeleteFile($event)"
       (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter"
+      [showVirusError]="showVirusError"
     ></app-file-drag-drop>
   </div>
 </section>

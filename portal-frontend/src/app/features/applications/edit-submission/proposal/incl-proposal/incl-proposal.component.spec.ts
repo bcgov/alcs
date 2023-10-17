@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { UserDto } from '../../../../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../../../../services/authentication/authentication.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { InclProposalComponent } from './incl-proposal.component';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
@@ -40,6 +41,10 @@ describe('InclProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

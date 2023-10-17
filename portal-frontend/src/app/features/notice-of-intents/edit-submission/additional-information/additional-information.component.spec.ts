@@ -7,6 +7,7 @@ import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { AdditionalInformationComponent } from './additional-information.component';
 
@@ -28,6 +29,10 @@ describe('RosoAdditionalInformationComponent', () => {
           useValue: mockNoticeOfIntentSubmissionService,
         },
         { provide: NoticeOfIntentDocumentService, useValue: mockNoticeOfIntentDocumentService },
+        {
+          provide: ToastService,
+          useValue: {},
+        },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

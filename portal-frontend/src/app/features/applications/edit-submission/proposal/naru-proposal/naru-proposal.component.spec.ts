@@ -9,6 +9,7 @@ import { ApplicationDocumentService } from '../../../../../services/application-
 import { ApplicationSubmissionDetailedDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../../services/code/code.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { NaruProposalComponent } from './naru-proposal.component';
 
@@ -42,6 +43,10 @@ describe('NaruProposalComponent', () => {
         },
         {
           provide: CodeService,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

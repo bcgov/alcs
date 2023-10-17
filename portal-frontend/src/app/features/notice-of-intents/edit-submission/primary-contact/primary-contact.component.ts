@@ -9,8 +9,10 @@ import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-in
 import { NoticeOfIntentOwnerDto } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -27,6 +29,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   files: (NoticeOfIntentDocumentDto & { errorMessage?: string })[] = [];
 
   needsAuthorizationLetter = false;
+  showVirusError = false;
   selectedThirdPartyAgent = false;
   selectedLocalGovernment = false;
   selectedOwnerUuid: string | undefined = undefined;
@@ -57,9 +60,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private authenticationService: AuthenticationService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(noticeOfIntentDocumentService, dialog);
+    super(noticeOfIntentDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -86,6 +90,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   async onSave() {
     await this.save();
+  }
+
+  async attachAuthorizationLetter(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+    this.showVirusError = !res;
   }
 
   onSelectAgent() {

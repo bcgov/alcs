@@ -16,23 +16,25 @@
       <app-file-drag-drop
         id="resolution-document"
         [uploadedFiles]="resolutionDocument"
-        (uploadFiles)="attachFile($event, documentTypes.RESOLUTION_DOCUMENT)"
+        (uploadFiles)="attachResolutionDocument($event)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [isRequired]="true"
         [showErrors]="showErrors"
+        [showVirusError]="showResolutionVirusError"
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
-      <label for="staff-report">Staff Report <span *ngIf="isAuthorized === false">(optional)</span></label>
+      <label for="staff-report">Staff Report <span *ngIf="!isAuthorized">(optional)</span></label>
       <app-file-drag-drop
         id="staff-report"
         [uploadedFiles]="staffReport"
-        (uploadFiles)="attachFile($event, documentTypes.STAFF_REPORT)"
+        (uploadFiles)="attachStaffReport($event)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [isRequired]="true"
         [showErrors]="showErrors"
+        [showVirusError]="showStaffReportVirusError"
       ></app-file-drag-drop>
     </section>
     <section>
@@ -40,10 +42,11 @@
       <app-file-drag-drop
         id="other-document"
         [uploadedFiles]="otherAttachments"
-        (uploadFiles)="attachFile($event, documentTypes.OTHER)"
+        (uploadFiles)="attachOtherDocument($event)"
         (deleteFile)="deleteFile($event)"
         (openFile)="openFile($event)"
         [allowMultiple]="true"
+        [showVirusError]="showOtherVirusError"
       ></app-file-drag-drop>
     </section>
   </div>

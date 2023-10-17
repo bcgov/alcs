@@ -11,7 +11,9 @@ import {
   ProposedStructure,
 } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../shared/utils/boolean-helper';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
 import { EditNoiSteps } from '../edit-submission.component';
@@ -55,6 +57,7 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   private submissionUuid = '';
 
   confirmRemovalOfSoil = false;
+  showBuildingPlanVirus = false;
   buildingPlans: NoticeOfIntentDocumentDto[] = [];
 
   proposedStructures: FormProposedStructure[] = [];
@@ -90,9 +93,10 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
   constructor(
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(noticeOfIntentDocumentService, dialog);
+    super(noticeOfIntentDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -151,6 +155,11 @@ export class AdditionalInformationComponent extends FilesStepComponent implement
     this.$noiDocuments.pipe(takeUntil(this.$destroy)).subscribe((documents) => {
       this.buildingPlans = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.BUILDING_PLAN);
     });
+  }
+
+  async attachBuildingPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.BUILDING_PLAN);
+    this.showBuildingPlanVirus = !res;
   }
 
   prepareStructureSpecificTextInputs() {

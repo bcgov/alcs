@@ -35,6 +35,7 @@ export class OwnerDialogComponent {
   corporateSummary = new FormControl<string | null>(null);
 
   isEdit = false;
+  showVirusError = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
   showFileErrors = false
@@ -104,8 +105,14 @@ export class OwnerDialogComponent {
         console.error('ApplicationOwnerDialogComponent misconfigured, needs fileId for create');
         return;
       }
-  
-      const documentUuid = await this.uploadPendingFile(this.pendingFile);
+
+      let documentUuid;
+      if (this.pendingFile) {
+        documentUuid = await this.uploadPendingFile(this.pendingFile);
+        if (!documentUuid) {
+          return;
+        }
+      }
       const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
         organizationName: this.organizationName.getRawValue() || undefined,
         firstName: this.firstName.getRawValue() || undefined,
@@ -117,7 +124,7 @@ export class OwnerDialogComponent {
         applicationSubmissionUuid: this.data.submissionUuid,
         noticeOfIntentSubmissionUuid: this.data.submissionUuid,
       };
-  
+
       const res = await this.data.ownerService.create(createDto);
       this.dialogRef.close(res);
     } else {
@@ -147,7 +154,7 @@ export class OwnerDialogComponent {
         this.dialogRef.close(res);
       }
     } else {
-      this.form.markAllAsTouched()
+      this.form.markAllAsTouched();
     }
   }
 
@@ -156,6 +163,7 @@ export class OwnerDialogComponent {
     this.corporateSummary.setValue('pending');
     const corporateSummaryType = this.documentCodes.find((code) => code.code === DOCUMENT_TYPE.CORPORATE_SUMMARY);
     if (corporateSummaryType) {
+      this.showVirusError = false;
       this.files = [
         {
           type: corporateSummaryType,
@@ -210,8 +218,13 @@ export class OwnerDialogComponent {
   private async uploadPendingFile(file?: File) {
     let documentUuid;
     if (file) {
-      documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
-      if (!documentUuid) {
+      try {
+        documentUuid = await this.data.ownerService.uploadCorporateSummary(this.data.fileId, file);
+      } catch (e) {
+        this.showVirusError = true;
+        this.pendingFile = undefined;
+        this.corporateSummary.setValue(null);
+        this.files = [];
         return;
       }
     }

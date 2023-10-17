@@ -9,6 +9,7 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../services/code/code.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { OtherAttachmentsComponent } from './other-attachments.component';
 
@@ -48,6 +49,10 @@ describe('OtherAttachmentsComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

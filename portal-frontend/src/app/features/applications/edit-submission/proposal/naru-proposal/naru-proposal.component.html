@@ -431,11 +431,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+        (uploadFiles)="attachProposalMap($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]='showProposalMapVirus'
       ></app-file-drag-drop>
     </div>
 
