@@ -12,6 +12,11 @@
     "FRONTEND_ROOT": "http://localhost:4201",
     "ALCS_GRPC_URL": "localhost:50057"
   },
+  "CLAMAV": {
+    "ENABLED": true,
+    "HOST": "clamav",
+    "PORT": 3310
+  },
   "DATABASE": {
     "HOST": "db",
     "PORT": 5432,

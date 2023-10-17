@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoticeOfIntentDecisionV2Service } from '../../../../../../services/notice-of-intent/decision-v2/notice-of-intent-decision-v2.service';
 import { NoticeOfIntentDecisionDocumentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
+import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
 @Component({
@@ -36,12 +38,14 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
 
   pendingFile: File | undefined;
   existingFile: string | undefined;
+  showVirusError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { fileId: string; decisionUuid: string; existingDocument?: NoticeOfIntentDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private decisionService: NoticeOfIntentDecisionV2Service
+    private decisionService: NoticeOfIntentDecisionV2Service,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +69,18 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       }
       await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
 
+      try {
+        await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          this.showVirusError = true;
+          this.isSaving = false;
+          this.pendingFile = undefined;
+          return;
+        }
+      }
+
       this.dialog.close(true);
       this.isSaving = false;
     } else if (this.data.existingDocument) {
@@ -82,6 +98,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     if (selectedFiles && selectedFiles[0]) {
       this.pendingFile = selectedFiles[0];
       this.name.setValue(selectedFiles[0].name);
+      this.showVirusError = false;
     }
   }
 

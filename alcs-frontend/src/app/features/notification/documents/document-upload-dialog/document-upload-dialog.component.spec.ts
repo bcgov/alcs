@@ -6,6 +6,7 @@ import { NoiDocumentService } from '../../../../services/notice-of-intent/noi-do
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent/notice-of-intent-submission/notice-of-intent-submission.service';
 import { NotificationDocumentService } from '../../../../services/notification/notification-document/notification-document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { DocumentUploadDialogComponent } from './document-upload-dialog.component';
 
@@ -34,6 +35,7 @@ describe('DocumentUploadDialogComponent', () => {
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ToastService, useValue: {} },
       ],
       imports: [MatDialogModule],
       schemas: [NO_ERRORS_SCHEMA],

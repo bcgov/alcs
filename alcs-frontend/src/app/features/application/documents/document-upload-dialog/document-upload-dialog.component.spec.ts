@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationDocumentService } from '../../../../services/application/application-document/application-document.service';
 import { ApplicationParcelService } from '../../../../services/application/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../services/application/application-submission/application-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { DocumentUploadDialogComponent } from './document-upload-dialog.component';
 
@@ -45,6 +46,7 @@ describe('DocumentUploadDialogComponent', () => {
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: ToastService, useValue: {} },
       ],
       imports: [MatDialogModule],
       schemas: [NO_ERRORS_SCHEMA],

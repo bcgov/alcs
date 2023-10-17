@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -5,6 +6,7 @@ import { Subject } from 'rxjs';
 import { UpdateNoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent/noi-document/noi-document.dto';
 import { NotificationDocumentDto } from '../../../../services/notification/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../../services/notification/notification-document/notification-document.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -47,12 +49,14 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
 
   pendingFile: File | undefined;
   existingFile: { name: string; size: number } | undefined;
+  showVirusError = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { fileId: string; existingDocument?: NotificationDocumentDto },
     protected dialog: MatDialogRef<any>,
-    private notificationDocumentService: NotificationDocumentService
+    private notificationDocumentService: NotificationDocumentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -102,10 +106,20 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       await this.notificationDocumentService.update(this.data.existingDocument.uuid, dto);
     } else if (file !== undefined) {
-      await this.notificationDocumentService.upload(this.data.fileId, {
-        ...dto,
-        file,
-      });
+      try {
+        await this.notificationDocumentService.upload(this.data.fileId, {
+          ...dto,
+          file,
+        });
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          this.showVirusError = true;
+          this.isSaving = false;
+          this.pendingFile = undefined;
+          return;
+        }
+      }
     }
     this.dialog.close(true);
     this.isSaving = false;
