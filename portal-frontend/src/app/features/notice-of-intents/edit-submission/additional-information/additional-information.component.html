@@ -309,10 +309,11 @@
         <app-file-drag-drop
           id="detailed-building-plans"
           [uploadedFiles]="buildingPlans"
-          (uploadFiles)="attachFile($event, DOCUMENT.BUILDING_PLAN)"
+          (uploadFiles)="attachBuildingPlan($event)"
           (deleteFile)="onDeleteFile($event)"
           (openFile)="openFile($event)"
           [showErrors]="showErrors"
+          [showVirusError]="showBuildingPlanVirus"
           [isRequired]="confirmRemovalOfSoil"
           [allowMultiple]="true"
           [disabled]="!confirmRemovalOfSoil"

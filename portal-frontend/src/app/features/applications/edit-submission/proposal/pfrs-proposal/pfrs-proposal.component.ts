@@ -7,7 +7,9 @@ import { ApplicationDocumentDto } from '../../../../../services/application-docu
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionUpdateDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { MOBILE_BREAKPOINT } from '../../../../../shared/utils/breakpoints';
 import { parseStringToBoolean } from '../../../../../shared/utils/string-helper';
@@ -35,6 +37,11 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   reclamationPlan: ApplicationDocumentDto[] = [];
   noticeOfWork: ApplicationDocumentDto[] = [];
   areComponentsDirty = false;
+
+  showProposalMapVirus = false;
+  showCrossSectionVirus = false;
+  showReclamationPlanVirus = false;
+  showNoticeOfWorkVirus = false;
 
   isFollowUp = new FormControl<string | null>(null, [Validators.required]);
   followUpIDs = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
@@ -74,9 +81,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     private router: Router,
     private applicationService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -156,6 +164,26 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
 
   async onSave() {
     await this.save();
+  }
+
+  async attachProposalMap(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.PROPOSAL_MAP);
+    this.showProposalMapVirus = !res;
+  }
+
+  async attachCrossSection(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.CROSS_SECTIONS);
+    this.showCrossSectionVirus = !res;
+  }
+
+  async attachReclamationPlan(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.RECLAMATION_PLAN);
+    this.showReclamationPlanVirus = !res;
+  }
+
+  async attachNoticeOfWork(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.NOTICE_OF_WORK);
+    this.showNoticeOfWorkVirus = !res;
   }
 
   protected async save() {

@@ -148,8 +148,9 @@
       </p>
     </ng-container>
     <ng-container *ngIf="isGovernmentUser">
-      An authorization letter must be provided only if the notice of intent is being submitted by a third-party agent. Please
-      consult the Supporting Documentation page of the <a>TODO: FIX THIS: ALC website</a> for further instruction.
+      An authorization letter must be provided only if the notice of intent is being submitted by a third-party agent.
+      Please consult the Supporting Documentation page of the <a>TODO: FIX THIS: ALC website</a> for further
+      instruction.
     </ng-container>
   </div>
   <h6>Authorization Letters (if applicable)</h6>
@@ -157,11 +158,12 @@
     <app-file-drag-drop
       [allowMultiple]="true"
       [uploadedFiles]="files"
-      (uploadFiles)="attachFile($event, DOCUMENT_TYPE.AUTHORIZATION_LETTER)"
+      (uploadFiles)="attachAuthorizationLetter($event)"
       (deleteFile)="onDeleteFile($event)"
       (openFile)="openFile($event)"
       [showErrors]="showErrors"
       [isRequired]="needsAuthorizationLetter"
+      [showVirusError]="showVirusError"
     ></app-file-drag-drop>
   </div>
 </section>

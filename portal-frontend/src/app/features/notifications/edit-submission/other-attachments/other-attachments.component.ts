@@ -10,7 +10,9 @@ import {
 } from '../../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../../services/notification-document/notification-document.service';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditNotificationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -29,6 +31,7 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
   otherFiles: NotificationDocumentDto[] = [];
 
   private isDirty = false;
+  showVirusError = false;
 
   form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
@@ -37,10 +40,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
     private router: Router,
     private applicationService: NotificationSubmissionService,
     private codeService: CodeService,
+    toastService: ToastService,
     notificationDocumentService: NotificationDocumentService,
     dialog: MatDialog
   ) {
-    super(notificationDocumentService, dialog);
+    super(notificationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -73,6 +77,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   async onSave() {
     await this.save();
+  }
+
+  async attachDocument(file: FileHandle) {
+    const res = await this.attachFile(file, null);
+    this.showVirusError = !res;
   }
 
   protected async save() {

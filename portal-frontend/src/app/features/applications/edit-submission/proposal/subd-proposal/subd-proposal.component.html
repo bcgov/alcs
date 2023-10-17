@@ -212,11 +212,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.PROPOSAL_MAP)"
+        (uploadFiles)="attachProposalMap($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -258,13 +259,14 @@
       <app-file-drag-drop
         id="ownership"
         [uploadedFiles]="homesiteSeverance"
-        (uploadFiles)="attachFile($event, DOCUMENT_TYPE.HOMESITE_SEVERANCE)"
+        (uploadFiles)="attachHomesiteSeverance($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="isHomeSiteSeverance.getRawValue() !== 'false'"
         [allowMultiple]="true"
         [disabled]="isHomeSiteSeverance.getRawValue() === 'false'"
+        [showVirusError]="showHomesiteSeveranceVirus"
       ></app-file-drag-drop>
     </div>
   </div>

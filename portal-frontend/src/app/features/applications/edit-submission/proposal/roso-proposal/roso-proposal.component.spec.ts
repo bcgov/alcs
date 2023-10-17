@@ -9,6 +9,7 @@ import { ApplicationDocumentService } from '../../../../../services/application-
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../../services/application-submission/application-submission.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 
 import { RosoProposalComponent } from './roso-proposal.component';
 
@@ -48,6 +49,10 @@ describe('RosoProposalComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

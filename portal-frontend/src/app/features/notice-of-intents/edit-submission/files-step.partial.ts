@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { ToastService } from '../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
@@ -24,7 +26,8 @@ export abstract class FilesStepComponent extends StepComponent {
 
   protected constructor(
     protected noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    protected dialog: MatDialog
+    protected dialog: MatDialog,
+    private toastService: ToastService
   ) {
     super();
   }
@@ -33,12 +36,22 @@ export abstract class FilesStepComponent extends StepComponent {
     if (this.fileId) {
       await this.save();
       const mappedFiles = file.file;
-      await this.noticeOfIntentDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+
+      try {
+        await this.noticeOfIntentDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          return false;
+        }
+      }
+
       const documents = await this.noticeOfIntentDocumentService.getByFileId(this.fileId);
       if (documents) {
         this.$noiDocuments.next(documents);
       }
     }
+    return true;
   }
 
   async onDeleteFile($event: NoticeOfIntentDocumentDto) {

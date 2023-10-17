@@ -9,8 +9,10 @@ import { ApplicationOwnerDto } from '../../../../services/application-owner/appl
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -34,6 +36,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isGovernmentUser = false;
   governmentName: string | undefined;
   isDirty = false;
+  showVirusError = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -54,12 +57,13 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   constructor(
     private router: Router,
     private applicationService: ApplicationSubmissionService,
-    applicationDocumentService: ApplicationDocumentService,
     private applicationOwnerService: ApplicationOwnerService,
     private authenticationService: AuthenticationService,
-    dialog: MatDialog
+    applicationDocumentService: ApplicationDocumentService,
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(applicationDocumentService, dialog);
+    super(applicationDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -86,6 +90,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   async onSave() {
     await this.save();
+  }
+
+  async attachAuthorizationLetter(file: FileHandle) {
+    const res = await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
+    this.showVirusError = !res;
   }
 
   onSelectAgent() {

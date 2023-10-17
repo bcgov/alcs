@@ -1,8 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { ToastService } from '../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../shared/dto/document.dto';
 import { FileHandle } from '../../../shared/file-drag-drop/drag-drop.directive';
 import { RemoveFileConfirmationDialogComponent } from '../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
@@ -22,7 +24,11 @@ export abstract class FilesStepComponent extends StepComponent {
 
   protected abstract save(): Promise<void>;
 
-  protected constructor(protected applicationDocumentService: ApplicationDocumentService, protected dialog: MatDialog) {
+  protected constructor(
+    protected applicationDocumentService: ApplicationDocumentService,
+    protected dialog: MatDialog,
+    protected toastService: ToastService
+  ) {
     super();
   }
 
@@ -30,12 +36,22 @@ export abstract class FilesStepComponent extends StepComponent {
     if (this.fileId) {
       await this.save();
       const mappedFiles = file.file;
-      await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+
+      try {
+        await this.applicationDocumentService.attachExternalFile(this.fileId, mappedFiles, documentType);
+      } catch (err) {
+        this.toastService.showErrorToast('Document upload failed');
+        if (err instanceof HttpErrorResponse && err.status === 403) {
+          return false;
+        }
+      }
+
       const documents = await this.applicationDocumentService.getByFileId(this.fileId);
       if (documents) {
         this.$applicationDocuments.next(documents);
       }
     }
+    return true;
   }
 
   async onDeleteFile($event: ApplicationDocumentDto) {

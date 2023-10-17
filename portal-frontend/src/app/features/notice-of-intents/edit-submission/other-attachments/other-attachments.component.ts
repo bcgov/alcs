@@ -10,7 +10,9 @@ import {
 } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../../../shared/dto/document.dto';
+import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 
@@ -32,15 +34,17 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   form = new FormGroup({} as any);
   private documentCodes: DocumentTypeDto[] = [];
+  showVirusError = false;
 
   constructor(
     private router: Router,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private codeService: CodeService,
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
-    dialog: MatDialog
+    dialog: MatDialog,
+    toastService: ToastService
   ) {
-    super(noticeOfIntentDocumentService, dialog);
+    super(noticeOfIntentDocumentService, dialog, toastService);
   }
 
   ngOnInit(): void {
@@ -73,6 +77,11 @@ export class OtherAttachmentsComponent extends FilesStepComponent implements OnI
 
   async onSave() {
     await this.save();
+  }
+
+  async attachDocument(file: FileHandle) {
+    const res = await this.attachFile(file, null);
+    this.showVirusError = !res;
   }
 
   protected async save() {

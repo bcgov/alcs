@@ -72,11 +72,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="terms"
-        (uploadFiles)="attachFile($event, DOCUMENT.SRW_TERMS)"
+        (uploadFiles)="attachSRWTerms($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]="showSRWTermsVirus"
       ></app-file-drag-drop>
     </div>
 
@@ -114,13 +115,14 @@
       <app-file-drag-drop
         id="surveyPlans"
         [uploadedFiles]="[]"
-        (uploadFiles)="attachFile($event, DOCUMENT.SURVEY_PLAN)"
+        (uploadFiles)="attachSurveyPlan($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="surveyPlans.length === 0"
         [disabled]="!allowSurveyPlanUploads"
         [allowMultiple]="true"
+        [showVirusError]="showSurveyPlanVirus"
       ></app-file-drag-drop>
     </div>
   </div>

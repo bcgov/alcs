@@ -185,8 +185,9 @@
   <div class="section" *ngIf="enableCertificateOfTitleUpload">
     <label for="certificate-of-title-upload">Upload Certificate of Title</label>
     <div class="subtext">
-      Visit <a href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank">BC Land Title & Survey</a> to obtain
-      a recent copy (not older than 1 year) of the Certificate of Title
+      Visit
+      <a href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank">BC Land Title & Survey</a>
+      to obtain a recent copy (not older than 1 year) of the Certificate of Title
     </div>
     <app-file-drag-drop
       id="certificate-of-title-upload"
@@ -197,6 +198,7 @@
       (beforeFileUploadOpened)="beforeFileUploadOpened()"
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"
+      [showVirusError]="showVirusError"
     ></app-file-drag-drop>
   </div>
 

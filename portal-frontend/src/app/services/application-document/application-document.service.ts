@@ -38,14 +38,11 @@ export class ApplicationDocumentService {
       this.toastService.showSuccessToast('Document uploaded');
       return res;
     } catch (e) {
-      console.error(e);
-      // @ts-ignore
-      if (e!.status === 403) {
-        this.toastService.showErrorToast('Malicious file detected, upload blocked');
-        debugger;
-      } else {
-        this.toastService.showErrorToast('Failed to attach document to Application, please try again');
+      if (e instanceof HttpErrorResponse && e.status === 403) {
+        throw e;
       }
+      console.error(e);
+      this.toastService.showErrorToast('Failed to attach document to Application, please try again');
     }
     return undefined;
   }

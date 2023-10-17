@@ -70,8 +70,8 @@
     <div class="full-row">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
-        Include why you are applying for placement of fill and removal of soil, what the proposal will achieve, and any benefits to
-        agriculture that the proposal provides.
+        Include why you are applying for placement of fill and removal of soil, what the proposal will achieve, and any
+        benefits to agriculture that the proposal provides.
       </div>
       <mat-form-field appearance="outline">
         <textarea
@@ -172,9 +172,7 @@
         </div>
         <div>
           <label for="projectDurationAmount">Length</label>
-          <div class='subtext'>
-            Decimals can be used - e.g. 3.5 months or 1.5 years
-          </div>
+          <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
           <mat-form-field appearance="outline">
             <input
               id="projectDurationAmount"
@@ -305,11 +303,12 @@
       <app-file-drag-drop
         id="proposal-map"
         [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachFile($event, DOCUMENT.PROPOSAL_MAP)"
+        (uploadFiles)="attachProposalMap($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -321,12 +320,13 @@
       <app-file-drag-drop
         id="cross-section"
         [uploadedFiles]="crossSections"
-        (uploadFiles)="attachFile($event, DOCUMENT.CROSS_SECTIONS)"
+        (uploadFiles)="attachCrossSection($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
         [allowMultiple]="true"
+        [showVirusError]="showCrossSectionVirus"
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
@@ -341,12 +341,13 @@
       <app-file-drag-drop
         id="reclamation-plan"
         [uploadedFiles]="reclamationPlan"
-        (uploadFiles)="attachFile($event, DOCUMENT.RECLAMATION_PLAN)"
+        (uploadFiles)="attachReclamationPlan($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
         [allowMultiple]="true"
+        [showVirusError]="showReclamationPlanVirus"
       ></app-file-drag-drop>
     </div>
 
@@ -421,13 +422,14 @@
       <app-file-drag-drop
         id="noticeOfWork"
         [uploadedFiles]="noticeOfWork"
-        (uploadFiles)="attachFile($event, DOCUMENT.NOTICE_OF_WORK)"
+        (uploadFiles)="attachNoticeOfWork($event)"
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
         [isRequired]="true"
         [disabled]="!requiresNoticeOfWork"
         [allowMultiple]="true"
+        [showVirusError]="showNoticeOfWorkVirus"
       ></app-file-drag-drop>
     </div>
   </div>

@@ -177,24 +177,6 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       });
   }
 
-  async attachFile(decisionUuid: string, event: Event) {
-    this.decisions = this.decisions.map((decision) => {
-      return {
-        ...decision,
-        loading: decision.uuid === decisionUuid,
-      };
-    });
-    const element = event.target as HTMLInputElement;
-    const fileList = element.files;
-    if (fileList && fileList.length > 0) {
-      const file: File = fileList[0];
-      const uploadedFile = await this.decisionService.uploadFile(decisionUuid, file);
-      if (uploadedFile) {
-        await this.loadDecisions(this.fileNumber);
-      }
-    }
-  }
-
   async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
