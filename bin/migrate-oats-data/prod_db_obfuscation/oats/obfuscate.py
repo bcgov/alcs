@@ -70,10 +70,6 @@ def _update_person_identification_info(conn=None):
     create_proc_sql = """
         CREATE OR REPLACE FUNCTION update_info_oats_schema() RETURNS VOID AS $$
         DECLARE r RECORD;
-            firstnames TEXT[] := ARRAY['John', 'Jane', 'Adam', 'Sara', 'Mike', 'Emma'];
-            lastnames TEXT[] := ARRAY['Doe', 'Smith', 'Johnson', 'Brown', 'Williams', 'Miller'];
-            midnames  TEXT[] := ARRAY['A', 'B', 'C', 'D','E', 'F'];
-            random_index int;
         BEGIN
             FOR r IN (SELECT * FROM information_schema.columns 
                       WHERE (column_name IN ('phone_number', 'cell_phone_number', 'email', 'email_address', 'website_url', 'fax_number' , 'title')) 
