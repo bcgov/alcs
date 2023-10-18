@@ -4,6 +4,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
@@ -38,7 +39,8 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
-    private applicationDocumentService: ApplicationDocumentService
+    private applicationDocumentService: ApplicationDocumentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +117,7 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
           DOCUMENT_SOURCE.LFNG
         );
       } catch (e) {
+        this.toastService.showErrorToast('Document upload failed');
         return false;
       }
       await this.loadApplicationDocuments(this.fileId);
