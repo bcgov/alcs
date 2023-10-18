@@ -132,7 +132,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   }
 
   async onStepChange($event: StepperSelectionEvent) {
-    // scrolls to step if step selected programmatically
+    // scrolls to top of page
     scrollToElement({ id: `siteLayout`, center: false });
   }
 
