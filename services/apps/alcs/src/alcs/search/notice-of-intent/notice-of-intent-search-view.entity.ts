@@ -34,6 +34,7 @@ export class SearchNoticeOfIntentSubmissionStatusType {
       .addSelect('nois.type_code', 'notice_of_intent_type_code')
       .addSelect('nois.is_draft', 'is_draft')
       .addSelect('noi.date_submitted_to_alc', 'date_submitted_to_alc')
+      .addSelect('noi.legacy_id', 'legacy_id')
       .addSelect('noi.decision_date', 'decision_date')
       .addSelect('noi.uuid', 'notice_of_intent_uuid')
       .addSelect('noi.region_code', 'notice_of_intent_region_code')
@@ -91,7 +92,7 @@ export class NoticeOfIntentSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
-  
+
   @ViewColumn()
   legacyId?: string;
 

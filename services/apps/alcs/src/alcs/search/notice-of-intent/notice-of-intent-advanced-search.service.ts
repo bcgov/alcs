@@ -83,6 +83,7 @@ export class NoticeOfIntentAdvancedSearchService {
         , "noiSearch"."notice_of_intent_region_code" 
         , "noiSearch"."file_number"
         , "noiSearch"."applicant"
+        , "noiSearch"."legacy_id"
         , "noiSearch"."local_government_uuid"
         , "noiSearch"."local_government_name"
         , "noiSearch"."notice_of_intent_type_code"
