@@ -157,6 +157,13 @@ export class NoticeOfIntent extends Base {
   })
   alrArea?: number | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'NOI Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
   legacyId?: string | null;
 
   @AutoMap(() => String)
