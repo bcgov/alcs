@@ -13,6 +13,7 @@ from .notice_of_intent_submissions import (
     process_alcs_notice_of_intent_in_progress_status,
     clean_notice_of_intent_submission_statuses,
     process_alcs_notice_of_intent_submitted_to_alc_status,
+    process_alcs_notice_of_intent_submitted_to_alc_incomplete_status,
 )
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
     process_alcs_notice_of_intent_decision_date,
@@ -53,6 +54,8 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_in_progress_status(batch_size)
 
     process_alcs_notice_of_intent_submitted_to_alc_status(batch_size)
+
+    process_alcs_notice_of_intent_submitted_to_alc_incomplete_status(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

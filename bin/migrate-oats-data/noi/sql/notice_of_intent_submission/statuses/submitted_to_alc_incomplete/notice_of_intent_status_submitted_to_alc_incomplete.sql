@@ -6,9 +6,10 @@ WITH noi_components_grouped AS (
     GROUP BY oaac.alr_application_id
     HAVING count(oaac.alr_application_id) < 2 -- ignore notice of intents with multiple components
 )
-SELECT oaa2.alr_application_id,
-    oaa2.submitted_to_alc_date,
+SELECT oa.alr_application_id,
+    completion_date,
     nois.uuid
-FROM oats.oats_alr_applications oaa2
-    JOIN noi_components_grouped ncg ON ncg.alr_application_id = oaa2.alr_application_id
-    JOIN alcs.notice_of_intent_submission nois ON nois.file_number = oaa2.alr_application_id::TEXT
+FROM noi_components_grouped ncg
+    JOIN oats.oats_accomplishments oa ON oa.alr_application_id = ncg.alr_application_id
+    JOIN alcs.notice_of_intent_submission nois ON nois.file_number = oa.alr_application_id::text
+    AND oa.accomplishment_code = 'AKI'
