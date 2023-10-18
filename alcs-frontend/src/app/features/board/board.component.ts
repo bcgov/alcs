@@ -438,6 +438,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         ? moment().add(60, 'days').subtract(noticeOfIntent.activeDays, 'days').toDate()
         : undefined,
       maxActiveDays: 61,
+      legacyId: noticeOfIntent.legacyId,
     };
   }
 

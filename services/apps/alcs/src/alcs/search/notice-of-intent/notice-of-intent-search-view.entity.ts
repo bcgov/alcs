@@ -91,6 +91,9 @@ export class NoticeOfIntentSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+  
+  @ViewColumn()
+  legacyId?: string;
 
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,

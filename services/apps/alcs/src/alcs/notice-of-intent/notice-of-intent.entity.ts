@@ -157,6 +157,8 @@ export class NoticeOfIntent extends Base {
   })
   alrArea?: number | null;
 
+  legacyId?: string | null;
+
   @AutoMap(() => String)
   @Column({
     type: 'text',

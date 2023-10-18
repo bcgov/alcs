@@ -138,6 +138,12 @@ export class NoticeOfIntentAdvancedSearchService {
       );
     }
 
+    if (searchDto.legacyId) {
+      query = query.andWhere('noiSearch.legacy_id = :legacyId', {
+        legacyId: searchDto.legacyId,
+      });
+    }
+
     if (searchDto.regionCode) {
       query = query.andWhere(
         'noiSearch.notice_of_intent_region_code = :noi_region_code',
