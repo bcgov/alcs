@@ -42,21 +42,22 @@ def import_all(console, args):
 
         # OATS -> ALCS documents = process_documents & process_documents_noi. Must take place in order to have usable rows in ALCS documents
         # ALCS documents -> application_documents/noi_documents = process_application_documents & process_noi_documents
+
+        # documents_noi brings noi labelled documents into ALCS documents
         console.log("Importing NOI specific OATS documents into ALCS:")
         process_documents_noi(batch_size=import_batch_size)
-        # documents_noi brings noi labelled documents into ALCS documents
 
+        # documents brings application labelled documents into ALCS documents
         console.log("Importing OATS app_documents into ALCS:")
         process_documents(batch_size=import_batch_size)
-        # documents brings application labelled documents into ALCS documents
 
+        # process_application_documents takes the imported documents from process_documents
         console.log("Processing ALCS application documents:")
         process_application_documents(batch_size=import_batch_size)
-        # process_application_documents takes the imported documents from process_documents
 
+        # process_noi_documents takes the imported documents from process_documents_noi
         console.log("Processing ALCS NOI documents:")
         process_noi_documents(batch_size=import_batch_size)
-        # process_noi_documents takes the imported documents from process_documents_noi
 
         console.log("Processing application prep:")
         process_alcs_application_prep_fields(batch_size=import_batch_size)
