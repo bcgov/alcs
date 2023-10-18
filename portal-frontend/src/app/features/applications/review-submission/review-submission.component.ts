@@ -207,8 +207,8 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     await this.router.navigateByUrl(`application/${this.fileId}/review/${index}`);
   }
 
-  async onStepChange($event: StepperSelectionEvent) {
-    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
+  async onStepChange() {
+    scrollToElement({ id: `siteLayout`, center: false });
   }
 
   private async loadApplicationDocuments(fileId: any) {
