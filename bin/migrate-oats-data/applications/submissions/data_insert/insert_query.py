@@ -149,7 +149,8 @@ def get_insert_query_for_nfu():
                         nfu_fill_type_description,
                         nfu_fill_origin_description,
                         nfu_project_duration_unit,
-                        nfu_total_fill_area
+                        nfu_total_fill_area,
+                        nfu_agriculture_support
                         """
     unique_values = """, %(alr_area)s,
                         %(import_fill)s,
@@ -159,7 +160,8 @@ def get_insert_query_for_nfu():
                         %(fill_type)s,
                         %(fill_origin)s,
                         %(fill_duration_unit)s,
-                        %(fill_area)s
+                        %(fill_area)s,
+                        %(support_desc)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
