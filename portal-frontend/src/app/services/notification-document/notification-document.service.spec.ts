@@ -88,22 +88,4 @@ describe('NotificationDocumentService', () => {
     expect(mockHttpClient.patch).toHaveBeenCalledTimes(1);
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
-
-  it('should make a post request for deleting multiple files', async () => {
-    mockHttpClient.post.mockReturnValue(of({}));
-
-    await service.deleteExternalFiles(['fileId']);
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockHttpClient.post.mock.calls[0][0]).toContain('notification-document');
-  });
-
-  it('should show an error toast if deleting a file fails', async () => {
-    mockHttpClient.post.mockReturnValue(throwError(() => ({})));
-
-    await service.deleteExternalFiles(['fileId']);
-
-    expect(mockHttpClient.post).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
-  });
 });

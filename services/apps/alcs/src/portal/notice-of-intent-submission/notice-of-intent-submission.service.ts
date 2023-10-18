@@ -10,11 +10,14 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { VISIBILITY_FLAG } from '../../alcs/notification/notification-document/notification-document.entity';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
@@ -598,5 +601,65 @@ export class NoticeOfIntentSubmissionService {
         noiUuid,
       );
     }
+  }
+
+  async canDeleteDocument(document: NoticeOfIntentDocument, user: User) {
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const isOwner = user.uuid === documentFlags.ownerUuid;
+    const isGovernmentOnFile =
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const isSameAccountAsOwner =
+      !!user.bceidBusinessGuid &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return isOwner || isGovernmentOnFile || isSameAccountAsOwner;
+  }
+
+  async canAccessDocument(document: NoticeOfIntentDocument, user: User) {
+    //If document has P, skip all checks.
+    if (document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
+      return true;
+    }
+
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const applicantFlag =
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.uuid === documentFlags.ownerUuid;
+    const governmentFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.GOVERNMENT) &&
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const sharedAccountFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return applicantFlag || governmentFlag || sharedAccountFlag;
+  }
+
+  private async getDocumentFlags(document: NoticeOfIntentDocument) {
+    const result = await this.noticeOfIntentSubmissionRepository
+      .createQueryBuilder('submission')
+      .leftJoin('submission.noticeOfIntent', 'noticeOfIntent')
+      .leftJoin('noticeOfIntent.documents', 'document')
+      .leftJoin('submission.createdBy', 'user')
+      .leftJoin('noticeOfIntent.localGovernment', 'localGovernment')
+      .select([
+        'user.uuid',
+        'user.bceid_business_guid',
+        'localGovernment.bceidBusinessGuid',
+      ])
+      .where('document.uuid = :uuid', {
+        uuid: document.uuid,
+      })
+      .execute();
+
+    return {
+      ownerUuid: result[0]?.user_uuid,
+      ownerGuid: result[0]?.bceid_business_guid,
+      localGovernmentGuid: result[0]?.localGovernment_bceid_business_guid,
+    };
   }
 }

@@ -4,7 +4,9 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -26,6 +28,7 @@ import {
 } from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
+import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmissionService } from '../notice-of-intent-submission/notice-of-intent-submission.service';
 import {
   AttachExternalDocumentDto,
@@ -66,14 +69,22 @@ export class NoticeOfIntentDocumentController {
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.noticeOfIntentDocumentService.get(fileUuid);
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const user = req.user.entity as User;
 
-    const url = await this.noticeOfIntentDocumentService.getInlineUrl(document);
-    return { url };
+    const canAccessDocument =
+      await this.noticeOfIntentSubmissionService.canAccessDocument(
+        document,
+        user,
+      );
+
+    if (canAccessDocument) {
+      const url = await this.noticeOfIntentDocumentService.getInlineUrl(
+        document,
+      );
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Patch('/notice-of-intent/:fileNumber')
@@ -103,24 +114,39 @@ export class NoticeOfIntentDocumentController {
   @Delete('/:uuid')
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.noticeOfIntentDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can delete?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canDeleteDocument =
+      await this.noticeOfIntentSubmissionService.canDeleteDocument(
+        document,
+        user,
+      );
 
-    await this.noticeOfIntentDocumentService.delete(document);
+    if (canDeleteDocument) {
+      await this.noticeOfIntentDocumentService.delete(document);
+    } else {
+      throw new ForbiddenException('Not allowed to delete document');
+    }
+
     return {};
   }
 
   @Post('/delete-files')
-  async deleteMany(@Body() fileUuids: string[]) {
-    //TODO: How do we know which documents applicant can delete?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+  async deleteMany(@Body() fileUuids: string[], @Req() req) {
+    for (const fileUuid of fileUuids) {
+      const document = await this.noticeOfIntentDocumentService.get(fileUuid);
+      const user = req.user.entity as User;
+
+      const canDeleteDocument =
+        await this.noticeOfIntentSubmissionService.canDeleteDocument(
+          document,
+          user,
+        );
+
+      if (!canDeleteDocument) {
+        throw new ForbiddenException('Not allowed to delete document');
+      }
+    }
     await this.noticeOfIntentDocumentService.deleteMany(fileUuids);
     return {};
   }

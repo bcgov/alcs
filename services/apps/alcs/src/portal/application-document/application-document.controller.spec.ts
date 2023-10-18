@@ -94,6 +94,7 @@ describe('ApplicationDocumentController', () => {
   it('should call through to delete documents', async () => {
     appDocumentService.delete.mockResolvedValue(mockDocument);
     appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canDeleteDocument.mockResolvedValue(true);
 
     await controller.delete('fake-uuid', {
       user: {
@@ -127,6 +128,7 @@ describe('ApplicationDocumentController', () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canAccessDocument.mockResolvedValue(true);
 
     const res = await controller.open('fake-uuid', {
       user: {
@@ -141,6 +143,7 @@ describe('ApplicationDocumentController', () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canAccessDocument.mockResolvedValue(true);
 
     const res = await controller.download('fake-uuid', {
       user: {
