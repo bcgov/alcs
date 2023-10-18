@@ -6,7 +6,7 @@ class SoilAction(Enum):
     ADD = "ADD"
 
 
-class Soil:
+class SoilProperties:
     ALR_ID = "alr_appl_component_id"
     AREA = "project_area"
     DESC = "material_desc"
@@ -35,8 +35,10 @@ def create_soil_dict(soil_rows):
     soil_dict = dict()
 
     for row in soil_rows:
-        app_component_id = row[Soil.ALR_ID]
-        soil_dict.setdefault(app_component_id, {Soil.ALR_ID: row[Soil.ALR_ID]})
+        app_component_id = row[SoilProperties.ALR_ID]
+        soil_dict.setdefault(
+            app_component_id, {SoilProperties.ALR_ID: row[SoilProperties.ALR_ID]}
+        )
 
         if (
             row["soil_change_code"] == SoilAction.RMV.value
@@ -133,26 +135,28 @@ def add_soil_field(data):
 
 
 def dict_fill_insert(soil_dict, app_component_id, row):
-    soil_dict[app_component_id]["fill_type"] = row[Soil.DESC]
-    soil_dict[app_component_id]["fill_origin"] = row[Soil.ORIGIN_DESC]
-    soil_dict[app_component_id]["total_fill"] = row[Soil.VOLUME]
-    soil_dict[app_component_id]["max_fill_depth"] = row[Soil.DEPTH]
-    soil_dict[app_component_id]["fill_duration"] = row[Soil.DURATION]
-    soil_dict[app_component_id]["duration"] = row[Soil.DURATION]
-    soil_dict[app_component_id]["fill_area"] = row[Soil.AREA]
+    soil_dict[app_component_id]["fill_type"] = row[SoilProperties.DESC]
+    soil_dict[app_component_id]["fill_origin"] = row[SoilProperties.ORIGIN_DESC]
+    soil_dict[app_component_id]["total_fill"] = row[SoilProperties.VOLUME]
+    soil_dict[app_component_id]["max_fill_depth"] = row[SoilProperties.DEPTH]
+    soil_dict[app_component_id]["fill_duration"] = row[SoilProperties.DURATION]
+    soil_dict[app_component_id]["duration"] = row[SoilProperties.DURATION]
+    soil_dict[app_component_id]["fill_area"] = row[SoilProperties.AREA]
     soil_dict[app_component_id]["import_fill"] = True
-    soil_dict[app_component_id]["alternative_measures_desc"] = row[Soil.ALT_MEASURE]
+    soil_dict[app_component_id]["alternative_measures_desc"] = row[
+        SoilProperties.ALT_MEASURE
+    ]
     soil_dict[app_component_id][SoilAction.ADD.name] = True
     return
 
 
 def dict_rmv_insert(soil_dict, app_component_id, row):
-    soil_dict[app_component_id]["remove_type"] = row[Soil.DESC]
-    soil_dict[app_component_id]["remove_origin"] = row[Soil.ORIGIN_DESC]
-    soil_dict[app_component_id]["max_remove_depth"] = row[Soil.DEPTH]
-    soil_dict[app_component_id]["total_remove"] = row[Soil.VOLUME]
-    soil_dict[app_component_id]["remove_duration"] = row[Soil.DURATION]
-    soil_dict[app_component_id]["duration"] = row[Soil.DURATION]
-    soil_dict[app_component_id]["remove_area"] = row[Soil.AREA]
+    soil_dict[app_component_id]["remove_type"] = row[SoilProperties.DESC]
+    soil_dict[app_component_id]["remove_origin"] = row[SoilProperties.ORIGIN_DESC]
+    soil_dict[app_component_id]["max_remove_depth"] = row[SoilProperties.DEPTH]
+    soil_dict[app_component_id]["total_remove"] = row[SoilProperties.VOLUME]
+    soil_dict[app_component_id]["remove_duration"] = row[SoilProperties.DURATION]
+    soil_dict[app_component_id]["duration"] = row[SoilProperties.DURATION]
+    soil_dict[app_component_id]["remove_area"] = row[SoilProperties.AREA]
     soil_dict[app_component_id][SoilAction.RMV.name] = True
     return
