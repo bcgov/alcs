@@ -28,3 +28,6 @@ from .statuses.notice_of_intent_status_submitted_to_alc import (
 from .statuses.notice_of_intent_status_submitted_to_alc_incomplete import (
     process_alcs_notice_of_intent_submitted_to_alc_incomplete_status,
 )
+from .statuses.notice_of_intent_status_received_by_alc import (
+    process_alcs_notice_of_intent_received_by_alc_status,
+)
