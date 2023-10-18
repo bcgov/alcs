@@ -27,6 +27,7 @@ def insert_app_sub_records(
         naru_data_list,
         tur_data_list,
         subd_data_list,
+        soil_data_list,
     ) = prepare_app_sub_data(rows, direction_data, subdiv_data, soil_data)
 
     if len(nfu_data_list) > 0:
@@ -66,6 +67,14 @@ def insert_app_sub_records(
             cursor,
             get_insert_query_for_subd(),
             subd_data_list,
+            page_size=batch_size,
+        )
+
+    if len(soil_data_list) > 0:
+        execute_batch(
+            cursor,
+            get_insert_query_for_soil(),
+            soil_data_list,
             page_size=batch_size,
         )
 
@@ -229,6 +238,44 @@ def get_insert_query_for_tur():
                         %(proposal_background_desc)s,
                         %(component_area)s,
                         %(owners_notified_ind)s
+                    """
+    return get_insert_query(unique_fields, unique_values)
+
+
+def get_insert_query_for_soil():
+    unique_fields = """, soil_type_removed,
+                        soil_reduce_negative_impacts,
+                        soil_to_remove_volume,
+                        soil_to_remove_area,
+                        soil_to_remove_maximum_depth,
+                        soil_to_remove_average_depth,
+                        soil_project_duration_amount,
+                        soil_project_duration_unit,
+                        soil_fill_type_to_place,
+                        soil_alternative_measures,
+                        soil_to_place_volume,
+                        soil_to_place_area,
+                        soil_to_place_maximum_depth,
+                        soil_to_place_average_depth,
+                        soil_is_follow_up,
+                        soil_follow_up_ids
+                    """
+    unique_values = """, %(remove_type)s,
+                        %(impact_reduction_desc)s,
+                        %(total_remove)s,
+                        %(remove_area)s,
+                        %(max_remove_depth)s,
+                        %(max_remove_depth)s,
+                        %(duration)s,
+                        %(remove_duration_unit)s,
+                        %(fill_type)s,
+                        %(alternative_measures_desc)s,
+                        %(total_fill)s,
+                        %(fill_area)s,
+                        %(max_fill_depth)s,
+                        %(max_fill_depth)s,
+                        %(followup_noi_ind)s,
+                        %(followup_noi_number)s
                     """
     return get_insert_query(unique_fields, unique_values)
 

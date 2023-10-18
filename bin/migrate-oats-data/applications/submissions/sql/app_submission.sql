@@ -38,7 +38,9 @@ SELECT
     oc.homesite_severance_ind,
     oa.current_land_use_desc,
     oa.non_agricultural_uses_desc,
-    oa.agricultural_improvement_desc
+    oa.agricultural_improvement_desc,
+    oa.followup_noi_ind,
+    oa.followup_noi_number
 
 FROM
     appl_components_grouped acg
