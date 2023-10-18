@@ -132,10 +132,14 @@ export class ProposalComponent extends FilesStepComponent implements OnInit, OnD
     if (this.isDirty) {
       const updateDtos: NotificationDocumentUpdateDto[] = this.surveyPlans.map((file) => ({
         uuid: file.uuid,
-        surveyPlanNumber: file.surveyPlanNumber,
-        controlNumber: file.controlNumber,
+        surveyPlanNumber: file.surveyPlanNumber || null,
+        controlNumber: file.controlNumber || null,
       }));
       await this.notificationDocumentService.update(this.fileId, updateDtos);
+      const updatedDocuments = await this.notificationDocumentService.getByFileId(this.fileId);
+      if (updatedDocuments) {
+        this.$notificationDocuments.next(updatedDocuments);
+      }
     }
   }
 
