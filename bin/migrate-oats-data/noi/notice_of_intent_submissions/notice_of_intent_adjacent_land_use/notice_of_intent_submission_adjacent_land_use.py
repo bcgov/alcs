@@ -98,7 +98,8 @@ def _update_notice_of_intent_submissions(conn, batch_size, cursor, rows):
                 land_use_data[direction],
                 page_size=batch_size,
             )
-        conn.commit()
+
+    conn.commit()
 
     return land_use_data, rows
 

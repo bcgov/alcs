@@ -22,3 +22,6 @@ from .statuses.notice_of_intent_statuses_base_insert import (
 from .statuses.notice_of_intent_status_in_progress import (
     process_alcs_notice_of_intent_in_progress_status,
 )
+from .statuses.notice_of_intent_status_submitted_to_alc import (
+    process_alcs_notice_of_intent_submitted_to_alc_status,
+)
