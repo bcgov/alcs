@@ -58,6 +58,7 @@ export interface NoticeOfIntentDto {
   agCapConsultant?: string;
   staffObservations?: string;
   proposalEndDate?: number;
+  legacyId?: string;
 }
 
 export interface UpdateNoticeOfIntentDto {

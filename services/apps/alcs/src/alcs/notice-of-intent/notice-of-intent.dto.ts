@@ -127,6 +127,9 @@ export class NoticeOfIntentDto {
   staffObservations?: string;
 
   proposalEndDate?: number;
+  
+  @AutoMap(() => String)
+  legacyId?: string;
 }
 
 export class UpdateNoticeOfIntentDto {

@@ -83,6 +83,7 @@ export class NoticeOfIntentAdvancedSearchService {
         , "noiSearch"."notice_of_intent_region_code" 
         , "noiSearch"."file_number"
         , "noiSearch"."applicant"
+        , "noiSearch"."legacy_id"
         , "noiSearch"."local_government_uuid"
         , "noiSearch"."local_government_name"
         , "noiSearch"."notice_of_intent_type_code"
@@ -136,6 +137,12 @@ export class NoticeOfIntentAdvancedSearchService {
           local_government_uuid: government.uuid,
         },
       );
+    }
+
+    if (searchDto.legacyId) {
+      query = query.andWhere('noiSearch.legacy_id = :legacyId', {
+        legacyId: searchDto.legacyId,
+      });
     }
 
     if (searchDto.regionCode) {
