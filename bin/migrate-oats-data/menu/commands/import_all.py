@@ -19,6 +19,8 @@ from noi import (
 from documents import (
     process_application_documents,
     process_noi_documents,
+    process_documents_noi,
+    process_documents,
 )
 
 
@@ -38,18 +40,23 @@ def import_all(console, args):
         console.log("Init NOIs:")
         init_notice_of_intents(batch_size=import_batch_size)
 
-        # TODO Liam question: which process_documents_noi or process_noi_documents is the correct one to keep?
-        # console.log("Processing NOI specific documents:")
-        # process_documents_noi(batch_size=import_batch_size)
+        # OATS -> ALCS documents = process_documents & process_documents_noi. Must take place in order to have usable rows in ALCS documents
+        # ALCS documents -> application_documents/noi_documents = process_application_documents & process_noi_documents
+        console.log("Importing NOI specific OATS documents into ALCS:")
+        process_documents_noi(batch_size=import_batch_size)
+        # documents_noi brings noi labelled documents into ALCS documents
 
-        # console.log("Processing documents:")
-        # process_documents(batch_size=import_batch_size)
+        console.log("Importing OATS app_documents into ALCS:")
+        process_documents(batch_size=import_batch_size)
+        # documents brings application labelled documents into ALCS documents
 
-        console.log("Processing application documents:")
+        console.log("Processing ALCS application documents:")
         process_application_documents(batch_size=import_batch_size)
+        # process_application_documents takes the imported documents from process_documents
 
-        console.log("Processing NOI documents:")
+        console.log("Processing ALCS NOI documents:")
         process_noi_documents(batch_size=import_batch_size)
+        # process_noi_documents takes the imported documents from process_documents_noi
 
         console.log("Processing application prep:")
         process_alcs_application_prep_fields(batch_size=import_batch_size)
