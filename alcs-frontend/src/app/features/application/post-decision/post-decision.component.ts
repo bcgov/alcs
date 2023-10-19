@@ -62,7 +62,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
           this.reconsiderations =
             reconsiderations?.map((r) => ({
               ...r,
-              reconsidersDecisionsNumbers: r.reconsideredDecisions.flatMap(
+              reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
               ),
             })) ?? [];
@@ -158,6 +158,13 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   async onSaveReconsiderationReviewOutcome(reconsiderationUuid: string, reviewOutcomeCode: string) {
     await this.applicationReconsiderationService.update(reconsiderationUuid, {
       reviewOutcomeCode,
+    });
+    await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
+  }
+
+  async onSaveReconsiderationDecisionOutcome(reconsiderationUuid: string, decisionOutcomeCode: string) {
+    await this.applicationReconsiderationService.update(reconsiderationUuid, {
+      decisionOutcomeCode,
     });
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }

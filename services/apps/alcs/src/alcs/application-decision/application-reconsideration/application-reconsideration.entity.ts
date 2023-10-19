@@ -57,7 +57,7 @@ export class ApplicationReconsideration extends Base {
   @Column({ type: 'boolean', nullable: true })
   isNewEvidence?: boolean;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationReconsiderationType)
   @ManyToOne(() => ApplicationReconsiderationType, {
     nullable: false,
   })
@@ -67,17 +67,27 @@ export class ApplicationReconsideration extends Base {
   @Column({ nullable: true, type: 'text' })
   reviewOutcomeCode?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationReconsiderationOutcomeType)
   @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
     nullable: true,
   })
   reviewOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
+  @Column({ nullable: true, type: 'text' })
+  decisionOutcomeCode?: string | null;
+
+  @AutoMap(() => ApplicationReconsiderationOutcomeType)
+  @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
+    nullable: true,
+  })
+  decisionOutcome: ApplicationReconsiderationOutcomeType | null;
+
+  @AutoMap()
   @Column({ type: 'uuid' })
   applicationUuid: string;
 
-  @AutoMap()
+  @AutoMap(() => Application)
   @ManyToOne(() => Application, { cascade: ['insert'] })
   application: Application;
 
@@ -85,18 +95,20 @@ export class ApplicationReconsideration extends Base {
   @Column({ type: 'uuid' })
   cardUuid: string;
 
-  @AutoMap()
+  @AutoMap(() => Card)
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
   card: Card | null;
 
+  @AutoMap(() => [ApplicationDecision])
   @ManyToMany(() => ApplicationDecision, (decision) => decision.reconsideredBy)
   @JoinTable({
     name: 'application_reconsidered_decisions',
   })
   reconsidersDecisions: ApplicationDecision[];
 
+  @AutoMap(() => ApplicationDecision)
   @OneToOne(() => ApplicationDecision, (dec) => dec.reconsiders)
   resultingDecision?: ApplicationDecision;
 }

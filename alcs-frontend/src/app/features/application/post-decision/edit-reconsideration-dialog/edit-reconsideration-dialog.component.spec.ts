@@ -29,7 +29,7 @@ describe('EditReconsiderationDialogComponent', () => {
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: { existingRecon: { type: {}, reconsideredDecisions: [], application: { source: 'fake' } } },
+          useValue: { existingRecon: { type: {}, reconsidersDecisions: [], application: { source: 'fake' } } },
         },
         { provide: MatDialogRef, useValue: {} },
       ],
