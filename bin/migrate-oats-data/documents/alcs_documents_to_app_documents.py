@@ -32,7 +32,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
 
 
 @inject_conn_pool
-def process_application_documents(conn=None, batch_size=10000):
+def link_alcs_docs_to_app_docs(conn=None, batch_size=10000):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
