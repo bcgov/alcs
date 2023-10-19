@@ -4,7 +4,9 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -27,6 +29,7 @@ import {
 } from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import {
   AttachExternalDocumentDto,
@@ -65,29 +68,35 @@ export class ApplicationDocumentController {
   @Get('/:uuid/open')
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canAccessDocument =
+      await this.applicationSubmissionService.canAccessDocument(document, user);
 
-    const url = await this.applicationDocumentService.getInlineUrl(document);
-    return { url };
+    if (canAccessDocument) {
+      const url = await this.applicationDocumentService.getInlineUrl(document);
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Get('/:uuid/download')
   async download(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canAccessDocument =
+      await this.applicationSubmissionService.canAccessDocument(document, user);
 
-    const url = await this.applicationDocumentService.getDownloadUrl(document);
-    return { url };
+    if (canAccessDocument) {
+      const url = await this.applicationDocumentService.getDownloadUrl(
+        document,
+      );
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Patch('/application/:fileNumber')
@@ -114,14 +123,17 @@ export class ApplicationDocumentController {
   @Delete('/:uuid')
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can delete?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canDeleteDocument =
+      await this.applicationSubmissionService.canDeleteDocument(document, user);
 
-    await this.applicationDocumentService.delete(document);
+    if (canDeleteDocument) {
+      await this.applicationDocumentService.delete(document);
+    } else {
+      throw new ForbiddenException('Not allowed to delete document');
+    }
+
     return {};
   }
 

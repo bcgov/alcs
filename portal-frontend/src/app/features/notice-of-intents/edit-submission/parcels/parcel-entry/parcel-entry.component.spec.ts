@@ -11,6 +11,7 @@ import { NoticeOfIntentOwnerService } from '../../../../../services/notice-of-in
 import { NoticeOfIntentParcelDto } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { ParcelEntryComponent } from './parcel-entry.component';
 
 describe('ParcelEntryComponent', () => {
@@ -61,6 +62,10 @@ describe('ParcelEntryComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

@@ -61,6 +61,7 @@ export class InboxNotificationService {
         , "notificationSearch"."status"
         , "notificationSearch"."created_by_uuid"
         , "notificationSearch"."bceid_business_guid"
+        , "notificationSearch"."date_submitted_to_alc"
         , "notificationType"."audit_deleted_date_at"
         , "notificationType"."audit_created_at"
         , "notificationType"."audit_updated_by"
@@ -94,7 +95,7 @@ export class InboxNotificationService {
       }
       if (governmentUuid) {
         where +=
-          ' OR notificationSearch.local_government_uuid = :governmentUuid';
+          ' OR (notificationSearch.local_government_uuid = :governmentUuid AND notificationSearch.date_submitted_to_alc IS NOT NULL)';
       }
     } else {
       if (searchDto.filterBy === 'submitted') {

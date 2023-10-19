@@ -31,7 +31,7 @@ export class NoticeOfIntentDecisionController {
 
   @Get('/:uuid/open')
   async openFile(@Param('uuid') fileUuid: string) {
-    const url = await this.decisionService.getDownloadUrl(fileUuid);
+    const url = await this.decisionService.getDownloadForPortal(fileUuid);
 
     return { url };
   }

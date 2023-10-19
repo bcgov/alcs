@@ -482,4 +482,64 @@ export class NotificationSubmissionService {
       parentId: notification.uuid,
     };
   }
+
+  async canDeleteDocument(document: NotificationDocument, user: User) {
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const isOwner = user.uuid === documentFlags.ownerUuid;
+    const isGovernmentOnFile =
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const isSameAccountAsOwner =
+      !!user.bceidBusinessGuid &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return isOwner || isGovernmentOnFile || isSameAccountAsOwner;
+  }
+
+  async canAccessDocument(document: NotificationDocument, user: User) {
+    //If document has P, skip all checks.
+    if (document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
+      return true;
+    }
+
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const applicantFlag =
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.uuid === documentFlags.ownerUuid;
+    const governmentFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.GOVERNMENT) &&
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const sharedAccountFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return applicantFlag || governmentFlag || sharedAccountFlag;
+  }
+
+  private async getDocumentFlags(document: NotificationDocument) {
+    const result = await this.notificationSubmissionRepository
+      .createQueryBuilder('submission')
+      .leftJoin('submission.notification', 'notification')
+      .leftJoin('notification.documents', 'document')
+      .leftJoin('submission.createdBy', 'user')
+      .leftJoin('notification.localGovernment', 'localGovernment')
+      .select([
+        'user.uuid',
+        'user.bceid_business_guid',
+        'localGovernment.bceidBusinessGuid',
+      ])
+      .where('document.uuid = :uuid', {
+        uuid: document.uuid,
+      })
+      .execute();
+
+    return {
+      ownerUuid: result[0]?.user_uuid,
+      ownerGuid: result[0]?.bceid_business_guid,
+      localGovernmentGuid: result[0]?.localGovernment_bceid_business_guid,
+    };
+  }
 }

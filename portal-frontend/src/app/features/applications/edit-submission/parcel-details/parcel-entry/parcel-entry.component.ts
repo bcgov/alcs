@@ -13,6 +13,7 @@ import {
 } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
@@ -114,7 +115,8 @@ export class ParcelEntryComponent implements OnInit {
     private applicationParcelService: ApplicationParcelService,
     public applicationOwnerService: ApplicationOwnerService,
     public applicationDocumentService: ApplicationDocumentService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -257,6 +259,7 @@ export class ParcelEntryComponent implements OnInit {
         );
       } catch (e) {
         this.showVirusError = true;
+        this.toastService.showErrorToast('Document upload failed');
         return;
       }
       this.showVirusError = false;

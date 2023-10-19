@@ -1,6 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
@@ -31,7 +31,7 @@ export class ApplicationDecisionController {
 
   @Get('/:uuid/open')
   async openFile(@Param('uuid') fileUuid: string) {
-    const url = await this.decisionService.getDownloadUrl(fileUuid);
+    const url = await this.decisionService.getDownloadForPortal(fileUuid);
 
     return { url };
   }

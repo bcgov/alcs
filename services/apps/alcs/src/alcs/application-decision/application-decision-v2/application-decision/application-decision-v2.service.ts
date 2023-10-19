@@ -490,6 +490,28 @@ export class ApplicationDecisionV2Service {
     );
   }
 
+  async getDownloadForPortal(decisionDocumentUuid: string) {
+    const decisionDocument = await this.decisionDocumentRepository.findOne({
+      where: {
+        decision: {
+          isDraft: false,
+        },
+        uuid: decisionDocumentUuid,
+      },
+      relations: {
+        document: true,
+      },
+    });
+
+    if (decisionDocument) {
+      return this.documentService.getDownloadUrl(
+        decisionDocument.document,
+        false,
+      );
+    }
+    throw new ServiceNotFoundException('Failed to find document');
+  }
+
   getOutcomeByCode(code: string) {
     return this.decisionOutcomeRepository.findOneOrFail({
       where: {

@@ -7,6 +7,7 @@
     [matAutocomplete]="auto"
     [formControl]="componentTypeControl"
   />
+  <mat-icon class='dropdown-arrow' matSuffix>arrow_drop_down</mat-icon>
   <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" class="tall-autocomplete">
     <mat-option disabled>Please select an item from below</mat-option>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">

@@ -32,7 +32,15 @@ SELECT
     oa.proposal_background_desc,
     oc.agricultural_activities_desc,
     oc.impact_reduction_desc,
-    oc.owners_notified_ind
+    oc.owners_notified_ind,
+    oc.applicationshare_ind,
+    oc.improvements_desc,
+    oc.homesite_severance_ind,
+    oa.current_land_use_desc,
+    oa.non_agricultural_uses_desc,
+    oa.agricultural_improvement_desc,
+    oa.followup_noi_ind,
+    oa.followup_noi_number
 
 FROM
     appl_components_grouped acg

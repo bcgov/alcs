@@ -93,6 +93,7 @@ describe('NotificationDocumentController', () => {
   it('should call through to delete documents', async () => {
     mockNotificationDocumentService.delete.mockResolvedValue(mockDocument);
     mockNotificationDocumentService.get.mockResolvedValue(mockDocument);
+    mockNotificationSubmissionService.canDeleteDocument.mockResolvedValue(true);
 
     await controller.delete('fake-uuid', {
       user: {
@@ -128,6 +129,7 @@ describe('NotificationDocumentController', () => {
     const fakeUrl = 'fake-url';
     mockNotificationDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     mockNotificationDocumentService.get.mockResolvedValue(mockDocument);
+    mockNotificationSubmissionService.canAccessDocument.mockResolvedValue(true);
 
     const res = await controller.open('fake-uuid', {
       user: {
@@ -142,6 +144,7 @@ describe('NotificationDocumentController', () => {
     const fakeUrl = 'fake-url';
     mockNotificationDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
     mockNotificationDocumentService.get.mockResolvedValue(mockDocument);
+    mockNotificationSubmissionService.canAccessDocument.mockResolvedValue(true);
 
     const res = await controller.download('fake-uuid', {
       user: {

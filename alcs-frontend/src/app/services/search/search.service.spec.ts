@@ -55,7 +55,6 @@ describe('SearchService', () => {
     page: 1,
     sortField: '1',
     sortDirection: 'ASC',
-    isIncludeOtherParcels: false,
     fileTypes: [],
   };
 
@@ -184,7 +183,6 @@ describe('SearchService', () => {
     expect(res).toBeUndefined();
     expect(mockToastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
-
 
   it('should fetch Non Applications advanced search results by AdvancedSearchRequestDto', async () => {
     mockHttpClient.post.mockReturnValue(of(mockAdvancedSearchEntityResult));

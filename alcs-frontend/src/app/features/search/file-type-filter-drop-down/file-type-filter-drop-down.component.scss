@@ -2,6 +2,14 @@
   width: 100%;
 }
 
-.tall-autocomplete {
-  max-height: 600px !important;
+.clear-button {
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  border: none;
+  cursor: pointer;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  color: #313132;
 }

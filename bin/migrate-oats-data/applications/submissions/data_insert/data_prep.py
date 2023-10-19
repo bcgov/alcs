@@ -43,6 +43,8 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
     inc_exc_data_list = []
     naru_data_list = []
     tur_data_list = []
+    subd_data_list = []
+    soil_data_list = []
     other_data_list = []
 
     for row in app_sub_raw_data_list:
@@ -70,6 +72,14 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
             naru_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.TUR.value:
             tur_data_list.append(data)
+        elif data["alr_change_code"] == ALRChangeCode.SDV.value:
+            subd_data_list.append(data)
+        elif (
+            data["alr_change_code"] == ALRChangeCode.SCH.value
+            or data["alr_change_code"] == ALRChangeCode.EXT.value
+            or data["alr_change_code"] == ALRChangeCode.FILL.value
+        ):
+            soil_data_list.append(data)
         else:
             other_data_list.append(data)
 
@@ -79,6 +89,8 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
         inc_exc_data_list,
         naru_data_list,
         tur_data_list,
+        subd_data_list,
+        soil_data_list,
     )
 
 

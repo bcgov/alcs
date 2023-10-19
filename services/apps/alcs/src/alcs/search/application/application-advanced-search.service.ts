@@ -39,7 +39,11 @@ export class ApplicationAdvancedSearchService {
     const sortQuery = this.compileSortQuery(searchDto);
 
     query = query
-      .orderBy(sortQuery, searchDto.sortDirection)
+      .orderBy(
+        sortQuery,
+        searchDto.sortDirection,
+        searchDto.sortDirection === 'ASC' ? 'NULLS FIRST' : 'NULLS LAST',
+      )
       .offset((searchDto.page - 1) * searchDto.pageSize)
       .limit(searchDto.pageSize);
 
@@ -261,10 +265,7 @@ export class ApplicationAdvancedSearchService {
     searchDto: SearchRequestDto,
     query: SelectQueryBuilder<ApplicationSubmissionSearchView>,
   ) {
-    if (
-      (searchDto.pid || searchDto.civicAddress) &&
-      searchDto.isIncludeOtherParcels
-    ) {
+    if (searchDto.pid || searchDto.civicAddress) {
       query = query.leftJoin(
         ApplicationParcel,
         'parcel',
@@ -283,9 +284,12 @@ export class ApplicationAdvancedSearchService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }
