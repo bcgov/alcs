@@ -11,6 +11,7 @@ import { ApplicationSubmissionToSubmissionStatus } from '../../../alcs/applicati
 import { Application } from '../../../alcs/application/application.entity';
 import { ApplicationType } from '../../../alcs/code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
+import { User } from '../../../user/user.entity';
 import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { LinkedStatusType } from '../inbox.dto';
@@ -26,9 +27,10 @@ import { LinkedStatusType } from '../inbox.dto';
       .addSelect('app_sub.local_government_uuid', 'local_government_uuid')
       .addSelect('app_sub.audit_created_at', 'created_at')
       .addSelect('localGovernment.name', 'local_government_name')
-      .addSelect('localGovernment.bceid_business_guid', 'bceid_business_guid')
+      .addSelect('user.bceid_business_guid', 'bceid_business_guid')
       .addSelect('app_sub.type_code', 'application_type_code')
       .addSelect('app.uuid', 'application_uuid')
+      .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect(
         'app_rev.local_government_file_number',
         'local_government_file_number',
@@ -43,6 +45,7 @@ import { LinkedStatusType } from '../inbox.dto';
       )
       .from(ApplicationSubmission, 'app_sub')
       .innerJoin(Application, 'app', 'app.file_number = app_sub.file_number')
+      .leftJoin(User, 'user', 'user.uuid = app_sub.created_by_uuid')
       .leftJoin(
         ApplicationSubmissionReview,
         'app_rev',
@@ -90,6 +93,9 @@ export class InboxApplicationSubmissionView {
 
   @ViewColumn()
   lastUpdate: Date;
+
+  @ViewColumn()
+  dateSubmittedToAlc: Date | null;
 
   @ViewColumn()
   createdAt: Date;

@@ -24,12 +24,15 @@ export class EditReconsiderationDialogComponent implements OnInit {
 
   typeControl = new FormControl<string | undefined>(undefined, [Validators.required]);
   reviewOutcomeCodeControl = new FormControl<string | null>(null);
+  decisionOutcomeCodeControl = new FormControl<string | null>(null);
+  reviewDateControl = new FormControl<Date | null | undefined>(null);
 
   form: FormGroup = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
     type: this.typeControl,
     reviewOutcomeCode: this.reviewOutcomeCodeControl,
-    reviewDate: new FormControl<Date | null | undefined>(null),
+    decisionOutcomeCode: this.decisionOutcomeCodeControl,
+    reviewDate: this.reviewDateControl,
     reconsidersDecisions: new FormControl<string[]>([], [Validators.required]),
     description: new FormControl<string | null>('', [Validators.required]),
     isNewProposal: new FormControl<string | undefined>(undefined, [Validators.required]),
@@ -59,8 +62,9 @@ export class EditReconsiderationDialogComponent implements OnInit {
         data.existingRecon.type.code === RECONSIDERATION_TYPE.T_33
           ? data.existingRecon.reviewOutcome?.code || 'PEN'
           : null,
+      decisionOutcomeCode: data.existingRecon.decisionOutcome?.code,
       reviewDate: data.existingRecon.reviewDate ? new Date(data.existingRecon.reviewDate) : null,
-      reconsidersDecisions: data.existingRecon.reconsideredDecisions.map((dec) => dec.uuid),
+      reconsidersDecisions: data.existingRecon.reconsidersDecisions.map((dec) => dec.uuid),
       description: data.existingRecon.description ?? null,
       isNewProposal: parseBooleanToString(data.existingRecon.isNewProposal),
       isIncorrectFalseInfo: parseBooleanToString(data.existingRecon.isIncorrectFalseInfo),
@@ -85,10 +89,12 @@ export class EditReconsiderationDialogComponent implements OnInit {
       isNewProposal,
       isIncorrectFalseInfo,
       isNewEvidence,
+      decisionOutcomeCode,
     } = this.form.getRawValue();
     const data: UpdateApplicationReconsiderationDto = {
       submittedDate: formatDateForApi(submittedDate!),
       reviewOutcomeCode: reviewOutcomeCode,
+      decisionOutcomeCode: decisionOutcomeCode,
       typeCode: type!,
       reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       reconsideredDecisionUuids: reconsidersDecisions || [],
@@ -121,13 +127,15 @@ export class EditReconsiderationDialogComponent implements OnInit {
 
   async onTypeReconsiderationChange(reconsiderationType: string) {
     if (reconsiderationType === RECONSIDERATION_TYPE.T_33_1) {
-      this.form.patchValue({
-        reviewOutcomeCode: null,
-      });
+      this.reviewOutcomeCodeControl.setValue(null);
     } else {
-      this.form.patchValue({
-        reviewOutcomeCode: 'PEN',
-      });
+      this.reviewOutcomeCodeControl.setValue('PEN');
     }
+  }
+
+  onChangeReviewOutcome() {
+    //Clear fields that only show up sometimes
+    this.decisionOutcomeCodeControl.setValue(null);
+    this.reviewDateControl.setValue(null);
   }
 }
