@@ -29,7 +29,6 @@ describe('SearchService', () => {
     page: 1,
     sortField: '1',
     sortDirection: 'ASC',
-    isIncludeOtherParcels: false,
     fileTypes: [],
   };
 

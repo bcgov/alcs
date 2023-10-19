@@ -120,10 +120,6 @@ export class SearchRequestDto extends PagingRequestDto {
   @MinLength(3)
   civicAddress?: string;
 
-  @IsBoolean()
-  @IsOptional()
-  isIncludeOtherParcels = false;
-
   @IsNumber()
   @IsOptional()
   resolutionNumber?: number;

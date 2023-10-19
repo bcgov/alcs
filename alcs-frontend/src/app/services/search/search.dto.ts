@@ -56,7 +56,6 @@ export interface SearchRequestDto extends PagingRequestDto {
   name?: string;
   pid?: string;
   civicAddress?: string;
-  isIncludeOtherParcels: boolean;
   resolutionNumber?: number;
   resolutionYear?: number;
   portalStatusCode?: string;

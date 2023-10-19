@@ -76,7 +76,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     name: this.nameControl,
     pid: this.pidControl,
     civicAddress: this.civicAddressControl,
-    isIncludeOtherParcels: new FormControl(false),
     resolutionNumber: new FormControl<string | undefined>(undefined),
     resolutionYear: new FormControl<number | undefined>(undefined),
     legacyId: new FormControl<string | undefined>(undefined),
@@ -102,6 +101,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchResultsHidden = true;
   notificationStatuses: NotificationSubmissionStatusDto[] = [];
   noiStatuses: NoticeOfIntentStatusDto[] = [];
+  isLoading = false;
 
   constructor(
     private searchService: SearchService,
@@ -131,21 +131,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
         if (searchText) {
           this.searchForm.controls.fileNumber.setValue(searchText);
-
-          this.searchService
-            .advancedSearchFetch({
-              fileNumber: searchText,
-              isIncludeOtherParcels: false,
-              pageSize: this.itemsPerPage,
-              page: this.pageIndex + 1,
-              sortDirection: this.sortDirection,
-              sortField: this.sortField,
-              fileTypes: [],
-            })
-            .then((result) => {
-              this.searchResultsHidden = false;
-              this.mapSearchResults(result);
-            });
+          this.onSubmit();
         }
       });
 
@@ -196,14 +182,32 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     const searchParams = this.getSearchParams();
+    this.isLoading = true;
     const result = await this.searchService.advancedSearchFetch(searchParams);
+
     this.searchResultsHidden = false;
+    this.isLoading = false;
+    this.toastService.showSuccessToast('Results updated');
 
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
       this.mapSearchResults(result);
-
       this.setActiveTab();
+      this.scrollToResults();
+    });
+  }
+
+  scrollToResults() {
+    setTimeout(() => {
+      const element = document.getElementById('results');
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center',
+        });
+      }
     });
   }
 
@@ -258,7 +262,6 @@ export class SearchComponent implements OnInit, OnDestroy {
       name: this.formatStringSearchParam(this.searchForm.controls.name.value),
       civicAddress: this.formatStringSearchParam(this.searchForm.controls.civicAddress.value),
       pid: this.formatStringSearchParam(this.searchForm.controls.pid.value),
-      isIncludeOtherParcels: this.searchForm.controls.isIncludeOtherParcels.value ?? false,
       resolutionNumber: resolutionNumberString ? parseInt(resolutionNumberString) : undefined,
       resolutionYear: this.searchForm.controls.resolutionYear.value ?? undefined,
       portalStatusCode: this.searchForm.controls.portalStatus.value ?? undefined,
