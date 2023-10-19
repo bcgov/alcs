@@ -11,7 +11,7 @@ def process_alcs_notice_of_intent_cancelled_status(
     conn=None, batch_size=BATCH_UPLOAD_SIZE
 ):
     """
-    This function is responsible for populating cancelled status of Notice of Intent in ALCS.
+    This function is responsible for populating Cancelled status of Notice of Intent in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
