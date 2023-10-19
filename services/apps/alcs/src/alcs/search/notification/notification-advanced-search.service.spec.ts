@@ -22,7 +22,6 @@ describe('NotificationAdvancedSearchService', () => {
     name: 'D',
     pid: 'E',
     civicAddress: 'F',
-    isIncludeOtherParcels: false,
     dateSubmittedFrom: new Date('2020-10-10').getTime(),
     dateSubmittedTo: new Date('2021-10-10').getTime(),
     dateDecidedFrom: new Date('2020-11-10').getTime(),

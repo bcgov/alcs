@@ -267,7 +267,6 @@ export class SearchController {
 
     const searchNoi =
       (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true) &&
-      !searchDto.isIncludeOtherParcels &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     const searchNonApplications =
@@ -278,7 +277,6 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !searchDto.isIncludeOtherParcels &&
       !searchDto.portalStatusCode &&
       !searchDto.pid &&
       !isStringSetAndNotEmpty(searchDto.legacyId) &&
@@ -290,7 +288,6 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !searchDto.isIncludeOtherParcels &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {

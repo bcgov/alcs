@@ -1,4 +1,9 @@
 @use '../../../styles/colors';
+
+.spinner {
+  margin: 20px;
+}
+
 :host::ng-deep {
   h3,
   div,
@@ -105,6 +110,8 @@
       align-items: center;
       cursor: pointer;
       color: #1a5a96;
+      margin-top: 12px;
+      margin-bottom: 24px;
 
       span {
         color: #1a5a96;
