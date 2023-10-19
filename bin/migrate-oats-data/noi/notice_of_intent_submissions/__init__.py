@@ -34,3 +34,6 @@ from .statuses.notice_of_intent_status_received_by_alc import (
 from .statuses.notice_of_intent_status_decision_released import (
     process_alcs_notice_of_intent_decision_released_status,
 )
+from .statuses.notice_of_intent_status_cancelled import (
+    process_alcs_notice_of_intent_cancelled_status,
+)

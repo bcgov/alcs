@@ -263,7 +263,7 @@ describe('ApplicationSubmissionService', () => {
     expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
   });
 
-  it('should load the canceled status and save the application for cancel', async () => {
+  it('should load the cancelled status and save the application for cancel', async () => {
     const application = new ApplicationSubmission({
       uuid: 'fake',
       status: new ApplicationSubmissionToSubmissionStatus({

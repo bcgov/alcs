@@ -1,5 +1,5 @@
---- tun it manually in IDE of your choice
---- compare to numbers returned by script. The should match
+--- run it manually in IDE of your choice
+--- compare to numbers returned by script. They should match
 -- total count of set 'SUIN' - Submitted to ALC Incomplete status in ALCS
 SELECT count(*)
 FROM alcs.notice_of_intent_submission_to_submission_status noistss
