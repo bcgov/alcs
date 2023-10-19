@@ -266,7 +266,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
           (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1 && !reconsideration.resultingDecision)
       )
       .map((reconsideration, index) => ({
-        label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsideredDecisions
+        label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsidersDecisions
           .map((dec) => `#${dec.resolutionNumber}/${dec.resolutionYear}`)
           .join(', ')}`,
         uuid: reconsideration.uuid,

@@ -1,7 +1,7 @@
 <div>
   <span *ngIf="!isEditing">
     <a (click)="toggleEdit()" class="add-date" *ngIf="!pendingReviewOutcome"> Select Outcome </a>
-    <span *ngIf="!pendingReviewOutcome || pendingReviewOutcome === 'PEN'">
+    <span *ngIf="!pendingReviewOutcome">
       {{ pendingReviewOutcome }}
     </span>
   </span>
@@ -12,14 +12,10 @@
     }"
   >
     <form [formGroup]="form">
-      <mat-button-toggle-group id="reviewOutcome" formControlName="reviewOutcome" name="reviewOutcome">
-        <mat-button-toggle value="PEN">Pending</mat-button-toggle>
-        <mat-button-toggle value="PRC">{{
-          isModification ? 'Proceed to Modify' : 'Proceed to Reconsider'
-        }}</mat-button-toggle>
-        <mat-button-toggle value="REF">{{
-          isModification ? 'Refuse to Modify' : 'Refuse to Reconsider'
-        }}</mat-button-toggle>
+      <mat-button-toggle-group id="decisionOutcome" formControlName="decisionOutcome" name="decisionOutcome">
+        <mat-button-toggle value="CONF">Confirm</mat-button-toggle>
+        <mat-button-toggle value="REVE">Reverse</mat-button-toggle>
+        <mat-button-toggle value="VARY">Vary</mat-button-toggle>
       </mat-button-toggle-group>
     </form>
     <div class="button-container">
