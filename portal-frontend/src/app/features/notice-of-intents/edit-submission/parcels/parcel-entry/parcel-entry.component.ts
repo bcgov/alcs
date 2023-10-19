@@ -11,6 +11,7 @@ import { NoticeOfIntentOwnerService } from '../../../../../services/notice-of-in
 import { NoticeOfIntentParcelDto } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcelService } from '../../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
@@ -109,6 +110,7 @@ export class ParcelEntryComponent implements OnInit {
     private noticeOfIntentParcelService: NoticeOfIntentParcelService,
     public noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     public noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
+    private toastService: ToastService,
     private dialog: MatDialog
   ) {}
 
@@ -253,6 +255,7 @@ export class ParcelEntryComponent implements OnInit {
         );
       } catch (e) {
         this.showVirusError = true;
+        this.toastService.showErrorToast('Document upload failed');
         return;
       }
       this.showVirusError = false;

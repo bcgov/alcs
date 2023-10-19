@@ -11,6 +11,7 @@ import { ApplicationOwnerService } from '../../../../../services/application-own
 import { ApplicationParcelDto } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
+import { ToastService } from '../../../../../services/toast/toast.service';
 import { ParcelEntryComponent } from './parcel-entry.component';
 
 describe('ParcelEntryComponent', () => {
@@ -62,6 +63,10 @@ describe('ParcelEntryComponent', () => {
         },
         {
           provide: MatDialog,
+          useValue: {},
+        },
+        {
+          provide: ToastService,
           useValue: {},
         },
       ],

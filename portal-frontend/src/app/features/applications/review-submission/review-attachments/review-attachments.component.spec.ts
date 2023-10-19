@@ -7,6 +7,7 @@ import { ApplicationDocumentDto } from '../../../../services/application-documen
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 
 import { ReviewAttachmentsComponent } from './review-attachments.component';
 
@@ -40,6 +41,10 @@ describe('ReviewAttachmentsComponent', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: ToastService,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],
