@@ -346,7 +346,7 @@ describe('SearchController', () => {
 
     expect(
       mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(0);
+    ).toBeCalledTimes(1);
     expect(result.noticeOfIntents).toBeDefined();
     expect(result.totalNoticeOfIntents).toBe(0);
 
