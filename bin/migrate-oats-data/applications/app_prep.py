@@ -259,7 +259,7 @@ def _get_update_query(unique_fields):
                     fee_waived = %(fee_waived_ind)s,
                     fee_amount = %(applied_fee_amt)s,
                     fee_split_with_lg = %(split_fee_with_local_gov_ind)s,
-                    legacy_id = %(legacy_application_nbr)s,
+                    legacy_id = %(legacy_application_nbr)s
                     {unique_fields}
                 WHERE
                 alcs.application.file_number = %(alr_application_id)s::TEXT;
