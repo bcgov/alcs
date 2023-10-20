@@ -61,6 +61,7 @@ export class InboxApplicationService {
             , "appSearch"."local_government_file_number"
             , "appSearch"."status"
             , "appSearch"."created_at"
+            , "appSearch"."date_submitted_to_alc"
             , "appSearch"."last_update"
             , "appSearch"."created_by_uuid"
             , "appSearch"."bceid_business_guid"
@@ -97,7 +98,8 @@ export class InboxApplicationService {
         where += ' OR appSearch.bceid_business_guid = :bceidBusinessGuid';
       }
       if (governmentUuid) {
-        where += ' OR appSearch.local_government_uuid = :governmentUuid';
+        where +=
+          ' OR (appSearch.local_government_uuid = :governmentUuid AND appSearch.date_submitted_to_alc IS NOT NULL)';
       }
     } else {
       if (searchDto.filterBy === 'submitted') {

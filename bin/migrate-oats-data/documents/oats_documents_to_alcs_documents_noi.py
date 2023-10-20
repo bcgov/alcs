@@ -31,13 +31,15 @@ def compile_document_insert_query(number_of_rows_to_insert):
 
 
 @inject_conn_pool
-def process_documents_noi(conn=None, batch_size=10000):
+def import_oats_noi_documents(conn=None, batch_size=10000):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """
     with conn.cursor() as cursor:
         with open(
-            "sql/documents_noi/oats_documents_to_alcs_documents_noi_total_count.sql", "r", encoding="utf-8"
+            "sql/documents_noi/oats_documents_to_alcs_documents_noi_total_count.sql",
+            "r",
+            encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
@@ -48,7 +50,11 @@ def process_documents_noi(conn=None, batch_size=10000):
         successful_inserts_count = 0
         last_document_id = 0
 
-        with open("sql/documents_noi/oats_documents_to_alcs_documents_noi.sql", "r", encoding="utf-8") as sql_file:
+        with open(
+            "sql/documents_noi/oats_documents_to_alcs_documents_noi.sql",
+            "r",
+            encoding="utf-8",
+        ) as sql_file:
             documents_to_insert_sql = sql_file.read()
             while True:
                 cursor.execute(
@@ -82,5 +88,3 @@ def process_documents_noi(conn=None, batch_size=10000):
 
     print("Total amount of successful inserts:", successful_inserts_count)
     print("Total amount of failed inserts:", failed_inserts)
-
-

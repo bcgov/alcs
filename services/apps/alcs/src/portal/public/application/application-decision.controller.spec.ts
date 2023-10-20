@@ -64,11 +64,11 @@ describe('ApplicationDecisionController', () => {
   });
 
   it('should call through for loading files', async () => {
-    mockDecisionService.getDownloadUrl.mockResolvedValue('Mock Url');
+    mockDecisionService.getDownloadForPortal.mockResolvedValue('Mock Url');
 
     const res = await controller.openFile('');
 
     expect(res.url).toBeTruthy();
-    expect(mockDecisionService.getDownloadUrl).toHaveBeenCalledTimes(1);
+    expect(mockDecisionService.getDownloadForPortal).toHaveBeenCalledTimes(1);
   });
 });

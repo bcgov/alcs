@@ -97,14 +97,11 @@
     </div>
   </form>
 
-  <div *ngIf="isLoading" class="center">
-    <mat-spinner></mat-spinner>
-  </div>
   <div class="search-fields-wrapper search-result-wrapper">
     <div *ngIf="isLoading" class="center">
       <mat-spinner></mat-spinner>
     </div>
-    <mat-tab-group mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+    <mat-tab-group *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
       <mat-tab>
         <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
         <app-inbox-list
@@ -112,6 +109,7 @@
           [items]="applications"
           [totalCount]="applicationTotal"
           (loadMore)="onLoadMore('APP')"
+          type="Applications"
         >
         </app-inbox-list>
         <app-inbox-table
@@ -119,6 +117,7 @@
           [items]="applications"
           [totalCount]="applicationTotal"
           (tableChange)="onTableChange($event)"
+          type="Applications"
         ></app-inbox-table>
       </mat-tab>
 
@@ -129,14 +128,15 @@
           [items]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           (loadMore)="onLoadMore('NOI')"
+          type="Notices of Intent"
         >
         </app-inbox-list>
         <app-inbox-table
           *ngIf="!isMobile"
           [items]="noticeOfIntents"
-          type="Notices of Intent"
           [totalCount]="noticeOfIntentTotal"
           (tableChange)="onTableChange($event)"
+          type="Notices of Intent"
         ></app-inbox-table>
       </mat-tab>
 
@@ -147,6 +147,7 @@
           [items]="notifications"
           [totalCount]="notificationTotal"
           (loadMore)="onLoadMore('NOTI')"
+          type="Notifications"
         >
         </app-inbox-list>
         <app-inbox-table

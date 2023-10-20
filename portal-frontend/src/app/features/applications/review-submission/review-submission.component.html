@@ -12,7 +12,7 @@
   class="review-application"
   *ngIf="!isFirstNationGovernment"
   #cdkStepper
-  (selectionChange)="onStepChange($event)"
+  (selectionChange)="onStepChange()"
   (beforeSwitchStep)="onBeforeSwitchStep($event)"
 >
   <cdk-step label="Contact Information">
@@ -78,7 +78,7 @@
   class="review-application"
   *ngIf="isFirstNationGovernment"
   #cdkStepper
-  (selectionChange)="onStepChange($event)"
+  (selectionChange)="onStepChange()"
   (beforeSwitchStep)="onBeforeSwitchStep($event)"
 >
   <cdk-step label="Contact Information">

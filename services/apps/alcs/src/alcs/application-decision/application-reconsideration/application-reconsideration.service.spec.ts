@@ -77,6 +77,7 @@ describe('ReconsiderationService', () => {
       type: true,
       resultingDecision: true,
       reviewOutcome: true,
+      decisionOutcome: true,
     };
 
   beforeEach(async () => {

@@ -265,9 +265,7 @@ export class SearchController {
       );
     }
 
-    const searchNoi =
-      (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true) &&
-      !searchDto.isIncludeOtherParcels;
+    const searchNoi = (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true);
 
     const searchNonApplications =
       (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
@@ -277,7 +275,6 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !searchDto.isIncludeOtherParcels &&
       !searchDto.portalStatusCode &&
       !searchDto.pid &&
       !isStringSetAndNotEmpty(searchDto.legacyId) &&
@@ -289,7 +286,6 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !searchDto.isIncludeOtherParcels &&
       !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {

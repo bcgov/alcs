@@ -24,7 +24,6 @@ describe('NonApplicationsService', () => {
     sortField: 'applicant',
     sortDirection: 'ASC',
     fileTypes: [],
-    isIncludeOtherParcels: false,
   };
 
   beforeEach(async () => {

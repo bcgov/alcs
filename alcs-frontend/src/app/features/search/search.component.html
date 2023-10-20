@@ -64,10 +64,6 @@
         <a href="https://arcmaps.gov.bc.ca/ess/hm/alc/" target="_blank">iMap</a> to confirm ALC history on a property
       </div>
     </div>
-
-    <mat-checkbox formControlName="isIncludeOtherParcels"
-      >Expand search to include 'Other Parcels in the Community' from applicant submission</mat-checkbox
-    >
   </div>
   <div class="expand-search search-fields-wrapper">
     <div
@@ -123,13 +119,15 @@
     </div>
     <div class="row">
       <div class="column">
-        <mat-form-field appearance="outline">
-          <mat-select placeholder="Portal Status" [formControl]="portalStatusControl">
-            <mat-option *ngFor="let status of allStatuses" [value]="status.code">
-              {{ status.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <ng-select
+          appearance="outline"
+          placeholder="Current Portal Status"
+          [items]="allStatuses"
+          bindLabel="label"
+          bindValue="code"
+          [formControl]="portalStatusControl"
+        >
+        </ng-select>
       </div>
 
       <div class="column">
@@ -140,22 +138,15 @@
 
     <div class="row">
       <div class="column">
-        <mat-form-field appearance="outline">
-          <input
-            (blur)="onBlur()"
-            id="government"
-            type="text"
-            matInput
-            formControlName="government"
-            placeholder="L/FNG Government"
-            [matAutocomplete]="auto"
-          />
-          <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
-              {{ option.name }}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+        <ng-select
+          appearance="outline"
+          placeholder="L/FNG Government"
+          [items]="localGovernments"
+          bindLabel="name"
+          bindValue="name"
+          formControlName="government"
+        >
+        </ng-select>
       </div>
 
       <div class="column">
@@ -174,7 +165,7 @@
         </ng-select>
       </div>
     </div>
-    <div class="row date-row-label">Date Submitted</div>
+    <div class="row date-row-label">Date Submitted to ALC</div>
     <div class="row date-row">
       <div class="column">
         <mat-form-field appearance="outline" class="date-picker">
@@ -256,37 +247,43 @@
 <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
   <h2 class="search-title">Search Results:</h2>
 
-  <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
+  <mat-tab-group id="results" mat-align-tabs="start" mat-stretch-tabs="false" #searchResultTabs>
     <mat-tab>
       <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
       <app-application-search-table
+        *ngIf="!isLoading"
         [applications]="applications"
         [totalCount]="applicationTotal"
         [statuses]="applicationStatuses"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-application-search-table>
+      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
     </mat-tab>
 
     <mat-tab>
       <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
       <app-notice-of-intent-search-table
+        *ngIf="!isLoading"
         [noticeOfIntents]="noticeOfIntents"
         [totalCount]="noticeOfIntentTotal"
         [statuses]="noiStatuses"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-notice-of-intent-search-table>
+      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
     </mat-tab>
 
     <mat-tab>
       <ng-template mat-tab-label> Non-Applications: {{ nonApplicationsTotal }} </ng-template>
       <app-non-application-search-table
+        *ngIf="!isLoading"
         [nonApplications]="nonApplications"
         [totalCount]="nonApplicationsTotal"
         (tableChange)="onTableChange($event)"
       >
       </app-non-application-search-table>
+      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
     </mat-tab>
 
     <mat-tab>
@@ -298,6 +295,7 @@
         (tableChange)="onTableChange($event)"
       >
       </app-notification-search-table>
+      <mat-spinner class="spinner" *ngIf="isLoading"></mat-spinner>
     </mat-tab>
   </mat-tab-group>
 </div>

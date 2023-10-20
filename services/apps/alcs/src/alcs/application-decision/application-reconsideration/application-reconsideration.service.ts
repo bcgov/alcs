@@ -80,6 +80,7 @@ export class ApplicationReconsiderationService {
       reconsidersDecisions: true,
       resultingDecision: true,
       reviewOutcome: true,
+      decisionOutcome: true,
     };
 
   getByBoard(boardUuid: string) {
@@ -201,6 +202,7 @@ export class ApplicationReconsiderationService {
     }
 
     reconsideration.reviewOutcomeCode = updateDto.reviewOutcomeCode;
+    reconsideration.decisionOutcomeCode = updateDto.decisionOutcomeCode;
 
     if (
       reconsideration.type.code === RECONSIDERATION_TYPE.T_33 &&

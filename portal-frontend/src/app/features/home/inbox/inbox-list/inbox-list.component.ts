@@ -1,9 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { BaseInboxResultDto } from '../../../../services/inbox/inbox.dto';
-import { BaseCodeDto } from '../../../../shared/dto/base.dto';
-import { SearchResult } from '../../../public/search/search.interface';
 import { InboxResultDto } from '../inbox.component';
 
 @Component({
@@ -15,6 +12,7 @@ export class InboxListComponent implements OnDestroy {
   $destroy = new Subject<void>();
 
   @Input() totalCount = 0;
+  @Input() type = '';
 
   _items: InboxResultDto[] = [];
   @Input() set items(items: InboxResultDto[]) {

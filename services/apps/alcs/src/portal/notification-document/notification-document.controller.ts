@@ -4,7 +4,9 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -27,6 +29,7 @@ import {
 } from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
+import { User } from '../../user/user.entity';
 import { NotificationSubmissionService } from '../notification-submission/notification-submission.service';
 import {
   AttachExternalDocumentDto,
@@ -65,29 +68,41 @@ export class NotificationDocumentController {
   @Get('/:uuid/open')
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.notificationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.notificationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canAccessDocument =
+      await this.notificationSubmissionService.canAccessDocument(
+        document,
+        user,
+      );
 
-    const url = await this.notificationDocumentService.getInlineUrl(document);
-    return { url };
+    if (canAccessDocument) {
+      const url = await this.notificationDocumentService.getInlineUrl(document);
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Get('/:uuid/download')
   async download(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.notificationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.notificationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canAccessDocument =
+      await this.notificationSubmissionService.canAccessDocument(
+        document,
+        user,
+      );
 
-    const url = await this.notificationDocumentService.getDownloadUrl(document);
-    return { url };
+    if (canAccessDocument) {
+      const url = await this.notificationDocumentService.getDownloadUrl(
+        document,
+      );
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Patch('/notification/:fileNumber')
@@ -114,14 +129,20 @@ export class NotificationDocumentController {
   @Delete('/:uuid')
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.notificationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can delete?
-    // await this.notificationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canDeleteDocument =
+      await this.notificationSubmissionService.canDeleteDocument(
+        document,
+        user,
+      );
 
-    await this.notificationDocumentService.delete(document);
+    if (canDeleteDocument) {
+      await this.notificationDocumentService.delete(document);
+    } else {
+      throw new ForbiddenException('Not allowed to delete document');
+    }
+
     return {};
   }
 

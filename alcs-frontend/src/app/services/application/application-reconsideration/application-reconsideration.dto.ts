@@ -41,7 +41,8 @@ export interface ApplicationReconsiderationDto {
   board: BoardSmallDto;
   reviewDate?: number;
   reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
-  reconsideredDecisions: ApplicationDecisionDto[];
+  decisionOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
+  reconsidersDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
   description?: string;
   isNewProposal?: boolean | null;
@@ -72,6 +73,7 @@ export interface UpdateApplicationReconsiderationDto {
   typeCode?: string | undefined;
   reviewDate?: number | null;
   reviewOutcomeCode?: string | null;
+  decisionOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
   description?: string;
   isNewProposal?: boolean | null;

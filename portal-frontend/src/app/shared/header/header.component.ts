@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
   isAuthenticated = false;
   isMenuOpen = false;
-  isOnSearch = false;
+  isOnPublicPage = false;
 
   title = 'Provincial Agricultural Land Commission Portal';
   user: UserDto | undefined;
@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
       const url = window.location.href;
-      this.isOnSearch = url.includes('public');
+      this.isOnPublicPage = url.includes('public');
     });
   }
 
@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (isOnLogin) {
       targetUrl = '/login';
     }
-    if (this.isOnSearch) {
+    if (this.isOnPublicPage) {
       targetUrl = '/public';
     }
 

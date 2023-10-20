@@ -1,6 +1,6 @@
 <div>
   <span *ngIf="!isEditing">
-    <a (click)="toggleEdit()" class="add-date" *ngIf="!pendingReviewOutcome"> Select outcome </a>
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!pendingReviewOutcome"> Select Outcome </a>
     <span *ngIf="!pendingReviewOutcome || pendingReviewOutcome === 'PEN'">
       {{ pendingReviewOutcome }}
     </span>

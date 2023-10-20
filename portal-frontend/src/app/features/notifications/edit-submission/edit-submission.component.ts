@@ -117,8 +117,8 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   }
 
   onStepChange($event: StepperSelectionEvent) {
-    // scrolls to step if step selected programmatically
-    scrollToElement({ id: `stepWrapper_${$event.selectedIndex}`, center: false });
+    // scrolls to top of page
+    scrollToElement({ id: `siteLayout`, center: false });
   }
 
   async switchStep(index: number) {

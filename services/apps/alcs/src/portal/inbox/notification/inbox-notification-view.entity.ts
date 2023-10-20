@@ -9,6 +9,7 @@ import {
 import { LocalGovernment } from '../../../alcs/local-government/local-government.entity';
 import { NotificationType } from '../../../alcs/notification/notification-type/notification-type.entity';
 import { Notification } from '../../../alcs/notification/notification.entity';
+import { User } from '../../../user/user.entity';
 import { NotificationSubmission } from '../../notification-submission/notification-submission.entity';
 import { LinkedStatusType } from '../inbox.dto';
 
@@ -22,7 +23,7 @@ import { LinkedStatusType } from '../inbox.dto';
       .addSelect('noti_sub.audit_created_at', 'created_at')
       .addSelect('noti_sub.created_by_uuid', 'created_by_uuid')
       .addSelect('noti_sub.local_government_uuid', 'local_government_uuid')
-      .addSelect('localGovernment.bceid_business_guid', 'bceid_business_guid')
+      .addSelect('user.bceid_business_guid', 'bceid_business_guid')
       .addSelect('noti.type_code', 'notification_type_code')
       .addSelect('noti.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('noti.uuid', 'notification_uuid')
@@ -31,6 +32,7 @@ import { LinkedStatusType } from '../inbox.dto';
         'status',
       )
       .from(NotificationSubmission, 'noti_sub')
+      .leftJoin(User, 'user', 'user.uuid = noti_sub.created_by_uuid')
       .innerJoin(
         Notification,
         'noti',
@@ -63,6 +65,9 @@ export class InboxNotificationSubmissionView {
 
   @ViewColumn()
   createdAt: Date;
+
+  @ViewColumn()
+  dateSubmittedToAlc: Date | null;
 
   @ViewColumn()
   createdByUuid: string;

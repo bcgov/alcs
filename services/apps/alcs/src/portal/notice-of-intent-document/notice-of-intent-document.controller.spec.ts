@@ -29,6 +29,8 @@ describe('NoticeOfIntentDocumentController', () => {
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
 
+  const mockRequest = { user: { entity: 'Bruce' } };
+
   const mockDocument = new NoticeOfIntentDocument({
     document: new Document({
       fileName: 'fileName',
@@ -92,12 +94,9 @@ describe('NoticeOfIntentDocumentController', () => {
   it('should call through to delete document', async () => {
     noiDocumentService.delete.mockResolvedValue(mockDocument);
     noiDocumentService.get.mockResolvedValue(mockDocument);
+    mockNoiSubmissionService.canDeleteDocument.mockResolvedValue(true);
 
-    await controller.delete('fake-uuid', {
-      user: {
-        entity: {},
-      },
-    });
+    await controller.delete('fake-uuid', mockRequest);
 
     expect(noiDocumentService.get).toHaveBeenCalledTimes(1);
     expect(noiDocumentService.delete).toHaveBeenCalledTimes(1);
@@ -106,31 +105,20 @@ describe('NoticeOfIntentDocumentController', () => {
   it('should call through to update documents', async () => {
     noiDocumentService.updateDescriptionAndType.mockResolvedValue([]);
 
-    await controller.update(
-      'file-number',
-      {
-        user: {
-          entity: {},
-        },
-      },
-      [],
-    );
+    await controller.update('file-number', mockRequest, []);
 
     expect(noiDocumentService.updateDescriptionAndType).toHaveBeenCalledTimes(
       1,
     );
   });
 
-  it('should call through for download', async () => {
+  it('should call through for open', async () => {
     const fakeUrl = 'fake-url';
     noiDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     noiDocumentService.get.mockResolvedValue(mockDocument);
+    mockNoiSubmissionService.canAccessDocument.mockResolvedValue(true);
 
-    const res = await controller.open('fake-uuid', {
-      user: {
-        entity: {},
-      },
-    });
+    const res = await controller.open('fake-uuid', mockRequest);
 
     expect(res.url).toEqual(fakeUrl);
   });
@@ -243,8 +231,10 @@ describe('NoticeOfIntentDocumentController', () => {
 
   it('should call through to delete multiple documents', async () => {
     noiDocumentService.deleteMany.mockResolvedValue();
+    noiDocumentService.get.mockResolvedValue(new NoticeOfIntentDocument());
+    mockNoiSubmissionService.canDeleteDocument.mockResolvedValue(true);
 
-    await controller.deleteMany(['fake-uuid']);
+    await controller.deleteMany(['fake-uuid'], mockRequest);
 
     expect(noiDocumentService.deleteMany).toHaveBeenCalledTimes(1);
   });

@@ -61,6 +61,7 @@ export class InboxNoticeOfIntentService {
         , "noiSearch"."status"
         , "noiSearch"."created_at"
         , "noiSearch"."last_update"
+        , "noiSearch"."date_submitted_to_alc"
         , "noiSearch"."created_by_uuid"
         , "noiSearch"."bceid_business_guid"      
         , "noticeOfIntentType"."audit_deleted_date_at"
@@ -93,7 +94,8 @@ export class InboxNoticeOfIntentService {
         where += ' OR noiSearch.bceid_business_guid = :bceidBusinessGuid';
       }
       if (governmentUuid) {
-        where += ' OR noiSearch.local_government_uuid = :governmentUuid';
+        where +=
+          ' OR (noiSearch.local_government_uuid = :governmentUuid AND noiSearch.date_submitted_to_alc IS NOT NULL)';
       }
     } else {
       if (searchDto.filterBy === 'submitted') {

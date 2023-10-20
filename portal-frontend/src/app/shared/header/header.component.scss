@@ -15,7 +15,6 @@
     padding: rem(8) rem(36);
   }
 
-
   @media screen and (min-width: $desktopBreakpoint) {
     padding: rem(8) rem(80);
   }
@@ -91,10 +90,6 @@ header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      button:not(:last-child) {
-        margin-right: rem(28) !important;
-      }
 
       .title,
       .title h5 {

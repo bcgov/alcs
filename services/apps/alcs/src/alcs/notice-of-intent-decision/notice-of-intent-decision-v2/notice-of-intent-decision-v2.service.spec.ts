@@ -9,6 +9,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../../document/document.service';
+import { ApplicationDecisionDocument } from '../../application-decision/application-decision-document/application-decision-document.entity';
 import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
@@ -459,6 +460,17 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       await service.attachDocument('uuid', {} as any, {} as any);
       expect(mockDecisionDocumentRepository.save).toHaveBeenCalledTimes(1);
       expect(mockDocumentService.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call the repository to check if portal user can download document', async () => {
+      mockDecisionDocumentRepository.findOne.mockResolvedValue(
+        new NoticeOfIntentDecisionDocument(),
+      );
+      mockDocumentService.getDownloadUrl.mockResolvedValue('');
+
+      await service.getDownloadForPortal('fake-uuid');
+      expect(mockDecisionDocumentRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockDocumentService.getDownloadUrl).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an exception when attaching a document to a non-existent decision', async () => {

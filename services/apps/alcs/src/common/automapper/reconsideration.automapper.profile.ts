@@ -14,6 +14,7 @@ import {
   ReconsiderationTypeDto,
 } from '../../alcs/application-decision/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsideration } from '../../alcs/application-decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationDecisionOutcomeType } from '../../alcs/application-decision/application-reconsideration/reconsideration-decision-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationOutcomeType } from '../../alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { Application } from '../../alcs/application/application.entity';
@@ -84,49 +85,17 @@ export class ReconsiderationProfile extends AutomapperProfile {
           (a) => a.reviewDate,
           mapFrom((rd) => rd.reviewDate?.getTime()),
         ),
-        forMember(
-          (a) => a.card,
-          mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
-        ),
-        forMember(
-          (a) => a.reconsideredDecisions,
-          mapFrom((rd) =>
-            this.mapper.mapArray(
-              rd.reconsidersDecisions ?? [],
-              ApplicationDecision,
-              ApplicationDecisionDto,
-            ),
-          ),
-        ),
-        forMember(
-          (a) => a.resultingDecision,
-          mapFrom((rd) =>
-            rd.resultingDecision
-              ? this.mapper.map(
-                  rd.resultingDecision,
-                  ApplicationDecision,
-                  ApplicationDecisionDto,
-                )
-              : undefined,
-          ),
-        ),
-        forMember(
-          (a) => a.reviewOutcome,
-          mapFrom((rd) =>
-            rd.reviewOutcome
-              ? this.mapper.map(
-                  rd.reviewOutcome,
-                  ApplicationReconsiderationOutcomeType,
-                  ApplicationReconsiderationOutcomeCodeDto,
-                )
-              : null,
-          ),
-        ),
       );
 
       createMap(
         mapper,
         ApplicationReconsiderationOutcomeType,
+        ApplicationReconsiderationOutcomeCodeDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationReconsiderationDecisionOutcomeType,
         ApplicationReconsiderationOutcomeCodeDto,
       );
 

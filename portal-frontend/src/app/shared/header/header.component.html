@@ -4,10 +4,10 @@
       <li>
         <a href="https://www.alc.gov.bc.ca/">ALC Website</a>
       </li>
-      <li *ngIf="!isOnSearch">
+      <li *ngIf="!isOnPublicPage">
         <a routerLink="/public">Public Search</a>
       </li>
-      <li *ngIf="isOnSearch">
+      <li *ngIf="isOnPublicPage">
         <a routerLink="/">Portal</a>
       </li>
     </ul>
@@ -16,15 +16,15 @@
     <div class="title">
       <img class="logo" (click)="onClickLogo()" src="assets/alc_logo.svg" alt="ALC Portal" />
       <h5 class="center">
-        <span *ngIf="isOnSearch">Provincial Agricultural Land Commission Public Search</span>
-        <span *ngIf="!isOnSearch">Provincial Agricultural Land Commission Portal</span>
+        <span *ngIf="isOnPublicPage">Provincial Agricultural Land Commission Public Search</span>
+        <span *ngIf="!isOnPublicPage">Provincial Agricultural Land Commission Portal</span>
       </h5>
       <div *ngIf="isAuthenticated" class="burger-menu">
         <mat-icon (click)="onMenuToggle()">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
       </div>
     </div>
 
-    <div *ngIf="isAuthenticated" class="controls">
+    <div *ngIf="isAuthenticated && !isOnPublicPage" class="controls">
       <button
         mat-button
         color="primary"
@@ -39,7 +39,6 @@
         <div class="item">Business: {{ user?.government || user?.businessName }}</div>
         <div class="item">Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
       </mat-menu>
-      <button class="inbox-btn" routerLink="/home" mat-flat-button color="primary">Portal Inbox</button>
       <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
     </div>
 

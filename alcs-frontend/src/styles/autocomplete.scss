@@ -1,3 +1,3 @@
 .tall-autocomplete {
-  max-height: 600px !important;
+  max-height: min(600px, 40vh) !important;
 }

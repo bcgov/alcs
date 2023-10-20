@@ -47,6 +47,7 @@ import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/in
 import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
 import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
 import { InlineNumberComponent } from './inline-editors/inline-number/inline-number.component';
+import { InlineDecisionOutcomeComponent } from './inline-editors/inline-review-decision-outcome/inline-decision-outcome.component';
 import { InlineReviewOutcomeComponent } from './inline-editors/inline-review-outcome/inline-review-outcome.component';
 import { InlineTextComponent } from './inline-editors/inline-text/inline-text.component';
 import { InlineTextareaEditComponent } from './inline-editors/inline-textarea-edit/inline-textarea-edit.component';
@@ -95,6 +96,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    InlineDecisionOutcomeComponent,
     BooleanToStringPipe,
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,
@@ -188,6 +190,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    InlineDecisionOutcomeComponent,
     BooleanToStringPipe,
     NoDataComponent,
     ApplicationSubmissionStatusTypePillComponent,

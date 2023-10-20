@@ -93,6 +93,10 @@ export class ApplicationReconsiderationUpdateDto {
   @IsOptional()
   reviewOutcomeCode?: string;
 
+  @IsString()
+  @IsOptional()
+  decisionOutcomeCode?: string;
+
   @IsOptional()
   @IsArray()
   @ArrayNotEmpty()
@@ -151,6 +155,7 @@ export class ApplicationReconsiderationDto extends ApplicationReconsiderationWit
   submittedDate: number;
   reviewDate: number;
   reviewOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
-  reconsideredDecisions: ApplicationDecisionDto[];
+  decisionOutcome: ApplicationReconsiderationOutcomeCodeDto | null;
+  reconsidersDecisions: ApplicationDecisionDto[];
   resultingDecision?: ApplicationDecisionDto;
 }
