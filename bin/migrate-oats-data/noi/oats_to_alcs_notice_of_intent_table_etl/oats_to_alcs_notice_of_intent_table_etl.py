@@ -113,6 +113,7 @@ def _get_update_query_from_oats_alr_applications_fields():
                     ag_cap_map = %(agri_cap_map)s,
                     ag_cap_consultant = %(agri_cap_consultant)s,
                     ag_cap = %(agri_capability_code)s,
+                    legacy_id=%(legacy_application_nbr)s,
                     source = 'APPLICANT'
                 WHERE
                     alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;

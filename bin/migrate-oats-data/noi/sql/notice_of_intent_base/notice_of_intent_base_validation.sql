@@ -17,7 +17,8 @@ oats_noi_data AS (
         split_fee_with_local_gov_ind AS fee_lg,
         fee_received_date AS fee_date,
         fee_waived_ind AS fee_waived,
-        applied_fee_amt AS fee_amount
+        applied_fee_amt AS fee_amount,
+        oaa.legacy_application_nbr
     FROM alcs.notice_of_intent noi
         JOIN nois_with_one_or_zero_component_only oats_noi ON oats_noi.alr_application_id::TEXT = noi.file_number
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oats_noi.alr_application_id
@@ -42,7 +43,9 @@ SELECT oats_noi.alr_application_id,
     noi.fee_split_with_lg,
     oats_noi.fee_lg,
     oats_noi.fee_waived,
-    noi.fee_waived
+    noi.fee_waived,
+    noi.legacy_id,
+    oats_noi.legacy_application_nbr
 FROM alcs.notice_of_intent noi
     LEFT JOIN oats_noi_data AS oats_noi ON noi.file_number = oats_noi.alr_application_id::TEXT
 WHERE noi.alr_area != oats_noi.component_area
@@ -52,3 +55,4 @@ WHERE noi.alr_area != oats_noi.component_area
     OR noi.fee_amount != oats_noi.fee_amount
     OR noi.fee_split_with_lg::bool != oats_noi.fee_lg::bool
     OR noi.fee_waived::bool != oats_noi.fee_waived::bool
+    OR noi.legacy_id != oats_noi.legacy_application_nbr::text
