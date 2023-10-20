@@ -88,7 +88,7 @@ export class PublicApplicationService {
       );
     }
 
-    const decisions = await this.applicationDecisionService.getByAppFileNumber(
+    const decisions = await this.applicationDecisionService.getForPortal(
       fileNumber,
     );
     const mappedDecisions = this.mapper.mapArray(
