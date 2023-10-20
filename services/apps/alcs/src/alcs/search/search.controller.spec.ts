@@ -321,7 +321,7 @@ describe('SearchController', () => {
     expect(result.totalNonApplications).toBe(0);
   });
 
-  it('should NOT call NOI and Non-applications advanced search to retrieve NOIs and Non-applications if no NOI or non-application search fields specified', async () => {
+  it('should NOT call Non-applications advanced search to retrieve Non-applications if no non-application search fields specified', async () => {
     const baseMockSearchRequestDto: SearchRequestDto = {
       pageSize: 1,
       page: 1,
@@ -343,12 +343,6 @@ describe('SearchController', () => {
     ).toBeCalledWith({ ...baseMockSearchRequestDto, legacyId: 'test' });
     expect(result.applications).toBeDefined();
     expect(result.totalApplications).toBe(0);
-
-    expect(
-      mockNoticeOfIntentAdvancedSearchService.searchNoticeOfIntents,
-    ).toBeCalledTimes(0);
-    expect(result.noticeOfIntents).toBeDefined();
-    expect(result.totalNoticeOfIntents).toBe(0);
 
     expect(
       mockNonApplicationsAdvancedSearchService.searchNonApplications,
