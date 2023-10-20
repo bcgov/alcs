@@ -95,11 +95,8 @@ export class AuthorizationService {
     const token = res.data;
 
     //Make sure token is legit, the Authguard will only do this on the next request
-    const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
-    if (payload) {
-      const decodedToken = JSON.parse(
-        Buffer.from(payload.payload).toString(),
-      ) as BaseToken;
+    const decodedToken = await this.decodeToken(token.id_token);
+    if (decodedToken) {
       this.logger.debug(decodedToken);
       await this.registerOrUpdateUser(decodedToken);
 
@@ -107,6 +104,18 @@ export class AuthorizationService {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  private async decodeToken(token: string) {
+    const payload = await JWS.createVerify(this.jwks).verify(token);
+    if (payload && payload.payload) {
+      return JSON.parse(Buffer.from(payload.payload).toString()) as BaseToken;
+    }
+  }
+
+  async decodeHeaderToken(authorization: string) {
+    const token = authorization.replace('Bearer ', '');
+    return this.decodeToken(token);
   }
 
   async refreshToken(refreshToken: string): Promise<TokenResponse | undefined> {
