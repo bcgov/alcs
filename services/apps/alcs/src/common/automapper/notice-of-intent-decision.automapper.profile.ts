@@ -247,14 +247,6 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((rd) => rd.submittedDate.getTime()),
         ),
         forMember(
-          (a) => a.reviewDate,
-          mapFrom((rd) => rd.reviewDate?.getTime()),
-        ),
-        forMember(
-          (a) => a.outcomeNotificationDate,
-          mapFrom((rd) => rd.outcomeNotificationDate?.getTime()),
-        ),
-        forMember(
           (a) => a.modifiesDecisions,
           mapFrom((rd) =>
             rd.modifiesDecisions

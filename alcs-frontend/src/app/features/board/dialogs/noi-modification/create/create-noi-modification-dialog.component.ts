@@ -33,6 +33,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
+  descriptionControl = new FormControl('', [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
@@ -41,6 +42,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
   createForm = new FormGroup({
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
+    description: this.descriptionControl,
     region: this.regionControl,
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
@@ -126,6 +128,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
         submittedDate: formValues.submittedDate!.valueOf(),
         boardCode: this.currentBoardCode,
         modifiesDecisionUuids: formValues.modifiesDecisions!,
+        description: formValues.description!,
       };
 
       if (!modificationCreateDto.boardCode) {
@@ -147,6 +150,7 @@ export class CreateNoiModificationDialogComponent implements OnInit, OnDestroy {
     this.regionControl.reset();
     this.submittedDateControl.reset();
     this.modifiesDecisions.reset();
+    this.descriptionControl.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();

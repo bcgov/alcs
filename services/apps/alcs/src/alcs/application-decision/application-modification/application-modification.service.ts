@@ -10,6 +10,7 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { filterUndefined } from '../../../utils/undefined';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
@@ -120,6 +121,7 @@ export class ApplicationModificationService {
     const modification = new ApplicationModification({
       submittedDate: new Date(createDto.submittedDate),
       isTimeExtension: createDto.isTimeExtension,
+      description: createDto.description,
     });
 
     modification.card = await this.cardService.create(
@@ -168,11 +170,6 @@ export class ApplicationModificationService {
     if (updateDto.submittedDate) {
       modification.submittedDate = new Date(updateDto.submittedDate);
     }
-    if (updateDto.reviewDate !== undefined) {
-      modification.reviewDate = updateDto.reviewDate
-        ? new Date(updateDto.reviewDate)
-        : null;
-    }
 
     if (updateDto.reviewOutcomeCode) {
       modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
@@ -181,6 +178,11 @@ export class ApplicationModificationService {
     if (updateDto.isTimeExtension !== undefined) {
       modification.isTimeExtension = updateDto.isTimeExtension;
     }
+
+    modification.description = filterUndefined(
+      updateDto.description,
+      modification.description,
+    );
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =

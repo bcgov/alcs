@@ -32,6 +32,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
 
   fileNumberControl = new FormControl<string | any>('', [Validators.required]);
   applicantControl = new FormControl('', [Validators.required]);
+  descriptionControl = new FormControl<string | null>(null, [Validators.required]);
   applicationTypeControl = new FormControl<string | null>(null, [Validators.required]);
   regionControl = new FormControl<string | null>(null, [Validators.required]);
   submittedDateControl = new FormControl<Date | undefined>(undefined, [Validators.required]);
@@ -44,6 +45,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
     region: this.regionControl,
+    description: this.descriptionControl,
     localGovernment: this.localGovernmentControl,
     submittedDate: this.submittedDateControl,
     isTimeExtension: this.isTimeExtensionControl,
@@ -138,6 +140,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
         boardCode: this.currentBoardCode,
         isTimeExtension: formValues.isTimeExtension === 'true',
         modifiesDecisionUuids: formValues.modifiesDecisions!,
+        description: formValues.description!,
       };
 
       if (!modificationCreateDto.boardCode) {
@@ -160,6 +163,7 @@ export class CreateAppModificationDialogComponent implements OnInit, OnDestroy {
     this.applicationTypeControl.reset();
     this.submittedDateControl.reset();
     this.modifiesDecisions.reset();
+    this.descriptionControl.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();

@@ -33,8 +33,8 @@ describe('ModificationDialogComponent', () => {
     uuid: '',
     modifiesDecisions: [],
     reviewOutcome: { label: 'mock', code: 'MOCK', description: 'mock' },
+    description: '',
     isTimeExtension: true,
-    reviewDate: 111111,
     submittedDate: 111111,
     application: {
       statusCode: '',

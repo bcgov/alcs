@@ -25,9 +25,8 @@ export class EditModificationDialogComponent implements OnInit {
   form = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
     reviewOutcomeCode: this.reviewOutcomeCodeControl,
-    outcomeNotificationDate: new FormControl<Date | null>(null),
-    reviewDate: new FormControl<Date | null | undefined>(null),
     modifiesDecisions: new FormControl<string[]>([], [Validators.required]),
+    description: new FormControl<string>('', [Validators.required]),
   });
 
   constructor(
@@ -44,11 +43,8 @@ export class EditModificationDialogComponent implements OnInit {
     this.form.patchValue({
       submittedDate: new Date(data.existingModification.submittedDate),
       reviewOutcomeCode: data.existingModification.reviewOutcome.code,
-      reviewDate: data.existingModification.reviewDate ? new Date(data.existingModification.reviewDate) : null,
       modifiesDecisions: data.existingModification.modifiesDecisions.map((dec) => dec.uuid),
-      outcomeNotificationDate: data.existingModification.outcomeNotificationDate
-        ? new Date(data.existingModification.outcomeNotificationDate)
-        : null,
+      description: data.existingModification.description,
     });
   }
 
@@ -59,16 +55,12 @@ export class EditModificationDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, reviewOutcomeCode, reviewDate, modifiesDecisions, outcomeNotificationDate } =
-      this.form.getRawValue();
+    const { submittedDate, reviewOutcomeCode, modifiesDecisions, description } = this.form.getRawValue();
     const updateDto: NoticeOfIntentModificationUpdateDto = {
       submittedDate: formatDateForApi(submittedDate!),
       reviewOutcomeCode: reviewOutcomeCode || undefined,
-      reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
-      outcomeNotificationDate: outcomeNotificationDate
-        ? formatDateForApi(outcomeNotificationDate)
-        : outcomeNotificationDate,
       modifiesDecisionUuids: modifiesDecisions!,
+      description: description!,
     };
 
     try {

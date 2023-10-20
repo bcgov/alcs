@@ -25,11 +25,10 @@ export class EditModificationDialogComponent implements OnInit {
 
   form = new FormGroup({
     submittedDate: new FormControl<Date | undefined>(undefined, [Validators.required]),
-    reviewOutcomeCode: this.reviewOutcomeCodeControl,
     isTimeExtension: this.isTimeExtensionControl,
-    reviewDate: new FormControl<Date | null | undefined>(null),
-    outcomeNotificationDate: new FormControl<Date | null | undefined>(null),
     modifiesDecisions: new FormControl<string[]>([], [Validators.required]),
+    description: new FormControl<string | undefined>(undefined),
+    reviewOutcomeCode: this.reviewOutcomeCodeControl,
   });
 
   constructor(
@@ -47,8 +46,8 @@ export class EditModificationDialogComponent implements OnInit {
       submittedDate: new Date(data.existingModification.submittedDate),
       reviewOutcomeCode: data.existingModification.reviewOutcome.code,
       isTimeExtension: data.existingModification.isTimeExtension ? 'true' : 'false',
-      reviewDate: data.existingModification.reviewDate ? new Date(data.existingModification.reviewDate) : null,
       modifiesDecisions: data.existingModification.modifiesDecisions.map((dec) => dec.uuid),
+      description: data.existingModification.description,
     });
   }
 
@@ -59,14 +58,14 @@ export class EditModificationDialogComponent implements OnInit {
   async onSubmit() {
     this.isLoading = true;
 
-    const { submittedDate, isTimeExtension, reviewOutcomeCode, reviewDate, modifiesDecisions } =
+    const { submittedDate, isTimeExtension, reviewOutcomeCode, modifiesDecisions, description } =
       this.form.getRawValue();
     const updateDto: ApplicationModificationUpdateDto = {
       submittedDate: formatDateForApi(submittedDate!),
       reviewOutcomeCode: reviewOutcomeCode || undefined,
       isTimeExtension: isTimeExtension === 'true',
-      reviewDate: reviewDate ? formatDateForApi(reviewDate) : reviewDate,
       modifiesDecisionUuids: modifiesDecisions!,
+      description: description!,
     };
 
     try {

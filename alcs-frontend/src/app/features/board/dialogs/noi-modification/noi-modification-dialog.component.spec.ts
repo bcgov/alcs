@@ -33,7 +33,7 @@ describe('NoiModificationDialogComponent', () => {
     uuid: '',
     modifiesDecisions: [],
     reviewOutcome: { label: 'mock', code: 'MOCK', description: 'mock' },
-    reviewDate: 111111,
+    description: '',
     submittedDate: 111111,
     noticeOfIntent: {
       statusCode: '',
@@ -45,7 +45,6 @@ describe('NoiModificationDialogComponent', () => {
       localGovernment: {} as ApplicationLocalGovernmentDto,
       retroactive: false,
     },
-    outcomeNotificationDate: null,
     card: {
       status: {
         code: 'FAKE_STATUS',

@@ -208,19 +208,6 @@ export class NoticeOfIntentTimelineService {
           events.push(mappedEvent);
         }
       }
-
-      if (modification.outcomeNotificationDate) {
-        events.push({
-          htmlText: `Modification Request Reviewed #${
-            modifications.length - index
-          } - ${modification.reviewOutcome.label}`,
-          startDate:
-            modification.outcomeNotificationDate.getTime() +
-            SORTING_ORDER.MODIFICATION_REVIEW,
-          fulfilledDate: null,
-          isFulfilled: true,
-        });
-      }
     }
   }
 

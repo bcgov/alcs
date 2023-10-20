@@ -123,7 +123,6 @@ const initApplicationReconsiderationMockEntity = (
   reconsideration.applicationUuid = app.uuid;
   reconsideration.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  reconsideration.reviewDate = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.submittedDate = new Date(1, 1, 1, 1, 1, 1, 1);
   const cardEntity = card ?? initCardMockEntity('222');
   reconsideration.card = cardEntity;
@@ -153,7 +152,6 @@ const initApplicationModificationMockEntity = (
     applicationUuid: app.uuid,
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
-    reviewDate: new Date(1, 1, 1, 1, 1, 1, 1),
     submittedDate: new Date(1, 1, 1, 1, 1, 1, 1),
     reviewOutcome: {
       label: 'mock',

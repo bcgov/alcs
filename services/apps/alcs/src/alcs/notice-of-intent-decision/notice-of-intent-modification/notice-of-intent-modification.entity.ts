@@ -27,9 +27,6 @@ export class NoticeOfIntentModification extends Base {
   @Column({ type: 'timestamptz' })
   submittedDate: Date;
 
-  @Column({ type: 'timestamptz', nullable: true })
-  outcomeNotificationDate: Date | null;
-
   @AutoMap()
   @Column({ type: 'text', default: 'PEN' })
   reviewOutcomeCode: string;
@@ -40,8 +37,13 @@ export class NoticeOfIntentModification extends Base {
   })
   reviewOutcome: NoticeOfIntentModificationOutcomeType;
 
-  @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date | null;
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Modification description provided by ALCS staff',
+  })
+  description?: string;
 
   @AutoMap()
   @ManyToOne(() => NoticeOfIntent, { cascade: ['insert'] })

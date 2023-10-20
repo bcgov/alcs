@@ -34,6 +34,10 @@ export class ApplicationModificationCreateDto {
 
   @IsNotEmpty()
   @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
   regionCode: string;
 
   @IsString()
@@ -56,22 +60,18 @@ export class ApplicationModificationCreateDto {
 }
 
 export class ApplicationModificationUpdateDto {
-  @AutoMap()
   @IsNumber()
   @IsOptional()
   submittedDate?: number;
 
-  @AutoMap()
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  reviewDate?: number;
+  description?: string;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
   reviewOutcomeCode?: string;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   isTimeExtension?: boolean;
@@ -97,7 +97,7 @@ export class ApplicationModificationDto {
   application: ApplicationForModificationDto;
   card: CardDto;
   submittedDate: number;
-  reviewDate: number;
+  description: string;
   reviewOutcome: ApplicationModificationOutcomeCodeDto | null;
   isTimeExtension: boolean | null;
   modifiesDecisions: ApplicationDecisionDto[];
