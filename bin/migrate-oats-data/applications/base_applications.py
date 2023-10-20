@@ -114,7 +114,7 @@ def _compile_application_insert_query(number_of_rows_to_insert):
             applicant = EXCLUDED.applicant,
             region_code = EXCLUDED.region_code,
             local_government_uuid = EXCLUDED.local_government_uuid,
-            audit_created_by = EXCLUDED.audit_created_by,
+            audit_created_by = EXCLUDED.audit_created_by
     """
 
 
