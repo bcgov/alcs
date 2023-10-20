@@ -17,7 +17,8 @@ SELECT oaa.fee_waived_ind,
     oaac.capability_source_code,
     oaac.agri_cap_map,
     oaac.agri_cap_consultant,
-    oaac.agri_capability_code
+    oaac.agri_capability_code,
+    oaa.legacy_application_nbr
 FROM alcs.notice_of_intent noi
     JOIN nois_with_one_or_zero_component_only oats_noi ON oats_noi.alr_application_id::TEXT = noi.file_number
     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oats_noi.alr_application_id
