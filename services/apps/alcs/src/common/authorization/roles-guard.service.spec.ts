@@ -16,7 +16,7 @@ import { mockAppLoggerService } from '../../../test/mocks/mockLogger';
 import { RolesGuard } from './roles-guard.service';
 import { AUTH_ROLE } from './roles';
 
-describe('RoleGuard', () => {
+describe('RolesGuard', () => {
   let guard: RolesGuard;
   let reflector: DeepMocked<Reflector>;
   let mockContext;
