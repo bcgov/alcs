@@ -267,8 +267,7 @@ export class SearchController {
 
     const searchNoi =
       (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true) &&
-      !searchDto.isIncludeOtherParcels &&
-      !isStringSetAndNotEmpty(searchDto.legacyId);
+      !searchDto.isIncludeOtherParcels;
 
     const searchNonApplications =
       (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&
