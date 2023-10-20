@@ -100,7 +100,7 @@ describe('PublicApplicationService', () => {
     mockAppReviewService.getForPublicReview.mockResolvedValue(
       new ApplicationSubmissionReview(),
     );
-    mockAppDecService.getByAppFileNumber.mockResolvedValue([]);
+    mockAppDecService.getForPortal.mockResolvedValue([]);
 
     const fileId = 'file-id';
     await service.getPublicData(fileId);
@@ -115,7 +115,7 @@ describe('PublicApplicationService', () => {
       VISIBILITY_FLAG.PUBLIC,
     ]);
     expect(mockAppReviewService.getForPublicReview).toHaveBeenCalledTimes(1);
-    expect(mockAppDecService.getByAppFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockAppDecService.getForPortal).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to document service for getting files', async () => {
