@@ -177,7 +177,7 @@ export class InboxApplicationService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('parcel.civic_address like :civic_address', {
+      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
         civic_address: `%${searchDto.civicAddress}%`,
       });
     }
