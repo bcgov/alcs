@@ -293,6 +293,7 @@ const initApplicationDecisionMock = (application?: Application) => {
     application,
     documents: [],
     conditions: [],
+    components: [],
   });
 };
 

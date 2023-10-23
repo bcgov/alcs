@@ -44,7 +44,6 @@ describe('DecisionConditionComponent', () => {
       ceoCriterion: [],
       decisionComponentTypes: [],
       decisionMakers: [],
-      linkedResolutionOutcomeTypes: [],
       naruSubtypes: [],
       outcomes: [],
       decisionConditionTypes: [],

@@ -19,7 +19,6 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
-import { decisionChildRoutes } from '../decision.module';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
 type LoadingDecision = NoticeOfIntentDecisionDto & {
@@ -35,7 +34,6 @@ export const OUTCOMES_WITH_COMPONENTS = ['APPR', 'APPA', 'RESC'];
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
   isDraftExists = true;
   disabledCreateBtnTooltip = '';
 
@@ -107,12 +105,13 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     });
   }
 
-  async onCreate() {
+  async onCreate(existingUuid?: string) {
     const newDecision = await this.decisionService.create({
       resolutionYear: new Date().getFullYear(),
       isDraft: true,
       date: Date.now(),
       fileNumber: this.fileNumber,
+      decisionToCopy: existingUuid,
     });
 
     const index = this.decisions.length;

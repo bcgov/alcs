@@ -106,7 +106,6 @@ describe('ApplicationDecisionV2Controller', () => {
       decisionMakers: [],
       decisionComponentTypes: [],
       decisionConditionTypes: [],
-      linkedResolutionOutcomeType: [],
       naruSubtypes: [],
     });
   });
@@ -163,6 +162,7 @@ describe('ApplicationDecisionV2Controller', () => {
         isDraft: true,
       },
       mockApplication,
+      undefined,
       undefined,
       undefined,
     );

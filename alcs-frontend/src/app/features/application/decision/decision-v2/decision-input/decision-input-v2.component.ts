@@ -14,17 +14,16 @@ import {
 } from '../../../../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../../../../services/application/application-reconsideration/application-reconsideration.service';
 import {
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
   CeoCriterion,
   CeoCriterionDto,
   CreateApplicationDecisionDto,
-  ApplicationDecisionCodesDto,
-  ApplicationDecisionComponentDto,
   DecisionMaker,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
-  LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
@@ -68,7 +67,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   outcomes: DecisionOutcomeCodeDto[] = [];
   decisionMakers: DecisionMakerDto[] = [];
   ceoCriterionItems: CeoCriterionDto[] = [];
-  linkedResolutionOutcomes: LinkedResolutionOutcomeTypeDto[] = [];
 
   resolutionYears: number[] = [];
   postDecisions: MappedPostDecision[] = [];
@@ -95,7 +93,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     chairReviewRequired: new FormControl<string>('true', [Validators.required]),
     chairReviewDate: new FormControl<Date | null>(null),
     chairReviewOutcome: new FormControl<string | null>(null),
-    linkedResolutionOutcome: new FormControl<string | null>(null),
     auditDate: new FormControl<Date | null>(null),
     criterionModification: new FormControl<string[]>([]),
     ceoCriterion: new FormControl<string | null>(null),
@@ -171,7 +168,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     this.outcomes = this.codes.outcomes;
     this.decisionMakers = this.codes.decisionMakers;
     this.ceoCriterionItems = this.codes.ceoCriterion;
-    this.linkedResolutionOutcomes = this.codes.linkedResolutionOutcomeTypes;
   }
 
   private setupSubscribers() {
@@ -291,7 +287,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       decisionDescription: existingDecision.decisionDescription,
       rescindedDate: existingDecision.rescindedDate ? new Date(existingDecision.rescindedDate) : undefined,
       rescindedComment: existingDecision.rescindedComment,
-      linkedResolutionOutcome: existingDecision.linkedResolutionOutcome?.code,
     });
 
     this.conditions = existingDecision.conditions;
@@ -335,9 +330,9 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.components = existingDecision.components;
     }
 
-    this.requireComponents = ['APPR', 'APPA'].includes(existingDecision.outcome.code);
+    this.requireComponents = existingDecision.outcome.code === 'APPR';
 
-    if (['APPR', 'APPA', 'RESC'].includes(existingDecision.outcome.code)) {
+    if (['APPR', 'RESC'].includes(existingDecision.outcome.code)) {
       this.showComponents = true;
     } else {
       this.showComponents = false;
@@ -423,7 +418,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       decisionDescription,
       rescindedDate,
       rescindedComment,
-      linkedResolutionOutcome,
     } = this.form.getRawValue();
 
     const selectedDecision = this.postDecisions.find((postDec) => postDec.uuid === postDecision);
@@ -451,7 +445,6 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       rescindedComment: rescindedComment,
       decisionComponents: this.components,
       conditions: this.conditionUpdates,
-      linkedResolutionOutcomeCode: linkedResolutionOutcome,
     };
     if (ceoCriterion && ceoCriterion === CeoCriterion.MODIFICATION) {
       data.isTimeExtension = criterionModification?.includes('isTimeExtension');
@@ -469,17 +462,14 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
       this.ceoCriterionItems =
         this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code === CeoCriterion.MODIFICATION) ?? [];
       this.form.controls.ceoCriterion.disable();
-      this.form.controls.linkedResolutionOutcome.disable();
       this.form.controls.decisionMaker.disable();
 
       this.form.patchValue({
         decisionMaker: DecisionMaker.CEO,
         ceoCriterion: CeoCriterion.MODIFICATION,
-        linkedResolutionOutcome: 'VARY',
       });
     } else {
       this.form.controls.decisionMaker.enable();
-      this.form.controls.linkedResolutionOutcome.enable();
       this.form.controls.ceoCriterion.enable();
       this.ceoCriterionItems =
         this.codes?.ceoCriterion.filter((ceoCriterion) => ceoCriterion.code !== CeoCriterion.MODIFICATION) ?? [];
@@ -604,7 +594,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
-    if (['APPR', 'APPA', 'RESC'].includes(selectedOutcome.code)) {
+    if (['APPR', 'RESC'].includes(selectedOutcome.code)) {
       if (this.form.controls.isSubjectToConditions.disabled) {
         this.showComponents = true;
         this.form.controls.isSubjectToConditions.enable();
