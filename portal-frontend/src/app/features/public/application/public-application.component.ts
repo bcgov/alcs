@@ -25,6 +25,7 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   documents: PublicDocumentDto[] = [];
   parcels: PublicParcelDto[] = [];
   decisions: ApplicationPortalDecisionDto[] = [];
+  selectedIndex = 0;
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}
 
@@ -42,6 +43,9 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
     if (res) {
       const { submission, documents, parcels, review, decisions } = res;
 
+      if (submission.status.code === SUBMISSION_STATUS.ALC_DECISION) {
+        this.selectedIndex = 2;
+      }
       this.submission = submission;
       this.documents = documents;
       this.parcels = parcels;

@@ -15,6 +15,35 @@
   @media screen and (min-width: $tabletBreakpoint) {
     padding: rem(16);
     margin: rem(24) 0 rem(40) 0;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 49% 49%;
+
+    .full-width {
+      grid-column: 1/3;
+    }
   }
+}
+
+.document {
+  display: none;
+  padding: rem(9) rem(16);
+  border-radius: rem(4);
+  border: rem(1) solid colors.$grey;
+  background: colors.$white;
+  margin: rem(8) 0;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: flex;
+  }
+}
+
+.responsive {
+  display: block;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: none;
+  }
+}
+
+.document-name {
+  padding: rem(6) 0;
 }

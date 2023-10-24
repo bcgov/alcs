@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
-import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
+import {
+  NOI_SUBMISSION_STATUS,
+  NoticeOfIntentSubmissionDetailedDto,
+} from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 
 @Component({
@@ -16,6 +19,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   $noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
   $noiDocuments = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
   submission: NoticeOfIntentSubmissionDetailedDto | undefined;
+  selectedIndex = 0;
 
   constructor(
     private noiSubmissionService: NoticeOfIntentSubmissionService,
@@ -37,6 +41,9 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   async loadSubmission(fileId: string) {
     const noiSubmission = await this.noiSubmissionService.getByFileId(fileId);
     this.submission = noiSubmission;
+    if (this.submission?.status.code === NOI_SUBMISSION_STATUS.ALC_DECISION) {
+      this.selectedIndex = 1;
+    }
     this.$noiSubmission.next(noiSubmission);
   }
 

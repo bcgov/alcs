@@ -21,6 +21,7 @@ export class PublicNoticeOfIntentComponent implements OnInit, OnDestroy {
   documents: PublicDocumentDto[] = [];
   parcels: PublicParcelDto[] = [];
   decisions: ApplicationPortalDecisionDto[] = [];
+  selectedIndex = 0;
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}
 
@@ -39,6 +40,9 @@ export class PublicNoticeOfIntentComponent implements OnInit, OnDestroy {
       const { submission, documents, parcels, decisions } = res;
 
       this.submission = submission;
+      if (submission.status.code === SUBMISSION_STATUS.ALC_DECISION) {
+        this.selectedIndex = 2;
+      }
       this.documents = documents;
       this.parcels = parcels;
       this.decisions = decisions;
