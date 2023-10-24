@@ -67,6 +67,7 @@
 
     @media screen and (min-width: $tabletBreakpoint) {
       grid-template-columns: 1fr 1fr 1fr;
+      grid-column-gap: rem(16);
     }
 
     .full-width {
