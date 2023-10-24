@@ -23,3 +23,11 @@ To report bugs/issues/features requests, please file an [issue](https://github.c
 - [SchemaSpy - ALCS](https://bcgov.github.io/alcs/schemaspy/alcs/index.html)
 - [SchemaSpy - OATS](https://bcgov.github.io/alcs/schemaspy/oats/index.html)
 - [One time Jobs](./docs/jobs.md)
+
+## Run dev setup
+- [Run ALCS Frontend](./alcs-frontend/README.md)
+- [Run Portal Frontend Readme](./portal-frontend/README.md)
+- [Run Services](./services/README.md)
+- [Setup database](./services/README.md)
+- Acquire latest development.json from some developer on the team
+- Run docker - `docker compose up`
