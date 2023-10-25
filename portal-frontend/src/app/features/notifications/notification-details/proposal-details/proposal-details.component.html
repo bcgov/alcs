@@ -1,5 +1,5 @@
 <div *ngIf="_notificationSubmission" class="review-table">
-  <div class="subheading2 grid-1">Submitter’s File Number</div>
+  <div class="subheading2 grid-1">Submitter's File Number</div>
   <div class="grid-double">
     {{ _notificationSubmission.submittersFileNumber }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_notificationSubmission.submittersFileNumber"></app-no-data>
