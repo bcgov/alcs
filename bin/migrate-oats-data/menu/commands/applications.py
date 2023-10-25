@@ -2,6 +2,12 @@ from applications import (
     process_applications,
     process_alcs_application_prep_fields,
     process_alcs_app_submissions,
+    init_application_statuses,
+    process_alcs_application_in_progress_status,
+    process_alcs_application_received_by_alc_status,
+    process_alcs_application_submitted_to_alc_status,
+    batch_application_statuses,
+    process_alcs_application_submitted_to_alc_incomplete_status,
 )
 
 
@@ -44,3 +50,25 @@ def application_submission_import(console, args):
         console.log(f"Processing app-sub import in batch size = {import_batch_size}")
 
         process_alcs_app_submissions(batch_size=import_batch_size)
+
+
+def application_status_import(console, args):
+    console.log("Beginning OATS -> ALCS app-status import process")
+    with console.status(
+        "[bold green]App submission status import (application_submission_to_submission_status table update in ALCS)...\n"
+    ) as status:
+        if args.batch_size:
+            import_batch_size = args.batch_size
+
+        console.log(
+            f"Processing application statuses import in batch size = {import_batch_size}"
+        )
+
+        init_application_statuses()
+        # batch_application_statuses(batch_size=import_batch_size)
+        process_alcs_application_in_progress_status(batch_size=import_batch_size)
+        process_alcs_application_received_by_alc_status()
+        process_alcs_application_submitted_to_alc_status(batch_size=import_batch_size)
+        process_alcs_application_submitted_to_alc_incomplete_status(
+            batch_size=import_batch_size
+        )
