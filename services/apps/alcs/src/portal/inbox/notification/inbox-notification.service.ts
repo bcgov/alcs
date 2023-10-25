@@ -150,7 +150,6 @@ export class InboxNotificationService {
         civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
       });
     }
-    console.log(query)
     return query;
   }
 
