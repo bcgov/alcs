@@ -311,19 +311,6 @@ export class ApplicationTimelineService {
           events.push(mappedEvent);
         }
       }
-
-      if (modification.reviewDate) {
-        events.push({
-          htmlText: `Modification Request Reviewed #${
-            modifications.length - index
-          } - ${modification.reviewOutcome.label}`,
-          startDate:
-            modification.reviewDate.getTime() +
-            SORTING_ORDER.MODIFICATION_REVIEW,
-          fulfilledDate: null,
-          isFulfilled: true,
-        });
-      }
     }
   }
 

@@ -110,6 +110,7 @@ describe('NoticeOfIntentModificationService', () => {
     mockModificationCreateDto = {
       fileNumber: 'fake-app-number',
       regionCode: 'fake-region',
+      description: 'description',
       localGovernmentUuid: 'fake-local-government-uuid',
       applicant: 'fake-applicant',
       submittedDate: 11111111111,
@@ -186,8 +187,8 @@ describe('NoticeOfIntentModificationService', () => {
     const uuid = 'fake';
 
     await service.update(uuid, {
-      isReviewApproved: true,
-    } as NoticeOfIntentModificationUpdateDto);
+      description: '',
+    });
 
     expect(modificationRepoMock.findOneBy).toBeCalledWith({
       uuid,

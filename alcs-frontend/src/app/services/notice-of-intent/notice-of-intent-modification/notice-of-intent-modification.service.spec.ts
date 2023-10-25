@@ -146,6 +146,7 @@ describe('NoticeOfIntentModificationService', () => {
     const res = await service.create({
       fileNumber: '',
       boardCode: '',
+      description: '',
       localGovernmentUuid: '',
       modifiesDecisionUuids: [],
       regionCode: '',
@@ -168,6 +169,7 @@ describe('NoticeOfIntentModificationService', () => {
     const res = await service.create({
       fileNumber: '',
       boardCode: '',
+      description: '',
       localGovernmentUuid: '',
       modifiesDecisionUuids: [],
       regionCode: '',

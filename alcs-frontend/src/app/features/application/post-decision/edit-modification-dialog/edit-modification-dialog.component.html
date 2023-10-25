@@ -18,26 +18,6 @@
         <mat-datepicker #datePicker type="date"></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Decisions to be Modified</mat-label>
-        <mat-select formControlName="modifiesDecisions" multiple>
-          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="date-picker">
-        <mat-label>Outcome Notification Date</mat-label>
-        <input
-          matInput
-          (click)="reviewDatePicker.open()"
-          [matDatepicker]="reviewDatePicker"
-          formControlName="reviewDate"
-          name="reviewDate"
-        />
-        <mat-datepicker-toggle matSuffix [for]="reviewDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #reviewDatePicker type="date"></mat-datepicker>
-      </mat-form-field>
-
       <div>
         <mat-label class="toggle-label">Condition to be Modified</mat-label>
         <mat-button-toggle-group id="isTimeExtension" formControlName="isTimeExtension" name="isTimeExtension">
@@ -45,6 +25,18 @@
           <mat-button-toggle value="false">Other</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
+
+      <mat-form-field class="full-grid-line" appearance="outline">
+        <mat-label>Resolutions to be Modified</mat-label>
+        <mat-select formControlName="modifiesDecisions" multiple>
+          <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-grid-line">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" name="description" required />
+      </mat-form-field>
 
       <div class="full-grid-line toggle-group">
         <mat-label class="toggle-label">Review Outcome <span>*</span></mat-label>

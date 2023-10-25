@@ -27,6 +27,10 @@ export class NoticeOfIntentModificationCreateDto {
 
   @IsNotEmpty()
   @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
   regionCode: string;
 
   @IsString()
@@ -50,13 +54,9 @@ export class NoticeOfIntentModificationUpdateDto {
   @IsOptional()
   submittedDate?: number;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  reviewDate?: number;
-
-  @IsNumber()
-  @IsOptional()
-  outcomeNotificationDate?: number | null;
+  description: string;
 
   @IsString()
   @IsOptional()
@@ -82,10 +82,9 @@ export class NoticeOfIntentModificationDto {
   uuid: string;
   noticeOfIntent: NoticeOfIntentForModificationDto;
   card: CardDto;
+  description: string;
   submittedDate: number;
-  reviewDate: number;
   reviewOutcome: NoticeOfIntentModificationOutcomeCodeDto | null;
-  outcomeNotificationDate: number | null;
   modifiesDecisions: NoticeOfIntentDecisionDto[];
   resultingDecision: NoticeOfIntentDecisionDto | null;
 }

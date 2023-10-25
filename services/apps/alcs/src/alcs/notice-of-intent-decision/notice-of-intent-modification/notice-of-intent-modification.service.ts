@@ -10,6 +10,7 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { filterUndefined } from '../../../utils/undefined';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
@@ -110,6 +111,7 @@ export class NoticeOfIntentModificationService {
   async create(createDto: NoticeOfIntentModificationCreateDto, board: Board) {
     const modification = new NoticeOfIntentModification({
       submittedDate: new Date(createDto.submittedDate),
+      description: createDto.description,
     });
 
     modification.card = await this.cardService.create(
@@ -136,21 +138,15 @@ export class NoticeOfIntentModificationService {
     if (updateDto.submittedDate) {
       modification.submittedDate = new Date(updateDto.submittedDate);
     }
-    if (updateDto.reviewDate !== undefined) {
-      modification.reviewDate = updateDto.reviewDate
-        ? new Date(updateDto.reviewDate)
-        : null;
-    }
-
-    if (updateDto.outcomeNotificationDate !== undefined) {
-      modification.outcomeNotificationDate = updateDto.outcomeNotificationDate
-        ? new Date(updateDto.outcomeNotificationDate)
-        : null;
-    }
 
     if (updateDto.reviewOutcomeCode) {
       modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
     }
+
+    modification.description = filterUndefined(
+      updateDto.description,
+      modification.description,
+    );
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =

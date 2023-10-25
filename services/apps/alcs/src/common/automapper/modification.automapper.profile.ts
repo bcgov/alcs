@@ -77,10 +77,6 @@ export class ModificationProfile extends AutomapperProfile {
           mapFrom((rd) => rd.submittedDate.getTime()),
         ),
         forMember(
-          (a) => a.reviewDate,
-          mapFrom((rd) => rd.reviewDate?.getTime()),
-        ),
-        forMember(
           (a) => a.reviewOutcome,
           mapFrom((rd) =>
             rd.reviewOutcome

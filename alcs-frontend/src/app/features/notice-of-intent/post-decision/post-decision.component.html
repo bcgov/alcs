@@ -33,19 +33,9 @@
         <div class="subheading2">Resolutions to be Modified</div>
         <ng-container> {{ modification.modifiesDecisionsNumbers.join(', ') }} </ng-container>
       </div>
-      <div>
-        <div class="subheading2 left">
-          Outcome Notification Date
-          <mat-icon matTooltip="The date that the proponent is notified of the review outcome"> info </mat-icon>
-        </div>
-        <span *ngIf="modification.outcomeNotificationDate">{{
-          modification.outcomeNotificationDate | momentFormat
-        }}</span>
-        <span *ngIf="!modification.outcomeNotificationDate">
-          <app-inline-datepicker
-            (save)="onSaveModificationNotificationDate(modification.uuid, $event)"
-          ></app-inline-datepicker>
-        </span>
+      <div class="full-grid">
+        <div class="subheading2">Request Description</div>
+        {{ modification.description }}
       </div>
       <div>
         <div class="subheading2">Review Outcome</div>

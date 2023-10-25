@@ -42,9 +42,13 @@ export class ApplicationModification extends Base {
   @Column()
   isTimeExtension: boolean;
 
-  @AutoMap()
-  @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date | null;
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Modification description provided by ALCS staff',
+  })
+  description?: string;
 
   @AutoMap()
   @ManyToOne(() => Application, { cascade: ['insert'] })
