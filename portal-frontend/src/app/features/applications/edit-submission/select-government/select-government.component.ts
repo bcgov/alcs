@@ -89,7 +89,9 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
       const localGovernmentName = this.localGovernment.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-        if (!localGovernment) {
+        if (localGovernment) {
+          this.selectedOwnGovernment = localGovernment.matchesUserGuid;
+        } else {
           this.localGovernment.setValue(null);
           console.log('Clearing Local Government field');
         }
