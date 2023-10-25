@@ -6,7 +6,10 @@ from noi.notice_of_intent_migration import (
     init_notice_of_intents,
     process_notice_of_intent,
 )
-from applications.submissions import process_alcs_app_submissions
+from applications.submissions import (
+    process_application_statuses,
+    process_alcs_app_submissions,
+)
 from applications.application_submission_status_email import (
     process_application_submission_status_emails,
 )
@@ -57,6 +60,9 @@ def import_all(console, args):
 
         console.log("Processing application submission:")
         process_alcs_app_submissions(batch_size=import_batch_size)
+
+        console.log("Processing application statuses:")
+        process_application_statuses(batch_size=import_batch_size)
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)
