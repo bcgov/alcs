@@ -46,6 +46,7 @@ export interface ApplicationSubmissionDto {
   purpose: string | null;
   type: string;
   typeCode: string;
+  requiresGovernmentReview: boolean;
   localGovernmentUuid: string;
   status: ApplicationStatusDto;
   canEdit: boolean;

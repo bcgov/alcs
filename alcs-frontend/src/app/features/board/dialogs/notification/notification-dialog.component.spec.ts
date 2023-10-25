@@ -8,7 +8,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationRegionDto, ApplicationTypeDto } from '../../../../services/application/application-code.dto';
 import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
-import { NotificationDto } from '../../../../services/notification/notification.dto';
+import { NotificationDto, NotificationTypeDto } from '../../../../services/notification/notification.dto';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { SharedModule } from '../../../../shared/shared.module';
@@ -35,7 +35,7 @@ describe('NotificationDialogComponent', () => {
     description: 'this is a test status',
   };
 
-  const mockApplicationType: ApplicationTypeDto = {
+  const mockNotificationType: NotificationTypeDto = {
     label: 'test_ty',
     code: 'TYPE',
     description: 'this is a test type',
@@ -46,7 +46,7 @@ describe('NotificationDialogComponent', () => {
 
   const mockApplication: NotificationDto = {
     uuid: '',
-    type: mockApplicationType,
+    type: mockNotificationType,
     region: mockApplicationRegion,
     fileNumber: '1111',
     applicant: 'I am an applicant',

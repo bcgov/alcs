@@ -51,6 +51,7 @@ export class ApplicationSubmissionDto {
   lastStatusUpdate: number;
   owners: ApplicationOwnerDto[];
   type: string;
+  requiresGovernmentReview: boolean;
 
   @AutoMap()
   typeCode: string;

@@ -10,7 +10,7 @@ import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
-import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../services/notice-of-intent/notice-of-intent.dto';
 import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
 import { NotificationDto } from '../../services/notification/notification.dto';
 import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
@@ -41,7 +41,7 @@ export class DetailsHeaderComponent {
   legacyId?: string;
 
   _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
-  types: ApplicationTypeDto[] = [];
+  types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
   timeTrackable?: TimeTrackable;
 
   @Input() set application(

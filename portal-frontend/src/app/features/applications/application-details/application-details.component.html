@@ -97,7 +97,10 @@
       </app-warning-banner>
       <app-warning-banner
         *ngIf="
-          showErrors && localGovernment && localGovernment.matchesUserGuid && applicationSubmission.typeCode !== 'TURP'
+          showErrors &&
+          localGovernment &&
+          localGovernment.matchesUserGuid &&
+          applicationSubmission.requiresGovernmentReview
         "
         class="full-row"
       >
