@@ -288,8 +288,7 @@ export class SearchController {
       !searchDto.dateDecidedTo &&
       !searchDto.resolutionNumber &&
       !searchDto.resolutionYear &&
-      !isStringSetAndNotEmpty(searchDto.legacyId) &&
-      !isStringSetAndNotEmpty(searchDto.civicAddress);
+      !isStringSetAndNotEmpty(searchDto.legacyId);
 
     return {
       searchApplications,
