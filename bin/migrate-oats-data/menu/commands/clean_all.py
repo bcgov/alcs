@@ -1,6 +1,9 @@
 from applications import clean_applications
 from noi.notice_of_intent_migration import clean_notice_of_intent
-from applications.submissions import clean_application_submission
+from applications.submissions import (
+    clean_application_submission,
+    clean_application_submission_statuses,
+)
 from applications.application_submission_status_email import (
     clean_application_submission_status_emails,
 )
@@ -22,6 +25,7 @@ def clean_all(console, args):
         clean_application_documents()
         clean_noi_documents()
         clean_documents()
+        clean_application_submission_statuses()
         clean_application_submission()
         clean_applications()
         clean_notice_of_intent()

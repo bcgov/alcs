@@ -7,34 +7,32 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notice_of_intent_statuses(conn=None):
+def init_application_statuses(conn=None):
     """
-    This function is responsible for initializing napplication statuses.
+    This function is responsible for initializing application statuses.
     Initializing means inserting status_to_submission record without the effective_date.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
     batch_size (int): The number of items to process at once. Defaults to BATCH_UPLOAD_SIZE.
     """
-
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_submission/statuses/init_notice_of_intent_submission_statuses_count.sql",
+            "applications/submissions/sql/statuses/init_app_submission_status_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Notice of Intents data to insert: {count_total}")
-
+        logger.info(f"Total Application data to insert: {count_total}")
         failed_inserts = 0
         successful_inserts_count = 0
         last_application_id = 0
 
         with open(
-            "noi/sql/notice_of_intent_submission/statuses/init_notice_of_intent_submission_statuses.sql",
+            "applications/submissions/sql/statuses/init_app_submission_status.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -56,13 +54,13 @@ def init_notice_of_intent_statuses(conn=None):
 
 
 @inject_conn_pool
-def clean_notice_of_intent_submission_statuses(conn=None):
-    logger.info("Start init_notice_of_intent_statuses cleaning")
+def clean_application_submission_statuses(conn=None):
+    logger.debug("Start application_statuses cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"""DELETE FROM alcs.notice_of_intent_submission_to_submission_status noi_st 
-                USING alcs.notice_of_intent_submission nois
-                WHERE noi_st.submission_uuid = nois.uuid AND nois.audit_created_by = '{OATS_ETL_USER}';"""
+            f"""DELETE FROM alcs.application_submission_to_submission_status app_st 
+                USING alcs.application_submission apss
+                WHERE app_st.submission_uuid = apss.uuid AND apss.audit_created_by = '{OATS_ETL_USER}';"""
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 

@@ -1,1 +1,2 @@
 from .app_submissions import process_alcs_app_submissions, clean_application_submission
+from .statuses import init_application_statuses, clean_application_submission_statuses
