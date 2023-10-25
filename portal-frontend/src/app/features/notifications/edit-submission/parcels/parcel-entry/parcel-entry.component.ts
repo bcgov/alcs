@@ -141,12 +141,12 @@ export class ParcelEntryComponent implements OnInit {
         this.searchBy.setValue(null);
         this.pidPinPlaceholder = '';
         this.isCrownLand = true;
-        this.pid.setValidators([]);
+        this.pid.removeValidators([Validators.required]);
       } else {
         this.searchBy.setValue('pid');
         this.pidPinPlaceholder = 'Type 9 digit PID';
         this.isCrownLand = false;
-        this.pid.setValidators([Validators.required]);
+        this.pid.addValidators([Validators.required]);
       }
 
       this.pid.updateValueAndValidity();
@@ -195,7 +195,7 @@ export class ParcelEntryComponent implements OnInit {
 
     if (this.isCrownLand) {
       this.pidPin.disable();
-      this.pid.setValidators([]);
+      this.pid.removeValidators([Validators.required]);
       this.pidPinPlaceholder = '';
     } else {
       this.pidPinPlaceholder = 'Type 9 digit PID';
