@@ -12,7 +12,7 @@ const CLASS_TO_URL_MAP: Record<string, string> = {
 };
 
 @Component({
-  selector: 'app-search-list',
+  selector: 'app-search-list[type]',
   templateUrl: './search-list.component.html',
   styleUrls: ['./search-list.component.scss'],
 })
@@ -21,6 +21,7 @@ export class SearchListComponent implements OnDestroy {
 
   @Input() totalCount = 0;
   @Input() statuses: ApplicationStatusDto[] = [];
+  @Input() type = '';
 
   _results: SearchResult[] = [];
   @Input() set results(results: BaseSearchResultDto[]) {

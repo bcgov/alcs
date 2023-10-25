@@ -132,6 +132,7 @@
         <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
         <app-search-list
           *ngIf="isMobile"
+          type="applications"
           [results]="applications"
           [totalCount]="applicationTotal"
           [statuses]="statuses"
@@ -151,6 +152,7 @@
         <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
         <app-search-list
           *ngIf="isMobile"
+          type="notices of intent"
           [results]="noticeOfIntents"
           [totalCount]="noticeOfIntentTotal"
           [statuses]="statuses"
@@ -170,6 +172,7 @@
         <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
         <app-search-list
           *ngIf="isMobile"
+          type="notifications"
           [results]="notifications"
           [totalCount]="notificationTotal"
           [statuses]="statuses"
