@@ -86,6 +86,10 @@ export class CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDecisio
 
   @IsOptional()
   override isDraft = true;
+
+  @IsString()
+  @IsOptional()
+  decisionToCopy?: string;
 }
 
 export class LinkedResolutionDto {

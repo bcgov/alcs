@@ -1,9 +1,30 @@
 <div class="split">
   <div><h1>Decisions</h1></div>
   <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
-    <button [disabled]="isPaused || isDraftExists" mat-flat-button color="primary" (click)="onCreate()">
+    <button
+      *ngIf="decisions.length === 0"
+      [disabled]="isPaused || isDraftExists"
+      mat-flat-button
+      color="primary"
+      (click)="onCreate()"
+    >
       + Decision Draft
     </button>
+    <button
+      [matMenuTriggerFor]="createMenu"
+      *ngIf="decisions.length > 0"
+      [disabled]="isPaused || isDraftExists"
+      mat-flat-button
+      color="primary"
+    >
+      + Decision Draft
+    </button>
+    <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+      <button *ngFor="let decision of decisions" mat-menu-item (click)="onCreate(decision.uuid)">
+        Duplicate Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+      </button>
+      <button mat-menu-item (click)="onCreate()">Blank Decision</button>
+    </mat-menu>
   </div>
 </div>
 <section class="no-decisions" *ngIf="!decisions.length">

@@ -22,7 +22,6 @@ import {
   ApplicationDecisionOutcomeCodeDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
-  LinkedResolutionOutcomeTypeDto,
 } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component-type.entity';
@@ -31,7 +30,6 @@ import {
   ApplicationDecisionComponentTypeDto,
 } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
-import { LinkedResolutionOutcomeType } from '../../alcs/application-decision/application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import { ApplicationPortalDecisionDto } from '../../portal/public/application/application-decision.dto';
 import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
@@ -297,12 +295,6 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
               : undefined,
           ),
         ),
-      );
-
-      createMap(
-        mapper,
-        LinkedResolutionOutcomeType,
-        LinkedResolutionOutcomeTypeDto,
       );
 
       createMap(

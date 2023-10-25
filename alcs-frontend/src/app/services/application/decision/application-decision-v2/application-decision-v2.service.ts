@@ -49,7 +49,6 @@ export class ApplicationDecisionV2Service {
       ceoCriterion: [],
       decisionComponentTypes: [],
       decisionConditionTypes: [],
-      linkedResolutionOutcomeTypes: [],
       naruSubtypes: [],
     };
   }

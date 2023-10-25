@@ -12,13 +12,14 @@ import {
   initApplicationDecisionMock,
   initApplicationMockEntity,
 } from '../../../../../test/mocks/mockEntities';
-import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
-import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { DocumentService } from '../../../../document/document.service';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationSubmissionStatusService } from '../../../application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../../application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from '../../application-decision-condition/application-decision-condition.service';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
@@ -31,8 +32,8 @@ import {
 } from './application-decision.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentDto } from './component/application-decision-component.dto';
+import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
-import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 describe('ApplicationDecisionV2Service', () => {
   let service: ApplicationDecisionV2Service;
@@ -48,9 +49,6 @@ describe('ApplicationDecisionV2Service', () => {
   >;
   let mockCeoCriterionCodeRepository: DeepMocked<
     Repository<ApplicationCeoCriterionCode>
-  >;
-  let mockLinkedResolutionOutcomeRepository: DeepMocked<
-    Repository<LinkedResolutionOutcomeType>
   >;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockDocumentService: DeepMocked<DocumentService>;
@@ -80,7 +78,6 @@ describe('ApplicationDecisionV2Service', () => {
     mockApplicationDecisionComponentTypeRepository = createMock();
     mockDecisionComponentService = createMock();
     mockDecisionConditionService = createMock();
-    mockLinkedResolutionOutcomeRepository = createMock();
     mockNaruSubtypeRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
 
@@ -111,10 +108,6 @@ describe('ApplicationDecisionV2Service', () => {
         {
           provide: getRepositoryToken(ApplicationDecisionOutcomeCode),
           useValue: mockDecisionOutcomeRepository,
-        },
-        {
-          provide: getRepositoryToken(LinkedResolutionOutcomeType),
-          useValue: mockLinkedResolutionOutcomeRepository,
         },
         {
           provide: getRepositoryToken(NaruSubtype),
@@ -173,7 +166,6 @@ describe('ApplicationDecisionV2Service', () => {
 
     mockDecisionMakerCodeRepository.find.mockResolvedValue([]);
     mockCeoCriterionCodeRepository.find.mockResolvedValue([]);
-    mockLinkedResolutionOutcomeRepository.find.mockResolvedValue([]);
 
     mockApplicationDecisionComponentTypeRepository.find.mockResolvedValue([]);
     mockNaruSubtypeRepository.find.mockResolvedValue([]);
@@ -266,6 +258,62 @@ describe('ApplicationDecisionV2Service', () => {
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
+    });
+
+    it('should copy the existing decisions fields when one is provided for create', async () => {
+      mockDecisionRepository.find.mockResolvedValue([]);
+      const component = new ApplicationDecisionComponent({
+        uuid: 'component-uuid',
+      });
+      const condition = new ApplicationDecisionCondition({
+        uuid: 'condition-uuid',
+        components: [component],
+      });
+
+      const decision = new ApplicationDecision({
+        documents: [],
+        components: [component],
+        conditions: [condition],
+        decisionMakerCode: 'decisionMakerCode',
+        outcomeCode: 'outcomeCode',
+        isSubjectToConditions: false,
+      });
+      mockDecisionRepository.findOne.mockResolvedValue(decision);
+      mockDecisionRepository.exist.mockResolvedValue(false);
+
+      const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+      const decisionToCreate: CreateApplicationDecisionDto = {
+        chairReviewRequired: false,
+        resolutionNumber: 0,
+        resolutionYear: 0,
+        date: decisionDate.getTime(),
+        applicationFileNumber: 'file-number',
+        outcomeCode: 'Outcome',
+        isDraft: true,
+        decisionToCopy: 'existing-decision-uuid',
+      };
+
+      await service.create(
+        decisionToCreate,
+        mockApplication,
+        undefined,
+        undefined,
+        'mock-uuid',
+      );
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(3);
+      expect(mockApplicationService.update).toHaveBeenCalledTimes(0);
+      const finalDecision = mockDecisionRepository.save.mock.calls[2][0];
+
+      expect(finalDecision.decisionMakerCode).toEqual(
+        decision.decisionMakerCode,
+      );
+      expect(finalDecision.outcomeCode).toEqual(decision.outcomeCode);
+      expect(finalDecision.isSubjectToConditions).toEqual(
+        decision.isSubjectToConditions,
+      );
+      expect(finalDecision.components?.length).toEqual(1);
+      expect(finalDecision.conditions?.length).toEqual(1);
     });
 
     it('should fail create a decision if the resolution number is already in use', async () => {
@@ -372,6 +420,7 @@ describe('ApplicationDecisionV2Service', () => {
         date: decisionDate,
         isDraft: false,
       });
+      mockDecisionComponentService.softRemove.mockResolvedValue();
 
       mockDecisionRepository.find.mockResolvedValue([createdDecision]);
 

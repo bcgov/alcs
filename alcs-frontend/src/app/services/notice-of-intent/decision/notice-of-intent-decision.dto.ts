@@ -23,6 +23,7 @@ export interface CreateNoticeOfIntentDecisionDto extends UpdateNoticeOfIntentDec
   resolutionNumber?: number;
   resolutionYear: number;
   fileNumber: string;
+  decisionToCopy?: string;
 }
 
 export interface LinkedResolutionDto {

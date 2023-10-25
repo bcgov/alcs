@@ -9,15 +9,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DocumentService } from '../../../document/document.service';
-import { ApplicationDecisionDocument } from '../../application-decision/application-decision-document/application-decision-document.entity';
 import { NOI_SUBMISSION_STATUS } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionStatusService } from '../../notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionComponentType } from '../notice-of-intent-decision-component/notice-of-intent-decision-component-type.entity';
 import { NoticeOfIntentDecisionComponentDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
+import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionComponentService } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.service';
 import { NoticeOfIntentDecisionConditionType } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
+import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionDocument } from '../notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
@@ -211,17 +212,66 @@ describe('NoticeOfIntentDecisionV2Service', () => {
       mockDecisionRepository.exist.mockResolvedValue(false);
 
       const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
-      const decisionToCreate = {
+      const decisionToCreate: CreateNoticeOfIntentDecisionDto = {
         date: decisionDate.getTime(),
         fileNumber: 'file-number',
         outcomeCode: 'Outcome',
         isDraft: true,
-      } as CreateNoticeOfIntentDecisionDto;
+      };
 
       await service.create(decisionToCreate, mockNoticeOfIntent, undefined);
 
       expect(mockDecisionRepository.save).toBeCalledTimes(1);
       expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
+    });
+
+    it('should copy the existing decisions fields when one is provided for create', async () => {
+      mockDecisionRepository.find.mockResolvedValue([]);
+      const component = new NoticeOfIntentDecisionComponent({
+        uuid: 'component-uuid',
+      });
+      const condition = new NoticeOfIntentDecisionCondition({
+        uuid: 'condition-uuid',
+        components: [component],
+      });
+
+      const decision = new NoticeOfIntentDecision({
+        documents: [],
+        components: [component],
+        conditions: [condition],
+        decisionMaker: 'decisionMaker',
+        decisionMakerName: 'decisionMakerName',
+        outcomeCode: 'outcomeCode',
+        isSubjectToConditions: false,
+      });
+      mockDecisionRepository.findOne.mockResolvedValue(decision);
+      mockDecisionRepository.exist.mockResolvedValue(false);
+
+      const decisionDate = new Date(2022, 2, 2, 2, 2, 2, 2);
+      const decisionToCreate: CreateNoticeOfIntentDecisionDto = {
+        date: decisionDate.getTime(),
+        fileNumber: 'file-number',
+        outcomeCode: 'Outcome',
+        isDraft: true,
+        decisionToCopy: 'existing-decision-uuid',
+      };
+
+      await service.create(decisionToCreate, mockNoticeOfIntent, undefined);
+
+      expect(mockDecisionRepository.save).toBeCalledTimes(3);
+      expect(mockNoticeOfIntentService.update).toHaveBeenCalledTimes(0);
+      const finalDecision = mockDecisionRepository.save.mock.calls[2][0];
+
+      expect(finalDecision.decisionMaker).toEqual(decision.decisionMaker);
+      expect(finalDecision.outcomeCode).toEqual(decision.outcomeCode);
+      expect(finalDecision.decisionMakerName).toEqual(
+        decision.decisionMakerName,
+      );
+      expect(finalDecision.isSubjectToConditions).toEqual(
+        decision.isSubjectToConditions,
+      );
+      expect(finalDecision.components?.length).toEqual(1);
+      expect(finalDecision.conditions?.length).toEqual(1);
     });
 
     it('should fail create a decision if the resolution number is already in use', async () => {
