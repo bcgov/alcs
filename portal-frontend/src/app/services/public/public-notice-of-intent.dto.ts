@@ -1,6 +1,8 @@
-import { ApplicationStatusDto } from '../application-submission/application-submission.dto';
 import { NoticeOfIntentPortalDecisionDto } from '../notice-of-intent-decision/notice-of-intent-decision.dto';
-import { ProposedStructure } from '../notice-of-intent-submission/notice-of-intent-submission.dto';
+import {
+  NoticeOfIntentSubmissionStatusDto,
+  ProposedStructure,
+} from '../notice-of-intent-submission/notice-of-intent-submission.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from './public.dto';
 
 export interface GetPublicNoticeOfIntentResponseDto {
@@ -19,7 +21,7 @@ export interface PublicNoticeOfIntentSubmissionDto {
   localGovernmentUuid: string;
   hasOtherParcelsInCommunity?: boolean | null;
   lastStatusUpdate: number;
-  status: ApplicationStatusDto;
+  status: NoticeOfIntentSubmissionStatusDto;
   owners: PublicOwnerDto[];
   type: string;
   typeCode: string;
