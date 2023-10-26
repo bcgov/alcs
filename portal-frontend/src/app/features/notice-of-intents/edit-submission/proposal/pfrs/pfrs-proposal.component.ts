@@ -125,7 +125,15 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         if (noiSubmission.soilIsFollowUp) {
           this.followUpIds.enable();
         }
-        this.allowMiningUploads = !!noiSubmission.soilIsAreaWideFilling;
+
+        this.allowMiningUploads = !!noiSubmission.soilIsAreaWideFilling || !!noiSubmission.soilIsExtractionOrMining;
+        if (noiSubmission.soilIsExtractionOrMining) {
+          this.hasSubmittedNotice.enable();
+        } else {
+          this.hasSubmittedNotice.disable();
+        }
+
+        this.requiresNoticeOfWork = !!noiSubmission.soilHasSubmittedNotice;
 
         this.form.patchValue({
           isFollowUp: formatBooleanToString(noiSubmission.soilIsFollowUp),
@@ -244,6 +252,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     } else {
       this.hasSubmittedNotice.setValue(null);
       this.hasSubmittedNotice.disable();
+      this.requiresNoticeOfWork = false;
     }
   }
 

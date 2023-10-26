@@ -53,8 +53,13 @@ export class ApplicationSubmissionValidatorService {
       errors.push(new ServiceValidationException('Missing purpose'));
     }
 
+    const parcels = await this.appParcelService.fetchByApplicationFileId(
+      applicationSubmission.fileNumber,
+    );
+
     const validatedParcels = await this.validateParcels(
       applicationSubmission,
+      parcels,
       errors,
     );
 
@@ -86,6 +91,7 @@ export class ApplicationSubmissionValidatorService {
       await this.validateSubdProposal(
         applicationSubmission,
         applicantDocuments,
+        parcels,
         errors,
       );
     }
@@ -159,12 +165,9 @@ export class ApplicationSubmissionValidatorService {
 
   private async validateParcels(
     applicationSubmission: ApplicationSubmission,
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
-    const parcels = await this.appParcelService.fetchByApplicationFileId(
-      applicationSubmission.fileNumber,
-    );
-
     if (parcels.length === 0) {
       errors.push(new ServiceValidationException(`Application has no parcels`));
     }
@@ -456,6 +459,7 @@ export class ApplicationSubmissionValidatorService {
   private async validateSubdProposal(
     applicationSubmission: ApplicationSubmission,
     applicantDocuments: ApplicationDocument[],
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
     if (applicationSubmission.subdProposedLots.length === 0) {
@@ -487,10 +491,27 @@ export class ApplicationSubmissionValidatorService {
       if (homesiteDocuments.length === 0) {
         errors.push(
           new ServiceValidationException(
-            `SUBD delcared homesite severance but does not have required document`,
+            `SUBD declared homesite severance but does not have required document`,
           ),
         );
       }
+    }
+
+    const initialArea = parcels.reduce(
+      (totalSize, parcel) => totalSize + (parcel.mapAreaHectares ?? 0),
+      0,
+    );
+    const subdividedArea = applicationSubmission.subdProposedLots.reduce(
+      (totalSize, proposedLot) => totalSize + (proposedLot.size ?? 0),
+      0,
+    );
+
+    if (initialArea !== subdividedArea) {
+      errors.push(
+        new ServiceValidationException(
+          `SUBD parcels area is different from proposed lot area`,
+        ),
+      );
     }
   }
 
