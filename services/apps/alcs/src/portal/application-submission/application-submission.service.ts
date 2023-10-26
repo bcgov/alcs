@@ -648,7 +648,7 @@ export class ApplicationSubmissionService {
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
           SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
-        userGovernment &&
+        !!userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
     };
   }
