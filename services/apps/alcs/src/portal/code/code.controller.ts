@@ -88,13 +88,15 @@ export class CodeController {
     req: any,
   ): Promise<LocalGovernmentDto[]> {
     //No auth guard, so we can't use req.user.entity
-    const tokenHeader = req.headers['authorization'];
-    const token = await this.authorizationService.decodeHeaderToken(
-      tokenHeader,
-    );
-    const bceidGuid: string | boolean = token
-      ? token['bceid_business_guid']
-      : false;
+    const tokenHeader = req.headers['authorization'] as string | undefined;
+
+    let bceidGuid;
+    if (tokenHeader) {
+      const token = await this.authorizationService.decodeHeaderToken(
+        tokenHeader,
+      );
+      bceidGuid = token ? token['bceid_business_guid'] : false;
+    }
 
     return governments.map((government) => ({
       name: government.name,

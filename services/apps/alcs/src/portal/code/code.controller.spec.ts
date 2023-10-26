@@ -132,7 +132,7 @@ describe('CodeController', () => {
     expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
   });
 
-  it('should set the matches flag correctly when users guid matches government', async () => {
+  it('should not try and decode the token if there isnt one on the request', async () => {
     const matchingGuid = 'guid';
     mockAuthorizationService.decodeHeaderToken.mockResolvedValue({
       bceid_business_guid: matchingGuid,
@@ -148,6 +148,34 @@ describe('CodeController', () => {
 
     const codes = await portalController.loadCodes({
       headers: {},
+    });
+
+    expect(mockAuthorizationService.decodeHeaderToken).toHaveBeenCalledTimes(0);
+    expect(codes.localGovernments).toBeDefined();
+    expect(codes.localGovernments.length).toBe(1);
+    expect(codes.localGovernments[0].name).toEqual('fake-name');
+    expect(codes.localGovernments[0].matchesUserGuid).toBeFalsy();
+    expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the matches flag correctly when users guid matches government', async () => {
+    const matchingGuid = 'guid';
+    mockAuthorizationService.decodeHeaderToken.mockResolvedValue({
+      bceid_business_guid: matchingGuid,
+    } as any);
+    mockLgService.listActive.mockResolvedValue([
+      new LocalGovernment({
+        uuid: 'fake-uuid',
+        name: 'fake-name',
+        isFirstNation: false,
+        bceidBusinessGuid: matchingGuid,
+      }),
+    ]);
+
+    const codes = await portalController.loadCodes({
+      headers: {
+        authorization: 'fake-token',
+      },
     });
 
     expect(mockAuthorizationService.decodeHeaderToken).toHaveBeenCalledTimes(1);
