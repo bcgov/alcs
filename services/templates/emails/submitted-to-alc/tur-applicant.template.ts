@@ -29,7 +29,7 @@ const template = `<mjml>
         <mj-table>
           <tr style="text-align: left; font-size: 16px; border: 1px solid black;">
             <th style="padding-left: 8px; border-right: 1px solid black;">Application Type</th>
-            <th style="padding-left: 8px">{{ governmentName }} Portion of Fee</th>
+            <th style="padding-left: 8px">Application Fee</th>
           </tr>
           <tr style="font-size: 16px; border: 1px solid black;">
             <td style="padding-left: 8px; border-right: 1px solid black;">Transportation, Utility, and Recreational Trail Uses</td>
