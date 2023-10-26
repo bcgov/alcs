@@ -18,6 +18,7 @@ export interface ApplicationTypeDto {
   code: string;
   portalLabel: string;
   htmlDescription: string;
+  portalOrder: number;
 }
 
 export interface NoticeOfIntentTypeDto {
