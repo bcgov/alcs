@@ -263,7 +263,7 @@ export class ApplicationSubmissionReviewController {
     const validationResult =
       await this.applicationValidatorService.validateSubmission(application);
 
-    if (!validationResult.application) {
+    if (!validationResult.submission) {
       throw new BaseServiceException(
         `Invalid application found during LG Submission ${
           application.fileNumber
@@ -275,7 +275,7 @@ export class ApplicationSubmissionReviewController {
       application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG
     ) {
       await this.applicationSubmissionService.submitToAlcs(
-        validationResult.application,
+        validationResult.submission,
         req.user.entity,
         completedReview,
       );

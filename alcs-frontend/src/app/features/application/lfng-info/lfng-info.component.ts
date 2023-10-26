@@ -38,7 +38,7 @@ export class LfngInfoComponent implements OnInit {
   ngOnInit(): void {
     this.applicationDetailService.$application.subscribe(async (application) => {
       if (application) {
-        this.requiresReview = application.type.code !== 'TURP';
+        this.requiresReview = application.type.requiresGovernmentReview;
         this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
         this.showComment = [SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(

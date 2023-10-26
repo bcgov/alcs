@@ -93,7 +93,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   async loadReview() {
     if (
       this.application &&
-      this.application.typeCode !== 'TURP' &&
+      this.application.requiresGovernmentReview &&
       (this.submittedToAlcStatus ||
         (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && this.application.canReview))
     ) {

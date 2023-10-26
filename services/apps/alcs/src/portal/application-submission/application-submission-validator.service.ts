@@ -159,7 +159,7 @@ export class ApplicationSubmissionValidatorService {
 
     return {
       errors,
-      application: errors.length === 0 ? validatedApplication : undefined,
+      submission: errors.length === 0 ? validatedApplication : undefined,
     };
   }
 

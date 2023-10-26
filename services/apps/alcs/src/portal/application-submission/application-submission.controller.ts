@@ -10,7 +10,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import {
+  BaseServiceException,
+  ServiceValidationException,
+} from '../../../../../libs/common/src/exceptions/base.exception';
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBGTurApplicantHtml,
@@ -21,13 +24,17 @@ import {
   generateSUBGGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-lfng';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
-import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
+import {
+  ApplicationSubmissionValidatorService,
+  ValidatedApplicationSubmission,
+} from './application-submission-validator.service';
 import {
   ApplicationSubmissionCreateDto,
   ApplicationSubmissionUpdateDto,
@@ -44,10 +51,11 @@ export class ApplicationSubmissionController {
     private localGovernmentService: LocalGovernmentService,
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
     private statusEmailService: StatusEmailService,
+    private applicationService: ApplicationService,
   ) {}
 
   @Get()
-  async getApplications(@Req() req) {
+  async list(@Req() req) {
     const user = req.user.entity as User;
 
     if (user.bceidBusinessGuid) {
@@ -239,25 +247,58 @@ export class ApplicationSubmissionController {
         applicationSubmission,
       );
 
+    if (validationResult.submission) {
+      return await this.submitValidatedSubmission(
+        validationResult.submission,
+        req.user.entity,
+      );
+    } else {
+      this.logger.debug(validationResult.errors);
+      throw new BadRequestException('Invalid Application');
+    }
+  }
+
+  private async submitValidatedSubmission(
+    validatedSubmission: ValidatedApplicationSubmission,
+    user: User,
+  ) {
+    const applicationTypes =
+      await this.applicationService.fetchApplicationTypes();
+    const matchingType = applicationTypes.find(
+      (type) => type.code === validatedSubmission.typeCode,
+    );
+
+    if (!matchingType) {
+      throw new BaseServiceException(
+        `Failed to find Application Type Matching ${validatedSubmission.typeCode}`,
+      );
+    }
+
     const { primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(
-        applicationSubmission.fileNumber,
-        applicationSubmission,
+        validatedSubmission.fileNumber,
+        validatedSubmission,
       );
 
-    if (validationResult.application) {
-      const validatedApplicationSubmission = validationResult.application;
-      if (validatedApplicationSubmission.typeCode === 'TURP') {
-        await this.applicationSubmissionService.submitToAlcs(
-          validatedApplicationSubmission,
-          req.user.entity,
-        );
+    if (matchingType.requiresGovernmentReview) {
+      const wasSubmittedToLfng = validatedSubmission.submissionStatuses.find(
+        (s) =>
+          [
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.WRONG_GOV,
+            SUBMISSION_STATUS.INCOMPLETE,
+          ].includes(s.statusTypeCode as SUBMISSION_STATUS) &&
+          !!s.effectiveDate,
+      );
 
+      // Send status emails for first time submissions
+      if (!wasSubmittedToLfng) {
         if (primaryContact) {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBGTurApplicantHtml,
-            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-            applicationSubmission,
+            generateStatusHtml: generateSUBGApplicantHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            applicationSubmission: validatedSubmission,
             government: submissionGovernment,
             parentType: PARENT_TYPE.APPLICATION,
             primaryContact,
@@ -266,62 +307,49 @@ export class ApplicationSubmissionController {
 
         if (submissionGovernment) {
           await this.statusEmailService.sendApplicationStatusEmail({
-            generateStatusHtml: generateSUBGTurGovernmentHtml,
-            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-            applicationSubmission,
+            generateStatusHtml: generateSUBGGovernmentHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            applicationSubmission: validatedSubmission,
             government: submissionGovernment,
             parentType: PARENT_TYPE.APPLICATION,
           });
         }
-
-        return await this.applicationSubmissionService.updateStatus(
-          applicationSubmission,
-          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-        );
-      } else {
-        const wasSubmittedToLfng =
-          applicationSubmission.submissionStatuses.find(
-            (s) =>
-              [
-                SUBMISSION_STATUS.SUBMITTED_TO_LG,
-                SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-                SUBMISSION_STATUS.WRONG_GOV,
-                SUBMISSION_STATUS.INCOMPLETE,
-              ].includes(s.statusTypeCode as SUBMISSION_STATUS) &&
-              !!s.effectiveDate,
-          );
-
-        // Send status emails for first time submissions
-        if (!wasSubmittedToLfng) {
-          if (primaryContact) {
-            await this.statusEmailService.sendApplicationStatusEmail({
-              generateStatusHtml: generateSUBGApplicantHtml,
-              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
-              applicationSubmission,
-              government: submissionGovernment,
-              parentType: PARENT_TYPE.APPLICATION,
-              primaryContact,
-            });
-          }
-
-          if (submissionGovernment) {
-            await this.statusEmailService.sendApplicationStatusEmail({
-              generateStatusHtml: generateSUBGGovernmentHtml,
-              status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
-              applicationSubmission,
-              government: submissionGovernment,
-              parentType: PARENT_TYPE.APPLICATION,
-            });
-          }
-        }
-
-        return await this.applicationSubmissionService.submitToLg(
-          validatedApplicationSubmission,
-        );
       }
+
+      return await this.applicationSubmissionService.submitToLg(
+        validatedSubmission,
+      );
     } else {
-      this.logger.debug(validationResult.errors);
-      throw new BadRequestException('Invalid Application');
+      await this.applicationSubmissionService.submitToAlcs(
+        validatedSubmission,
+        user,
+      );
+
+      if (primaryContact) {
+        await this.statusEmailService.sendApplicationStatusEmail({
+          generateStatusHtml: generateSUBGTurApplicantHtml,
+          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          applicationSubmission: validatedSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.APPLICATION,
+          primaryContact,
+        });
+      }
+
+      if (submissionGovernment) {
+        await this.statusEmailService.sendApplicationStatusEmail({
+          generateStatusHtml: generateSUBGTurGovernmentHtml,
+          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          applicationSubmission: validatedSubmission,
+          government: submissionGovernment,
+          parentType: PARENT_TYPE.APPLICATION,
+        });
+      }
+
+      return await this.applicationSubmissionService.updateStatus(
+        validatedSubmission,
+        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      );
     }
   }
 }
