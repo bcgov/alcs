@@ -15,6 +15,9 @@ export class ApplicationPortalDecisionDto {
   outcome: ApplicationDecisionOutcomeCodeDto;
 
   @AutoMap(() => String)
+  decisionDescription: string;
+
+  @AutoMap(() => String)
   resolutionNumber: number;
 
   @AutoMap(() => String)

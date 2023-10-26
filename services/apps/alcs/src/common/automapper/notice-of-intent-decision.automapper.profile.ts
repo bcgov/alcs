@@ -197,6 +197,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
+        ),
+        forMember(
           (a) => a.uploadedBy,
           mapFrom((ad) => ad.document.uploadedBy?.name),
         ),

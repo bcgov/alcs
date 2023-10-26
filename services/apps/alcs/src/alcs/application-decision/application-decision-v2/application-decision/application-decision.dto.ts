@@ -235,6 +235,9 @@ export class DecisionDocumentDto {
   fileName: string;
 
   @AutoMap()
+  fileSize: number;
+
+  @AutoMap()
   mimeType: string;
 
   @AutoMap()

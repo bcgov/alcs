@@ -23,6 +23,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   $application = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
   $applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
   applicationReview: ApplicationSubmissionReviewDto | undefined;
+  selectedIndex = 0;
 
   $destroy = new Subject<void>();
 
@@ -50,6 +51,10 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   async loadApplication(fileId: string) {
     this.application = await this.applicationService.getByFileId(fileId);
     this.$application.next(this.application);
+
+    if (this.application?.status.code === SUBMISSION_STATUS.ALC_DECISION) {
+      this.selectedIndex = 2;
+    }
     this.loadApplicationDocuments(fileId);
   }
 
