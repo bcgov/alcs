@@ -1210,4 +1210,159 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(false);
     });
   });
+
+  describe('SUBD Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: null,
+        subdAgricultureSupport: null,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: 'subdSuitability',
+        subdAgricultureSupport: 'subdAgricultureSupport',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 0,
+            alrArea: null,
+            planNumbers: null,
+          },
+        ],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require homesite severance when set to true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdIsHomeSiteSeverance: true,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `SUBD declared homesite severance but does not have required document`,
+          ),
+        ),
+      ).toBe(true);
+    });
+
+    it('should accept matching parcel sizes', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(false);
+    });
+  });
+
+  it('should reject mismatched parcel sizes', async () => {
+    const application = new ApplicationSubmission({
+      owners: [],
+      typeCode: 'SUBD',
+      subdProposedLots: [
+        {
+          type: 'Lot',
+          size: 4,
+          planNumbers: null,
+          alrArea: null,
+        },
+        {
+          type: 'Lot',
+          size: 6,
+          planNumbers: null,
+          alrArea: null,
+        },
+      ],
+    });
+
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        mapAreaHectares: 12,
+        owners: [],
+      }),
+    ]);
+
+    const res = await service.validateSubmission(application);
+
+    expect(
+      includesError(
+        res.errors,
+        new Error(`SUBD parcels area is different from proposed lot area`),
+      ),
+    ).toBe(true);
+  });
 });
