@@ -99,7 +99,8 @@ export class InboxNotificationService {
       }
     } else {
       if (searchDto.filterBy === 'submitted') {
-        where = 'notificationSearch.local_government_uuid = :governmentUuid';
+        where =
+          'notificationSearch.local_government_uuid = :governmentUuid AND notificationSearch.date_submitted_to_alc IS NOT NULL';
       } else {
         where =
           '(notificationSearch.created_by_uuid = :userUuid OR notificationSearch.bceid_business_guid = :bceidBusinessGuid)';

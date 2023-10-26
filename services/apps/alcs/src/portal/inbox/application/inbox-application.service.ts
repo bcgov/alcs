@@ -98,12 +98,11 @@ export class InboxApplicationService {
         where += ' OR appSearch.bceid_business_guid = :bceidBusinessGuid';
       }
       if (governmentUuid) {
-        where +=
-          ' OR (appSearch.local_government_uuid = :governmentUuid AND appSearch.date_submitted_to_alc IS NOT NULL)';
+        where += ` OR (appSearch.local_government_uuid = :governmentUuid AND (appSearch.date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG')))`;
       }
     } else {
       if (searchDto.filterBy === 'submitted') {
-        where = 'appSearch.local_government_uuid = :governmentUuid';
+        where = `appSearch.local_government_uuid = :governmentUuid AND (appSearch.date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG'))`;
       } else {
         where =
           '(appSearch.created_by_uuid = :userUuid OR appSearch.bceid_business_guid = :bceidBusinessGuid)';
@@ -177,9 +176,12 @@ export class InboxApplicationService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
-        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-      });
+      query = query.andWhere(
+        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
+        {
+          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
+        },
+      );
     }
     return query;
   }
