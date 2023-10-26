@@ -69,7 +69,9 @@ import { LinkedStatusType } from '../public-search.dto';
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
       .where('noi_sub.is_draft = FALSE')
-      .andWhere('noi.date_received_all_items IS NOT NULL')
+      .andWhere(
+        '(noi.date_received_all_items IS NOT NULL AND noi.date_received_all_items <= NOW())',
+      )
       .andWhere(
         "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != 'CNCL'",
       ),
