@@ -62,7 +62,7 @@ export class CreateSubmissionDialogComponent implements OnInit, AfterViewChecked
     const codes = await this.codeService.loadCodes();
     this.applicationTypes = codes.applicationTypes
       .filter((type) => !!type.portalLabel)
-      .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
+      .sort((a, b) => a.portalOrder - b.portalOrder);
     this.submissionTypes = codes.submissionTypes.sort((a, b) => (a.code > b.code ? 1 : -1));
     this.noticeOfIntentTypes = codes.noticeOfIntentTypes.sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
   }

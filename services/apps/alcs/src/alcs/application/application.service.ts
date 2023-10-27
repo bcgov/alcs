@@ -418,6 +418,7 @@ export class ApplicationService {
         htmlDescription: true,
         label: true,
         requiresGovernmentReview: true,
+        portalOrder: true,
       },
     });
   }

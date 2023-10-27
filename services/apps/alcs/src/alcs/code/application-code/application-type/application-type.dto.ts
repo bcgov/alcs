@@ -13,4 +13,7 @@ export class ApplicationTypeDto extends BaseCodeDto {
 
   @AutoMap()
   requiresGovernmentReview: boolean;
+
+  @AutoMap()
+  portalOrder: number;
 }
