@@ -1,11 +1,5 @@
 @use '../../../../../styles/functions' as *;
 
-.multiple-documents {
-  a {
-    display: block;
-  }
-}
-
 .structure-table {
   display: grid;
   grid-template-columns: max-content max-content max-content;
