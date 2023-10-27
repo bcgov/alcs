@@ -13,6 +13,7 @@ from applications.submissions import (
     process_alcs_application_received_by_alc_status,
     process_alcs_application_submitted_to_alc_status,
     batch_application_statuses,
+    process_alcs_application_submitted_to_alc_incomplete_status,
 )
 from applications.application_submission_status_email import (
     process_application_submission_status_emails,
@@ -71,6 +72,9 @@ def import_all(console, args):
         process_alcs_application_in_progress_status(batch_size=import_batch_size)
         process_alcs_application_submitted_to_alc_status(batch_size=import_batch_size)
         process_alcs_application_received_by_alc_status()
+        process_alcs_application_submitted_to_alc_incomplete_status(
+            batch_size=import_batch_size
+        )
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)

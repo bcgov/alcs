@@ -7,6 +7,7 @@ from applications import (
     process_alcs_application_received_by_alc_status,
     process_alcs_application_submitted_to_alc_status,
     batch_application_statuses,
+    process_alcs_application_submitted_to_alc_incomplete_status,
 )
 
 
@@ -68,3 +69,6 @@ def application_status_import(console, args):
         process_alcs_application_in_progress_status(batch_size=import_batch_size)
         process_alcs_application_received_by_alc_status()
         process_alcs_application_submitted_to_alc_status(batch_size=import_batch_size)
+        process_alcs_application_submitted_to_alc_incomplete_status(
+            batch_size=import_batch_size
+        )

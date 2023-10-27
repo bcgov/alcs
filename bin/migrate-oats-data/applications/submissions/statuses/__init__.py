@@ -8,3 +8,6 @@ from .application_status_rec_alc import process_alcs_application_received_by_alc
 from .application_status_submitted_alc import (
     process_alcs_application_submitted_to_alc_status,
 )
+from .application_status_submitted_incomplete_alc import (
+    process_alcs_application_submitted_to_alc_incomplete_status,
+)
