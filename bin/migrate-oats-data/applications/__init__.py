@@ -5,6 +5,10 @@ from .submissions import (
     clean_application_submission,
     init_application_statuses,
     clean_application_submission_statuses,
+    process_alcs_application_in_progress_status,
+    process_alcs_application_received_by_alc_status,
+    process_alcs_application_submitted_to_alc_status,
+    batch_application_statuses,
 )
 from .application_submission_status_email import (
     process_application_submission_status_emails,

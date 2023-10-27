@@ -9,6 +9,10 @@ from noi.notice_of_intent_migration import (
 from applications.submissions import (
     process_alcs_app_submissions,
     init_application_statuses,
+    process_alcs_application_in_progress_status,
+    process_alcs_application_received_by_alc_status,
+    process_alcs_application_submitted_to_alc_status,
+    batch_application_statuses,
 )
 from applications.application_submission_status_email import (
     process_application_submission_status_emails,
@@ -44,10 +48,10 @@ def import_all(console, args):
         init_notice_of_intents(batch_size=import_batch_size)
 
         console.log("Importing NOI specific OATS documents into ALCS:")
-        import_oats_noi_documents(batch_size=import_batch_size)
+        # import_oats_noi_documents(batch_size=import_batch_size)
 
         console.log("Importing OATS app_documents into ALCS:")
-        import_oats_app_documents(batch_size=import_batch_size)
+        # import_oats_app_documents(batch_size=import_batch_size)
 
         console.log("Processing ALCS application documents:")
         link_alcs_docs_to_app_docs(batch_size=import_batch_size)
@@ -62,8 +66,11 @@ def import_all(console, args):
         process_alcs_app_submissions(batch_size=import_batch_size)
 
         console.log("Processing application status:")
-        # init_application_statuses(batch_size=import_batch_size)
-        init_application_statuses()
+        # init_application_statuses()
+        batch_application_statuses(batch_size=import_batch_size)
+        process_alcs_application_in_progress_status(batch_size=import_batch_size)
+        process_alcs_application_submitted_to_alc_status(batch_size=import_batch_size)
+        process_alcs_application_received_by_alc_status()
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)
