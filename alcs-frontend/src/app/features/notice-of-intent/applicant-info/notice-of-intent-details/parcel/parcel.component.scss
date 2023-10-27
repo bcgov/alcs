@@ -1,6 +1,6 @@
 .owner-information {
   display: grid;
-  grid-template-columns: max-content max-content max-content max-content max-content max-content;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   overflow-x: auto;
   overflow-y: hidden;
   grid-column-gap: 36px;
@@ -11,12 +11,8 @@
   }
 }
 
-.review-table {
-  grid-template-columns: 1fr 1fr !important;
-
-  .full-width {
-    grid-column: 1/5;
-  }
+.crown-owner-information {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .crown-land {

@@ -1,6 +1,12 @@
 @use '../../../../../styles/colors';
 
 :host::ng-deep {
+  .multiple-documents {
+    a {
+      display: block;
+    }
+  }
+
   .view-grid-item {
     display: grid;
     grid-template-columns: minmax(100px, 0.5fr) 1fr;

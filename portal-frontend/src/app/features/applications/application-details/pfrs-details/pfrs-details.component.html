@@ -259,12 +259,10 @@
   </div>
 
   <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="subheading2 grid-1">Notice of Work</div>
-  <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="grid-double">
-    <div *ngFor="let file of noticeOfWork">
-      <a (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
-    </div>
+  <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="grid-double multiple-documents">
+    <a *ngFor="let file of noticeOfWork" (click)="openFile(file.uuid)">
+      {{ file.fileName }}
+    </a>
     <app-no-data [showRequired]="showErrors" *ngIf="noticeOfWork.length === 0"></app-no-data>
   </div>
 
