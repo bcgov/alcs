@@ -16,6 +16,7 @@ import {
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';
+import { CovenantTransfereeDto } from './covenant-transferee/covenant-transferee.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -310,6 +311,19 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  @AutoMap(() => Boolean)
+  coveHasDraft: boolean | null;
+
+  @AutoMap(() => String)
+  coveFarmImpact: string | null;
+
+  @AutoMap(() => [CovenantTransfereeDto])
+  coveTransferees: CovenantTransfereeDto[];
+
+  @AutoMap(() => Number)
+  coveAreaImpacted: number | null;
 }
 
 export class ApplicationSubmissionCreateDto {
@@ -695,4 +709,17 @@ export class ApplicationSubmissionUpdateDto {
   @IsBoolean()
   @IsOptional()
   inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  @IsBoolean()
+  @IsOptional()
+  coveHasDraft?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  coveFarmImpact?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  coveAreaImpacted?: number | null;
 }

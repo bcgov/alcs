@@ -1,0 +1,226 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>
+    Considerations are subject to
+    <a> Section 6 of the ALC Act. </a>
+  </p>
+  <p>*All fields are required unless stated optional.</p>
+</div>
+<app-warning-banner>
+  Please consult the '
+  <a
+    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+    target="_blank"
+  >
+    What the Commission Considers
+  </a>
+  ' page of the ALC website for more information.
+</app-warning-banner>
+<section>
+  <div class="split">
+    <div class="subheading2">Provide the name and contact information for all transferees</div>
+    <div>
+      <button
+        mat-flat-button
+        color="accent"
+        [ngClass]="{
+          'error-outline': transferees.length === 0 && showErrors
+        }"
+        (click)="onAdd()"
+      >
+        Add New Transferee
+      </button>
+      <app-validation-error *ngIf="transferees.length === 0 && showErrors">
+        At least one transferee is required
+      </app-validation-error>
+    </div>
+  </div>
+  <div class="table">
+    <table mat-table [dataSource]="transferees">
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.type.code === 'INDV' ? 'Individual' : 'Organization' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>Full Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="organizationName">
+        <th mat-header-cell *matHeaderCellDef>Organization Name</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.organizationName">
+            {{ element.organizationName }}
+          </span>
+          <span class="no-data" *ngIf="!element.organizationName"> No Data </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Phone</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.phoneNumber | mask : '(000) 000-0000' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.email }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td class="actions-cell" mat-cell *matCellDef="let element">
+          <button mat-flat-button color="primary" (click)="onEdit(element.uuid)">Edit</button>
+          <button mat-stroked-button color="warn" (click)="onDelete(element.uuid)">Remove</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="no-data" colspan="6">
+          No Transferee added. Use ‘Add New Transferee’ button to the right to add your first transferee.
+        </td>
+      </tr>
+    </table>
+  </div>
+  <form [formGroup]="form">
+    <div class="form-row">
+      <div>
+        <label for="hectares">How many hectares will the covenant impact?</label>
+        <div class="subtext">Note: 0.01 ha is 100m<sup>2</sup></div>
+        <mat-form-field appearance="outline">
+          <input
+            id="hectares"
+            mask="separator.2"
+            thousandSeparator=","
+            separatorLimit="9999999999"
+            min="0.01"
+            matInput
+            formControlName="hectares"
+            placeholder="Type area in hectares"
+          />
+          <span matTextSuffix>ha</span>
+        </mat-form-field>
+        <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="hectares.errors?.['required']">This field is required</div>
+        </div>
+      </div>
+      <div class="full-row">
+        <label for="purpose">What is the purpose of the covenant?</label>
+        <div class="subtext">
+          Include why you are applying for a restrictive covenant, what the proposal will achieve, and any benefits to
+          agriculture that the proposal provides.
+        </div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="purpose"
+            #purposeText
+            maxlength="4000"
+            id="purpose"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="purpose.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+      </div>
+      <div class="full-row">
+        <label for="farmImpact">Explain how the covenant impacts the use of agricultural land for farm purposes.</label>
+        <div class="subtext">Does the covenant restrict or prohibit agricultural use?</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="farmImpact"
+            #purposeText
+            maxlength="4000"
+            id="farmImpact"
+            matInput
+            placeholder="Type comment"
+          ></textarea>
+        </mat-form-field>
+        <div *ngIf="farmImpact.invalid && (farmImpact.dirty || farmImpact.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="farmImpact.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+        <div class="subtext">A visual representation of your proposal.</div>
+        <app-file-drag-drop
+          id="proposal-map"
+          [uploadedFiles]="proposalMap"
+          (uploadFiles)="attachProposalMap($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [showVirusError]="showProposalMapVirus"
+        ></app-file-drag-drop>
+      </div>
+      <div class="full-row">
+        <label for="hasDraftCopy"> Do you have a draft copy of the covenant? </label>
+        <div class="subtext">If yes, please attach the Draft in the section below.</div>
+        <div>
+          <mat-button-toggle-group
+            class="input"
+            (change)="onChangeHasDraftCopy($event.value)"
+            id="hasDraftCopy"
+            formControlName="hasDraftCopy"
+          >
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+              }"
+              value="true"
+              >Yes
+            </mat-button-toggle>
+            <mat-button-toggle
+              class="toggle-button"
+              [ngClass]="{
+                'error-outline': hasDraftCopy.invalid && (hasDraftCopy.dirty || hasDraftCopy.touched)
+              }"
+              value="false"
+              >No
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+      <div class="full-row">
+        <label class="subheading2" for="proposal-map">Draft Covenant</label>
+        <div class="subtext">A visual representation of your proposal.</div>
+        <app-file-drag-drop
+          id="draftCovenant"
+          [uploadedFiles]="draftCovenant"
+          (uploadFiles)="attachDraftCovenant($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [disabled]="!canUploadDraft"
+          [showVirusError]="showDraftCovenantVirus"
+        ></app-file-drag-drop>
+      </div>
+    </div>
+  </form>
+</section>
+<div class="button-container">
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

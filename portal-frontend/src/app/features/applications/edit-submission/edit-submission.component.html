@@ -165,6 +165,14 @@
         (navigateToStep)="onBeforeSwitchStep($event)"
         (exit)="onExit()"
       ></app-incl-proposal>
+      <app-cove-proposal
+        *ngIf="applicationSubmission.typeCode === 'COVE'"
+        [$applicationSubmission]="$applicationSubmission"
+        [$applicationDocuments]="$applicationDocuments"
+        [showErrors]="showValidationErrors"
+        (navigateToStep)="onBeforeSwitchStep($event)"
+        (exit)="onExit()"
+      ></app-cove-proposal>
     </div>
   </cdk-step>
   <cdk-step label="Upload Attachments">

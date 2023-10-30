@@ -190,6 +190,7 @@ export class ApplicationSubmissionService {
     await this.setSoilFields(applicationSubmission, updateDto);
     this.setNARUFields(applicationSubmission, updateDto);
     this.setInclusionExclusionFields(applicationSubmission, updateDto);
+    this.setCovenantFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -1024,6 +1025,24 @@ export class ApplicationSubmissionService {
     applicationSubmission.inclGovernmentOwnsAllParcels = filterUndefined(
       updateDto.inclGovernmentOwnsAllParcels,
       applicationSubmission.inclGovernmentOwnsAllParcels,
+    );
+  }
+
+  private setCovenantFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.coveAreaImpacted = filterUndefined(
+      updateDto.coveAreaImpacted,
+      applicationSubmission.coveAreaImpacted,
+    );
+    applicationSubmission.coveFarmImpact = filterUndefined(
+      updateDto.coveFarmImpact,
+      applicationSubmission.coveFarmImpact,
+    );
+    applicationSubmission.coveHasDraft = filterUndefined(
+      updateDto.coveHasDraft,
+      applicationSubmission.coveHasDraft,
     );
   }
 

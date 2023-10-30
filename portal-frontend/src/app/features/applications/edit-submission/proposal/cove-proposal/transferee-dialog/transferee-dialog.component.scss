@@ -1,0 +1,19 @@
+@use '../../../../../../../styles/functions' as *;
+@use '../../../../../../../styles/colors';
+
+.actions {
+  button:not(:last-child) {
+    margin-right: rem(8) !important;
+  }
+}
+
+:host::ng-deep {
+  .field-error {
+    color: colors.$error-color;
+    font-size: rem(15);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: rem(4);
+  }
+}
