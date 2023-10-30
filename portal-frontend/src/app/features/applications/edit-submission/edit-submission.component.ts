@@ -23,6 +23,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { CoveProposalComponent } from './proposal/cove-proposal/cove-proposal.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
@@ -81,6 +82,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
   @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
+  @ViewChild(CoveProposalComponent) coveProposalComponent?: CoveProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -255,6 +257,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     }
     if (this.inclProposalComponent) {
       await this.inclProposalComponent.onSave();
+    }
+    if (this.coveProposalComponent) {
+      await this.coveProposalComponent.onSave();
     }
   }
 
