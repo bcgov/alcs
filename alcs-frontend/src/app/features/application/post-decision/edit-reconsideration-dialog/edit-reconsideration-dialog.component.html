@@ -31,7 +31,7 @@
       </div>
 
       <mat-form-field appearance="outline">
-        <mat-label>Resolutions to be Reconsidered*</mat-label>
+        <mat-label>Resolutions to be Reconsidered</mat-label>
         <mat-select formControlName="reconsidersDecisions" multiple>
           <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
         </mat-select>
