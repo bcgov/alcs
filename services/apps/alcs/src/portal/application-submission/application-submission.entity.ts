@@ -722,13 +722,6 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   coveFarmImpact: string | null;
 
-  @AutoMap(() => [CovenantTransferee])
-  @OneToMany(
-    () => CovenantTransferee,
-    (transferee) => transferee.applicationSubmission,
-  )
-  coveTransferees: CovenantTransferee[];
-
   //END SUBMISSION FIELDS
 
   @AutoMap(() => Application)

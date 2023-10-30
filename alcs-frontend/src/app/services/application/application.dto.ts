@@ -214,6 +214,11 @@ export interface ApplicationSubmissionDto {
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
   inclGovernmentOwnsAllParcels: boolean | null;
+
+  //Covenant Fields
+  coveHasDraft: boolean | null;
+  coveFarmImpact: string | null;
+  coveAreaImpacted: number | null;
 }
 
 export interface ApplicationDto {
@@ -284,4 +289,16 @@ export interface UpdateApplicationDto {
   inclExclApplicantType?: string;
   proposalEndDate?: number;
   proposalExpiryDate?: number;
+}
+
+export interface CovenantTransfereeDto {
+  uuid: string;
+  applicationSubmissionUuid: string;
+  displayName: string;
+  firstName: string | null;
+  lastName: string | null;
+  organizationName: string | null;
+  phoneNumber: string | null;
+  email: string | null;
+  type: BaseCodeDto;
 }
