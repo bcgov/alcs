@@ -53,7 +53,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   notificationTotal = 0;
 
   pageIndex = 0;
-  itemsPerPage = 20;
+  itemsPerPage = 10;
 
   governmentFileNumber = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);

@@ -117,7 +117,6 @@ export class InboxApplicationService {
     if (searchDto.fileNumber) {
       query
         .andWhere('appSearch.file_number = :fileNumber')
-        .andWhere('appSearch.created_by_uuid = :userUuid')
         .setParameters({ fileNumber: searchDto.fileNumber ?? null, userUuid });
     }
 
