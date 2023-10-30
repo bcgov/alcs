@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeepMocked } from '@golevelup/ts-jest';
 import { CovenantTransfereeService } from '../../../../services/covenant-transferee/covenant-transferee.service';
@@ -30,6 +31,7 @@ describe('CoveDetailsComponent', () => {
           useValue: mockTransfereeService,
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CoveDetailsComponent);

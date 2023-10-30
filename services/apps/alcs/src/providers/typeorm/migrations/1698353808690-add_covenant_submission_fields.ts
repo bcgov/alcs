@@ -24,6 +24,9 @@ export class addCovenantSubmissionFields1698353808690
     await queryRunner.query(
       `ALTER TABLE "alcs"."covenant_transferee" ADD CONSTRAINT "FK_a1c022ef4e1785b2877cb6aab69" FOREIGN KEY ("application_submission_uuid") REFERENCES "alcs"."application_submission"("uuid") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
+    await queryRunner.query(
+      `COMMENT ON COLUMN "alcs"."covenant_transferee" IS 'Stores Transferees for Restrictive Covenant Applications'`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
