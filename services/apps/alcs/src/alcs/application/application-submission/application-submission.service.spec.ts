@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
@@ -22,11 +23,13 @@ describe('ApplicationSubmissionService', () => {
     Repository<ApplicationSubmissionStatusType>
   >;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockCovenantTransfereeRepo: DeepMocked<Repository<CovenantTransferee>>;
 
   beforeEach(async () => {
     mockApplicationSubmissionRepository = createMock();
     mockApplicationStatusRepository = createMock();
     mockApplicationSubmissionStatusService = createMock();
+    mockCovenantTransfereeRepo = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -49,6 +52,10 @@ describe('ApplicationSubmissionService', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockApplicationSubmissionStatusService,
+        },
+        {
+          provide: getRepositoryToken(CovenantTransferee),
+          useValue: mockCovenantTransfereeRepo,
         },
       ],
     }).compile();
@@ -150,5 +157,14 @@ describe('ApplicationSubmissionService', () => {
       'fake',
       SUBMISSION_STATUS.ALC_DECISION,
     );
+  });
+
+  it('should call repo for retrieving transferees', async () => {
+    mockCovenantTransfereeRepo.find.mockResolvedValue([]);
+
+    const result = await service.getTransferees('file-number');
+
+    expect(result).toBeDefined();
+    expect(mockCovenantTransfereeRepo.find).toBeCalledTimes(1);
   });
 });

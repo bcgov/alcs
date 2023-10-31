@@ -33,6 +33,20 @@ export class CovenantTransfereeService {
     });
   }
 
+  async fetchByFileNumber(fileNumber: string) {
+    return this.repository.find({
+      where: {
+        applicationSubmission: {
+          fileNumber: fileNumber,
+          isDraft: false,
+        },
+      },
+      relations: {
+        type: true,
+      },
+    });
+  }
+
   async create(
     createDto: CovenantTransfereeCreateDto,
     applicationSubmission: ApplicationSubmission,

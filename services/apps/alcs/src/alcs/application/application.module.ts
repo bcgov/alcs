@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
 import { ApplicationSubmissionStatusType } from './application-submission-status/submission-status-type.entity';
 import { ApplicationSubmissionToSubmissionStatus } from './application-submission-status/submission-status.entity';
@@ -58,6 +59,7 @@ import { ApplicationService } from './application.service';
       ApplicationSubmissionStatusType,
       ApplicationSubmissionToSubmissionStatus,
       LocalGovernment,
+      CovenantTransferee,
     ]),
     MessageModule,
     DocumentModule,

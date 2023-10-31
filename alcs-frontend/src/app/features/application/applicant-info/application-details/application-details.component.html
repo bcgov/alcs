@@ -193,6 +193,12 @@
     [files]="files"
   >
   </app-incl-details>
+  <app-cove-details
+    *ngIf="submission && applicationType === 'COVE'"
+    [applicationSubmission]="submission"
+    [files]="files"
+  >
+  </app-cove-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">

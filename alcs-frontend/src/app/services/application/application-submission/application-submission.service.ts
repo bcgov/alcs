@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { openFileInline } from '../../../shared/utils/file';
 import { ToastService } from '../../toast/toast.service';
-import { ApplicationSubmissionDto, UpdateApplicationSubmissionDto } from '../application.dto';
+import { ApplicationSubmissionDto, CovenantTransfereeDto, UpdateApplicationSubmissionDto } from '../application.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +41,15 @@ export class ApplicationSubmissionService {
       return firstValueFrom(this.http.patch<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}`, update));
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application Submission');
+      throw e;
+    }
+  }
+
+  async fetchTransferees(fileNumber: string) {
+    try {
+      return firstValueFrom(this.http.get<CovenantTransfereeDto[]>(`${this.baseUrl}/${fileNumber}/transferee`));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to fetch Application Transfrees');
       throw e;
     }
   }
