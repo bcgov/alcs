@@ -1,4 +1,5 @@
 -- this query checks that OATS NULL does not override fee_paid_date if it has value in ALCS
+-- Run this query before ETL and after to ensure that the result is the same
 WITH noi_with_one_component AS (
     SELECT oaac.alr_application_id
     FROM oats.oats_alr_appl_components oaac

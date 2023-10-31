@@ -107,7 +107,7 @@ def process_alcs_application_prep_fields(conn=None, batch_size=BATCH_UPLOAD_SIZE
                     )
                 except Exception as e:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception()
+                    logger.exception(e)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
@@ -255,11 +255,12 @@ def _get_update_query(unique_fields):
                     alr_area = %(component_area)s,
                     ag_cap_source = %(capability_source_code)s,
                     staff_observations = %(staff_comment_observations)s,
-                    fee_paid_date = %(fee_received_date)s,
+                    fee_paid_date = COALESCE(%(fee_received_date)s, fee_paid_date),
                     fee_waived = %(fee_waived_ind)s,
                     fee_amount = %(applied_fee_amt)s,
                     fee_split_with_lg = %(split_fee_with_local_gov_ind)s,
-                    legacy_id = %(legacy_application_nbr)s
+                    legacy_id = %(legacy_application_nbr)s,
+                    date_submitted_to_alc = COALESCE(%(submitted_to_alc_date)s, date_submitted_to_alc)
                     {unique_fields}
                 WHERE
                 alcs.application.file_number = %(alr_application_id)s::TEXT;

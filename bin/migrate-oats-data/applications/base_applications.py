@@ -111,9 +111,9 @@ def _compile_application_insert_query(number_of_rows_to_insert):
         ON CONFLICT (file_number) DO UPDATE SET
             file_number = EXCLUDED.file_number,
             type_code = EXCLUDED.type_code,
-            applicant = EXCLUDED.applicant,
-            region_code = EXCLUDED.region_code,
-            local_government_uuid = EXCLUDED.local_government_uuid,
+            applicant = COALESCE((CASE WHEN EXCLUDED.applicant = 'Unknown' THEN alcs.application.applicant ELSE EXCLUDED.applicant END), EXCLUDED.applicant),
+            region_code = COALESCE(EXCLUDED.region_code, alcs.application.region_code),
+            local_government_uuid = COALESCE(EXCLUDED.local_government_uuid, alcs.application.local_government_uuid),
             audit_created_by = EXCLUDED.audit_created_by
     """
 

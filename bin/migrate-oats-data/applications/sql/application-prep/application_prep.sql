@@ -25,7 +25,8 @@ SELECT oaa.alr_application_id,
     oaa.split_fee_with_local_gov_ind,
     oaa.fee_waived_ind,
     oaa.fee_received_date,
-    oaa.legacy_application_nbr
+    oaa.legacy_application_nbr,
+    oaa.submitted_to_alc_date
 FROM appl_components_grouped acg
     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = acg.alr_application_id
     JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = acg.alr_application_id
