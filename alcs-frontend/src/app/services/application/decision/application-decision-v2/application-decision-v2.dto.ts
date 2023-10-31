@@ -129,7 +129,7 @@ export interface NfuDecisionComponentDto {
   endDate?: number | null;
 }
 
-export interface TurpDecisionComponentDto {
+export interface ExpiryDateDecisionComponentDto {
   expiryDate?: number | null;
 }
 
@@ -169,7 +169,7 @@ export interface InclExclDecisionComponentDto {
 
 export interface ApplicationDecisionComponentDto
   extends NfuDecisionComponentDto,
-    TurpDecisionComponentDto,
+    ExpiryDateDecisionComponentDto,
     PofoDecisionComponentDto,
     RosoDecisionComponentDto,
     NaruDecisionComponentDto,

@@ -11,7 +11,7 @@ import {
   ProposedDecisionLotDto,
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
-  TurpDecisionComponentDto,
+  ExpiryDateDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
@@ -41,7 +41,7 @@ export class DecisionComponentComponent implements OnInit {
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
   endDate = new FormControl<Date | null>(null, [Validators.required]);
 
-  // expiry-date & cove
+  // turp & cove
   expiryDate = new FormControl<Date | null>(null);
 
   // pofo, pfrs
@@ -285,7 +285,7 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getExpiryDateDataChange(): TurpDecisionComponentDto {
+  private getExpiryDateDataChange(): ExpiryDateDecisionComponentDto {
     return {
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };

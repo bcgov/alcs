@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExpiryDateInputComponent } from './expiry-date-input.component';
 
-describe('TurpInputComponent', () => {
+describe('ExpiryDateInputComponent', () => {
   let component: ExpiryDateInputComponent;
   let fixture: ComponentFixture<ExpiryDateInputComponent>;
 

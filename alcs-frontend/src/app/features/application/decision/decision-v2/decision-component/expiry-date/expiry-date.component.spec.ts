@@ -4,7 +4,7 @@ import { ApplicationDecisionComponentDto } from '../../../../../../services/appl
 
 import { ExpiryDateComponent } from './expiry-date.component';
 
-describe('TurpComponent', () => {
+describe('ExpiryDateComponent', () => {
   let component: ExpiryDateComponent;
   let fixture: ComponentFixture<ExpiryDateComponent>;
 
