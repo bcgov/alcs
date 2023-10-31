@@ -20,12 +20,12 @@
       </ng-container>
 
       <ng-container matColumnDef="applicant">
-        <th mat-header-cell *matHeaderCellDef>Owner Name</th>
+        <th mat-header-cell *matHeaderCellDef>{{ type === 'Notifications' ? 'Transferee' : 'Owner Name' }}</th>
         <td mat-cell *matCellDef="let row">{{ row.ownerName || '(Unknown)' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="applicationType">
-        <th mat-header-cell *matHeaderCellDef>Application Type</th>
+        <th mat-header-cell *matHeaderCellDef>Type</th>
         <td mat-cell *matCellDef="let row">{{ row.type }}</td>
       </ng-container>
 
