@@ -1,8 +1,6 @@
-<div class='split'>
+<div class="split">
   <h5>{{ data.applicationDecisionComponentType?.label }}</h5>
-  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">
-    Remove
-  </button>
+  <button type="button" class="remove-button" mat-stroked-button color="warn" (click)="onRemove()">Remove</button>
 </div>
 
 <form [formGroup]="form" class="decision-component-form">
@@ -10,8 +8,14 @@
     <app-nfu-input [form]="form"></app-nfu-input>
   </div>
 
-  <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP" class="row-no-flex">
-    <app-turp-input [form]="form"></app-turp-input>
+  <div
+    *ngIf="
+      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
+      data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE
+    "
+    class="row-no-flex"
+  >
+    <app-expiry-date-input [form]="form"></app-expiry-date-input>
   </div>
 
   <div *ngIf="data.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">

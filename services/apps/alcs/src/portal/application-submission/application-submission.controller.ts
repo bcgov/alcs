@@ -17,8 +17,9 @@ import {
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBGTurApplicantHtml,
-  generateSUBGTurGovernmentHtml,
+  generateSUBGNoReviewGovernmentTemplateEmail,
 } from '../../../../../templates/emails/submitted-to-alc';
+import { generateSUBGCoveApplicantHtml } from '../../../../../templates/emails/submitted-to-alc/cove-applicant.template';
 import {
   generateSUBGApplicantHtml,
   generateSUBGGovernmentHtml,
@@ -31,6 +32,7 @@ import { LocalGovernmentService } from '../../alcs/local-government/local-govern
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
+import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -326,30 +328,40 @@ export class ApplicationSubmissionController {
       );
 
       if (primaryContact) {
-        await this.statusEmailService.sendApplicationStatusEmail({
-          generateStatusHtml: generateSUBGTurApplicantHtml,
-          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-          applicationSubmission: validatedSubmission,
-          government: submissionGovernment,
-          parentType: PARENT_TYPE.APPLICATION,
-          primaryContact,
-        });
-      }
+        if (
+          matchingType.code === APPLICATION_SUBMISSION_TYPES.TURP ||
+          matchingType.code === APPLICATION_SUBMISSION_TYPES.COVE
+        ) {
+          const generateTemplateFunction =
+            matchingType.code === APPLICATION_SUBMISSION_TYPES.TURP
+              ? generateSUBGTurApplicantHtml
+              : generateSUBGCoveApplicantHtml;
 
-      if (submissionGovernment) {
-        await this.statusEmailService.sendApplicationStatusEmail({
-          generateStatusHtml: generateSUBGTurGovernmentHtml,
-          status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-          applicationSubmission: validatedSubmission,
-          government: submissionGovernment,
-          parentType: PARENT_TYPE.APPLICATION,
-        });
-      }
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateTemplateFunction,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission: validatedSubmission,
+            government: submissionGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+            primaryContact,
+          });
+        }
 
-      return await this.applicationSubmissionService.updateStatus(
-        validatedSubmission,
-        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
-      );
+        if (submissionGovernment) {
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission: validatedSubmission,
+            government: submissionGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+          });
+        }
+
+        return await this.applicationSubmissionService.updateStatus(
+          validatedSubmission,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        );
+      }
     }
   }
 }

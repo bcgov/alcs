@@ -104,8 +104,11 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           this.patchNfuFields(component);
         }
 
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
-          this.patchTurpFields(component);
+        if (
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP ||
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.COVE
+        ) {
+          this.setExpiryDateFields(component);
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
@@ -143,6 +146,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
       case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
       case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
       case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
         this.components.unshift({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
@@ -225,7 +229,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     component.endDate = this.application.proposalEndDate;
   }
 
-  private patchTurpFields(component: ApplicationDecisionComponentDto) {
+  private setExpiryDateFields(component: ApplicationDecisionComponentDto) {
     component.expiryDate = this.application.proposalExpiryDate;
   }
 
