@@ -32,7 +32,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="volume"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>
@@ -51,7 +51,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="volume2"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m<sup>3</sup></span>
         </mat-form-field>
@@ -74,7 +74,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="area"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
@@ -93,7 +93,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="area2"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m<sup>2</sup></span>
         </mat-form-field>
@@ -116,7 +116,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="maximumDepth"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -135,7 +135,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="maximumDepth2"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -158,7 +158,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="averageDepth"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
@@ -177,7 +177,7 @@
             separatorLimit="9999999999"
             matInput
             formControlName="averageDepth2"
-            onfocus="this.select()"
+            (focus)="onInputFocus($event)"
           />
           <span matTextSuffix>m</span>
         </mat-form-field>
