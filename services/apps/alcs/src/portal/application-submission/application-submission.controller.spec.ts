@@ -8,7 +8,7 @@ import { ServiceValidationException } from '../../../../../libs/common/src/excep
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBGTurApplicantHtml,
-  generateSUBGTurGovernmentHtml,
+  generateSUBGNoReviewGovernmentTemplateEmail,
 } from '../../../../../templates/emails/submitted-to-alc';
 import {
   generateSUBGApplicantHtml,
@@ -452,7 +452,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGTurGovernmentHtml,
+      generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,

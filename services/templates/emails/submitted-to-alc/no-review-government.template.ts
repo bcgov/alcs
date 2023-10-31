@@ -37,7 +37,7 @@ const template = `<mjml>
 </mjml>
 `;
 
-export const generateSUBGTurGovernmentHtml = (
+export const generateSUBGNoReviewGovernmentTemplateEmail = (
   data: StatusUpdateEmail,
 ): MJMLParseResults => {
   return new EmailTemplateService().generateEmailBase(template, data);
