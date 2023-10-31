@@ -11,7 +11,7 @@ import {
   ProposedDecisionLotDto,
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
-  TurpDecisionComponentDto,
+  ExpiryDateDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
@@ -41,7 +41,7 @@ export class DecisionComponentComponent implements OnInit {
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
   endDate = new FormControl<Date | null>(null, [Validators.required]);
 
-  // turp
+  // turp & cove
   expiryDate = new FormControl<Date | null>(null);
 
   // pofo, pfrs
@@ -98,7 +98,8 @@ export class DecisionComponentComponent implements OnInit {
           this.patchNfuFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
-          this.patchTurpFields();
+        case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
+          this.addExpiryDateField();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
           this.patchPofoFields();
@@ -127,6 +128,14 @@ export class DecisionComponentComponent implements OnInit {
     }
 
     this.onFormValueChanges();
+  }
+
+  markTouched() {
+    this.subdInputComponent?.markAllAsTouched();
+  }
+
+  onRemove() {
+    this.remove.emit();
   }
 
   private onFormValueChanges() {
@@ -167,7 +176,8 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getNfuDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
-        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+      case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
+        dataChange = { ...dataChange, ...this.getExpiryDateDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
         dataChange = { ...dataChange, ...this.getPofoDataChange() };
@@ -205,7 +215,7 @@ export class DecisionComponentComponent implements OnInit {
     this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
   }
 
-  private patchTurpFields() {
+  private addExpiryDateField() {
     this.form.addControl('expiryDate', this.expiryDate);
 
     this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
@@ -275,7 +285,7 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getTurpDataChange(): TurpDecisionComponentDto {
+  private getExpiryDateDataChange(): ExpiryDateDecisionComponentDto {
     return {
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
@@ -334,18 +344,10 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  markTouched() {
-    this.subdInputComponent?.markAllAsTouched();
-  }
-
   private getInclExclDataChange() {
     return {
       inclExclApplicantType: this.applicantType.value ?? undefined,
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
-  }
-
-  onRemove() {
-    this.remove.emit();
   }
 }
