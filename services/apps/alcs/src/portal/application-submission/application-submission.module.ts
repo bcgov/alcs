@@ -69,6 +69,7 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
     ApplicationOwnerService,
     ApplicationSubmissionValidatorService,
     ApplicationParcelService,
+    CovenantTransfereeService,
   ],
 })
 export class ApplicationSubmissionModule {}

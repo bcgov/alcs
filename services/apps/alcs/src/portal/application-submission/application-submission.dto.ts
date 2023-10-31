@@ -319,9 +319,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => String)
   coveFarmImpact: string | null;
 
-  @AutoMap(() => [CovenantTransfereeDto])
-  coveTransferees: CovenantTransfereeDto[];
-
   @AutoMap(() => Number)
   coveAreaImpacted: number | null;
 }

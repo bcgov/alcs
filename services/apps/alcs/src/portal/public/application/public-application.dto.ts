@@ -295,6 +295,13 @@ export class PublicApplicationSubmissionDto {
 
   @AutoMap(() => Boolean)
   inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  @AutoMap(() => String)
+  coveFarmImpact: string | null;
+
+  @AutoMap(() => Number)
+  coveAreaImpacted: number | null;
 }
 
 export class PublicApplicationSubmissionReviewDto {

@@ -4,6 +4,7 @@ import {
   NaruSubtypeDto,
   ProposedLot,
 } from '../application-submission/application-submission.dto';
+import { CovenantTransfereeDto, OwnerTypeDto } from '../covenant-transferee/covenant-transferee.dto';
 import { PublicParcelDto, PublicDocumentDto, PublicOwnerDto } from './public.dto';
 
 export interface GetPublicApplicationResponseDto {
@@ -12,6 +13,7 @@ export interface GetPublicApplicationResponseDto {
   documents: PublicDocumentDto[];
   review?: PublicApplicationSubmissionReviewDto;
   decisions: ApplicationPortalDecisionDto[];
+  transferees: PublicOwnerDto[];
 }
 
 export interface PublicApplicationSubmissionDto {
@@ -122,6 +124,10 @@ export interface PublicApplicationSubmissionDto {
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
   inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  coveFarmImpact: string | null;
+  coveAreaImpacted: number | null;
 }
 
 export interface PublicApplicationSubmissionReviewDto {
