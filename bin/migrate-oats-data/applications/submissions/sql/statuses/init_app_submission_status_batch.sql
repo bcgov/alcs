@@ -24,7 +24,7 @@ alcs_submission_uuids_to_populate AS (
     WHERE alcs_submissions_with_statuses.file_number IS NULL -- filter out all submissions that have statuses populated before the ETL;
 )
 SELECT asup.alr_application_id,
-    apsst.code AS sscode,
+    --apsst.code AS sscode,
     asup.uuid
 FROM alcs_submission_uuids_to_populate asup
-    CROSS JOIN alcs.application_submission_status_type apsst
+    --CROSS JOIN alcs.application_submission_status_type apsst
