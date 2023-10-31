@@ -83,9 +83,9 @@ def _noi_insert_query(number_of_rows_to_insert):
         VALUES{nois_to_insert}
         ON CONFLICT (file_number) DO UPDATE SET
             file_number = EXCLUDED.file_number,
-            applicant = EXCLUDED.applicant,
-            region_code = EXCLUDED.region_code,
-            local_government_uuid = EXCLUDED.local_government_uuid,
+            applicant = COALESCE((CASE WHEN EXCLUDED.applicant = 'Unknown' THEN alcs.notice_of_intent.applicant ELSE EXCLUDED.applicant END), EXCLUDED.applicant),
+            region_code = COALESCE(EXCLUDED.region_code, alcs.notice_of_intent.region_code),
+            local_government_uuid = COALESCE(EXCLUDED.local_government_uuid, alcs.notice_of_intent.local_government_uuid),
             audit_created_by = EXCLUDED.audit_created_by,
             type_code = EXCLUDED.type_code
     """
