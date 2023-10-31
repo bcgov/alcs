@@ -10,6 +10,8 @@ from .submissions import (
     process_alcs_application_submitted_to_alc_status,
     batch_application_statuses,
     process_alcs_application_submitted_to_alc_incomplete_status,
+    process_alcs_application_decision_released_status,
+    process_alcs_application_cancelled_status,
 )
 from .application_submission_status_email import (
     process_application_submission_status_emails,
