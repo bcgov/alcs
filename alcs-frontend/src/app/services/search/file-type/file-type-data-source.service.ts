@@ -47,6 +47,9 @@ const TREE_DATA: TreeNode[] = [
       {
         item: { label: 'Transportation, Utility, Trail Permits', value: 'TURP' },
       },
+      {
+        item: { label: 'Restrictive Covenant', value: 'COVE' },
+      },
     ],
   },
   {
