@@ -10,6 +10,8 @@ from applications import (
     process_alcs_application_submitted_to_alc_incomplete_status,
     process_alcs_application_decision_released_status,
     process_alcs_application_cancelled_status,
+    process_alcs_application_review_lfng_status,
+    process_alcs_application_wrong_lfng_status,
 )
 
 
@@ -76,3 +78,5 @@ def application_status_import(console, args):
         )
         process_alcs_application_decision_released_status()
         process_alcs_application_cancelled_status(batch_size=import_batch_size)
+        process_alcs_application_review_lfng_status(batch_size=import_batch_size)
+        process_alcs_application_wrong_lfng_status(batch_size=import_batch_size)
