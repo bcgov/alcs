@@ -90,6 +90,8 @@ export class TransfereeDialogComponent {
 
       await this.transfereeService.create(createDto);
       this.dialogRef.close(true);
+    } else {
+      this.form.markAllAsTouched()
     }
   }
 
@@ -112,6 +114,8 @@ export class TransfereeDialogComponent {
         await this.transfereeService.update(this.existingUuid, updateDto);
         this.dialogRef.close(true);
       }
+    } else {
+      this.form.markAllAsTouched()
     }
   }
 }
