@@ -4,8 +4,7 @@ import {
   NaruSubtypeDto,
   ProposedLot,
 } from '../application-submission/application-submission.dto';
-import { CovenantTransfereeDto, OwnerTypeDto } from '../covenant-transferee/covenant-transferee.dto';
-import { PublicParcelDto, PublicDocumentDto, PublicOwnerDto } from './public.dto';
+import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from './public.dto';
 
 export interface GetPublicApplicationResponseDto {
   submission: PublicApplicationSubmissionDto;
