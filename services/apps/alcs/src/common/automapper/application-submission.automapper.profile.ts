@@ -19,7 +19,11 @@ import {
   NaruSubtypeDto,
 } from '../../portal/application-submission/application-submission.dto';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { CovenantTransfereeDto } from '../../portal/application-submission/covenant-transferee/covenant-transferee.dto';
+import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { NotificationTransfereeDto } from '../../portal/notification-submission/notification-transferee/notification-transferee.dto';
+import { NotificationTransferee } from '../../portal/notification-submission/notification-transferee/notification-transferee.entity';
 
 @Injectable()
 export class ApplicationSubmissionProfile extends AutomapperProfile {
@@ -75,6 +79,16 @@ export class ApplicationSubmissionProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationSubmissionStatusType, ApplicationStatusDto);
       createMap(mapper, NaruSubtype, NaruSubtypeDto);
+
+      createMap(
+        mapper,
+        CovenantTransferee,
+        CovenantTransfereeDto,
+        forMember(
+          (pd) => pd.displayName,
+          mapFrom((p) => `${p.firstName} ${p.lastName}`),
+        ),
+      );
 
       createMap(
         mapper,

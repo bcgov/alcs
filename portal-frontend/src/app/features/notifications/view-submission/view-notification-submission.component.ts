@@ -79,8 +79,4 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  onDownloadSubmissionPdf(fileNumber: string) {
-    //TODO: When we add PDFs
-  }
 }

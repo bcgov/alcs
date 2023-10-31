@@ -173,12 +173,6 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  async onDownloadPdf(fileNumber: string | undefined) {
-    if (fileNumber) {
-      //TODO: Hook this up later
-    }
-  }
-
   async onSubmit() {
     if (this.notificationSubmission) {
       this.dialog

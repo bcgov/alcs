@@ -3,19 +3,20 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
-  NotificationTransfereeCreateDto,
-  NotificationTransfereeDto,
-  NotificationTransfereeUpdateDto,
-} from '../../../../../services/notification-transferee/notification-transferee.dto';
-import { NotificationTransfereeService } from '../../../../../services/notification-transferee/notification-transferee.service';
-import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
+  CovenantTransfereeCreateDto,
+  CovenantTransfereeDto,
+  CovenantTransfereeUpdateDto,
+} from '../../../../../../services/covenant-transferee/covenant-transferee.dto';
+import { CovenantTransfereeService } from '../../../../../../services/covenant-transferee/covenant-transferee.service';
+import { OWNER_TYPE } from '../../../../../../shared/dto/owner.dto';
+import { TransfereeDialogComponent } from '../../../../../notifications/edit-submission/transferees/transferee-dialog/transferee-dialog.component';
 
 @Component({
   selector: 'app-transferee-dialog',
   templateUrl: './transferee-dialog.component.html',
   styleUrls: ['./transferee-dialog.component.scss'],
 })
-export class TransfereeDialogComponent {
+export class CovenantTransfereeDialogComponent {
   OWNER_TYPE = OWNER_TYPE;
   type = new FormControl<string | null>(OWNER_TYPE.INDIVIDUAL);
   firstName = new FormControl<string | null>('', [Validators.required]);
@@ -39,11 +40,11 @@ export class TransfereeDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<TransfereeDialogComponent>,
-    private transfereeService: NotificationTransfereeService,
+    private transfereeService: CovenantTransfereeService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       submissionUuid: string;
-      existingTransferee?: NotificationTransfereeDto;
+      existingTransferee?: CovenantTransfereeDto;
     }
   ) {
     if (data && data.existingTransferee) {
@@ -71,26 +72,24 @@ export class TransfereeDialogComponent {
   }
 
   async onCreate() {
-    if (this.form.valid) {
-      if (!this.data.submissionUuid) {
-        console.error('TransfereeDialogComponent misconfigured, needs submissionUuid for create');
-        return;
-      }
-      this.isLoading = true;
-
-      const createDto: NotificationTransfereeCreateDto = {
-        organizationName: this.organizationName.getRawValue() || undefined,
-        firstName: this.firstName.getRawValue() || undefined,
-        lastName: this.lastName.getRawValue() || undefined,
-        email: this.email.getRawValue()!,
-        phoneNumber: this.phoneNumber.getRawValue()!,
-        typeCode: this.type.getRawValue()!,
-        notificationSubmissionUuid: this.data.submissionUuid,
-      };
-
-      await this.transfereeService.create(createDto);
-      this.dialogRef.close(true);
+    if (!this.data.submissionUuid) {
+      console.error('TransfereeDialogComponent misconfigured, needs submissionUuid for create');
+      return;
     }
+    this.isLoading = true;
+
+    const createDto: CovenantTransfereeCreateDto = {
+      organizationName: this.organizationName.getRawValue() || undefined,
+      firstName: this.firstName.getRawValue() || undefined,
+      lastName: this.lastName.getRawValue() || undefined,
+      email: this.email.getRawValue()!,
+      phoneNumber: this.phoneNumber.getRawValue()!,
+      typeCode: this.type.getRawValue()!,
+      applicationSubmissionUuid: this.data.submissionUuid,
+    };
+
+    await this.transfereeService.create(createDto);
+    this.dialogRef.close(true);
   }
 
   async onClose() {
@@ -98,20 +97,18 @@ export class TransfereeDialogComponent {
   }
 
   async onSave() {
-    if (this.form.valid) {
-      const updateDto: NotificationTransfereeUpdateDto = {
-        organizationName: this.organizationName.getRawValue(),
-        firstName: this.firstName.getRawValue(),
-        lastName: this.lastName.getRawValue(),
-        email: this.email.getRawValue()!,
-        phoneNumber: this.phoneNumber.getRawValue()!,
-        typeCode: this.type.getRawValue()!,
-      };
-      if (this.existingUuid) {
-        this.isLoading = true;
-        await this.transfereeService.update(this.existingUuid, updateDto);
-        this.dialogRef.close(true);
-      }
+    const updateDto: CovenantTransfereeUpdateDto = {
+      organizationName: this.organizationName.getRawValue(),
+      firstName: this.firstName.getRawValue(),
+      lastName: this.lastName.getRawValue(),
+      email: this.email.getRawValue()!,
+      phoneNumber: this.phoneNumber.getRawValue()!,
+      typeCode: this.type.getRawValue()!,
+    };
+    if (this.existingUuid) {
+      this.isLoading = true;
+      await this.transfereeService.update(this.existingUuid, updateDto);
+      this.dialogRef.close(true);
     }
   }
 }
