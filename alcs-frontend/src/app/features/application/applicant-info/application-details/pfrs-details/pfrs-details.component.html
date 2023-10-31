@@ -14,6 +14,24 @@
     <span>{{ _applicationSubmission.purpose }}</span>
   </div>
 
+  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="_applicationSubmission.soilProjectDurationAmount && _applicationSubmission.soilProjectDurationUnit">
+      {{ _applicationSubmission.soilProjectDurationAmount }}
+      <ng-container [ngPlural]="_applicationSubmission.soilProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ _applicationSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ _applicationSubmission.soilProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!_applicationSubmission.soilProjectDurationAmount || !_applicationSubmission.soilProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
   <div class="full-width soil-table">
     <div></div>
     <div><strong>Soil to be Removed</strong></div>
@@ -106,18 +124,6 @@
     </div>
   </div>
 
-  <div class="full-width">
-    <span class="subheading1">Project Duration</span>
-  </div>
-  <div class="subheading2 grid-1">Duration</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilProjectDurationUnit }}
-  </div>
-  <div class="subheading2 grid-1">Length</div>
-  <div class="grid-double">
-    {{ _applicationSubmission.soilProjectDurationAmount }}
-  </div>
-
   <div class="subheading2 grid-1">
     What alternative measures have you considered or attempted before proposing to place fill?
   </div>
@@ -146,7 +152,7 @@
     </a>
   </div>
   <div class="subheading2 grid-1">Cross Sections</div>
-  <div class="grid-double">
+  <div class="grid-double multiple-documents">
     <div>
       <a *ngFor="let file of crossSections" (click)="openFile(file)">
         {{ file.fileName }}
@@ -154,12 +160,10 @@
     </div>
   </div>
   <div class="subheading2 grid-1">Reclamation Plan</div>
-  <div class="grid-double">
-    <div *ngFor="let file of reclamationPlans">
-      <a (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
-    </div>
+  <div class="grid-double multiple-documents">
+    <a *ngFor="let file of reclamationPlans" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
   </div>
 
   <div class="subheading2 grid-1">Is your proposal for aggregate extraction or placer mining?</div>
@@ -179,11 +183,9 @@
   </div>
 
   <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="subheading2 grid-1">Notice of Work</div>
-  <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="grid-double">
-    <div *ngFor="let file of noticeOfWork">
-      <a (click)="openFile(file)">
-        {{ file.fileName }}
-      </a>
-    </div>
+  <div *ngIf="_applicationSubmission.soilHasSubmittedNotice" class="grid-double multiple-documents">
+    <a *ngFor="let file of noticeOfWork" (click)="openFile(file)">
+      {{ file.fileName }}
+    </a>
   </div>
 </div>

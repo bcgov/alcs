@@ -44,20 +44,16 @@
 :host::ng-deep {
   .transferee-table {
     display: grid;
-    grid-template-columns: max-content max-content max-content max-content max-content;
-    overflow-x: auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-column-gap: 36px;
     grid-row-gap: 12px;
-    overflow: unset;
   }
 
   .survey-plan-table {
     display: grid;
-    grid-template-columns: max-content max-content max-content;
-    overflow-x: auto;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 36px;
     grid-row-gap: 12px;
-    overflow: unset;
   }
 
   .scrollable {
@@ -66,9 +62,7 @@
 
   .other-attachments {
     display: grid;
-    grid-template-columns: max-content max-content max-content;
-    overflow-x: auto;
-    overflow-y: hidden;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 36px;
     grid-row-gap: 12px;
 
