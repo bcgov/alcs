@@ -1,0 +1,42 @@
+<div *ngIf="applicationSubmission" class="review-table">
+  <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
+  <div class="full-width transferee-table">
+    <div class="subheading2">Type</div>
+    <div class="subheading2">Full Name</div>
+    <div class="subheading2">Organization Name</div>
+    <ng-container *ngFor="let transferee of transferees">
+      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+      <div>{{ transferee.displayName }}</div>
+      <div>
+        {{ transferee.organizationName }}
+        <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
+      </div>
+    </ng-container>
+  </div>
+  <app-no-data class="full-width" *ngIf="transferees.length === 0"></app-no-data>
+
+  <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.coveAreaImpacted }}<span *ngIf="applicationSubmission.coveAreaImpacted"> ha</span>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of this covenant?</div>
+  <div class="grid-double">
+    {{ applicationSubmission.purpose }}
+  </div>
+
+  <div class="subheading2 grid-1">Explain how the covenant impacts the use of agricultural land for farm purposes.</div>
+  <div class="grid-double">
+    <span *ngIf="applicationSubmission.coveFarmImpact !== null">
+      {{ applicationSubmission.coveFarmImpact }}
+    </span>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map.uuid)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+</div>

@@ -157,4 +157,10 @@
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="applicationDocuments"
   ></app-incl-details>
+  <app-cove-details
+    *ngIf="applicationSubmission.typeCode === 'COVE'"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="applicationDocuments"
+    [transferees]='transferees'
+  ></app-cove-details>
 </section>
