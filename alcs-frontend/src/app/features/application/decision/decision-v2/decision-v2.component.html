@@ -182,9 +182,12 @@
                 ></app-basic>
               </app-nfup>
 
-              <app-turp
+              <app-expiry-date
                 class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
+                *ngIf="
+                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
+                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE
+                "
                 [component]="component"
               >
                 <app-basic
@@ -192,7 +195,7 @@
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-basic
-              ></app-turp>
+              ></app-expiry-date>
 
               <app-pofo
                 class="grid-2"

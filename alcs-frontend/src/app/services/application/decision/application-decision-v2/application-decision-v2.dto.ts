@@ -206,6 +206,7 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   SUBD = 'SUBD',
   INCL = 'INCL',
   EXCL = 'EXCL',
+  COVE = 'COVE',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}

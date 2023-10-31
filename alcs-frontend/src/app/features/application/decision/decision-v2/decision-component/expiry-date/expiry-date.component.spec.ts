@@ -2,19 +2,19 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
-import { TurpComponent } from './turp.component';
+import { ExpiryDateComponent } from './expiry-date.component';
 
 describe('TurpComponent', () => {
-  let component: TurpComponent;
-  let fixture: ComponentFixture<TurpComponent>;
+  let component: ExpiryDateComponent;
+  let fixture: ComponentFixture<ExpiryDateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TurpComponent],
+      declarations: [ExpiryDateComponent],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TurpComponent);
+    fixture = TestBed.createComponent(ExpiryDateComponent);
     component = fixture.componentInstance;
     component.component = {} as ApplicationDecisionComponentDto;
     fixture.detectChanges();
