@@ -35,7 +35,7 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
 
         failed_inserts = 0
         successful_updates_count = 0
-        last_application_id = 0
+        last_soil_change_element_id = 0
 
         with open(
             "noi/sql/notice_of_intent_submission/soil_fields/notice_of_intent_soil_fields.sql",
@@ -45,7 +45,7 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE oaac.alr_application_id > {last_application_id} ORDER BY oaac.alr_application_id;"
+                    f"{application_sql} WHERE osce.soil_change_element_id > {last_soil_change_element_id} ORDER BY osce.soil_change_element_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -60,17 +60,17 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
                     successful_updates_count = (
                         successful_updates_count + records_to_be_updated_count
                     )
-                    last_application_id = dict(rows[-1])["alr_application_id"]
+                    last_soil_change_element_id = dict(rows[-1])["soil_change_element_id"]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
+                        f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_soil_change_element_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception()
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
-                    last_application_id = last_application_id + 1
+                    last_soil_change_element_id = last_soil_change_element_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
