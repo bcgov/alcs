@@ -17,6 +17,7 @@ from menu.commands import (
     notice_of_intent_import,
     notice_of_intent_clean,
     start_obfuscation,
+    application_status_import,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -56,6 +57,13 @@ if __name__ == "__main__":
                 application_submission_import(console, args)
             case "obfuscate":
                 start_obfuscation(console)
+            case "app-status-import":
+                application_status_import(console, args)
+            case "app-all-import":
+                application_import(console, args)
+                app_prep_import(console, args)
+                application_submission_import(console, args)
+                application_status_import(console, args)
 
     finally:
         if connection_pool:

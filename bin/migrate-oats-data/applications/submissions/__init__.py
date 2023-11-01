@@ -14,3 +14,7 @@ from .statuses import (
     process_alcs_application_returned_incomplete_lfng_status,
     process_alcs_application_submitted_lfng_status,
 )
+from .migrate_application_submissions import (
+    process_application_statuses,
+    clean_app_submissions,
+)
