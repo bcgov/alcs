@@ -1,45 +1,51 @@
 --- run it manually in IDE of your choice
---- compare to numbers returned by script. They should match
--- total count of set 'PROG' - In Progress in ALCS
+--- compare to numbers returned by script.
+-- total count of set 'SUBG' - Submitted to LFNG in ALCS
 SELECT
     count(*)
 FROM
     alcs.application_submission_to_submission_status appstss
     JOIN alcs.application_submission as2 ON as2.uuid = appstss.submission_uuid
 WHERE
-    appstss.status_type_code = 'PROG'
+    appstss.status_type_code = 'SUBG'
     AND effective_date IS NOT NULL
     AND as2.audit_created_by = 'oats_etl';
 
---total count of set 'INP' - In Progress apps with one or zero components in OATS
+--total count of set 'SLG' apps with one or zero components in OATS 
 WITH
-    inp_accomplishment_per_file_number AS (
+    last_sub_lg_accomplishment_per_file_number AS (
         SELECT
             alr_application_id,
-            accomplishment_code
+            accomplishment_code,
+            MAX(oa.completion_date) AS completion_date
         FROM
             oats.oats_accomplishments oa
         WHERE
-            accomplishment_code = 'INP'
+            accomplishment_code = 'SLG'
         GROUP BY
             alr_application_id,
             accomplishment_code
     ),
-    inp_accomplishments_for_app_only AS (
+    sub_lg_accomplishments_for_app_only AS (
         SELECT DISTINCT
             ON (
-                inp_accomplishments.accomplishment_code,
+                last_sub_lg.accomplishment_code,
+                last_sub_lg.completion_date,
                 oaa.alr_application_id,
-                oaa.when_created
-            ) inp_accomplishments.accomplishment_code,
+                oaa.submitted_to_lg_date
+            ) last_sub_lg.accomplishment_code,
+            last_sub_lg.completion_date,
             oaa.alr_application_id,
-            oaa.when_created
+            oaa.submitted_to_lg_date
         FROM
             oats.oats_alr_applications oaa
-            LEFT JOIN inp_accomplishment_per_file_number AS inp_accomplishments ON inp_accomplishments.alr_application_id = oaa.alr_application_id
+            LEFT JOIN last_sub_lg_accomplishment_per_file_number AS last_sub_lg ON last_sub_lg.alr_application_id = oaa.alr_application_id
         WHERE
             oaa.application_class_code IN ('LOA', 'BLK')
-            AND (oaa.when_created IS NOT NULL)
+            AND (
+                last_sub_lg.completion_date IS NOT NULL
+                OR oaa.submitted_to_lg_date IS NOT NULL
+            )
     ),
     apps_with_one_or_zero_component_only AS (
         SELECT
@@ -52,18 +58,18 @@ WITH
         GROUP BY
             oaac.alr_application_id
         HAVING
-            count(oaac.alr_application_id) < 2
+            COUNT(oaac.alr_application_id) < 2
     ),
-    all_in_progress AS (
+    all_sub_lg AS (
         SELECT
-            inp.alr_application_id
+            sub_lg.alr_application_id
         FROM
-            inp_accomplishments_for_app_only AS inp
-            JOIN apps_with_one_or_zero_component_only AS apps_one_or_zero ON apps_one_or_zero.alr_application_id = inp.alr_application_id
+            sub_lg_accomplishments_for_app_only AS sub_lg
+            JOIN apps_with_one_or_zero_component_only AS apps_one_or_zero ON apps_one_or_zero.alr_application_id = sub_lg.alr_application_id
         GROUP BY
-            inp.alr_application_id
+            sub_lg.alr_application_id
     )
 SELECT
     count(*)
 FROM
-    all_in_progress;
+    all_sub_lg

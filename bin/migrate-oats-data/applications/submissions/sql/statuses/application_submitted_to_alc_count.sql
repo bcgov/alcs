@@ -4,7 +4,7 @@ WITH app_components_grouped AS (
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
     WHERE oaa.application_class_code IN ('LOA', 'BLK')
     GROUP BY oaac.alr_application_id
-    HAVING count(oaac.alr_application_id) < 2 -- ignore notice of intents with multiple components
+    HAVING count(oaac.alr_application_id) < 2 -- ignore applications with multiple components
 )
 SELECT count(*)
 FROM app_components_grouped
