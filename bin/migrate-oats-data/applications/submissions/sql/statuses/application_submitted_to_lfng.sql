@@ -38,8 +38,7 @@ SELECT oats_sub_lg.alr_application_id,
     apps.uuid
 FROM submitted_lg_accomplishments_for_app_only oats_sub_lg
     JOIN alcs.application_submission apps ON apps.file_number = oats_sub_lg.alr_application_id::TEXT
-    JOIN alcs.application_submission_to_submission_status appstss ON appstss.submission_uuid = apps.uuid
 WHERE (
-        oats_sub_lg.completion_date IS NOT NULL
+        oats_sub_lg.completion_date IS NOT NULL 
         OR oats_sub_lg.submitted_to_lg_date IS NOT NULL
     )

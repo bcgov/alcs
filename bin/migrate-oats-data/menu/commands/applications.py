@@ -13,6 +13,7 @@ from applications import (
     process_alcs_application_review_lfng_status,
     process_alcs_application_wrong_lfng_status,
     process_alcs_application_returned_incomplete_lfng_status,
+    process_alcs_application_submitted_lfng_status,
 )
 
 
@@ -84,3 +85,4 @@ def application_status_import(console, args):
         process_alcs_application_returned_incomplete_lfng_status(
             batch_size=import_batch_size
         )
+        process_alcs_application_submitted_lfng_status(batch_size=import_batch_size)

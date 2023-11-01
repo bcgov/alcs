@@ -38,7 +38,6 @@ SELECT oats_cancelled.alr_application_id,
     apps.uuid
 FROM cancelled_accomplishments_for_app_only oats_cancelled
     JOIN alcs.application_submission apps ON apps.file_number = oats_cancelled.alr_application_id::TEXT
-    JOIN alcs.application_submission_to_submission_status appstss ON appstss.submission_uuid = apps.uuid
 WHERE (
         oats_cancelled.completion_date IS NOT NULL
         OR oats_cancelled.cancelled_date IS NOT NULL

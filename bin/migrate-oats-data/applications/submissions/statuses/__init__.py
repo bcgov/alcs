@@ -20,3 +20,6 @@ from .application_status_wrong_lfng import process_alcs_application_wrong_lfng_s
 from .application_status_returned_incomplete_lfng import (
     process_alcs_application_returned_incomplete_lfng_status,
 )
+from .application_status_submitted_lfng import (
+    process_alcs_application_submitted_lfng_status,
+)

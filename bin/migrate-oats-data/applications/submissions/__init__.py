@@ -12,4 +12,5 @@ from .statuses import (
     process_alcs_application_review_lfng_status,
     process_alcs_application_wrong_lfng_status,
     process_alcs_application_returned_incomplete_lfng_status,
+    process_alcs_application_submitted_lfng_status,
 )
