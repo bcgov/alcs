@@ -14,6 +14,7 @@ from .submissions import (
     process_alcs_application_cancelled_status,
     process_alcs_application_review_lfng_status,
     process_alcs_application_wrong_lfng_status,
+    process_alcs_application_returned_incomplete_lfng_status,
 )
 from .application_submission_status_email import (
     process_application_submission_status_emails,

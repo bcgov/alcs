@@ -17,3 +17,6 @@ from .application_status_batch_insert import batch_application_statuses
 from .application_status_cancelled import process_alcs_application_cancelled_status
 from .application_status_review_lfng import process_alcs_application_review_lfng_status
 from .application_status_wrong_lfng import process_alcs_application_wrong_lfng_status
+from .application_status_returned_incomplete_lfng import (
+    process_alcs_application_returned_incomplete_lfng_status,
+)
