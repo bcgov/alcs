@@ -13,7 +13,6 @@ from .application_status_submitted_incomplete_alc import (
 from .application_status_descision_released import (
     process_alcs_application_decision_released_status,
 )
-from .application_status_batch_insert import batch_application_statuses
 from .application_status_cancelled import process_alcs_application_cancelled_status
 from .application_status_review_lfng import process_alcs_application_review_lfng_status
 from .application_status_wrong_lfng import process_alcs_application_wrong_lfng_status
