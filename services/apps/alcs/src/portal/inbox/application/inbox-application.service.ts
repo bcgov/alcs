@@ -98,11 +98,12 @@ export class InboxApplicationService {
         where += ' OR appSearch.bceid_business_guid = :bceidBusinessGuid';
       }
       if (governmentUuid) {
-        where += ` OR (appSearch.local_government_uuid = :governmentUuid AND (appSearch.date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG')))`;
+        where +=
+          ' OR (appSearch.local_government_uuid = :governmentUuid AND appSearch.date_submitted_to_alc IS NOT NULL)';
       }
     } else {
       if (searchDto.filterBy === 'submitted') {
-        where = `appSearch.local_government_uuid = :governmentUuid AND (appSearch.date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG'))`;
+        where = 'appSearch.local_government_uuid = :governmentUuid';
       } else {
         where =
           '(appSearch.created_by_uuid = :userUuid OR appSearch.bceid_business_guid = :bceidBusinessGuid)';
@@ -117,6 +118,7 @@ export class InboxApplicationService {
     if (searchDto.fileNumber) {
       query
         .andWhere('appSearch.file_number = :fileNumber')
+        .andWhere('appSearch.created_by_uuid = :userUuid')
         .setParameters({ fileNumber: searchDto.fileNumber ?? null, userUuid });
     }
 
@@ -175,12 +177,9 @@ export class InboxApplicationService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere(
-        'LOWER(parcel.civic_address) like LOWER(:civic_address)',
-        {
-          civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
-        },
-      );
+      query = query.andWhere('parcel.civic_address like :civic_address', {
+        civic_address: `%${searchDto.civicAddress}%`,
+      });
     }
     return query;
   }
