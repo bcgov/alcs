@@ -2,6 +2,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationSubmissionService } from '../../services/application-submission/application-submission.service';
 import { CodeService } from '../../services/code/code.service';
 import { NoticeOfIntentSubmissionService } from '../../services/notice-of-intent-submission/notice-of-intent-submission.service';
@@ -11,8 +12,11 @@ import { CreateSubmissionDialogComponent } from './create-submission-dialog.comp
 describe('CreateSubmissionDialogComponent', () => {
   let component: CreateSubmissionDialogComponent;
   let fixture: ComponentFixture<CreateSubmissionDialogComponent>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
+    mockCodeService = createMock();
+
     await TestBed.configureTestingModule({
       imports: [MatDialogModule, MatRadioModule],
       providers: [
@@ -23,7 +27,7 @@ describe('CreateSubmissionDialogComponent', () => {
         },
         {
           provide: CodeService,
-          useValue: {},
+          useValue: mockCodeService,
         },
         {
           provide: NoticeOfIntentSubmissionService,
@@ -40,6 +44,18 @@ describe('CreateSubmissionDialogComponent', () => {
 
     fixture = TestBed.createComponent(CreateSubmissionDialogComponent);
     component = fixture.componentInstance;
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

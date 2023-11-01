@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { parse } from '@typescript-eslint/parser';
 import { Subject } from 'rxjs';
 import { CeoCriterionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
 import { CeoCriterionService } from '../../../services/ceo-criterion/ceo-criterion.service';
