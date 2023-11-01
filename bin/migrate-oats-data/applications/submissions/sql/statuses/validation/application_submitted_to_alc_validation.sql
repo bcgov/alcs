@@ -24,7 +24,7 @@ WITH
         GROUP BY
             oaac.alr_application_id
         HAVING
-            count(oaac.alr_application_id) < 2 -- ignore notice of intents with multiple components
+            count(oaac.alr_application_id) < 2 -- ignore applications with multiple components
     )
 SELECT
     count(*)
