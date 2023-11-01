@@ -40,6 +40,7 @@ describe('ApplicationService', () => {
       shortLabel: '',
       backgroundColor: '',
       textColor: '',
+      requiresGovernmentReview: false,
     },
     source: SYSTEM_SOURCE_TYPES.ALCS,
   };

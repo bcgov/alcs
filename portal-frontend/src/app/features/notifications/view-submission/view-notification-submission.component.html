@@ -31,7 +31,7 @@
 <button (click)="onNavigateHome()" mat-button color="accent"><mat-icon>chevron_left</mat-icon>Return to Inbox</button>
 <div>
   <div class="navigation">
-    <mat-tab-group>
+    <mat-tab-group [(selectedIndex)]="selectedIndex">
       <mat-tab label="Applicant Submission">
         <div *ngIf="submission" class="content">
           <section>
@@ -48,9 +48,6 @@
                   color="primary"
                 >
                   Edit SRW
-                </button>
-                <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
-                  Download PDF
                 </button>
               </div>
             </div>

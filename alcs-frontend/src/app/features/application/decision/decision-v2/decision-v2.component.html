@@ -1,9 +1,30 @@
 <div class="split">
   <div><h1>Decisions</h1></div>
   <div matTooltip="{{ disabledCreateBtnTooltip }}" [matTooltipDisabled]="!isPaused && !isDraftExists">
-    <button [disabled]="isPaused || isDraftExists" mat-flat-button color="primary" (click)="onCreate()">
+    <button
+      *ngIf="decisions.length === 0"
+      [disabled]="isPaused || isDraftExists"
+      mat-flat-button
+      color="primary"
+      (click)="onCreate()"
+    >
       + Decision Draft
     </button>
+    <button
+      [matMenuTriggerFor]="createMenu"
+      *ngIf="decisions.length > 0"
+      [disabled]="isPaused || isDraftExists"
+      mat-flat-button
+      color="primary"
+    >
+      + Decision Draft
+    </button>
+    <mat-menu class="move-board-menu" xPosition="before" #createMenu="matMenu">
+      <button *ngFor="let decision of decisions" mat-menu-item (click)="onCreate(decision.uuid)">
+        Duplicate Res #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+      </button>
+      <button mat-menu-item (click)="onCreate()">Blank Decision</button>
+    </mat-menu>
   </div>
 </div>
 <section class="no-decisions" *ngIf="!decisions.length">
@@ -110,19 +131,6 @@
             <ng-container *ngIf="decision.isOther">Other</ng-container>
           </div>
 
-          <div *ngIf="!!decision.modifies || !!decision.reconsiders">
-            <div class="subheading2">
-              <span *ngIf="!!decision.modifies">Modification Outcome</span>
-              <span *ngIf="!!decision.reconsiders">Reconsideration Outcome</span>
-            </div>
-            {{ decision.linkedResolutionOutcome?.label }}
-            <app-no-data
-              *ngIf="decision.linkedResolutionOutcome === null || decision.linkedResolutionOutcome === undefined"
-            ></app-no-data>
-            {{ decision.modifies?.linkedResolutions?.join(', ') }}
-            {{ decision.reconsiders?.linkedResolutions?.join(', ') }}
-          </div>
-
           <div class="full-width">
             <div class="subheading2">Decision Description</div>
             {{ decision.decisionDescription }}
@@ -151,7 +159,7 @@
       </section>
 
       <!-- Components -->
-      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code)">
+      <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code)">
         <h4>Components</h4>
         <section class="decision-section">
           <app-no-data
@@ -174,9 +182,12 @@
                 ></app-basic>
               </app-nfup>
 
-              <app-turp
+              <app-expiry-date
                 class="grid-2"
-                *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP"
+                *ngIf="
+                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.TURP ||
+                  component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.COVE
+                "
                 [component]="component"
               >
                 <app-basic
@@ -184,7 +195,7 @@
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
                 ></app-basic
-              ></app-turp>
+              ></app-expiry-date>
 
               <app-pofo
                 class="grid-2"
@@ -294,7 +305,7 @@
         </section>
       </ng-container>
 
-      <ng-container *ngIf="['APPR', 'APPA', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
+      <ng-container *ngIf="['APPR', 'RESC'].includes(decision.outcome.code) && decision.isSubjectToConditions">
         <h4>Conditions</h4>
         <section class="decision-section">
           <div>

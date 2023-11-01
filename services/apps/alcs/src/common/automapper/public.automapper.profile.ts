@@ -8,6 +8,7 @@ import { ApplicationSubmissionReview } from '../../portal/application-submission
 import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { NoticeOfIntentOwner } from '../../portal/notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.entity';
 import { NoticeOfIntentParcel } from '../../portal/notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.entity';
 import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.entity';
@@ -115,6 +116,16 @@ export class PublicAutomapperProfile extends AutomapperProfile {
       createMap(
         mapper,
         NotificationTransferee,
+        PublicOwnerDto,
+        forMember(
+          (pd) => pd.displayName,
+          mapFrom((p) => `${p.firstName} ${p.lastName}`),
+        ),
+      );
+
+      createMap(
+        mapper,
+        CovenantTransferee,
         PublicOwnerDto,
         forMember(
           (pd) => pd.displayName,

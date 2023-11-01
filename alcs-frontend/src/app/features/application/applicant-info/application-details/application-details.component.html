@@ -83,21 +83,15 @@
     <div class="full-width">
       <h4>Land Use of Parcel(s) under Application</h4>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agriculture that currently takes place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsAgricultureDescription }}
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agricultural improvements made to the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsAgricultureImprovementDescription }}
     </div>
-    <div class="subheading2 grid-1">
-      Describe all other uses that currently take place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
     <div class="grid-double">
       {{ submission.parcelsNonAgricultureUseDescription }}
     </div>
@@ -193,6 +187,12 @@
     [files]="files"
   >
   </app-incl-details>
+  <app-cove-details
+    *ngIf="submission && applicationType === 'COVE'"
+    [applicationSubmission]="submission"
+    [files]="files"
+  >
+  </app-cove-details>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(5)" mat-flat-button color="accent">

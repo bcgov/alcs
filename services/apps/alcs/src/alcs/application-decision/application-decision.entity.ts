@@ -21,7 +21,6 @@ import { ApplicationDecisionDocument } from './application-decision-document/app
 import { ApplicationDecisionMakerCode } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './application-decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationDecisionComponent } from './application-decision-v2/application-decision/component/application-decision-component.entity';
-import { LinkedResolutionOutcomeType } from './application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
@@ -155,12 +154,6 @@ export class ApplicationDecision extends Base {
   @AutoMap()
   @Column({ nullable: true, type: 'text' })
   chairReviewOutcomeCode: string | null;
-
-  @AutoMap(() => LinkedResolutionOutcomeType)
-  @ManyToOne(() => LinkedResolutionOutcomeType, {
-    nullable: true,
-  })
-  linkedResolutionOutcome: LinkedResolutionOutcomeType | null;
 
   @AutoMap()
   @Column({ nullable: true, type: 'text' })

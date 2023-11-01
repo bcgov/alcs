@@ -13,10 +13,8 @@
   </div>
 
   <ng-container *ngIf="_noiSubmission.soilIsRemovingSoilForNewStructure">
-    <div class="full-width subheading2">
-      The total floor area (m<sup>2</sup>) of the proposed structure(s)
-    </div>
-    <div class="full-width soil-table">
+    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) of the proposed structure(s)</div>
+    <div class="full-width structure-table">
       <div class="grid-1 subheading2">#</div>
       <div class="grid-2 subheading2">Type</div>
       <div class="grid-3 subheading2">Area</div>
@@ -39,9 +37,7 @@
     </div>
 
     <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
-      <div class="subheading2 grid-1">
-        Describe how the structure is necessary for farm use
-      </div>
+      <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureFarmUseReason }}
         <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilStructureFarmUseReason"></app-no-data>
@@ -49,9 +45,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
-      <div class="subheading2 grid-1">
-        Describe how the structure is necessary for residential use
-      </div>
+      <div class="subheading2 grid-1">Describe how the structure is necessary for residential use</div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialUseReason }}
         <app-no-data
@@ -62,9 +56,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilAgriParcelActivityVisible">
-      <div class="subheading2 grid-1">
-        Describe the current agricultural activity on the parcel(s)
-      </div>
+      <div class="subheading2 grid-1">Describe the current agricultural activity on the parcel(s)</div>
       <div class="grid-double">
         {{ _noiSubmission.soilAgriParcelActivity }}
         <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilAgriParcelActivity"></app-no-data>
@@ -72,9 +64,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
-      <div class="subheading2 grid-1">
-        Describe the intended use of the residential accessory structure
-      </div>
+      <div class="subheading2 grid-1">Describe the intended use of the residential accessory structure</div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureResidentialAccessoryUseReason }}
         <app-no-data
@@ -85,9 +75,7 @@
     </ng-container>
 
     <ng-container *ngIf="isSoilOtherStructureVisible">
-      <div class="subheading2 grid-1">
-        Describe the intended use of the 'Other' structure
-      </div>
+      <div class="subheading2 grid-1">Describe the intended use of the 'Other' structure</div>
       <div class="grid-double">
         {{ _noiSubmission.soilStructureOtherUseReason }}
         <app-no-data [showRequired]="showErrors" *ngIf="!_noiSubmission.soilStructureOtherUseReason"></app-no-data>

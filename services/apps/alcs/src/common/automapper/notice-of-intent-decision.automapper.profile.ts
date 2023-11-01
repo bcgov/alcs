@@ -197,6 +197,10 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
+        ),
+        forMember(
           (a) => a.uploadedBy,
           mapFrom((ad) => ad.document.uploadedBy?.name),
         ),
@@ -245,14 +249,6 @@ export class NoticeOfIntentDecisionProfile extends AutomapperProfile {
         forMember(
           (a) => a.submittedDate,
           mapFrom((rd) => rd.submittedDate.getTime()),
-        ),
-        forMember(
-          (a) => a.reviewDate,
-          mapFrom((rd) => rd.reviewDate?.getTime()),
-        ),
-        forMember(
-          (a) => a.outcomeNotificationDate,
-          mapFrom((rd) => rd.outcomeNotificationDate?.getTime()),
         ),
         forMember(
           (a) => a.modifiesDecisions,

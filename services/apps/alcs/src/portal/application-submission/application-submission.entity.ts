@@ -13,8 +13,10 @@ import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
+import { NotificationTransferee } from '../notification-submission/notification-transferee/notification-transferee.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
+import { CovenantTransferee } from './covenant-transferee/covenant-transferee.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 export class ProposedLot {
@@ -701,6 +703,24 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
   inclGovernmentOwnsAllParcels: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  coveAreaImpacted: number | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  coveHasDraft: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  coveFarmImpact: string | null;
 
   //END SUBMISSION FIELDS
 

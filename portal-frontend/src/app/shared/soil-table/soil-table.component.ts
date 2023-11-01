@@ -86,4 +86,9 @@ export class SoilTableComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  onInputFocus(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    inputElement.select()
+  }
 }

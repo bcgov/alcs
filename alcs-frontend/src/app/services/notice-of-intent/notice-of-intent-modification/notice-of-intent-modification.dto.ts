@@ -7,6 +7,7 @@ import { NoticeOfIntentDecisionDto } from '../decision/notice-of-intent-decision
 export interface NoticeOfIntentModificationCreateDto {
   fileNumber: string;
   applicant: string;
+  description: string;
   regionCode: string;
   localGovernmentUuid: string;
   submittedDate: number;
@@ -15,10 +16,9 @@ export interface NoticeOfIntentModificationCreateDto {
 }
 
 export interface NoticeOfIntentModificationUpdateDto {
+  description?: string;
   submittedDate?: number;
-  reviewDate?: number | null;
   reviewOutcomeCode?: string;
-  outcomeNotificationDate?: number | null;
   modifiesDecisionUuids?: string[];
 }
 
@@ -35,9 +35,8 @@ export interface NoticeOfIntentModificationDto {
   uuid: string;
   noticeOfIntent: NoticeOfIntentForModificationDto;
   card: CardDto;
+  description: string;
   submittedDate: number;
-  reviewDate: number;
-  outcomeNotificationDate: number | null;
   reviewOutcome: ModificationReviewOutcomeTypeDto;
   modifiesDecisions: NoticeOfIntentDecisionDto[];
   resultingDecision?: NoticeOfIntentDecisionDto;

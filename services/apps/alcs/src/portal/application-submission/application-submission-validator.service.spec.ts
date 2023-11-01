@@ -21,6 +21,8 @@ import { ApplicationParcel } from './application-parcel/application-parcel.entit
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
+import { CovenantTransferee } from './covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from './covenant-transferee/covenant-transferee.service';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);
@@ -31,11 +33,13 @@ describe('ApplicationSubmissionValidatorService', () => {
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockCovenantTransfereeService: DeepMocked<CovenantTransfereeService>;
 
   beforeEach(async () => {
     mockLGService = createMock();
     mockAppParcelService = createMock();
     mockAppDocumentService = createMock();
+    mockCovenantTransfereeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -51,6 +55,10 @@ describe('ApplicationSubmissionValidatorService', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: CovenantTransfereeService,
+          useValue: mockCovenantTransfereeService,
         },
       ],
     }).compile();
@@ -1210,4 +1218,236 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(false);
     });
   });
+
+  describe('SUBD Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: null,
+        subdAgricultureSupport: null,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: 'subdSuitability',
+        subdAgricultureSupport: 'subdAgricultureSupport',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 0,
+            alrArea: null,
+            planNumbers: null,
+          },
+        ],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require homesite severance when set to true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdIsHomeSiteSeverance: true,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `SUBD declared homesite severance but does not have required document`,
+          ),
+        ),
+      ).toBe(true);
+    });
+
+    it('should accept matching parcel sizes', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should reject mismatched parcel sizes', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 4,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(true);
+    });
+  });
+
+  describe('COVE Applications', () => {
+    beforeEach(() => {
+      mockCovenantTransfereeService.fetchBySubmissionUuid.mockResolvedValue([]);
+    });
+
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveAreaImpacted: null,
+        coveFarmImpact: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal missing covenant fields`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is is missing covenant transferees`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveAreaImpacted: 1.512,
+        coveFarmImpact: 'Farming impact',
+        coveHasDraft: false,
+      });
+      mockCovenantTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
+        new CovenantTransferee(),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal missing covenant fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is is missing covenant transferees`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require draft proposal when draft is true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveHasDraft: true,
+      });
+
+      const res = await service.validateSubmission(application);
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is missing draft proposal but has it true`),
+        ),
+      ).toBe(true);
+    });
+  });
 });
+``;

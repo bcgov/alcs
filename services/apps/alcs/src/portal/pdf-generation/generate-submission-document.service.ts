@@ -1,5 +1,4 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
-import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
 import {
   forwardRef,
   HttpStatus,
@@ -9,15 +8,15 @@ import {
 } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
-import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
@@ -38,6 +37,7 @@ export enum APPLICATION_SUBMISSION_TYPES {
   SUBD = 'SUBD',
   INCL = 'INCL',
   EXCL = 'EXCL',
+  COVE = 'COVE',
 }
 
 class PdfTemplate {

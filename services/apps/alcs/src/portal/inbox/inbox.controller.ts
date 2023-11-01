@@ -230,7 +230,6 @@ export class InboxController {
 
     const searchNotifications =
       (searchDto.fileTypes.length > 0 ? notificationTypeSpecified : true) &&
-      !isStringSetAndNotEmpty(searchDto.civicAddress) &&
       !isStringSetAndNotEmpty(searchDto.governmentFileNumber);
 
     return {

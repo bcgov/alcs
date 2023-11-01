@@ -23,6 +23,7 @@ import { OtherAttachmentsComponent } from './other-attachments/other-attachments
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { CoveProposalComponent } from './proposal/cove-proposal/cove-proposal.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { NaruProposalComponent } from './proposal/naru-proposal/naru-proposal.component';
@@ -81,6 +82,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(NaruProposalComponent) naruProposalComponent?: NaruProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
   @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
+  @ViewChild(CoveProposalComponent) coveProposalComponent?: CoveProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -256,6 +258,9 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     if (this.inclProposalComponent) {
       await this.inclProposalComponent.onSave();
     }
+    if (this.coveProposalComponent) {
+      await this.coveProposalComponent.onSave();
+    }
   }
 
   async onBeforeSwitchStep(index: number) {
@@ -280,15 +285,15 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   async onSubmit() {
     if (this.applicationSubmission) {
-      const isTUR = this.applicationSubmission.typeCode === 'TURP';
       const government = await this.loadGovernment(this.applicationSubmission.localGovernmentUuid);
       const governmentName = government?.name ?? 'selected local / first nation government';
+      const requiresReview = this.applicationSubmission.requiresGovernmentReview;
 
       this.dialog
         .open(SubmitConfirmationDialogComponent, {
           data: {
-            governmentName: isTUR ? 'ALC' : governmentName,
-            userIsGovernment: (government?.matchesUserGuid && !isTUR) ?? false,
+            governmentName: requiresReview ? governmentName : 'ALC',
+            userIsGovernment: !!government?.matchesUserGuid && requiresReview,
           },
         })
         .beforeClosed()
@@ -310,7 +315,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
           government = await this.loadGovernment(this.applicationSubmission?.localGovernmentUuid);
         }
 
-        if (government && government.matchesUserGuid && submission.typeCode !== 'TURP') {
+        if (government && government.matchesUserGuid && submission.requiresGovernmentReview) {
           const review = await this.applicationReviewService.startReview(submission.fileNumber);
           if (review) {
             await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);

@@ -24,6 +24,7 @@ oats_app_prep_data AS (
         oaac.nonfarm_use_subtype_code,
         onutc.description AS nonfarm_use_type_description,
         onusc.description AS nonfarm_use_subtype_description,
+        oaa.legacy_application_nbr,
         -- ALCS has typos fixed and this is required for proper validation
         CASE
             WHEN onusc.description = 'Water Distribtion Systems' THEN 'Water Distribution Systems'
@@ -32,11 +33,11 @@ oats_app_prep_data AS (
             ELSE onusc.description
         END AS mapped_nonfarm_use_subtype_description,
         CASE
-        	WHEN oaac.legislation_code = 'SEC_30_1' THEN 'Land Owner'
-        	WHEN oaac.legislation_code = 'SEC_29_1' THEN 'L/FNG Initiated'
-        	WHEN oaac.legislation_code = 'SEC_17_3' THEN 'Land Owner'
-        	WHEN oaac.legislation_code = 'SEC_17_1' THEN 'L/FNG Initiated'
-        	ELSE oaac.legislation_code
+            WHEN oaac.legislation_code = 'SEC_30_1' THEN 'Land Owner'
+            WHEN oaac.legislation_code = 'SEC_29_1' THEN 'L/FNG Initiated'
+            WHEN oaac.legislation_code = 'SEC_17_3' THEN 'Land Owner'
+            WHEN oaac.legislation_code = 'SEC_17_1' THEN 'L/FNG Initiated'
+            ELSE oaac.legislation_code
         END AS mapped_legislation,
         split_fee_with_local_gov_ind AS fee_lg,
         fee_received_date AS fee_date,
@@ -72,7 +73,9 @@ SELECT oapd.alr_application_id,
     a.fee_split_with_lg,
     oapd.fee_lg,
     oapd.fee_waived,
-    a.fee_waived
+    a.fee_waived,
+    oapd.legacy_application_nbr,
+    a.legacy_id
 FROM alcs.application a
     LEFT JOIN oats_app_prep_data AS oapd ON a.file_number = oapd.alr_application_id::TEXT
 WHERE a.alr_area != oapd.component_area
@@ -82,3 +85,4 @@ WHERE a.alr_area != oapd.component_area
     OR a.nfu_use_sub_type != oapd.mapped_nonfarm_use_subtype_description
     OR a.incl_excl_applicant_type != oapd.mapped_legislation
     OR a.fee_amount != oapd.fee_amount
+    OR a.legacy_id != oapd.legacy_application_nbr::text

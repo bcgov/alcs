@@ -8,7 +8,7 @@ import { ServiceValidationException } from '../../../../../libs/common/src/excep
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   generateSUBGTurApplicantHtml,
-  generateSUBGTurGovernmentHtml,
+  generateSUBGNoReviewGovernmentTemplateEmail,
 } from '../../../../../templates/emails/submitted-to-alc';
 import {
   generateSUBGApplicantHtml,
@@ -20,6 +20,8 @@ import { ApplicationSubmissionStatusType } from '../../alcs/application/applicat
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
@@ -45,6 +47,7 @@ describe('ApplicationSubmissionController', () => {
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   const localGovernmentUuid = 'local-government';
   const primaryContactOwnerUuid = 'primary-contact';
@@ -57,6 +60,7 @@ describe('ApplicationSubmissionController', () => {
     mockLgService = createMock();
     mockAppValidationService = createMock();
     mockStatusEmailService = createMock();
+    mockApplicationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionController],
@@ -81,6 +85,10 @@ describe('ApplicationSubmissionController', () => {
         {
           provide: StatusEmailService,
           useValue: mockStatusEmailService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
         {
           provide: ClsService,
@@ -116,6 +124,16 @@ describe('ApplicationSubmissionController', () => {
     mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
+    mockApplicationService.fetchApplicationTypes.mockResolvedValue([
+      new ApplicationType({
+        code: 'TURP',
+        requiresGovernmentReview: false,
+      }),
+      new ApplicationType({
+        code: 'NOT-TURP',
+        requiresGovernmentReview: true,
+      }),
+    ]);
 
     mockAppSubmissionService.mapToDTOs.mockResolvedValue([]);
     mockLgService.list.mockResolvedValue([
@@ -135,7 +153,7 @@ describe('ApplicationSubmissionController', () => {
   it('should call out to service when fetching applications', async () => {
     mockAppSubmissionService.getByUser.mockResolvedValue([]);
 
-    const applications = await controller.getApplications({
+    const applications = await controller.list({
       user: {
         entity: new User(),
       },
@@ -148,7 +166,7 @@ describe('ApplicationSubmissionController', () => {
   it('should fetch by bceid if user has same guid as a local government', async () => {
     mockAppSubmissionService.getForGovernment.mockResolvedValue([]);
 
-    const applications = await controller.getApplications({
+    const applications = await controller.list({
       user: {
         entity: new User({
           bceidBusinessGuid,
@@ -394,7 +412,7 @@ describe('ApplicationSubmissionController', () => {
       new ApplicationSubmissionToSubmissionStatus(),
     );
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application: mockApplicationSubmission as ValidatedApplicationSubmission,
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
       errors: [],
     });
 
@@ -434,7 +452,7 @@ describe('ApplicationSubmissionController', () => {
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledWith({
-      generateStatusHtml: generateSUBGTurGovernmentHtml,
+      generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
       status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       applicationSubmission: mockApplicationSubmission,
       government: mockGovernment,
@@ -458,8 +476,7 @@ describe('ApplicationSubmissionController', () => {
       mockApplicationSubmission,
     );
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
       errors: [],
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
@@ -528,8 +545,7 @@ describe('ApplicationSubmissionController', () => {
       mockApplicationSubmission,
     );
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
       errors: [],
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
@@ -571,7 +587,7 @@ describe('ApplicationSubmissionController', () => {
       submissionGovernment: new LocalGovernment(),
     });
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application: undefined,
+      submission: undefined,
       errors: [new Error('Failed to validate')],
     });
 

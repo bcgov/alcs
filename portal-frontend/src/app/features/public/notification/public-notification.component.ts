@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationPortalDecisionDto } from '../../../services/application-decision/application-decision.dto';
+import { NOTIFICATION_STATUS } from '../../../services/notification-submission/notification-submission.dto';
 import { PublicNotificationSubmissionDto } from '../../../services/public/public-notification.dto';
 import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/public.dto';
 import { PublicService } from '../../../services/public/public.service';
@@ -18,6 +19,7 @@ export class PublicNotificationComponent implements OnInit, OnDestroy {
   documents: PublicDocumentDto[] = [];
   parcels: PublicParcelDto[] = [];
   decisions: ApplicationPortalDecisionDto[] = [];
+  selectedIndex = 1;
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}
 
@@ -34,6 +36,10 @@ export class PublicNotificationComponent implements OnInit, OnDestroy {
     const res = await this.publicService.getNotification(fileId);
     if (res) {
       const { submission, documents, parcels } = res;
+
+      if (submission.status.code !== NOTIFICATION_STATUS.ALC_RESPONSE) {
+        this.selectedIndex = 0;
+      }
 
       this.submission = submission;
       this.documents = documents;

@@ -99,7 +99,8 @@ export class InboxNoticeOfIntentService {
       }
     } else {
       if (searchDto.filterBy === 'submitted') {
-        where = 'noiSearch.local_government_uuid = :governmentUuid';
+        where =
+          'noiSearch.local_government_uuid = :governmentUuid AND noiSearch.date_submitted_to_alc IS NOT NULL';
       } else {
         where =
           '(noiSearch.created_by_uuid = :userUuid OR noiSearch.bceid_business_guid = :bceidBusinessGuid)';
@@ -155,8 +156,8 @@ export class InboxNoticeOfIntentService {
     }
 
     if (searchDto.civicAddress) {
-      query = query.andWhere('parcel.civic_address like :civic_address', {
-        civic_address: `%${searchDto.civicAddress}%`,
+      query = query.andWhere('LOWER(parcel.civic_address) like LOWER(:civic_address)', {
+        civic_address: `%${searchDto.civicAddress}%`.toLowerCase(),
       });
     }
     return query;

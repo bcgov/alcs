@@ -43,6 +43,7 @@ describe('ApplicationDialogComponent', () => {
     shortLabel: 'short_label',
     textColor: '#000',
     backgroundColor: '#fff',
+    requiresGovernmentReview: false,
   };
 
   const mockApplication: ApplicationDto = {

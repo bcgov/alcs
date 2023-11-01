@@ -69,7 +69,9 @@ import { LinkedStatusType } from '../public-search.dto';
         'decision_date."application_uuid" = app.uuid',
       )
       .where('app_sub.is_draft = FALSE')
-      .andWhere('app.date_received_all_items IS NOT NULL')
+      .andWhere(
+        '(app.date_received_all_items IS NOT NULL AND app.date_received_all_items <= NOW())',
+      )
       .andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != 'CNCL'",
       ),

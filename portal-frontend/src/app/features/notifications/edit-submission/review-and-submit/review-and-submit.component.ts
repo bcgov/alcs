@@ -45,8 +45,4 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
       }
     }
   }
-
-  async onDownloadPdf(fileNumber: string | undefined) {
-    //TODO
-  }
 }

@@ -19,6 +19,8 @@ import { ApplicationSubmissionReviewService } from '../../application-submission
 import { ApplicationParcelService } from '../../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
+import { CovenantTransfereeService } from '../../application-submission/covenant-transferee/covenant-transferee.service';
+import { APPLICATION_SUBMISSION_TYPES } from '../../pdf-generation/generate-submission-document.service';
 import { PublicApplicationService } from './public-application.service';
 
 describe('PublicApplicationService', () => {
@@ -29,6 +31,7 @@ describe('PublicApplicationService', () => {
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppDecService: DeepMocked<ApplicationDecisionV2Service>;
+  let mockCovenantTransfereeService: DeepMocked<CovenantTransfereeService>;
 
   beforeEach(async () => {
     mockAppService = createMock();
@@ -37,6 +40,7 @@ describe('PublicApplicationService', () => {
     mockAppDocService = createMock();
     mockAppReviewService = createMock();
     mockAppDecService = createMock();
+    mockCovenantTransfereeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -71,6 +75,10 @@ describe('PublicApplicationService', () => {
           provide: ApplicationDecisionV2Service,
           useValue: mockAppDecService,
         },
+        {
+          provide: CovenantTransfereeService,
+          useValue: mockCovenantTransfereeService,
+        },
       ],
     }).compile();
 
@@ -100,7 +108,7 @@ describe('PublicApplicationService', () => {
     mockAppReviewService.getForPublicReview.mockResolvedValue(
       new ApplicationSubmissionReview(),
     );
-    mockAppDecService.getByAppFileNumber.mockResolvedValue([]);
+    mockAppDecService.getForPortal.mockResolvedValue([]);
 
     const fileId = 'file-id';
     await service.getPublicData(fileId);
@@ -115,7 +123,38 @@ describe('PublicApplicationService', () => {
       VISIBILITY_FLAG.PUBLIC,
     ]);
     expect(mockAppReviewService.getForPublicReview).toHaveBeenCalledTimes(1);
-    expect(mockAppDecService.getByAppFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockAppDecService.getForPortal).toHaveBeenCalledTimes(1);
+  });
+
+  it('load Transferees for Covenant Applications', async () => {
+    mockAppService.get.mockResolvedValue(
+      new Application({
+        dateReceivedAllItems: new Date(),
+        type: new ApplicationType(),
+        typeCode: APPLICATION_SUBMISSION_TYPES.COVE,
+      }),
+    );
+    mockAppSubService.getOrFailByFileNumber.mockResolvedValue(
+      new ApplicationSubmission({
+        get status(): ApplicationSubmissionToSubmissionStatus {
+          return new ApplicationSubmissionToSubmissionStatus();
+        },
+      }),
+    );
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([]);
+    mockAppDocService.list.mockResolvedValue([]);
+    mockAppReviewService.getForPublicReview.mockResolvedValue(
+      new ApplicationSubmissionReview(),
+    );
+    mockAppDecService.getForPortal.mockResolvedValue([]);
+    mockCovenantTransfereeService.fetchBySubmissionUuid.mockResolvedValue([]);
+
+    const fileId = 'file-id';
+    await service.getPublicData(fileId);
+
+    expect(
+      mockCovenantTransfereeService.fetchBySubmissionUuid,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to document service for getting files', async () => {

@@ -6,6 +6,7 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
+import { v4 } from 'uuid';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -21,6 +22,7 @@ import { NoticeOfIntentDecisionComponentType } from '../notice-of-intent-decisio
 import { NoticeOfIntentDecisionComponent } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.entity';
 import { NoticeOfIntentDecisionComponentService } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.service';
 import { NoticeOfIntentDecisionConditionType } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition-code.entity';
+import { NoticeOfIntentDecisionCondition } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition.entity';
 import { NoticeOfIntentDecisionConditionService } from '../notice-of-intent-decision-condition/notice-of-intent-decision-condition.service';
 import { NoticeOfIntentDecisionDocument } from '../notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
 import { NoticeOfIntentDecisionOutcome } from '../notice-of-intent-decision-outcome.entity';
@@ -263,6 +265,11 @@ export class NoticeOfIntentDecisionV2Service {
       );
     }
 
+    await this.validateResolutionNumber(
+      createDto.resolutionNumber,
+      createDto.resolutionYear,
+    );
+
     let decisionComponents: NoticeOfIntentDecisionComponent[] = [];
     if (createDto.decisionComponents) {
       this.decisionComponentService.validate(
@@ -297,11 +304,6 @@ export class NoticeOfIntentDecisionV2Service {
       components: decisionComponents,
     });
 
-    await this.validateResolutionNumber(
-      createDto.resolutionNumber,
-      createDto.resolutionYear,
-    );
-
     const savedDecision = await this.noticeOfIntentDecisionRepository.save(
       decision,
       {
@@ -309,7 +311,62 @@ export class NoticeOfIntentDecisionV2Service {
       },
     );
 
+    if (createDto.decisionToCopy) {
+      await this.copyDecisionFields(createDto.decisionToCopy, savedDecision);
+    }
+
     return this.get(savedDecision.uuid);
+  }
+
+  private async copyDecisionFields(
+    decisionToCopy: string,
+    decision: NoticeOfIntentDecision,
+  ) {
+    //It is intentional to only copy select fields
+    const existingDecision = await this.get(decisionToCopy);
+    decision.decisionMaker = existingDecision.decisionMaker;
+    decision.outcomeCode = existingDecision.outcomeCode;
+    decision.decisionMakerName = existingDecision.decisionMakerName;
+    decision.isSubjectToConditions = existingDecision.isSubjectToConditions;
+
+    const oldToNewComponentsUuid = new Map<string, string>();
+    const newToOldComponentsUuid = new Map<string, string>();
+    for (const component of existingDecision.components) {
+      const newUuid = v4();
+      oldToNewComponentsUuid.set(component.uuid, newUuid);
+      newToOldComponentsUuid.set(newUuid, component.uuid);
+    }
+
+    decision.components = existingDecision.components.map(
+      (component) =>
+        new NoticeOfIntentDecisionComponent({
+          ...component,
+          uuid: oldToNewComponentsUuid.get(component.uuid),
+          conditions: [],
+        }),
+    );
+    const savedDecision = await this.noticeOfIntentDecisionRepository.save(
+      decision,
+    );
+
+    savedDecision.conditions = existingDecision.conditions.map((condition) => {
+      const conditionsComponents = condition.components?.map(
+        (component) => component.uuid,
+      );
+      return new NoticeOfIntentDecisionCondition({
+        ...condition,
+        uuid: undefined,
+        components: savedDecision.components.filter((component) => {
+          const oldUuid = newToOldComponentsUuid.get(component.uuid);
+          return (
+            !!oldUuid &&
+            conditionsComponents &&
+            conditionsComponents.includes(oldUuid)
+          );
+        }),
+      });
+    });
+    await this.noticeOfIntentDecisionRepository.save(savedDecision);
   }
 
   private async validateResolutionNumber(number, year) {

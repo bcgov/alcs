@@ -201,7 +201,6 @@ describe('ApplicationTimelineService', () => {
       new ApplicationModification({
         isTimeExtension: true,
         submittedDate: new Date(sameDate.getTime() + 100),
-        reviewDate: new Date(sameDate.getTime() + 100),
         reviewOutcome: {
           label: 'CATS',
         } as ApplicationModificationOutcomeType,
@@ -215,12 +214,11 @@ describe('ApplicationTimelineService', () => {
     const res = await service.getTimelineEvents('file-number');
 
     expect(res).toBeDefined();
-    expect(res.length).toEqual(3);
-    expect(res[2].htmlText).toEqual('Modification Requested #1 - Other');
-    expect(res[1].htmlText).toEqual(
+    expect(res.length).toEqual(2);
+    expect(res[1].htmlText).toEqual('Modification Requested #1 - Other');
+    expect(res[0].htmlText).toEqual(
       'Modification Requested #2 - Time Extension',
     );
-    expect(res[0].htmlText).toEqual('Modification Request Reviewed #2 - CATS');
   });
 
   it('should map Meeting Events', async () => {

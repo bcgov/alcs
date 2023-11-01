@@ -74,7 +74,7 @@ describe('InboxApplicationService', () => {
     expect(
       mockApplicationSubmissionSearchViewRepository.createQueryBuilder,
     ).toBeCalledTimes(1);
-    expect(mockQuery.andWhere).toBeCalledTimes(8);
+    expect(mockQuery.andWhere).toBeCalledTimes(7);
   });
 
   it('should call compileApplicationSearchQuery method correctly', async () => {

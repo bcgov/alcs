@@ -2,6 +2,7 @@ import { MultipartFile } from '@fastify/multipart';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
+import { v4 } from 'uuid';
 import {
   ServiceNotFoundException,
   ServiceValidationException,
@@ -20,6 +21,7 @@ import { Application } from '../../../application/application.entity';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
+import { ApplicationDecisionCondition } from '../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecisionConditionService } from '../../application-decision-condition/application-decision-condition.service';
 import { ApplicationDecisionDocument } from '../../application-decision-document/application-decision-document.entity';
 import { ApplicationDecisionMakerCode } from '../../application-decision-maker/application-decision-maker.entity';
@@ -34,7 +36,6 @@ import {
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponent } from './component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './component/application-decision-component.service';
-import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @Injectable()
 export class ApplicationDecisionV2Service {
@@ -53,8 +54,6 @@ export class ApplicationDecisionV2Service {
     private decisionComponentTypeRepository: Repository<ApplicationDecisionComponentType>,
     @InjectRepository(ApplicationDecisionConditionType)
     private decisionConditionTypeRepository: Repository<ApplicationDecisionConditionType>,
-    @InjectRepository(LinkedResolutionOutcomeType)
-    private linkedResolutionOutcomeTypeRepository: Repository<LinkedResolutionOutcomeType>,
     @InjectRepository(NaruSubtype)
     private naruNaruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
@@ -98,7 +97,6 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        linkedResolutionOutcome: true,
         modifies: {
           modifiesDecisions: true,
         },
@@ -192,7 +190,6 @@ export class ApplicationDecisionV2Service {
         outcome: true,
         decisionMaker: true,
         ceoCriterion: true,
-        linkedResolutionOutcome: true,
         documents: {
           document: true,
         },
@@ -324,6 +321,7 @@ export class ApplicationDecisionV2Service {
     application: Application,
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
+    decisionToCopy?: string,
   ) {
     const isDraftExists = await this.appDecisionRepository.exist({
       where: {
@@ -337,6 +335,13 @@ export class ApplicationDecisionV2Service {
         'Draft decision already exists for this application.',
       );
     }
+
+    await this.validateDecisionChanges(createDto);
+
+    await this.validateResolutionNumber(
+      createDto.resolutionNumber,
+      createDto.resolutionYear,
+    );
 
     let decisionComponents: ApplicationDecisionComponent[] = [];
     if (createDto.decisionComponents) {
@@ -381,18 +386,64 @@ export class ApplicationDecisionV2Service {
       components: decisionComponents,
     });
 
-    await this.validateDecisionChanges(createDto);
-
-    await this.validateResolutionNumber(
-      createDto.resolutionNumber,
-      createDto.resolutionYear,
-    );
-
     const savedDecision = await this.appDecisionRepository.save(decision, {
       transaction: true,
     });
 
+    if (decisionToCopy) {
+      await this.copyDecisionFields(decisionToCopy, savedDecision);
+    }
+
     return this.get(savedDecision.uuid);
+  }
+
+  private async copyDecisionFields(
+    decisionToCopy: string,
+    decision: ApplicationDecision,
+  ) {
+    //It is intentional to only copy select fields
+    const existingDecision = await this.get(decisionToCopy);
+    decision.decisionMakerCode = existingDecision.decisionMakerCode;
+    decision.outcomeCode = existingDecision.outcomeCode;
+    decision.isSubjectToConditions = existingDecision.isSubjectToConditions;
+
+    const oldToNewComponentsUuid = new Map<string, string>();
+    const newToOldComponentsUuid = new Map<string, string>();
+    for (const component of existingDecision.components) {
+      const newUuid = v4();
+      oldToNewComponentsUuid.set(component.uuid, newUuid);
+      newToOldComponentsUuid.set(newUuid, component.uuid);
+    }
+
+    decision.components = existingDecision.components.map(
+      (component) =>
+        new ApplicationDecisionComponent({
+          ...component,
+          uuid: oldToNewComponentsUuid.get(component.uuid),
+          conditions: [],
+        }),
+    );
+    const savedDecision = await this.appDecisionRepository.save(decision);
+
+    savedDecision.conditions = existingDecision.conditions.map((condition) => {
+      const conditionsComponents = condition.components?.map(
+        (component) => component.uuid,
+      );
+      return new ApplicationDecisionCondition({
+        ...condition,
+        uuid: undefined,
+        components: savedDecision.components.filter((component) => {
+          const oldUuid = newToOldComponentsUuid.get(component.uuid);
+          return (
+            !!oldUuid &&
+            conditionsComponents &&
+            conditionsComponents.includes(oldUuid)
+          );
+        }),
+      });
+    });
+
+    await this.appDecisionRepository.save(savedDecision);
   }
 
   private async validateResolutionNumber(number, year) {
@@ -538,7 +589,6 @@ export class ApplicationDecisionV2Service {
       }),
       this.decisionComponentTypeRepository.find(),
       this.decisionConditionTypeRepository.find(),
-      this.linkedResolutionOutcomeTypeRepository.find(),
       this.naruNaruSubtypeRepository.find(),
     ]);
 
@@ -548,8 +598,7 @@ export class ApplicationDecisionV2Service {
       ceoCriterion: values[2],
       decisionComponentTypes: values[3],
       decisionConditionTypes: values[4],
-      linkedResolutionOutcomeType: values[5],
-      naruSubtypes: values[6],
+      naruSubtypes: values[5],
     };
   }
 

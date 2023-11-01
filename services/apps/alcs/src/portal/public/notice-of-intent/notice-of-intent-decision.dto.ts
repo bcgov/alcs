@@ -17,6 +17,9 @@ export class NoticeOfIntentPortalDecisionDto {
   outcome: NoticeOfIntentDecisionOutcomeCodeDto;
 
   @AutoMap(() => String)
+  decisionDescription: string;
+
+  @AutoMap(() => String)
   resolutionNumber: number;
 
   @AutoMap(() => String)

@@ -10,6 +10,7 @@ import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmission } from './application-submission.entity';
+import { CovenantTransfereeService } from './covenant-transferee/covenant-transferee.service';
 
 export class ValidatedApplicationSubmission extends ApplicationSubmission {
   applicant: string;
@@ -40,6 +41,7 @@ export class ApplicationSubmissionValidatorService {
     private localGovernmentService: LocalGovernmentService,
     private appParcelService: ApplicationParcelService,
     private appDocumentService: ApplicationDocumentService,
+    private covenantTransfereeService: CovenantTransfereeService,
   ) {}
 
   async validateSubmission(applicationSubmission: ApplicationSubmission) {
@@ -53,8 +55,13 @@ export class ApplicationSubmissionValidatorService {
       errors.push(new ServiceValidationException('Missing purpose'));
     }
 
+    const parcels = await this.appParcelService.fetchByApplicationFileId(
+      applicationSubmission.fileNumber,
+    );
+
     const validatedParcels = await this.validateParcels(
       applicationSubmission,
+      parcels,
       errors,
     );
 
@@ -86,6 +93,7 @@ export class ApplicationSubmissionValidatorService {
       await this.validateSubdProposal(
         applicationSubmission,
         applicantDocuments,
+        parcels,
         errors,
       );
     }
@@ -136,6 +144,13 @@ export class ApplicationSubmissionValidatorService {
         errors,
       );
     }
+    if (applicationSubmission.typeCode === 'COVE') {
+      await this.validateCoveProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
 
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
@@ -153,18 +168,15 @@ export class ApplicationSubmissionValidatorService {
 
     return {
       errors,
-      application: errors.length === 0 ? validatedApplication : undefined,
+      submission: errors.length === 0 ? validatedApplication : undefined,
     };
   }
 
   private async validateParcels(
     applicationSubmission: ApplicationSubmission,
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
-    const parcels = await this.appParcelService.fetchByApplicationFileId(
-      applicationSubmission.fileNumber,
-    );
-
     if (parcels.length === 0) {
       errors.push(new ServiceValidationException(`Application has no parcels`));
     }
@@ -456,6 +468,7 @@ export class ApplicationSubmissionValidatorService {
   private async validateSubdProposal(
     applicationSubmission: ApplicationSubmission,
     applicantDocuments: ApplicationDocument[],
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
     if (applicationSubmission.subdProposedLots.length === 0) {
@@ -487,10 +500,27 @@ export class ApplicationSubmissionValidatorService {
       if (homesiteDocuments.length === 0) {
         errors.push(
           new ServiceValidationException(
-            `SUBD delcared homesite severance but does not have required document`,
+            `SUBD declared homesite severance but does not have required document`,
           ),
         );
       }
+    }
+
+    const initialArea = parcels.reduce(
+      (totalSize, parcel) => totalSize + (parcel.mapAreaHectares ?? 0),
+      0,
+    );
+    const subdividedArea = applicationSubmission.subdProposedLots.reduce(
+      (totalSize, proposedLot) => totalSize + (proposedLot.size ?? 0),
+      0,
+    );
+
+    if (initialArea !== subdividedArea) {
+      errors.push(
+        new ServiceValidationException(
+          `SUBD parcels area is different from proposed lot area`,
+        ),
+      );
     }
   }
 
@@ -805,6 +835,60 @@ export class ApplicationSubmissionValidatorService {
           ),
         );
       }
+    }
+  }
+
+  private async validateCoveProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.coveHasDraft === null ||
+      applicationSubmission.coveFarmImpact === null ||
+      applicationSubmission.coveAreaImpacted === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing covenant fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.coveHasDraft === true) {
+      const draftProposal = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.SRW_TERMS,
+      );
+      if (draftProposal.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing draft proposal but has it true`,
+          ),
+        );
+      }
+    }
+
+    const coveTransferess =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        applicationSubmission.uuid,
+      );
+    if (coveTransferess.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is is missing covenant transferees`,
+        ),
+      );
     }
   }
 }

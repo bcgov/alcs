@@ -10,4 +10,10 @@ export class ApplicationTypeDto extends BaseCodeDto {
 
   @AutoMap()
   textColor: string;
+
+  @AutoMap()
+  requiresGovernmentReview: boolean;
+
+  @AutoMap()
+  portalOrder: number;
 }

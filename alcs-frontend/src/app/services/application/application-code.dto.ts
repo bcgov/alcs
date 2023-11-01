@@ -9,6 +9,7 @@ export interface ApplicationTypeDto extends BaseCodeDto {
   shortLabel: string;
   backgroundColor: string;
   textColor: string;
+  requiresGovernmentReview: boolean;
 }
 
 export interface ApplicationMasterCodesDto {

@@ -7,7 +7,7 @@ import {
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
 } from '../../../services/public/public-application.dto';
-import { PublicDocumentDto, PublicParcelDto } from '../../../services/public/public.dto';
+import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../services/public/public.dto';
 import { PublicService } from '../../../services/public/public.service';
 
 @Component({
@@ -25,6 +25,8 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   documents: PublicDocumentDto[] = [];
   parcels: PublicParcelDto[] = [];
   decisions: ApplicationPortalDecisionDto[] = [];
+  transferees: PublicOwnerDto[] = [];
+  selectedIndex = 0;
 
   constructor(private publicService: PublicService, private route: ActivatedRoute) {}
 
@@ -40,13 +42,17 @@ export class PublicApplicationComponent implements OnInit, OnDestroy {
   private async loadApplication(fileId: string) {
     const res = await this.publicService.getApplication(fileId);
     if (res) {
-      const { submission, documents, parcels, review, decisions } = res;
+      const { submission, documents, parcels, review, decisions, transferees } = res;
 
+      if (submission.status.code === SUBMISSION_STATUS.ALC_DECISION) {
+        this.selectedIndex = 2;
+      }
       this.submission = submission;
       this.documents = documents;
       this.parcels = parcels;
       this.review = review;
       this.decisions = decisions;
+      this.transferees = transferees;
     }
   }
 

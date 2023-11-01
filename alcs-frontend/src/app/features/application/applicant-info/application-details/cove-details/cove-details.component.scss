@@ -1,0 +1,10 @@
+
+.transferee-table {
+  display: grid;
+  grid-template-columns: minmax(max-content, 1fr) minmax(max-content, 1fr) minmax(max-content, 1fr) minmax(max-content, 1fr) minmax(max-content, 1fr);
+  overflow-x: auto;
+  grid-column-gap: 36px;
+  grid-row-gap: 12px;
+  overflow: unset;
+  margin-bottom: 12px;
+}

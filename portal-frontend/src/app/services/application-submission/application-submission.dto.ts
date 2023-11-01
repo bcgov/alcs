@@ -1,5 +1,6 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
+import { CovenantTransfereeDto } from '../covenant-transferee/covenant-transferee.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -46,6 +47,7 @@ export interface ApplicationSubmissionDto {
   purpose: string | null;
   type: string;
   typeCode: string;
+  requiresGovernmentReview: boolean;
   localGovernmentUuid: string;
   status: ApplicationStatusDto;
   canEdit: boolean;
@@ -154,6 +156,11 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   inclImprovements: string | null;
   exclShareGovernmentBorders: boolean | null;
   inclGovernmentOwnsAllParcels: boolean | null;
+
+  //Covenant Fields
+  coveHasDraft: boolean | null;
+  coveFarmImpact: string | null;
+  coveAreaImpacted: number | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
@@ -259,4 +266,9 @@ export interface ApplicationSubmissionUpdateDto {
   inclImprovements?: string | null;
   exclShareGovernmentBorders?: boolean | null;
   inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  coveHasDraft?: boolean | null;
+  coveFarmImpact?: string | null;
+  coveAreaImpacted?: number | null;
 }

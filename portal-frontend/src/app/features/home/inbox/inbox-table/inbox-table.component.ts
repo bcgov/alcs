@@ -45,7 +45,7 @@ export class InboxTableComponent implements OnDestroy {
   ];
   dataSource = new MatTableDataSource<InboxResultDto>();
   pageIndex = 0;
-  itemsPerPage = 20;
+  itemsPerPage = 10;
   total = 0;
   sortDirection = 'DESC';
   sortField = 'lastUpdate';

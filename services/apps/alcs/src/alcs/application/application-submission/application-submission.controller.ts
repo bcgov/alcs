@@ -1,12 +1,16 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
-import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
+import { CovenantTransfereeDto } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.dto';
+import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -17,6 +21,7 @@ export class ApplicationSubmissionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private documentService: DocumentService,
+    @InjectMapper() private mapper: Mapper,
   ) {}
 
   @UserRoles(...ANY_AUTH_ROLE)
@@ -25,6 +30,19 @@ export class ApplicationSubmissionController {
     const submission = await this.applicationSubmissionService.get(fileNumber);
 
     return await this.applicationSubmissionService.mapToDto(submission);
+  }
+
+  @UserRoles(...ANY_AUTH_ROLE)
+  @Get('/:fileNumber/transferee')
+  async getCovenantTransferees(@Param('fileNumber') fileNumber: string) {
+    const covenantTransferees =
+      await this.applicationSubmissionService.getTransferees(fileNumber);
+
+    return this.mapper.mapArray(
+      covenantTransferees,
+      CovenantTransferee,
+      CovenantTransfereeDto,
+    );
   }
 
   @UserRoles(...ANY_AUTH_ROLE)

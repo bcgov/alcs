@@ -417,6 +417,8 @@ export class ApplicationService {
         portalLabel: true,
         htmlDescription: true,
         label: true,
+        requiresGovernmentReview: true,
+        portalOrder: true,
       },
     });
   }

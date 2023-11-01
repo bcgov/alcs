@@ -1,3 +1,5 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -19,6 +21,11 @@ describe('ApplicationSubmissionController', () => {
     mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [ApplicationSubmissionController],
       providers: [
         {
@@ -63,22 +70,17 @@ describe('ApplicationSubmissionController', () => {
     expect(result).toBeDefined();
   });
 
-  it('should call documentService to get inline download url Submission', async () => {
-    const fakeDownloadUrl = 'fake_download';
-    const fakeUuid = 'fake';
+  it('should call through to service for fetching transferees', async () => {
+    const fakeFileNumber = 'fake';
 
-    mockDocumentService.getDocument.mockResolvedValue({} as Document);
-    mockDocumentService.getDownloadUrl.mockResolvedValue(fakeDownloadUrl);
+    mockApplicationSubmissionService.getTransferees.mockResolvedValue([]);
 
-    const result = await controller.downloadFile(fakeUuid);
+    const result = await controller.getCovenantTransferees(fakeFileNumber);
 
-    expect(mockDocumentService.getDocument).toBeCalledTimes(1);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledTimes(1);
-    expect(mockDocumentService.getDocument).toBeCalledWith(fakeUuid);
-    expect(mockDocumentService.getDownloadUrl).toBeCalledWith(
-      {} as Document,
-      true,
+    expect(mockApplicationSubmissionService.getTransferees).toBeCalledTimes(1);
+    expect(mockApplicationSubmissionService.getTransferees).toBeCalledWith(
+      fakeFileNumber,
     );
-    expect(result).toEqual({ url: fakeDownloadUrl });
+    expect(result).toEqual([]);
   });
 });

@@ -143,14 +143,12 @@ describe('NoticeOfIntentTimelineService', () => {
     mockNOIModificationRepo.find.mockResolvedValue([
       new NoticeOfIntentModification({
         submittedDate: new Date(sameDate.getTime() + 1000),
-        outcomeNotificationDate: new Date(sameDate.getTime() + 1000),
         reviewOutcome: {
           label: 'CATS',
         } as NoticeOfIntentModificationOutcomeType,
       }),
       new NoticeOfIntentModification({
         submittedDate: sameDate,
-        outcomeNotificationDate: sameDate,
         reviewOutcome: {
           label: 'CATS',
         } as NoticeOfIntentModificationOutcomeType,
@@ -160,11 +158,9 @@ describe('NoticeOfIntentTimelineService', () => {
     const res = await service.getTimelineEvents('file-number');
 
     expect(res).toBeDefined();
-    expect(res.length).toEqual(4);
-    expect(res[3].htmlText).toEqual('Modification Requested #1');
-    expect(res[2].htmlText).toEqual('Modification Request Reviewed #1 - CATS');
-    expect(res[1].htmlText).toEqual('Modification Requested #2');
-    expect(res[0].htmlText).toEqual('Modification Request Reviewed #2 - CATS');
+    expect(res.length).toEqual(2);
+    expect(res[1].htmlText).toEqual('Modification Requested #1');
+    expect(res[0].htmlText).toEqual('Modification Requested #2');
   });
 
   it('should map Meeting Events', async () => {

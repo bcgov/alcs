@@ -205,14 +205,15 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     } else {
       this.hasSubmittedNotice.disable();
       this.hasSubmittedNotice.setValue(null);
+      this.requiresNoticeOfWork = false;
     }
-  }
-
-  markDirty() {
-    this.areComponentsDirty = true;
   }
 
   onChangeNoticeOfWork(selectedValue: string) {
     this.requiresNoticeOfWork = selectedValue === 'true';
+  }
+
+  markDirty() {
+    this.areComponentsDirty = true;
   }
 }

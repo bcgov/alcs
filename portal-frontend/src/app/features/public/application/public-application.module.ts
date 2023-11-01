@@ -11,6 +11,7 @@ import { PublicDecisionsComponent } from './alc-review/decisions/decisions.compo
 import { PublicSubmissionDocumentsComponent } from './alc-review/submission-documents/submission-documents.component';
 import { PublicLfngReviewComponent } from './lfng-review/lfng-review.component';
 import { PublicApplicationComponent } from './public-application.component';
+import { CoveDetailsComponent } from './submission/cove-details/cove-details.component';
 import { ExclDetailsComponent } from './submission/excl-details/excl-details.component';
 import { InclDetailsComponent } from './submission/incl-details/incl-details.component';
 import { NaruDetailsComponent } from './submission/naru-details/naru-details.component';
@@ -48,6 +49,7 @@ const routes: Routes = [
     NaruDetailsComponent,
     ExclDetailsComponent,
     InclDetailsComponent,
+    CoveDetailsComponent,
   ],
   imports: [
     CommonModule,

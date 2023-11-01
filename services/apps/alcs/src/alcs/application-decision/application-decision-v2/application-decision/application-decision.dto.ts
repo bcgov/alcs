@@ -115,6 +115,10 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
 
   @IsString()
+  @IsOptional()
+  decisionToCopy?: string;
+
+  @IsString()
   outcomeCode: string;
 
   @IsNumber()
@@ -140,8 +144,6 @@ export class ApplicationDecisionOutcomeCodeDto extends BaseCodeDto {
 }
 
 export class ChairReviewOutcomeCodeDto extends BaseCodeDto {}
-
-export class LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
 
 export class ApplicationDecisionDto {
   @AutoMap()
@@ -176,9 +178,6 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => ChairReviewOutcomeCodeDto)
   chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
-
-  @AutoMap(() => LinkedResolutionOutcomeTypeDto)
-  linkedResolutionOutcome?: LinkedResolutionOutcomeTypeDto | null;
 
   @AutoMap(() => [DecisionDocumentDto])
   documents: DecisionDocumentDto[];
@@ -234,6 +233,9 @@ export class DecisionDocumentDto {
 
   @AutoMap()
   fileName: string;
+
+  @AutoMap()
+  fileSize: number;
 
   @AutoMap()
   mimeType: string;

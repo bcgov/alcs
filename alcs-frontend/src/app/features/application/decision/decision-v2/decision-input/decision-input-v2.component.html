@@ -71,7 +71,7 @@
       class="card-post-decision"
       [items]="postDecisions"
       appendTo="body"
-      placeholder="Linked Recon or Modification Request *"
+      placeholder="Linked Request*"
       bindLabel="label"
       bindValue="uuid"
       [clearable]="false"
@@ -79,17 +79,6 @@
       (change)="onSelectPostDecision($event)"
     >
     </ng-select>
-
-    <ng-select
-      *ngIf="!isFirstDecision"
-      appearance="outline"
-      [items]="linkedResolutionOutcomes"
-      formControlName="linkedResolutionOutcome"
-      appendTo="body"
-      bindLabel="label"
-      bindValue="code"
-      placeholder="Linked Resolution Outcome *"
-    ></ng-select>
 
     <ng-select
       appearance="outline"

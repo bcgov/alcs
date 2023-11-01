@@ -20,6 +20,8 @@ import { ParcelDetailsComponent } from './parcel-details/parcel-details.componen
 import { ParcelEntryConfirmationDialogComponent } from './parcel-details/parcel-entry/parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 import { ParcelEntryComponent } from './parcel-details/parcel-entry/parcel-entry.component';
 import { PrimaryContactComponent } from './primary-contact/primary-contact.component';
+import { CoveProposalComponent } from './proposal/cove-proposal/cove-proposal.component';
+import { CovenantTransfereeDialogComponent } from './proposal/cove-proposal/transferee-dialog/transferee-dialog.component';
 import { ExclProposalComponent } from './proposal/excl-proposal/excl-proposal.component';
 import { InclProposalComponent } from './proposal/incl-proposal/incl-proposal.component';
 import { ChangeSubtypeConfirmationDialogComponent } from './proposal/naru-proposal/change-subtype-confirmation-dialog/change-subtype-confirmation-dialog.component';
@@ -60,6 +62,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     ChangeSubtypeConfirmationDialogComponent,
     ExclProposalComponent,
     InclProposalComponent,
+    CoveProposalComponent,
+    CovenantTransfereeDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -97,6 +101,8 @@ import { SelectGovernmentComponent } from './select-government/select-government
     NaruProposalComponent,
     ExclProposalComponent,
     InclProposalComponent,
+    CoveProposalComponent,
+    CovenantTransfereeDialogComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

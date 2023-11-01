@@ -22,7 +22,7 @@
     <div *ngIf="_applicationSubmission.subdProposedLots.length === 0" class="full-width">
       <app-no-data [showRequired]="showErrors"></app-no-data>
     </div>
-    <div *ngIf="showErrors && totalAcres !== totalTargetAcres" class="full-width field-error">
+    <div *ngIf="showErrors && totalAcres !== totalTargetAcres" class="full-width error field-error">
       <mat-icon>warning</mat-icon>
       <div>The total lot area proposed must match {{ totalTargetAcres }} hectares as provided in Step 1</div>
     </div>

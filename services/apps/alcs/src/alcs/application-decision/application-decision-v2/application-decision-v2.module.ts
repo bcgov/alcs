@@ -43,7 +43,6 @@ import { ApplicationDecisionComponentType } from './application-decision/compone
 import { ApplicationDecisionComponentController } from './application-decision/component/application-decision-component.controller';
 import { ApplicationDecisionComponent } from './application-decision/component/application-decision-component.entity';
 import { ApplicationDecisionComponentService } from './application-decision/component/application-decision-component.service';
-import { LinkedResolutionOutcomeType } from './application-decision/linked-resolution-outcome-type.entity';
 
 @Module({
   imports: [
@@ -63,7 +62,6 @@ import { LinkedResolutionOutcomeType } from './application-decision/linked-resol
       ApplicationDecisionComponentType,
       ApplicationDecisionCondition,
       ApplicationDecisionConditionType,
-      LinkedResolutionOutcomeType,
       NaruSubtype,
       ApplicationSubmissionToSubmissionStatus,
       ApplicationSubmission,

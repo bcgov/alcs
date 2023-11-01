@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
 import { filterUndefined } from '../../../utils/undefined';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../application-submission-status/submission-status-type.entity';
@@ -22,6 +23,8 @@ export class ApplicationSubmissionService {
     private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    @InjectRepository(CovenantTransferee)
+    private covenantTransfereeRepository: Repository<CovenantTransferee>,
   ) {}
 
   async get(fileNumber: string) {
@@ -37,6 +40,20 @@ export class ApplicationSubmissionService {
         owners: {
           type: true,
         },
+      },
+    });
+  }
+
+  async getTransferees(fileNumber: string) {
+    return this.covenantTransfereeRepository.find({
+      where: {
+        applicationSubmission: {
+          fileNumber,
+          isDraft: false,
+        },
+      },
+      relations: {
+        type: true,
       },
     });
   }

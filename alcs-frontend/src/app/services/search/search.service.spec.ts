@@ -32,6 +32,7 @@ describe('SearchService', () => {
         textColor: '#000000',
         label: 'Application Type 1',
         description: 'Application Type 1',
+        requiresGovernmentReview: false,
       },
     },
   ];

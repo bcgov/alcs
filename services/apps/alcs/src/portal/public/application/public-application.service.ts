@@ -10,14 +10,21 @@ import {
 } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../../alcs/application/application.service';
-import { PublicDocumentDto, PublicParcelDto } from '../public.dto';
-import { ApplicationPortalDecisionDto } from './application-decision.dto';
 import { ApplicationSubmissionReview } from '../../application-submission-review/application-submission-review.entity';
 import { ApplicationSubmissionReviewService } from '../../application-submission-review/application-submission-review.service';
 import { ApplicationParcel } from '../../application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
+import { CovenantTransferee } from '../../application-submission/covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from '../../application-submission/covenant-transferee/covenant-transferee.service';
+import { APPLICATION_SUBMISSION_TYPES } from '../../pdf-generation/generate-submission-document.service';
+import {
+  PublicDocumentDto,
+  PublicOwnerDto,
+  PublicParcelDto,
+} from '../public.dto';
+import { ApplicationPortalDecisionDto } from './application-decision.dto';
 import {
   PublicApplicationSubmissionDto,
   PublicApplicationSubmissionReviewDto,
@@ -32,6 +39,7 @@ export class PublicApplicationService {
     private applicationDocumentService: ApplicationDocumentService,
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDecisionService: ApplicationDecisionV2Service,
+    private covenantTransfereeService: CovenantTransfereeService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -88,7 +96,7 @@ export class PublicApplicationService {
       );
     }
 
-    const decisions = await this.applicationDecisionService.getByAppFileNumber(
+    const decisions = await this.applicationDecisionService.getForPortal(
       fileNumber,
     );
     const mappedDecisions = this.mapper.mapArray(
@@ -97,12 +105,25 @@ export class PublicApplicationService {
       ApplicationPortalDecisionDto,
     );
 
+    let transferees: CovenantTransferee[] = [];
+    if (application.typeCode === APPLICATION_SUBMISSION_TYPES.COVE) {
+      transferees = await this.covenantTransfereeService.fetchBySubmissionUuid(
+        submission.uuid,
+      );
+    }
+    const mappedTransferees = this.mapper.mapArray(
+      transferees,
+      CovenantTransferee,
+      PublicOwnerDto,
+    );
+
     return {
       submission: mappedSubmission,
       parcels: mappedParcels,
       documents: mappedDocuments,
       review: mappedReview,
       decisions: mappedDecisions,
+      transferees: mappedTransferees,
     };
   }
 

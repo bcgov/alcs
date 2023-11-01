@@ -301,8 +301,7 @@ describe('ApplicationSubmissionReviewController', () => {
     mockAppReviewService.verifyComplete.mockReturnValue(applicationReview);
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
     mockAppDocService.list.mockResolvedValue([]);
@@ -349,8 +348,7 @@ describe('ApplicationSubmissionReviewController', () => {
     });
 
     mockAppValidatorService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
 
@@ -433,8 +431,7 @@ describe('ApplicationSubmissionReviewController', () => {
     });
     mockAppReviewService.getByFileNumber.mockResolvedValue(applicationReview);
     mockAppValidatorService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: new ApplicationSubmission() as ValidatedApplicationSubmission,
       errors: [],
     });
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);

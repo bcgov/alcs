@@ -71,24 +71,28 @@ export class TransfereeDialogComponent {
   }
 
   async onCreate() {
-    if (!this.data.submissionUuid) {
-      console.error('TransfereeDialogComponent misconfigured, needs submissionUuid for create');
-      return;
+    if (this.form.valid) {
+      if (!this.data.submissionUuid) {
+        console.error('TransfereeDialogComponent misconfigured, needs submissionUuid for create');
+        return;
+      }
+      this.isLoading = true;
+
+      const createDto: NotificationTransfereeCreateDto = {
+        organizationName: this.organizationName.getRawValue() || undefined,
+        firstName: this.firstName.getRawValue() || undefined,
+        lastName: this.lastName.getRawValue() || undefined,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+        notificationSubmissionUuid: this.data.submissionUuid,
+      };
+
+      await this.transfereeService.create(createDto);
+      this.dialogRef.close(true);
+    } else {
+      this.form.markAllAsTouched()
     }
-    this.isLoading = true;
-
-    const createDto: NotificationTransfereeCreateDto = {
-      organizationName: this.organizationName.getRawValue() || undefined,
-      firstName: this.firstName.getRawValue() || undefined,
-      lastName: this.lastName.getRawValue() || undefined,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-      notificationSubmissionUuid: this.data.submissionUuid,
-    };
-
-    await this.transfereeService.create(createDto);
-    this.dialogRef.close(true);
   }
 
   async onClose() {
@@ -96,18 +100,22 @@ export class TransfereeDialogComponent {
   }
 
   async onSave() {
-    const updateDto: NotificationTransfereeUpdateDto = {
-      organizationName: this.organizationName.getRawValue(),
-      firstName: this.firstName.getRawValue(),
-      lastName: this.lastName.getRawValue(),
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: this.type.getRawValue()!,
-    };
-    if (this.existingUuid) {
-      this.isLoading = true;
-      await this.transfereeService.update(this.existingUuid, updateDto);
-      this.dialogRef.close(true);
+    if (this.form.valid) {
+      const updateDto: NotificationTransfereeUpdateDto = {
+        organizationName: this.organizationName.getRawValue(),
+        firstName: this.firstName.getRawValue(),
+        lastName: this.lastName.getRawValue(),
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: this.type.getRawValue()!,
+      };
+      if (this.existingUuid) {
+        this.isLoading = true;
+        await this.transfereeService.update(this.existingUuid, updateDto);
+        this.dialogRef.close(true);
+      }
+    } else {
+      this.form.markAllAsTouched()
     }
   }
 }

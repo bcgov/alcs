@@ -109,18 +109,18 @@
   <h3>Optional Documents</h3>
   <div *ngIf="submission" class="review-table">
     <div class="other-attachments full-width">
-      <div class="grid-1 subheading2">File Name</div>
-      <div class="grid-2 subheading2">Type</div>
-      <div class="grid-3 subheading2">Description</div>
+      <div class="subheading2">File Name</div>
+      <div class="subheading2">Type</div>
+      <div class="subheading2">Description</div>
 
       <ng-container *ngFor="let file of otherFiles">
-        <div class="grid-1">
+        <div>
           <a (click)="openFile(file.uuid)">{{ file.fileName }}</a>
         </div>
-        <div class="grid-2">
+        <div>
           {{ file.type?.label }}
         </div>
-        <div class="grid-3">
+        <div>
           {{ file.description }}
         </div>
       </ng-container>

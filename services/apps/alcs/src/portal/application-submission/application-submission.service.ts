@@ -190,6 +190,7 @@ export class ApplicationSubmissionService {
     await this.setSoilFields(applicationSubmission, updateDto);
     this.setNARUFields(applicationSubmission, updateDto);
     this.setInclusionExclusionFields(applicationSubmission, updateDto);
+    this.setCovenantFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
@@ -588,17 +589,19 @@ export class ApplicationSubmissionService {
     apps: ApplicationSubmission[],
     user: User,
     userGovernment?: LocalGovernment,
-  ) {
+  ): Promise<ApplicationSubmissionDto[]> {
     const types = await this.applicationService.fetchApplicationTypes();
 
     return apps.map((app) => {
+      const matchingAppType = types.find((type) => type.code === app.typeCode);
       return {
         ...this.mapper.map(
           app,
           ApplicationSubmission,
           ApplicationSubmissionDto,
         ),
-        type: types.find((type) => type.code === app.typeCode)!.label,
+        type: matchingAppType!.label,
+        requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
         canEdit: [
           SUBMISSION_STATUS.IN_PROGRESS,
           SUBMISSION_STATUS.INCOMPLETE,
@@ -610,7 +613,7 @@ export class ApplicationSubmissionService {
             SUBMISSION_STATUS.SUBMITTED_TO_LG,
             SUBMISSION_STATUS.IN_REVIEW_BY_LG,
           ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
-          userGovernment &&
+          !!userGovernment &&
           userGovernment.uuid === app.localGovernmentUuid,
       };
     });
@@ -626,9 +629,14 @@ export class ApplicationSubmissionService {
       ApplicationSubmission,
       ApplicationSubmissionDetailedDto,
     );
+
+    const matchingAppType = types.find(
+      (type) => type.code === application.typeCode,
+    );
     return {
       ...mappedApp,
-      type: types.find((type) => type.code === application.typeCode)!.label,
+      type: matchingAppType!.label,
+      requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
       canEdit: [
         SUBMISSION_STATUS.IN_PROGRESS,
         SUBMISSION_STATUS.INCOMPLETE,
@@ -641,7 +649,7 @@ export class ApplicationSubmissionService {
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
           SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
-        userGovernment &&
+        !!userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
     };
   }
@@ -1017,6 +1025,24 @@ export class ApplicationSubmissionService {
     applicationSubmission.inclGovernmentOwnsAllParcels = filterUndefined(
       updateDto.inclGovernmentOwnsAllParcels,
       applicationSubmission.inclGovernmentOwnsAllParcels,
+    );
+  }
+
+  private setCovenantFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.coveAreaImpacted = filterUndefined(
+      updateDto.coveAreaImpacted,
+      applicationSubmission.coveAreaImpacted,
+    );
+    applicationSubmission.coveFarmImpact = filterUndefined(
+      updateDto.coveFarmImpact,
+      applicationSubmission.coveFarmImpact,
+    );
+    applicationSubmission.coveHasDraft = filterUndefined(
+      updateDto.coveHasDraft,
+      applicationSubmission.coveHasDraft,
     );
   }
 

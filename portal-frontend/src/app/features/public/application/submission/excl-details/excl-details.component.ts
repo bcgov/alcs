@@ -23,7 +23,7 @@ export class ExclDetailsComponent {
   proposalMap: PublicDocumentDto[] = [];
   reportOfPublicHearing: PublicDocumentDto[] = [];
 
-  constructor(private router: Router, private publicService: PublicService) {}
+  constructor(private publicService: PublicService) {}
 
   async openFile(uuid: string) {
     const res = await this.publicService.getApplicationOpenFileUrl(this.applicationSubmission.fileNumber, uuid);

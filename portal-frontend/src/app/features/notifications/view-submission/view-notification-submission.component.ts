@@ -4,8 +4,8 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
 import { NotificationDocumentService } from '../../../services/notification-document/notification-document.service';
 import {
+  NOTIFICATION_STATUS,
   NotificationSubmissionDetailedDto,
-  NotificationSubmissionDto,
 } from '../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../services/notification-submission/notification-submission.service';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -20,6 +20,7 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   $notificationSubmission = new BehaviorSubject<NotificationSubmissionDetailedDto | undefined>(undefined);
   $notificationDocuments = new BehaviorSubject<NotificationDocumentDto[]>([]);
   submission: NotificationSubmissionDetailedDto | undefined;
+  selectedIndex = 0;
 
   constructor(
     private notificationSubmissionService: NotificationSubmissionService,
@@ -42,6 +43,9 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   async loadSubmission(fileId: string) {
     const notificationSubmission = await this.notificationSubmissionService.getByFileId(fileId);
     this.submission = notificationSubmission;
+    if (this.submission?.status.code === NOTIFICATION_STATUS.ALC_RESPONSE) {
+      this.selectedIndex = 1;
+    }
     this.$notificationSubmission.next(notificationSubmission);
   }
 
@@ -74,9 +78,5 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
         await this.router.navigateByUrl(`home`);
       }
     });
-  }
-
-  onDownloadSubmissionPdf(fileNumber: string) {
-    //TODO: When we add PDFs
   }
 }

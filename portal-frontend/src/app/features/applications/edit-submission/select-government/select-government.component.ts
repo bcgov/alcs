@@ -30,7 +30,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
   form = new FormGroup({
     localGovernment: this.localGovernment,
   });
-  typeCode = '';
+  requiresGovernmentReview = false;
 
   constructor(private codeService: CodeService, private applicationSubmissionService: ApplicationSubmissionService) {
     super();
@@ -44,7 +44,7 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
         this.selectGovernmentUuid = applicationSubmission.localGovernmentUuid;
         this.fileId = applicationSubmission.fileNumber;
         this.submissionUuid = applicationSubmission.uuid;
-        this.typeCode = applicationSubmission.typeCode;
+        this.requiresGovernmentReview = applicationSubmission.requiresGovernmentReview;
         this.populateLocalGovernment(applicationSubmission.localGovernmentUuid);
       }
     });
@@ -89,7 +89,9 @@ export class SelectGovernmentComponent extends StepComponent implements OnInit, 
       const localGovernmentName = this.localGovernment.getRawValue();
       if (localGovernmentName) {
         const localGovernment = this.localGovernments.find((lg) => lg.name == localGovernmentName);
-        if (!localGovernment) {
+        if (localGovernment) {
+          this.selectedOwnGovernment = localGovernment.matchesUserGuid;
+        } else {
           this.localGovernment.setValue(null);
           console.log('Clearing Local Government field');
         }

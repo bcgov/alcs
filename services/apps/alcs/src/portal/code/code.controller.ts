@@ -1,22 +1,21 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionMakerCodeDto } from '../../alcs/application-decision/application-decision-maker/decision-maker.dto';
-import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { CardService } from '../../alcs/card/card.service';
 import { ApplicationRegionDto } from '../../alcs/code/application-code/application-region/application-region.dto';
 import { ApplicationRegion } from '../../alcs/code/application-code/application-region/application-region.entity';
 import { CodeService } from '../../alcs/code/code.service';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
+import { AuthorizationService } from '../../common/authorization/authorization.service';
 import { DocumentCode } from '../../document/document-code.entity';
-import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { ApplicationService } from '../../alcs/application/application.service';
-import { CardService } from '../../alcs/card/card.service';
 import { DocumentTypeDto } from '../../document/document.dto';
-import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 
 export interface LocalGovernmentDto {
@@ -38,6 +37,7 @@ export class CodeController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private noticeOfIntentService: NoticeOfIntentService,
     private codeService: CodeService,
+    private authorizationService: AuthorizationService,
   ) {}
 
   @Get()
@@ -72,10 +72,7 @@ export class CodeController {
     );
 
     return {
-      localGovernments: this.mapLocalGovernments(
-        localGovernments,
-        req.user?.entity,
-      ),
+      localGovernments: await this.mapLocalGovernments(localGovernments, req),
       applicationTypes,
       noticeOfIntentTypes,
       submissionTypes,
@@ -86,18 +83,29 @@ export class CodeController {
     };
   }
 
-  private mapLocalGovernments(
+  private async mapLocalGovernments(
     governments: LocalGovernment[],
-    user?: User,
-  ): LocalGovernmentDto[] {
+    req: any,
+  ): Promise<LocalGovernmentDto[]> {
+    //No auth guard, so we can't use req.user.entity
+    const tokenHeader = req.headers['authorization'] as string | undefined;
+
+    let bceidGuid;
+    if (tokenHeader) {
+      const token = await this.authorizationService.decodeHeaderToken(
+        tokenHeader,
+      );
+      bceidGuid = token ? token['bceid_business_guid'] : false;
+    }
+
     return governments.map((government) => ({
       name: government.name,
       uuid: government.uuid,
       hasGuid: government.bceidBusinessGuid !== null,
       matchesUserGuid:
-        user &&
+        !!bceidGuid &&
         !!government.bceidBusinessGuid &&
-        government.bceidBusinessGuid === user.bceidBusinessGuid,
+        government.bceidBusinessGuid === bceidGuid,
     }));
   }
 }

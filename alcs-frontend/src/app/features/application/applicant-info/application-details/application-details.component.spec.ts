@@ -109,6 +109,9 @@ describe('ApplicationDetailsComponent', () => {
       turOutsideLands: null,
       turReduceNegativeImpacts: null,
       turTotalCorridorArea: null,
+      coveHasDraft: null,
+      coveFarmImpact: null,
+      coveAreaImpacted: null,
       primaryContact: {
         type: {
           code: '',

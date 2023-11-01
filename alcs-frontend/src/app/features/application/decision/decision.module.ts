@@ -21,7 +21,7 @@ import { PfrsComponent } from './decision-v2/decision-component/pfrs/pfrs.compon
 import { PofoComponent } from './decision-v2/decision-component/pofo/pofo.component';
 import { RosoComponent } from './decision-v2/decision-component/roso/roso.component';
 import { SubdComponent } from './decision-v2/decision-component/subd/subd.component';
-import { TurpComponent } from './decision-v2/decision-component/turp/turp.component';
+import { ExpiryDateComponent } from './decision-v2/decision-component/expiry-date/expiry-date.component';
 import { DecisionDocumentsComponent } from './decision-v2/decision-documents/decision-documents.component';
 import { DecisionComponentComponent } from './decision-v2/decision-input/decision-components/decision-component/decision-component.component';
 import { InclExclInputComponent } from './decision-v2/decision-input/decision-components/decision-component/incl-excl-input/incl-excl-input.component';
@@ -31,7 +31,7 @@ import { PfrsInputComponent } from './decision-v2/decision-input/decision-compon
 import { PofoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/pofo-input/pofo-input.component';
 import { RosoInputComponent } from './decision-v2/decision-input/decision-components/decision-component/roso-input/roso-input.component';
 import { SubdInputComponent } from './decision-v2/decision-input/decision-components/decision-component/subd-input/subd-input.component';
-import { TurpInputComponent } from './decision-v2/decision-input/decision-components/decision-component/turp-input/turp-input.component';
+import { ExpiryDateInputComponent } from './decision-v2/decision-input/decision-components/decision-component/expiry-date-input/expiry-date-input.component';
 import { DecisionComponentsComponent } from './decision-v2/decision-input/decision-components/decision-components.component';
 import { DecisionConditionComponent } from './decision-v2/decision-input/decision-conditions/decision-condition/decision-condition.component';
 import { DecisionConditionsComponent } from './decision-v2/decision-input/decision-conditions/decision-conditions.component';
@@ -86,9 +86,9 @@ export const decisionChildRoutes = [
     NfuInputComponent,
     DecisionConditionComponent,
     DecisionConditionsComponent,
-    TurpInputComponent,
+    ExpiryDateInputComponent,
     NfupComponent,
-    TurpComponent,
+    ExpiryDateComponent,
     PofoInputComponent,
     PofoComponent,
     RosoComponent,

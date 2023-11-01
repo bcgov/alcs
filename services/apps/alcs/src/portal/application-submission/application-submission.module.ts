@@ -23,6 +23,9 @@ import { ApplicationSubmissionValidatorService } from './application-submission-
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmission } from './application-submission.entity';
 import { ApplicationSubmissionService } from './application-submission.service';
+import { CovenantTransfereeController } from './covenant-transferee/covenant-transferee.controller';
+import { CovenantTransferee } from './covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from './covenant-transferee/covenant-transferee.service';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 @Module({
@@ -36,6 +39,7 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
       OwnerType,
       NaruSubtype,
       ApplicationSubmissionToSubmissionStatus,
+      CovenantTransferee,
     ]),
     forwardRef(() => ApplicationModule),
     AuthorizationModule,
@@ -52,17 +56,20 @@ import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
     ApplicationOwnerService,
     ApplicationOwnerProfile,
     ApplicationSubmissionValidatorService,
+    CovenantTransfereeService,
   ],
   controllers: [
     ApplicationSubmissionController,
     ApplicationParcelController,
     ApplicationOwnerController,
+    CovenantTransfereeController,
   ],
   exports: [
     ApplicationSubmissionService,
     ApplicationOwnerService,
     ApplicationSubmissionValidatorService,
     ApplicationParcelService,
+    CovenantTransfereeService,
   ],
 })
 export class ApplicationSubmissionModule {}

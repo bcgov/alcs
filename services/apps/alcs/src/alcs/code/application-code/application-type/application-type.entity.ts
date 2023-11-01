@@ -30,4 +30,12 @@ export class ApplicationType extends BaseCodeEntity {
   @AutoMap()
   @Column({ type: 'text', default: '' })
   portalLabel: string;
+
+  @AutoMap()
+  @Column({ type: 'int4' })
+  portalOrder: number;
+
+  @AutoMap()
+  @Column({ default: true })
+  requiresGovernmentReview: boolean;
 }

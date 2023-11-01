@@ -102,17 +102,18 @@ def _update_fee_fields_records(conn, batch_size, cursor, rows):
 def _get_update_query_from_oats_alr_applications_fields():
     query = """
                 UPDATE alcs.notice_of_intent
-                SET fee_paid_date = %(fee_received_date)s,
-                    fee_waived = %(fee_waived_ind)s,
-                    fee_amount = %(applied_fee_amt)s,
-                    fee_split_with_lg = %(split_fee_with_local_gov_ind)s,
-                    date_submitted_to_alc = %(submitted_to_alc_date)s,
-                    staff_observations = %(staff_comment_observations)s,
-                    alr_area = %(component_area)s,
-                    ag_cap_source = %(capability_source_code)s,
-                    ag_cap_map = %(agri_cap_map)s,
-                    ag_cap_consultant = %(agri_cap_consultant)s,
-                    ag_cap = %(agri_capability_code)s,
+                SET fee_paid_date = COALESCE(%(fee_received_date)s, fee_paid_date),
+                    fee_waived = COALESCE(%(fee_waived_ind)s, fee_waived),
+                    fee_amount = COALESCE(%(applied_fee_amt)s, fee_amount),
+                    fee_split_with_lg = COALESCE(%(split_fee_with_local_gov_ind)s, fee_split_with_lg),
+                    date_submitted_to_alc = COALESCE(%(submitted_to_alc_date)s, date_submitted_to_alc),
+                    staff_observations = COALESCE(%(staff_comment_observations)s, staff_observations),
+                    alr_area = COALESCE(%(component_area)s, alr_area),
+                    ag_cap_source = COALESCE(%(capability_source_code)s, ag_cap_source),
+                    ag_cap_map = COALESCE(%(agri_cap_map)s, ag_cap_map),
+                    ag_cap_consultant = COALESCE(%(agri_cap_consultant)s, ag_cap_consultant),
+                    ag_cap = COALESCE(%(agri_capability_code)s, ag_cap),
+                    legacy_id= COALESCE(%(legacy_application_nbr)s, legacy_id),
                     source = 'APPLICANT'
                 WHERE
                     alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;

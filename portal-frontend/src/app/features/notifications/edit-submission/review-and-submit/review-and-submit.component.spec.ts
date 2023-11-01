@@ -5,7 +5,6 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationSubmissionDetailedDto } from '../../../../services/notification-submission/notification-submission.dto';
 import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
-import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 
 import { ReviewAndSubmitComponent } from './review-and-submit.component';
@@ -37,10 +36,6 @@ describe('ReviewAndSubmitComponent', () => {
         {
           provide: NotificationSubmissionService,
           useValue: mockNotificationSubmissionService,
-        },
-        {
-          provide: PdfGenerationService,
-          useValue: {},
         },
       ],
     }).compileComponents();

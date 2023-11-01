@@ -97,7 +97,10 @@
       </app-warning-banner>
       <app-warning-banner
         *ngIf="
-          showErrors && localGovernment && localGovernment.matchesUserGuid && applicationSubmission.typeCode !== 'TURP'
+          showErrors &&
+          localGovernment &&
+          localGovernment.matchesUserGuid &&
+          applicationSubmission.requiresGovernmentReview
         "
         class="full-row"
       >
@@ -276,6 +279,14 @@
     [applicationSubmission]="applicationSubmission"
     [applicationDocuments]="appDocuments"
   ></app-incl-details>
+  <app-cove-details
+    *ngIf="applicationSubmission.typeCode === 'COVE'"
+    [showErrors]="showErrors"
+    [showEdit]="showEdit"
+    [draftMode]="draftMode"
+    [applicationSubmission]="applicationSubmission"
+    [applicationDocuments]="appDocuments"
+  ></app-cove-details>
 </section>
 <section>
   <h3>7. Optional Documents</h3>

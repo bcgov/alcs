@@ -5,7 +5,6 @@ import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
 import { PublicApplicationSubmissionDto } from '../../../../services/public/public-application.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../services/public/public.dto';
-import { PublicService } from '../../../../services/public/public.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -19,6 +18,7 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   @Input() applicationSubmission!: PublicApplicationSubmissionDto;
   @Input() applicationDocuments: PublicDocumentDto[] = [];
   @Input() applicationParcels: PublicParcelDto[] = [];
+  @Input() transferees: PublicOwnerDto[] = [];
 
   parcelType = PARCEL_TYPE;
   primaryContact: PublicOwnerDto | undefined;

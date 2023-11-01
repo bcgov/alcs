@@ -26,12 +26,12 @@ export interface UpdateApplicationDecisionDto {
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
-  linkedResolutionOutcomeCode?: string | null;
   isDraft?: boolean;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
+  decisionToCopy?: string;
   outcomeCode?: string;
   resolutionNumber?: number | null;
   resolutionYear: number;
@@ -56,7 +56,6 @@ export interface ApplicationDecisionDto {
   ceoCriterion?: CeoCriterionDto;
   chairReviewRequired: boolean;
   chairReviewOutcome: ChairReviewOutcomeCodeDto | null;
-  linkedResolutionOutcome: LinkedResolutionOutcomeTypeDto | null;
   applicationFileNumber: string;
   documents: ApplicationDecisionDocumentDto[];
   isTimeExtension?: boolean | null;
@@ -130,7 +129,7 @@ export interface NfuDecisionComponentDto {
   endDate?: number | null;
 }
 
-export interface TurpDecisionComponentDto {
+export interface ExpiryDateDecisionComponentDto {
   expiryDate?: number | null;
 }
 
@@ -170,7 +169,7 @@ export interface InclExclDecisionComponentDto {
 
 export interface ApplicationDecisionComponentDto
   extends NfuDecisionComponentDto,
-    TurpDecisionComponentDto,
+    ExpiryDateDecisionComponentDto,
     PofoDecisionComponentDto,
     RosoDecisionComponentDto,
     NaruDecisionComponentDto,
@@ -194,7 +193,6 @@ export interface ApplicationDecisionCodesDto {
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
   decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
-  linkedResolutionOutcomeTypes: LinkedResolutionOutcomeTypeDto[];
   naruSubtypes: NaruSubtypesDto[];
 }
 
@@ -208,10 +206,10 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   SUBD = 'SUBD',
   INCL = 'INCL',
   EXCL = 'EXCL',
+  COVE = 'COVE',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
-export interface LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
 export interface NaruSubtypesDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {

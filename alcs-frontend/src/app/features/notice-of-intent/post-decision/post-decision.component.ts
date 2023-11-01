@@ -82,13 +82,6 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
       });
   }
 
-  async onSaveModificationNotificationDate(uuid: string, notificationDate: number) {
-    await this.modificationService.update(uuid, {
-      outcomeNotificationDate: formatDateForApi(notificationDate),
-    });
-    await this.modificationService.fetchByFileNumber(this.fileNumber);
-  }
-
   async onSaveModificationOutcome(uuid: string, reviewOutcomeCode: string) {
     await this.modificationService.update(uuid, {
       reviewOutcomeCode,

@@ -167,15 +167,9 @@ export class DecisionDocumentDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap()
   fileName: string;
-
-  @AutoMap()
+  fileSize: number;
   mimeType: string;
-
-  @AutoMap()
   uploadedBy: string;
-
-  @AutoMap()
   uploadedAt: number;
 }

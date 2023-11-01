@@ -1,18 +1,18 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { CodeService } from '../../alcs/code/code.service';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
-import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { CardType } from '../../alcs/card/card-type/card-type.entity';
 import { CardService } from '../../alcs/card/card.service';
+import { CodeService } from '../../alcs/code/code.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NoticeOfIntentService } from '../../alcs/notice-of-intent/notice-of-intent.service';
-import { User } from '../../user/user.entity';
+import { AuthorizationService } from '../../common/authorization/authorization.service';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { CodeController } from './code.controller';
 
@@ -25,6 +25,7 @@ describe('CodeController', () => {
   let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockNoiService: DeepMocked<NoticeOfIntentService>;
   let mockCodeService: DeepMocked<CodeService>;
+  let mockAuthorizationService: DeepMocked<AuthorizationService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
@@ -34,6 +35,7 @@ describe('CodeController', () => {
     mockAppSubmissionService = createMock();
     mockNoiService = createMock();
     mockCodeService = createMock();
+    mockAuthorizationService = createMock();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -73,6 +75,10 @@ describe('CodeController', () => {
           useValue: mockCodeService,
         },
         {
+          provide: AuthorizationService,
+          useValue: mockAuthorizationService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -99,6 +105,8 @@ describe('CodeController', () => {
       }),
     ]);
 
+    mockAuthorizationService.decodeHeaderToken.mockResolvedValue({} as any);
+
     mockAppDocService.fetchTypes.mockResolvedValue([]);
     mockAppSubmissionService.listNaruSubtypes.mockResolvedValue([]);
     mockNoiService.listTypes.mockResolvedValue([]);
@@ -115,9 +123,7 @@ describe('CodeController', () => {
 
   it('should call out to local government service for fetching codes', async () => {
     const codes = await portalController.loadCodes({
-      user: {
-        entity: new User(),
-      },
+      headers: {},
     });
     expect(codes.localGovernments).toBeDefined();
     expect(codes.localGovernments.length).toBe(1);
@@ -126,8 +132,11 @@ describe('CodeController', () => {
     expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
   });
 
-  it('should set the matches flag correctly when users guid matches government', async () => {
+  it('should not try and decode the token if there isnt one on the request', async () => {
     const matchingGuid = 'guid';
+    mockAuthorizationService.decodeHeaderToken.mockResolvedValue({
+      bceid_business_guid: matchingGuid,
+    } as any);
     mockLgService.listActive.mockResolvedValue([
       new LocalGovernment({
         uuid: 'fake-uuid',
@@ -138,13 +147,38 @@ describe('CodeController', () => {
     ]);
 
     const codes = await portalController.loadCodes({
-      user: {
-        entity: new User({
-          bceidBusinessGuid: matchingGuid,
-        }),
+      headers: {},
+    });
+
+    expect(mockAuthorizationService.decodeHeaderToken).toHaveBeenCalledTimes(0);
+    expect(codes.localGovernments).toBeDefined();
+    expect(codes.localGovernments.length).toBe(1);
+    expect(codes.localGovernments[0].name).toEqual('fake-name');
+    expect(codes.localGovernments[0].matchesUserGuid).toBeFalsy();
+    expect(mockLgService.listActive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set the matches flag correctly when users guid matches government', async () => {
+    const matchingGuid = 'guid';
+    mockAuthorizationService.decodeHeaderToken.mockResolvedValue({
+      bceid_business_guid: matchingGuid,
+    } as any);
+    mockLgService.listActive.mockResolvedValue([
+      new LocalGovernment({
+        uuid: 'fake-uuid',
+        name: 'fake-name',
+        isFirstNation: false,
+        bceidBusinessGuid: matchingGuid,
+      }),
+    ]);
+
+    const codes = await portalController.loadCodes({
+      headers: {
+        authorization: 'fake-token',
       },
     });
 
+    expect(mockAuthorizationService.decodeHeaderToken).toHaveBeenCalledTimes(1);
     expect(codes.localGovernments).toBeDefined();
     expect(codes.localGovernments.length).toBe(1);
     expect(codes.localGovernments[0].name).toEqual('fake-name');
@@ -154,9 +188,7 @@ describe('CodeController', () => {
 
   it('should call out to local submission service for fetching codes', async () => {
     const codes = await portalController.loadCodes({
-      user: {
-        entity: new User(),
-      },
+      headers: {},
     });
     expect(codes.submissionTypes).toBeDefined();
     expect(codes.submissionTypes.length).toBe(1);
