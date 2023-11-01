@@ -41,7 +41,6 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     break
                 try:
                     records_to_be_inserted_count = len(rows)
-                    # logger.debug(rows)
 
                     _insert_records(conn, cursor, rows)
 
@@ -54,7 +53,6 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                         f"inserted items count: {records_to_be_inserted_count}; total successfully inserted notice of intent parcels so far {successful_inserts_count}; last inserted subject_property_id: {last_subject_property_id}"
                     )
                 except Exception as err:
-                    # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_inserts_count
@@ -68,12 +66,9 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 def _insert_records(conn, cursor, rows):
     number_of_rows_to_insert = len(rows)
 
-    # logger.debug(insert_query)
-
     if number_of_rows_to_insert > 0:
         insert_query = _compile_application_insert_query(number_of_rows_to_insert)
         rows_to_insert = _prepare_data_to_insert(rows)
-        # logger.debug(rows_to_insert)
         cursor.execute(insert_query, rows_to_insert)
         conn.commit()
 
