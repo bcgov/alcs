@@ -165,16 +165,6 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
   async onSaveReconsiderationDecisionOutcome(reconsiderationUuid: string, decisionOutcomeCode: string) {
     await this.applicationReconsiderationService.update(reconsiderationUuid, {
       decisionOutcomeCode,
-<<<<<<< HEAD
-    });
-    await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
-  }
-
-  async onSaveModificationReviewDate(uuid: string, reviewDate: number) {
-    await this.modificationService.update(uuid, {
-      reviewDate: formatDateForApi(reviewDate),
-=======
->>>>>>> origin/develop
     });
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }

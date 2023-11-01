@@ -98,12 +98,7 @@ export class InboxApplicationService {
         where += ' OR appSearch.bceid_business_guid = :bceidBusinessGuid';
       }
       if (governmentUuid) {
-<<<<<<< HEAD
-        where +=
-          ' OR (appSearch.local_government_uuid = :governmentUuid AND appSearch.date_submitted_to_alc IS NOT NULL)';
-=======
         where += ` OR (appSearch.local_government_uuid = :governmentUuid AND (appSearch.date_submitted_to_alc IS NOT NULL OR appSearch.status ->> 'status_type_code' IN ('REVG', 'SUBG')))`;
->>>>>>> origin/develop
       }
     } else {
       if (searchDto.filterBy === 'submitted') {
