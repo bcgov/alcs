@@ -59,7 +59,7 @@ def process_alcs_application_submitted_to_alc_status(
                     last_application_id = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
+                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost

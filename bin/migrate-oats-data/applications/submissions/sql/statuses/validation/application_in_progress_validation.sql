@@ -7,7 +7,7 @@ FROM
     alcs.application_submission_to_submission_status appstss
     JOIN alcs.application_submission as2 ON as2.uuid = appstss.submission_uuid
 WHERE
-    appstss.status_type_code = 'PROG'
+    status_type_code = 'SUBM'
     AND effective_date IS NOT NULL
     AND as2.audit_created_by = 'oats_etl';
 
@@ -56,12 +56,12 @@ WITH
     ),
     all_in_progress AS (
         SELECT
-            inp.alr_application_id
+            cancelled.alr_application_id
         FROM
-            inp_accomplishments_for_app_only AS inp
-            JOIN apps_with_one_or_zero_component_only AS apps_one_or_zero ON apps_one_or_zero.alr_application_id = inp.alr_application_id
+            inp_accomplishments_for_app_only AS cancelled
+            JOIN apps_with_one_or_zero_component_only AS apps_one_or_zero ON apps_one_or_zero.alr_application_id = cancelled.alr_application_id
         GROUP BY
-            inp.alr_application_id
+            cancelled.alr_application_id
     )
 SELECT
     count(*)
