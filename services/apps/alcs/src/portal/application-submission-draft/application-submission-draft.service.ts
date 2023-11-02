@@ -9,7 +9,12 @@ import { ApplicationParcelUpdateDto } from '../application-submission/applicatio
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
+import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
+import {
+  APPLICATION_SUBMISSION_TYPES,
+  GenerateSubmissionDocumentService,
+} from '../pdf-generation/generate-submission-document.service';
 
 @Injectable()
 export class ApplicationSubmissionDraftService {
@@ -23,6 +28,7 @@ export class ApplicationSubmissionDraftService {
     private applicationOwnerService: ApplicationOwnerService,
     private generateSubmissionDocumentService: GenerateSubmissionDocumentService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private covenantTransfereeService: CovenantTransfereeService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string) {
@@ -166,6 +172,10 @@ export class ApplicationSubmissionDraftService {
       );
     }
 
+    if (originalSubmission.typeCode === APPLICATION_SUBMISSION_TYPES.COVE) {
+      await this.copyTransferees(originalSubmission, newSubmission);
+    }
+
     this.logger.debug(`Draft Created for File Number ${fileNumber}`);
 
     const submission = await this.getDraft(fileNumber);
@@ -205,6 +215,13 @@ export class ApplicationSubmissionDraftService {
     for (const owner of original.owners) {
       await this.applicationOwnerService.delete(owner);
     }
+
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(original.uuid);
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.delete(transferee);
+    }
+
     const parcelUuids = original.parcels.map((parcel) => parcel.uuid);
     await this.applicationParcelService.deleteMany(parcelUuids);
     await this.applicationSubmissionStatusService.removeStatuses(original.uuid);
@@ -248,6 +265,14 @@ export class ApplicationSubmissionDraftService {
       await this.applicationOwnerService.delete(owner);
     }
 
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        draftSubmission.uuid,
+      );
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.delete(transferee);
+    }
+
     await this.applicationSubmissionStatusService.removeStatuses(
       draftSubmission.uuid,
     );
@@ -269,5 +294,30 @@ export class ApplicationSubmissionDraftService {
       canReview: true,
       canView: true,
     };
+  }
+
+  private async copyTransferees(
+    originalSubmission: ApplicationSubmission,
+    newSubmission: ApplicationSubmission,
+  ) {
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        originalSubmission.uuid,
+      );
+
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.create(
+        {
+          firstName: transferee.firstName ?? undefined,
+          lastName: transferee.lastName ?? undefined,
+          organizationName: transferee.organizationName ?? undefined,
+          email: transferee.email ?? undefined,
+          phoneNumber: transferee.phoneNumber ?? undefined,
+          typeCode: transferee.type.code,
+          applicationSubmissionUuid: newSubmission.uuid,
+        },
+        newSubmission,
+      );
+    }
   }
 }

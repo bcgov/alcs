@@ -1,9 +1,12 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { create } from 'handlebars';
 import { Repository } from 'typeorm';
 import { NoticeOfIntentSubmissionStatusService } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { User } from '../../user/user.entity';
+import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 import { NoticeOfIntentOwnerService } from '../notice-of-intent-submission/notice-of-intent-owner/notice-of-intent-owner.service';
 import { NoticeOfIntentParcelService } from '../notice-of-intent-submission/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmission } from '../notice-of-intent-submission/notice-of-intent-submission.entity';
