@@ -11,7 +11,7 @@ logger = setup_and_get_logger(etl_name)
 def init_application_statuses(conn=None):
     """
     This function is responsible for initializing application statuses.
-    Initializing means inserting status_to_submission record without the effective_date.
+    Initializing means inserting application_status_to_submission_status record without the effective_date.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
