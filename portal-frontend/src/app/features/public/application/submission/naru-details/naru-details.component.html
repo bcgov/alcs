@@ -163,33 +163,36 @@
       {{ applicationSubmission.naruFillOrigin }}
       <app-no-data *ngIf="!applicationSubmission.naruFillOrigin"></app-no-data>
     </div>
+    <div class="grid-1"></div>
+    <div class="subheading2 grid-double">Fill to be Placed</div>
 
-    <div class="subheading1 full-width">Fill to be Placed</div>
-    <div class="full-width soil-table">
-      <div class="grid-1"><strong>Volume</strong></div>
-      <div class="grid-2">
-        {{ applicationSubmission.naruToPlaceVolume }}
-        <span *ngIf="applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
-        <app-no-data *ngIf="applicationSubmission.naruToPlaceVolume === null"></app-no-data>
-      </div>
-      <div class="grid-1"><strong>Area</strong></div>
-      <div class="grid-2">
-        {{ applicationSubmission.naruToPlaceArea }}
-        <span *ngIf="applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
-        <app-no-data *ngIf="applicationSubmission.naruToPlaceArea === null"></app-no-data>
-      </div>
-      <div class="grid-1"><strong>Maximum Depth</strong></div>
-      <div class="grid-2">
-        {{ applicationSubmission.naruToPlaceMaximumDepth }}
-        <span *ngIf="applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
-        <app-no-data *ngIf="applicationSubmission.naruToPlaceMaximumDepth === null"></app-no-data>
-      </div>
-      <div class="grid-1"><strong>Average Depth</strong></div>
-      <div class="grid-2">
-        {{ applicationSubmission.naruToPlaceAverageDepth }}
-        <span *ngIf="applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
-        <app-no-data *ngIf="applicationSubmission.naruToPlaceAverageDepth === null"></app-no-data>
-      </div>
+    <div class="subheading2 grid-1">Volume</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruToPlaceVolume }}
+      <span *ngIf="applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
+      <app-no-data *ngIf="applicationSubmission.naruToPlaceVolume === null"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Area</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruToPlaceArea }}
+      <span *ngIf="applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
+      <app-no-data *ngIf="applicationSubmission.naruToPlaceArea === null"></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Maximum Depth</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruToPlaceMaximumDepth }}
+      <span *ngIf="applicationSubmission.naruToPlaceMaximumDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.naruToPlaceMaximumDepth === null"
+      ></app-no-data>
+    </div>
+    <div class="subheading2 grid-1">Average Depth</div>
+    <div class="grid-double">
+      {{ applicationSubmission.naruToPlaceAverageDepth }}
+      <span *ngIf="applicationSubmission.naruToPlaceAverageDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.naruToPlaceAverageDepth === null"
+      ></app-no-data>
     </div>
 
     <div class="full-width">
