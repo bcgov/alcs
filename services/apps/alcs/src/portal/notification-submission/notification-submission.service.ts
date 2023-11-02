@@ -1,6 +1,6 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as dayjs from 'dayjs';
@@ -87,9 +87,8 @@ export class NotificationSubmissionService {
       createdBy,
     });
 
-    const savedSubmission = await this.notificationSubmissionRepository.save(
-      noiSubmission,
-    );
+    const savedSubmission =
+      await this.notificationSubmissionRepository.save(noiSubmission);
 
     await this.notificationSubmissionStatusService.setInitialStatuses(
       savedSubmission.uuid,

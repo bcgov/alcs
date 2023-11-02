@@ -1,6 +1,6 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';

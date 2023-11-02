@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Controller,
@@ -215,9 +215,8 @@ export class NoticeOfIntentDocumentController {
   @UserRoles(...ANY_AUTH_ROLE)
   async download(@Param('uuid') fileUuid: string) {
     const document = await this.noticeOfIntentDocumentService.get(fileUuid);
-    const url = await this.noticeOfIntentDocumentService.getDownloadUrl(
-      document,
-    );
+    const url =
+      await this.noticeOfIntentDocumentService.getDownloadUrl(document);
     return {
       url,
     };

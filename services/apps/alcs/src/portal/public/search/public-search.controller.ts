@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Post } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { isStringSetAndNotEmpty } from '../../../utils/string-helper';
@@ -68,9 +68,8 @@ export class PublicSearchController {
   async searchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
-    const applications = await this.applicationSearchService.searchApplications(
-      searchDto,
-    );
+    const applications =
+      await this.applicationSearchService.searchApplications(searchDto);
 
     const mappedSearchResult = this.mapSearchResults(applications, null, null);
 
@@ -103,9 +102,8 @@ export class PublicSearchController {
   async searchNotifications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
-    const notifications = await this.notificationSearchService.search(
-      searchDto,
-    );
+    const notifications =
+      await this.notificationSearchService.search(searchDto);
 
     const mappedSearchResult = this.mapSearchResults(null, null, notifications);
 

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -35,9 +35,8 @@ export class NoticeOfIntentController {
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async get(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      fileNumber,
-    );
+    const noticeOfIntent =
+      await this.noticeOfIntentService.getByFileNumber(fileNumber);
     const mapped = await this.noticeOfIntentService.mapToDtos([noticeOfIntent]);
     return mapped[0];
   }
@@ -116,9 +115,8 @@ export class NoticeOfIntentController {
   @Get('/search/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async search(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntents = await this.noticeOfIntentService.searchByFileNumber(
-      fileNumber,
-    );
+    const noticeOfIntents =
+      await this.noticeOfIntentService.searchByFileNumber(fileNumber);
     return this.noticeOfIntentService.mapToDtos(noticeOfIntents);
   }
 }

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -54,9 +54,8 @@ export class SearchController {
   async search(@Param('searchTerm') searchTerm) {
     const application = await this.searchService.getApplication(searchTerm);
     const noi = await this.searchService.getNoi(searchTerm);
-    const planningReview = await this.searchService.getPlanningReview(
-      searchTerm,
-    );
+    const planningReview =
+      await this.searchService.getPlanningReview(searchTerm);
     const covenant = await this.searchService.getCovenant(searchTerm);
     const notification = await this.searchService.getNotification(searchTerm);
 
@@ -159,9 +158,8 @@ export class SearchController {
   async advancedSearchApplications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<ApplicationSearchResultDto[]>> {
-    const applications = await this.applicationSearchService.searchApplications(
-      searchDto,
-    );
+    const applications =
+      await this.applicationSearchService.searchApplications(searchDto);
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       applications,
@@ -223,9 +221,8 @@ export class SearchController {
   async advancedSearchNotifications(
     @Body() searchDto: SearchRequestDto,
   ): Promise<AdvancedSearchResultDto<NotificationSearchResultDto[]>> {
-    const notifications = await this.notificationSearchService.search(
-      searchDto,
-    );
+    const notifications =
+      await this.notificationSearchService.search(searchDto);
 
     const mappedSearchResult = this.mapAdvancedSearchResults(
       null,
@@ -265,7 +262,7 @@ export class SearchController {
       );
     }
 
-    const searchNoi = (searchDto.fileTypes.length > 0 ? noiTypeSpecified : true);
+    const searchNoi = searchDto.fileTypes.length > 0 ? noiTypeSpecified : true;
 
     const searchNonApplications =
       (searchDto.fileTypes.length > 0 ? nonApplicationTypeSpecified : true) &&

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
