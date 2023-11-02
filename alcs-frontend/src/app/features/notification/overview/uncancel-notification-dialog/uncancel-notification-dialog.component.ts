@@ -7,7 +7,7 @@ import { NotificationSubmissionToSubmissionStatusDto } from '../../../../service
 import { ApplicationSubmissionStatusPill } from '../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
-  selector: 'app-uncancel-notice-of-intent-dialog',
+  selector: 'app-noti-uncancel-notice-of-intent-dialog',
   templateUrl: './uncancel-notification-dialog.component.html',
   styleUrls: ['./uncancel-notification-dialog.component.scss'],
 })

@@ -26,6 +26,18 @@ describe('SubmissionDetailsComponent', () => {
 
     fixture = TestBed.createComponent(SubmissionDetailsComponent);
     component = fixture.componentInstance;
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

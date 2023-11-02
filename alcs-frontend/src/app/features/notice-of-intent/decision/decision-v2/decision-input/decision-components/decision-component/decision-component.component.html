@@ -5,7 +5,7 @@
 
 <form [formGroup]="form" class="decision-component-form">
   <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO" class="row-no-flex">
-    <app-pofo-input [form]="form"></app-pofo-input>
+    <app-noi-pofo-input [form]="form"></app-noi-pofo-input>
   </div>
 
   <div *ngIf="data.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO" class="row-no-flex">

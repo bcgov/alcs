@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NoticeOfIntentDecisionComponentDto } from '../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
 
 @Component({
-  selector: 'app-basic',
+  selector: 'app-noi-basic',
   templateUrl: './basic.component.html',
   styleUrls: ['./basic.component.scss'],
 })

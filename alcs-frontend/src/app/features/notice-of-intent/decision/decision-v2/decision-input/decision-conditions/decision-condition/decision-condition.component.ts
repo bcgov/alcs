@@ -4,7 +4,7 @@ import { parseStringToBoolean } from '../../../../../../../shared/utils/boolean-
 import { SelectableComponent, TempNoticeOfIntentDecisionConditionDto } from '../decision-conditions.component';
 
 @Component({
-  selector: 'app-decision-condition',
+  selector: 'app-noi-decision-condition',
   templateUrl: './decision-condition.component.html',
   styleUrls: ['./decision-condition.component.scss'],
 })

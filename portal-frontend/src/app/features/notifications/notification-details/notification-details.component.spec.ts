@@ -47,6 +47,18 @@ describe('NoticeOfIntentDetailsComponent', () => {
     component = fixture.componentInstance;
     component.$notificationSubmission = new BehaviorSubject<NotificationSubmissionDetailedDto | undefined>(undefined);
     component.$notificationDocuments = documentPipe;
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

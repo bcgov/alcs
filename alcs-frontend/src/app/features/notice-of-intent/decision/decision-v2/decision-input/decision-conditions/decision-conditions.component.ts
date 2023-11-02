@@ -25,7 +25,7 @@ export type TempNoticeOfIntentDecisionConditionDto = UpdateNoticeOfIntentDecisio
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
 
 @Component({
-  selector: 'app-decision-conditions',
+  selector: 'app-noi-decision-conditions',
   templateUrl: './decision-conditions.component.html',
   styleUrls: ['./decision-conditions.component.scss'],
 })

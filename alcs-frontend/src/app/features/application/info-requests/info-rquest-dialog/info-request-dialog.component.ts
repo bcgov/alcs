@@ -22,7 +22,7 @@ export const REASON_TYPE = {
 };
 
 @Component({
-  selector: 'app-info-request-dialog',
+  selector: 'app-app-info-request-dialog',
   templateUrl: './info-request-dialog.component.html',
   styleUrls: ['./info-request-dialog.component.scss'],
 })

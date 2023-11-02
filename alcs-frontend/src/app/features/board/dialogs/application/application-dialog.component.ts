@@ -32,9 +32,9 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ApplicationDto,
-    private dialogRef: MatDialogRef<ApplicationDialogComponent>,
     private applicationService: ApplicationService,
     private router: Router,
+    dialogRef: MatDialogRef<ApplicationDialogComponent>,
     userService: UserService,
     confirmationDialogService: ConfirmationDialogService,
     boardService: BoardService,
@@ -118,5 +118,9 @@ export class ApplicationDialogComponent extends CardDialogComponent implements O
           this.toastService.showSuccessToast('Card updated');
         });
     }
+  }
+
+  async goToDetailpage() {
+    await this.router.navigateByUrl(`application/${this.application.fileNumber}`);
   }
 }
