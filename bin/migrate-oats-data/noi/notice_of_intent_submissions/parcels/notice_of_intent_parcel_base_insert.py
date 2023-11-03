@@ -1,5 +1,13 @@
-from common import setup_and_get_logger, BATCH_UPLOAD_SIZE
+from common import (
+    setup_and_get_logger,
+    BATCH_UPLOAD_SIZE,
+    OATS_ETL_USER,
+    convert_timezone,
+    set_time,
+    OatsToAlcsOwnershipType,
+)
 from db import inject_conn_pool
+from psycopg2.extras import RealDictCursor
 
 etl_name = "init_notice_of_intent_parcels"
 logger = setup_and_get_logger(etl_name)
@@ -9,7 +17,7 @@ logger = setup_and_get_logger(etl_name)
 def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
 
-    with conn.cursor() as cursor:
+    with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
             "noi/sql/notice_of_intent_submission/parcels/notice_of_intent_parcels_base_insert_count.sql",
             "r",
@@ -17,7 +25,7 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
-            count_total = cursor.fetchone()[0]
+            count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Notice of Intents Parcels to insert: {count_total}")
 
         failed_inserts = 0
@@ -32,7 +40,7 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE subject_property_id > {last_subject_property_id} ORDER BY subject_property_id;"
+                    f"{application_sql} WHERE osp.subject_property_id > {last_subject_property_id} ORDER BY osp.subject_property_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -47,7 +55,8 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_inserts_count = (
                         successful_inserts_count + records_to_be_inserted_count
                     )
-                    last_subject_property_id = rows[-1][-1]
+
+                    last_subject_property_id = dict(rows[-1])["subject_property_id"]
 
                     logger.debug(
                         f"inserted items count: {records_to_be_inserted_count}; total successfully inserted notice of intent parcels so far {successful_inserts_count}; last inserted subject_property_id: {last_subject_property_id}"
@@ -76,15 +85,69 @@ def _insert_records(conn, cursor, rows):
 def _prepare_data_to_insert(rows):
     row_without_last_element = []
     for row in rows:
-        row_without_last_element.append(row[:-1])
+        mapped_row = _map_data(row)
+        row_without_last_element.append(tuple(mapped_row.values()))
 
     return row_without_last_element
+
+
+def _map_data(row):
+    # logger.debug("map data here")
+    return {
+        "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
+        "audit_created_by": OATS_ETL_USER,
+        "is_confirmed_by_applicant": True,
+        "alr_area": row["alr_area"],
+        "civic_address": row["civic_address"],
+        "is_farm": row["farm_land_ind"],
+        "legal_description": row["legal_description"],
+        "map_area_hectares": row["area_size"],
+        "ownership_type_code": _map_ownership_type_code(
+            row["property_owner_type_code"]
+        ),
+        "pid": row["pid"],
+        "pin": row["pin"],
+        "purchased_date": _map_purchased_date(row["purchase_date"]),
+    }
+
+
+def _map_ownership_type_code(ownership_type_code):
+    if ownership_type_code == OatsToAlcsOwnershipType.FEE.name:
+        return OatsToAlcsOwnershipType.FEE.value
+    if ownership_type_code == OatsToAlcsOwnershipType.CROWN.name:
+        return OatsToAlcsOwnershipType.CROWN.value
+    if ownership_type_code == OatsToAlcsOwnershipType.FIRST.name:
+        return OatsToAlcsOwnershipType.FIRST.value
+
+
+def _map_purchased_date(purchased_date):
+    date = None
+    if purchased_date:
+        date = convert_timezone(purchased_date, "US/Pacific")
+        date = set_time(
+            date
+        )  # check if date is set to 0 from the front end or if there a specific time
+    return date
 
 
 def _compile_application_insert_query(number_of_rows_to_insert):
     parcels_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-                    INSERT INTO alcs.notice_of_intent_parcel (notice_of_intent_submission_uuid, audit_created_by, is_confirmed_by_applicant)
+                    INSERT INTO alcs.notice_of_intent_parcel 
+                    (
+                        notice_of_intent_submission_uuid, 
+                        audit_created_by, 
+                        is_confirmed_by_applicant,
+                        alr_area,
+                        civic_address,
+                        is_farm,
+                        legal_description,
+                        map_area_hectares,
+                        ownership_type_code,
+                        pid,
+                        pin,
+                        purchased_date
+                    )
                     VALUES{parcels_to_insert}
                     ON CONFLICT DO NOTHING
                 """
