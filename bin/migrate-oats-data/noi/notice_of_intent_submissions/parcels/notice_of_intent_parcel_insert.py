@@ -2,8 +2,7 @@ from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
     OATS_ETL_USER,
-    convert_timezone,
-    set_time,
+    add_timezone_and_keep_date_part,
     OatsToAlcsOwnershipType,
 )
 from db import inject_conn_pool
@@ -92,7 +91,6 @@ def _prepare_data_to_insert(rows):
 
 
 def _map_data(row):
-    # logger.debug("map data here")
     return {
         "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
         "audit_created_by": OATS_ETL_USER,
@@ -108,6 +106,7 @@ def _map_data(row):
         "pid": row["pid"],
         "pin": row["pin"],
         "purchased_date": _map_purchased_date(row["purchase_date"]),
+        "oats_subject_property_id": row["subject_property_id"],
     }
 
 
@@ -123,10 +122,7 @@ def _map_ownership_type_code(ownership_type_code):
 def _map_purchased_date(purchased_date):
     date = None
     if purchased_date:
-        date = convert_timezone(purchased_date, "US/Pacific")
-        date = set_time(
-            date
-        )  # check if date is set to 0 from the front end or if there a specific time
+        date = add_timezone_and_keep_date_part(purchased_date)
     return date
 
 
@@ -146,7 +142,8 @@ def _compile_application_insert_query(number_of_rows_to_insert):
                         ownership_type_code,
                         pid,
                         pin,
-                        purchased_date
+                        purchased_date,
+                        oats_subject_property_id
                     )
                     VALUES{parcels_to_insert}
                     ON CONFLICT DO NOTHING
