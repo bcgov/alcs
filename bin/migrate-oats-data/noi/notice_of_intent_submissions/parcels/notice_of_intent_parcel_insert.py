@@ -19,7 +19,7 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_submission/parcels/notice_of_intent_parcels_base_insert_count.sql",
+            "noi/sql/notice_of_intent_submission/parcels/notice_of_intent_parcels_insert_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -33,7 +33,7 @@ def init_notice_of_intent_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         last_subject_property_id = 0
 
         with open(
-            "noi/sql/notice_of_intent_submission/parcels/notice_of_intent_parcels_base_insert.sql",
+            "noi/sql/notice_of_intent_submission/parcels/notice_of_intent_parcels_insert.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
