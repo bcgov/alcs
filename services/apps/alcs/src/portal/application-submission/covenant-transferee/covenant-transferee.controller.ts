@@ -74,7 +74,6 @@ export class CovenantTransfereeController {
     const owner = await this.covenantTransfereeService.create(
       createDto,
       applicationSubmission,
-      req.user.entity,
     );
 
     return this.mapper.mapAsync(
