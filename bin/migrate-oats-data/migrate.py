@@ -10,14 +10,12 @@ from menu.commands import (
     clean_all,
     document_import,
     app_document_import,
-    app_prep_import,
     application_import,
-    application_submission_import,
+    application_clean,
     noi_document_import,
     notice_of_intent_import,
     notice_of_intent_clean,
     start_obfuscation,
-    application_status_import,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -43,27 +41,18 @@ if __name__ == "__main__":
                 document_import(console, args)
             case "app-document-import":
                 app_document_import(console, args)
-            case "app-prep-import":
-                app_prep_import(console, args)
             case "noi-import":
                 notice_of_intent_import(console, args)
             case "noi-clean":
                 notice_of_intent_clean(console)
             case "application-import":
                 application_import(console, args)
+            case "application-clean":
+                application_clean(console)
             case "noi-document-import":
                 noi_document_import(console, args)
-            case "app-sub-import":
-                application_submission_import(console, args)
             case "obfuscate":
                 start_obfuscation(console)
-            case "app-status-import":
-                application_status_import(console, args)
-            case "app-all-import":
-                application_import(console, args)
-                app_prep_import(console, args)
-                application_submission_import(console, args)
-                application_status_import(console, args)
 
     finally:
         if connection_pool:

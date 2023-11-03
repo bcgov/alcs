@@ -1,10 +1,7 @@
 import sys, argparse
 from .command_parser.application_command_parser import (
     application_import_command_parser,
-    app_prep_import_command_parser,
-    app_sub_import_command_parser,
-    app_status_import_command_parser,
-    app_all_import_command_parser,
+    app_clean_command_parser,
 )
 from .command_parser.notice_of_intent_command_parser import (
     noi_import_command_parser,
@@ -41,17 +38,14 @@ def setup_menu_args_parser(import_batch_size):
     # Add subcommands to parser
     subparsers = parser.add_subparsers(dest="command")
     application_import_command_parser(import_batch_size, subparsers)
+    app_clean_command_parser(subparsers)
     document_import_command_parser(import_batch_size, subparsers)
     application_document_import_command_parser(import_batch_size, subparsers)
-    app_prep_import_command_parser(import_batch_size, subparsers)
     noi_import_command_parser(import_batch_size, subparsers)
     noi_clean_command_parser(subparsers)
     document_noi_import_command_parser(import_batch_size, subparsers)
     noi_document_import_command_parser(import_batch_size, subparsers)
     _import_command_parser(subparsers)
-    app_sub_import_command_parser(import_batch_size, subparsers)
-    app_status_import_command_parser(import_batch_size, subparsers)
-    app_all_import_command_parser(import_batch_size, subparsers)
 
     subparsers.add_parser("clean", help="Clean all imported data")
 

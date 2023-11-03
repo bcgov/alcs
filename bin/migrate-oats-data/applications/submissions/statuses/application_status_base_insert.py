@@ -1,7 +1,6 @@
 from common import OATS_ETL_USER, setup_and_get_logger, BATCH_UPLOAD_SIZE
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
-from .application_status_type_code import *
 
 etl_name = "init_application_statuses"
 logger = setup_and_get_logger(etl_name)
