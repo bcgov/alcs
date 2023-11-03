@@ -12,6 +12,7 @@ import {
   RosoDecisionComponentDto,
   SubdDecisionComponentDto,
   ExpiryDateDecisionComponentDto,
+  PfrsDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
 import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
@@ -50,6 +51,9 @@ export class DecisionComponentComponent implements OnInit {
   areaToPlace = new FormControl<number | null>(null, [Validators.required]);
   maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
+
+  //pfrs
+  endDate2 = new FormControl<Date | null>(null, [Validators.required]);
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
@@ -108,8 +112,7 @@ export class DecisionComponentComponent implements OnInit {
           this.patchRosoFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
-          this.patchPofoFields();
-          this.patchRosoFields();
+          this.patchPfrsFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
           this.patchNaruFields();
@@ -221,6 +224,13 @@ export class DecisionComponentComponent implements OnInit {
     this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
   }
 
+  private patchPfrsFields() {
+    this.patchPofoFields();
+    this.patchRosoFields();
+    this.form.addControl('endDate2', this.endDate2);
+    this.endDate2.setValue(this.data.endDate2 ? new Date(this.data.endDate2) : null);
+  }
+
   private patchPofoFields() {
     this.form.addControl('endDate', this.endDate);
     this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
@@ -313,9 +323,10 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getPfrsDataChange(): RosoDecisionComponentDto & PofoDecisionComponentDto {
+  private getPfrsDataChange(): PfrsDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ?? null,
       soilToRemoveArea: this.areaToRemove.value ?? null,
       soilToRemoveVolume: this.volumeToRemove.value ?? null,

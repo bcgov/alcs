@@ -81,9 +81,12 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   onAddNewComponent(uiCode: string, typeCode: string) {
+    debugger;
     switch (uiCode) {
       case 'COPY':
         const component: ApplicationDecisionComponentDto = {
+          endDate: this.application.proposalEndDate,
+          endDate2: this.application.proposalEndDate2,
           applicationDecisionComponentTypeCode: typeCode,
           alrArea: this.application.alrArea,
           agCap: this.application.agCap,
@@ -120,8 +123,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
-          this.patchPofoFields(component);
-          this.patchRosoFields(component);
+          this.patchPfrsFields(component);
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
@@ -231,6 +233,12 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
   private setExpiryDateFields(component: ApplicationDecisionComponentDto) {
     component.expiryDate = this.application.proposalExpiryDate;
+  }
+
+  private patchPfrsFields(component: ApplicationDecisionComponentDto) {
+    this.patchPofoFields(component);
+    this.patchRosoFields(component);
+    component.endDate2 = this.application.proposalEndDate2;
   }
 
   private patchPofoFields(component: ApplicationDecisionComponentDto) {

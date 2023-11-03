@@ -531,6 +531,14 @@ export class NoticeOfIntentSubmissionService {
       updateDto.soilProjectDurationUnit,
       noticeOfIntentSubmission.soilProjectDurationUnit,
     );
+    noticeOfIntentSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      noticeOfIntentSubmission.fillProjectDurationAmount,
+    );
+    noticeOfIntentSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      noticeOfIntentSubmission.fillProjectDurationUnit,
+    );
     noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
       noticeOfIntentSubmission.soilFillTypeToPlace,

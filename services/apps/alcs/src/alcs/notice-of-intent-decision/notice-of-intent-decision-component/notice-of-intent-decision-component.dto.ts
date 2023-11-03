@@ -37,6 +37,10 @@ export class UpdateNoticeOfIntentDecisionComponentDto {
 
   @IsOptional()
   @IsNumber()
+  endDate2?: number;
+
+  @IsOptional()
+  @IsNumber()
   expiryDate?: number;
 
   @IsOptional()
@@ -105,10 +109,8 @@ export class NoticeOfIntentDecisionComponentDto {
   @AutoMap()
   agCapConsultant?: string;
 
-  @AutoMap()
   endDate?: number;
-
-  @AutoMap()
+  endDate2?: number;
   expiryDate?: number;
 
   @AutoMap()
