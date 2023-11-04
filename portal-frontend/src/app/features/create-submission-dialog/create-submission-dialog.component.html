@@ -49,7 +49,6 @@
         <mat-radio-group
           [value]="selectedAppType?.code"
           class="app-type-radio-group"
-          aria-labelledby="radio-label"
           (change)="onAppTypeSelected($event)"
           color="primary"
           required
@@ -77,13 +76,7 @@
     <ng-container *ngIf="currentStep === steps.noticeOfIntentType">
       <div class="step-description">Select an option to learn more about the notice of intent type.</div>
       <div class="step-noi-type">
-        <mat-radio-group
-          class="app-type-radio-group"
-          aria-labelledby="radio-label"
-          (change)="onNoiTypeSelected($event)"
-          color="primary"
-          required
-        >
+        <mat-radio-group class="app-type-radio-group" (change)="onNoiTypeSelected($event)" color="primary" required>
           <mat-radio-button *ngFor="let type of noticeOfIntentTypes" class="radio-option" [value]="type.code">
             {{ type.portalLabel }}
           </mat-radio-button>

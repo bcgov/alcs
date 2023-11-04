@@ -93,7 +93,8 @@ mat-form-field.mat-form-field-disabled {
 }
 
 form {
-  label {
+  label,
+  mat-label {
     font-weight: 700;
     font-size: rem(13) !important;
 
