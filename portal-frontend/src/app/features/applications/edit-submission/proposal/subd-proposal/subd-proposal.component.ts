@@ -197,7 +197,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
   private calculateLotSize() {
     this.totalAcres = this.proposedLots
       .reduce((total, lot) => total + (lot.size !== null ? parseFloat(lot.size) : 0), 0)
-      .toFixed(2);
+      .toFixed(5);
   }
 
   private async loadParcels(submissionUuid: string) {
@@ -206,7 +206,7 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
       this.totalTargetAcres = parcels
         .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
         .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
-        .toFixed(2);
+        .toFixed(5);
     }
   }
 }

@@ -150,7 +150,7 @@ export class ApplicationParcel extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   alrArea?: number | null;

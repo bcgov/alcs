@@ -39,7 +39,7 @@ export class ApplicationDecisionComponentLot extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   alrArea?: number | null;
@@ -49,7 +49,7 @@ export class ApplicationDecisionComponentLot extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   size?: number | null;
