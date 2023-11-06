@@ -28,7 +28,7 @@ def add_timezone_and_keep_date_part(date_str, timezone_str="America/Vancouver"):
         naive_dt = date_str
 
     local_tz = pytz.timezone(timezone_str)
-    aware_dt = local_tz.localize(naive_dt, is_dst=True)
+    aware_dt = local_tz.localize(naive_dt)
 
     # Format the string with the desired output
     formatted = aware_dt.strftime("%Y-%m-%d %H:%M:%S.%f %z")

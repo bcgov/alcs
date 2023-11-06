@@ -13,20 +13,21 @@ WITH noi_components_grouped AS (
 )
 SELECT count(*)
 FROM noi_components_grouped noig
-    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = noig.alr_application_id -- return records that are different between OATS and ALCS
-    WITH parcels_to_insert AS (
-        SELECT nois.uuid,
-            osp.subject_property_id
-        FROM alcs.notice_of_intent_submission nois
-            JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nois.file_number::INTEGER
-    ),
-    grouped_oats_property_interests_ids AS (
-        SELECT MIN(property_owner_type_code) AS property_owner_type_code,
-            -- min will not affect anything since all property_owner_type_code are the same in scope of subject_property
-            subject_property_id
-        FROM oats.oats_property_interests opi
-        GROUP BY opi.subject_property_id
-    ) --- compares parcel fields and returns mismatches. Since oats has a lot of bad data ignore all records prior the 1900s
+    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = noig.alr_application_id;
+-- return records that are different between OATS and ALCS
+WITH parcels_to_insert AS (
+    SELECT nois.uuid,
+        osp.subject_property_id
+    FROM alcs.notice_of_intent_submission nois
+        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nois.file_number::INTEGER
+),
+grouped_oats_property_interests_ids AS (
+    SELECT MIN(property_owner_type_code) AS property_owner_type_code,
+        -- min will not affect anything since all property_owner_type_code are the same in scope of subject_property
+        subject_property_id
+    FROM oats.oats_property_interests opi
+    GROUP BY opi.subject_property_id
+) --- compares parcel fields and returns mismatches. Since oats has a lot of bad data ignore all records prior the 1900s
 SELECT noip.alr_area,
     osp.alr_area,
     noip.civic_address,
