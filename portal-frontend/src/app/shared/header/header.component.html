@@ -25,20 +25,14 @@
     </div>
 
     <div *ngIf="isAuthenticated && !isOnPublicPage" class="controls">
-      <button
-        mat-button
-        color="primary"
-        [class.open]="menuTrigger.menuOpen"
-        #menuTrigger="matMenuTrigger"
-        [matMenuTriggerFor]="userMenu"
-      >
+      <button mat-button color="primary" class="user-menu-button" (click)="onUserMenuToggle()">
         <div class="center">{{ user?.name }} <mat-icon> arrow_drop_down </mat-icon></div>
       </button>
-      <mat-menu class="user-menu" #userMenu="matMenu">
+      <ul *ngIf="isUserMenuOpen" class="user-menu mat-elevation-z8">
         <div class="item">User ID: {{ user?.bceidUserName }}</div>
         <div class="item">Business: {{ user?.government || user?.businessName }}</div>
         <div class="item">Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
-      </mat-menu>
+      </ul>
       <button class="logout-btn" (click)="onLogout()" mat-stroked-button color="primary">Log Out</button>
     </div>
 
