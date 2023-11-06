@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { NoticeOfIntentTypeDto } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
 import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';

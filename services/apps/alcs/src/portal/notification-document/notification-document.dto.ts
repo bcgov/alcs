@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';

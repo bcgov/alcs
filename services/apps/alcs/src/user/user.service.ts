@@ -1,9 +1,9 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectMapper } from 'automapper-nestjs';
 import { IConfig } from 'config';
 import { Repository } from 'typeorm';
 import { LocalGovernment } from '../alcs/local-government/local-government.entity';

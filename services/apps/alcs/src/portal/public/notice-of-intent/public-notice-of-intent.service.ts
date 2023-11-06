@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { NoticeOfIntentDecisionV2Service } from '../../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
@@ -28,9 +28,8 @@ export class PublicNoticeOfIntentService {
   ) {}
 
   async getPublicData(fileNumber: string) {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      fileNumber,
-    );
+    const noticeOfIntent =
+      await this.noticeOfIntentService.getByFileNumber(fileNumber);
 
     //Easy way to check if its public
     if (!noticeOfIntent?.dateReceivedAllItems) {
@@ -44,9 +43,8 @@ export class PublicNoticeOfIntentService {
         fileNumber,
       );
 
-    const parcels = await this.noticeOfIntentParcelService.fetchByFileId(
-      fileNumber,
-    );
+    const parcels =
+      await this.noticeOfIntentParcelService.fetchByFileId(fileNumber);
 
     const mappedParcels = this.mapper.mapArray(
       parcels,
@@ -72,9 +70,8 @@ export class PublicNoticeOfIntentService {
       PublicDocumentDto,
     );
 
-    const decisions = await this.noticeOfIntentDecisionV2Service.getForPortal(
-      fileNumber,
-    );
+    const decisions =
+      await this.noticeOfIntentDecisionV2Service.getForPortal(fileNumber);
     const mappedDecisions = this.mapper.mapArray(
       decisions,
       NoticeOfIntentDecision,
@@ -96,9 +93,8 @@ export class PublicNoticeOfIntentService {
       throw new ServiceNotFoundException('Failed to find document');
     }
 
-    const url = await this.noticeOfIntentDocumentService.getDownloadUrl(
-      document,
-    );
+    const url =
+      await this.noticeOfIntentDocumentService.getDownloadUrl(document);
 
     return {
       url,

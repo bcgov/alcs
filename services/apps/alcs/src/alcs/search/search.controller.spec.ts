@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -238,9 +238,8 @@ describe('SearchController', () => {
       fileTypes: [],
     };
 
-    const result = await controller.advancedSearchNonApplications(
-      mockSearchRequestDto,
-    );
+    const result =
+      await controller.advancedSearchNonApplications(mockSearchRequestDto);
 
     expect(
       mockNonApplicationsAdvancedSearchService.searchNonApplications,

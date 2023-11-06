@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -51,9 +51,8 @@ export class ApplicationParcelController {
   async fetchByFileId(
     @Param('submissionUuid') submissionUuid: string,
   ): Promise<ApplicationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
-      submissionUuid,
-    );
+    const parcels =
+      await this.parcelService.fetchByApplicationSubmissionUuid(submissionUuid);
     return this.mapper.mapArrayAsync(
       parcels,
       ApplicationParcel,

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';

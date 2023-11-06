@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -126,9 +126,8 @@ export class NoticeOfIntentModificationService {
         createDto.modifiesDecisionUuids,
       );
 
-    const mockModifications = await this.modificationRepository.save(
-      modification,
-    );
+    const mockModifications =
+      await this.modificationRepository.save(modification);
     return this.getByUuid(mockModifications.uuid);
   }
 
