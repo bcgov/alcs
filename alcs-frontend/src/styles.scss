@@ -305,6 +305,15 @@ mat-button-toggle-group {
   display: none !important;
 }
 
+.mat-mdc-cell {
+  font-size: 16px;
+}
+
+.mat-mdc-header-cell {
+  font-size: 16px;
+  font-weight: 700 !important;
+}
+
 @mixin text-ellipsis($lines: 1) {
   text-overflow: ellipsis;
   overflow: hidden;

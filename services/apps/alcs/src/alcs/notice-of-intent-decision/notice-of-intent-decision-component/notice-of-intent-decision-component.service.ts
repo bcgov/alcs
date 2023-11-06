@@ -43,6 +43,12 @@ export class NoticeOfIntentDecisionComponentService {
       component.agCapSource = updateDto.agCapSource;
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
+      component.endDate = updateDto.endDate
+        ? new Date(updateDto.endDate)
+        : null;
+      component.endDate2 = updateDto.endDate2
+        ? new Date(updateDto.endDate2)
+        : null;
 
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
@@ -61,7 +67,6 @@ export class NoticeOfIntentDecisionComponentService {
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
     component.soilFillTypeToPlace = updateDto.soilFillTypeToPlace ?? null;
     component.soilToPlaceArea = updateDto.soilToPlaceArea ?? null;
     component.soilToPlaceVolume = updateDto.soilToPlaceVolume ?? null;
@@ -75,7 +80,6 @@ export class NoticeOfIntentDecisionComponentService {
     component: NoticeOfIntentDecisionComponent,
     updateDto: CreateNoticeOfIntentDecisionComponentDto,
   ) {
-    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
     component.soilTypeRemoved = updateDto.soilTypeRemoved ?? null;
     component.soilToRemoveVolume = updateDto.soilToRemoveVolume ?? null;
     component.soilToRemoveArea = updateDto.soilToRemoveArea ?? null;

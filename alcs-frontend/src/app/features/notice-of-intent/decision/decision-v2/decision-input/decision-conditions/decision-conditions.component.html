@@ -28,11 +28,11 @@
   </mat-menu>
 
   <div class="condition" *ngFor="let condition of mappedConditions; let index = index; trackBy: trackByFn">
-    <app-decision-condition
+    <app-noi-decision-condition
       [(data)]="mappedConditions[index]"
       (dataChange)="onChanges()"
       (remove)="onRemoveCondition(index)"
       [selectableComponents]="selectableComponents"
-    ></app-decision-condition>
+    ></app-noi-decision-condition>
   </div>
 </section>

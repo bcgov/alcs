@@ -175,11 +175,11 @@
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NFUP"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic>
+                ></app-app-basic>
               </app-nfup>
 
               <app-expiry-date
@@ -190,59 +190,59 @@
                 "
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
+                ></app-app-basic
               ></app-expiry-date>
 
-              <app-pofo
+              <app-app-pofo
                 class="grid-2"
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-pofo>
+                ></app-app-basic
+              ></app-app-pofo>
 
-              <app-roso
+              <app-app-roso
                 class="grid-2"
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-roso>
+                ></app-app-basic
+              ></app-app-roso>
 
-              <app-pfrs
+              <app-app-pfrs
                 class="grid-2"
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
-              ></app-pfrs>
+                ></app-app-basic
+              ></app-app-pfrs>
 
               <app-naru
                 class="grid-2"
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.NARU"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
+                ></app-app-basic
               ></app-naru>
 
               <app-subd
@@ -250,11 +250,11 @@
                 *ngIf="component.applicationDecisionComponentTypeCode === COMPONENT_TYPE.SUBD"
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
+                ></app-app-basic
               ></app-subd>
 
               <app-incl-excl
@@ -265,11 +265,11 @@
                 "
                 [component]="component"
               >
-                <app-basic
+                <app-app-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic
+                ></app-app-basic
               ></app-incl-excl>
 
               <div class="grid-2">

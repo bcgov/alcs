@@ -11,7 +11,6 @@ import {
 } from '../../../services/application-submission/application-submission.dto';
 import { UserDto } from '../../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../../services/authentication/authentication.service';
-import { CodeService } from '../../../services/code/code.service';
 import { BaseInboxResultDto, InboxRequestDto, InboxSearchResponseDto } from '../../../services/inbox/inbox.dto';
 import { InboxService } from '../../../services/inbox/inbox.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -105,7 +104,6 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   constructor(
     private inboxService: InboxService,
-    private codeService: CodeService,
     private toastService: ToastService,
     private titleService: Title,
     private authenticationService: AuthenticationService

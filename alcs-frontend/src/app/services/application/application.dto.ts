@@ -182,6 +182,8 @@ export interface ApplicationSubmissionDto {
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
   soilProjectDurationUnit: string | null;
+  fillProjectDurationAmount: number | null;
+  fillProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean | null;
@@ -256,6 +258,7 @@ export interface ApplicationDto {
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
   proposalEndDate?: number;
+  proposalEndDate2?: number;
   proposalExpiryDate?: number;
   legacyId?: string;
 }
@@ -287,6 +290,7 @@ export interface UpdateApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
+  proposalEndDate2?: number;
   proposalEndDate?: number;
   proposalExpiryDate?: number;
 }

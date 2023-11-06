@@ -150,7 +150,21 @@
   </div>
 
   <div class="full-width">
-    <h4>Project Duration</h4>
+    <span class="subheading1">Placement of Fill Project Duration</span>
+  </div>
+  <div class="subheading2 grid-1">Duration</div>
+  <div class="grid-double">
+    {{ noiSubmission.fillProjectDurationUnit }}
+    <app-no-data *ngIf="!noiSubmission.fillProjectDurationUnit"></app-no-data>
+  </div>
+  <div class="subheading2 grid-1">Length</div>
+  <div class="grid-double">
+    {{ noiSubmission.fillProjectDurationAmount }}
+    <app-no-data *ngIf="!noiSubmission.fillProjectDurationAmount"></app-no-data>
+  </div>
+
+  <div class="full-width">
+    <span class="subheading1">Removal of Soil Project Duration</span>
   </div>
   <div class="subheading2 grid-1">Duration</div>
   <div class="grid-double">

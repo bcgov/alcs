@@ -157,6 +157,10 @@ export class UpdateApplicationDto {
 
   @IsOptional()
   @IsNumber()
+  proposalEndDate2?: number;
+
+  @IsOptional()
+  @IsNumber()
   proposalExpiryDate?: number;
 }
 
@@ -256,6 +260,7 @@ export class ApplicationDto {
   legacyId?: string;
 
   proposalEndDate?: number;
+  proposalEndDate2?: number;
   proposalExpiryDate?: number;
 }
 
@@ -283,6 +288,7 @@ export class ApplicationUpdateServiceDto {
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
   proposalEndDate?: Date | null;
+  proposalEndDate2?: Date | null;
   proposalExpiryDate?: Date | null;
   staffObservations?: string | null;
   localGovernmentUuid?: string;

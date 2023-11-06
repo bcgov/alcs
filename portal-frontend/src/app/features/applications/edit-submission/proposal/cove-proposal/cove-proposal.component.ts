@@ -51,7 +51,6 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
   showDraftCovenantVirus = false;
 
   constructor(
-    private router: Router,
     private covenantTransfereeService: CovenantTransfereeService,
     private applicationSubmissionService: ApplicationSubmissionService,
     applicationDocumentService: ApplicationDocumentService,
@@ -76,6 +75,10 @@ export class CoveProposalComponent extends FilesStepComponent implements OnInit,
         });
 
         this.canUploadDraft = !!submission.coveHasDraft;
+
+        if (this.showErrors) {
+          this.form.markAllAsTouched();
+        }
       }
     });
 

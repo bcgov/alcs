@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { InfoRequestDialogComponent, REASON_TYPE } from './info-request-dialog/info-request-dialog.component';
 
 @Component({
-  selector: 'app-info-requests',
+  selector: 'app-noi-info-requests',
   templateUrl: './info-requests.component.html',
   styleUrls: ['./info-requests.component.scss'],
 })

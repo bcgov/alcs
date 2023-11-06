@@ -47,6 +47,10 @@ export class UpdateApplicationDecisionComponentDto {
 
   @IsOptional()
   @IsNumber()
+  endDate2?: number;
+
+  @IsOptional()
+  @IsNumber()
   expiryDate?: number;
 
   @IsOptional()
@@ -133,10 +137,8 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   nfuSubType?: string;
 
-  @AutoMap()
   endDate?: number;
-
-  @AutoMap()
+  endDate2?: number;
   expiryDate?: number;
 
   @AutoMap()

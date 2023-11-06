@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationModificationService } from '../../../../services/application/application-modification/application-modification.service';
 import { ApplicationDecisionService } from '../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -10,8 +11,11 @@ import { EditModificationDialogComponent } from './edit-modification-dialog.comp
 describe('EditModificationDialogComponent', () => {
   let component: EditModificationDialogComponent;
   let fixture: ComponentFixture<EditModificationDialogComponent>;
+  let mockDecisionService: DeepMocked<ApplicationDecisionService>;
 
   beforeEach(async () => {
+    mockDecisionService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [EditModificationDialogComponent],
       providers: [
@@ -21,7 +25,7 @@ describe('EditModificationDialogComponent', () => {
         },
         {
           provide: ApplicationDecisionService,
-          useValue: {},
+          useValue: mockDecisionService,
         },
         {
           provide: ToastService,
@@ -40,6 +44,9 @@ describe('EditModificationDialogComponent', () => {
 
     fixture = TestBed.createComponent(EditModificationDialogComponent);
     component = fixture.componentInstance;
+
+    mockDecisionService.fetchByApplication.mockResolvedValue({} as any);
+
     fixture.detectChanges();
   });
 

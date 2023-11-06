@@ -76,7 +76,6 @@ describe('CovenantTransfereeService', () => {
         typeCode: '',
       },
       new ApplicationSubmission(),
-      new User(),
     );
 
     expect(mockRepo.save).toHaveBeenCalledTimes(1);

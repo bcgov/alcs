@@ -34,6 +34,18 @@ describe('SelectGovernmentComponent', () => {
     fixture = TestBed.createComponent(SelectGovernmentComponent);
     component = fixture.componentInstance;
     component.$noiSubmission = new BehaviorSubject<NoticeOfIntentSubmissionDetailedDto | undefined>(undefined);
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

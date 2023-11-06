@@ -8,7 +8,7 @@ import { ToastService } from '../../../../../../services/toast/toast.service';
 import { DOCUMENT_SOURCE } from '../../../../../../shared/document/document.dto';
 
 @Component({
-  selector: 'app-decision-document-upload-dialog',
+  selector: 'app-app-decision-document-upload-dialog',
   templateUrl: './decision-document-upload-dialog.component.html',
   styleUrls: ['./decision-document-upload-dialog.component.scss'],
 })

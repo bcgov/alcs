@@ -5,7 +5,7 @@ import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-
 import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
-  selector: 'app-decision',
+  selector: 'app-noi-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
 })
