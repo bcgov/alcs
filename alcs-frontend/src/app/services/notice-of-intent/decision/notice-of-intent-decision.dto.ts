@@ -122,7 +122,10 @@ export interface UpdateNoticeOfIntentDecisionComponentDto {
   soilToRemoveAverageDepth?: number | null;
 }
 
-export interface NoticeOfIntentDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
+export interface NoticeOfIntentDecisionComponentDto
+  extends PofoDecisionComponentDto,
+    RosoDecisionComponentDto,
+    PfrsDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -132,6 +135,10 @@ export interface NoticeOfIntentDecisionComponentDto extends PofoDecisionComponen
   noticeOfIntentDecisionUuid?: string;
   noticeOfIntentDecisionComponentTypeCode: string;
   noticeOfIntentDecisionComponentType?: NoticeOfIntentDecisionComponentTypeDto;
+}
+
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
+  endDate2?: number | null;
 }
 
 export interface PofoDecisionComponentDto {

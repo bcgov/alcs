@@ -80,6 +80,10 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.proposalEndDate?.getTime()),
         ),
         forMember(
+          (a) => a.proposalEndDate2,
+          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
+        ),
+        forMember(
           (a) => a.proposalExpiryDate,
           mapFrom((ad) => ad.proposalExpiryDate?.getTime()),
         ),

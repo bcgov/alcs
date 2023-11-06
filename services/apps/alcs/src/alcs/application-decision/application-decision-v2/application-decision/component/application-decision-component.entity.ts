@@ -90,14 +90,21 @@ export class ApplicationDecisionComponent extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` end date',
+    comment: 'Components end date',
     nullable: true,
   })
   endDate?: Date | null;
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` expiry date',
+    comment: 'Components second end date (PFRS only)',
+    nullable: true,
+  })
+  endDate2?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'Components expiry date',
     nullable: true,
   })
   expiryDate?: Date | null;

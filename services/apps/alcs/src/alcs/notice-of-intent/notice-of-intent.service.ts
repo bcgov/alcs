@@ -323,6 +323,11 @@ export class NoticeOfIntentService {
       noticeOfIntent.proposalEndDate,
     );
 
+    noticeOfIntent.proposalEndDate2 = filterUndefined(
+      formatIncomingDate(updateDto.proposalEndDate2),
+      noticeOfIntent.proposalEndDate2,
+    );
+
     await this.repository.save(noticeOfIntent);
 
     await this.updateStatus(updateDto, noticeOfIntent);

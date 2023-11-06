@@ -140,6 +140,10 @@ export interface NaruDecisionComponentDto {
   naruSubtype?: NaruSubtypesDto | null;
 }
 
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
+  endDate2?: number | null;
+}
+
 export interface PofoDecisionComponentDto {
   endDate?: number | null;
   soilFillTypeToPlace?: string | null;
@@ -174,7 +178,8 @@ export interface ApplicationDecisionComponentDto
     RosoDecisionComponentDto,
     NaruDecisionComponentDto,
     SubdDecisionComponentDto,
-    InclExclDecisionComponentDto {
+    InclExclDecisionComponentDto,
+    PfrsDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;

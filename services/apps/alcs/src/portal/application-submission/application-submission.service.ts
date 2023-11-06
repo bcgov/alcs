@@ -886,6 +886,14 @@ export class ApplicationSubmissionService {
       updateDto.soilProjectDurationUnit,
       applicationSubmission.soilProjectDurationUnit,
     );
+    applicationSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      applicationSubmission.fillProjectDurationUnit,
+    );
+    applicationSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      applicationSubmission.fillProjectDurationAmount,
+    );
     applicationSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
       applicationSubmission.soilFillTypeToPlace,

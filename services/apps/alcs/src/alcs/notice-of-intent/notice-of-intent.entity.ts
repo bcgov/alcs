@@ -213,6 +213,13 @@ export class NoticeOfIntent extends Base {
   })
   proposalEndDate?: Date | null;
 
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the placement of fill ends (PFRS only)',
+    nullable: true,
+  })
+  proposalEndDate2?: Date | null;
+
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,
   })

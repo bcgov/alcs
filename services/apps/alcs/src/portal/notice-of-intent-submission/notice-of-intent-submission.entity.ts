@@ -381,6 +381,20 @@ export class NoticeOfIntentSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   soilProjectDurationUnit: string | null;
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  fillProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  fillProjectDurationUnit: string | null;
+
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilFillTypeToPlace: string | null;

@@ -58,6 +58,7 @@ export interface NoticeOfIntentDto {
   agCapConsultant?: string;
   staffObservations?: string;
   proposalEndDate?: number;
+  proposalEndDate2?: number;
   legacyId?: string;
 }
 
@@ -81,6 +82,7 @@ export interface UpdateNoticeOfIntentDto {
   agCapConsultant?: string;
   staffObservations?: string;
   proposalEndDate?: number;
+  proposalEndDate2?: number;
 }
 
 export enum NOI_SUBMISSION_STATUS {
@@ -151,7 +153,9 @@ export interface NoticeOfIntentSubmissionDto {
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit?: string | null;
+  soilProjectDurationUnit: string | null;
+  fillProjectDurationAmount: number | null;
+  fillProjectDurationUnit: string | null;
   soilFillTypeToPlace?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;
@@ -202,7 +206,9 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit?: string | null;
+  soilProjectDurationUnit: string | null;
+  fillProjectDurationAmount: number | null;
+  fillProjectDurationUnit: string | null;
   soilFillTypeToPlace?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilHasSubmittedNotice?: boolean;

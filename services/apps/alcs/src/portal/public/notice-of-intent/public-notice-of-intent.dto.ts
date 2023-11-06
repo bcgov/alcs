@@ -139,6 +139,12 @@ export class PublicNoticeOfIntentSubmissionDto {
   @AutoMap(() => String)
   soilProjectDurationUnit?: string | null;
 
+  @AutoMap(() => Number)
+  fillProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  fillProjectDurationUnit?: string | null;
+
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
 
