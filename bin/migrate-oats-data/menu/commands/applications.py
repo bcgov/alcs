@@ -1,27 +1,14 @@
 from applications import (
-    process_applications,
-    process_alcs_application_prep_fields,
-    process_alcs_app_submissions,
+    process_application_etl,
+    clean_alcs_applications,
+    init_applications,
 )
-
-
-def app_prep_import(console, args):
-    console.log("Beginning OATS -> ALCS app-prep import process")
-    with console.status(
-        "[bold green]App prep import (applications table update in ALCS)...\n"
-    ) as status:
-        if args.batch_size:
-            import_batch_size = args.batch_size
-
-        console.log(f"Processing app-prep import in batch size = {import_batch_size}")
-
-        process_alcs_application_prep_fields(batch_size=import_batch_size)
 
 
 def application_import(console, args):
     console.log("Beginning OATS -> ALCS application import process")
     with console.status(
-        "[bold green]application import (application table update in ALCS)...\n"
+        "[bold green]application import (Application and application related table update in ALCS)...\n"
     ) as status:
         if args.batch_size:
             import_batch_size = args.batch_size
@@ -30,17 +17,11 @@ def application_import(console, args):
             f"Processing applications import in batch size = {import_batch_size}"
         )
 
-        process_applications(batch_size=import_batch_size)
+        init_applications(batch_size=import_batch_size)
+        process_application_etl(batch_size=import_batch_size)
 
 
-def application_submission_import(console, args):
-    console.log("Beginning OATS -> ALCS app-sub import process")
-    with console.status(
-        "[bold green]App submission import (application_submission table update in ALCS)...\n"
-    ) as status:
-        if args.batch_size:
-            import_batch_size = args.batch_size
-
-        console.log(f"Processing app-sub import in batch size = {import_batch_size}")
-
-        process_alcs_app_submissions(batch_size=import_batch_size)
+def application_clean(console):
+    console.log("Beginning ALCS application clean")
+    with console.status("[bold green]Cleaning ALCS Applications...\n") as status:
+        clean_alcs_applications()
