@@ -222,7 +222,7 @@ export class NoticeOfIntentSubmission extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;
@@ -262,7 +262,7 @@ export class NoticeOfIntentSubmission extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyRemovedArea: number | null;
@@ -302,7 +302,7 @@ export class NoticeOfIntentSubmission extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -342,7 +342,7 @@ export class NoticeOfIntentSubmission extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyPlacedArea: number | null;

@@ -163,7 +163,7 @@ export class Application extends Base {
     type: 'decimal',
     nullable: true,
     precision: 12,
-    scale: 2,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the proposal',
   })
