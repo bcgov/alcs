@@ -23,10 +23,14 @@ def process_application_etl(batch_size):
 
 def clean_alcs_applications():
     clean_application_submission_status_emails()
-    # clean_parcels()
+    clean_parcels()
     clean_app_submissions()
     clean_applications()
 
 
 def init_applications(batch_size):
     process_applications(batch_size)
+
+
+def clean_application_parcels():
+    clean_parcels()

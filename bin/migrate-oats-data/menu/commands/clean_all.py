@@ -1,4 +1,7 @@
-from applications.migrate_application import clean_alcs_applications
+from applications.migrate_application import (
+    clean_alcs_applications,
+    clean_application_parcels,
+)
 from noi.notice_of_intent_migration import clean_notice_of_intent
 from applications.application_submission_status_email import (
     clean_application_submission_status_emails,
@@ -18,6 +21,8 @@ def clean_all(console, args):
         console.log("Cleaning data:")
         # this will be enabled once application import is ready
 
+        # application parcels need to be cleaned before application documents
+        clean_application_parcels()
         clean_application_documents()
         clean_noi_documents()
         clean_documents()
