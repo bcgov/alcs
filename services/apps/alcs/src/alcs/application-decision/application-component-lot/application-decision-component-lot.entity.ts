@@ -38,7 +38,7 @@ export class ApplicationDecisionComponentLot extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
+    precision: 15,
     scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
@@ -48,7 +48,7 @@ export class ApplicationDecisionComponentLot extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
+    precision: 15,
     scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
