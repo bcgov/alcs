@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, CreateDateColumn, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';

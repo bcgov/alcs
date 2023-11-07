@@ -1,5 +1,5 @@
-import { createMap, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { PlanningReviewDto } from '../../alcs/planning-review/planning-review.dto';
 import { PlanningReview } from '../../alcs/planning-review/planning-review.entity';

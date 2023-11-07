@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { AssigneeDto } from '../../user/user.dto';
 import { MinimalBoardDto } from '../board/board.dto';

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -65,9 +65,8 @@ export class ApplicationDecisionMeetingController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionMeetingDto[]> {
-    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
-      fileNumber,
-    );
+    const meetings =
+      await this.appDecisionMeetingService.getByAppFileNumber(fileNumber);
     return this.mapper.mapArrayAsync(
       meetings,
       ApplicationDecisionMeeting,
@@ -125,9 +124,8 @@ export class ApplicationDecisionMeetingController {
       ApplicationDecisionMeetingDto,
       ApplicationDecisionMeeting,
     );
-    const updatedMeeting = await this.appDecisionMeetingService.createOrUpdate(
-      appDecEntity,
-    );
+    const updatedMeeting =
+      await this.appDecisionMeetingService.createOrUpdate(appDecEntity);
     return this.mapper.map(
       updatedMeeting,
       ApplicationDecisionMeeting,
@@ -161,9 +159,8 @@ export class ApplicationDecisionMeetingController {
       await this.appDecisionMeetingService.getUpcomingReconsiderationMeetings();
 
     const reconIds = upcomingReconsiderationMeetings.map((a) => a.uuid);
-    const reconsiderations = await this.reconsiderationService.getMany(
-      reconIds,
-    );
+    const reconsiderations =
+      await this.reconsiderationService.getMany(reconIds);
     return reconsiderations.map((recon): UpcomingMeetingDto => {
       const meetingDate = upcomingReconsiderationMeetings.find(
         (meeting) => meeting.uuid === recon.uuid,

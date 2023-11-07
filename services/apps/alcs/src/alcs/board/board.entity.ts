@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { CardType } from '../card/card-type/card-type.entity';

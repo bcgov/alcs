@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNumber } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 

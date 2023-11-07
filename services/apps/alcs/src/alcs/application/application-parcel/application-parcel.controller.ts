@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';

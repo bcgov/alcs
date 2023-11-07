@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { NotificationDocument } from '../../../alcs/notification/notification-document/notification-document.entity';
@@ -25,9 +25,8 @@ export class PublicNotificationService {
   ) {}
 
   async getPublicData(fileNumber: string) {
-    const notification = await this.notificationService.getByFileNumber(
-      fileNumber,
-    );
+    const notification =
+      await this.notificationService.getByFileNumber(fileNumber);
 
     const submission =
       await this.notificationSubmissionService.getOrFailByFileNumber(
@@ -44,9 +43,8 @@ export class PublicNotificationService {
       );
     }
 
-    const parcels = await this.notificationParcelService.fetchByFileId(
-      fileNumber,
-    );
+    const parcels =
+      await this.notificationParcelService.fetchByFileId(fileNumber);
 
     const mappedParcels = this.mapper.mapArray(
       parcels,

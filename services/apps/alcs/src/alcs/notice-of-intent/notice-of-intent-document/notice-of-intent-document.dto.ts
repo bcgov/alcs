@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { DocumentTypeDto } from '../../../document/document.dto';
 
 export class NoticeOfIntentDocumentDto {

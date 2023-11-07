@@ -1,7 +1,7 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';

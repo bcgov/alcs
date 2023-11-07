@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-preset-angular',
   moduleDirectories: ['node_modules', 'src'],
-  globalSetup: 'jest-preset-angular/global-setup',
+  reporters: [['github-actions', { silent: false }], 'summary'],
   coverageReporters: [
     [
       'lcov',

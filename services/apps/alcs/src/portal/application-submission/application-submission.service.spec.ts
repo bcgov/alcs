@@ -2,8 +2,8 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';

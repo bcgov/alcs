@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { ApplicationStatusDto } from '../../../alcs/application/application-submission-status/submission-status.dto';
 import { NaruSubtypeDto } from '../../application-submission/application-submission.dto';
 import { ProposedLot } from '../../application-submission/application-submission.entity';

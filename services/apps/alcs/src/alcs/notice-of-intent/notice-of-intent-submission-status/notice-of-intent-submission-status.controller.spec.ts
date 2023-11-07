@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -83,9 +83,8 @@ describe('NoticeOfIntentSubmissionStatusController', () => {
       new NoticeOfIntentSubmissionToSubmissionStatus(),
     );
 
-    const result = await controller.getCurrentStatusByFileNumber(
-      fakeFileNumber,
-    );
+    const result =
+      await controller.getCurrentStatusByFileNumber(fakeFileNumber);
 
     expect(
       mockNoticeOfIntentSubmissionStatusService.getCurrentStatusByFileNumber,

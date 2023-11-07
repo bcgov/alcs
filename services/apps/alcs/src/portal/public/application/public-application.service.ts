@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
@@ -96,9 +96,8 @@ export class PublicApplicationService {
       );
     }
 
-    const decisions = await this.applicationDecisionService.getForPortal(
-      fileNumber,
-    );
+    const decisions =
+      await this.applicationDecisionService.getForPortal(fileNumber);
     const mappedDecisions = this.mapper.mapArray(
       decisions,
       ApplicationDecision,
