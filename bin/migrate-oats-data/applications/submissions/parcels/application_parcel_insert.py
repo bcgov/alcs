@@ -32,7 +32,7 @@ def init_application_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
         last_subject_property_id = 0
 
         with open(
-            "applications/submissions/sql/parcels/application_parcels_insert_count.sql",
+            "applications/submissions/sql/parcels/application_parcels_insert.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:

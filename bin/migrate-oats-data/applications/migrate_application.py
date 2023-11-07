@@ -2,6 +2,8 @@ from .submissions import (
     clean_app_submissions,
     process_application_statuses,
     process_alcs_app_submissions,
+    clean_parcels,
+    process_application_parcels,
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -15,11 +17,13 @@ def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
     process_alcs_app_submissions(batch_size)
     process_application_statuses(batch_size)
+    process_application_parcels(batch_size)
     process_application_submission_status_emails()
 
 
 def clean_alcs_applications():
     clean_application_submission_status_emails()
+    # clean_parcels()
     clean_app_submissions()
     clean_applications()
 
