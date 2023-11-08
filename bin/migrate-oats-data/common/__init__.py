@@ -8,4 +8,4 @@ from .oats_to_alcs_soil_change_code_enum import *
 from .date_time_helper import *
 from .oats_to_alcs_naru_code_enum import *
 from .oats_temp_tables import *
-from .oats_to_alcs_ownership_type_codes import *
+from .oats_to_alcs_parcel_enum import *

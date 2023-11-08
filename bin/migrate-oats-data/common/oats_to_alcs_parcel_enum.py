@@ -10,3 +10,9 @@ class OatsToAlcsOwnershipType(Enum):
     FEE = ALCSOwnershipType.FeeSimple.value
     CROWN = ALCSOwnershipType.Crown.value
     FIRST = ALCSOwnershipType.FeeSimple.value
+
+
+class ALCSOwnerType(Enum):
+    INDV = "INDV"
+    ORGZ = "ORGZ"
+    CRWN = "CRWN"

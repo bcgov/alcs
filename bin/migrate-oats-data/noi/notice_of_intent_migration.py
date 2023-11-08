@@ -31,6 +31,10 @@ from .notice_of_intent_submissions.parcels import (
     process_notice_of_intent_certificate_of_title,
 )
 
+from .notice_of_intent_submissions.parcels.owners import (
+    process_notice_of_intent_parcel_owners,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
@@ -76,6 +80,8 @@ def process_notice_of_intent(batch_size):
     init_notice_of_intent_parcels(batch_size)
 
     process_notice_of_intent_certificate_of_title(batch_size)
+
+    process_notice_of_intent_parcel_owners(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()
