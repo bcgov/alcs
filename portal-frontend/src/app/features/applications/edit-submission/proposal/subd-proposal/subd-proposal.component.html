@@ -32,11 +32,11 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="purpose">Total area of the parcels added on Step 1: {{ totalTargetAcres }} (ha)</label>
+      <span class="subheading2">Total area of the parcels added on Step 1: {{ totalTargetAcres }} (ha)</span>
       <div class="subtext">Total area of the parcels must equal total area of the proposed lots</div>
     </div>
     <div class="full-row">
-      <label for="purpose">Total number of lots proposed</label>
+      <label for="lotsProposed">Total number of lots proposed</label>
       <div class="subtext">You must include any road dedications as additional lot(s) in the field below</div>
       <mat-form-field appearance="outline">
         <input
@@ -61,7 +61,7 @@
     </div>
     <div class="full-row">
       <form [formGroup]="lotsForm">
-        <label for="purpose">Enter your proposed lot areas (ha)</label>
+        <mat-label>Enter your proposed lot areas (ha)</mat-label>
         <table class="proposed-lots" mat-table [dataSource]="lotsSource">
           <ng-container matColumnDef="index">
             <th mat-header-cell *matHeaderCellDef>#</th>
@@ -207,7 +207,7 @@
       <div class="subtext">Characters left: {{ 4000 - agriculturalSupportText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
       <app-file-drag-drop
         id="proposal-map"
@@ -221,9 +221,9 @@
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="home-site-severance"
+      <mat-label class="subheading2" for="home-site-severance"
         >Are you applying for subdivision pursuant to the ALC Homesite Severance Policy?
-      </label>
+      </mat-label>
       <div class="subtext">
         If yes, you are required to submit proof of property ownership prior to December 21, 1972 and proof of continued
         occupancy since December 21, 1972
@@ -251,7 +251,7 @@
       </mat-button-toggle-group>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="ownership">Proof of Homesite Severance Qualification</label>
+      <mat-label class="subheading2" for="ownership">Proof of Homesite Severance Qualification</mat-label>
       <div class="subtext">
         Please submit proof of property ownership prior to December 21, 1972 <strong>and</strong> proof of continued
         occupancy since December 21, 1972.

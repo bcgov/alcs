@@ -2,6 +2,10 @@
 @use '../../../../styles/colors';
 
 :host::ng-deep {
+  .page-title {
+    margin: rem(16) 0 !important;
+  }
+
   .multiple-documents {
     a {
       display: block;
