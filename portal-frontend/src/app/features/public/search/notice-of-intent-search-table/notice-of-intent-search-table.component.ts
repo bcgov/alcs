@@ -34,7 +34,11 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   @Input() statuses: ApplicationStatusDto[] = [];
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
+  displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'outcome', 'lastUpdate', 'government'];
+  outcomeMapping: {[code:string] : string } = {
+    'APPR': "Approved",
+    'ONTP': "Ordered not to Proceed (NOI)",
+  }
   dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;

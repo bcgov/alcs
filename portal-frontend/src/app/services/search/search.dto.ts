@@ -23,6 +23,7 @@ export interface SearchResponseDto {
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalNotifications: number;
+  outcome: string;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {
@@ -49,4 +50,5 @@ export interface SearchRequestDto extends PagingRequestDto {
   dateDecidedFrom?: number;
   dateDecidedTo?: number;
   fileTypes: string[];
+  decisionOutcome?: string[];
 }

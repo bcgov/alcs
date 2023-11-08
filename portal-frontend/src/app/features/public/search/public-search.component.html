@@ -71,7 +71,16 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div><label for="status">Decision Outcome</label>//TODO: Decision Outcome</div>
+      <div>
+        <label for="decision">Decision Outcome</label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple="true" id="decision" [formControl]="portalDecisionOutcomeControl">
+            <mat-option *ngFor="let decision of DECISION_MAP" [value]="decision[1]">
+              {{ decision[0] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div>
         <label for="status">Decision Maker</label>
         <mat-form-field appearance="outline">

@@ -26,6 +26,7 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('app_sub.type_code', 'application_type_code')
       .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('app.decision_date', 'decision_date')
+      .addSelect('decision_date.outcome', 'outcome')
       .addSelect('app.uuid', 'application_uuid')
       .addSelect('app.region_code', 'application_region_code')
       .addSelect(
@@ -63,8 +64,10 @@ import { LinkedStatusType } from '../public-search.dto';
           qb
             .from(ApplicationDecision, 'decision_date')
             .select('MAX("date")', 'date')
+            .addSelect('outcome_code', 'outcome')
             .addSelect('application_uuid', 'application_uuid')
-            .groupBy('application_uuid'),
+            .groupBy('application_uuid')
+            .addGroupBy('outcome'),
         'decision_date',
         'decision_date."application_uuid" = app.uuid',
       )
@@ -113,6 +116,9 @@ export class PublicApplicationSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+
+  @ViewColumn()
+  outcome: string | null;
 
   @ManyToOne(() => ApplicationType, {
     nullable: false,

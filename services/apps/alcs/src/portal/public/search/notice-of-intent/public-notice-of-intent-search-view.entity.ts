@@ -26,6 +26,7 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('noi_sub.type_code', 'notice_of_intent_type_code')
       .addSelect('noi.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('noi.decision_date', 'decision_date')
+      .addSelect('decision_date.outcome', 'outcome')
       .addSelect('noi.uuid', 'notice_of_intent_uuid')
       .addSelect('noi.region_code', 'notice_of_intent_region_code')
       .addSelect(
@@ -63,8 +64,10 @@ import { LinkedStatusType } from '../public-search.dto';
           qb
             .from(NoticeOfIntentDecision, 'decision_date')
             .select('MAX("date")', 'date')
+            .addSelect('outcome_code', 'outcome')
             .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
-            .groupBy('notice_of_intent_uuid'),
+            .groupBy('notice_of_intent_uuid')
+            .addGroupBy('outcome'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
@@ -113,6 +116,10 @@ export class PublicNoticeOfIntentSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+
+
+  @ViewColumn()
+  outcome: string | null;
 
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,

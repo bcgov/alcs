@@ -36,7 +36,12 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Input() statuses: ApplicationStatusDto[] = [];
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
+  displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus',  'outcome', 'lastUpdate', 'government'];
+  outcomeMapping: {[code:string] : string } = {
+    'APPR': "Approved",
+    'REFU': "Refused",
+    'RESC': "Rescinded",
+  }
   dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;
