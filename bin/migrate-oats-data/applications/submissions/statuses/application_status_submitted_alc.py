@@ -1,4 +1,9 @@
-from common import BATCH_UPLOAD_SIZE, setup_and_get_logger, convert_timezone, set_time
+from common import (
+    BATCH_UPLOAD_SIZE,
+    setup_and_get_logger,
+    add_timezone_and_keep_date_part,
+    set_time,
+)
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
@@ -109,7 +114,7 @@ def _map_fields(data):
     if data and data["submitted_to_alc_date"]:
         status_effective_date = data["submitted_to_alc_date"]
         if status_effective_date:
-            date = convert_timezone(status_effective_date, "US/Pacific")
+            date = add_timezone_and_keep_date_part(status_effective_date)
             data["date"] = set_time(date)
 
     return data
