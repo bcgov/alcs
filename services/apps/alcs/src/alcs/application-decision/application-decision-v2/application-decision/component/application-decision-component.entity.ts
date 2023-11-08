@@ -33,7 +33,7 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
+    precision: 15,
     scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the decision component',
@@ -127,7 +127,7 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
+    precision: 15,
     scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
@@ -171,7 +171,7 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
+    precision: 15,
     scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
