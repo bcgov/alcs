@@ -2,7 +2,8 @@ WITH parcels_to_insert AS (
     SELECT nois.uuid,
         osp.subject_property_id
     FROM alcs.notice_of_intent_submission nois
-        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nois.file_number::INTEGER
+        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nois.file_number::bigint
+    WHERE osp.alr_application_land_ind = 'Y' -- ensure that only parcels in ALR are transferred
 ),
 grouped_oats_property_interests_ids AS (
     SELECT MIN(property_owner_type_code) AS property_owner_type_code,
