@@ -12,7 +12,6 @@ import { PublicNoticeOfIntentSubmissionSearchView } from './notice-of-intent/pub
 import { PublicNotificationSearchService } from './notification/public-notification-search.service';
 import { PublicNotificationSubmissionSearchView } from './notification/public-notification-search-view.entity';
 import { PublicSearchController } from './public-search.controller';
-import { PublicSearchService } from './public-search.service';
 
 @Module({
   imports: [
@@ -27,7 +26,6 @@ import { PublicSearchService } from './public-search.service';
     ]),
   ],
   providers: [
-    PublicSearchService,
     ApplicationProfile,
     PublicApplicationSearchService,
     PublicNoticeOfIntentSearchService,
