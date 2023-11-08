@@ -19,7 +19,7 @@ WITH parcels_to_insert AS (
     SELECT apps.uuid,
         osp.subject_property_id
     FROM alcs.application_submission apps
-        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = apps.file_number::INTEGER
+        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = apps.file_number::bigint
 ),
 grouped_oats_property_interests_ids AS (
     SELECT MIN(property_owner_type_code) AS property_owner_type_code,
