@@ -13,8 +13,22 @@ WITH app_components_grouped AS (
 )
 SELECT count(*)
 FROM app_components_grouped appg
-    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = appg.alr_application_id;
+    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = appg.alr_application_id
+    AND osp.alr_application_land_ind = 'Y';
 -- return records that are different between OATS and ALCS
+WITH parcels_to_insert AS (
+    SELECT apps.uuid,
+        osp.subject_property_id
+    FROM alcs.application_submission apps
+        JOIN oats.oats_subject_properties osp ON osp.alr_application_id = apps.file_number::bigint
+),
+grouped_oats_property_interests_ids AS (
+    SELECT MIN(property_owner_type_code) AS property_owner_type_code,
+        -- min will not affect anything since all property_owner_type_code are the same in scope of subject_property
+        subject_property_id
+    FROM oats.oats_property_interests opi
+    GROUP BY opi.subject_property_id
+) --- compares parcel fields and returns mismatches. Since oats has a lot of bad data ignore all records prior the 1900s
 WITH parcels_to_insert AS (
     SELECT apps.uuid,
         osp.subject_property_id
@@ -42,8 +56,16 @@ SELECT appp.alr_area,
     op.pid,
     appp.pin,
     op.pin,
-    appp.purchased_date AT TIME ZONE 'UTC',
+    appp.purchased_date,
     osp.purchase_date,
+    Date(
+        appp.purchased_date AT TIME ZONE 'America/Vancouver'
+    ) AS alcs_date,
+    -- GET ONLY the date part
+    Date(
+        osp.purchase_date AT TIME ZONE 'America/Vancouver'
+    ) AS oats_date,
+    -- GET ONLY the date part
     appp.ownership_type_code,
     gopi.property_owner_type_code,
     appp.oats_subject_property_id,
@@ -61,7 +83,11 @@ WHERE appp.alr_area != osp.alr_area
     OR (appp.pid != op.pid::text)
     OR (appp.pin != op.pin::text)
     OR (
-        appp.purchased_date != osp.purchase_date AT TIME ZONE 'America/Vancouver'
+        Date(
+            appp.purchased_date AT TIME ZONE 'America/Vancouver'
+        ) != Date(
+            osp.purchase_date AT TIME ZONE 'America/Vancouver'
+        )
     )
     OR (
         appp.oats_subject_property_id != osp.subject_property_id
