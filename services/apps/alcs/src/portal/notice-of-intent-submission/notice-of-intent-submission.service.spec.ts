@@ -499,6 +499,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       new NoticeOfIntentDocument({}),
       new User({
         uuid: 'user_uuid',
+        clientRoles: [],
       }),
     );
 
@@ -514,6 +515,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       new NoticeOfIntentDocument({}),
       new User({
         uuid: 'NOT_user_uuid',
+        clientRoles: [],
       }),
     );
 

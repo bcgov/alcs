@@ -706,6 +706,7 @@ describe('ApplicationSubmissionService', () => {
       new ApplicationDocument({}),
       new User({
         uuid: 'user_uuid',
+        clientRoles: [],
       }),
     );
 
@@ -721,6 +722,7 @@ describe('ApplicationSubmissionService', () => {
       new ApplicationDocument({}),
       new User({
         uuid: 'NOT_user_uuid',
+        clientRoles: [],
       }),
     );
 
