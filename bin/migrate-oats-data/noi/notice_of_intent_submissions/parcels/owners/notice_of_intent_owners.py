@@ -13,7 +13,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def process_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
@@ -47,20 +47,20 @@ def process_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SI
                 if not rows:
                     break
                 try:
-                    records_to_be_updated_count = len(rows)
+                    records_to_be_inserted_count = len(rows)
 
                     _insert_records(conn, cursor, rows)
 
                     successful_updates_count = (
-                        successful_updates_count + records_to_be_updated_count
+                        successful_updates_count + records_to_be_inserted_count
                     )
-                    last_subject_property = dict(rows[-1])["subject_property_id"]
-                    last_person_organization_id = dict(rows[-1])[
-                        "person_organization_id"
-                    ]
+
+                    last_record = dict(rows[-1])
+                    last_subject_property = last_record["subject_property_id"]
+                    last_person_organization_id = last_record["person_organization_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -98,7 +98,7 @@ def _compile_owner_insert_query(number_of_rows_to_insert):
                             audit_created_by
                         )
                         VALUES{owners_to_insert}
-                        ON CONFLICT DO NOTHING
+                        ON CONFLICT DO NOTHING;
     """
 
 
@@ -118,7 +118,7 @@ def _map_data(row):
         "organization_name": row["organization_name"],
         "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
         "email": row["email_address"],
-        "phone_number": row.get("phone_number", "cell_phone_number", None),
+        "phone_number": row.get("phone_number", "cell_phone_number"),
         "type_code": _map_owner_type(row),
         "oats_person_organization_id": row["person_organization_id"],
         "audit_created_by": OATS_ETL_USER,
@@ -139,6 +139,18 @@ def _map_owner_type(owner_record):
             return ALCSOwnerType.ORGZ.value
     elif owner_record["ownership_type_code"] == ALCSOwnershipType.Crown.value:
         return ALCSOwnerType.CRWN.value
+
+
+@inject_conn_pool
+def clean_owners(conn=None):
+    logger.info("Start notice of intent owner cleaning")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM alcs.notice_of_intent_owner noio WHERE noio.audit_created_by = 'oats_etl'"
+        )
+        logger.info(f"Deleted items count = {cursor.rowcount}")
+    conn.commit()
+    logger.info("Done notice of intent owner cleaning")
 
 
 # _parcel_owner_insert_query = f""""
