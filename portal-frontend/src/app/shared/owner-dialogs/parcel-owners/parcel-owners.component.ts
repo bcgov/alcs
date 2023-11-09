@@ -55,7 +55,7 @@ export class ParcelOwnersComponent {
   @Input() isShowAllOwners = false;
 
   _disabled = false;
-  displayedColumns = ['type', 'position', 'displayName', 'organizationName', 'phone', 'email', 'actions'];
+  displayedColumns = ['type', 'displayName', 'organizationName', 'phone', 'email', 'actions'];
 
   constructor(private dialog: MatDialog, private confDialogService: ConfirmationDialogService) {}
 

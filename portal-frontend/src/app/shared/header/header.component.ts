@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   isMenuOpen = false;
   isOnPublicPage = false;
+  isUserMenuOpen = false;
 
   title = 'Provincial Agricultural Land Commission Portal';
   user: UserDto | undefined;
@@ -57,6 +58,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const hidden = 'display-none';
     body?.classList.toggle(hidden);
     footer?.classList.toggle(hidden);
+  }
+
+  async onUserMenuToggle() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
   async onMenuClicked(url: string) {

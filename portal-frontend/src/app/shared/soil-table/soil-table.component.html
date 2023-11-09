@@ -20,13 +20,13 @@
       </div>
 
       <div class="label">
-        <label for="volume">Volume</label>
+        <label for="{{ 'volume' + idSuffix }}">Volume</label>
       </div>
       <div>
         <mat-form-field appearance="outline">
           <input
             min="0.01"
-            id="volume"
+            id="{{ 'volume' + idSuffix }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -46,6 +46,7 @@
           <input
             min="0.01"
             id="volume2"
+            attr.aria-label="{{ 'volume' + idSuffix2 }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -62,13 +63,13 @@
       </div>
 
       <div class="label">
-        <label for="area">Area</label>
+        <label for="{{ 'area' + idSuffix }}">Area</label>
       </div>
       <div>
         <mat-form-field appearance="outline">
           <input
             min="0.01"
-            id="area"
+            id="{{ 'area' + idSuffix }}"
             mask="separator.5"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -88,6 +89,7 @@
           <input
             min="0.01"
             id="area2"
+            attr.aria-label="{{ 'area' + idSuffix2 }}"
             mask="separator.5"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -104,13 +106,13 @@
       </div>
 
       <div class="label">
-        <label for="volume">Maximum Depth</label>
+        <label for="{{ 'maximumDepth' + idSuffix }}">Maximum Depth</label>
       </div>
       <div>
         <mat-form-field appearance="outline">
           <input
             min="0.01"
-            id="maximumDepth"
+            id="{{ 'maximumDepth' + idSuffix }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -130,6 +132,7 @@
           <input
             min="0.01"
             id="maximumDepth2"
+            attr.aria-label="{{ 'maximumDepth' + idSuffix2 }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -146,13 +149,13 @@
       </div>
 
       <div class="label">
-        <label for="volume">Average Depth</label>
+        <label for="{{ 'averageDepth' + idSuffix }}">Average Depth</label>
       </div>
       <div>
         <mat-form-field appearance="outline">
           <input
             min="0.01"
-            id="averageDepth"
+            id="{{ 'averageDepth' + idSuffix }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"
@@ -172,6 +175,7 @@
           <input
             min="0.01"
             id="averageDepth2"
+            attr.aria-label="{{ 'averageDepth' + idSuffix2 }}"
             mask="separator.2"
             thousandSeparator=","
             separatorLimit="9999999999"

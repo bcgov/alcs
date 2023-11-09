@@ -1,4 +1,4 @@
-<input type="file" class="file-input" (change)="fileSelected($event)" #fileUpload />
+<input type="file" class="file-input" (change)="fileSelected($event)" #fileUpload aria-label="upload" />
 <div *ngIf="uploadedFiles">
   <ng-container *ngFor="let file of uploadedFiles">
     <div
