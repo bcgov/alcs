@@ -60,7 +60,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                     last_person_organization_id = last_record["person_organization_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -69,7 +69,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                     last_person_organization_id = last_person_organization_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_updates_count}, total failed inserts {failed_inserts}"
     )
 
 
@@ -146,7 +146,7 @@ def clean_owners(conn=None):
     logger.info("Start notice of intent owner cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            "DELETE FROM alcs.notice_of_intent_owner noio WHERE noio.audit_created_by = 'oats_etl'"
+            f"DELETE FROM alcs.notice_of_intent_owner noio WHERE noio.audit_created_by = '{OATS_ETL_USER}'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()
