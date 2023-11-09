@@ -151,10 +151,3 @@ def clean_owners(conn=None):
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()
     logger.info("Done notice of intent owner cleaning")
-
-
-# _parcel_owner_insert_query = f""""
-#                     INSERT INTO alcs.notice_of_intent_parcel_owners_notice_of_intent_owner(notice_of_intent_parcel_uuid, notice_of_intent_owner_uuid)
-#                     VALUES{values}
-#                     ON CONFLICT DO NOTHING
-# """
