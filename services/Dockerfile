@@ -60,4 +60,9 @@ COPY ./config/ /opt/app-root/config/
 COPY ./local-certificates /opt/app-root/local-certificates
 COPY ./templates/ /opt/app-root/templates/
 
+# Create Empty Config File if not Exists
+RUN mkdir -p /vault/secrets
+RUN touch /vault/secrets/config
+RUN . /vault/secrets/config
+
 CMD [ "node", "dist/main.js" ]
