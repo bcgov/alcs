@@ -8,11 +8,11 @@
   grid-template-columns: max-content max-content max-content;
 
   @media screen and (min-width: $tabletBreakpoint) {
-    grid-template-columns: 0.55fr 1fr 1fr;
+    grid-template-columns: 0.55fr 1fr;
   }
 
   @media screen and (min-width: $midBreakpoint) {
-    grid-template-columns: 0.95fr 1fr 2fr;
+    grid-template-columns: 0.95fr 1fr;
     grid-column-gap: rem(16);
   }
 
