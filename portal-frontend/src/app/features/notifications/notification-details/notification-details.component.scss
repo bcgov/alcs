@@ -2,6 +2,10 @@
 @use '../../../../styles/colors';
 
 :host::ng-deep {
+  .page-title {
+    margin: rem(16) 0 !important;
+  }
+
   .view-grid-item {
     display: grid;
     grid-template-columns: minmax(rem(100), 0.5fr) 1fr;
