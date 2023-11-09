@@ -1,5 +1,3 @@
--- Total count of inserted parcels should match total count of parcels in oats
--- Get total count of parcels in ALCS
 SELECT count(*)
 FROM alcs.notice_of_intent_parcel noip;
 -- Get total count of parcels in OATS
@@ -13,13 +11,16 @@ WITH noi_components_grouped AS (
 )
 SELECT count(*)
 FROM noi_components_grouped noig
-    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = noig.alr_application_id;
+    JOIN oats.oats_subject_properties osp ON osp.alr_application_id = noig.alr_application_id
+    AND osp.alr_application_land_ind = 'Y';
+;
 -- return records that are different between OATS and ALCS
 WITH parcels_to_insert AS (
     SELECT nois.uuid,
         osp.subject_property_id
     FROM alcs.notice_of_intent_submission nois
         JOIN oats.oats_subject_properties osp ON osp.alr_application_id = nois.file_number::bigint
+        AND osp.alr_application_land_ind = 'Y'
 ),
 grouped_oats_property_interests_ids AS (
     SELECT MIN(property_owner_type_code) AS property_owner_type_code,
@@ -42,8 +43,16 @@ SELECT noip.alr_area,
     op.pid,
     noip.pin,
     op.pin,
-    noip.purchased_date AT TIME ZONE 'UTC',
+    noip.purchased_date,
     osp.purchase_date,
+    Date(
+        noip.purchased_date AT TIME ZONE 'America/Vancouver'
+    ) AS alcs_date,
+    -- GET ONLY the date part
+    Date(
+        osp.purchase_date AT TIME ZONE 'America/Vancouver'
+    ) AS oats_date,
+    -- GET ONLY the date part
     noip.ownership_type_code,
     gopi.property_owner_type_code,
     noip.oats_subject_property_id,
@@ -61,7 +70,11 @@ WHERE noip.alr_area != osp.alr_area
     OR (noip.pid != op.pid::text)
     OR (noip.pin != op.pin::text)
     OR (
-        noip.purchased_date != osp.purchase_date AT TIME ZONE 'America/Vancouver'
+        Date(
+            noip.purchased_date AT TIME ZONE 'America/Vancouver'
+        ) != Date(
+            osp.purchase_date AT TIME ZONE 'America/Vancouver'
+        )
     )
     OR (
         noip.oats_subject_property_id != osp.subject_property_id
