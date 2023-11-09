@@ -110,6 +110,7 @@
                   placeholder="Type size in hectares"
                   [formControlName]="i + '-size'"
                   (change)="onChangeLotSize(i, $event)"
+                  aria-label="Size in hectares"
                 />
                 <span *ngIf="element.size" matTextSuffix>ha</span>
               </mat-form-field>
