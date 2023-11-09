@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
@@ -139,6 +139,12 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
 
   @AutoMap(() => String)
   soilProjectDurationUnit?: string | null;
+
+  @AutoMap(() => Number)
+  fillProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  fillProjectDurationUnit: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
@@ -335,6 +341,14 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   soilProjectDurationUnit?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  fillProjectDurationAmount?: number | null;
+
+  @IsString()
+  @IsOptional()
+  fillProjectDurationUnit?: string | null;
 
   @IsString()
   @IsOptional()

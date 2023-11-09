@@ -25,12 +25,19 @@ from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_tabl
     process_alcs_notice_of_intent_base_fields,
 )
 
+from .notice_of_intent_submissions.parcels import (
+    init_notice_of_intent_parcels,
+    clean_parcels,
+    process_notice_of_intent_certificate_of_title,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
 
 
 def clean_notice_of_intent():
+    clean_parcels()
     clean_notice_of_intent_submission_statuses()
     clean_notice_of_intent_submissions()
     clean_notice_of_intents()
@@ -65,6 +72,10 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_received_by_alc_status()
 
     process_alcs_notice_of_intent_decision_released_status()
+
+    init_notice_of_intent_parcels(batch_size)
+
+    process_notice_of_intent_certificate_of_title(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

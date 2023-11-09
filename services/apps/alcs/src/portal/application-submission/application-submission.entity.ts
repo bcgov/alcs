@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   AfterLoad,
   Column,
@@ -13,10 +13,8 @@ import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
-import { NotificationTransferee } from '../notification-submission/notification-transferee/notification-transferee.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
-import { CovenantTransferee } from './covenant-transferee/covenant-transferee.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 export class ProposedLot {
@@ -210,8 +208,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   nfuHectares: number | null;
@@ -236,8 +234,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   nfuTotalFillArea: number | null;
@@ -311,8 +309,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   turTotalCorridorArea: number | null;
@@ -377,8 +375,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;
@@ -417,8 +415,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyRemovedArea: number | null;
@@ -457,8 +455,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -497,8 +495,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyPlacedArea: number | null;
@@ -537,6 +535,20 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   soilProjectDurationUnit: string | null;
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  fillProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  fillProjectDurationUnit: string | null;
+
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilFillTypeToPlace: string | null;
@@ -566,8 +578,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   naruFloorArea: number | null;
@@ -628,8 +640,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   naruToPlaceArea: number | null;
@@ -678,8 +690,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   inclExclHectares: number | null;

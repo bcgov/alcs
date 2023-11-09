@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 import { CardStatus } from '../card/card-status/card-status.entity';
 import { Base } from '../../common/entities/base.entity';

@@ -14,7 +14,25 @@
     <span>{{ _noiSubmission.purpose }}</span>
   </div>
 
-  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="_noiSubmission.fillProjectDurationAmount && _noiSubmission.fillProjectDurationUnit">
+      {{ _noiSubmission.fillProjectDurationAmount }}
+      <ng-container [ngPlural]="_noiSubmission.fillProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ _noiSubmission.fillProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ _noiSubmission.fillProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!_noiSubmission.fillProjectDurationAmount || !_noiSubmission.fillProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
   <div class="grid-double">
     <div *ngIf="_noiSubmission.soilProjectDurationAmount && _noiSubmission.soilProjectDurationUnit">
       {{ _noiSubmission.soilProjectDurationAmount }}

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -96,9 +96,8 @@ export class NotificationDocumentController {
       );
 
     if (canAccessDocument) {
-      const url = await this.notificationDocumentService.getDownloadUrl(
-        document,
-      );
+      const url =
+        await this.notificationDocumentService.getDownloadUrl(document);
       return { url };
     }
 

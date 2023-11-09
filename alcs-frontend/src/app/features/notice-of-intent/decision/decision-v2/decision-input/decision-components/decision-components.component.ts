@@ -113,8 +113,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
         }
 
         if (typeCode === NOI_DECISION_COMPONENT_TYPE.PFRS) {
-          this.patchPofoFields(component);
-          this.patchRosoFields(component);
+          this.patchPfrsFields(component);
         }
 
         this.components.unshift(component);
@@ -186,6 +185,12 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     this.decisionComponentTypes = decisionComponentTypes;
 
     this.updateComponentsMenuItems();
+  }
+
+  private patchPfrsFields(component: NoticeOfIntentDecisionComponentDto) {
+    this.patchRosoFields(component);
+    this.patchRosoFields(component);
+    component.endDate2 = this.noticeOfIntent.proposalEndDate2;
   }
 
   private patchPofoFields(component: NoticeOfIntentDecisionComponentDto) {

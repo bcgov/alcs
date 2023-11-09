@@ -2,8 +2,8 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
@@ -885,6 +885,14 @@ export class ApplicationSubmissionService {
     applicationSubmission.soilProjectDurationUnit = filterUndefined(
       updateDto.soilProjectDurationUnit,
       applicationSubmission.soilProjectDurationUnit,
+    );
+    applicationSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      applicationSubmission.fillProjectDurationUnit,
+    );
+    applicationSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      applicationSubmission.fillProjectDurationAmount,
     );
     applicationSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,

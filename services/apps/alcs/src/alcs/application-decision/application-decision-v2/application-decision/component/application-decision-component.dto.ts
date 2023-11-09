@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
 import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
@@ -44,6 +44,10 @@ export class UpdateApplicationDecisionComponentDto {
   @IsOptional()
   @IsNumber()
   endDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  endDate2?: number;
 
   @IsOptional()
   @IsNumber()
@@ -133,10 +137,8 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   nfuSubType?: string;
 
-  @AutoMap()
   endDate?: number;
-
-  @AutoMap()
+  endDate2?: number;
   expiryDate?: number;
 
   @AutoMap()

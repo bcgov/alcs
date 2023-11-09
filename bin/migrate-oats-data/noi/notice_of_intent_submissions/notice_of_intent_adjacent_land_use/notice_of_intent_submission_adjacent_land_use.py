@@ -38,7 +38,7 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
 
         failed_updates = 0
         successful_updates_count = 0
-        last_submission_id = 0
+        last_land_use_id = 0
 
         with open(
             "noi/sql/notice_of_intent_submission/adjacent_land_use/notice_of_intent_adjacent_land_use.sql",
@@ -48,7 +48,7 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
             submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{submission_sql} WHERE oalu.alr_application_id > {last_submission_id} ORDER BY oalu.alr_application_id;"
+                    f"{submission_sql} WHERE oalu.adjacent_land_use_id > {last_land_use_id} ORDER BY oalu.adjacent_land_use_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -58,23 +58,24 @@ def process_notice_of_intent_adjacent_land_use(conn=None, batch_size=BATCH_UPLOA
                 try:
                     submissions_to_be_updated_count = len(rows)
 
-                    (parsed_data, raw_data) = _update_notice_of_intent_submissions(
+                    total_updated_items = _update_notice_of_intent_submissions(
                         conn, batch_size, cursor, rows
                     )
 
-                    successful_updates_count = successful_updates_count + len(
-                        parsed_data
+                    successful_updates_count = (
+                        successful_updates_count + total_updated_items
                     )
-                    last_submission_id = dict(rows[-1])["alr_application_id"]
+
+                    last_land_use_id = dict(rows[-1])["adjacent_land_use_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {submissions_to_be_updated_count}; total successfully processed submissions so far {successful_updates_count}; last update alr_application_id: {last_submission_id}"
+                        f"retrieved/updated items count: {submissions_to_be_updated_count}; total successfully processed submissions so far {successful_updates_count}; last update alr_application_id: {last_land_use_id}"
                     )
                 except Exception as err:
                     logger.exception()
                     conn.rollback()
                     failed_updates = count_total - successful_updates_count
-                    last_submission_id = last_submission_id + 1
+                    last_land_use_id = last_land_use_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successfully processed adjacent land uses {successful_updates_count}, total failed updates {failed_updates}"
@@ -101,7 +102,11 @@ def _update_notice_of_intent_submissions(conn, batch_size, cursor, rows):
 
     conn.commit()
 
-    return land_use_data, rows
+    total_items = 0
+    for direction in land_use_data:
+        total_items += len(land_use_data[direction])
+
+    return total_items
 
 
 _land_use_update_queries = {

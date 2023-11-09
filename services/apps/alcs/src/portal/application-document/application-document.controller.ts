@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -90,9 +90,8 @@ export class ApplicationDocumentController {
       await this.applicationSubmissionService.canAccessDocument(document, user);
 
     if (canAccessDocument) {
-      const url = await this.applicationDocumentService.getDownloadUrl(
-        document,
-      );
+      const url =
+        await this.applicationDocumentService.getDownloadUrl(document);
       return { url };
     }
 

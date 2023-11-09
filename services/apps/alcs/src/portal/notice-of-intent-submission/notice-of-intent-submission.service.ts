@@ -1,6 +1,6 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -90,9 +90,8 @@ export class NoticeOfIntentSubmissionService {
       createdBy,
     });
 
-    const savedSubmission = await this.noticeOfIntentSubmissionRepository.save(
-      noiSubmission,
-    );
+    const savedSubmission =
+      await this.noticeOfIntentSubmissionRepository.save(noiSubmission);
 
     await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(
       savedSubmission.uuid,
@@ -530,6 +529,14 @@ export class NoticeOfIntentSubmissionService {
     noticeOfIntentSubmission.soilProjectDurationUnit = filterUndefined(
       updateDto.soilProjectDurationUnit,
       noticeOfIntentSubmission.soilProjectDurationUnit,
+    );
+    noticeOfIntentSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      noticeOfIntentSubmission.fillProjectDurationAmount,
+    );
+    noticeOfIntentSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      noticeOfIntentSubmission.fillProjectDurationUnit,
     );
     noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,

@@ -10,9 +10,8 @@ from menu.commands import (
     clean_all,
     document_import,
     app_document_import,
-    app_prep_import,
     application_import,
-    application_submission_import,
+    application_clean,
     noi_document_import,
     notice_of_intent_import,
     notice_of_intent_clean,
@@ -42,18 +41,16 @@ if __name__ == "__main__":
                 document_import(console, args)
             case "app-document-import":
                 app_document_import(console, args)
-            case "app-prep-import":
-                app_prep_import(console, args)
             case "noi-import":
                 notice_of_intent_import(console, args)
             case "noi-clean":
                 notice_of_intent_clean(console)
             case "application-import":
                 application_import(console, args)
+            case "application-clean":
+                application_clean(console)
             case "noi-document-import":
                 noi_document_import(console, args)
-            case "app-sub-import":
-                application_submission_import(console, args)
             case "obfuscate":
                 start_obfuscation(console)
 
