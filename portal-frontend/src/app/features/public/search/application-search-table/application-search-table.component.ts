@@ -37,7 +37,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus',  'outcome', 'lastUpdate', 'government'];
-  outcomeMapping: {[code:string] : string } = {
+  outcomeMapping: Record<string, string> = {
     'APPR': "Approved",
     'REFU': "Refused",
     'RESC': "Rescinded",

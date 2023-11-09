@@ -16,7 +16,6 @@ export class SearchResultDto {
   fileNumber: string;
   boardCode?: string;
   label?: ApplicationTypeDto;
-  outcome?: string
 }
 
 export type SearchEntityClass = 'APP' | 'NOI' | 'PLAN' | 'COV' | 'NOTI';
