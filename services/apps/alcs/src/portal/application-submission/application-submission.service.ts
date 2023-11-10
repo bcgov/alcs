@@ -612,6 +612,7 @@ export class ApplicationSubmissionService {
           [
             SUBMISSION_STATUS.SUBMITTED_TO_LG,
             SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.RETURNED_TO_LG,
           ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
           !!userGovernment &&
           userGovernment.uuid === app.localGovernmentUuid,
@@ -648,6 +649,7 @@ export class ApplicationSubmissionService {
         [
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
           SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          SUBMISSION_STATUS.RETURNED_TO_LG,
         ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
         !!userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,

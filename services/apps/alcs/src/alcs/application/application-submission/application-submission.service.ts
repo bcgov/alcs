@@ -103,6 +103,10 @@ export class ApplicationSubmissionService {
       updateDto.subProposedLots,
       submission.subdProposedLots,
     );
+    submission.returnedToLfngComment = filterUndefined(
+      updateDto.returnComment,
+      submission.returnedToLfngComment,
+    );
 
     await this.applicationSubmissionRepository.save(submission);
   }

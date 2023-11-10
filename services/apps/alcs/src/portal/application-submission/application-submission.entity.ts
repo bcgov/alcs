@@ -79,6 +79,15 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'text',
     comment:
+      'Used to store comments when an Application is returned to the L/FNG by ALC Staff',
+    nullable: true,
+  })
+  returnedToLfngComment?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
       'Describe all agriculture that currently takes place on the parcel(s).',
     nullable: true,
   })
