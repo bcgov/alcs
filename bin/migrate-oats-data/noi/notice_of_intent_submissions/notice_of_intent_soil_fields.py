@@ -60,7 +60,9 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
                     successful_updates_count = (
                         successful_updates_count + records_to_be_updated_count
                     )
-                    last_soil_change_element_id = dict(rows[-1])["soil_change_element_id"]
+                    last_soil_change_element_id = dict(rows[-1])[
+                        "soil_change_element_id"
+                    ]
 
                     logger.debug(
                         f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated notice of intents so far {successful_updates_count}; last updated alr_application_id: {last_soil_change_element_id}"
@@ -106,8 +108,8 @@ _soil_fill_query = """
                         , soil_to_place_maximum_depth = %(depth)s
                         , soil_to_place_average_depth = %(depth)s
                         , soil_fill_type_to_place  = %(type)s
-                        , soil_project_duration_amount = %(project_duration)s
-                        , soil_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
+                        , fill_project_duration_amount = %(project_duration)s
+                        , fill_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
                         , soil_already_placed_volume = 0
                         , soil_already_placed_area  = 0
                         , soil_already_placed_maximum_depth  = 0

@@ -107,7 +107,7 @@
       <div class="subtext">Characters left: {{ 4000 - improvementsText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
       <app-file-drag-drop
         id="proposal-map"
@@ -121,8 +121,9 @@
       ></app-file-drag-drop>
     </div>
     <div class="full-row" *ngIf="showGovernmentQuestions">
-      <label for="isFarm"
-        >Is the {{ governmentName }} the registered land owner of all parcels under this inclusion application?</label
+      <mat-label for="isFarm"
+        >Is the {{ governmentName }} the registered land owner of all parcels under this inclusion
+        application?</mat-label
       >
       <div class="subtext">
         The ALR General Regulation does not require the {{ governmentName }} to complete a public hearing if all
@@ -185,7 +186,7 @@
   <form>
     <div class="form-row">
       <div class="full-row">
-        <label class="subheading2" for="advertising">Notice of Public Hearing (Advertisement)</label>
+        <mat-label class="subheading2" for="advertising">Notice of Public Hearing (Advertisement)</mat-label>
         <div class="subtext">
           Proof that notice of the application was provided in a form and manner acceptable to the Commission
         </div>
@@ -203,7 +204,7 @@
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
-        <label class="subheading2" for="signage">Proof of Signage</label>
+        <mat-label class="subheading2" for="signage">Proof of Signage</mat-label>
         <div class="subtext">
           Proof that a sign, in a form and manner acceptable to the Commission, was posted on the land that is the
           subject of the application
@@ -222,7 +223,7 @@
         ></app-file-drag-drop>
       </div>
       <div class="full-row">
-        <label class="subheading2" for="report">Report of Public Hearing</label>
+        <mat-label class="subheading2" for="report">Report of Public Hearing</mat-label>
         <div class="subtext">Public hearing report and any other public comments received</div>
         <app-file-drag-drop
           id="report"

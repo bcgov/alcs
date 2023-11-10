@@ -611,6 +611,13 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async canDeleteDocument(document: NoticeOfIntentDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
     const documentFlags = await this.getDocumentFlags(document);
 
     const isOwner = user.uuid === documentFlags.ownerUuid;

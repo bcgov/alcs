@@ -1,9 +1,8 @@
 <form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
-    <label>Select ownership type:</label>
+    <mat-label>Select ownership type:</mat-label>
     <div class="subtext">
-      The answer to the following question will change the rest of the form. Do not change this answer
-      once selected.
+      The answer to the following question will change the rest of the form. Do not change this answer once selected.
     </div>
     <mat-button-toggle-group
       class="input"
