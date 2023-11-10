@@ -37,3 +37,6 @@ from .statuses.notice_of_intent_status_decision_released import (
 from .statuses.notice_of_intent_status_cancelled import (
     process_alcs_notice_of_intent_cancelled_status,
 )
+from .notice_of_intent_fill_fields_update import (
+    update_alcs_notice_of_intent_soil_fill_fields,
+)
