@@ -37,7 +37,7 @@ def update_alcs_notice_of_intent_soil_fill_fields(
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND nois.file_number::INTEGER > {last_document_id} ORDER BY nois.file_number::INTEGER;"
+                    f"{application_sql} AND nois.file_number::BIGINT > {last_document_id} ORDER BY nois.file_number::BIGINT;"
                 )
 
                 rows = cursor.fetchmany(batch_size)

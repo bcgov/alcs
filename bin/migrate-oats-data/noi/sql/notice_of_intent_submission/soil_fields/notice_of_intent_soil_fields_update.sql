@@ -2,7 +2,7 @@ SELECT
     nois.fill_project_duration_unit,
     nois.fill_project_duration_amount,
     nois.file_number,
-    nois.file_number::INTEGER AS file_id
+    nois.file_number::BIGINT AS file_id
 FROM
     alcs.notice_of_intent_submission nois
 WHERE
