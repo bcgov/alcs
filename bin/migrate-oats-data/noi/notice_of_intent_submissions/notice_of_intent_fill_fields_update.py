@@ -70,8 +70,6 @@ def update_alcs_notice_of_intent_soil_fill_fields(
 
 
 def _update_records(conn, batch_size, cursor, rows):
-    # parsed_data_list = _prepare_oats_data(rows)
-
     if len(rows) > 0:
         execute_batch(
             cursor,
