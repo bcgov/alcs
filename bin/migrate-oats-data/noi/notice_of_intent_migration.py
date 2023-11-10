@@ -38,12 +38,19 @@ from .notice_of_intent_submissions.parcels.owners import (
     clean_parcel_owners,
 )
 
+from .notice_of_intent_submissions.parcels.primary_contacts import (
+    init_notice_of_intent_primary_contacts,
+    clean_primary_contacts,
+    link_notice_of_intent_owners_to_parcels,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
 
 
 def clean_notice_of_intent():
+    clean_primary_contacts()
     clean_parcel_owners()
     clean_owners()
     clean_parcels()
@@ -87,6 +94,10 @@ def process_notice_of_intent(batch_size):
     process_notice_of_intent_certificate_of_title(batch_size)
 
     init_notice_of_intent_parcel_owners(batch_size)
+
+    link_notice_of_intent_owners_to_parcels(batch_size)
+
+    init_notice_of_intent_primary_contacts(batch_size)
 
     link_notice_of_intent_owners_to_parcels(batch_size)
 

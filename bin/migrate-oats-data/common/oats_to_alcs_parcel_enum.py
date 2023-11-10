@@ -16,3 +16,4 @@ class ALCSOwnerType(Enum):
     INDV = "INDV"
     ORGZ = "ORGZ"
     CRWN = "CRWN"
+    AGEN = "AGEN"
