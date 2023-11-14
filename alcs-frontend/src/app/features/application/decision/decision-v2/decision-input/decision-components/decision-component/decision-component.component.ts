@@ -40,7 +40,7 @@ export class DecisionComponentComponent implements OnInit {
   // nfu
   nfuType = new FormControl<string | null>(null, [Validators.required]);
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
-  endDate = new FormControl<Date | null>(null, [Validators.required]);
+  endDate = new FormControl<Date | null>(null);
 
   // turp & cove
   expiryDate = new FormControl<Date | null>(null);
@@ -53,7 +53,7 @@ export class DecisionComponentComponent implements OnInit {
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
 
   //pfrs
-  endDate2 = new FormControl<Date | null>(null, [Validators.required]);
+  endDate2 = new FormControl<Date | null>(null);
 
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
@@ -151,7 +151,7 @@ export class DecisionComponentComponent implements OnInit {
         agCapConsultant: this.agCapConsultant.value ? this.agCapConsultant.value : null,
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
         applicationDecisionComponentType: this.codes.decisionComponentTypes.find(
-          (e) => e.code === this.data.applicationDecisionComponentTypeCode
+          (e) => e.code === this.data.applicationDecisionComponentTypeCode,
         )!,
         applicationDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,
@@ -349,7 +349,7 @@ export class DecisionComponentComponent implements OnInit {
   }
 
   private getSubdDataChange(): SubdDecisionComponentDto {
-    const update = this.subdApprovedLots.value?.map((e) => ({ ...e } as ProposedDecisionLotDto));
+    const update = this.subdApprovedLots.value?.map((e) => ({ ...e }) as ProposedDecisionLotDto);
     return {
       lots: update ?? undefined,
     };
