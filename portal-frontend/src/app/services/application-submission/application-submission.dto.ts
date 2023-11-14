@@ -14,6 +14,7 @@ export enum SUBMISSION_STATUS {
   IN_REVIEW_BY_ALC = 'REVA', //new Under Review by ALC
   ALC_DECISION = 'ALCD', // Decision Released
   REFUSED_TO_FORWARD_LG = 'RFFG', //new L/FNG Refused to Forward
+  RETURNED_TO_LG = 'INCG', //Returned to L/FNG from ALC
   CANCELLED = 'CANC',
 }
 
@@ -56,6 +57,7 @@ export interface ApplicationSubmissionDto {
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  returnedToLfngComment?: string;
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 }
 

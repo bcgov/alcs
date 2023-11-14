@@ -49,6 +49,9 @@ export class ApplicationSubmissionDto {
   @AutoMap(() => String)
   returnedComment: string | null;
 
+  @AutoMap(() => String)
+  returnedToLfngComment: string | null;
+
   lastStatusUpdate: number;
   owners: ApplicationOwnerDto[];
   type: string;

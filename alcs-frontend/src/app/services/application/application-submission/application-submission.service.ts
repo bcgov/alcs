@@ -12,7 +12,10 @@ import { ApplicationSubmissionDto, CovenantTransfereeDto, UpdateApplicationSubmi
 export class ApplicationSubmissionService {
   private baseUrl = `${environment.apiUrl}/application-submission`;
 
-  constructor(private http: HttpClient, private toastService: ToastService) {}
+  constructor(
+    private http: HttpClient,
+    private toastService: ToastService,
+  ) {}
 
   async fetchSubmission(fileNumber: string): Promise<ApplicationSubmissionDto> {
     try {
@@ -28,7 +31,7 @@ export class ApplicationSubmissionService {
       return firstValueFrom(
         this.http.patch<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}/update-status`, {
           statusCode,
-        })
+        }),
       );
     } catch (e) {
       this.toastService.showErrorToast('Failed to update Application Submission Status');
@@ -50,6 +53,19 @@ export class ApplicationSubmissionService {
       return firstValueFrom(this.http.get<CovenantTransfereeDto[]>(`${this.baseUrl}/${fileNumber}/transferee`));
     } catch (e) {
       this.toastService.showErrorToast('Failed to fetch Application Transfrees');
+      throw e;
+    }
+  }
+
+  returnToLfng(fileNumber: string, returnComment: string) {
+    try {
+      return firstValueFrom(
+        this.http.post<ApplicationSubmissionDto>(`${this.baseUrl}/${fileNumber}/return`, {
+          returnComment,
+        }),
+      );
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to return Application Submission');
       throw e;
     }
   }

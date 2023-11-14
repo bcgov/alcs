@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
@@ -17,6 +18,7 @@ import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
+import { ReturnApplicationDialogComponent } from './lfng-info/return-application-dialog/return-application-dialog.component';
 import { OverviewComponent } from './overview/overview.component';
 import { UncancelApplicationDialogComponent } from './overview/uncancel-application-dialog/uncancel-application-dialog.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
@@ -78,7 +80,8 @@ const routes: Routes = [
     InclProposalComponent,
     ParcelPrepComponent,
     UncancelApplicationDialogComponent,
+    ReturnApplicationDialogComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
+  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule, NgIf],
 })
 export class ApplicationModule {}
