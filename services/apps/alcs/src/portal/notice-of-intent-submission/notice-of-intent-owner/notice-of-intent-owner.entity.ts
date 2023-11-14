@@ -51,6 +51,15 @@ export class NoticeOfIntentOwner extends Base {
   })
   email?: string | null;
 
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_person_organization to alcs.notice_of_intent_owner. Note that this id is unique only in scope of parcel.',
+  })
+  oatsPersonOrganizationId: number;
+
   @AutoMap(() => NoticeOfIntentDocumentDto)
   @ManyToOne(() => NoticeOfIntentDocument, {
     onDelete: 'SET NULL',
