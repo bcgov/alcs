@@ -1,9 +1,25 @@
+@use '../../../../styles/colors';
+
 .applicant-info {
   & > div {
-    margin: 32px 0;
+    margin: 12px 0;
   }
 }
 
 .subheading1 {
   margin-bottom: 4px !important;
+}
+
+.comment-container {
+  align-items: flex-start;
+  background-color: colors.$secondary-color-light;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  margin-bottom: 24px;
+
+  div {
+    margin-bottom: 4px;
+  }
 }

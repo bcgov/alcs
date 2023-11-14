@@ -12,12 +12,15 @@ import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
+import { generateINCGApplicationHtml } from '../../../../../../templates/emails/return-to-lfng';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
 import { CovenantTransfereeDto } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.dto';
 import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { StatusEmailService } from '../../../providers/email/status-email.service';
+import { PARENT_TYPE } from '../../card/card-subtask/card-subtask.dto';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
@@ -31,6 +34,7 @@ export class ApplicationSubmissionController {
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private documentService: DocumentService,
+    private statusEmailService: StatusEmailService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -123,6 +127,25 @@ export class ApplicationSubmissionController {
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       null,
     );
+
+    const { primaryContact, submissionGovernment } =
+      await this.statusEmailService.getApplicationEmailData(
+        submission.fileNumber,
+        submission,
+      );
+
+    //Send Email
+    if (primaryContact && submissionGovernment) {
+      await this.statusEmailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateINCGApplicationHtml,
+        status: SUBMISSION_STATUS.RETURNED_TO_LG,
+        applicationSubmission: submission,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
+        primaryContact,
+        ccGovernment: true,
+      });
+    }
 
     //Return Updated Version
     return this.get(fileNumber);

@@ -67,6 +67,17 @@
                 </button>
               </div>
             </div>
+            <div
+              *ngIf="
+                application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+                application.status.code === SUBMISSION_STATUS.INCOMPLETE
+              "
+              class="comment-container"
+            >
+              <div><strong>Comment for Applicant</strong></div>
+              {{ application.returnedComment }}
+              <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
+            </div>
             <app-application-details
               [showEdit]="false"
               [showErrors]="false"

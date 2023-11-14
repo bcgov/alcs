@@ -57,6 +57,7 @@ export interface ApplicationSubmissionDto {
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  returnedToLfngComment?: string;
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 }
 

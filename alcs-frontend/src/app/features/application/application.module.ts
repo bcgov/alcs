@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
@@ -81,6 +82,6 @@ const routes: Routes = [
     UncancelApplicationDialogComponent,
     ReturnApplicationDialogComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
+  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule, NgIf],
 })
 export class ApplicationModule {}
