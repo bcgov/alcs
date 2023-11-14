@@ -2,10 +2,14 @@ import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { create } from 'handlebars';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { DocumentService } from '../../../document/document.service';
+import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
+import { StatusEmailService } from '../../../providers/email/status-email.service';
+import { LocalGovernment } from '../../local-government/local-government.entity';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../application-submission-status/submission-status.entity';
@@ -18,11 +22,13 @@ describe('ApplicationSubmissionController', () => {
   let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockAppSubStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
 
   beforeEach(async () => {
     mockApplicationSubmissionService = createMock();
     mockDocumentService = createMock();
     mockAppSubStatusService = createMock();
+    mockStatusEmailService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -43,6 +49,10 @@ describe('ApplicationSubmissionController', () => {
         {
           provide: ApplicationSubmissionStatusService,
           useValue: mockAppSubStatusService,
+        },
+        {
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
         },
         {
           provide: ClsService,
@@ -108,6 +118,12 @@ describe('ApplicationSubmissionController', () => {
     const mockDto = {
       returnComment: 'returned comment',
     };
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      submissionGovernment: new LocalGovernment(),
+      applicationSubmission: new ApplicationSubmission(),
+      primaryContact: new ApplicationOwner(),
+    });
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await controller.returnToLfng(fakeFileNumber, mockDto);
 
@@ -132,5 +148,11 @@ describe('ApplicationSubmissionController', () => {
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       null,
     );
+    expect(
+      mockStatusEmailService.getApplicationEmailData,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
   });
 });

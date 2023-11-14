@@ -57,6 +57,4 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
     this.destroy.next();
     this.destroy.complete();
   }
-
-  protected readonly undefined = undefined;
 }
