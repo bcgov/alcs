@@ -1,5 +1,10 @@
 <div class="applicant-info">
   <div *ngIf="application && submission">
+    <div *ngIf="submission.returnedComment" class="comment-container">
+      <div><strong>Comment for Applicant</strong></div>
+      {{ submission.returnedComment }}
+    </div>
+
     <app-application-details
       [submission]="submission"
       [fileNumber]="fileNumber"

@@ -46,9 +46,6 @@ export class LfngInfoComponent implements OnInit {
         this.requiresReview = application.type.requiresGovernmentReview;
         this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
-        this.showComment = [SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(
-          this.submission?.status.code,
-        );
         this.hasGovernmentReview = application.type.requiresGovernmentReview && !!this.applicationReview;
         this.canReturnToGovernment = [
           SUBMISSION_STATUS.SUBMITTED_TO_ALC,

@@ -185,7 +185,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
     private modificationService: ApplicationModificationService,
     private route: ActivatedRoute,
     private titleService: Title,
-    public applicationStatusService: ApplicationSubmissionStatusService
+    public applicationStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   ngOnInit(): void {
@@ -213,13 +213,15 @@ export class ApplicationComponent implements OnInit, OnDestroy {
             [
               SUBMISSION_STATUS.SUBMITTED_TO_LG,
               SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+              SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+              SUBMISSION_STATUS.RETURNED_TO_LG,
               SUBMISSION_STATUS.WRONG_GOV,
               SUBMISSION_STATUS.INCOMPLETE,
             ].includes(this.submission?.status?.code);
         }
 
         const submittedToAlcsStatus = this.submission?.submissionStatuses.find(
-          (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate
+          (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate,
         );
         this.showSubmittedToLfngMenuItems = wasSubmittedToLfng && !submittedToAlcsStatus;
 
