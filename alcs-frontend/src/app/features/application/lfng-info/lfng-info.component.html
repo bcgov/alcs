@@ -1,4 +1,20 @@
-<h3>L/FNG Info</h3>
+<div class="split">
+  <h3>L/FNG Info</h3>
+  <div
+    matTooltip="Only enabled when Portal status is 'Submitted to ALC' or 'L/FNG Refused to Forward'."
+    [matTooltipDisabled]="canReturnToGovernment"
+  >
+    <button
+      *ngIf="hasGovernmentReview"
+      [disabled]="!canReturnToGovernment"
+      mat-stroked-button
+      color="primary"
+      (click)="returnToLfng()"
+    >
+      Return to L/FNG
+    </button>
+  </div>
+</div>
 <section>
   <div *ngIf="!requiresReview" class="warning">
     <mat-icon>info</mat-icon>Application not subjected to Local/First Nation Government Review.

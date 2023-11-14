@@ -1,7 +1,15 @@
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
-import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceValidationException } from '../../../../../../libs/common/src/exceptions/base.exception';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
@@ -10,6 +18,7 @@ import { UserRoles } from '../../../common/authorization/roles.decorator';
 import { DocumentService } from '../../../document/document.service';
 import { CovenantTransfereeDto } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.dto';
 import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
@@ -20,6 +29,7 @@ import { ApplicationSubmissionService } from './application-submission.service';
 export class ApplicationSubmissionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private documentService: DocumentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -80,6 +90,41 @@ export class ApplicationSubmissionController {
     }
 
     await this.applicationSubmissionService.update(fileNumber, updateDto);
+    return this.get(fileNumber);
+  }
+
+  @UserRoles(...ANY_AUTH_ROLE)
+  @Post('/:fileNumber/return')
+  async returnToLfng(
+    @Param('fileNumber') fileNumber: string,
+    @Body() dto: AlcsApplicationSubmissionUpdateDto,
+  ) {
+    //Set Comment
+    await this.applicationSubmissionService.update(fileNumber, {
+      returnComment: dto.returnComment,
+    });
+
+    const submission = await this.applicationSubmissionService.get(fileNumber);
+
+    //Set Status
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      SUBMISSION_STATUS.RETURNED_TO_LG,
+    );
+
+    //Clear Other Statuses
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      null,
+    );
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+      null,
+    );
+
+    //Return Updated Version
     return this.get(fileNumber);
   }
 }

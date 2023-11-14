@@ -558,7 +558,7 @@ describe('ApplicationSubmissionReviewController', () => {
     });
     expect(
       mockApplicationSubmissionStatusService.setStatusDate,
-    ).toHaveBeenCalledTimes(2);
+    ).toHaveBeenCalledTimes(3);
     expect(
       mockStatusEmailService.sendApplicationStatusEmail,
     ).toHaveBeenCalledTimes(1);

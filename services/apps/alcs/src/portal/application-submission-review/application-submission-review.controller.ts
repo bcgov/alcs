@@ -272,7 +272,8 @@ export class ApplicationSubmissionReviewController {
     }
 
     if (
-      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG
+      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      application.status.statusTypeCode === SUBMISSION_STATUS.RETURNED_TO_LG
     ) {
       await this.applicationSubmissionService.submitToAlcs(
         validationResult.submission,
@@ -351,7 +352,9 @@ export class ApplicationSubmissionReviewController {
 
     if (
       applicationSubmission.status.statusTypeCode ===
-      SUBMISSION_STATUS.IN_REVIEW_BY_LG
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      applicationSubmission.status.statusTypeCode ===
+        SUBMISSION_STATUS.RETURNED_TO_LG
     ) {
       const documents = await this.applicationDocumentService.list(
         applicationSubmission.fileNumber,
@@ -364,6 +367,12 @@ export class ApplicationSubmissionReviewController {
       }
 
       await this.applicationSubmissionReviewService.delete(applicationReview);
+
+      await this.applicationSubmissionStatusService.setStatusDate(
+        applicationSubmission.uuid,
+        SUBMISSION_STATUS.RETURNED_TO_LG,
+        null,
+      );
 
       await this.applicationSubmissionStatusService.setStatusDate(
         applicationSubmission.uuid,

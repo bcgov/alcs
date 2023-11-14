@@ -1,0 +1,45 @@
+@use '../../../../../styles/colors';
+
+.return-application-modal {
+  width: 80vw;
+  max-width: 845px;
+  color: colors.$black;
+}
+
+.step-controls {
+  display: flex;
+  padding: 0 16px;
+  justify-content: flex-end;
+
+  button {
+    margin-left: 24px !important;
+    width: 113px;
+  }
+}
+
+.step-body {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.step-controls {
+  padding: 0;
+}
+
+::ng-deep {
+  .return-application-modal {
+    .mdc-button .mdc-button__label {
+      width: 100%;
+    }
+  }
+}
+
+.comment-input {
+  resize: none;
+  margin-top: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.42);
+  border-radius: 4px;
+  padding: 4px 8px;
+  height: 120px;
+  width: 100%;
+}

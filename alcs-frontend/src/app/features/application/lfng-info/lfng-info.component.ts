@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentDto } from '../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
@@ -10,6 +11,7 @@ import {
 } from '../../../services/application/application.dto';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
 import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { ReturnApplicationDialogComponent } from './return-application-dialog/return-application-dialog.component';
 
 @Component({
   selector: 'app-lfng-info',
@@ -27,12 +29,15 @@ export class LfngInfoComponent implements OnInit {
   isFirstNationGovernment = false;
   hasCompletedStepsBeforeResolution = false;
   hasCompletedStepsBeforeDocuments = false;
+  hasGovernmentReview = false;
+  canReturnToGovernment = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
-    private applicationReviewService: ApplicationReviewService
+    private applicationReviewService: ApplicationReviewService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +47,13 @@ export class LfngInfoComponent implements OnInit {
         this.applicationReview = await this.applicationReviewService.fetchReview(application.fileNumber);
         this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
         this.showComment = [SUBMISSION_STATUS.WRONG_GOV, SUBMISSION_STATUS.INCOMPLETE].includes(
-          this.submission?.status.code
+          this.submission?.status.code,
         );
+        this.hasGovernmentReview = application.type.requiresGovernmentReview && !!this.applicationReview;
+        this.canReturnToGovernment = [
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+        ].includes(this.submission?.status.code);
         this.loadDocuments(application.fileNumber);
         this.isFirstNationGovernment = !!application.localGovernment?.isFirstNation;
 
@@ -75,5 +85,22 @@ export class LfngInfoComponent implements OnInit {
     this.resolutionDocument = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT);
     this.staffReport = documents.find((doc) => doc.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
     this.otherAttachments = documents.filter((doc) => doc.type?.code === DOCUMENT_TYPE.OTHER);
+  }
+
+  async returnToLfng() {
+    if (this.submission) {
+      this.dialog
+        .open(ReturnApplicationDialogComponent, {
+          data: {
+            fileNumber: this.submission.fileNumber,
+          },
+        })
+        .beforeClosed()
+        .subscribe((didUpdate) => {
+          if (didUpdate && this.submission) {
+            this.applicationDetailService.loadApplication(this.submission?.fileNumber);
+          }
+        });
+    }
   }
 }
