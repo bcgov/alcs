@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import {
   Column,
@@ -150,8 +150,8 @@ export class NoticeOfIntent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the proposal',
   })
@@ -212,6 +212,13 @@ export class NoticeOfIntent extends Base {
     nullable: true,
   })
   proposalEndDate?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the placement of fill ends (PFRS only)',
+    nullable: true,
+  })
+  proposalEndDate2?: Date | null;
 
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,

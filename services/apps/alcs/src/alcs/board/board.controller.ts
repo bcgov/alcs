@@ -1,6 +1,6 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -105,17 +105,14 @@ export class BoardController {
       board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
-      planningReviews: await this.planningReviewService.mapToDtos(
-        planningReviews,
-      ),
+      planningReviews:
+        await this.planningReviewService.mapToDtos(planningReviews),
       modifications: await this.appModificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
-      noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
-        noticeOfIntents,
-      ),
-      noiModifications: await this.noiModificationService.mapToDtos(
-        noiModifications,
-      ),
+      noticeOfIntents:
+        await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
+      noiModifications:
+        await this.noiModificationService.mapToDtos(noiModifications),
       notifications: await this.notificationService.mapToDtos(notifications),
     };
   }

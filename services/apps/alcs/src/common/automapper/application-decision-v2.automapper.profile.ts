@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
@@ -164,6 +164,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         forMember(
           (ad) => ad.endDate,
           mapFrom((a) => a.endDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.endDate2,
+          mapFrom((a) => a.endDate2?.getTime()),
         ),
         forMember(
           (ad) => ad.expiryDate,

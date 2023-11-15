@@ -201,14 +201,14 @@
   </app-decision-components>
 
   <div>
-    <app-decision-conditions
+    <app-app-decision-conditions
       *ngIf="codes && showComponents && showConditions"
       [codes]="codes"
       [components]="components"
       [conditions]="conditions"
       (conditionsChange)="onConditionsChange($event)"
       [showError]="form.touched && conditionUpdates.length < 1 && showConditions"
-    ></app-decision-conditions>
+    ></app-app-decision-conditions>
   </div>
 
   <section>

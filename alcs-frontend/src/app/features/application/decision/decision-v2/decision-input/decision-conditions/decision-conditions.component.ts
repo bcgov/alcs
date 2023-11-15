@@ -25,7 +25,7 @@ export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionCondi
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
 
 @Component({
-  selector: 'app-decision-conditions',
+  selector: 'app-app-decision-conditions',
   templateUrl: './decision-conditions.component.html',
   styleUrls: ['./decision-conditions.component.scss'],
 })

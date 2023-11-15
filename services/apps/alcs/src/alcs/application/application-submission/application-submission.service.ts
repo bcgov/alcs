@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -102,6 +102,10 @@ export class ApplicationSubmissionService {
     submission.subdProposedLots = filterUndefined(
       updateDto.subProposedLots,
       submission.subdProposedLots,
+    );
+    submission.returnedToLfngComment = filterUndefined(
+      updateDto.returnComment,
+      submission.returnedToLfngComment,
     );
 
     await this.applicationSubmissionRepository.save(submission);

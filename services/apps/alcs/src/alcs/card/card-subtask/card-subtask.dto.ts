@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsOptional, IsUUID } from 'class-validator';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { AssigneeDto } from '../../../user/user.dto';

@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -41,9 +41,8 @@ export class NotificationController {
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
   async get(@Param('fileNumber') fileNumber: string) {
-    const notification = await this.notificationService.getByFileNumber(
-      fileNumber,
-    );
+    const notification =
+      await this.notificationService.getByFileNumber(fileNumber);
     const mapped = await this.notificationService.mapToDtos([notification]);
     return mapped[0];
   }
@@ -138,9 +137,8 @@ export class NotificationController {
   @Get('/search/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async search(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntents = await this.notificationService.searchByFileNumber(
-      fileNumber,
-    );
+    const noticeOfIntents =
+      await this.notificationService.searchByFileNumber(fileNumber);
     return this.notificationService.mapToDtos(noticeOfIntents);
   }
 }

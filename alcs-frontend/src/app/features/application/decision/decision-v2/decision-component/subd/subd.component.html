@@ -28,6 +28,7 @@
         <app-inline-number
           (save)="onSaveAlrParcelArea(lot, $event)"
           [value]="lot.alrArea?.toString()"
+          [decimals]="5"
         ></app-inline-number>
       </div>
     </ng-container>

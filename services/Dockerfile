@@ -3,7 +3,7 @@
 # https://www.tomray.dev/nestjs-docker-production
 ###################
 
-FROM node:18.12-alpine As development
+FROM node:20-alpine As development
 
 WORKDIR /opt/app-root/
 
@@ -19,7 +19,7 @@ USER node
 # BUILD FOR PRODUCTION
 ###################
 
-FROM node:18.12-alpine As build
+FROM node:20-alpine As build
 ARG NEST_APP=alcs
 
 WORKDIR /opt/app-root/
@@ -40,7 +40,7 @@ USER node
 # PRODUCTION
 ###################
 
-FROM node:18.12-alpine As production
+FROM node:20-alpine As production
 ARG NEST_APP=alcs
 
 # Init 
@@ -59,5 +59,10 @@ COPY --from=build /opt/app-root/dist/apps/${NEST_APP} ./dist
 COPY ./config/ /opt/app-root/config/
 COPY ./local-certificates /opt/app-root/local-certificates
 COPY ./templates/ /opt/app-root/templates/
+
+# Create Empty Config File if not Exists
+RUN mkdir -p /vault/secrets
+RUN touch /vault/secrets/config
+RUN . /vault/secrets/config
 
 CMD [ "node", "dist/main.js" ]

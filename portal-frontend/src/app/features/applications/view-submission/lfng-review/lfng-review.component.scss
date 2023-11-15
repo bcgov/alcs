@@ -14,20 +14,6 @@
   }
 }
 
-.comment-container {
-  align-items: flex-start;
-  background-color: rgba(colors.$accent-color-light, 0.5);
-  border-radius: rem(4);
-  display: flex;
-  flex-direction: column;
-  margin-bottom: rem(24);
-  padding: rem(16);
-
-  div {
-    margin-bottom: rem(4);
-  }
-}
-
 .no-comment {
   color: colors.$grey-dark;
   font-style: italic;

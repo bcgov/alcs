@@ -63,7 +63,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private applicationDecisionComponentService: ApplicationDecisionComponentService,
     private router: Router,
     private activatedRouter: ActivatedRoute,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -180,6 +180,14 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
       chairReviewRequired: true,
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
+    });
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onSaveChairReviewOutcome(decisionUuid: string, chairReviewOutcomeCode: string) {
+    await this.decisionService.update(decisionUuid, {
+      chairReviewOutcomeCode,
       isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);

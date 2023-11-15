@@ -5,6 +5,7 @@ import {
   NoticeOfIntentDecisionCodesDto,
   NoticeOfIntentDecisionComponentDto,
   NoticeOfIntentDecisionComponentTypeDto,
+  PfrsDecisionComponentDto,
   PofoDecisionComponentDto,
   RosoDecisionComponentDto,
 } from '../../../../../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
@@ -42,6 +43,9 @@ export class DecisionComponentComponent implements OnInit {
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
 
+  //pfrs
+  endDate2 = new FormControl<Date | null>(null, [Validators.required]);
+
   // general
   endDate = new FormControl<Date | null>(null, [Validators.required]);
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -76,8 +80,7 @@ export class DecisionComponentComponent implements OnInit {
           this.patchRosoFields();
           break;
         case NOI_DECISION_COMPONENT_TYPE.PFRS:
-          this.patchPofoFields();
-          this.patchRosoFields();
+          this.patchPfrsFields();
           break;
         default:
           this.toastService.showErrorToast('Wrong decision component type');
@@ -137,6 +140,14 @@ export class DecisionComponentComponent implements OnInit {
     return dataChange;
   }
 
+  private patchPfrsFields() {
+    this.patchPofoFields();
+    this.patchRosoFields();
+    this.form.addControl('endDate2', this.endDate2);
+
+    this.endDate2.setValue(this.data.endDate2 ? new Date(this.data.endDate2) : null);
+  }
+
   private patchPofoFields() {
     this.form.addControl('endDate', this.endDate);
     this.form.addControl('fillTypeToPlace', this.fillTypeToPlace);
@@ -191,9 +202,10 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getPfrsDataChange(): RosoDecisionComponentDto & PofoDecisionComponentDto {
+  private getPfrsDataChange(): PfrsDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ?? null,
       soilToRemoveArea: this.areaToRemove.value ?? null,
       soilToRemoveVolume: this.volumeToRemove.value ?? null,

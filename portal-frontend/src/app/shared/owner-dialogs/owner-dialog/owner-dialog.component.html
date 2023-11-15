@@ -6,7 +6,7 @@
   <form [formGroup]="form">
     <div class="form-row">
       <div class="full-row">
-        <label for="type">Owner Type</label>
+        <mat-label for="type">Owner Type</mat-label>
         <mat-button-toggle-group (change)="onChangeType($event)" class="input" id="type" formControlName="type">
           <mat-button-toggle [value]="OWNER_TYPE.INDIVIDUAL">Individual</mat-button-toggle>
           <mat-button-toggle [value]="OWNER_TYPE.ORGANIZATION">Organization</mat-button-toggle>
@@ -88,7 +88,7 @@
         </div>
       </div>
       <div>
-        <label for="firstName">Email</label>
+        <label for="email">Email</label>
         <mat-form-field appearance="outline">
           <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
         </mat-form-field>

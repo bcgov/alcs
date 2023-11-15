@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Controller, Get, Req } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
@@ -92,9 +92,8 @@ export class CodeController {
 
     let bceidGuid;
     if (tokenHeader) {
-      const token = await this.authorizationService.decodeHeaderToken(
-        tokenHeader,
-      );
+      const token =
+        await this.authorizationService.decodeHeaderToken(tokenHeader);
       bceidGuid = token ? token['bceid_business_guid'] : false;
     }
 

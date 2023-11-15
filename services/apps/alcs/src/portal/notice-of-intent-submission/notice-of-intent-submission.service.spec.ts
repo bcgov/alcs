@@ -1,10 +1,10 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import {
   NoticeOfIntentDocument,
@@ -499,6 +499,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       new NoticeOfIntentDocument({}),
       new User({
         uuid: 'user_uuid',
+        clientRoles: [],
       }),
     );
 
@@ -514,6 +515,7 @@ describe('NoticeOfIntentSubmissionService', () => {
       new NoticeOfIntentDocument({}),
       new User({
         uuid: 'NOT_user_uuid',
+        clientRoles: [],
       }),
     );
 

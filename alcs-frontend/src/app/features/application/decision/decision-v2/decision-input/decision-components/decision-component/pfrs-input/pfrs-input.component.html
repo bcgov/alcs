@@ -1,20 +1,33 @@
 <form [formGroup]="form" class="pofo-component-form">
+  <mat-form-field appearance="outline" class="row">
+    <mat-label>ALR Area Impacted (ha)</mat-label>
+    <input
+      matInput
+      min="0.01"
+      mask="separator.5"
+      thousandSeparator=","
+      separatorLimit="9999999999"
+      formControlName="alrArea"
+      required
+    />
+  </mat-form-field>
+
   <div class="grid-2">
-    <mat-form-field appearance="outline">
-      <mat-label>ALR Area Impacted (ha)</mat-label>
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Use End Date (Placement of Fill)</mat-label>
       <input
         matInput
-        min="0.01"
-        mask="separator.2"
-        thousandSeparator=","
-        separatorLimit="9999999999"
-        formControlName="alrArea"
-        required
+        (click)="endDatePicker2.open()"
+        [matDatepicker]="endDatePicker2"
+        formControlName="endDate2"
+        name="date"
       />
+      <mat-datepicker-toggle matSuffix [for]="endDatePicker2"></mat-datepicker-toggle>
+      <mat-datepicker #endDatePicker2 type="date"></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="date-picker">
-      <mat-label>Use End Date</mat-label>
+      <mat-label>Use End Date (Removal of Soil)</mat-label>
       <input
         matInput
         (click)="endDatePicker.open()"
@@ -94,7 +107,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <input
             min="0.01"
-            mask="separator.2"
+            mask="separator.5"
             thousandSeparator=","
             separatorLimit="9999999999"
             matInput
@@ -107,7 +120,7 @@
         <mat-form-field appearance="outline" class="full-width">
           <input
             min="0.01"
-            mask="separator.2"
+            mask="separator.5"
             thousandSeparator=","
             separatorLimit="9999999999"
             matInput

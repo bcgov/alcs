@@ -32,6 +32,19 @@ a {
   .mat-expansion-panel {
     box-shadow: none;
   }
+
+  .mat-expansion-panel-header-title {
+    color: colors.$link-color;
+    flex-direction: row-reverse;
+  }
+
+  .mat-expansion-indicator {
+    display: flex;
+
+    &::after {
+      color: colors.$link-color;
+    }
+  }
 }
 
 .search-form {

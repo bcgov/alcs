@@ -101,7 +101,7 @@
       <div class="subtext">Characters left: {{ 4000 - reduceNegativeImpactsText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label for="negative-impact">Could this proposal be accommodated on lands outside of the ALR?</label>
+      <label for="outside-lands">Could this proposal be accommodated on lands outside of the ALR?</label>
       <div class="subtext">Please justify why the proposal cannot be carried out on lands outside the ALR.</div>
       <mat-form-field appearance="outline">
         <textarea
@@ -125,7 +125,7 @@
       <mat-form-field appearance="outline">
         <input
           [formControl]="totalCorridorArea"
-          mask="separator.2"
+          mask="separator.5"
           thousandSeparator=","
           separatorLimit="9999999999"
           min="0.01"
@@ -163,7 +163,7 @@
 </form>
 <div>
   <div class="section">
-    <label class="subheading2" for="proof-of-serving">Proof of Serving Notice</label>
+    <mat-label class="subheading2" for="proof-of-serving">Proof of Serving Notice</mat-label>
     <div class="subtext">Proof that all affected property owners with land in the ALR were notified as required.</div>
     <app-file-drag-drop
       id="proof-of-serving"
@@ -177,7 +177,7 @@
     ></app-file-drag-drop>
   </div>
   <div class="section">
-    <label class="subheading2" for="proposal-map">Proposal Map / Sketch Plan</label>
+    <mat-label class="subheading2" for="proposal-map">Proposal Map / Sketch Plan</mat-label>
     <app-file-drag-drop
       id="proposal-map"
       [uploadedFiles]="proposalMap"

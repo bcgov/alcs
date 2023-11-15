@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { NotificationStatusDto } from '../../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PublicOwnerDto } from '../public.dto';
 

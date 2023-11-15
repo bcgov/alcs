@@ -1,17 +1,15 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Controller, Get, Param } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
-import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import { ApplicationPortalDecisionDto } from './application-decision.dto';
 
 @Public()
 @Controller('public/application/decision')
 export class ApplicationDecisionController {
   constructor(
-    private applicationSubmissionService: ApplicationSubmissionService,
     private decisionService: ApplicationDecisionV2Service,
     @InjectMapper() private mapper: Mapper,
   ) {}

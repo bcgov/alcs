@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Controller, Get } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationSubmissionStatusService } from '../../../alcs/application/application-submission-status/application-submission-status.service';

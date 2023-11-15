@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { OwnerTypeDto } from '../../common/owner-type/owner-type.entity';
 import { DocumentTypeDto } from '../../document/document.dto';
 import { ApplicationParcelOwnershipTypeDto } from '../application-submission/application-parcel/application-parcel.dto';

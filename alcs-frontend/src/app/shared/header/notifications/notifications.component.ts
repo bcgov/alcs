@@ -24,14 +24,14 @@ export class NotificationsComponent implements OnInit {
   hasUnread = false;
   unreadCount = 0;
 
-  constructor(private router: Router, private notificationService: MessageService) {}
+  constructor(private router: Router, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loadNotifications();
   }
 
   async loadNotifications() {
-    const notifications = await this.notificationService.fetchMyNotifications();
+    const notifications = await this.messageService.fetchMyNotifications();
 
     this.formattedNotifications = notifications.map((notification) => ({
       ...notification,
@@ -52,7 +52,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   async onSelectNotification(notification: FormattedNotification) {
-    await this.notificationService.markRead(notification.uuid);
+    await this.messageService.markRead(notification.uuid);
     this.formattedNotifications = this.formattedNotifications.map((formattedNotification) => ({
       ...formattedNotification,
       read: formattedNotification.uuid === notification.uuid ? true : formattedNotification.read,
@@ -75,7 +75,7 @@ export class NotificationsComponent implements OnInit {
 
   async onMarkAllRead($event: MouseEvent) {
     $event.stopPropagation();
-    await this.notificationService.markAllRead();
+    await this.messageService.markAllRead();
     this.formattedNotifications = this.formattedNotifications.map((notification) => ({
       ...notification,
       read: true,

@@ -1,7 +1,7 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { RedisModule } from '@app/common/redis/redis.module';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -34,7 +34,7 @@ import { UserModule } from './user/user.module';
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
-    ClsModule.register({
+    ClsModule.forRoot({
       global: true,
       middleware: { mount: true },
     }),

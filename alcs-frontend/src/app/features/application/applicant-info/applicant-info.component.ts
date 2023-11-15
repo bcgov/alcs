@@ -27,7 +27,7 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
-    private applicationSubmissionService: ApplicationSubmissionService
+    private applicationSubmissionService: ApplicationSubmissionService,
   ) {}
 
   ngOnInit(): void {

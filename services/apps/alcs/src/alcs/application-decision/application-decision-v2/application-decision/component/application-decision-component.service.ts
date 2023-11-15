@@ -49,6 +49,9 @@ export class ApplicationDecisionComponentService {
       component.agCapSource = updateDto.agCapSource;
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
+      component.endDate2 = updateDto.endDate2
+        ? new Date(updateDto.endDate2)
+        : null;
 
       this.patchNfuFields(component, updateDto);
       this.patchTurpFields(component, updateDto);

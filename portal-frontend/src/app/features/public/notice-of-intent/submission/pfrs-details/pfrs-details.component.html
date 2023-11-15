@@ -33,13 +33,31 @@
     <app-no-data *ngIf="!noiSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
   <div class="grid-double">
-    <div *ngIf="noiSubmission.soilProjectDurationAmount && noiSubmission.soilProjectDurationUnit">
+    <div *ngIf="noiSubmission.fillProjectDurationAmount && noiSubmission.fillProjectDurationAmount">
+      {{ noiSubmission.fillProjectDurationAmount }}
+      <ng-container [ngPlural]="noiSubmission.fillProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ noiSubmission.fillProjectDurationUnit?.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ noiSubmission.fillProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!noiSubmission.fillProjectDurationAmount || !noiSubmission.fillProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Removal of Fill Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="noiSubmission.soilProjectDurationAmount && noiSubmission.soilProjectDurationAmount">
       {{ noiSubmission.soilProjectDurationAmount }}
       <ng-container [ngPlural]="noiSubmission.soilProjectDurationAmount">
         <ng-template ngPluralCase="=1">
-          {{ noiSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
+          {{ noiSubmission.soilProjectDurationUnit?.slice(0, -1) | titlecase }}
         </ng-template>
         <ng-template ngPluralCase="other">
           {{ noiSubmission.soilProjectDurationUnit | titlecase }}

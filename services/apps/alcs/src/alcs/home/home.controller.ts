@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -86,49 +86,40 @@ export class HomeController {
     };
 
     if (userId) {
-      const applications = await this.applicationService.getMany(
-        assignedFindOptions,
-      );
-      const reconsiderations = await this.reconsiderationService.getBy(
-        assignedFindOptions,
-      );
+      const applications =
+        await this.applicationService.getMany(assignedFindOptions);
+      const reconsiderations =
+        await this.reconsiderationService.getBy(assignedFindOptions);
 
-      const planningReviews = await this.planningReviewService.getBy(
-        assignedFindOptions,
-      );
+      const planningReviews =
+        await this.planningReviewService.getBy(assignedFindOptions);
 
-      const modifications = await this.modificationService.getBy(
-        assignedFindOptions,
-      );
+      const modifications =
+        await this.modificationService.getBy(assignedFindOptions);
 
       const covenants = await this.covenantService.getBy(assignedFindOptions);
 
-      const noticeOfIntents = await this.noticeOfIntentService.getBy(
-        assignedFindOptions,
-      );
+      const noticeOfIntents =
+        await this.noticeOfIntentService.getBy(assignedFindOptions);
 
       const noticeOfIntentModifications =
         await this.noticeOfIntentModificationService.getBy(assignedFindOptions);
 
-      const notifications = await this.notificationService.getBy(
-        assignedFindOptions,
-      );
+      const notifications =
+        await this.notificationService.getBy(assignedFindOptions);
 
       const result = {
-        noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
-          noticeOfIntents,
-        ),
+        noticeOfIntents:
+          await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
         noticeOfIntentModifications:
           await this.noticeOfIntentModificationService.mapToDtos(
             noticeOfIntentModifications,
           ),
         applications: await this.applicationService.mapToDtos(applications),
-        reconsiderations: await this.reconsiderationService.mapToDtos(
-          reconsiderations,
-        ),
-        planningReviews: await this.planningReviewService.mapToDtos(
-          planningReviews,
-        ),
+        reconsiderations:
+          await this.reconsiderationService.mapToDtos(reconsiderations),
+        planningReviews:
+          await this.planningReviewService.mapToDtos(planningReviews),
         modifications: await this.modificationService.mapToDtos(modifications),
         covenants: await this.covenantService.mapToDtos(covenants),
         notifications: await this.notificationService.mapToDtos(notifications),
@@ -246,9 +237,8 @@ export class HomeController {
   }
 
   private async mapApplicationsToDtos(applications: Application[]) {
-    const applicationTimes = await this.timeService.fetchActiveTimes(
-      applications,
-    );
+    const applicationTimes =
+      await this.timeService.fetchActiveTimes(applications);
 
     const appPausedMap = await this.timeService.getPausedStatus(applications);
     const result: HomepageSubtaskDTO[] = [];

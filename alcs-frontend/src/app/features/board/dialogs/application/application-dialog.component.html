@@ -16,9 +16,7 @@
     <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
-        <button [mat-dialog-close]="isDirty" [routerLink]="['application', application.fileNumber]" mat-menu-item>
-          View Detail
-        </button>
+        <button [mat-dialog-close]="isDirty" (click)="goToDetailpage()" mat-menu-item>View Detail</button>
         <button
           [mat-dialog-close]="isDirty"
           [routerLink]="['application', application.fileNumber, 'info-request']"

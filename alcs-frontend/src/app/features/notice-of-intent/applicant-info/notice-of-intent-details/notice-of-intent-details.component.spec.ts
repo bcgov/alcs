@@ -107,6 +107,8 @@ describe('NoticeOfIntentDetailsComponent', () => {
       soilAlreadyPlacedAverageDepth: null,
       soilProjectDurationAmount: null,
       soilProjectDurationUnit: null,
+      fillProjectDurationUnit: null,
+      fillProjectDurationAmount: null,
       soilFillTypeToPlace: null,
       soilProposedStructures: [],
     };

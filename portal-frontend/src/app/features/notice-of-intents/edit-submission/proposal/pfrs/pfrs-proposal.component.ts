@@ -49,8 +49,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  soilProjectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
+  soilProjectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  fillProjectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
+  fillProjectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
   areComponentsDirty = false;
   isAreaWideFilling = new FormControl<string | null>(null, [Validators.required]);
   isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
@@ -62,8 +64,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     purpose: this.purpose,
     soilTypeRemoved: this.soilTypeRemoved,
     fillTypeToPlace: this.fillTypeToPlace,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    soilProjectDurationAmount: this.soilProjectDurationAmount,
+    soilProjectDurationUnit: this.soilProjectDurationUnit,
+    fillProjectDurationAmount: this.fillProjectDurationAmount,
+    fillProjectDurationUnit: this.fillProjectDurationUnit,
     isAreaWideFilling: this.isAreaWideFilling,
     isExtractionOrMining: this.isExtractionOrMining,
     hasSubmittedNotice: this.hasSubmittedNotice,
@@ -141,8 +145,10 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           purpose: noiSubmission.purpose,
           soilTypeRemoved: noiSubmission.soilTypeRemoved,
           fillTypeToPlace: noiSubmission.soilFillTypeToPlace,
-          projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
-          projectDurationUnit: noiSubmission.soilProjectDurationUnit,
+          soilProjectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
+          soilProjectDurationUnit: noiSubmission.soilProjectDurationUnit,
+          fillProjectDurationAmount: noiSubmission.fillProjectDurationAmount?.toString() ?? null,
+          fillProjectDurationUnit: noiSubmission.fillProjectDurationUnit,
           isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
           isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
@@ -218,10 +224,14 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
         soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
         soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
-        soilProjectDurationAmount: this.projectDurationAmount.value
-          ? parseFloat(this.projectDurationAmount.value)
+        soilProjectDurationAmount: this.soilProjectDurationAmount.value
+          ? parseFloat(this.soilProjectDurationAmount.value)
           : null,
-        soilProjectDurationUnit: this.projectDurationUnit.value,
+        soilProjectDurationUnit: this.soilProjectDurationUnit.value,
+        fillProjectDurationAmount: this.fillProjectDurationAmount.value
+          ? parseFloat(this.fillProjectDurationAmount.value)
+          : null,
+        fillProjectDurationUnit: this.fillProjectDurationUnit.value,
         soilIsAreaWideFilling: parseStringToBoolean(isAreaWideFilling),
         soilIsExtractionOrMining: parseStringToBoolean(isExtractionOrMining),
         soilHasSubmittedNotice: parseStringToBoolean(hasSubmittedNotice),

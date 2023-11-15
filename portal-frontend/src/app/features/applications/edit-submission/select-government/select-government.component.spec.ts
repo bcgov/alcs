@@ -1,7 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatAutocomplete } from '@angular/material/autocomplete';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
@@ -34,6 +34,16 @@ describe('SelectGovernmentComponent', () => {
     fixture = TestBed.createComponent(SelectGovernmentComponent);
     component = fixture.componentInstance;
     component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
     fixture.detectChanges();
   });
 

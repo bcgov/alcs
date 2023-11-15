@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["18"]
+        node: ["20"]
     name: Coverage Report ALCS Frontend - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -19,10 +19,10 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install --legacy-peer-deps
+      - run: npm install
       - run: npm run build
       - run: npm run test:cov
-      - if: matrix.node == '18'
+      - if: matrix.node == '20'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-alcs-frontend
@@ -35,8 +35,8 @@ jobs:
         working-directory: portal-frontend
     strategy:
       matrix:
-        platform: [ ubuntu-latest ]
-        node: [ "18" ]
+        platform: [ubuntu-latest]
+        node: ["20"]
     name: Coverage Report Portal Frontend - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -47,7 +47,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run test:cov
-      - if: matrix.node == '18'
+      - if: matrix.node == '20'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-portal-frontend
@@ -61,7 +61,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["18"]
+        node: ["20"]
     name: Coverage Report API - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -72,7 +72,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm run test:cov
-      - if: matrix.node == '18'
+      - if: matrix.node == '20'
         uses: actions/upload-artifact@v3
         with:
           name: coverage-api

@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -78,9 +78,8 @@ export class NoticeOfIntentDocumentController {
       );
 
     if (canAccessDocument) {
-      const url = await this.noticeOfIntentDocumentService.getInlineUrl(
-        document,
-      );
+      const url =
+        await this.noticeOfIntentDocumentService.getInlineUrl(document);
       return { url };
     }
 
@@ -99,9 +98,8 @@ export class NoticeOfIntentDocumentController {
     );
 
     //Map from file number to uuid
-    const noticeOfIntentUuid = await this.noticeOfIntentService.getUuid(
-      fileNumber,
-    );
+    const noticeOfIntentUuid =
+      await this.noticeOfIntentService.getUuid(fileNumber);
 
     const res =
       await this.noticeOfIntentDocumentService.updateDescriptionAndType(

@@ -18,10 +18,12 @@ describe('NaruProposalComponent', () => {
   let fixture: ComponentFixture<NaruProposalComponent>;
   let mockApplicationService: DeepMocked<ApplicationSubmissionService>;
   let mockRouter: DeepMocked<Router>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockApplicationService = createMock();
     mockRouter = createMock();
+    mockCodeService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -43,7 +45,7 @@ describe('NaruProposalComponent', () => {
         },
         {
           provide: CodeService,
-          useValue: {},
+          useValue: mockCodeService,
         },
         {
           provide: ToastService,
@@ -58,6 +60,18 @@ describe('NaruProposalComponent', () => {
     component = fixture.componentInstance;
     component.$applicationSubmission = new BehaviorSubject<ApplicationSubmissionDetailedDto | undefined>(undefined);
     component.$applicationDocuments = new BehaviorSubject<ApplicationDocumentDto[]>([]);
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

@@ -161,41 +161,41 @@
           <ng-container *ngFor="let component of decision.components; let index = index">
             <h5>{{ component.noticeOfIntentDecisionComponentType?.label }}</h5>
             <div>
-              <app-pofo
+              <app-noi-pofo
                 class="grid-2"
                 *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.POFO"
                 [component]="component"
               >
-                <app-basic
+                <app-noi-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic>
-              </app-pofo>
+                ></app-noi-basic>
+              </app-noi-pofo>
 
-              <app-roso
+              <app-noi-roso
                 class="grid-2"
                 *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.ROSO"
                 [component]="component"
               >
-                <app-basic
+                <app-noi-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic>
-              </app-roso>
+                ></app-noi-basic>
+              </app-noi-roso>
 
-              <app-pfrs
+              <app-noi-pfrs
                 class="grid-2"
                 *ngIf="component.noticeOfIntentDecisionComponentTypeCode === COMPONENT_TYPE.PFRS"
                 [component]="component"
               >
-                <app-basic
+                <app-noi-basic
                   [component]="component"
                   [fillRow]="true"
                   (saveAlrArea)="onSaveAlrArea(decision.uuid, component.uuid, $event)"
-                ></app-basic>
-              </app-pfrs>
+                ></app-noi-basic>
+              </app-noi-pfrs>
 
               <div class="grid-2">
                 <div>

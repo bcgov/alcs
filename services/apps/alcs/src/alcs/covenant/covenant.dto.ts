@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { CardDto } from '../card/card.dto';

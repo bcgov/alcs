@@ -50,7 +50,6 @@ export class CovenantTransfereeService {
   async create(
     createDto: CovenantTransfereeCreateDto,
     applicationSubmission: ApplicationSubmission,
-    user: User,
   ) {
     const type = await this.typeRepository.findOneOrFail({
       where: {
@@ -119,14 +118,14 @@ export class CovenantTransfereeService {
     return await this.repository.save(existingOwner);
   }
 
-  async delete(owner: CovenantTransferee) {
-    return await this.repository.remove(owner);
+  async delete(transferee: CovenantTransferee) {
+    return await this.repository.remove(transferee);
   }
 
-  async getOwner(ownerUuid: string) {
+  async getOwner(transfereeUuid: string) {
     return await this.repository.findOneOrFail({
       where: {
-        uuid: ownerUuid,
+        uuid: transfereeUuid,
       },
       relations: {
         type: true,

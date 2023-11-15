@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 
 import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
@@ -78,6 +78,10 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.proposalEndDate,
           mapFrom((ad) => ad.proposalEndDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalEndDate2,
+          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
         ),
         forMember(
           (a) => a.proposalExpiryDate,

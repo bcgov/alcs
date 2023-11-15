@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsArray, IsBoolean, IsString } from 'class-validator';
 
 export enum BOARD_CODES {

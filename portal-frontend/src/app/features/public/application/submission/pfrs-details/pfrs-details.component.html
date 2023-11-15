@@ -21,7 +21,25 @@
     <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="applicationSubmission.fillProjectDurationAmount && applicationSubmission.fillProjectDurationUnit">
+      {{ applicationSubmission.fillProjectDurationAmount }}
+      <ng-container [ngPlural]="applicationSubmission.fillProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ applicationSubmission.fillProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ applicationSubmission.fillProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!applicationSubmission.fillProjectDurationAmount || !applicationSubmission.fillProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Removal of Soil Project Duration</div>
   <div class="grid-double">
     <div *ngIf="applicationSubmission.soilProjectDurationAmount && applicationSubmission.soilProjectDurationUnit">
       {{ applicationSubmission.soilProjectDurationAmount }}

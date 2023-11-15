@@ -1,22 +1,23 @@
 <section>
   <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
     <mat-form-field class="full-width" appearance="outline">
-      <input placeholder="Search Inbox by File ID" mask="0*" id="fileNumber" matInput formControlName="fileNumber" />
+      <input
+        placeholder="Search Inbox by File ID"
+        mask="0*"
+        id="fileNumber"
+        matInput
+        formControlName="fileNumber"
+        aria-label="search"
+      />
     </mat-form-field>
 
-    <div class="right search-toggle">
-      <a *ngIf="!panel.expanded" class="right" (click)="panel.toggle()"
-        >More search options<mat-icon>expand_more</mat-icon></a
-      >
-      <a *ngIf="panel.expanded" class="right" (click)="panel.toggle()"
-        >Less search options<mat-icon>expand_less</mat-icon></a
-      >
-    </div>
-
     <mat-expansion-panel #panel>
+      <mat-expansion-panel-header class="search-toggle">
+        <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options </mat-panel-title>
+      </mat-expansion-panel-header>
       <div class="search-form">
         <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
-          <label for="filterBy">Filter By</label>
+          <mat-label for="filterBy">Filter By</mat-label>
           <mat-form-field appearance="outline">
             <mat-select id="filterBy" formControlName="filterBy">
               <mat-option value="created">Created By {{ profile.government }}</mat-option>
@@ -73,7 +74,7 @@
           />
         </div>
         <div>
-          <label for="status">Status</label>
+          <mat-label for="status">Status</mat-label>
           <mat-form-field appearance="outline">
             <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
               <mat-option *ngFor="let status of allStatuses" [value]="status.code">

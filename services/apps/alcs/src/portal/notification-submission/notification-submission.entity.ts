@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   AfterLoad,
   Column,
@@ -71,8 +71,8 @@ export class NotificationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   totalArea: number | null;

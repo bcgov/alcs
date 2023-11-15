@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { LinkedResolutionDto } from '../../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
 import {
   NoticeOfIntentDecisionDocumentDto,

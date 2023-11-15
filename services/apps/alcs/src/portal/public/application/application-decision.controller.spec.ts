@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -7,16 +7,13 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
 import { ApplicationDecisionProfile } from '../../../common/automapper/application-decision-v2.automapper.profile';
-import { ApplicationSubmissionService } from '../../application-submission/application-submission.service';
 import { ApplicationDecisionController } from './application-decision.controller';
 
 describe('ApplicationDecisionController', () => {
   let controller: ApplicationDecisionController;
-  let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockDecisionService: DeepMocked<ApplicationDecisionV2Service>;
 
   beforeEach(async () => {
-    mockApplicationSubmissionService = createMock();
     mockDecisionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -28,10 +25,6 @@ describe('ApplicationDecisionController', () => {
       controllers: [ApplicationDecisionController],
       providers: [
         ApplicationDecisionProfile,
-        {
-          provide: ApplicationSubmissionService,
-          useValue: mockApplicationSubmissionService,
-        },
         {
           provide: ApplicationDecisionV2Service,
           useValue: mockDecisionService,

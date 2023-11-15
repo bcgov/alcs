@@ -5,7 +5,7 @@ import { NoticeOfIntentSubmissionStatusService } from '../../../../../services/n
 import { ApplicationSubmissionStatusPill } from '../../../../../shared/application-submission-status-type-pill/application-submission-status-type-pill.component';
 
 @Component({
-  selector: 'app-revert-to-draft-dialog',
+  selector: 'app-noi-revert-to-draft-dialog',
   templateUrl: './revert-to-draft-dialog.component.html',
   styleUrls: ['./revert-to-draft-dialog.component.scss'],
 })

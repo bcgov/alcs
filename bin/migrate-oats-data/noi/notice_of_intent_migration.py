@@ -17,6 +17,7 @@ from .notice_of_intent_submissions import (
     process_alcs_notice_of_intent_received_by_alc_status,
     process_alcs_notice_of_intent_decision_released_status,
     process_alcs_notice_of_intent_cancelled_status,
+    update_alcs_notice_of_intent_soil_fill_fields,
 )
 from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date import (
     process_alcs_notice_of_intent_decision_date,
@@ -25,15 +26,36 @@ from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_tabl
     process_alcs_notice_of_intent_base_fields,
 )
 
+from .notice_of_intent_submissions.parcels import (
+    init_notice_of_intent_parcels,
+    clean_parcels,
+    process_notice_of_intent_certificate_of_title,
+)
+
+from .notice_of_intent_submissions.parcels.owners import (
+    init_notice_of_intent_parcel_owners,
+    clean_owners,
+    link_notice_of_intent_owners_to_parcels,
+    clean_parcel_owners,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
 
 
 def clean_notice_of_intent():
+    clean_parcel_owners()
+    clean_owners()
+    clean_parcels()
     clean_notice_of_intent_submission_statuses()
     clean_notice_of_intent_submissions()
     clean_notice_of_intents()
+
+
+def process_notice_of_intent_soil(batch_size):
+    process_alcs_notice_of_intent_soil_fields(batch_size)
+    update_alcs_notice_of_intent_soil_fill_fields(batch_size)
 
 
 def process_notice_of_intent(batch_size):
@@ -48,7 +70,7 @@ def process_notice_of_intent(batch_size):
 
     process_notice_of_intent_empty_adjacent_land_use()
 
-    process_alcs_notice_of_intent_soil_fields(batch_size)
+    process_notice_of_intent_soil(batch_size)
 
     process_alcs_notice_of_intent_proposal_fields(batch_size)
 
@@ -65,6 +87,14 @@ def process_notice_of_intent(batch_size):
     process_alcs_notice_of_intent_received_by_alc_status()
 
     process_alcs_notice_of_intent_decision_released_status()
+
+    init_notice_of_intent_parcels(batch_size)
+
+    process_notice_of_intent_certificate_of_title(batch_size)
+
+    init_notice_of_intent_parcel_owners(batch_size)
+
+    link_notice_of_intent_owners_to_parcels(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

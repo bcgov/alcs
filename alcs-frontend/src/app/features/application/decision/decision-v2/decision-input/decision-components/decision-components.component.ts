@@ -51,7 +51,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private applicationDetailService: ApplicationDetailService,
     private submissionService: ApplicationSubmissionService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +84,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     switch (uiCode) {
       case 'COPY':
         const component: ApplicationDecisionComponentDto = {
+          endDate: this.application.proposalEndDate,
+          endDate2: this.application.proposalEndDate2,
           applicationDecisionComponentTypeCode: typeCode,
           alrArea: this.application.alrArea,
           agCap: this.application.agCap,
@@ -91,7 +93,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           agCapMap: this.application.agCapMap,
           agCapConsultant: this.application.agCapConsultant,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
           ),
           lots: this.application.submittedApplication?.subdProposedLots.map((lot, index) => ({
             ...lot,
@@ -120,8 +122,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
-          this.patchPofoFields(component);
-          this.patchRosoFields(component);
+          this.patchPfrsFields(component);
         }
 
         if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
@@ -150,7 +151,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
         this.components.unshift({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
           ),
         } as ApplicationDecisionComponentDto);
         break;
@@ -231,6 +232,12 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
 
   private setExpiryDateFields(component: ApplicationDecisionComponentDto) {
     component.expiryDate = this.application.proposalExpiryDate;
+  }
+
+  private patchPfrsFields(component: ApplicationDecisionComponentDto) {
+    this.patchPofoFields(component);
+    this.patchRosoFields(component);
+    component.endDate2 = this.application.proposalEndDate2;
   }
 
   private patchPofoFields(component: ApplicationDecisionComponentDto) {

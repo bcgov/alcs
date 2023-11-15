@@ -1,4 +1,3 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +18,7 @@ import { OtherAttachmentsComponent } from '../edit-submission/other-attachments/
 import { OtherParcelsComponent } from '../edit-submission/other-parcels/other-parcels.component';
 import { ParcelDetailsComponent } from '../edit-submission/parcel-details/parcel-details.component';
 import { PrimaryContactComponent } from '../edit-submission/primary-contact/primary-contact.component';
+import { CoveProposalComponent } from '../edit-submission/proposal/cove-proposal/cove-proposal.component';
 import { NfuProposalComponent } from '../edit-submission/proposal/nfu-proposal/nfu-proposal.component';
 import { PfrsProposalComponent } from '../edit-submission/proposal/pfrs-proposal/pfrs-proposal.component';
 import { PofoProposalComponent } from '../edit-submission/proposal/pofo-proposal/pofo-proposal.component';
@@ -66,6 +66,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   @ViewChild(PfrsProposalComponent) pfrsProposalComponent?: PfrsProposalComponent;
   @ViewChild(ExclProposalComponent) exclProposalComponent?: ExclProposalComponent;
   @ViewChild(InclProposalComponent) inclProposalComponent?: InclProposalComponent;
+  @ViewChild(CoveProposalComponent) coveProposalComponent?: CoveProposalComponent;
   @ViewChild(OtherAttachmentsComponent) otherAttachmentsComponent!: OtherAttachmentsComponent;
 
   constructor(
@@ -205,6 +206,9 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.inclProposalComponent) {
       await this.inclProposalComponent.onSave();
+    }
+    if (this.coveProposalComponent) {
+      await this.coveProposalComponent.onSave();
     }
   }
 

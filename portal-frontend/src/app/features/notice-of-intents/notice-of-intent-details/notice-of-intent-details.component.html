@@ -1,3 +1,4 @@
+<h2 *ngIf="showEdit" class="page-title">Review & Submit</h2>
 <section>
   <app-parcel
     [draftMode]="draftMode"
@@ -76,9 +77,7 @@
 <section>
   <h3>3. Government</h3>
   <div *ngIf="noiSubmission" class="review-table">
-    <div class="subheading2 grid-1">
-      Local or First Nation Government
-    </div>
+    <div class="subheading2 grid-1">Local or First Nation Government</div>
     <div class="grid-double">
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
@@ -100,16 +99,12 @@
     <div class="full-width">
       <h4>Land Use of Parcel(s) under Notice of Intent</h4>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agriculture that currently takes place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agriculture that currently takes place on the parcel(s).</div>
     <div class="grid-double">
       {{ noiSubmission.parcelsAgricultureDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsAgricultureDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all agricultural improvements made to the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all agricultural improvements made to the parcel(s).</div>
     <div class="grid-double">
       {{ noiSubmission.parcelsAgricultureImprovementDescription }}
       <app-no-data
@@ -117,17 +112,13 @@
         *ngIf="!noiSubmission.parcelsAgricultureImprovementDescription"
       ></app-no-data>
     </div>
-    <div class="subheading2 grid-1">
-      Describe all other uses that currently take place on the parcel(s).
-    </div>
+    <div class="subheading2 grid-1">Describe all other uses that currently take place on the parcel(s).</div>
     <div class="grid-double">
       {{ noiSubmission.parcelsNonAgricultureUseDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!noiSubmission.parcelsNonAgricultureUseDescription"></app-no-data>
     </div>
     <div class="full-width">
-      <h4>
-        Land Use of Adjacent Parcels
-      </h4>
+      <h4>Land Use of Adjacent Parcels</h4>
     </div>
     <div class="adjacent-parcels full-width">
       <div class="grid-1 subheading2"></div>

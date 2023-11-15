@@ -25,9 +25,9 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="noi-follow-up">
+      <mat-label for="noi-follow-up">
         Has the ALC previously received an application or Notice of Intent for this proposal?
-      </label>
+      </mat-label>
       <div class="subtext">If yes, provide the ALC Application or Notice of Intent ID in the field below</div>
       <div>
         <mat-button-toggle-group
@@ -127,7 +127,7 @@
       <div class="subtext">Characters left: {{ 4000 - soilTypeRemovedText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label>Proposal Dimensions</label>
+      <mat-label>Proposal Dimensions</mat-label>
       <div class="subtext">
         The Commission will consider your proposal dimensions when determining the potential impact it will have on the
         agricultural capability of the land.
@@ -140,7 +140,9 @@
       ></app-soil-table>
     </div>
     <div class="full-row">
-      <label> Of the proposed totals indicated above, please provide the dimensions of soil if already placed. </label>
+      <mat-label>
+        Of the proposed totals indicated above, please provide the dimensions of soil if already placed.
+      </mat-label>
       <div class="subtext">If no proposed material has already been placed, please leave 0 in the fields below</div>
       <app-soil-table
         tableHeader="Fill already placed"
@@ -154,7 +156,7 @@
       <div class="subtext">Estimated duration of the project</div>
       <div class="form-row">
         <div>
-          <label for="projectDurationUnit">Duration</label>
+          <mat-label for="projectDurationUnit">Duration</mat-label>
           <div class="subtext">Days, Months, or Years</div>
           <mat-form-field appearance="outline">
             <mat-select placeholder="Select one" id="projectDurationUnit" [formControl]="projectDurationUnit">
@@ -198,7 +200,7 @@
     </section>
 
     <div class="full-row">
-      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
       <app-file-drag-drop
         id="proposal-map"
@@ -213,7 +215,7 @@
     </div>
 
     <div class="full-row">
-      <label for="noi-follow-up"> Is your proposal for area-wide filling? </label>
+      <mat-label for="noi-extraction-or-mining"> Is your proposal for area-wide filling? </mat-label>
       <div>
         <mat-button-toggle-group
           class="input"
@@ -242,7 +244,7 @@
     </div>
 
     <div class="full-row">
-      <label class="subheading2" for="cross-section">Cross Sections</label>
+      <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
       <div class="subtext">Include North-South and East-West cross sections</div>
       <app-info-banner>
         Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
@@ -261,7 +263,7 @@
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="reclamation-plan">Reclamation Plan</label>
+      <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
       <div class="subtext">
         The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
         agricultural capability assessment.

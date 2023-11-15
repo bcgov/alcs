@@ -19,7 +19,7 @@
         <input
           matInput
           class="editable"
-          mask="separator.2"
+          [mask]="'separator.' + decimals"
           thousandSeparator=","
           separatorLimit="99999999"
           name="value"

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   Column,
   Entity,
@@ -33,8 +33,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the decision component',
   })
@@ -90,14 +90,21 @@ export class ApplicationDecisionComponent extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` end date',
+    comment: 'Components end date',
     nullable: true,
   })
   endDate?: Date | null;
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` expiry date',
+    comment: 'Components second end date (PFRS only)',
+    nullable: true,
+  })
+  endDate2?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'Components expiry date',
     nullable: true,
   })
   expiryDate?: Date | null;
@@ -120,8 +127,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -164,8 +171,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;

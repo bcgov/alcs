@@ -2,8 +2,8 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -321,6 +321,11 @@ export class NoticeOfIntentService {
     noticeOfIntent.proposalEndDate = filterUndefined(
       formatIncomingDate(updateDto.proposalEndDate),
       noticeOfIntent.proposalEndDate,
+    );
+
+    noticeOfIntent.proposalEndDate2 = filterUndefined(
+      formatIncomingDate(updateDto.proposalEndDate2),
+      noticeOfIntent.proposalEndDate2,
     );
 
     await this.repository.save(noticeOfIntent);

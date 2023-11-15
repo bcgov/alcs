@@ -1,6 +1,6 @@
 <form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
-    <label>Select ownership type:</label>
+    <mat-label for="parcelType">Select ownership type:</mat-label>
     <div class="warning">
       The answer to the following question will change the rest of the application form. Do not change this answer once
       selected.
@@ -87,7 +87,7 @@
       <mat-form-field class="full-width-input" appearance="outline">
         <input
           id="map-area"
-          mask="separator.2"
+          mask="separator.5"
           thousandSeparator=","
           separatorLimit="9999999999"
           matInput
@@ -147,7 +147,7 @@
     </div>
 
     <div>
-      <label for="isFarm">Farm Classification</label>
+      <mat-label for="isFarm">Farm Classification</mat-label>
       <div class="subtext">
         As determined by
         <a class="subtext" href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
@@ -183,7 +183,7 @@
   </div>
 
   <div class="section" *ngIf="enableCertificateOfTitleUpload">
-    <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+    <mat-label for="certificate-of-title-upload">Upload Certificate of Title</mat-label>
     <div class="subtext">
       Visit
       <a href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank">BC Land Title & Survey</a>
@@ -273,9 +273,7 @@
       </div>
     </ng-container>
     <ng-container *ngIf="isCrownLand">
-      <div>
-        <label for="crown-owner-type">Select owner:</label>
-      </div>
+      <mat-label for="crown-owner-type">Select owner:</mat-label>
       <mat-radio-group
         formControlName="crownLandOwnerType"
         class="crown-owner-type"

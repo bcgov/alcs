@@ -51,7 +51,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   }
 
   ngAfterViewInit(): void {
-    setTimeout((_) => this.componentInitialized.emit(true));
+    setTimeout(() => this.componentInitialized.emit(true));
   }
 
   openParcel(index: string) {
