@@ -1,7 +1,23 @@
+@use '../../../../../../styles/functions' as *;
+
 .soil-table {
   display: grid;
-  grid-template-columns: max-content max-content;
   overflow-x: auto;
-  grid-column-gap: 36px;
-  grid-row-gap: 12px;
+  grid-column-gap: rem(36);
+  grid-row-gap: rem(12);
+  grid-template-columns: max-content max-content;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 0.55fr 1fr;
+  }
+
+  @media screen and (min-width: $midBreakpoint) {
+    grid-template-columns: 0.95fr 1fr;
+    grid-column-gap: rem(16);
+  }
+
+  .spacer-row {
+    grid-column: 1/4;
+    height: rem(16);
+  }
 }

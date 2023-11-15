@@ -33,6 +33,42 @@
     <app-no-data *ngIf="!noiSubmission.soilFillTypeToPlace"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="noiSubmission.fillProjectDurationAmount && noiSubmission.fillProjectDurationAmount">
+      {{ noiSubmission.fillProjectDurationAmount }}
+      <ng-container [ngPlural]="noiSubmission.fillProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ noiSubmission.fillProjectDurationUnit?.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ noiSubmission.fillProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!noiSubmission.fillProjectDurationAmount || !noiSubmission.fillProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Removal of Fill Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="noiSubmission.soilProjectDurationAmount && noiSubmission.soilProjectDurationAmount">
+      {{ noiSubmission.soilProjectDurationAmount }}
+      <ng-container [ngPlural]="noiSubmission.soilProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ noiSubmission.soilProjectDurationUnit?.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ noiSubmission.soilProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!noiSubmission.soilProjectDurationAmount || !noiSubmission.soilProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
   <div *ngIf="noiSubmission" class="full-width soil-table">
     <div></div>
     <div>
@@ -147,34 +183,6 @@
       <span *ngIf="noiSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
       <app-no-data *ngIf="noiSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
     </div>
-  </div>
-
-  <div class="full-width">
-    <span class="subheading1">Placement of Fill Project Duration</span>
-  </div>
-  <div class="subheading2 grid-1">Duration</div>
-  <div class="grid-double">
-    {{ noiSubmission.fillProjectDurationUnit }}
-    <app-no-data *ngIf="!noiSubmission.fillProjectDurationUnit"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Length</div>
-  <div class="grid-double">
-    {{ noiSubmission.fillProjectDurationAmount }}
-    <app-no-data *ngIf="!noiSubmission.fillProjectDurationAmount"></app-no-data>
-  </div>
-
-  <div class="full-width">
-    <span class="subheading1">Removal of Soil Project Duration</span>
-  </div>
-  <div class="subheading2 grid-1">Duration</div>
-  <div class="grid-double">
-    {{ noiSubmission.soilProjectDurationUnit }}
-    <app-no-data *ngIf="!noiSubmission.soilProjectDurationUnit"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Length</div>
-  <div class="grid-double">
-    {{ noiSubmission.soilProjectDurationAmount }}
-    <app-no-data *ngIf="!noiSubmission.soilProjectDurationAmount"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
