@@ -45,7 +45,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
     public data: { fileId: string; decisionUuid: string; existingDocument?: NoticeOfIntentDecisionDocumentDto },
     protected dialog: MatDialogRef<any>,
     private decisionService: NoticeOfIntentDecisionV2Service,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +67,6 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       if (this.data.existingDocument) {
         await this.decisionService.deleteFile(this.data.decisionUuid, this.data.existingDocument.uuid);
       }
-      await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
 
       try {
         await this.decisionService.uploadFile(this.data.decisionUuid, renamedFile);
@@ -119,7 +118,7 @@ export class DecisionDocumentUploadDialogComponent implements OnInit {
       await this.decisionService.downloadFile(
         this.data.decisionUuid,
         this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName
+        this.data.existingDocument.fileName,
       );
     }
   }
