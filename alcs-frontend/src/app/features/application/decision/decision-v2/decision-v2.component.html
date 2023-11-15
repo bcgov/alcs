@@ -340,8 +340,10 @@
           </div>
           <div *ngIf="decision.chairReviewRequired">
             <div class="subheading2">Chair Review Outcome</div>
-            <span *ngIf="decision.chairReviewOutcome !== null">{{ decision.chairReviewOutcome.label }}</span>
-            <app-no-data *ngIf="decision.chairReviewOutcome === null"></app-no-data>
+            <app-inline-chair-review-outcome
+              [selectedValue]="decision.chairReviewOutcome?.code"
+              (save)="onSaveChairReviewOutcome(decision.uuid, $event)"
+            ></app-inline-chair-review-outcome>
           </div>
         </div>
       </section>

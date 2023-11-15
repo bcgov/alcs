@@ -51,7 +51,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
     private toastService: ToastService,
     private applicationDetailService: ApplicationDetailService,
     private submissionService: ApplicationSubmissionService,
-    private confirmationDialogService: ConfirmationDialogService
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +81,6 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
   }
 
   onAddNewComponent(uiCode: string, typeCode: string) {
-    debugger;
     switch (uiCode) {
       case 'COPY':
         const component: ApplicationDecisionComponentDto = {
@@ -94,7 +93,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
           agCapMap: this.application.agCapMap,
           agCapConsultant: this.application.agCapConsultant,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
           ),
           lots: this.application.submittedApplication?.subdProposedLots.map((lot, index) => ({
             ...lot,
@@ -152,7 +151,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterView
         this.components.unshift({
           applicationDecisionComponentTypeCode: typeCode,
           applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
           ),
         } as ApplicationDecisionComponentDto);
         break;
