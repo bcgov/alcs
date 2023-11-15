@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { BaseCodeDto } from '../common/dtos/base.dto';
 import { User } from '../user/user.entity';
 

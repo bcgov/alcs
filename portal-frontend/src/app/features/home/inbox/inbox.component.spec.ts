@@ -17,10 +17,12 @@ describe('InboxComponent', () => {
   let fixture: ComponentFixture<InboxComponent>;
   let mockInboxService: DeepMocked<InboxService>;
   let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockCodeService: DeepMocked<CodeService>;
 
   beforeEach(async () => {
     mockInboxService = createMock();
     mockAuthService = createMock();
+    mockCodeService = createMock();
 
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
@@ -34,7 +36,7 @@ describe('InboxComponent', () => {
         },
         {
           provide: CodeService,
-          useValue: {},
+          useValue: mockCodeService,
         },
         {
           provide: StatusService,
@@ -54,6 +56,24 @@ describe('InboxComponent', () => {
 
     fixture = TestBed.createComponent(InboxComponent);
     component = fixture.componentInstance;
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
+    mockInboxService.listStatuses.mockResolvedValue({
+      application: [],
+      noticeOfIntent: [],
+      notification: [],
+    });
+
     fixture.detectChanges();
   });
 

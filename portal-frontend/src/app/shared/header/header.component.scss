@@ -2,8 +2,18 @@
 @use '../../../styles/colors' as colors;
 
 ::ng-deep {
+  .user-menu-button {
+    position: relative;
+  }
+
   .user-menu {
     max-width: unset !important;
+    border-radius: rem(4);
+    position: absolute;
+    margin: 0;
+    padding: rem(8) 0;
+    background-color: colors.$white;
+    z-index: 2;
   }
 }
 
@@ -123,6 +133,10 @@ header {
   @media screen and (min-width: $desktopBreakpoint) {
     .title-wrapper {
       margin: rem(18) rem(80) !important;
+    }
+
+    .user-menu {
+      margin-left: rem(4);
     }
   }
 }

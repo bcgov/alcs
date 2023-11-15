@@ -62,6 +62,18 @@ describe('NoticeOfIntentDetailsComponent', () => {
       undefined
     );
     component.$noiDocuments = noiDocumentPipe;
+
+    mockCodeService.loadCodes.mockResolvedValue({
+      localGovernments: [],
+      applicationTypes: [],
+      decisionMakers: [],
+      documentTypes: [],
+      naruSubtypes: [],
+      noticeOfIntentTypes: [],
+      regions: [],
+      submissionTypes: [],
+    });
+
     fixture.detectChanges();
   });
 

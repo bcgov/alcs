@@ -39,13 +39,13 @@ const TREE_DATA: TreeNode[] = [
         item: { label: 'Removal of Soil and Placement of Fill', value: 'PFRS' },
       },
       {
-        item: { label: 'Removal of Soil Only', value: 'ROSO' },
+        item: { label: 'Removal of Soil', value: 'ROSO' },
       },
       {
         item: { label: 'Subdivision', value: 'SUBD' },
       },
       {
-        item: { label: 'Transportation, Utility, Trail Permits', value: 'TURP' },
+        item: { label: 'Transportation, Utility, or Recreational Trail', value: 'TURP' },
       },
       {
         item: { label: 'Restrictive Covenant', value: 'COVE' },

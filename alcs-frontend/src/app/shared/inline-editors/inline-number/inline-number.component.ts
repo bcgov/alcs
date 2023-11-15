@@ -8,6 +8,7 @@ import { AfterContentChecked, Component, ElementRef, EventEmitter, Input, Output
 export class InlineNumberComponent implements AfterContentChecked {
   @Input() value?: string | undefined;
   @Input() placeholder: string = 'Enter a value';
+  @Input() decimals = 2;
   @Output() save = new EventEmitter<string | null>();
 
   @ViewChild('editInput') textInput!: ElementRef;

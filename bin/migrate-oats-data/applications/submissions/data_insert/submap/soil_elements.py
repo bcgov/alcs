@@ -85,8 +85,7 @@ def map_soil_data(data, soil_data):
     data["import_fill"] = soil_data.get(data[app_component_id], {}).get(
         "import_fill", None
     )
-    data["fill_duration_unit"] = "months"
-    data["remove_duration_unit"] = "months"
+    data["duration_unit"] = "months"
     data["remove_type"] = soil_data.get(data[app_component_id], {}).get(
         "remove_type", None
     )
@@ -128,8 +127,7 @@ def add_soil_field(data):
     data["remove_duration"] = None
     data["duration"] = None
     data["remove_area"] = None
-    data["fill_duration_unit"] = None
-    data["remove_duration_unit"] = None
+    data["duration_unit"] = None
     data["alternative_measures_desc"] = None
     return data
 

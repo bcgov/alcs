@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { NotificationTransfereeDto } from '../../portal/notification-submission/notification-transferee/notification-transferee.dto';
 import { NotificationTransferee } from '../../portal/notification-submission/notification-transferee/notification-transferee.entity';

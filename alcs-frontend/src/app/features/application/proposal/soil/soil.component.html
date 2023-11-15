@@ -1,9 +1,27 @@
-<div>
+<div *ngIf="submission?.typeCode !== 'PFRS'">
   <div class="subheading2">Use End Date</div>
   <app-inline-datepicker
     [value]="application?.proposalEndDate"
     (save)="updateApplicationValue('proposalEndDate', $event)"
   ></app-inline-datepicker>
+</div>
+
+<div class="input-table">
+  <div *ngIf="submission?.typeCode === 'PFRS'">
+    <div class="subheading2">Use End Date (Placement of Fill)</div>
+    <app-inline-datepicker
+      [value]="application?.proposalEndDate2"
+      (save)="updateApplicationValue('proposalEndDate2', $event)"
+    ></app-inline-datepicker>
+  </div>
+
+  <div *ngIf="submission?.typeCode === 'PFRS'">
+    <div class="subheading2">Use End Date (Removal of Soil)</div>
+    <app-inline-datepicker
+      [value]="application?.proposalEndDate"
+      (save)="updateApplicationValue('proposalEndDate', $event)"
+    ></app-inline-datepicker>
+  </div>
 </div>
 
 <div *ngIf="submission?.soilFillTypeToPlace">

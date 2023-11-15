@@ -18,16 +18,16 @@
       </a>
     </li>
     <li>
-      <a href="TODO" target="_blank">FIXME: Placement of Fill</a>
+      <a href="TODO" target="_blank">FIXME: Removal of Soil & Placement of Fill</a>
     </li>
   </ul>
 </app-warning-banner>
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="noi-follow-up">
+      <mat-label for="noi-follow-up">
         Has the ALC previously received an application or Notice of Intent for this proposal?
-      </label>
+      </mat-label>
       <div class="subtext">If yes, provide the ALC Application or Notice of Intent ID in the field below</div>
       <div>
         <mat-button-toggle-group
@@ -147,7 +147,7 @@
     </div>
 
     <div class="full-row">
-      <label>Proposal Dimensions</label>
+      <mat-label>Proposal Dimensions</mat-label>
       <div class="subtext">
         Please provide accurate numbers that align with your cross sections, reclamation plan, and site plan. The
         Commission will consider your proposal dimensions when determining the potential impact it will have on the
@@ -177,9 +177,9 @@
       ></app-soil-table>
     </div>
     <div class="full-row">
-      <label
+      <mat-label
         >Of the proposed totals provided above, please input the dimensions of soil that has already been
-        removed.</label
+        removed.</mat-label
       >
       <div class="subtext">If no proposed soil has already been removed, please leave 0 in the fields below</div>
       <app-soil-table
@@ -205,56 +205,114 @@
       ></app-soil-table>
     </div>
 
-    <section>
-      <h4>Project Duration</h4>
+    <div class="full-row">
+      <h4>Placement of Fill Project Duration</h4>
       <div class="subtext">Estimated duration of the project</div>
       <div class="form-row">
         <div>
-          <label for="projectDurationUnit">Duration</label>
+          <label for="fillProjectDurationUnit">Duration</label>
           <div class="subtext">Days, Months, or Years</div>
           <mat-form-field appearance="outline">
-            <mat-select placeholder="Select one" id="projectDurationUnit" [formControl]="projectDurationUnit">
+            <mat-select placeholder="Select one" id="fillProjectDurationUnit" formControlName="fillProjectDurationUnit">
               <mat-option value="days">Days</mat-option>
               <mat-option value="months">Months</mat-option>
               <mat-option value="years">Years</mat-option>
             </mat-select>
           </mat-form-field>
           <div
-            *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+            *ngIf="
+              fillProjectDurationUnit.invalid && (fillProjectDurationUnit.dirty || fillProjectDurationUnit.touched)
+            "
             class="field-error"
           >
             <mat-icon>warning</mat-icon>
-            <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+            <div *ngIf="fillProjectDurationUnit.errors?.['required']">This field is required</div>
           </div>
         </div>
         <div>
-          <label for="projectDurationAmount">Length</label>
+          <label for="fillProjectDurationUnit">Length</label>
           <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
           <mat-form-field appearance="outline">
             <input
-              id="projectDurationAmount"
+              id="fillProjectDurationAmount"
               mask="separator.2"
               thousandSeparator=","
               separatorLimit="9999999999"
               min="0.01"
               matInput
-              [formControl]="projectDurationAmount"
+              formControlName="fillProjectDurationAmount"
               placeholder="Type length"
             />
           </mat-form-field>
           <div
-            *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+            *ngIf="
+              fillProjectDurationAmount.invalid &&
+              (fillProjectDurationAmount.dirty || fillProjectDurationAmount.touched)
+            "
             class="field-error"
           >
             <mat-icon>warning</mat-icon>
-            <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+            <div *ngIf="fillProjectDurationAmount.errors?.['required']">This field is required</div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
 
     <div class="full-row">
-      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <h4>Removal of Soil Project Duration</h4>
+      <div class="subtext">Estimated duration of the project</div>
+      <div class="form-row">
+        <div>
+          <mat-label for="soilProjectDurationUnit">Duration</mat-label>
+          <div class="subtext">Days, Months, or Years</div>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Select one" id="soilProjectDurationUnit" formControlName="soilProjectDurationUnit">
+              <mat-option value="days">Days</mat-option>
+              <mat-option value="months">Months</mat-option>
+              <mat-option value="years">Years</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div
+            *ngIf="
+              soilProjectDurationUnit.invalid && (soilProjectDurationUnit.dirty || soilProjectDurationUnit.touched)
+            "
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="soilProjectDurationUnit.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="soilProjectDurationUnit">Length</label>
+          <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
+          <mat-form-field appearance="outline">
+            <input
+              id="soilProjectDurationAmount"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              min="0.01"
+              matInput
+              formControlName="soilProjectDurationAmount"
+              placeholder="Type length"
+            />
+          </mat-form-field>
+          <div
+            *ngIf="
+              soilProjectDurationAmount.invalid &&
+              (soilProjectDurationAmount.dirty || soilProjectDurationAmount.touched)
+            "
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="soilProjectDurationAmount.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="full-row">
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
       <app-file-drag-drop
         id="proposal-map"
@@ -269,7 +327,7 @@
     </div>
 
     <div class="full-row">
-      <label for="noi-area-wide-filling"> Is your proposal for area-wide filling? </label>
+      <mat-label for="noi-area-wide-filling"> Is your proposal for area-wide filling? </mat-label>
       <div>
         <mat-button-toggle-group
           class="input"
@@ -298,7 +356,9 @@
     </div>
 
     <div class="full-row">
-      <label for="noi-extraction-or-mining"> Is your proposal for aggregate extraction or placer mining? </label>
+      <mat-label for="noi-extraction-or-mining">
+        Is your proposal for aggregate extraction or placer mining?
+      </mat-label>
       <div>
         <mat-button-toggle-group
           class="input"
@@ -329,7 +389,7 @@
     </div>
 
     <div class="full-row">
-      <label class="subheading2" for="cross-section">Cross Sections</label>
+      <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
       <div class="subtext">Include North-South and East-West cross sections</div>
       <app-info-banner>
         Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
@@ -348,7 +408,7 @@
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="reclamation-plan">Reclamation Plan</label>
+      <mat-label class="subheading2" for="reclamation-plan">Reclamation Plan</mat-label>
       <div class="subtext">
         The Reclamation Plan should be completed by a qualified Professional Agrologist and contain the area's
         agricultural capability assessment.
@@ -371,9 +431,9 @@
     </div>
 
     <div class="full-row">
-      <label for="hasSubmittedNotice">
+      <mat-label for="hasSubmittedNotice">
         Have you submitted a Notice of Work to the Ministry of Energy, Mines and Low Carbon Innovation (EMLI)?
-      </label>
+      </mat-label>
       <div class="subtext">If yes, please attach the Notice of Work in the section below.</div>
       <div>
         <mat-button-toggle-group
@@ -403,7 +463,7 @@
     </div>
 
     <div class="full-row">
-      <label class="subheading2" for="noticeOfWork">Notice of Work</label>
+      <mat-label class="subheading2" for="noticeOfWork">Notice of Work</mat-label>
       <app-info-banner>
         Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
       </app-info-banner>

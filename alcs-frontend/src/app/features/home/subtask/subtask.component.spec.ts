@@ -16,6 +16,7 @@ describe('AuditComponent', () => {
   let fixture: ComponentFixture<SubtaskComponent>;
   let mockUserService: DeepMocked<UserService>;
   let mockAuthenticationService: DeepMocked<AuthenticationService>;
+  let mockHomeService: DeepMocked<HomeService>;
 
   beforeEach(async () => {
     mockUserService = createMock();
@@ -23,6 +24,8 @@ describe('AuditComponent', () => {
 
     mockAuthenticationService = createMock();
     mockAuthenticationService.$currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+
+    mockHomeService = createMock();
 
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],
@@ -39,7 +42,7 @@ describe('AuditComponent', () => {
           provide: UserService,
           useValue: mockUserService,
         },
-        { provide: HomeService, useValue: {} },
+        { provide: HomeService, useValue: mockHomeService },
       ],
       declarations: [SubtaskComponent],
       schemas: [NO_ERRORS_SCHEMA],

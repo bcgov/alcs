@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
-  async ngOnInit() {
+  ngOnInit() {
     this.authenticationService.getToken(false);
     this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
       if (user) {

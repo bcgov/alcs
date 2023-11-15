@@ -1,6 +1,6 @@
 <form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
-    <label>Select ownership type:</label>
+    <mat-label for="parcelType">Select ownership type:</mat-label>
     <div class="warning">
       The answer to the following question will change the rest of the notice of intent form. Do not change this answer
       once selected.
@@ -147,7 +147,7 @@
     </div>
 
     <div>
-      <label for="isFarm">Farm Classification</label>
+      <mat-label for="isFarm">Farm Classification</mat-label>
       <div class="subtext">
         As determined by
         <a class="subtext" href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
@@ -183,7 +183,7 @@
   </div>
 
   <div class="section" *ngIf="enableCertificateOfTitleUpload">
-    <label for="certificate-of-title-upload">Upload Certificate of Title</label>
+    <mat-label for="certificate-of-title-upload">Upload Certificate of Title</mat-label>
     <div class="subtext">
       Visit
       <a class="subtext" href="https://ltsa.ca/property-owners/how-can-i/search-for-a-title/" target="_blank"
@@ -276,7 +276,7 @@
     </ng-container>
     <ng-container *ngIf="isCrownLand">
       <div>
-        <label for="crown-owner-type">Select owner:</label>
+        <mat-label for="crown-owner-type">Select owner:</mat-label>
       </div>
       <mat-radio-group
         formControlName="crownLandOwnerType"

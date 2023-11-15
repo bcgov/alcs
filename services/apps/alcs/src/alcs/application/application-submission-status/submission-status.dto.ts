@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
 export enum SUBMISSION_STATUS {
@@ -13,6 +13,7 @@ export enum SUBMISSION_STATUS {
   IN_REVIEW_BY_ALC = 'REVA', //Under Review by ALC
   ALC_DECISION = 'ALCD', // Decision Released
   REFUSED_TO_FORWARD_LG = 'RFFG', //L/FNG Refused to Forward
+  RETURNED_TO_LG = 'INCG', //Returned to L/FNG from ALC
   CANCELLED = 'CANC',
 }
 

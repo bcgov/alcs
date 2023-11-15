@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { Card } from '../alcs/card/card.entity';
 import { CommentMention } from '../alcs/comment/mention/comment-mention.entity';

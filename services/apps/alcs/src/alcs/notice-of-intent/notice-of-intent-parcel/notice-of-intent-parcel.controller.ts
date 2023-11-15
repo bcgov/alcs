@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
@@ -17,9 +17,8 @@ export class NoticeOfIntentParcelController {
   @UserRoles(...ANY_AUTH_ROLE)
   @Get('/:fileNumber')
   async get(@Param('fileNumber') fileNumber: string) {
-    const parcels = await this.applicationParcelService.fetchByFileId(
-      fileNumber,
-    );
+    const parcels =
+      await this.applicationParcelService.fetchByFileId(fileNumber);
 
     return this.mapper.mapArray(
       parcels,

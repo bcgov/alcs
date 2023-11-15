@@ -38,7 +38,7 @@ export const CONDITION_STATUS = {
 };
 
 @Component({
-  selector: 'app-conditions',
+  selector: 'app-noi-conditions',
   templateUrl: './conditions.component.html',
   styleUrls: ['./conditions.component.scss'],
 })

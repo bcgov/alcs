@@ -6,12 +6,7 @@ WITH nois_with_one_or_zero_component_only AS (
         AND oaa.application_class_code = 'NOI'
     GROUP BY oaac.alr_application_id
     HAVING count(oaac.alr_application_id) < 2
-),
-grouped_adjacent_land_uses_by_application_id AS (
-    SELECT count(oalu.alr_application_id)
-    FROM oats.oats_adjacent_land_uses oalu
-        JOIN nois_with_one_or_zero_component_only ON oalu.alr_application_id = nois_with_one_or_zero_component_only.alr_application_id
-    GROUP BY oalu.alr_application_id
 )
 SELECT count(*)
-FROM grouped_adjacent_land_uses_by_application_id;
+FROM oats.oats_adjacent_land_uses oalu
+    JOIN nois_with_one_or_zero_component_only ON oalu.alr_application_id = nois_with_one_or_zero_component_only.alr_application_id

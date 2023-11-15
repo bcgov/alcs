@@ -52,6 +52,8 @@ describe('ApplicationDetailsComponent', () => {
       soilToPlaceVolume: null,
       soilToRemoveAverageDepth: null,
       soilToRemoveMaximumDepth: null,
+      fillProjectDurationAmount: null,
+      fillProjectDurationUnit: null,
       status: {} as ApplicationStatus,
       type: '',
       uuid: '',

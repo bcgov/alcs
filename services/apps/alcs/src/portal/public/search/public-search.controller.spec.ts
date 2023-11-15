@@ -1,28 +1,22 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { Application } from '../../../alcs/application/application.entity';
-import { NoticeOfIntent } from '../../../alcs/notice-of-intent/notice-of-intent.entity';
-import { Notification } from '../../../alcs/notification/notification.entity';
 import { PublicApplicationSearchService } from './application/public-application-search.service';
 import { PublicNoticeOfIntentSearchService } from './notice-of-intent/public-notice-of-intent-search.service';
 import { PublicNotificationSearchService } from './notification/public-notification-search.service';
 import { PublicSearchController } from './public-search.controller';
 import { SearchRequestDto } from './public-search.dto';
-import { PublicSearchService } from './public-search.service';
 
 describe('PublicSearchController', () => {
   let controller: PublicSearchController;
-  let mockSearchService: DeepMocked<PublicSearchService>;
   let mockNOIPublicSearchService: DeepMocked<PublicNoticeOfIntentSearchService>;
   let mockAppPublicSearchService: DeepMocked<PublicApplicationSearchService>;
   let mockNotiPublicSearchService: DeepMocked<PublicNotificationSearchService>;
 
   beforeEach(async () => {
-    mockSearchService = createMock();
     mockNOIPublicSearchService = createMock();
     mockAppPublicSearchService = createMock();
     mockNotiPublicSearchService = createMock();
@@ -56,10 +50,6 @@ describe('PublicSearchController', () => {
     }).compile();
 
     controller = module.get<PublicSearchController>(PublicSearchController);
-
-    mockSearchService.getApplication.mockResolvedValue(new Application());
-    mockSearchService.getNoi.mockResolvedValue(new NoticeOfIntent());
-    mockSearchService.getNotification.mockResolvedValue(new Notification());
 
     mockNOIPublicSearchService.searchNoticeOfIntents.mockResolvedValue({
       data: [],

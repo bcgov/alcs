@@ -23,7 +23,7 @@
       <mat-form-field appearance="outline">
         <input
           id="hectares"
-          mask="separator.2"
+          mask="separator.5"
           thousandSeparator=","
           separatorLimit="9999999999"
           min="0.01"
@@ -102,7 +102,7 @@
       <div class="subtext">Characters left: {{ 4000 - agricultureSupportText.textLength }}</div>
     </div>
     <div class="full-row">
-      <label class="subheading2" for="proposal-map">Proposal Map / Site Plan</label>
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
       <div class="subtext">A visual representation of your proposal.</div>
       <app-file-drag-drop
         id="proposal-map"
@@ -116,9 +116,9 @@
       ></app-file-drag-drop>
     </div>
     <div class="full-row">
-      <label for="will-import-fill">
+      <mat-label for="will-import-fill">
         Do you need to import any fill to construct or conduct the proposed Non-farm use?
-      </label>
+      </mat-label>
       <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
       <mat-button-toggle-group
         (change)="onChangeFill($event.value)"
@@ -206,7 +206,7 @@
     <div class="subtext">Estimated duration of the project</div>
     <div class="form-row">
       <div>
-        <label for="projectDurationUnit">Duration</label>
+        <mat-label for="projectDurationUnit">Duration</mat-label>
         <div class="subtext">Days, Months, or Years</div>
         <mat-form-field appearance="outline">
           <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
 
@@ -34,6 +34,10 @@ export class UpdateNoticeOfIntentDecisionComponentDto {
   @IsOptional()
   @IsNumber()
   endDate?: number;
+
+  @IsOptional()
+  @IsNumber()
+  endDate2?: number;
 
   @IsOptional()
   @IsNumber()
@@ -105,10 +109,8 @@ export class NoticeOfIntentDecisionComponentDto {
   @AutoMap()
   agCapConsultant?: string;
 
-  @AutoMap()
   endDate?: number;
-
-  @AutoMap()
+  endDate2?: number;
   expiryDate?: number;
 
   @AutoMap()

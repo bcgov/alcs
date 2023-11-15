@@ -46,7 +46,7 @@
         </div>
       </div>
       <div>
-        <label for="civicAddress">Local/First Nation Government</label>
+        <label for="government">Local/First Nation Government</label>
         <mat-form-field appearance="outline">
           <input
             (blur)="onBlur()"
@@ -64,7 +64,7 @@
         </mat-form-field>
       </div>
       <div>
-        <label for="status">Region</label>
+        <mat-label for="region">Region</mat-label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" id="region" formControlName="region">
             <mat-option *ngFor="let region of regions" [value]="region.code">{{ region.label }}</mat-option>
@@ -72,9 +72,9 @@
         </mat-form-field>
       </div>
       <div>
-        <label for="decision">Decision Outcome</label>
+        <label for="decisionOutcome">Decision Outcome</label>
         <mat-form-field appearance="outline">
-          <mat-select multiple="true" id="decision" [formControl]="portalDecisionOutcomeControl">
+          <mat-select multiple="true" id="decisionOutcome" [formControl]="portalDecisionOutcomeControl">
             <mat-option *ngFor="let decision of DECISION_MAP" [value]="decision[1]">
               {{ decision[0] }}
             </mat-option>
@@ -82,7 +82,7 @@
         </mat-form-field>
       </div>
       <div>
-        <label for="status">Decision Maker</label>
+        <mat-label for="decisionMaker">Decision Maker</mat-label>
         <mat-form-field appearance="outline">
           <mat-select id="decisionMaker" formControlName="decisionMaker">
             <mat-option *ngFor="let decisionMaker of decisionMakers" [value]="decisionMaker.code">{{
@@ -100,7 +100,7 @@
         />
       </div>
       <div>
-        <label for="status">Status</label>
+        <mat-label for="status">Status</mat-label>
         <mat-form-field appearance="outline">
           <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
             <mat-option *ngFor="let status of STATUS_MAP" [value]="status[1]">
@@ -110,11 +110,11 @@
         </mat-form-field>
       </div>
       <div class="full-width">
-        <label for="status">Decision Dates</label>
+        <mat-label for="decisionDates">Decision Dates</mat-label>
         <mat-form-field appearance="outline">
           <mat-date-range-input [max]="today" [rangePicker]="decisionDatePicker">
-            <input matStartDate formControlName="dateDecidedFrom" />
-            <input matEndDate formControlName="dateDecidedTo" />
+            <input matStartDate formControlName="dateDecidedFrom" aria-label="date-decided-from" />
+            <input matEndDate formControlName="dateDecidedTo" aria-label="date-decided-to" />
           </mat-date-range-input>
           <mat-datepicker-toggle matIconSuffix [for]="decisionDatePicker"></mat-datepicker-toggle>
           <mat-date-range-picker #decisionDatePicker></mat-date-range-picker
@@ -132,7 +132,7 @@
     <mat-spinner></mat-spinner>
   </div>
   <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
-    <h2 class="search-title">Search Results</h2>
+    <h3 class="search-title">Search Results</h3>
     <div *ngIf="isLoading && !searchResultsHidden" class="center">
       <mat-spinner></mat-spinner>
     </div>

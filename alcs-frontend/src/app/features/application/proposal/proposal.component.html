@@ -4,7 +4,7 @@
   <div class="input-table">
     <div>
       <div class="subheading2">Proposal ALR Area Impacted (ha)</div>
-      <app-inline-number [value]="alrArea" (save)="onSaveAlrArea($event)"></app-inline-number>
+      <app-inline-number [value]="alrArea" (save)="onSaveAlrArea($event)" [decimals]="5"></app-inline-number>
     </div>
     <div>
       <div class="subheading2">Agricultural Capability</div>

@@ -4,12 +4,12 @@
   </div>
   <div class="banner-status">
     <div>
-      <div class="subheading2">Application Status</div>
-      <span *ngIf="application">{{ application.status.label }}</span>
-    </div>
-    <div>
       <div class="subheading2">Status Date</div>
       <span *ngIf="application">{{ application.lastStatusUpdate | date }}</span>
+    </div>
+    <div>
+      <div class="subheading2">Application Status</div>
+      <span *ngIf="application">{{ application.status.label }}</span>
     </div>
   </div>
 </div>
@@ -36,7 +36,7 @@
         <div *ngIf="application" class="content">
           <section>
             <div class="header">
-              <h3>Applicant Submission</h3>
+              <h2>Applicant Submission</h2>
               <div class="btns-wrapper">
                 <button
                   *ngIf="application.canEdit || application.canReview"
@@ -66,6 +66,17 @@
                   Download PDF
                 </button>
               </div>
+            </div>
+            <div
+              *ngIf="
+                application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+                application.status.code === SUBMISSION_STATUS.INCOMPLETE
+              "
+              class="comment-container"
+            >
+              <div><strong>Comment for Applicant</strong></div>
+              {{ application.returnedComment }}
+              <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
             </div>
             <app-application-details
               [showEdit]="false"
@@ -125,7 +136,10 @@
   <button (click)="onReview(application.fileNumber)" mat-button>
     <div>
       <span
-        *ngIf="application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG"
+        *ngIf="
+          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
+        "
         (click)="onReview(application.fileNumber)"
         class="subheading2"
         >Continue Application Review</span

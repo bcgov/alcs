@@ -6,7 +6,7 @@ import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto
 import { decisionChildRoutes } from './decision.module';
 
 @Component({
-  selector: 'app-decision',
+  selector: 'app-app-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
 })

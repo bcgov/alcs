@@ -93,25 +93,10 @@ mat-form-field.mat-form-field-disabled {
 }
 
 form {
-  label {
+  label,
+  mat-label {
     font-weight: 700;
     font-size: rem(13) !important;
-
-    &:has(+ .mat-form-field-disabled) {
-      color: colors.$grey;
-    }
-
-    &:has(+ div ~ mat-form-field.mat-form-field-disabled) {
-      color: colors.$grey;
-    }
-
-    &:has(+ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
-      color: colors.$grey;
-    }
-
-    &:has(+ div ~ mat-button-toggle-group mat-button-toggle.mat-button-toggle-disabled) {
-      color: colors.$grey;
-    }
 
     @media screen and (min-width: $tabletBreakpoint) {
       & {

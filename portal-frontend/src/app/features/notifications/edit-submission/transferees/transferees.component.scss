@@ -2,7 +2,7 @@
 @use '../../../../../styles/colors';
 
 .no-data {
-  color: colors.$grey;
+  color: colors.$grey-dark;
   text-align: center;
   padding: rem(8);
 }
@@ -31,7 +31,8 @@
     flex-direction: column;
     align-items: start;
 
-    div, button {
+    div,
+    button {
       margin-top: rem(4);
       width: 100%;
     }

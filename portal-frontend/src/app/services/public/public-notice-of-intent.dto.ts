@@ -61,6 +61,8 @@ export interface PublicNoticeOfIntentSubmissionDto {
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
   soilProjectDurationUnit?: string | null;
+  fillProjectDurationAmount: number | null;
+  fillProjectDurationUnit: string | null;
   soilFillTypeToPlace?: string | null;
   soilIsExtractionOrMining?: boolean;
   soilIsAreaWideFilling?: boolean;

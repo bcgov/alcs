@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   AfterLoad,
   Column,
@@ -221,8 +221,8 @@ export class NoticeOfIntentSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;
@@ -261,8 +261,8 @@ export class NoticeOfIntentSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyRemovedArea: number | null;
@@ -301,8 +301,8 @@ export class NoticeOfIntentSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -341,8 +341,8 @@ export class NoticeOfIntentSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyPlacedArea: number | null;
@@ -380,6 +380,20 @@ export class NoticeOfIntentSubmission extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   soilProjectDurationUnit: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  fillProjectDurationAmount: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  fillProjectDurationUnit: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })

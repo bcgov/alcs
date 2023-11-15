@@ -88,6 +88,8 @@ describe('ApplicationSubmissionService', () => {
     soilFollowUpIDs: null,
     soilProjectDurationAmount: null,
     soilProjectDurationUnit: null,
+    fillProjectDurationAmount: null,
+    fillProjectDurationUnit: null,
     soilReduceNegativeImpacts: null,
     soilToPlaceAverageDepth: null,
     soilToPlaceMaximumDepth: null,

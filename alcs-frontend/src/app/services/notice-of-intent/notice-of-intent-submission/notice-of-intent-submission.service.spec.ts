@@ -68,8 +68,11 @@ describe('NoticeOfIntentSubmissionService', () => {
     soilAlreadyPlacedMaximumDepth: null,
     soilAlreadyPlacedAverageDepth: null,
     soilProjectDurationAmount: null,
+    soilProjectDurationUnit: null,
     soilIsRemovingSoilForNewStructure: null,
     soilProposedStructures: [],
+    fillProjectDurationAmount: null,
+    fillProjectDurationUnit: null,
   };
 
   beforeEach(() => {

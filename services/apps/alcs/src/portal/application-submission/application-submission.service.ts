@@ -2,8 +2,8 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
@@ -612,6 +612,7 @@ export class ApplicationSubmissionService {
           [
             SUBMISSION_STATUS.SUBMITTED_TO_LG,
             SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.RETURNED_TO_LG,
           ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
           !!userGovernment &&
           userGovernment.uuid === app.localGovernmentUuid,
@@ -648,6 +649,7 @@ export class ApplicationSubmissionService {
         [
           SUBMISSION_STATUS.SUBMITTED_TO_LG,
           SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          SUBMISSION_STATUS.RETURNED_TO_LG,
         ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
         !!userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
@@ -886,6 +888,14 @@ export class ApplicationSubmissionService {
       updateDto.soilProjectDurationUnit,
       applicationSubmission.soilProjectDurationUnit,
     );
+    applicationSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      applicationSubmission.fillProjectDurationUnit,
+    );
+    applicationSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      applicationSubmission.fillProjectDurationAmount,
+    );
     applicationSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
       applicationSubmission.soilFillTypeToPlace,
@@ -1070,6 +1080,13 @@ export class ApplicationSubmissionService {
   }
 
   async canDeleteDocument(document: ApplicationDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
     const documentFlags = await this.getDocumentFlags(document);
 
     const isOwner = user.uuid === documentFlags.ownerUuid;

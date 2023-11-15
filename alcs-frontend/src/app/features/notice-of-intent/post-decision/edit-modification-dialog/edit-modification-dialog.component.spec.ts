@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { NoticeOfIntentDecisionService } from '../../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
 import { NoticeOfIntentModificationService } from '../../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -10,8 +11,11 @@ import { EditModificationDialogComponent } from './edit-modification-dialog.comp
 describe('EditModificationDialogComponent', () => {
   let component: EditModificationDialogComponent;
   let fixture: ComponentFixture<EditModificationDialogComponent>;
+  let mockDecisionService: DeepMocked<NoticeOfIntentDecisionService>;
 
   beforeEach(async () => {
+    mockDecisionService = createMock();
+
     await TestBed.configureTestingModule({
       declarations: [EditModificationDialogComponent],
       providers: [
@@ -21,7 +25,7 @@ describe('EditModificationDialogComponent', () => {
         },
         {
           provide: NoticeOfIntentDecisionService,
-          useValue: {},
+          useValue: mockDecisionService,
         },
         {
           provide: ToastService,

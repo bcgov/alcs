@@ -23,6 +23,9 @@ export class SoilTableComponent implements OnInit, OnChanges {
   @Output() dataChange = new EventEmitter<SoilTableData>();
   @Output() data2Change = new EventEmitter<SoilTableData>();
 
+  idSuffix?: string;
+  idSuffix2?: string | undefined;
+
   volume = new FormControl<string | null>(null, [Validators.required]);
   area = new FormControl<string | null>(null, [Validators.required]);
   maximumDepth = new FormControl<string | null>(null, [Validators.required]);
@@ -74,6 +77,9 @@ export class SoilTableComponent implements OnInit, OnChanges {
         averageDepth: this.averageDepth2.value !== null ? parseFloat(this.averageDepth2.value) : undefined,
       });
     });
+
+    this.idSuffix = '-' + this.tableHeader.replace(/\s/g, '-').toLowerCase();
+    this.idSuffix2 = '-' + this.tableHeader2?.replace(/\s/g, '-').toLowerCase();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,6 +95,6 @@ export class SoilTableComponent implements OnInit, OnChanges {
 
   onInputFocus(event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    inputElement.select()
+    inputElement.select();
   }
 }

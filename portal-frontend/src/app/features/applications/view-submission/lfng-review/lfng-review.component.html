@@ -1,6 +1,6 @@
 <div *ngIf="application">
   <div class="header">
-    <h3>Local/First Nation Gov Review</h3>
+    <h2>Local/First Nation Gov Review</h2>
     <div class="btns-wrapper">
       <button
         *ngIf="application.canEdit || application.canReview"
@@ -34,7 +34,14 @@
       </button>
     </div>
   </div>
-  <div *ngIf="application.status.code === SUBMISSION_STATUS.IN_PROGRESS" class="warning">
+  <div
+    *ngIf="
+      application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
+      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
+      application.status.code === SUBMISSION_STATUS.INCOMPLETE
+    "
+    class="warning"
+  >
     <mat-icon>info</mat-icon>This section will update after the application is submitted.
   </div>
   <div *ngIf="!applicationReview && submittedToAlcStatus" class="warning">
@@ -49,16 +56,9 @@
   >
     <mat-icon>info</mat-icon>Pending Local/First Nation Government review.
   </div>
-  <div
-    *ngIf="
-      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-      application.status.code === SUBMISSION_STATUS.INCOMPLETE
-    "
-    class="comment-container"
-  >
-    <div><strong>Comment for Applicant</strong></div>
-    {{ application.returnedComment }}
-    <span class="no-comment" *ngIf="!application.returnedComment">No comment added</span>
+  <div *ngIf="application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG" class="comment-container">
+    <div><strong>Comment for L/FNG</strong></div>
+    {{ application.returnedToLfngComment }}
   </div>
   <div
     *ngIf="

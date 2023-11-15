@@ -11,10 +11,10 @@ import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
   KEYCLOAK_LOGGER,
+  KEYCLOAK_MULTITENANT_SERVICE,
+  KeycloakConnectConfig,
   RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
-import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';
-import { KeycloakMultiTenantService } from 'nest-keycloak-connect/services/keycloak-multitenant.service';
 import { ClsService } from 'nestjs-cls';
 import { UserGuids, UserService } from '../../user/user.service';
 import { BaseToken } from './authorization.service';
@@ -26,12 +26,11 @@ export class RolesGuard implements CanActivate {
 
   constructor(
     @Inject(KEYCLOAK_INSTANCE)
-    private singleTenant: Keycloak,
+    singleTenant: Keycloak,
     @Inject(KEYCLOAK_CONNECT_OPTIONS)
     private keycloakOpts: KeycloakConnectConfig,
     @Inject(KEYCLOAK_LOGGER)
     private logger: Logger,
-    private multiTenant: KeycloakMultiTenantService,
     private reflector: Reflector,
     private cls: ClsService,
     private userService: UserService,
@@ -40,7 +39,7 @@ export class RolesGuard implements CanActivate {
       singleTenant,
       keycloakOpts,
       logger,
-      multiTenant,
+      null!,
       reflector,
     );
   }

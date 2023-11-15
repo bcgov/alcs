@@ -1,6 +1,6 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -90,9 +90,8 @@ export class NoticeOfIntentSubmissionService {
       createdBy,
     });
 
-    const savedSubmission = await this.noticeOfIntentSubmissionRepository.save(
-      noiSubmission,
-    );
+    const savedSubmission =
+      await this.noticeOfIntentSubmissionRepository.save(noiSubmission);
 
     await this.noticeOfIntentSubmissionStatusService.setInitialStatuses(
       savedSubmission.uuid,
@@ -531,6 +530,14 @@ export class NoticeOfIntentSubmissionService {
       updateDto.soilProjectDurationUnit,
       noticeOfIntentSubmission.soilProjectDurationUnit,
     );
+    noticeOfIntentSubmission.fillProjectDurationAmount = filterUndefined(
+      updateDto.fillProjectDurationAmount,
+      noticeOfIntentSubmission.fillProjectDurationAmount,
+    );
+    noticeOfIntentSubmission.fillProjectDurationUnit = filterUndefined(
+      updateDto.fillProjectDurationUnit,
+      noticeOfIntentSubmission.fillProjectDurationUnit,
+    );
     noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
       noticeOfIntentSubmission.soilFillTypeToPlace,
@@ -604,6 +611,13 @@ export class NoticeOfIntentSubmissionService {
   }
 
   async canDeleteDocument(document: NoticeOfIntentDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
     const documentFlags = await this.getDocumentFlags(document);
 
     const isOwner = user.uuid === documentFlags.ownerUuid;

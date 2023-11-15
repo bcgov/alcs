@@ -43,6 +43,7 @@ import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
 import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-applicant-type.component';
 import { InlineBooleanComponent } from './inline-editors/inline-boolean/inline-boolean.component';
+import { InlineChairReviewOutcomeComponent } from './inline-editors/inline-chair-review-outcome/inline-chair-review-outcome.component';
 import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/inline-datepicker.component';
 import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
 import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
@@ -106,6 +107,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     InlineNgSelectComponent,
     ApplicationLegacyIdComponent,
     TableColumnNoDataPipe,
+    InlineChairReviewOutcomeComponent,
   ],
   imports: [
     CommonModule,
@@ -199,6 +201,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     LotsTableFormComponent,
     ApplicationLegacyIdComponent,
     TableColumnNoDataPipe,
+    InlineChairReviewOutcomeComponent
   ],
 })
 export class SharedModule {

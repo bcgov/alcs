@@ -18,6 +18,7 @@ export enum SUBMISSION_STATUS {
   IN_REVIEW_BY_ALC = 'REVA', //Under Review by ALC
   ALC_DECISION = 'ALCD', // Decision Released
   REFUSED_TO_FORWARD_LG = 'RFFG', //L/FNG Refused to Forward
+  RETURNED_TO_LG = 'INCG', //Returned to L/FNG from ALC
   CANCELLED = 'CANC', //Cancelled
 }
 
@@ -115,6 +116,7 @@ export interface ApplicationSubmissionDto {
   owners: SubmittedApplicationOwnerDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  returnedToLfngComment?: string;
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 
   primaryContactOwnerUuid?: string;
@@ -182,6 +184,8 @@ export interface ApplicationSubmissionDto {
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDurationAmount: number | null;
   soilProjectDurationUnit: string | null;
+  fillProjectDurationAmount: number | null;
+  fillProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean | null;
@@ -256,6 +260,7 @@ export interface ApplicationDto {
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
   proposalEndDate?: number;
+  proposalEndDate2?: number;
   proposalExpiryDate?: number;
   legacyId?: string;
 }
@@ -287,6 +292,7 @@ export interface UpdateApplicationDto {
   nfuUseType?: string;
   nfuUseSubType?: string;
   inclExclApplicantType?: string;
+  proposalEndDate2?: number;
   proposalEndDate?: number;
   proposalExpiryDate?: number;
 }

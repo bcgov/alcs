@@ -2,12 +2,14 @@ h3 {
   margin-bottom: 24px !important;
 }
 
-.input-table {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 16px;
-  row-gap: 32px;
-  column-gap: 24px;
+:host::ng-deep {
+  .input-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 16px;
+    row-gap: 32px;
+    column-gap: 24px;
+  }
 }
 
 section {

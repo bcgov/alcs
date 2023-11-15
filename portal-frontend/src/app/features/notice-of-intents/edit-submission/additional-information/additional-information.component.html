@@ -26,7 +26,7 @@
 <form [formGroup]="form">
   <div class="form-row">
     <div class="full-row">
-      <label for="is-new-structure"> {{ firstQuestion }}</label>
+      <mat-label for="is-new-structure"> {{ firstQuestion }}</mat-label>
       <div class="subtext">This can include farm buildings, residences, or accessory buildings.</div>
       <div>
         <mat-button-toggle-group
@@ -67,7 +67,7 @@
     <div class="form-row">
       <div class="full-row">
         <form [formGroup]="structuresForm">
-          <label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </label>
+          <mat-label>Provide the total floor area (m<sup>2</sup>) of the proposed structure(s) </mat-label>
           <table mat-table [dataSource]="structuresSource">
             <ng-container matColumnDef="index">
               <th mat-header-cell *matHeaderCellDef>#</th>
@@ -110,11 +110,12 @@
                     type="text"
                     matInput
                     thousandSeparator=","
-                    mask="separator.2"
+                    mask="separator.5"
                     separatorLimit="9999999999"
                     min="0.01"
                     placeholder="Type area"
                     [formControlName]="i + '-area'"
+                    attr.aria-label="{{ i + '-area' }}"
                   />
                   <span matTextSuffix>m<sup>2</sup></span>
                 </mat-form-field>
@@ -301,7 +302,7 @@
       </div>
 
       <div class="full-row">
-        <label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</label>
+        <mat-label class="subheading2" for="detailed-building-plans">Detailed Building Plan(s)</mat-label>
         <div class="subtext">
           Building plans must be the most up to date, current version and should include (1) the total floor area of all
           levels and the intended use; and (2) interior and exterior views

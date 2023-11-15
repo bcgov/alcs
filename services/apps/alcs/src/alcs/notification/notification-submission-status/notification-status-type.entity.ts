@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 import { NotificationSubmissionToSubmissionStatus } from './notification-status.entity';

@@ -1,6 +1,6 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';

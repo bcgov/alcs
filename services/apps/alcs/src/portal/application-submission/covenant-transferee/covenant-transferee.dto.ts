@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsOptional, IsString, Matches } from 'class-validator';
 import { OwnerTypeDto } from '../../../common/owner-type/owner-type.entity';
 import { emailRegex } from '../../../utils/email.helper';
