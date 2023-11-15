@@ -42,7 +42,7 @@ from .notice_of_intent_submissions.parcels.owners import (
 from .notice_of_intent_submissions.parcels.primary_contacts import (
     init_notice_of_intent_primary_contacts,
     clean_primary_contacts,
-    link_notice_of_intent_owners_to_parcels,
+    link_notice_of_intent_primary_contacts,
 )
 
 
@@ -105,7 +105,7 @@ def process_notice_of_intent(batch_size):
 
     init_notice_of_intent_primary_contacts(batch_size)
 
-    link_notice_of_intent_owners_to_parcels(batch_size)
+    link_notice_of_intent_primary_contacts(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

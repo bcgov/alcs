@@ -4,5 +4,5 @@ from .notice_of_intent_primary_contact import (
 )
 
 from .notice_of_intent_submission_primary_contact import (
-    link_notice_of_intent_owners_to_parcels,
+    link_notice_of_intent_primary_contacts,
 )

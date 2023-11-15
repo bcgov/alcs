@@ -5,12 +5,12 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "link_notice_of_intent_owners_to_parcels"
+etl_name = "link_notice_of_intent_primary_contacts"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def link_notice_of_intent_owners_to_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def link_notice_of_intent_primary_contacts(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
