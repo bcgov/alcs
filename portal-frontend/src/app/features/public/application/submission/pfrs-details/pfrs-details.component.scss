@@ -7,6 +7,15 @@
   grid-column-gap: rem(36);
   grid-row-gap: rem(12);
 
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 0.55fr 1fr 1fr;
+  }
+
+  @media screen and (min-width: $midBreakpoint) {
+    grid-template-columns: 0.95fr 1fr 2fr;
+    grid-column-gap: rem(16);
+  }
+
   .spacer-row {
     grid-column: 1/4;
     height: rem(16);

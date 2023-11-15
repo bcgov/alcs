@@ -21,6 +21,24 @@
     <app-no-data *ngIf="!applicationSubmission.purpose"></app-no-data>
   </div>
 
+  <div class="subheading2 grid-1">Project Duration</div>
+  <div class="grid-double">
+    <div *ngIf="applicationSubmission.soilProjectDurationAmount && applicationSubmission.soilProjectDurationUnit">
+      {{ applicationSubmission.soilProjectDurationAmount }}
+      <ng-container [ngPlural]="applicationSubmission.soilProjectDurationAmount">
+        <ng-template ngPluralCase="=1">
+          {{ applicationSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
+        </ng-template>
+        <ng-template ngPluralCase="other">
+          {{ applicationSubmission.soilProjectDurationUnit | titlecase }}
+        </ng-template>
+      </ng-container>
+    </div>
+    <app-no-data
+      *ngIf="!applicationSubmission.soilProjectDurationAmount || !applicationSubmission.soilProjectDurationUnit"
+    ></app-no-data>
+  </div>
+
   <div class="subheading1 full-width">Soil to be Removed</div>
   <div class="full-width soil-table">
     <div class="grid-1"><strong>Volume</strong></div>
@@ -74,19 +92,6 @@
       <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
       <app-no-data *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"></app-no-data>
     </div>
-  </div>
-
-  <div class="grid-1"></div>
-  <div class="subheading2 grid-double">Project Duration</div>
-  <div class="subheading2 grid-1">Duration</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilProjectDurationUnit }}
-    <app-no-data *ngIf="!applicationSubmission.soilProjectDurationUnit"></app-no-data>
-  </div>
-  <div class="subheading2 grid-1">Length</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilProjectDurationAmount }}
-    <app-no-data *ngIf="!applicationSubmission.soilProjectDurationAmount"></app-no-data>
   </div>
 
   <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>
