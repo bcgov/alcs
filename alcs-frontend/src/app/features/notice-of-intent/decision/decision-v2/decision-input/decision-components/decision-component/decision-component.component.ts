@@ -44,10 +44,10 @@ export class DecisionComponentComponent implements OnInit {
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
 
   //pfrs
-  endDate2 = new FormControl<Date | null>(null, [Validators.required]);
+  endDate2 = new FormControl<Date | null>(null);
 
   // general
-  endDate = new FormControl<Date | null>(null, [Validators.required]);
+  endDate = new FormControl<Date | null>(null);
   alrArea = new FormControl<number | null>(null, [Validators.required]);
   agCap = new FormControl<string | null>(null, [Validators.required]);
   agCapSource = new FormControl<string | null>(null, [Validators.required]);
@@ -101,7 +101,7 @@ export class DecisionComponentComponent implements OnInit {
         agCapConsultant: this.agCapConsultant.value ? this.agCapConsultant.value : null,
         noticeOfIntentDecisionComponentTypeCode: this.data.noticeOfIntentDecisionComponentTypeCode,
         noticeOfIntentDecisionComponentType: this.codes.decisionComponentTypes.find(
-          (e) => e.code === this.data.noticeOfIntentDecisionComponentTypeCode
+          (e) => e.code === this.data.noticeOfIntentDecisionComponentTypeCode,
         )!,
         noticeOfIntentDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,
