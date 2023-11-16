@@ -20,5 +20,6 @@ export interface SearchResult {
   portalStatus?: string;
   referenceId: string;
   class: string;
+  outcome?: string;
   status?: ApplicationStatusDto | NoticeOfIntentSubmissionStatusDto | NotificationSubmissionStatusDto;
 }

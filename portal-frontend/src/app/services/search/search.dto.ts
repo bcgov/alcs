@@ -6,6 +6,7 @@ export interface BaseSearchResultDto {
   localGovernmentName: string;
   boardCode?: string;
   ownerName: string;
+  outcome?: string;
   dateSubmitted: number;
   lastUpdate: number;
   status?: string;
@@ -23,7 +24,7 @@ export interface SearchResponseDto {
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalNotifications: number;
-  outcome: string;
+  outcome?: string;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {

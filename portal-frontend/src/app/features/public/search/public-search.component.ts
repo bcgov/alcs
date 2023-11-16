@@ -390,7 +390,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
     this.notifications = searchResult.notifications;
     this.notificationTotal = searchResult.totalNotifications;
-    this.outcome = searchResult.outcome;
+    this.outcome = searchResult.outcome || '-';
   }
 
   private setActiveTab() {
