@@ -7,7 +7,7 @@
       hoverable: result.routerLink
     }"
   >
-    <div class="subheading2">{{ result.fileNumber }} - {{ result.applicant ?? '(Unknown)' }}</div>
+    <div class="subheading2">{{ result.fileNumber }} - {{ result.ownerName ?? '(Unknown)' }}</div>
     <div>Created: {{ result.createdAt | momentFormat }}</div>
     <div [title]="result.type">{{ result.type }}</div>
     <div
