@@ -101,7 +101,8 @@ _update_query = """
                         soil_has_submitted_notice= %(soil_has_submitted_notice)s,
                         soil_is_extraction_or_mining = FALSE,
                         soil_is_removing_soil_for_new_structure = FALSE,
-                        soil_is_area_wide_filling = FALSE
+                        soil_is_area_wide_filling = FALSE,
+                        created_by_uuid = %(created_guid)s
                     WHERE
                         alcs.notice_of_intent_submission.file_number = %(alr_application_id)s::TEXT
 """
