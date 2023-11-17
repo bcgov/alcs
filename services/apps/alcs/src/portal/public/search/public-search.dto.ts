@@ -19,7 +19,7 @@ export class BaseSearchResultDto {
   status: string;
   dateSubmitted?: number;
   lastUpdate?: number;
-  outcome: string | null;
+  outcome?: string;
   class: SearchEntityClass;
 }
 

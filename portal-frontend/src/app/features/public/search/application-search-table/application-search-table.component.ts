@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSearchResultDto } from '../../../../services/search/search.dto';
+import { ApplicationSearchResultDto, displayedColumns, outcomeMapping } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
 
 @Component({
@@ -36,12 +36,9 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Input() statuses: ApplicationStatusDto[] = [];
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus',  'outcome', 'lastUpdate', 'government'];
-  outcomeMapping: Record<string, string> = {
-    'APPR': "Approved",
-    'REFU': "Refused",
-    'RESC': "Rescinded",
-  }
+  displayedColumns = displayedColumns;
+  outcomeMapping = outcomeMapping;
+  
   dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
   itemsPerPage = 20;

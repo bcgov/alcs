@@ -24,7 +24,6 @@ export interface SearchResponseDto {
   totalApplications: number;
   totalNoticeOfIntents: number;
   totalNotifications: number;
-  outcome?: string;
 }
 
 export interface AdvancedSearchEntityResponseDto<T> {
@@ -52,4 +51,13 @@ export interface SearchRequestDto extends PagingRequestDto {
   dateDecidedTo?: number;
   fileTypes: string[];
   decisionOutcome?: string[];
+}
+
+export const displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus',  'outcome', 'lastUpdate', 'government'];
+
+export const  outcomeMapping: Record<string, string> = {
+  'APPR': "Approved",
+  'REFU': "Refused",
+  'RESC': "Rescinded",
+  'ONTP': "Ordered not to Proceed (NOI)"
 }

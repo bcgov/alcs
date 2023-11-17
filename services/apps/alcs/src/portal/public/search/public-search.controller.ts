@@ -249,8 +249,7 @@ export class PublicSearchController {
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',
-      status: notification.status.status_type_code,
-      outcome: null
+      status: notification.status.status_type_code
     };
   }
 }

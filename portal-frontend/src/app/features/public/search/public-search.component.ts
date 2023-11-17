@@ -60,7 +60,6 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   notifications: NotificationSearchResultDto[] = [];
   notificationTotal = 0;
-  outcome = '';
 
   pageIndex = 0;
   itemsPerPage = 20;
@@ -377,8 +376,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
         notifications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
-        totalNotifications: 0,
-        outcome: ''
+        totalNotifications: 0
       };
     }
 
@@ -390,7 +388,6 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
     this.notifications = searchResult.notifications;
     this.notificationTotal = searchResult.totalNotifications;
-    this.outcome = searchResult.outcome || '-';
   }
 
   private setActiveTab() {
