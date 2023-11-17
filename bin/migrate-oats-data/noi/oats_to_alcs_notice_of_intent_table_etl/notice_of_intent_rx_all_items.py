@@ -14,7 +14,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def update_notice_of_intent_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for populating date_received_all_items in application in ALCS.
+    This function is responsible for populating date_received_all_items in notice_of_intent in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -45,7 +45,7 @@ def update_notice_of_intent_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND alr_application_id > {last_application_id} ORDER BY alr_application_id;"
+                    f"{application_sql} AND oa.alr_application_id > {last_application_id} ORDER BY oa.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)

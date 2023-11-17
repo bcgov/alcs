@@ -45,7 +45,7 @@ def update_application_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND alr_application_id > {last_application_id} ORDER BY alr_application_id;"
+                    f"{application_sql} AND oa.alr_application_id > {last_application_id} ORDER BY oa.alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -53,8 +53,6 @@ def update_application_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE
                 if not rows:
                     break
                 try:
-                    # records_to_be_updated_count = len(rows)
-
                     records_to_be_updated_count = _update_fee_fields_records(
                         conn, batch_size, cursor, rows
                     )
