@@ -85,11 +85,15 @@ def clean_applications(conn=None):
     logger.info("Start applications cleaning")
     with conn.cursor() as cursor:
         logger.debug("Start applications cleaning")
+        cursor.execute("DROP INDEX IF EXISTS alcs.idx_audit_created_by")
+        cursor.execute(
+            "CREATE INDEX idx_audit_created_by ON alcs.application(audit_created_by)"
+        )
         cursor.execute(
             "DELETE FROM alcs.application a WHERE a.audit_created_by = 'oats_etl'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
-
+        cursor.execute("DROP INDEX IF EXISTS alcs.idx_audit_created_by")
         cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_exclude")
         cursor.execute("DROP TABLE IF EXISTS oats.alcs_etl_application_duplicate")
         logger.info(f"Temporary tables dropped")

@@ -53,9 +53,11 @@ def update_application_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE
                 if not rows:
                     break
                 try:
-                    records_to_be_updated_count = len(rows)
+                    # records_to_be_updated_count = len(rows)
 
-                    _update_fee_fields_records(conn, batch_size, cursor, rows)
+                    records_to_be_updated_count = _update_fee_fields_records(
+                        conn, batch_size, cursor, rows
+                    )
 
                     successful_updates_count = (
                         successful_updates_count + records_to_be_updated_count
@@ -63,7 +65,7 @@ def update_application_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE
                     last_application_id = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated alr_application_id: {last_application_id}"
+                        f"Retrieved/updated items count: {records_to_be_updated_count}; total successfully updated applications so far {successful_updates_count}; last updated application_id: {last_application_id}"
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
@@ -79,7 +81,7 @@ def update_application_date_rx_all_items(conn=None, batch_size=BATCH_UPLOAD_SIZE
 
 def _update_fee_fields_records(conn, batch_size, cursor, rows):
     parsed_data_list = _prepare_oats_alr_applications_data(rows)
-
+    actual_inserts = len(parsed_data_list)
     execute_batch(
         cursor,
         _rx_items_query,
@@ -88,6 +90,7 @@ def _update_fee_fields_records(conn, batch_size, cursor, rows):
     )
 
     conn.commit()
+    return actual_inserts
 
 
 _rx_items_query = """
@@ -101,29 +104,33 @@ def _prepare_oats_alr_applications_data(row_data_list):
     mapped_data_list = []
     for row in row_data_list:
         data = dict(row)
-        # print(data)
-        # print("data before mapping")
         data = _map_rx_date(data)
-        # print("data after mapping")
-        # print(data)
         mapped_data_list.append(data)
-    return mapped_data_list
+    filtered_data = [
+        item
+        for item in mapped_data_list
+        if item["accomplishment_code"] == "AKC"
+        or not any(
+            entry["accomplishment_code"] == "AKC"
+            for entry in mapped_data_list
+            if entry["alr_application_id"] == item["alr_application_id"]
+        )
+    ]
+    return filtered_data
 
 
 def _map_rx_date(data):
     completion_date = data.get("completion_date", "")
     accomplishment_code = data.get("accomplishment_code", "")
-    # rx_date = data.get("date_received_all_items", "")
 
-    # if rx_date:
-    #     data["date_to_insert"] = set_time(rx_date)
     if accomplishment_code == "AKC" and completion_date:
         date = add_timezone_and_keep_date_part(completion_date)
         data["date_to_insert"] = set_time(date)
-    elif accomplishment_code == "SAL" and completion_date:
-        date = add_timezone_and_keep_date_part(completion_date)
-        data["date_to_insert"] = set_time(date)
-    else:
-        data["date_to_insert"] = ""
+    elif data.get("date_to_insert") is None:
+        if accomplishment_code == "SAL" and completion_date:
+            date = add_timezone_and_keep_date_part(completion_date)
+            data["date_to_insert"] = set_time(date)
+        else:
+            data["date_to_insert"] = None
 
     return data
