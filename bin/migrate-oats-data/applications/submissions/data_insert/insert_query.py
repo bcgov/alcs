@@ -120,7 +120,8 @@ def get_insert_query(unique_fields, unique_values):
                     purpose,
                     parcels_agriculture_improvement_description,
                     parcels_agriculture_description,
-                    parcels_non_agriculture_use_description
+                    parcels_non_agriculture_use_description,
+                    created_by_uuid
                     {unique_fields}
                 )
                 VALUES (
@@ -142,7 +143,8 @@ def get_insert_query(unique_fields, unique_values):
                     %(proposal_summary_desc)s,
                     %(agricultural_improvement_desc)s,
                     %(current_land_use_desc)s,
-                    %(non_agricultural_uses_desc)s
+                    %(non_agricultural_uses_desc)s,
+                    %(created_guid)s
                     {unique_values}
                 )
     """
@@ -159,7 +161,8 @@ def get_insert_query_for_nfu():
                         nfu_fill_origin_description,
                         nfu_project_duration_unit,
                         nfu_total_fill_area,
-                        nfu_agriculture_support
+                        nfu_agriculture_support,
+                        nfu_outside_lands
                         """
     unique_values = """, %(alr_area)s,
                         %(import_fill)s,
@@ -170,7 +173,8 @@ def get_insert_query_for_nfu():
                         %(fill_origin)s,
                         %(duration_unit)s,
                         %(fill_area)s,
-                        %(support_desc)s
+                        %(support_desc)s,
+                        %(proposal_background_desc)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
@@ -269,7 +273,8 @@ def get_insert_query_for_soil():
                         soil_to_place_maximum_depth,
                         soil_to_place_average_depth,
                         soil_is_follow_up,
-                        soil_follow_up_ids
+                        soil_follow_up_ids,
+                        soil_has_submitted_notice
                     """
     unique_values = """, %(remove_type)s,
                         %(impact_reduction_desc)s,
@@ -286,7 +291,8 @@ def get_insert_query_for_soil():
                         %(max_fill_depth)s,
                         %(max_fill_depth)s,
                         %(followup_noi_ind)s,
-                        %(followup_noi_number)s
+                        %(followup_noi_number)s,
+                        %(ministry_notice_ind)s
                     """
     return get_insert_query(unique_fields, unique_values)
 
@@ -309,7 +315,8 @@ def get_insert_query_for_pfrs():
                         soil_to_place_maximum_depth,
                         soil_to_place_average_depth,
                         soil_is_follow_up,
-                        soil_follow_up_ids
+                        soil_follow_up_ids,
+                        soil_has_submitted_notice
                     """
     unique_values = """, %(remove_type)s,
                         %(impact_reduction_desc)s,
@@ -328,7 +335,8 @@ def get_insert_query_for_pfrs():
                         %(max_fill_depth)s,
                         %(max_fill_depth)s,
                         %(followup_noi_ind)s,
-                        %(followup_noi_number)s
+                        %(followup_noi_number)s,
+                        %(ministry_notice_ind)s
                     """
     return get_insert_query(unique_fields, unique_values)
 

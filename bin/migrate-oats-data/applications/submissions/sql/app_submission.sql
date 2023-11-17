@@ -40,8 +40,9 @@ SELECT
     oa.non_agricultural_uses_desc,
     oa.agricultural_improvement_desc,
     oa.followup_noi_ind,
-    oa.followup_noi_number
-
+    oa.followup_noi_number,
+    oa.created_guid,
+    oa.ministry_notice_ind
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
