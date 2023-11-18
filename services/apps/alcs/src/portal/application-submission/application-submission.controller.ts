@@ -30,6 +30,7 @@ import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
@@ -54,6 +55,7 @@ export class ApplicationSubmissionController {
     private applicationSubmissionValidatorService: ApplicationSubmissionValidatorService,
     private statusEmailService: StatusEmailService,
     private applicationService: ApplicationService,
+    private trackingService: TrackingService,
   ) {}
 
   @Get()
@@ -79,9 +81,8 @@ export class ApplicationSubmissionController {
       }
     }
 
-    const applications = await this.applicationSubmissionService.getByUser(
-      user,
-    );
+    const applications =
+      await this.applicationSubmissionService.getByUser(user);
     return this.applicationSubmissionService.mapToDTOs(applications, user);
   }
 
@@ -103,6 +104,7 @@ export class ApplicationSubmissionController {
         localGovernment &&
         submission.localGovernmentUuid === localGovernment.uuid
       ) {
+        await this.trackingService.trackView(user, fileId);
         return await this.applicationSubmissionService.mapToDetailedDTO(
           submission,
           localGovernment,

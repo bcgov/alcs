@@ -22,6 +22,7 @@ import { generateCANCApplicationHtml } from '../../../../../templates/emails/can
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
@@ -42,16 +43,21 @@ export class ApplicationController {
     private applicationService: ApplicationService,
     private cardService: CardService,
     private statusEmailService: StatusEmailService,
+    private trackingService: TrackingService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
+  async get(
+    @Param('fileNumber') fileNumber,
+    @Req() req,
+  ): Promise<ApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
     const mappedApplication = await this.applicationService.mapToDtos([
       application,
     ]);
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return mappedApplication[0];
   }
 

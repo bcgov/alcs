@@ -4,6 +4,7 @@ import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { NotificationSubmissionService } from '../../portal/notification-submission/notification-submission.service';
 import { User } from '../../user/user.entity';
 import { NotificationDocumentService } from './notification-document/notification-document.service';
@@ -19,12 +20,14 @@ describe('NotificationController', () => {
   let mockSubmissionStatusService: DeepMocked<NotificationSubmissionStatusService>;
   let mockSubmissionService: DeepMocked<NotificationSubmissionService>;
   let mockDocumentService: DeepMocked<NotificationDocumentService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   beforeEach(async () => {
     mockService = createMock();
     mockSubmissionStatusService = createMock();
     mockSubmissionService = createMock();
     mockDocumentService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -51,6 +54,10 @@ describe('NotificationController', () => {
           useValue: mockSubmissionService,
         },
         {
+          provide: TrackingService,
+          useValue: mockTrackingService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -68,11 +75,17 @@ describe('NotificationController', () => {
   it('should call through to service for get', async () => {
     mockService.getByFileNumber.mockResolvedValue(new Notification());
     mockService.mapToDtos.mockResolvedValue([]);
+    mockTrackingService.trackView.mockResolvedValue();
 
-    await controller.get('fileNumber');
+    await controller.get('fileNumber', {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(mockService.getByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
   it('should call through to service for search', async () => {

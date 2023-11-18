@@ -1,9 +1,10 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   initApplicationMockEntity,
   initMockAssigneeDto,
@@ -11,23 +12,23 @@ import {
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
 import { StatusEmailService } from '../../providers/email/status-email.service';
+import { User } from '../../user/user.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { MessageService } from '../message/message.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { Application } from './application.entity';
 import { ApplicationService } from './application.service';
-import { EmailService } from '../../providers/email/email.service';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
-import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
-import { LocalGovernment } from '../local-government/local-government.entity';
-import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
-import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 
 describe('ApplicationController', () => {
   let controller: ApplicationController;
@@ -35,6 +36,7 @@ describe('ApplicationController', () => {
   let notificationService: DeepMocked<MessageService>;
   let cardService: DeepMocked<CardService>;
   let statusEmailService: DeepMocked<StatusEmailService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   const mockApplicationEntity = initApplicationMockEntity();
 
@@ -76,6 +78,7 @@ describe('ApplicationController', () => {
     notificationService = createMock();
     cardService = createMock();
     statusEmailService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -97,6 +100,10 @@ describe('ApplicationController', () => {
         {
           provide: StatusEmailService,
           useValue: statusEmailService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,
@@ -374,11 +381,17 @@ describe('ApplicationController', () => {
   });
 
   it('should call through for get', async () => {
+    mockTrackingService.trackView.mockResolvedValue();
     applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
-    await controller.get(mockApplicationEntity.uuid);
+    await controller.get(mockApplicationEntity.uuid, {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(applicationService.getOrFail).toBeCalledTimes(1);
     expect(applicationService.mapToDtos).toBeCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
   it('should call through for cancel', async () => {

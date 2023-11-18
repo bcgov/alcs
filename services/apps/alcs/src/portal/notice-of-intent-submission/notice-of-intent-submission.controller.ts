@@ -16,9 +16,11 @@ import {
   generateSUBMNoiGovernmentHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentSubmissionValidatorService } from './notice-of-intent-submission-validator.service';
@@ -37,6 +39,8 @@ export class NoticeOfIntentSubmissionController {
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private noticeOfIntentValidatorService: NoticeOfIntentSubmissionValidatorService,
     private statusEmailService: StatusEmailService,
+    private localGovernmentService: LocalGovernmentService,
+    private trackingService: TrackingService,
   ) {}
 
   @Get()
@@ -54,6 +58,14 @@ export class NoticeOfIntentSubmissionController {
 
     const submission =
       await this.noticeOfIntentSubmissionService.getByFileNumber(fileId, user);
+
+    if (user && user.bceidBusinessGuid) {
+      const matchingLocalGovernment =
+        await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
+      if (matchingLocalGovernment) {
+        await this.trackingService.trackView(user, fileId);
+      }
+    }
 
     return await this.noticeOfIntentSubmissionService.mapToDetailedDTO(
       submission,
