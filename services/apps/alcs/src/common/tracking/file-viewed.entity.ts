@@ -27,6 +27,7 @@ export class FileViewed extends BaseEntity {
 
   @Column({
     nullable: false,
+    type: 'uuid',
   })
   userUuid: string;
 
