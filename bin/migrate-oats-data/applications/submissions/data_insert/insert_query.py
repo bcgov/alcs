@@ -144,7 +144,7 @@ def get_insert_query(unique_fields, unique_values):
                     %(agricultural_improvement_desc)s,
                     %(current_land_use_desc)s,
                     %(non_agricultural_uses_desc)s,
-                    %(created_guid)s
+                    %(uuid)s
                     {unique_values}
                 )
     """

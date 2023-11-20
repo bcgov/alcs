@@ -41,10 +41,11 @@ SELECT
     oa.agricultural_improvement_desc,
     oa.followup_noi_ind,
     oa.followup_noi_number,
-    oa.created_guid,
+    au."uuid",
     oa.ministry_notice_ind
 FROM
     appl_components_grouped acg
     LEFT JOIN alcs.application aa ON aa.file_number = acg.alr_application_id::TEXT
     JOIN oats.oats_alr_appl_components oc ON acg.alr_application_id = oc.alr_application_id
     JOIN oats.oats_alr_applications oa ON acg.alr_application_id = oa.alr_application_id
+    LEFT JOIN alcs."user" au ON oa.created_guid = au.bceid_guid
