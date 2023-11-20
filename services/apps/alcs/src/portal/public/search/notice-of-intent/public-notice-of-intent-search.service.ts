@@ -27,7 +27,6 @@ export class PublicNoticeOfIntentSearchService {
     AdvancedSearchResultDto<PublicNoticeOfIntentSubmissionSearchView[]>
   > {
     const query = await this.compileNoticeOfIntentSearchQuery(searchDto);
-    console.log(query.getQuery())
 
     this.compileGroupBySearchQuery(query);
 
