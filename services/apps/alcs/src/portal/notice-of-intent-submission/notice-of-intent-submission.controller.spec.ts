@@ -18,6 +18,7 @@ import { NOI_SUBMISSION_STATUS } from '../../alcs/notice-of-intent/notice-of-int
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentSubmissionProfile } from '../../common/automapper/notice-of-intent-submission.automapper.profile';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { NoticeOfIntentOwner } from './notice-of-intent-owner/notice-of-intent-owner.entity';
@@ -40,6 +41,7 @@ describe('NoticeOfIntentSubmissionController', () => {
   let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockNoiValidatorService: DeepMocked<NoticeOfIntentSubmissionValidatorService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   const primaryContactOwnerUuid = 'primary-contact';
   const localGovernmentUuid = 'local-government';
@@ -52,6 +54,7 @@ describe('NoticeOfIntentSubmissionController', () => {
     mockLgService = createMock();
     mockNoiValidatorService = createMock();
     mockStatusEmailService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NoticeOfIntentSubmissionController],
@@ -76,6 +79,10 @@ describe('NoticeOfIntentSubmissionController', () => {
         {
           provide: StatusEmailService,
           useValue: mockStatusEmailService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,

@@ -1,10 +1,10 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { RedisModule } from '@app/common/redis/redis.module';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
@@ -14,6 +14,7 @@ import { AlcsModule } from './alcs/alcs.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
+import { TrackingModule } from './common/tracking/tracking.module';
 import { DocumentModule } from './document/document.module';
 import { FileNumberModule } from './file-number/file-number.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
@@ -65,6 +66,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     FileNumberModule,
     NoticeOfIntentSubmissionModule,
+    TrackingModule,
     SchedulerModule, // this will init BullMQ
   ],
   controllers: [MainController, LogoutController],

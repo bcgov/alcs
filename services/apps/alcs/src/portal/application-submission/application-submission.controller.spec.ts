@@ -1,14 +1,14 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
 import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
-  generateSUBGTurApplicantHtml,
   generateSUBGNoReviewGovernmentTemplateEmail,
+  generateSUBGTurApplicantHtml,
 } from '../../../../../templates/emails/submitted-to-alc';
 import {
   generateSUBGApplicantHtml,
@@ -25,6 +25,7 @@ import { ApplicationType } from '../../alcs/code/application-code/application-ty
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
@@ -48,6 +49,7 @@ describe('ApplicationSubmissionController', () => {
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   const localGovernmentUuid = 'local-government';
   const primaryContactOwnerUuid = 'primary-contact';
@@ -61,6 +63,7 @@ describe('ApplicationSubmissionController', () => {
     mockAppValidationService = createMock();
     mockStatusEmailService = createMock();
     mockApplicationService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionController],
@@ -89,6 +92,10 @@ describe('ApplicationSubmissionController', () => {
         {
           provide: ApplicationService,
           useValue: mockApplicationService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,
@@ -272,7 +279,7 @@ describe('ApplicationSubmissionController', () => {
       {} as ApplicationSubmissionDetailedDto,
     );
 
-    const application = controller.getSubmission(
+    const application = await controller.getSubmission(
       {
         user: {
           entity: new User(),
@@ -285,6 +292,33 @@ describe('ApplicationSubmissionController', () => {
     expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
       1,
     );
+    expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service and track view when fetching a submission by file id', async () => {
+    mockTrackingService.trackView.mockResolvedValue();
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationSubmissionDetailedDto,
+    );
+    mockLgService.getByGuid.mockResolvedValue(new LocalGovernment());
+
+    const application = await controller.getSubmissionByFileId(
+      {
+        user: {
+          entity: new User({
+            bceidBusinessGuid: 'cats',
+          }),
+        },
+      },
+      '',
+    );
+
+    expect(application).toBeDefined();
+    expect(mockAppSubmissionService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
@@ -296,8 +330,9 @@ describe('ApplicationSubmissionController', () => {
         localGovernmentUuid: '',
       }),
     );
+    mockLgService.getByGuid.mockResolvedValue(new LocalGovernment());
 
-    const application = controller.getSubmission(
+    const application = await controller.getSubmission(
       {
         user: {
           entity: new User({
