@@ -14,7 +14,6 @@ import { ApplicationSubmissionStatusType } from '../../alcs/application/applicat
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
@@ -45,7 +44,6 @@ describe('ApplicationSubmissionReviewController', () => {
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
-  let mockAppService: DeepMocked<ApplicationService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
@@ -66,7 +64,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
-    mockAppService = createMock();
     mockStatusEmailService = createMock();
 
     applicationReview = new ApplicationSubmissionReview({
@@ -100,10 +97,6 @@ describe('ApplicationSubmissionReviewController', () => {
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidatorService,
-        },
-        {
-          provide: ApplicationService,
-          useValue: mockAppService,
         },
         {
           provide: StatusEmailService,
@@ -237,7 +230,6 @@ describe('ApplicationSubmissionReviewController', () => {
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
-    mockAppService.fetchApplicationTypes.mockResolvedValue([]);
     mockAppSubmissionService.getStatus.mockResolvedValue(
       new ApplicationSubmissionStatusType({
         label: '',

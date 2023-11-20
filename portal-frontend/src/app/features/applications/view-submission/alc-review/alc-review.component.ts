@@ -21,12 +21,38 @@ export class AlcReviewComponent implements OnInit, OnDestroy {
 
   application: ApplicationSubmissionDetailedDto | undefined;
   SUBMISSION_STATUS = SUBMISSION_STATUS;
+  showUpdateAfterSubmitLabel = false;
+  showALCSection = false;
 
-  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
+  constructor(
+    private applicationReviewService: ApplicationSubmissionReviewService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
+
+      this.showUpdateAfterSubmitLabel =
+        !!application?.status.code &&
+        [
+          SUBMISSION_STATUS.IN_PROGRESS,
+          SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          SUBMISSION_STATUS.INCOMPLETE,
+          SUBMISSION_STATUS.WRONG_GOV,
+          SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          SUBMISSION_STATUS.RETURNED_TO_LG,
+        ].includes(application?.status.code);
+
+      this.showALCSection =
+        !!application?.status.code &&
+        [
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+          SUBMISSION_STATUS.RECEIVED_BY_ALC,
+          SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+          SUBMISSION_STATUS.ALC_DECISION,
+        ].includes(application?.status.code);
     });
   }
 

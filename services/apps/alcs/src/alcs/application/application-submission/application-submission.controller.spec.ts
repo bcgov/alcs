@@ -14,6 +14,8 @@ import { ApplicationSubmissionStatusService } from '../application-submission-st
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../application-submission-status/submission-status.entity';
 import { AlcsApplicationSubmissionDto } from '../application.dto';
+import { Application } from '../application.entity';
+import { ApplicationService } from '../application.service';
 import { ApplicationSubmissionController } from './application-submission.controller';
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -23,12 +25,14 @@ describe('ApplicationSubmissionController', () => {
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockAppSubStatusService: DeepMocked<ApplicationSubmissionStatusService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
+  let mockAppService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockApplicationSubmissionService = createMock();
     mockDocumentService = createMock();
     mockAppSubStatusService = createMock();
     mockStatusEmailService = createMock();
+    mockAppService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -53,6 +57,10 @@ describe('ApplicationSubmissionController', () => {
         {
           provide: StatusEmailService,
           useValue: mockStatusEmailService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockAppService,
         },
         {
           provide: ClsService,
@@ -102,7 +110,7 @@ describe('ApplicationSubmissionController', () => {
     expect(result).toEqual([]);
   });
 
-  it('should update status correctly when returning to lfng', async () => {
+  it('should update status and clear submitted date when returning to lfng', async () => {
     const fakeFileNumber = 'fake';
     const fakeUuid = 'fake-uuid';
     mockApplicationSubmissionService.update.mockResolvedValue();
@@ -124,6 +132,7 @@ describe('ApplicationSubmissionController', () => {
       primaryContact: new ApplicationOwner(),
     });
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    mockAppService.updateByFileNumber.mockResolvedValue(new Application());
 
     await controller.returnToLfng(fakeFileNumber, mockDto);
 
@@ -148,6 +157,9 @@ describe('ApplicationSubmissionController', () => {
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       null,
     );
+    expect(mockAppService.updateByFileNumber).toBeCalledWith(fakeFileNumber, {
+      dateSubmittedToAlc: null,
+    });
     expect(
       mockStatusEmailService.getApplicationEmailData,
     ).toHaveBeenCalledTimes(1);

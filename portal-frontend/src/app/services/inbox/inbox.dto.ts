@@ -2,8 +2,7 @@ export interface BaseInboxResultDto {
   fileNumber: string;
   type: string;
   referenceId: string;
-  applicant?: string;
-  ownerName: string;
+  ownerName?: string;
   createdAt: number;
   lastUpdate: number;
   status: string;

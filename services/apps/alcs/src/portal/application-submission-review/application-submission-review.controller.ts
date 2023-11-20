@@ -20,6 +20,7 @@ import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.tem
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationService } from '../../alcs/application/application.service';
 import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
@@ -368,24 +369,6 @@ export class ApplicationSubmissionReviewController {
 
       await this.applicationSubmissionReviewService.delete(applicationReview);
 
-      await this.applicationSubmissionStatusService.setStatusDate(
-        applicationSubmission.uuid,
-        SUBMISSION_STATUS.RETURNED_TO_LG,
-        null,
-      );
-
-      await this.applicationSubmissionStatusService.setStatusDate(
-        applicationSubmission.uuid,
-        SUBMISSION_STATUS.SUBMITTED_TO_LG,
-        null,
-      );
-
-      await this.applicationSubmissionStatusService.setStatusDate(
-        applicationSubmission.uuid,
-        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
-        null,
-      );
-
       if (returnDto.applicantComment) {
         await this.applicationSubmissionService.update(
           applicationSubmission.uuid,
@@ -395,6 +378,18 @@ export class ApplicationSubmissionReviewController {
         );
       }
 
+      // Clear future statuses
+      for (const status of [
+        SUBMISSION_STATUS.RETURNED_TO_LG,
+        SUBMISSION_STATUS.SUBMITTED_TO_LG,
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+      ]) {
+        await this.applicationSubmissionStatusService.setStatusDate(
+          applicationSubmission.uuid,
+          status,
+          null,
+        );
+      }
       await this.setReturnedStatus(returnDto, applicationSubmission);
 
       const primaryContact = applicationSubmission.owners?.find(
