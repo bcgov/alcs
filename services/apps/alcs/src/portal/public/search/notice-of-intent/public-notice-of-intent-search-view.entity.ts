@@ -64,7 +64,7 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(NoticeOfIntentDecision, 'decision_date')
-            .select('MAX("date")', 'date')
+            .select('date', 'date')
             .addSelect('outcome_code', 'outcome')
             .addSelect(
               'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC)',
@@ -73,7 +73,7 @@ import { LinkedStatusType } from '../public-search.dto';
             .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
             .groupBy('notice_of_intent_uuid')
             .addGroupBy('outcome_code')
-            .addGroupBy('decision_date.date'),
+            .addGroupBy('date'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
