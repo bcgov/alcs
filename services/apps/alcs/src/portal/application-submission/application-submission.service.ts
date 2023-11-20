@@ -359,7 +359,10 @@ export class ApplicationSubmissionService {
     return submissions;
   }
 
-  async getForGovernmentByUuid(uuid: string, localGovernment: LocalGovernment) {
+  private async getForGovernmentByUuid(
+    uuid: string,
+    localGovernment: LocalGovernment,
+  ) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }

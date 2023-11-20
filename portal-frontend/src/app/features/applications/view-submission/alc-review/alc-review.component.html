@@ -15,30 +15,13 @@
       </button>
     </div>
   </div>
-  <div
-    *ngIf="
-      application.status.code === SUBMISSION_STATUS.IN_PROGRESS ||
-      application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-      application.status.code === SUBMISSION_STATUS.INCOMPLETE ||
-      application.status.code === SUBMISSION_STATUS.WRONG_GOV ||
-      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG
-    "
-    class="warning"
-  >
+  <div *ngIf="showUpdateAfterSubmitLabel" class="warning">
     This section will update after the application is submitted to the ALC.
   </div>
   <div *ngIf="application.status.code === SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG" class="warning">
     Application not subject to Agricultural Land Commission review.
   </div>
-  <div
-    *ngIf="
-      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC ||
-      application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE ||
-      application.status.code === SUBMISSION_STATUS.RECEIVED_BY_ALC ||
-      application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_ALC ||
-      application.status.code === SUBMISSION_STATUS.ALC_DECISION
-    "
-  >
+  <div *ngIf="showALCSection">
     <app-decisions [fileNumber]="application.fileNumber"></app-decisions>
     <app-submission-documents [$applicationDocuments]="$applicationDocuments"></app-submission-documents>
   </div>

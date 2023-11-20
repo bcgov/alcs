@@ -475,6 +475,7 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should update the status, delete documents, and update the application for return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
+    mockAppService.updateByFileNumber.mockResolvedValue(new Application());
 
     const mockOwner = new ApplicationOwner({ uuid: '1234' });
     const mockSubmission = new ApplicationSubmission({
@@ -549,6 +550,7 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.WRONG_GOV,
     );
+    expect(mockAppService.updateByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(
       'submission-uuid',
@@ -577,6 +579,7 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should send the correct email template for wrong government return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
+    mockAppService.updateByFileNumber.mockResolvedValue(new Application());
 
     const mockOwner = new ApplicationOwner({ uuid: '1234' });
     const mockSubmission = new ApplicationSubmission({
@@ -650,6 +653,7 @@ describe('ApplicationSubmissionReviewController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
     });
+    expect(mockAppService.updateByFileNumber).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {
