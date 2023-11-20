@@ -14,7 +14,6 @@ import { ApplicationSubmissionStatusType } from '../../alcs/application/applicat
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
-import { ApplicationService } from '../../alcs/application/application.service';
 import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { OwnerType } from '../../common/owner-type/owner-type.entity';
@@ -45,7 +44,6 @@ describe('ApplicationSubmissionReviewController', () => {
   let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
   let mockAppValidatorService: DeepMocked<ApplicationSubmissionValidatorService>;
-  let mockAppService: DeepMocked<ApplicationService>;
   let mockStatusEmailService: DeepMocked<StatusEmailService>;
   let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
@@ -66,7 +64,6 @@ describe('ApplicationSubmissionReviewController', () => {
     mockLGService = createMock();
     mockAppDocService = createMock();
     mockAppValidatorService = createMock();
-    mockAppService = createMock();
     mockStatusEmailService = createMock();
 
     applicationReview = new ApplicationSubmissionReview({
@@ -100,10 +97,6 @@ describe('ApplicationSubmissionReviewController', () => {
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidatorService,
-        },
-        {
-          provide: ApplicationService,
-          useValue: mockAppService,
         },
         {
           provide: StatusEmailService,
@@ -237,7 +230,6 @@ describe('ApplicationSubmissionReviewController', () => {
       }),
     );
     mockAppSubmissionService.updateStatus.mockResolvedValue({} as any);
-    mockAppService.fetchApplicationTypes.mockResolvedValue([]);
     mockAppSubmissionService.getStatus.mockResolvedValue(
       new ApplicationSubmissionStatusType({
         label: '',
@@ -475,7 +467,6 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should update the status, delete documents, and update the application for return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.updateByFileNumber.mockResolvedValue(new Application());
 
     const mockOwner = new ApplicationOwner({ uuid: '1234' });
     const mockSubmission = new ApplicationSubmission({
@@ -550,7 +541,6 @@ describe('ApplicationSubmissionReviewController', () => {
     expect(mockAppSubmissionService.updateStatus.mock.calls[0][1]).toEqual(
       SUBMISSION_STATUS.WRONG_GOV,
     );
-    expect(mockAppService.updateByFileNumber).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockAppSubmissionService.update.mock.calls[0][0]).toEqual(
       'submission-uuid',
@@ -579,7 +569,6 @@ describe('ApplicationSubmissionReviewController', () => {
 
   it('should send the correct email template for wrong government return', async () => {
     mockLGService.getByGuid.mockResolvedValue(mockLG);
-    mockAppService.updateByFileNumber.mockResolvedValue(new Application());
 
     const mockOwner = new ApplicationOwner({ uuid: '1234' });
     const mockSubmission = new ApplicationSubmission({
@@ -653,7 +642,6 @@ describe('ApplicationSubmissionReviewController', () => {
       parentType: 'application',
       primaryContact: mockOwner,
     });
-    expect(mockAppService.updateByFileNumber).toHaveBeenCalledTimes(1);
   });
 
   it('should throw an exception when trying to return an application not in review', async () => {

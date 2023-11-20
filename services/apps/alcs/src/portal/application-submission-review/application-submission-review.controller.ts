@@ -44,7 +44,6 @@ export class ApplicationSubmissionReviewController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
-    private applicationService: ApplicationService,
     private applicationDocumentService: ApplicationDocumentService,
     private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
@@ -369,11 +368,6 @@ export class ApplicationSubmissionReviewController {
       }
 
       await this.applicationSubmissionReviewService.delete(applicationReview);
-
-      //Clear Submission Date
-      await this.applicationService.updateByFileNumber(fileNumber, {
-        dateSubmittedToAlc: null,
-      });
 
       if (returnDto.applicantComment) {
         await this.applicationSubmissionService.update(
