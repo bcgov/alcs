@@ -27,6 +27,7 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('app.decision_date', 'decision_date')
       .addSelect('decision_date.outcome', 'outcome')
+      .addSelect('decision_date.dest_rank', 'dest_rank')
       .addSelect('app.uuid', 'application_uuid')
       .addSelect('app.region_code', 'application_region_code')
       .addSelect(
@@ -63,11 +64,16 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(ApplicationDecision, 'decision_date')
-            .select('MAX("date")', 'date')
+            .select('date', 'date')
             .addSelect('outcome_code', 'outcome')
+            .addSelect(
+              'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC)',
+              'dest_rank',
+            )
             .addSelect('application_uuid', 'application_uuid')
             .groupBy('application_uuid')
-            .addGroupBy('outcome'),
+            .addGroupBy('outcome_code')
+            .addGroupBy('date'),
         'decision_date',
         'decision_date."application_uuid" = app.uuid',
       )
@@ -77,6 +83,9 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != 'CNCL'",
+      )
+      .andWhere(
+        "decision_date.dest_rank = 1",
       ),
 })
 export class PublicApplicationSubmissionSearchView {
@@ -116,6 +125,9 @@ export class PublicApplicationSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+
+  @ViewColumn()
+  destRank: number | null;
 
   @ViewColumn()
   outcome: string | null;
