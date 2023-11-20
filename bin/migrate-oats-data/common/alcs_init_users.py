@@ -1,6 +1,7 @@
 from common import BATCH_UPLOAD_SIZE, OATS_ETL_USER, setup_and_get_logger
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
+import uuid
 
 etl_name = "init_alcs_users"
 logger = setup_and_get_logger(etl_name)
@@ -30,8 +31,7 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts = 0
         successful_inserts_count = 0
-        last_submission_id = 0
-
+        last_submission_id = "-"
         with open(
             "sql/common/init_users.sql",
             "r",
@@ -40,7 +40,7 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{submission_sql} WHERE oas.alc_staff_id > {last_submission_id} ORDER BY oas.alc_staff_id;"
+                    f"{submission_sql} AND oaa.created_guid > '{last_submission_id}' ORDER BY oaa.created_guid;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -55,10 +55,10 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_inserts_count = (
                         successful_inserts_count + users_to_be_inserted_count
                     )
-                    last_submission_id = dict(rows[-1])["alc_staff_id"]
+                    last_submission_id = dict(rows[-1])["created_guid"]
 
                     logger.debug(
-                        f"retrieved/inserted items count: {users_to_be_inserted_count}; total successfully inserted users so far {successful_inserts_count}; last inserted alr_application_id: {last_submission_id}"
+                        f"retrieved/inserted items count: {users_to_be_inserted_count}; total successfully inserted users so far {successful_inserts_count}; last inserted guid: {last_submission_id}"
                     )
                 except Exception as err:
                     logger.exception()
@@ -84,22 +84,20 @@ def _insert_users(conn, batch_size, cursor, rows):
 
 def _get_insert_query():
     query = f"""
-                INSERT INTO alcs.users (
+                INSERT INTO alcs.user (
+                    bceid_guid,
+                    email,
                     display_name,
                     identity_provider,
                     preferred_username,
-                    given_name,
-                    family_name,
-                    email,
                     audit_created_by
                 )
                 VALUES (
-                    %(login)s,
-                    %(local_government_uuid)s,
-                    %(login)s,
-                    %(first_name)s,
-                    %(last_name)s,
-                    %(email)s,
+                    %(created_guid)s,
+                    '11@11',
+                    'etl_imported_display_name',
+                    'bceid_etl',
+                    'etl_imported_username',
                     '{OATS_ETL_USER}'
                 )
     """
@@ -118,7 +116,7 @@ def clean_users(conn=None):
     logger.info("Start users cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.users alu WHERE alu.audit_created_by = '{OATS_ETL_USER}'"
+            f"DELETE FROM alcs.user alu WHERE alu.audit_created_by = '{OATS_ETL_USER}'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 

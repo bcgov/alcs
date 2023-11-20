@@ -12,6 +12,7 @@ from noi.noi_submission_status_email import (
 from noi import (
     process_notice_of_intent,
 )
+from common.alcs_init_users import init_alcs_users
 from documents import (
     import_oats_noi_documents,
     import_oats_app_documents,
@@ -53,6 +54,9 @@ def import_all(console, args):
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)
+
+        console.log("Processing Users")
+        init_alcs_users(batch_size=import_batch_size)
 
         # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
         #       must be the last ones in the migrate etl

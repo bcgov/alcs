@@ -1,11 +1,11 @@
 WITH
     insert_count AS (
-        SELECT
-            oas.alc_staff_id
+        SELECT DISTINCT
+            oaa.created_guid
         FROM
-            oats.oats_alc_staffs oas
-        GROUP BY
-            oas.alc_staff_id
+            oats.oats_alr_applications oaa
+        WHERE
+            oaa.created_guid IS NOT NULL
     )
 SELECT
     count(*)
