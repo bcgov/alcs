@@ -25,6 +25,9 @@ from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_decision_date imp
 from .oats_to_alcs_notice_of_intent_table_etl.oats_to_alcs_notice_of_intent_table_etl import (
     process_alcs_notice_of_intent_base_fields,
 )
+from .oats_to_alcs_notice_of_intent_table_etl.notice_of_intent_rx_all_items import (
+    update_notice_of_intent_date_rx_all_items,
+)
 
 from .notice_of_intent_submissions.parcels import (
     init_notice_of_intent_parcels,
@@ -68,6 +71,8 @@ def process_notice_of_intent_soil(batch_size):
 def process_notice_of_intent(batch_size):
     # place the rest notice of intent processing functions here
     process_alcs_notice_of_intent_base_fields(batch_size)
+
+    update_notice_of_intent_date_rx_all_items(batch_size)
 
     process_alcs_notice_of_intent_decision_date(batch_size)
 
