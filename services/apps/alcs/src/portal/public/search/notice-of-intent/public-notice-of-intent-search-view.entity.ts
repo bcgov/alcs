@@ -27,6 +27,7 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('noi.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('noi.decision_date', 'decision_date')
       .addSelect('decision_date.outcome', 'outcome')
+      .addSelect('decision_date.dest_rank', 'dest_rank')
       .addSelect('noi.uuid', 'notice_of_intent_uuid')
       .addSelect('noi.region_code', 'notice_of_intent_region_code')
       .addSelect(
@@ -65,9 +66,14 @@ import { LinkedStatusType } from '../public-search.dto';
             .from(NoticeOfIntentDecision, 'decision_date')
             .select('MAX("date")', 'date')
             .addSelect('outcome_code', 'outcome')
+            .addSelect(
+              'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC)',
+              'dest_rank',
+            )
             .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
             .groupBy('notice_of_intent_uuid')
-            .addGroupBy('outcome'),
+            .addGroupBy('outcome_code')
+            .addGroupBy('decision_date.date'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
@@ -77,6 +83,9 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != 'CNCL'",
+      )
+      .andWhere(
+        "decision_date.dest_rank = 1",
       ),
 })
 export class PublicNoticeOfIntentSubmissionSearchView {
@@ -117,6 +126,8 @@ export class PublicNoticeOfIntentSubmissionSearchView {
   @ViewColumn()
   decisionDate: Date | null;
 
+  @ViewColumn()
+  destRank: number | null;
 
   @ViewColumn()
   outcome: string | null;

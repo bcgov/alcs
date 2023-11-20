@@ -27,6 +27,7 @@ export class PublicNoticeOfIntentSearchService {
     AdvancedSearchResultDto<PublicNoticeOfIntentSubmissionSearchView[]>
   > {
     const query = await this.compileNoticeOfIntentSearchQuery(searchDto);
+    console.log(query.getQuery())
 
     this.compileGroupBySearchQuery(query);
 
@@ -89,6 +90,7 @@ export class PublicNoticeOfIntentSearchService {
         , "noiSearch"."date_submitted_to_alc"
         , "noiSearch"."decision_date"
         , "noiSearch"."outcome"
+        , "noiSearch"."dest_rank"
         , "noiSearch"."last_update"      
         , "noticeOfIntentType"."audit_deleted_date_at"
         , "noticeOfIntentType"."audit_created_at"
