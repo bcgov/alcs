@@ -216,7 +216,7 @@ export class PublicSearchController {
       ownerName: application.applicant,
       class: 'APP',
       status: application.status.status_type_code,
-      outcome: application.outcome ?? undefined
+      outcome: application.outcome ?? undefined,
     };
   }
 
@@ -233,7 +233,7 @@ export class PublicSearchController {
       ownerName: noi.applicant,
       class: 'NOI',
       status: noi.status.status_type_code,
-      outcome: noi.outcome ?? undefined
+      outcome: noi.outcome ?? undefined,
     };
   }
 
@@ -249,7 +249,7 @@ export class PublicSearchController {
       localGovernmentName: notification.localGovernmentName,
       ownerName: notification.applicant,
       class: 'NOTI',
-      status: notification.status.status_type_code
+      status: notification.status.status_type_code,
     };
   }
 }
