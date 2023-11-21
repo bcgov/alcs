@@ -1,7 +1,6 @@
 from common import BATCH_UPLOAD_SIZE, OATS_ETL_USER, setup_and_get_logger
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
-import uuid
 
 etl_name = "init_alcs_users"
 logger = setup_and_get_logger(etl_name)
@@ -31,7 +30,7 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts = 0
         successful_inserts_count = 0
-        last_submission_id = "-"
+        last_user_guid = "-"
         with open(
             "sql/common/init_users.sql",
             "r",
@@ -40,7 +39,7 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{submission_sql} AND oaa.created_guid > '{last_submission_id}' ORDER BY oaa.created_guid;"
+                    f"{submission_sql} AND oaa.created_guid > '{last_user_guid}' ORDER BY oaa.created_guid;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -55,10 +54,10 @@ def init_alcs_users(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     successful_inserts_count = (
                         successful_inserts_count + users_to_be_inserted_count
                     )
-                    last_submission_id = dict(rows[-1])["created_guid"]
+                    last_user_guid = dict(rows[-1])["created_guid"]
 
                     logger.debug(
-                        f"retrieved/inserted items count: {users_to_be_inserted_count}; total successfully inserted users so far {successful_inserts_count}; last inserted guid: {last_submission_id}"
+                        f"retrieved/inserted items count: {users_to_be_inserted_count}; total successfully inserted users so far {successful_inserts_count}; last inserted guid: {last_user_guid}"
                     )
                 except Exception as err:
                     logger.exception()

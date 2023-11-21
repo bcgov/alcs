@@ -27,9 +27,9 @@ def clean_all(console, args):
         clean_application_documents()
         clean_noi_documents()
         clean_documents()
-        clean_users()
         clean_alcs_applications()
         clean_notice_of_intent()
+        clean_users()
         clean_application_submission_status_emails(),
         clean_notice_of_intent_submission_status_emails(),
 
