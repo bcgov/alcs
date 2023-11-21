@@ -60,11 +60,7 @@
     <div><strong>Comment for L/FNG</strong></div>
     {{ application.returnedToLfngComment }}
   </div>
-  <div
-    *ngIf="
-      applicationReview && (application.canReview || application.status.code !== SUBMISSION_STATUS.IN_REVIEW_BY_LG)
-    "
-  >
+  <div *ngIf="applicationReview">
     <section>
       <h4>Contact Information</h4>
       <div class="review-table">
