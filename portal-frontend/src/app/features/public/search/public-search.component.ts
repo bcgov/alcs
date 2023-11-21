@@ -30,6 +30,13 @@ const STATUS_MAP = {
   'ALC Response Sent (SRW only)': 'ALCR',
 };
 
+const DECISION_MAP = {
+  'Approved': 'APPR',
+  'Refused': 'REFU',
+  'Rescinded': 'RESC',
+  'Ordered not to Proceed (NOI)': 'ONTP',
+};
+
 const SEARCH_SESSION_STORAGE_KEY = 'search';
 
 @Component({
@@ -61,6 +68,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
 
   localGovernmentControl = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);
+  portalDecisionOutcomeControl = new FormControl<string[]>([]);
   componentTypeControl = new FormControl<string[] | undefined>(undefined);
   pidControl = new FormControl<string | undefined>(undefined);
   nameControl = new FormControl<string | undefined>(undefined);
@@ -71,6 +79,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     pid: this.pidControl,
     civicAddress: this.civicAddressControl,
     portalStatus: this.portalStatusControl,
+    portalDecisionOutcome: this.portalDecisionOutcomeControl,
     componentType: this.componentTypeControl,
     government: this.localGovernmentControl,
     decisionMaker: new FormControl<string | undefined>(undefined),
@@ -90,6 +99,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   searchResultsHidden = true;
   decisionMakers: DecisionMakerDto[] = [];
   STATUS_MAP = Object.entries(STATUS_MAP);
+  DECISION_MAP = Object.entries(DECISION_MAP);
   isMobile = false;
   isLoading = false;
   today = new Date();
@@ -244,6 +254,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       fileNumber: this.formatStringSearchParam(searchControls.fileNumber.value),
       name: this.formatStringSearchParam(searchControls.name.value),
       civicAddress: this.formatStringSearchParam(searchControls.civicAddress.value),
+      decisionOutcome: searchControls.portalDecisionOutcome.value ?? undefined,
       pid: this.formatStringSearchParam(searchControls.pid.value),
       portalStatusCodes: searchControls.portalStatus.value ?? undefined,
       governmentName: this.formatStringSearchParam(searchControls.government.value),
@@ -365,7 +376,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
         notifications: [],
         totalApplications: 0,
         totalNoticeOfIntents: 0,
-        totalNotifications: 0,
+        totalNotifications: 0
       };
     }
 
@@ -424,6 +435,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
       civicAddress,
       government,
       portalStatus,
+      portalDecisionOutcome
     } = this.searchForm.controls;
 
     decisionMaker.setValue(storedSearch.decisionMakerCode);
@@ -434,6 +446,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
     civicAddress.setValue(storedSearch.civicAddress);
     government.setValue(storedSearch.governmentName);
     portalStatus.setValue(storedSearch.portalStatusCodes ?? null);
+    portalDecisionOutcome.setValue(storedSearch.decisionOutcome ?? null)
 
     if (storedSearch.dateDecidedTo) {
       dateDecidedTo.setValue(new Date(storedSearch.dateDecidedTo));

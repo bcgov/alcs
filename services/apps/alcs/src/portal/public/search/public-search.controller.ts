@@ -143,6 +143,7 @@ export class PublicSearchController {
       !searchDto.dateDecidedFrom &&
       !searchDto.dateDecidedTo &&
       !searchDto.decisionMakerCode &&
+      !searchDto.decisionOutcome &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
 
     return {
@@ -215,6 +216,7 @@ export class PublicSearchController {
       ownerName: application.applicant,
       class: 'APP',
       status: application.status.status_type_code,
+      outcome: application.outcome ?? undefined,
     };
   }
 
@@ -231,6 +233,7 @@ export class PublicSearchController {
       ownerName: noi.applicant,
       class: 'NOI',
       status: noi.status.status_type_code,
+      outcome: noi.outcome ?? undefined,
     };
   }
 

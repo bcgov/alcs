@@ -26,6 +26,8 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('app_sub.type_code', 'application_type_code')
       .addSelect('app.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('app.decision_date', 'decision_date')
+      .addSelect('decision_date.outcome', 'outcome')
+      .addSelect('decision_date.dest_rank', 'dest_rank')
       .addSelect('app.uuid', 'application_uuid')
       .addSelect('app.region_code', 'application_region_code')
       .addSelect(
@@ -62,9 +64,26 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(ApplicationDecision, 'decision_date')
-            .select('MAX("date")', 'date')
-            .addSelect('application_uuid', 'application_uuid')
-            .groupBy('application_uuid'),
+            .select('decisiondate', 'date')
+            .addSelect('outcome', 'outcome')
+            .addSelect('dest_rank', 'dest_rank')
+            .distinctOn(['application_uuid'])
+            .addSelect('applicationuuid', 'application_uuid')
+            .from(
+              qb
+                .subQuery()
+                .select('outcome_code', 'outcome')
+                .addSelect('date', 'decisiondate')
+                .addSelect('application_uuid', 'applicationuuid')
+                .addSelect(
+                  'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC, audit_created_at DESC)',
+                  'dest_rank',
+                )
+                .from(ApplicationDecision, 'decision')
+                .getQuery(),
+              'decisions',
+            )
+            .where('dest_rank = 1'),
         'decision_date',
         'decision_date."application_uuid" = app.uuid',
       )
@@ -113,6 +132,12 @@ export class PublicApplicationSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+
+  @ViewColumn()
+  destRank: number | null;
+
+  @ViewColumn()
+  outcome: string | null;
 
   @ManyToOne(() => ApplicationType, {
     nullable: false,

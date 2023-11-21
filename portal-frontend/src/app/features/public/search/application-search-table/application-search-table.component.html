@@ -43,6 +43,13 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="outcome">
+      <th class="type-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Outcome</th>
+      <td mat-cell *matCellDef="let element">
+        {{ outcomeMapping[element.outcome] | emptyColumn }}
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="lastUpdate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Update</th>
       <td mat-cell *matCellDef="let element">

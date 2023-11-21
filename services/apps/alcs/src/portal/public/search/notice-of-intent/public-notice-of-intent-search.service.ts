@@ -88,6 +88,8 @@ export class PublicNoticeOfIntentSearchService {
         , "noiSearch"."status"
         , "noiSearch"."date_submitted_to_alc"
         , "noiSearch"."decision_date"
+        , "noiSearch"."outcome"
+        , "noiSearch"."dest_rank"
         , "noiSearch"."last_update"      
         , "noticeOfIntentType"."audit_deleted_date_at"
         , "noticeOfIntentType"."audit_created_at"
@@ -133,6 +135,12 @@ export class PublicNoticeOfIntentSearchService {
           local_government_uuid: government.uuid,
         },
       );
+    }
+
+    if (searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) {
+      query.andWhere('noiSearch.outcome IN(:...outcomes)', {
+        outcomes: searchDto.decisionOutcome,
+      });
     }
 
     if (searchDto.regionCodes && searchDto.regionCodes.length > 0) {

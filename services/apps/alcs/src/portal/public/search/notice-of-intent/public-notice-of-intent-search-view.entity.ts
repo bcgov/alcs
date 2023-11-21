@@ -26,6 +26,8 @@ import { LinkedStatusType } from '../public-search.dto';
       .addSelect('noi_sub.type_code', 'notice_of_intent_type_code')
       .addSelect('noi.date_submitted_to_alc', 'date_submitted_to_alc')
       .addSelect('noi.decision_date', 'decision_date')
+      .addSelect('decision_date.outcome', 'outcome')
+      .addSelect('decision_date.dest_rank', 'dest_rank')
       .addSelect('noi.uuid', 'notice_of_intent_uuid')
       .addSelect('noi.region_code', 'notice_of_intent_region_code')
       .addSelect(
@@ -62,9 +64,26 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(NoticeOfIntentDecision, 'decision_date')
-            .select('MAX("date")', 'date')
-            .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
-            .groupBy('notice_of_intent_uuid'),
+            .select('decisiondate', 'date')
+            .addSelect('outcome', 'outcome')
+            .addSelect('dest_rank', 'dest_rank')
+            .distinctOn(['notice_of_intentuuid'])
+            .addSelect('notice_of_intentuuid', 'notice_of_intent_uuid')
+            .from(
+              qb
+                .subQuery()
+                .select('outcome_code', 'outcome')
+                .addSelect('date', 'decisiondate')
+                .addSelect('notice_of_intent_uuid', 'notice_of_intentuuid')
+                .addSelect(
+                  'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC, audit_created_at DESC)',
+                  'dest_rank',
+                )
+                .from(NoticeOfIntentDecision, 'decision')
+                .getQuery(),
+              'decisions',
+            )
+            .where('dest_rank = 1'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
@@ -74,6 +93,9 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != 'CNCL'",
+      )
+      .andWhere(
+        "decision_date.dest_rank = 1",
       ),
 })
 export class PublicNoticeOfIntentSubmissionSearchView {
@@ -113,6 +135,12 @@ export class PublicNoticeOfIntentSubmissionSearchView {
 
   @ViewColumn()
   decisionDate: Date | null;
+
+  @ViewColumn()
+  destRank: number | null;
+
+  @ViewColumn()
+  outcome: string | null;
 
   @ManyToOne(() => NoticeOfIntentType, {
     nullable: false,

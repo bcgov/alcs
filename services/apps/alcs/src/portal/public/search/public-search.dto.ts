@@ -19,6 +19,7 @@ export class BaseSearchResultDto {
   status: string;
   dateSubmitted?: number;
   lastUpdate?: number;
+  outcome?: string;
   class: SearchEntityClass;
 }
 
@@ -77,6 +78,10 @@ export class SearchRequestDto extends PagingRequestDto {
   @IsArray()
   @IsOptional()
   portalStatusCodes?: string[];
+
+  @IsArray()
+  @IsOptional()
+  decisionOutcome?: string[];
 
   @IsString()
   @IsOptional()

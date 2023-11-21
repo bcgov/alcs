@@ -84,6 +84,7 @@ export class PublicApplicationSearchService {
             , "appSearch"."local_government_name"
             , "appSearch"."application_type_code"
             , "appSearch"."status"
+            , "appSearch"."outcome"
             , "appSearch"."date_submitted_to_alc"
             , "appSearch"."decision_date"
             , "appSearch"."last_update"
@@ -121,6 +122,12 @@ export class PublicApplicationSearchService {
           statuses: searchDto.portalStatusCodes,
         },
       );
+    }
+
+    if (searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) {
+      query.andWhere('appSearch.outcome IN(:...outcomes)', {
+        outcomes: searchDto.decisionOutcome,
+      });
     }
 
     if (searchDto.governmentName) {

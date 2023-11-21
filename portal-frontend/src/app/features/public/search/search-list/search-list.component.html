@@ -3,6 +3,7 @@
     <div class="subheading2">{{ result.fileNumber }} - {{ result.ownerName }}</div>
     <div [title]="result.type">{{ result.type }}</div>
     <div [title]="result.localGovernmentName">{{ result.localGovernmentName }}</div>
+    <div>Outcome: {{ result?.outcome }}</div>
     <div>Last Updated: {{ result.lastUpdate | momentFormat }}</div>
     <div
       *ngIf="result.status"
