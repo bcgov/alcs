@@ -1,8 +1,9 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { ApplicationDto } from '../application/application.dto';
 import { ApplicationService } from '../application/application.service';
 import { AUTH_ROLE } from '../../common/authorization/roles';
@@ -20,6 +21,7 @@ export class CommissionerController {
     private applicationService: ApplicationService,
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
+    private trackingService: TrackingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -27,6 +29,7 @@ export class CommissionerController {
   @UserRoles(AUTH_ROLE.COMMISSIONER)
   async get(
     @Param('fileNumber') fileNumber,
+    @Req() req,
   ): Promise<CommissionerApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
     const firstMap = await this.applicationService.mapToDtos([application]);
@@ -48,6 +51,7 @@ export class CommissionerController {
       false,
     );
     const mappedRecords = finalMap[0];
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return {
       ...mappedRecords,
       hasModifications: hasApprovedOrPendingModification,

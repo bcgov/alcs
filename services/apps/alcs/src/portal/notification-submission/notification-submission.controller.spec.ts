@@ -1,18 +1,17 @@
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
-import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import { NotificationDocument } from '../../alcs/notification/notification-document/notification-document.entity';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { NotificationSubmissionToSubmissionStatus } from '../../alcs/notification/notification-submission-status/notification-status.entity';
 import { Notification } from '../../alcs/notification/notification.entity';
 import { NotificationSubmissionProfile } from '../../common/automapper/notification-submission.automapper.profile';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { User } from '../../user/user.entity';
 import { GenerateSrwDocumentService } from '../pdf-generation/generate-srw-document.service';
 import {
@@ -33,16 +32,19 @@ describe('NotificationSubmissionController', () => {
   let mockNotificationSubmissionService: DeepMocked<NotificationSubmissionService>;
   let mockNotificationValidationService: DeepMocked<NotificationSubmissionValidatorService>;
   let mockSrwDocumentService: DeepMocked<GenerateSrwDocumentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   const primaryContactOwnerUuid = 'primary-contact';
   const localGovernmentUuid = 'local-government';
   const applicant = 'fake-applicant';
-  const bceidBusinessGuid = 'business-guid';
 
   beforeEach(async () => {
     mockNotificationSubmissionService = createMock();
     mockNotificationValidationService = createMock();
     mockSrwDocumentService = createMock();
+    mockLGService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [NotificationSubmissionController],
@@ -59,6 +61,14 @@ describe('NotificationSubmissionController', () => {
         {
           provide: GenerateSrwDocumentService,
           useValue: mockSrwDocumentService,
+        },
+        {
+          provide: LocalGovernmentService,
+          useValue: mockLGService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,

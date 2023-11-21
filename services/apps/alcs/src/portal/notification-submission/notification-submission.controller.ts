@@ -10,9 +10,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { NOTIFICATION_STATUS } from '../../alcs/notification/notification-submission-status/notification-status.dto';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
-import { EmailService } from '../../providers/email/email.service';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { User } from '../../user/user.entity';
 import { GenerateSrwDocumentService } from '../pdf-generation/generate-srw-document.service';
 import { NotificationSubmissionValidatorService } from './notification-submission-validator.service';
@@ -29,6 +30,8 @@ export class NotificationSubmissionController {
     private notificationSubmissionService: NotificationSubmissionService,
     private notificationValidationService: NotificationSubmissionValidatorService,
     private generateSrwDocumentService: GenerateSrwDocumentService,
+    private localGovernmentService: LocalGovernmentService,
+    private trackingService: TrackingService,
   ) {}
 
   @Get()
@@ -51,6 +54,14 @@ export class NotificationSubmissionController {
       fileId,
       user,
     );
+
+    if (user && user.bceidBusinessGuid) {
+      const matchingLocalGovernment =
+        await this.localGovernmentService.getByGuid(user.bceidBusinessGuid);
+      if (matchingLocalGovernment) {
+        await this.trackingService.trackView(user, fileId);
+      }
+    }
 
     return await this.notificationSubmissionService.mapToDetailedDTO(
       submission,

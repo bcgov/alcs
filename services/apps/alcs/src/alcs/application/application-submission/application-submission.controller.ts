@@ -23,6 +23,7 @@ import { StatusEmailService } from '../../../providers/email/status-email.servic
 import { PARENT_TYPE } from '../../card/card-subtask/card-subtask.dto';
 import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
 import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
+import { ApplicationService } from '../application.service';
 import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 import { ApplicationSubmissionService } from './application-submission.service';
 
@@ -33,6 +34,7 @@ export class ApplicationSubmissionController {
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private applicationService: ApplicationService,
     private documentService: DocumentService,
     private statusEmailService: StatusEmailService,
     @InjectMapper() private mapper: Mapper,
@@ -127,6 +129,11 @@ export class ApplicationSubmissionController {
       SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
       null,
     );
+
+    //Clear Submission Date
+    await this.applicationService.updateByFileNumber(fileNumber, {
+      dateSubmittedToAlc: null,
+    });
 
     const { primaryContact, submissionGovernment } =
       await this.statusEmailService.getApplicationEmailData(

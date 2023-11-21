@@ -1,6 +1,14 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import {
@@ -9,6 +17,7 @@ import {
 } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
 import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
@@ -29,15 +38,17 @@ export class NoticeOfIntentController {
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private boardService: BoardService,
+    private trackingService: TrackingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async get(@Param('fileNumber') fileNumber: string) {
+  async get(@Param('fileNumber') fileNumber: string, @Req() req) {
     const noticeOfIntent =
       await this.noticeOfIntentService.getByFileNumber(fileNumber);
     const mapped = await this.noticeOfIntentService.mapToDtos([noticeOfIntent]);
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return mapped[0];
   }
 

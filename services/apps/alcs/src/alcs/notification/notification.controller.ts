@@ -1,6 +1,4 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -18,6 +16,7 @@ import {
 } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { TrackingService } from '../../common/tracking/tracking.service';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { NotificationSubmissionService } from '../../portal/notification-submission/notification-submission.service';
 import { NotificationDocumentService } from './notification-document/notification-document.service';
@@ -35,15 +34,16 @@ export class NotificationController {
     private notificationSubmissionStatusService: NotificationSubmissionStatusService,
     private notificationSubmissionService: NotificationSubmissionService,
     private notificationDocumentService: NotificationDocumentService,
-    @InjectMapper() private mapper: Mapper,
+    private trackingService: TrackingService,
   ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async get(@Param('fileNumber') fileNumber: string) {
+  async get(@Param('fileNumber') fileNumber: string, @Req() req) {
     const notification =
       await this.notificationService.getByFileNumber(fileNumber);
     const mapped = await this.notificationService.mapToDtos([notification]);
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return mapped[0];
   }
 
@@ -131,7 +131,7 @@ export class NotificationController {
       );
     }
 
-    return this.get(fileNumber);
+    return this.get(fileNumber, req.user.entity);
   }
 
   @Get('/search/:fileNumber')
