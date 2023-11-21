@@ -274,7 +274,8 @@ def get_insert_query_for_soil():
                         soil_to_place_average_depth,
                         soil_is_follow_up,
                         soil_follow_up_ids,
-                        soil_has_submitted_notice
+                        soil_has_submitted_notice,
+                        soil_is_extraction_or_mining
                     """
     unique_values = """, %(remove_type)s,
                         %(impact_reduction_desc)s,
@@ -292,6 +293,7 @@ def get_insert_query_for_soil():
                         %(max_fill_depth)s,
                         %(followup_noi_ind)s,
                         %(followup_noi_number)s,
+                        %(ministry_notice_ind)s,
                         %(ministry_notice_ind)s
                     """
     return get_insert_query(unique_fields, unique_values)
@@ -316,7 +318,8 @@ def get_insert_query_for_pfrs():
                         soil_to_place_average_depth,
                         soil_is_follow_up,
                         soil_follow_up_ids,
-                        soil_has_submitted_notice
+                        soil_has_submitted_notice,
+                        soil_is_extraction_or_mining
                     """
     unique_values = """, %(remove_type)s,
                         %(impact_reduction_desc)s,
@@ -336,6 +339,7 @@ def get_insert_query_for_pfrs():
                         %(max_fill_depth)s,
                         %(followup_noi_ind)s,
                         %(followup_noi_number)s,
+                        %(ministry_notice_ind)s,
                         %(ministry_notice_ind)s
                     """
     return get_insert_query(unique_fields, unique_values)
