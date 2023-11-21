@@ -64,16 +64,26 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(ApplicationDecision, 'decision_date')
-            .select('date', 'date')
-            .addSelect('outcome_code', 'outcome')
-            .addSelect(
-              'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC)',
-              'dest_rank',
+            .select('decisiondate', 'date')
+            .addSelect('outcome', 'outcome')
+            .addSelect('dest_rank', 'dest_rank')
+            .distinctOn(['application_uuid'])
+            .addSelect('applicationuuid', 'application_uuid')
+            .from(
+              qb
+                .subQuery()
+                .select('outcome_code', 'outcome')
+                .addSelect('date', 'decisiondate')
+                .addSelect('application_uuid', 'applicationuuid')
+                .addSelect(
+                  'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC, audit_created_at DESC)',
+                  'dest_rank',
+                )
+                .from(ApplicationDecision, 'decision')
+                .getQuery(),
+              'decisions',
             )
-            .addSelect('application_uuid', 'application_uuid')
-            .groupBy('application_uuid')
-            .addGroupBy('outcome_code')
-            .addGroupBy('date'),
+            .where('dest_rank = 1'),
         'decision_date',
         'decision_date."application_uuid" = app.uuid',
       )
@@ -83,9 +93,6 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != 'CNCL'",
-      )
-      .andWhere(
-        "decision_date.dest_rank = 1",
       ),
 })
 export class PublicApplicationSubmissionSearchView {

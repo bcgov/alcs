@@ -64,16 +64,26 @@ import { LinkedStatusType } from '../public-search.dto';
         (qb) =>
           qb
             .from(NoticeOfIntentDecision, 'decision_date')
-            .select('date', 'date')
-            .addSelect('outcome_code', 'outcome')
-            .addSelect(
-              'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC)',
-              'dest_rank',
+            .select('decisiondate', 'date')
+            .addSelect('outcome', 'outcome')
+            .addSelect('dest_rank', 'dest_rank')
+            .distinctOn(['notice_of_intentuuid'])
+            .addSelect('notice_of_intentuuid', 'notice_of_intent_uuid')
+            .from(
+              qb
+                .subQuery()
+                .select('outcome_code', 'outcome')
+                .addSelect('date', 'decisiondate')
+                .addSelect('notice_of_intent_uuid', 'notice_of_intentuuid')
+                .addSelect(
+                  'RANK() OVER (PARTITION BY notice_of_intent_uuid ORDER BY date DESC, audit_created_at DESC)',
+                  'dest_rank',
+                )
+                .from(NoticeOfIntentDecision, 'decision')
+                .getQuery(),
+              'decisions',
             )
-            .addSelect('notice_of_intent_uuid', 'notice_of_intent_uuid')
-            .groupBy('notice_of_intent_uuid')
-            .addGroupBy('outcome_code')
-            .addGroupBy('date'),
+            .where('dest_rank = 1'),
         'decision_date',
         'decision_date."notice_of_intent_uuid" = noi.uuid',
       )
