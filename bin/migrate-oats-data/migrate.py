@@ -16,6 +16,8 @@ from menu.commands import (
     notice_of_intent_import,
     notice_of_intent_clean,
     start_obfuscation,
+    import_users,
+    users_clean,
 )
 from db import connection_pool
 from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
@@ -53,6 +55,10 @@ if __name__ == "__main__":
                 noi_document_import(console, args)
             case "obfuscate":
                 start_obfuscation(console)
+            case "user-import":
+                import_users(console, args)
+            case "user-clean":
+                users_clean(console)
 
     finally:
         if connection_pool:

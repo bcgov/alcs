@@ -3,7 +3,7 @@ from noi.notice_of_intent_migration import (
     process_notice_of_intent,
     clean_notice_of_intent,
 )
-from common import setup_and_get_logger
+from common import setup_and_get_logger, init_alcs_users
 
 logger = setup_and_get_logger("noi_import")
 
@@ -19,6 +19,7 @@ def notice_of_intent_import(console, args):
         logger.debug(f"Processing NOI import in batch size = {import_batch_size}")
 
         init_notice_of_intents(batch_size=import_batch_size)
+        init_alcs_users(batch_size=import_batch_size)
         process_notice_of_intent(batch_size=import_batch_size)
 
 

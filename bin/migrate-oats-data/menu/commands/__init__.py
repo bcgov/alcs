@@ -4,3 +4,4 @@ from .documents import *
 from .applications import *
 from .notice_of_intents import *
 from .obfuscation import *
+from .users import *

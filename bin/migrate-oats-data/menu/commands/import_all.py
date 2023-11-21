@@ -12,6 +12,7 @@ from noi.noi_submission_status_email import (
 from noi import (
     process_notice_of_intent,
 )
+from common.alcs_init_users import init_alcs_users
 from documents import (
     import_oats_noi_documents,
     import_oats_app_documents,
@@ -47,6 +48,9 @@ def import_all(console, args):
 
         console.log("Processing ALCS NOI documents:")
         link_alcs_docs_to_noi_docs(batch_size=import_batch_size)
+
+        console.log("Processing Users:")
+        init_alcs_users(batch_size=import_batch_size)
 
         console.log("Processing Applications:")
         process_application_etl(batch_size=import_batch_size)

@@ -3,6 +3,7 @@ from applications import (
     clean_alcs_applications,
     init_applications,
 )
+from common.alcs_init_users import init_alcs_users
 
 
 def application_import(console, args):
@@ -18,6 +19,7 @@ def application_import(console, args):
         )
 
         init_applications(batch_size=import_batch_size)
+        init_alcs_users(batch_size=import_batch_size)
         process_application_etl(batch_size=import_batch_size)
 
 
