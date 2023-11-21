@@ -41,7 +41,7 @@
       Please select a sub-type above to view proposal questions
     </div>
 
-    <div class="full-row">
+    <div class="full-row" *ngIf="subtype.value">
       <label for="purpose">What is the purpose of the proposal?</label>
       <div class="subtext">
         Include why you are applying for non-adhering residential use, what the proposal will achieve, and any benefits
@@ -397,171 +397,181 @@
       </div>
     </ng-container>
 
-    <div class="full-row">
-      <label for="existingStructures">
-        Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
-        currently located on the property.
-      </label>
-      <div class="subtext">
-        Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
-        agri-tourism accommodation, or tourist accommodation.
-      </div>
-      <mat-form-field appearance="outline">
-        <textarea
-          formControlName="existingStructures"
-          #existingStructuresText
-          maxlength="4000"
-          id="existingStructures"
-          matInput
-        ></textarea>
-      </mat-form-field>
-      <div
-        *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
-        class="field-error"
-      >
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
-      </div>
-      <div class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</div>
-    </div>
-
-    <div class="full-row">
-      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
-      <div class="subtext">A visual representation of your proposal.</div>
-      <app-file-drag-drop
-        id="proposal-map"
-        [uploadedFiles]="proposalMap"
-        (uploadFiles)="attachProposalMap($event)"
-        (deleteFile)="onDeleteFile($event)"
-        (openFile)="openFile($event)"
-        [showErrors]="showErrors"
-        [isRequired]="true"
-        [showVirusError]="showProposalMapVirus"
-      ></app-file-drag-drop>
-    </div>
-
-    <div class="full-row">
-      <mat-label for="will-import-fill">
-        Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
-      </mat-label>
-      <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
-      <mat-button-toggle-group
-        (change)="onChangeFill($event.value)"
-        class="input"
-        id="will-import-fill"
-        formControlName="willImportFill"
-      >
-        <mat-button-toggle
-          value="true"
-          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-          >Yes</mat-button-toggle
-        >
-        <mat-button-toggle
-          value="false"
-          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
-          >No</mat-button-toggle
-        >
-      </mat-button-toggle-group>
-      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
-        <mat-icon>warning</mat-icon>
-        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
-      </div>
-    </div>
-  </div>
-
-  <section>
-    <h3>Soil & Fill Components</h3>
-    <div class="form-row">
+    <ng-container *ngIf="subtype.value">
       <div class="full-row">
-        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
-        <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
-        <mat-form-field appearance="outline">
-          <textarea formControlName="fillType" #fillTypeToPlaceText maxlength="4000" id="fillType" matInput></textarea>
-        </mat-form-field>
-        <div *ngIf="fillType.invalid && (fillType.dirty || fillType.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fillType.errors?.['required']">This field is required</div>
+        <label for="existingStructures">
+          Describe the total floor area (m<sup>2</sup>), type, number, and occupancy of all residential structures
+          currently located on the property.
+        </label>
+        <div class="subtext">
+          Residential structure is defined as a structure, whether used permanently or temporarily as a residence,
+          agri-tourism accommodation, or tourist accommodation.
         </div>
-        <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
-        <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="full-row">
-        <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
         <mat-form-field appearance="outline">
           <textarea
-            formControlName="fillOrigin"
-            #fillOriginToPlaceText
+            formControlName="existingStructures"
+            #existingStructuresText
             maxlength="4000"
-            id="fillOrigin"
+            id="existingStructures"
             matInput
           ></textarea>
         </mat-form-field>
-        <div *ngIf="fillOrigin.invalid && (fillOrigin.dirty || fillOrigin.touched)" class="field-error">
-          <mat-icon>warning</mat-icon>
-          <div *ngIf="fillOrigin.errors?.['required']">This field is required</div>
-        </div>
-        <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
-      </div>
-    </div>
-
-    <app-soil-table
-      [disabled]="willImportFill.value === 'false'"
-      tableHeader="Fill to be Placed"
-      [(data)]="fillTableData"
-      (dataChange)="markDirty()"
-    ></app-soil-table>
-  </section>
-
-  <section>
-    <h4>Project Duration</h4>
-    <div class="subtext">Estimated duration of the project</div>
-    <div class="form-row">
-      <div>
-        <mat-label for="projectDurationUnit">Duration</mat-label>
-        <div class="subtext">Days, Months, or Years</div>
-        <mat-form-field appearance="outline">
-          <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
-            <mat-option value="days">Days</mat-option>
-            <mat-option value="months">Months</mat-option>
-            <mat-option value="years">Years</mat-option>
-          </mat-select>
-        </mat-form-field>
         <div
-          *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+          *ngIf="existingStructures.invalid && (existingStructures.dirty || existingStructures.touched)"
           class="field-error"
         >
           <mat-icon>warning</mat-icon>
-          <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+          <div *ngIf="existingStructures.errors?.['required']">This field is required</div>
         </div>
+        <div class="subtext">Characters left: {{ 4000 - existingStructuresText.textLength }}</div>
       </div>
-      <div>
-        <label for="projectDurationAmount">Length</label>
-        <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
-        <mat-form-field appearance="outline">
-          <input
-            id="projectDurationAmount"
-            mask="separator.2"
-            thousandSeparator=","
-            separatorLimit="9999999999"
-            min="0.01"
-            matInput
-            formControlName="projectDurationAmount"
-            placeholder="Type length"
-          />
-        </mat-form-field>
-        <div
-          *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
-          class="field-error"
+
+      <div class="full-row">
+        <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
+        <div class="subtext">A visual representation of your proposal.</div>
+        <app-file-drag-drop
+          id="proposal-map"
+          [uploadedFiles]="proposalMap"
+          (uploadFiles)="attachProposalMap($event)"
+          (deleteFile)="onDeleteFile($event)"
+          (openFile)="openFile($event)"
+          [showErrors]="showErrors"
+          [isRequired]="true"
+          [showVirusError]="showProposalMapVirus"
+        ></app-file-drag-drop>
+      </div>
+
+      <div class="full-row">
+        <mat-label for="will-import-fill">
+          Do you need to import any fill to construct or conduct the proposed non-adhering residential use?
+        </mat-label>
+        <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
+        <mat-button-toggle-group
+          (change)="onChangeFill($event.value)"
+          class="input"
+          id="will-import-fill"
+          formControlName="willImportFill"
         >
+          <mat-button-toggle
+            value="true"
+            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+            >Yes</mat-button-toggle
+          >
+          <mat-button-toggle
+            value="false"
+            [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+            >No</mat-button-toggle
+          >
+        </mat-button-toggle-group>
+        <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
           <mat-icon>warning</mat-icon>
-          <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+          <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
         </div>
       </div>
-    </div>
-  </section>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="subtype.value">
+    <section>
+      <h3>Soil & Fill Components</h3>
+      <div class="form-row">
+        <div class="full-row">
+          <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
+          <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
+          <mat-form-field appearance="outline">
+            <textarea
+              formControlName="fillType"
+              #fillTypeToPlaceText
+              maxlength="4000"
+              id="fillType"
+              matInput
+            ></textarea>
+          </mat-form-field>
+          <div *ngIf="fillType.invalid && (fillType.dirty || fillType.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="fillType.errors?.['required']">This field is required</div>
+          </div>
+          <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+          <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="full-row">
+          <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
+          <mat-form-field appearance="outline">
+            <textarea
+              formControlName="fillOrigin"
+              #fillOriginToPlaceText
+              maxlength="4000"
+              id="fillOrigin"
+              matInput
+            ></textarea>
+          </mat-form-field>
+          <div *ngIf="fillOrigin.invalid && (fillOrigin.dirty || fillOrigin.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="fillOrigin.errors?.['required']">This field is required</div>
+          </div>
+          <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
+        </div>
+      </div>
+
+      <app-soil-table
+        [disabled]="willImportFill.value === 'false'"
+        tableHeader="Fill to be Placed"
+        [(data)]="fillTableData"
+        (dataChange)="markDirty()"
+      ></app-soil-table>
+    </section>
+
+    <section>
+      <h4>Project Duration</h4>
+      <div class="subtext">Estimated duration of the project</div>
+      <div class="form-row">
+        <div>
+          <mat-label for="projectDurationUnit">Duration</mat-label>
+          <div class="subtext">Days, Months, or Years</div>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Select one" id="projectDurationUnit" formControlName="projectDurationUnit">
+              <mat-option value="days">Days</mat-option>
+              <mat-option value="months">Months</mat-option>
+              <mat-option value="years">Years</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationUnit.invalid && (projectDurationUnit.dirty || projectDurationUnit.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationUnit.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="projectDurationAmount">Length</label>
+          <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
+          <mat-form-field appearance="outline">
+            <input
+              id="projectDurationAmount"
+              mask="separator.2"
+              thousandSeparator=","
+              separatorLimit="9999999999"
+              min="0.01"
+              matInput
+              formControlName="projectDurationAmount"
+              placeholder="Type length"
+            />
+          </mat-form-field>
+          <div
+            *ngIf="projectDurationAmount.invalid && (projectDurationAmount.dirty || projectDurationAmount.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="projectDurationAmount.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
 </form>
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
