@@ -39,7 +39,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     private applicationReviewService: ApplicationSubmissionReviewService,
     private pdfGenerationService: PdfGenerationService,
     private applicationDocumentService: ApplicationDocumentService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       this.application = application;
       this.submittedToAlcStatus = !!this.application?.submissionStatuses.find(
-        (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate
+        (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate,
       );
       this.loadReview();
     });
@@ -76,10 +76,10 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
     this.$applicationDocuments.subscribe((documents) => {
       this.staffReport = documents.filter((document) => document.type?.code === DOCUMENT_TYPE.STAFF_REPORT);
       this.resolutionDocument = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT
+        (document) => document.type?.code === DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
       );
       this.governmentOtherAttachments = documents.filter(
-        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
+        (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG,
       );
     });
   }
@@ -95,7 +95,8 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
       this.application &&
       this.application.requiresGovernmentReview &&
       (this.submittedToAlcStatus ||
-        (this.application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG && this.application.canReview))
+        ([SUBMISSION_STATUS.IN_REVIEW_BY_LG, SUBMISSION_STATUS.RETURNED_TO_LG].includes(this.application.status.code) &&
+          this.application.canReview))
     ) {
       await this.applicationReviewService.getByFileId(this.application.fileNumber);
     } else {
