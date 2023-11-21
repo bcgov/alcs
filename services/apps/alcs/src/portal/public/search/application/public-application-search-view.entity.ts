@@ -93,6 +93,9 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         "alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != 'CNCL'",
+      )
+      .andWhere(
+        "decision_date.dest_rank = 1",
       ),
 })
 export class PublicApplicationSubmissionSearchView {

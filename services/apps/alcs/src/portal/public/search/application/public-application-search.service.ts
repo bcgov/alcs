@@ -85,6 +85,7 @@ export class PublicApplicationSearchService {
             , "appSearch"."application_type_code"
             , "appSearch"."status"
             , "appSearch"."outcome"
+            , "appSearch"."dest_rank"
             , "appSearch"."date_submitted_to_alc"
             , "appSearch"."decision_date"
             , "appSearch"."last_update"
