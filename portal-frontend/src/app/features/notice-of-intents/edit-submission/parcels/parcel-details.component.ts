@@ -152,7 +152,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       .beforeClosed()
       .subscribe((result) => {
         if (result) {
-          this.loadParcels();
+          this.parcels = this.parcels.filter(parcel => parcel.uuid !== parcelUuid);
         }
       });
   }
