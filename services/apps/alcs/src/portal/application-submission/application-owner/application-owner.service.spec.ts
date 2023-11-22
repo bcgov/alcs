@@ -351,7 +351,7 @@ describe('ApplicationOwnerService', () => {
     expect(mockApplicationSubmissionservice.update).toHaveBeenCalledTimes(1);
     expect(
       mockApplicationSubmissionservice.update.mock.calls[0][1].applicant,
-    ).toEqual('A et al.');
+    ).toEqual('C et al.');
     expect(
       mockApplicationSubmissionservice.getFileNumber,
     ).toHaveBeenCalledTimes(1);

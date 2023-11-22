@@ -277,7 +277,7 @@ export class NoticeOfIntentOwnerService {
 
     if (parcels.length > 0) {
       const firstParcel = parcels.reduce((a, b) =>
-        a.auditCreatedAt > b.auditCreatedAt ? a : b,
+        a.auditCreatedAt < b.auditCreatedAt ? a : b,
       );
 
       const ownerCount = parcels.reduce((count, parcel) => {

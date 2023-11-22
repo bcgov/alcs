@@ -259,7 +259,7 @@ export class ApplicationOwnerService {
     if (applicationParcels.length > 0) {
       const firstParcel = parcels
         .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-        .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
+        .reduce((a, b) => (a.auditCreatedAt < b.auditCreatedAt ? a : b));
 
       const ownerCount = applicationParcels.reduce((count, parcel) => {
         return count + parcel.owners.length;
