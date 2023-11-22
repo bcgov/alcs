@@ -19,7 +19,6 @@ export class BaseSearchResultDto {
   status: string;
   dateSubmitted?: number;
   lastUpdate?: number;
-  outcome?: string;
   class: SearchEntityClass;
 }
 

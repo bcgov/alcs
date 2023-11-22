@@ -33,7 +33,6 @@ const STATUS_MAP = {
 const DECISION_MAP = {
   'Approved': 'APPR',
   'Refused': 'REFU',
-  'Rescinded': 'RESC',
   'Ordered not to Proceed (NOI)': 'ONTP',
 };
 
