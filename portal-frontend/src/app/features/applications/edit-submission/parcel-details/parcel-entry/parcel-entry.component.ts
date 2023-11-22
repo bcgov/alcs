@@ -198,8 +198,9 @@ export class ParcelEntryComponent implements OnInit {
       this.pin.value ||
       this.purchaseDate.value ||
       this.isFarm.value ||
-      this.civicAddress.value;
-
+      this.civicAddress.value ||
+      this.parcel.owners.length > 0;
+    
     const changeParcelType = () => {
       if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
         this.searchBy.setValue(null);
