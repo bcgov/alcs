@@ -347,7 +347,7 @@ describe('NoticeOfIntentOwnerService', () => {
 
     expect(mockNoiSubmissionService.update).toHaveBeenCalledTimes(1);
     expect(mockNoiSubmissionService.update.mock.calls[0][1].applicant).toEqual(
-      'A et al.',
+      'C et al.',
     );
     expect(mockNoiSubmissionService.getFileNumber).toHaveBeenCalledTimes(1);
     expect(mockNoiService.updateApplicant).toHaveBeenCalledTimes(1);
