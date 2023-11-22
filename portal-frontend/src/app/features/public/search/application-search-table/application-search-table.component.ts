@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationStatusDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSearchResultDto, displayedColumns, outcomeMapping } from '../../../../services/search/search.dto';
+import { ApplicationSearchResultDto, displayedColumns } from '../../../../services/search/search.dto';
 import { SearchResult, TableChange } from '../search.interface';
 
 @Component({
@@ -37,7 +37,6 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = displayedColumns;
-  outcomeMapping = outcomeMapping;
   
   dataSource = new MatTableDataSource<SearchResult>();
   pageIndex = 0;
