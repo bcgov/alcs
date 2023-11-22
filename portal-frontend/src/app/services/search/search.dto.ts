@@ -6,7 +6,6 @@ export interface BaseSearchResultDto {
   localGovernmentName: string;
   boardCode?: string;
   ownerName: string;
-  outcome?: string;
   dateSubmitted: number;
   lastUpdate: number;
   status?: string;
@@ -53,7 +52,7 @@ export interface SearchRequestDto extends PagingRequestDto {
   decisionOutcome?: string[];
 }
 
-export const displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus',  'outcome', 'lastUpdate', 'government'];
+export const displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
 
 export const  outcomeMapping: Record<string, string> = {
   'APPR': "Approved",
