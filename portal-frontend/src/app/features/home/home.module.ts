@@ -13,8 +13,9 @@ import { InboxListComponent } from './inbox/inbox-list/inbox-list.component';
 import { InboxComponent } from './inbox/inbox.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'applications', pathMatch: 'full' },
   {
-    path: '',
+    path: ':submissionType',
     component: HomeComponent,
   },
 ];
