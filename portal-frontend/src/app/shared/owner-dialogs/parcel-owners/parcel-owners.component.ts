@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { PARCEL_OWNERSHIP_TYPE } from 'src/app/services/application-parcel/application-parcel.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
