@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
+import { PARCEL_OWNERSHIP_TYPE } from 'src/app/services/application-parcel/application-parcel.dto';
 import { ApplicationOwnerDto } from '../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
@@ -20,6 +21,8 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
 export class ParcelOwnersComponent {
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
+  
+  PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
   @Input() ownerService!: ApplicationOwnerService | NoticeOfIntentOwnerService;
   @Input() documentService!: ApplicationDocumentService | NoticeOfIntentDocumentService;
@@ -55,9 +58,13 @@ export class ParcelOwnersComponent {
   @Input() isShowAllOwners = false;
 
   _disabled = false;
-  displayedColumns = ['type', 'displayName', 'organizationName', 'phone', 'email', 'actions'];
+  displayedColumns = ['displayName', 'organizationName', 'phone', 'email', 'corporateSummary', 'actions'];
 
-  constructor(private dialog: MatDialog, private confDialogService: ConfirmationDialogService) {}
+  constructor(
+    private dialog: MatDialog, 
+    private confDialogService: ConfirmationDialogService,
+    private applicationDocumentService: ApplicationDocumentService
+  ) {}
 
   onEdit(owner: ApplicationOwnerDto) {
     let dialog;
@@ -89,12 +96,24 @@ export class ParcelOwnersComponent {
         this.onOwnersUpdated.emit();
       }
     });
+    dialog.afterClosed().subscribe((result) => {
+      if (result.ownerDeleted) {
+        this.dataSource.data = this.dataSource.data.filter((owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) => owner.uuid !== result.deletedOwnerId);
+      }
+    });
   }
 
   async onRemove(uuid: string) {
     this.onOwnerRemoved.emit(uuid);
   }
 
+  async onOpenFile(uuid: string) {
+    const res = await this.applicationDocumentService.openFile(uuid);
+    if (res) {
+      window.open(res.url, '_blank');
+    }
+  }
+  
   async onDelete(owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) {
     this.confDialogService
       .openDialog({

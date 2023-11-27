@@ -331,10 +331,18 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  async onSelectOwner(owner: ApplicationOwnerDto, isSelected: boolean) {
+  private isOwnerInParcel(owner: ApplicationOwnerDto): boolean {
+    return this.parcel.owners.some(existingOwner => existingOwner.uuid === owner.uuid);
+  }
+
+  async onSelectOwner(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {
     if (!isSelected) {
-      const selectedOwners = [...this.parcel.owners, owner];
-      this.updateParcelOwners(selectedOwners);
+      if (!this.isOwnerInParcel(owner)) {
+        const selectedOwners = [...this.parcel.owners, owner];
+        this.updateParcelOwners(selectedOwners);
+      }
+    } else {
+      event.preventDefault()
     }
   }
 
@@ -377,25 +385,6 @@ export class ParcelEntryComponent implements OnInit {
     this.filteredOwners = this.mapOwners(this.owners).filter((option) => {
       return option.displayName.toLowerCase().includes(element.value.toLowerCase());
     });
-  }
-
-  onSeeAllOwners() {
-    this.dialog
-      .open(AllOwnersDialogComponent, {
-        data: {
-          owners: this.owners,
-          fileId: this.fileId,
-          submissionUuid: this.submissionUuid,
-          ownerService: this.applicationOwnerService,
-          documentService: this.applicationDocumentService,
-        },
-      })
-      .beforeClosed()
-      .subscribe((isDirty) => {
-        if (isDirty) {
-          this.onOwnersUpdated.emit();
-        }
-      });
   }
 
   private setupForm() {

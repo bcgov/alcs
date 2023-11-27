@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import {
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 import { NoticeOfIntentOwnerCreateDto } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { DOCUMENT_SOURCE, DOCUMENT_TYPE, DocumentTypeDto } from '../../dto/document.dto';
@@ -56,6 +57,7 @@ export class OwnerDialogComponent {
     private dialogRef: MatDialogRef<OwnerDialogComponent>,
     private codeService: CodeService,
     private dialog: MatDialog,
+    private confDialogService: ConfirmationDialogService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       fileId: string;
@@ -135,6 +137,19 @@ export class OwnerDialogComponent {
 
   async onClose() {
     this.dialogRef.close();
+  }
+
+  async onDelete() {
+    this.confDialogService
+    .openDialog({
+      body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
+    })
+    .subscribe(async (didConfirm) => {
+      if (didConfirm) {
+        await this.data.ownerService.delete(this.existingUuid ?? '');        
+        this.dialogRef.close({ ownerDeleted: true, deletedOwnerId: this.existingUuid});
+      }
+    });
   }
 
   async onSave() {
