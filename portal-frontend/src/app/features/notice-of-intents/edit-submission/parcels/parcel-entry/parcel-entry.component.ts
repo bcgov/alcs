@@ -16,7 +16,6 @@ import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
 import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
-import { AllOwnersDialogComponent } from '../../../../../shared/owner-dialogs/owners-dialog/all-owners-dialog.component';
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
@@ -327,10 +326,18 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  async onSelectOwner(owner: NoticeOfIntentOwnerDto, isSelected: boolean) {
+  private isOwnerInParcel(owner: NoticeOfIntentOwnerDto): boolean {
+    return this.parcel.owners.some(existingOwner => existingOwner.uuid === owner.uuid);
+  }
+
+  async onSelectOwner(event: Event, owner: NoticeOfIntentOwnerDto, isSelected: boolean) {
     if (!isSelected) {
-      const selectedOwners = [...this.parcel.owners, owner];
-      this.updateParcelOwners(selectedOwners);
+      if (!this.isOwnerInParcel(owner)) {
+        const selectedOwners = [...this.parcel.owners, owner];
+        this.updateParcelOwners(selectedOwners);
+      }
+    } else {
+      event.preventDefault()
     }
   }
 
@@ -363,25 +370,6 @@ export class ParcelEntryComponent implements OnInit {
     this.filteredOwners = this.mapOwners(this.owners).filter((option) => {
       return option.displayName.toLowerCase().includes(element.value.toLowerCase());
     });
-  }
-
-  onSeeAllOwners() {
-    this.dialog
-      .open(AllOwnersDialogComponent, {
-        data: {
-          owners: this.owners,
-          fileId: this.fileId,
-          submissionUuid: this.submissionUuid,
-          ownerService: this.noticeOfIntentOwnerService,
-          documentService: this.noticeOfIntentDocumentService,
-        },
-      })
-      .beforeClosed()
-      .subscribe((isDirty) => {
-        if (isDirty) {
-          this.onOwnersUpdated.emit();
-        }
-      });
   }
 
   private setupForm() {
