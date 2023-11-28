@@ -150,7 +150,9 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     this.currentTabName = changes['currentTabName'].currentValue;
-    this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
   }
 
   tabIndexFromName(tabName: string) {
