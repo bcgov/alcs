@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,6 +17,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from '../../public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from '../../public/search/search.interface';
+import { Router } from '@angular/router';
 
 export interface InboxResultDto extends BaseInboxResultDto {
   statusType: ApplicationStatusDto;
@@ -37,10 +38,23 @@ const CLASS_TO_URL_MAP: Record<string, string> = {
 export class InboxComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
+  tabGroup!: MatTabGroup;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
-  @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
+  @ViewChild(MatTabGroup)
+  set tab(tabGroup: MatTabGroup) {
+    if (tabGroup) {
+      // Override click handler to change URL
+      tabGroup._handleClick = (_tab, _tabHeader, index) => {
+        this.router.navigateByUrl(`/home/${_tab.textLabel}`);
+      };
+    }
+    this.tabGroup = tabGroup;
+  }
   @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
+
+  @Input() currentTabName: string = '';
 
   applications: InboxResultDto[] = [];
   applicationTotal = 0;
@@ -106,7 +120,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private inboxService: InboxService,
     private toastService: ToastService,
     private titleService: Title,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
     this.titleService.setTitle('ALC Portal | Inbox');
   }
