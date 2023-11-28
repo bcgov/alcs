@@ -110,7 +110,12 @@ export class InboxComponent implements OnInit, OnDestroy {
         this.itemsPerPage = 20;
         this.pageIndex = 0;
       }
-      this.onSubmit();
+      this.populateTable();
+
+      // push tab activation to next render cycle, after the tabGroup is rendered
+      setTimeout(() => {
+        this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+      });
     }
 
     this.isMobile = isMobile;
@@ -150,6 +155,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     this.currentTabName = changes['currentTabName'].currentValue;
+
     setTimeout(() => {
       this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
     });
@@ -169,7 +175,12 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   private async setup() {
     await this.loadStatuses();
-    await this.onSubmit();
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
   }
 
   ngOnDestroy(): void {
@@ -182,7 +193,12 @@ export class InboxComponent implements OnInit, OnDestroy {
 
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
-      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+      //Keep this in Tab Order
+      const searchCounts = [this.applicationTotal, this.noticeOfIntentTotal, this.notificationTotal];
+      const index = searchCounts.indexOf(Math.max(...searchCounts));
+      const newTabName: string = this.tabGroup._tabs.get(index)?.textLabel ?? 'applications';
+
+      this.router.navigateByUrl(`/home/${newTabName}`);
     });
   }
 
@@ -199,9 +215,14 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
-  onClear() {
+  async onClear() {
     this.searchForm.reset();
-    this.onSubmit();
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
