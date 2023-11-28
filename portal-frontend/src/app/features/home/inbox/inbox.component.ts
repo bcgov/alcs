@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, Input, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -148,6 +148,23 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.currentTabName = changes['currentTabName'].currentValue;
+    this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+  }
+
+  tabIndexFromName(tabName: string) {
+    // Default to 'application' tab
+    if (!this.tabGroup) return 0;
+
+    return this.tabGroup._tabs
+      .map((a) => a.textLabel)
+      .reduce((iPrev, b, i) => {
+        if (b == tabName) return i;
+        return iPrev;
+      }, 0);
+  }
+
   private async setup() {
     await this.loadStatuses();
     await this.onSubmit();
@@ -159,6 +176,15 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
+  }
+
+  async populateTable() {
     const searchParams = this.getSearchParams();
 
     this.isLoading = true;
@@ -168,8 +194,6 @@ export class InboxComponent implements OnInit, OnDestroy {
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
       this.mapSearchResults(result);
-
-      this.setActiveTab();
     });
   }
 
@@ -326,13 +350,6 @@ export class InboxComponent implements OnInit, OnDestroy {
 
     this.notificationTotal = searchResult.totalNotifications;
     this.notifications = this.hydrateResult(searchResult.notifications);
-  }
-
-  private setActiveTab() {
-    //Keep this in Tab Order
-    const searchCounts = [this.applicationTotal, this.noticeOfIntentTotal, this.notificationTotal];
-
-    this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));
   }
 
   private formatStringSearchParam(value: string | undefined | null) {
