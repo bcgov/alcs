@@ -342,7 +342,7 @@ export class ParcelEntryComponent implements OnInit {
         this.updateParcelOwners(selectedOwners);
       }
     } else {
-      event.preventDefault()
+      this.onOwnerRemoved(owner.uuid);
     }
   }
 
