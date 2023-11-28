@@ -60,7 +60,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   }
 
   async onNavigateHome() {
-    await this.router.navigateByUrl(`home`);
+    await this.router.navigateByUrl(`home/nois`);
   }
 
   async onCancel(uuid: string) {
