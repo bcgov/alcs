@@ -79,6 +79,7 @@ import { LinkedStatusType } from '../public-search.dto';
                   'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC, audit_created_at DESC)',
                   'dest_rank',
                 )
+                .where('is_draft = FALSE')
                 .from(ApplicationDecision, 'decision')
                 .getQuery(),
               'decisions',
