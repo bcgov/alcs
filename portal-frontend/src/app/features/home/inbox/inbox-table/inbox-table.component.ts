@@ -60,7 +60,7 @@ export class InboxTableComponent implements OnDestroy {
       itemsPerPage: this.itemsPerPage,
       sortDirection: this.sortDirection,
       sortField: this.sortField,
-      tableType: 'APP',
+      tableType: this.type === 'Notices of Intent' ? 'NOI' : this.type === 'Notifications' ? 'NOTI' : 'APP',
     });
   }
 
