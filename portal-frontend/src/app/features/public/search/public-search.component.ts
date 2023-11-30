@@ -186,6 +186,7 @@ export class PublicSearchComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    this.pageIndex = 0;
     const searchParams = this.getSearchParams();
 
     const searchDto = JSON.stringify(searchParams);

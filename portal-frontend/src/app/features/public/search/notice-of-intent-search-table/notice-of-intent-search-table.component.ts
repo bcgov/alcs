@@ -26,6 +26,7 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   }
 
   _totalCount = 0;
+  @Input() pageIndex: number = 0;
   @Input() set totalCount(count: number) {
     this._totalCount = count;
     this.initSorting();
@@ -37,7 +38,6 @@ export class NoticeOfIntentSearchTableComponent implements OnDestroy {
   displayedColumns = displayedColumns;
   
   dataSource = new MatTableDataSource<SearchResult>();
-  pageIndex = 0;
   itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';
