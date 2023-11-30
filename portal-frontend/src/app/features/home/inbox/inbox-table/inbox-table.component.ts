@@ -34,15 +34,7 @@ export class InboxTableComponent implements OnDestroy {
   @Input() type = 'Applications';
   @Output() tableChange = new EventEmitter<TableChange>();
 
-  displayedColumns: string[] = [
-    'fileNumber',
-    'dateCreated',
-    'applicant',
-    'applicationType',
-    'status',
-    'lastUpdated',
-    'actions',
-  ];
+  displayedColumns: string[] = ['fileNumber', 'dateCreated', 'applicant', 'applicationType', 'status', 'lastUpdated'];
   dataSource = new MatTableDataSource<InboxResultDto>();
   pageIndex = 0;
   itemsPerPage = 10;
