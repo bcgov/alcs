@@ -13,6 +13,8 @@
   padding-top: rem(12);
 }
 
-.text {
+.no-data-text {
   color: colors.$grey-dark;
+  text-align: left;
+  padding-top: 0;
 }
