@@ -10,14 +10,6 @@
       >
         Cancel Application
       </button>
-      <button
-        [routerLink]="'/application/' + application.fileNumber + '/edit'"
-        *ngIf="application.canEdit"
-        mat-flat-button
-        color="primary"
-      >
-        Edit Application
-      </button>
       <button *ngIf="application.canReview" (click)="onReview(application.fileNumber)" mat-flat-button color="primary">
         Review Application
       </button>

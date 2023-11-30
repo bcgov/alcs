@@ -41,14 +41,6 @@
                 <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
                   Cancel NOI
                 </button>
-                <button
-                  [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
-                  *ngIf="submission.canEdit"
-                  mat-flat-button
-                  color="primary"
-                >
-                  Edit NOI
-                </button>
                 <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
                   Download PDF
                 </button>
