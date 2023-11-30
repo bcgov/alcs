@@ -89,9 +89,7 @@
           <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
             owner.corporateSummary.fileName
           }}</a>
-          <div class="no-data" *ngIf="!owner.corporateSummary">
-            <div class="no-data-text">Not Applicable</div>
-          </div>
+          <app-no-data *ngIf="!owner.corporateSummary"></app-no-data>
         </div>
       </ng-container>
     </div>
