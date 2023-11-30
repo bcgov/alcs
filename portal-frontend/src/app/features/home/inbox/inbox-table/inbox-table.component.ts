@@ -88,4 +88,10 @@ export class InboxTableComponent implements OnDestroy {
       }
     });
   }
+
+  onRowClick(event: Event) {
+    if (event.currentTarget instanceof HTMLElement) {
+      console.log(event.currentTarget.querySelector<HTMLElement>('td > a')!.click());
+    }
+  }
 }
