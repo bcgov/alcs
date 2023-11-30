@@ -21,6 +21,7 @@ export class SearchListComponent implements OnDestroy {
 
   @Input() totalCount = 0;
   @Input() statuses: ApplicationStatusDto[] = [];
+  @Input() pageIndex: number = 0;
   @Input() type = '';
 
   _results: SearchResult[] = [];

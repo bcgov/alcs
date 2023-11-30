@@ -33,11 +33,11 @@ export class NotificationSearchTableComponent implements OnDestroy {
     this._totalCount = count;
     this.initSorting();
   }
+  @Input() pageIndex: number = 0;
   @Output() tableChange = new EventEmitter<TableChange>();
 
   displayedColumns = ['fileId', 'ownerName', 'type', 'portalStatus', 'lastUpdate', 'government'];
   dataSource = new MatTableDataSource<SearchResult>();
-  pageIndex = 0;
   itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';

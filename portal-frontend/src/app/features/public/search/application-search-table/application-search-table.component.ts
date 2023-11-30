@@ -20,6 +20,8 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   @ViewChild(MatSort) sort?: MatSort;
 
   _applications: ApplicationSearchResultDto[] = [];
+  @Input() pageIndex: number = 0;
+
   @Input() set applications(applications: ApplicationSearchResultDto[]) {
     this._applications = applications;
     this.dataSource = new MatTableDataSource<SearchResult>(this.mapApplications(applications));
@@ -39,8 +41,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   displayedColumns = displayedColumns;
   
   dataSource = new MatTableDataSource<SearchResult>();
-  pageIndex = 0;
-  itemsPerPage = 20;
+  itemsPerPage = 1;
   total = 0;
   sortDirection = 'DESC';
   sortField = 'lastUpdate';

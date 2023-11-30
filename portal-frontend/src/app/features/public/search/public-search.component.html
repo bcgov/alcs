@@ -145,6 +145,7 @@
           [results]="applications"
           [totalCount]="applicationTotal"
           [statuses]="statuses"
+          [pageIndex]="pageIndex"
           (loadMore)="onLoadMore('APP')"
         >
         </app-search-list>
@@ -163,6 +164,7 @@
           *ngIf="isMobile"
           type="notices of intent"
           [results]="noticeOfIntents"
+          [pageIndex]="pageIndex"
           [totalCount]="noticeOfIntentTotal"
           [statuses]="statuses"
           (loadMore)="onLoadMore('NOI')"
@@ -183,6 +185,7 @@
           *ngIf="isMobile"
           type="notifications"
           [results]="notifications"
+          [pageIndex]="pageIndex"
           [totalCount]="notificationTotal"
           [statuses]="statuses"
           (loadMore)="onLoadMore('NOTI')"
