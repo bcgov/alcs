@@ -110,7 +110,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private applicationService: ApplicationDetailService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -177,8 +177,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         combineLatestWith(
           this.modificationService.$modifications,
           this.reconsiderationService.$reconsiderations,
-          this.decisionService.$decisions
-        )
+          this.decisionService.$decisions,
+        ),
       )
       .subscribe(([decision, modifications, reconsiderations, decisions]) => {
         if (decision) {
@@ -238,13 +238,13 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   private mapPostDecisionsToControls(
     modifications: ApplicationModificationDto[],
     reconsiderations: ApplicationReconsiderationDto[],
-    existingDecision?: ApplicationDecisionDto
+    existingDecision?: ApplicationDecisionDto,
   ) {
     const mappedModifications = modifications
       .filter(
         (modification) =>
           (existingDecision && existingDecision.modifies?.uuid === modification.uuid) ||
-          (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision)
+          (modification.reviewOutcome.code === 'PRC' && !modification.resultingDecision),
       )
       .map((modification, index) => ({
         label: `Modification Request #${modifications.length - index} - ${modification.modifiesDecisions
@@ -259,7 +259,7 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
         (reconsideration) =>
           (existingDecision && existingDecision.reconsiders?.uuid === reconsideration.uuid) ||
           (reconsideration.reviewOutcome?.code === 'PRC' && !reconsideration.resultingDecision) ||
-          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1 && !reconsideration.resultingDecision)
+          (reconsideration.type.code === RECONSIDERATION_TYPE.T_33_1 && !reconsideration.resultingDecision),
       )
       .map((reconsideration, index) => ({
         label: `Reconsideration Request #${reconsiderations.length - index} - ${reconsideration.reconsidersDecisions
@@ -594,6 +594,8 @@ export class DecisionInputV2Component implements OnInit, OnDestroy {
   }
 
   onChangeDecisionOutcome(selectedOutcome: DecisionOutcomeCodeDto) {
+    this.requireComponents = selectedOutcome.code === 'APPR';
+
     if (['APPR', 'RESC'].includes(selectedOutcome.code)) {
       if (this.form.controls.isSubjectToConditions.disabled) {
         this.showComponents = true;
