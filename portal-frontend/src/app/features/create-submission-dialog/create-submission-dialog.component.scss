@@ -13,6 +13,10 @@
 
 .radio-option {
   display: block !important;
+
+  & .mdc-label {
+    cursor: pointer !important;
+  }
 }
 
 .dialog-content-wrapper {

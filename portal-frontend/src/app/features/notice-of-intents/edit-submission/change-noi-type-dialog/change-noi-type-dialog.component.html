@@ -14,7 +14,7 @@
     </div>
 
     <div [ngClass]="{ 'display-none': stepIdx !== applicationTypeStep }">
-      <div class="step-description">Select an option to learn more about the notice of intent type.</div>
+      <div class="subheading2 step-description">Select an option to learn more about the notice of intent type.</div>
       <mat-radio-group class="app-type-radio-group" (change)="onTypeSelected($event)" color="primary" required>
         <mat-radio-button *ngFor="let appType of noiTypes" [value]="appType.code" class="radio-option">
           {{ appType.portalLabel }}

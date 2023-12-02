@@ -8,7 +8,7 @@
 
   <div mat-dialog-content class="steps" [ngClass]="{ 'app-type-dialog': currentStep === steps.applicationType }">
     <ng-container *ngIf="currentStep === steps.submissionType">
-      <div class="step-description">Select an option to learn more about the submission type.</div>
+      <div class="subheading2 step-description">Select an option to learn more about the submission type.</div>
       <div class="step-submission-type">
         <mat-radio-group
           [value]="selectedSubmissionType?.code"
@@ -25,7 +25,7 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
-      <div id="warningBanner" class="warning-banner" *ngIf="selectedSubmissionType">
+      <div class="warning-banner" *ngIf="selectedSubmissionType">
         <div>
           <b class="sub-type-label">{{ selectedSubmissionType.label }}</b>
           <div
@@ -44,7 +44,7 @@
       >
     </ng-container>
     <ng-container *ngIf="currentStep === steps.applicationType">
-      <div class="step-description">Select an option to learn more about the application type.</div>
+      <div class="subheading2 step-description">Select an option to learn more about the application type.</div>
       <div class="step-application-type">
         <mat-radio-group
           [value]="selectedAppType?.code"
@@ -59,7 +59,7 @@
         </mat-radio-group>
       </div>
 
-      <div id="warningBanner" class="warning-banner" *ngIf="selectedAppType">
+      <div class="warning-banner" *ngIf="selectedAppType">
         <div>
           <b class="app-type-label radio-option">{{ selectedAppType.portalLabel }}</b>
         </div>
@@ -74,7 +74,7 @@
       </div>
     </ng-container>
     <ng-container *ngIf="currentStep === steps.noticeOfIntentType">
-      <div class="step-description">Select an option to learn more about the notice of intent type.</div>
+      <div class="subheading2 step-description">Select an option to learn more about the notice of intent type.</div>
       <div class="step-noi-type">
         <mat-radio-group class="app-type-radio-group" (change)="onNoiTypeSelected($event)" color="primary" required>
           <mat-radio-button *ngFor="let type of noticeOfIntentTypes" class="radio-option" [value]="type.code">
@@ -83,7 +83,7 @@
         </mat-radio-group>
       </div>
 
-      <div id="warningBanner" class="warning-banner" *ngIf="selectedNoiType">
+      <div class="warning-banner" *ngIf="selectedNoiType">
         <div>
           <b class="app-type-label radio-option">{{ selectedNoiType.portalLabel }}</b>
         </div>
@@ -109,7 +109,7 @@
           >s. 218 of the Land Title Act.</a
         >
       </div>
-      <div id="warningBanner" class="warning-banner">
+      <div class="warning-banner">
         <div>
           <b class="app-type-label radio-option">Before you create a notification of SRW:</b>
         </div>
