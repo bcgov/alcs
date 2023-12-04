@@ -349,6 +349,7 @@
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
           (onOwnerRemoved)="onOwnerRemoved($event)"
+          (onOwnersDeleted)="onOwnerRemoved($event)"
           [disabled]="_disabled"
           [isCrown]="true"
           [ownerService]="noticeOfIntentOwnerService"

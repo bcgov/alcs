@@ -20,6 +20,7 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
 })
 export class ParcelOwnersComponent {
   @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Output() onOwnersDeleted = new EventEmitter<string>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
   
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
@@ -92,13 +93,17 @@ export class ParcelOwnersComponent {
       });
     }
     dialog.beforeClosed().subscribe((updatedUuid) => {
-      if (updatedUuid) {
+      if (updatedUuid?.ownerDeleted) {
+        this.onOwnersDeleted.emit(updatedUuid.deletedOwnerId);
+      }
+      else if (updatedUuid) {
         this.onOwnersUpdated.emit();
       }
     });
     dialog.afterClosed().subscribe((result) => {
       if (result.ownerDeleted) {
-        this.dataSource.data = this.dataSource.data.filter((owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) => owner.uuid !== result.deletedOwnerId);
+        const updatedOwners = this.dataSource.data.filter((o: ApplicationOwnerDto | NoticeOfIntentOwnerDto) => o.uuid !== result.deletedOwnerId);
+        this.dataSource = new MatTableDataSource(updatedOwners);
       }
     });
   }
@@ -122,7 +127,7 @@ export class ParcelOwnersComponent {
       .subscribe(async (didConfirm) => {
         if (didConfirm) {
           await this.ownerService.delete(owner.uuid);
-          this.onOwnersUpdated.emit();
+          this.onOwnersDeleted.emit(owner.uuid);
         }
       });
   }
