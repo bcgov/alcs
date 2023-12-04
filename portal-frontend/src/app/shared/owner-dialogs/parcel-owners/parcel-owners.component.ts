@@ -95,9 +95,6 @@ export class ParcelOwnersComponent {
       if (result) {
         this.onOwnersUpdated.emit();
       }
-      if (result.ownerDeleted) {        
-        this.dataSource.data = this.dataSource.data.filter((owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) => owner.uuid !== result.deletedOwnerId);
-      }
     });
   }
 
