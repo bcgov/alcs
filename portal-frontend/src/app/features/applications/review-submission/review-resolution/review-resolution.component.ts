@@ -26,7 +26,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   isSubjectToZoning: boolean | null = null;
   isFirstNationGovernment = false;
 
-  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
@@ -54,12 +54,6 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
   private async saveProgress() {
     if (this.fileId && this.resolutionForm.dirty) {
       if (this.isAuthorized.getRawValue() !== null) {
@@ -79,9 +73,5 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

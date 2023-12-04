@@ -32,7 +32,7 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
@@ -64,12 +64,6 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
 
   async onSave() {
     await this.saveProgress();
-  }
-
-  async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
   }
 
   private async saveProgress() {
@@ -117,9 +111,5 @@ export class ReviewZoningComponent implements OnInit, OnDestroy {
       this.isZoningConsistent.disable();
       this.zoningDesignation.disable();
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

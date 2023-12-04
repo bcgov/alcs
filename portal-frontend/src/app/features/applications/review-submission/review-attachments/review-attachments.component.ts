@@ -37,7 +37,6 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   showOtherVirusError = false;
 
   constructor(
-    private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private toastService: ToastService
@@ -77,12 +76,6 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
         (document) => document.type?.code === DOCUMENT_TYPE.OTHER && document.source === DOCUMENT_SOURCE.LFNG
       );
     });
-  }
-
-  async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
   }
 
   async loadApplicationDocuments(fileId: string) {
@@ -142,9 +135,5 @@ export class ReviewAttachmentsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

@@ -1,4 +1,3 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,11 +33,6 @@ export enum ReviewApplicationFngSteps {
   ReviewAndSubmitFng = 3,
 }
 
-export class NavigateToStep {
-  from!: number;
-  to!: number;
-}
-
 @Component({
   selector: 'app-review-application',
   templateUrl: './review-submission.component.html',
@@ -56,7 +50,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   reviewAppFngSteps = ReviewApplicationFngSteps;
   doNotSaveAppReview = false;
   showValidationErrors = false;
-  showDownloadPdf = false;
+  isOnLastStep = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -102,7 +96,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
               const stepInt = parseInt(stepInd);
               this.customStepper.navigateToStep(stepInt, true);
 
-              this.showDownloadPdf = this.isFirstNationGovernment
+              this.isOnLastStep = this.isFirstNationGovernment
                 ? stepInt === ReviewApplicationFngSteps.ReviewAndSubmitFng
                 : stepInt === ReviewApplicationSteps.ReviewAndSubmit;
             });
@@ -222,5 +216,13 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.pdfGenerationService.generateReview(this.fileId);
     }
+  }
+
+  async onSaveExit() {
+    await this.router.navigateByUrl(`application/${this.fileId}`);
+  }
+
+  async onNavigateToStep(number: number) {
+    await this.router.navigateByUrl(`application/${this.fileId}/review/${number}`);
   }
 }

@@ -4,9 +4,6 @@
     <div class="description">
       <div *ngIf="isFirstNationGovernment">Provide contact information for First Nation government staff</div>
       <div *ngIf="!isFirstNationGovernment">Provide contact information for Local government staff</div>
-      <div>
-        <button class="save-button" (click)="onSave()" mat-flat-button color="primary">Save Progress</button>
-      </div>
     </div>
     <form [formGroup]="contactForm">
       <div class="form-row">
@@ -92,14 +89,5 @@
         </div>
       </div>
     </form>
-    <div class="button-container">
-      <button mat-stroked-button color="accent" (click)="onExit()">Save and Exit</button>
-      <div>
-        <div><!--this is required for correct responsive view --></div>
-        <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-          Next<span class="mobile-hidden"> Step</span>
-        </button>
-      </div>
-    </div>
   </div>
 </div>
