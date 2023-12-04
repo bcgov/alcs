@@ -125,14 +125,12 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
-      this.parcel.owners = this.parcel.owners.map((owner) => {
-        const updatedOwner = owners.find((updatedOwner) => updatedOwner.uuid === owner.uuid)!;
-        if (!updatedOwner) {
-          console.warn('Failed to find user in array');
-          return owner;
-        }
-        return updatedOwner;
-      });
+      this.parcel.owners = this.parcel.owners
+        .filter((owner) => owners.some((updatedOwner) => updatedOwner.uuid === owner.uuid))
+        .map((owner) => {
+          const updatedOwner = owners.find((uOwner) => uOwner.uuid === owner.uuid);
+          return updatedOwner || owner;
+        });
     });
   }
 
@@ -200,7 +198,7 @@ export class ParcelEntryComponent implements OnInit {
       this.isFarm.value ||
       this.civicAddress.value ||
       this.parcel.owners.length > 0;
-    
+
     const changeParcelType = () => {
       if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
         this.searchBy.setValue(null);
@@ -333,7 +331,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   private isOwnerInParcel(owner: ApplicationOwnerDto): boolean {
-    return this.parcel.owners.some(existingOwner => existingOwner.uuid === owner.uuid);
+    return this.parcel.owners.some((existingOwner) => existingOwner.uuid === owner.uuid);
   }
 
   async onSelectOwner(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {

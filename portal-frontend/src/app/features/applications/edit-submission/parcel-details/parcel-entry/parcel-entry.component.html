@@ -214,7 +214,6 @@
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
           (onOwnerRemoved)="onOwnerRemoved($event)"
-          (onOwnersDeleted)="onOwnerRemoved($event)"
           [documentService]="applicationDocumentService"
           [ownerService]="applicationOwnerService"
           [disabled]="_disabled"
