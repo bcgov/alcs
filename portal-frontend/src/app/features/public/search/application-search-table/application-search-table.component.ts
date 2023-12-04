@@ -41,7 +41,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
   displayedColumns = displayedColumns;
   
   dataSource = new MatTableDataSource<SearchResult>();
-  itemsPerPage = 1;
+  itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';
   sortField = 'lastUpdate';
