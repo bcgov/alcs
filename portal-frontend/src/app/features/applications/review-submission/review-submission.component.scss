@@ -21,6 +21,18 @@
   }
 }
 
+.menu {
+  position: sticky;
+  bottom: 0;
+  background-color: colors.$white;
+  padding: rem(16) 0;
+
+  .next-step {
+    align-self: flex-end;
+    margin-left: rem(32) !important;
+  }
+}
+
 :host::ng-deep {
   .field-error {
     color: colors.$error-color;
@@ -123,11 +135,16 @@
       }
     }
 
-    .button-container {
+    .menu {
+      position: sticky;
+      bottom: 0;
       margin-top: rem(40);
+      background-color: colors.$white;
       display: flex;
+      padding: rem(16) 0;
       flex-direction: column-reverse;
       justify-content: space-between;
+      z-index: 2;
 
       @media screen and (min-width: $tabletBreakpoint) {
         flex-direction: row;

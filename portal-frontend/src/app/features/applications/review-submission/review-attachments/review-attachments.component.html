@@ -2,9 +2,6 @@
 <div>
   <div class="description">
     <div>Provide mandatory and optional attachments</div>
-    <div>
-      <button class="save-button" mat-flat-button color="primary">Save Progress</button>
-    </div>
   </div>
   <div *ngIf="!hasCompletedPreviousSteps">
     Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue with
@@ -12,7 +9,7 @@
   </div>
   <div *ngIf="hasCompletedPreviousSteps">
     <section *ngIf="showMandatoryUploads">
-      <label for="resolution-document">Resolution Document</label>
+      <label class="subheading2" for="resolution-document">Resolution Document</label>
       <app-file-drag-drop
         id="resolution-document"
         [uploadedFiles]="resolutionDocument"
@@ -25,7 +22,7 @@
       ></app-file-drag-drop>
     </section>
     <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
-      <label for="staff-report">Staff Report <span *ngIf="!isAuthorized">(optional)</span></label>
+      <label class="subheading2" for="staff-report">Staff Report <span *ngIf="!isAuthorized">(optional)</span></label>
       <app-file-drag-drop
         id="staff-report"
         [uploadedFiles]="staffReport"
@@ -38,7 +35,7 @@
       ></app-file-drag-drop>
     </section>
     <section>
-      <label for="other-document">Other Attachments (optional)</label>
+      <label class="subheading2" for="other-document">Other Attachments (optional)</label>
       <app-file-drag-drop
         id="other-document"
         [uploadedFiles]="otherAttachments"
@@ -49,16 +46,5 @@
         [showVirusError]="showOtherVirusError"
       ></app-file-drag-drop>
     </section>
-  </div>
-  <div class="button-container">
-    <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
-    </div>
   </div>
 </div>

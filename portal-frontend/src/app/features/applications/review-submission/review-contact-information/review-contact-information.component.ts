@@ -36,7 +36,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
@@ -63,12 +63,6 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
     await this.saveProgress();
   }
 
-  async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
-  }
-
   private async saveProgress() {
     if (this.fileId && this.contactForm.dirty) {
       await this.applicationReviewService.update(this.fileId, {
@@ -86,9 +80,5 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.$destroy.next();
     this.$destroy.complete();
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }

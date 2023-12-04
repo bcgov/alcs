@@ -3,7 +3,33 @@
     <h6 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h6>
     <div>
       <button (click)="onReturnApplication()" mat-flat-button color="accent">Return Application</button>
-      <button *ngIf="showDownloadPdf" (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
+      <button *ngIf="isOnLastStep" (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #menu let-stepper="stepper">
+  <div class="menu">
+    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+    <div>
+      <div *ngIf="stepper.selectedIndex === 0"></div>
+      <button
+        *ngIf="stepper.selectedIndex > 0"
+        mat-stroked-button
+        color="primary"
+        (click)="onNavigateToStep(stepper.selectedIndex - 1)"
+      >
+        Previous<span class="mobile-hidden"> Step</span>
+      </button>
+      <button
+        class="next-step"
+        *ngIf="!isOnLastStep"
+        mat-flat-button
+        color="primary"
+        (click)="onNavigateToStep(stepper.selectedIndex + 1)"
+      >
+        Next<span class="mobile-hidden"> Step</span>
+      </button>
     </div>
   </div>
 </ng-template>
@@ -23,6 +49,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-contact-information>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: OCP">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -32,6 +59,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-ocp>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Plans & Bylaws: Zoning">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -41,6 +69,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-zoning>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -50,6 +79,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-resolution>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -59,6 +89,7 @@
         [showErrors]="showValidationErrors"
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
+      <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
     </div>
   </cdk-step>
   <cdk-step label="Review & Submit">
@@ -89,6 +120,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-contact-information>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Resolution">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -98,6 +130,7 @@
         [showErrors]="showValidationErrors"
       ></app-review-resolution>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Attachments">
     <ng-container *ngTemplateOutlet="header"></ng-container>
@@ -108,6 +141,7 @@
         (navigateToStep)="onBeforeSwitchStep($event)"
       ></app-review-attachments>
     </div>
+    <ng-container *ngTemplateOutlet="menu; context: { stepper: cdkStepper }"></ng-container>
   </cdk-step>
   <cdk-step label="Review & Submit">
     <ng-container *ngTemplateOutlet="header"></ng-container>

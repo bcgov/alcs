@@ -16,12 +16,10 @@ describe('ReviewAttachmentsComponent', () => {
   let fixture: ComponentFixture<ReviewAttachmentsComponent>;
   let mockAppReviewService: DeepMocked<ApplicationSubmissionReviewService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockRouter: DeepMocked<Router>;
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
   beforeEach(async () => {
     mockAppReviewService = createMock();
-    mockRouter = createMock();
     mockAppDocumentService = createMock();
     mockAppReviewService.$applicationReview = new BehaviorSubject<ApplicationSubmissionReviewDto | undefined>(
       undefined
@@ -33,10 +31,6 @@ describe('ReviewAttachmentsComponent', () => {
         {
           provide: ApplicationSubmissionReviewService,
           useValue: mockAppReviewService,
-        },
-        {
-          provide: Router,
-          useValue: mockRouter,
         },
         {
           provide: ApplicationDocumentService,

@@ -30,7 +30,7 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
   });
   private fileId: string | undefined;
 
-  constructor(private applicationReviewService: ApplicationSubmissionReviewService, private router: Router) {}
+  constructor(private applicationReviewService: ApplicationSubmissionReviewService) {}
 
   ngOnInit(): void {
     this.applicationReviewService.$applicationReview.pipe(takeUntil(this.$destroy)).subscribe((applicationReview) => {
@@ -60,12 +60,6 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
 
   async onSave() {
     await this.saveProgress();
-  }
-
-  async onExit() {
-    if (this.fileId) {
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
-    }
   }
 
   private async saveProgress() {
@@ -109,9 +103,5 @@ export class ReviewOcpComponent implements OnInit, OnDestroy {
       this.OCPDesignation.disable();
       this.isOCPConsistent.disable();
     }
-  }
-
-  onNavigateToStep(step: number) {
-    this.navigateToStep.emit(step);
   }
 }
