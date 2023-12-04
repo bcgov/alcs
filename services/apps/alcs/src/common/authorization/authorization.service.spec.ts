@@ -79,7 +79,7 @@ describe('AuthorizationService', () => {
   });
 
   it('should call out to keycloak when exchanging a code for token', async () => {
-    const token = await service.exchangeCodeForToken('fake-code');
+    const token = await service.exchangeCodeForToken('fake-code', false);
 
     expect(token).toEqual({ id_token: fakeToken });
     expect(mockHttpService.post).toHaveBeenCalledTimes(1);
@@ -92,11 +92,18 @@ describe('AuthorizationService', () => {
     expect(mockHttpService.post).toHaveBeenCalledTimes(1);
   });
 
-  it('should call out CreateUser and SendEmail on receiving token if user is not registered', async () => {
-    await service.exchangeCodeForToken('fake-code');
+  it('should call out CreateUser and SendEmail on receiving token if user is not registered and from ALCS', async () => {
+    await service.exchangeCodeForToken('fake-code', false);
 
     expect(mockUserService.create).toBeCalledTimes(1);
     expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(1);
+  });
+
+  it('should call out CreateUser and NOT SendEmail on receiving token if user is not registered and from Portal', async () => {
+    await service.exchangeCodeForToken('fake-code', true);
+
+    expect(mockUserService.create).toBeCalledTimes(1);
+    expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
   });
 
   it('should call out CreateUser but not SendEmail on receiving token if user is not registered but has CSS roles assigned', async () => {
@@ -104,7 +111,7 @@ describe('AuthorizationService', () => {
       clientRoles: ['fake-role'],
     } as User);
 
-    await service.exchangeCodeForToken('fake-code');
+    await service.exchangeCodeForToken('fake-code', false);
 
     expect(mockUserService.create).toBeCalledTimes(1);
     expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
@@ -113,7 +120,7 @@ describe('AuthorizationService', () => {
   it('should not call out CreateUser on receiving token if user is registered', async () => {
     mockUserService.getByGuid.mockResolvedValue(createMock<User>({} as User));
     mockUserService.update.mockResolvedValue(createMock<User>({} as User));
-    await service.exchangeCodeForToken('fake-code');
+    await service.exchangeCodeForToken('fake-code', false);
     expect(mockUserService.create).toBeCalledTimes(0);
     expect(mockUserService.sendNewUserRequestEmail).toBeCalledTimes(0);
   });

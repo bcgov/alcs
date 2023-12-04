@@ -66,14 +66,14 @@ export class AuthorizationService {
     const baseUrl = this.config.get('KEYCLOAK.AUTH_SERVER_URL');
     const realm = this.config.get('KEYCLOAK.REALM');
     const res = await firstValueFrom(
-      await this.httpService.get(
+      this.httpService.get(
         `${baseUrl}/realms/${realm}/protocol/openid-connect/certs`,
       ),
     );
     this.jwks = await JWK.asKeyStore(res.data);
   }
 
-  async exchangeCodeForToken(code: string) {
+  async exchangeCodeForToken(code: string, isPortal: boolean) {
     const baseUrl = this.config.get<string>('ALCS.BASE_URL');
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
@@ -98,7 +98,7 @@ export class AuthorizationService {
     const decodedToken = await this.decodeToken(token.id_token);
     if (decodedToken) {
       this.logger.debug(decodedToken);
-      await this.registerOrUpdateUser(decodedToken);
+      await this.registerOrUpdateUser(decodedToken, isPortal);
 
       return res.data;
     } else {
@@ -179,7 +179,7 @@ export class AuthorizationService {
     );
   }
 
-  private async registerOrUpdateUser(payload: BaseToken) {
+  private async registerOrUpdateUser(payload: BaseToken, isPortal: boolean) {
     const bceidGuid = payload['bceid_user_guid'];
     const idirUserGuid = payload['idir_user_guid'];
     const existingUser = await this.userService.getByGuid({
@@ -197,8 +197,7 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
 
-      //TODO: Only send if they are trying to load ALCS
-      if (user.clientRoles.length === 0) {
+      if (user.clientRoles.length === 0 && !isPortal) {
         await this.userService.sendNewUserRequestEmail(
           user.email,
           user.bceidGuid ?? user.displayName,

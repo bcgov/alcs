@@ -34,10 +34,6 @@ export class AuthorizationController {
     @Res() res: FastifyReply,
   ) {
     try {
-      const token = await this.authorizationService.exchangeCodeForToken(
-        authCode,
-      );
-
       const redis = this.redisService.getClient();
       const sessionData = await redis.get(`session_${sessionId}`);
 
@@ -46,6 +42,11 @@ export class AuthorizationController {
         const parsedSession = JSON.parse(sessionData);
         isPortal = parsedSession.source === 'portal';
       }
+
+      const token = await this.authorizationService.exchangeCodeForToken(
+        authCode,
+        isPortal,
+      );
 
       const frontEndUrl = isPortal
         ? this.config.get('PORTAL.FRONTEND_ROOT')
