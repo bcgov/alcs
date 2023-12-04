@@ -91,14 +91,9 @@ export class ParcelOwnersComponent {
         },
       });
     }
-    dialog.beforeClosed().subscribe((updatedUuid) => {
-      if (updatedUuid) {
-        this.onOwnersUpdated.emit();
-      }
-    });
     dialog.afterClosed().subscribe((result) => {
-      if (result.ownerDeleted) {
-        this.dataSource.data = this.dataSource.data.filter((owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) => owner.uuid !== result.deletedOwnerId);
+      if (result) {
+        this.onOwnersUpdated.emit();
       }
     });
   }

@@ -146,8 +146,8 @@ export class OwnerDialogComponent {
     })
     .subscribe(async (didConfirm) => {
       if (didConfirm) {
-        await this.data.ownerService.delete(this.existingUuid ?? '');        
-        this.dialogRef.close({ ownerDeleted: true, deletedOwnerId: this.existingUuid});
+        const res = await this.data.ownerService.delete(this.existingUuid ?? '');        
+        this.dialogRef.close(res);
       }
     });
   }
