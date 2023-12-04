@@ -118,6 +118,7 @@
           [items]="applications"
           [totalCount]="applicationTotal"
           (tableChange)="onTableChange($event)"
+          [pageIndex]="pageIndex"
           type="Applications"
         ></app-inbox-table>
       </mat-tab>

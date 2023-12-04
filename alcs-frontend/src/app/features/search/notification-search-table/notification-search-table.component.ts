@@ -53,7 +53,7 @@ export class NotificationSearchTableComponent implements OnDestroy {
 
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
   dataSource: SearchResult[] = [];
-  pageIndex = 0;
+  @Input() pageIndex: number = 0;
   itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';

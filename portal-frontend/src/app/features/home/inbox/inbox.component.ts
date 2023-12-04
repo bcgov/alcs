@@ -189,6 +189,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    this.pageIndex = 0;
     await this.populateTable();
 
     // push tab activation to next render cycle, after the tabGroup is rendered
