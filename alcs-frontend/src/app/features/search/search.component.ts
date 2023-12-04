@@ -181,6 +181,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    this.pageIndex = 0;
     const searchParams = this.getSearchParams();
     this.isLoading = true;
     const result = await this.searchService.advancedSearchFetch(searchParams);

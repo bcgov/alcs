@@ -144,6 +144,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   async onSubmit() {
+    this.pageIndex = 0;
     const searchParams = this.getSearchParams();
 
     this.isLoading = true;

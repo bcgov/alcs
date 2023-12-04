@@ -255,6 +255,7 @@
         [applications]="applications"
         [totalCount]="applicationTotal"
         [statuses]="applicationStatuses"
+        [pageIndex]="pageIndex"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
       ></app-application-search-table>
@@ -267,6 +268,7 @@
         *ngIf="!isLoading"
         [noticeOfIntents]="noticeOfIntents"
         [totalCount]="noticeOfIntentTotal"
+        [pageIndex]="pageIndex"
         [statuses]="noiStatuses"
         [regions]="regions"
         (tableChange)="onTableChange($event)"
@@ -280,6 +282,7 @@
         *ngIf="!isLoading"
         [nonApplications]="nonApplications"
         [totalCount]="nonApplicationsTotal"
+        [pageIndex]="pageIndex"
         (tableChange)="onTableChange($event)"
       >
       </app-non-application-search-table>
@@ -292,6 +295,7 @@
         [statuses]="notificationStatuses"
         [notifications]="notifications"
         [totalCount]="notificationTotal"
+        [pageIndex]="pageIndex"
         (tableChange)="onTableChange($event)"
       >
       </app-notification-search-table>

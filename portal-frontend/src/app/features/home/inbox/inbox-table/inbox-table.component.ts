@@ -44,7 +44,7 @@ export class InboxTableComponent implements OnDestroy {
     'actions',
   ];
   dataSource = new MatTableDataSource<InboxResultDto>();
-  pageIndex = 0;
+  @Input() pageIndex: number = 0;
   itemsPerPage = 10;
   total = 0;
   sortDirection = 'DESC';

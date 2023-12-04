@@ -46,7 +46,7 @@ export class NonApplicationSearchTableComponent implements OnDestroy {
 
   displayedColumns = ['fileId', 'type', 'applicant', 'government'];
   dataSource: NonApplicationSearchResultDto[] = [];
-  pageIndex = 0;
+  @Input() pageIndex: number = 0;
   itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';

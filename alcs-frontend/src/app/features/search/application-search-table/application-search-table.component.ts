@@ -39,6 +39,7 @@ export class ApplicationSearchTableComponent implements OnDestroy {
     this._applications = applications;
     this.dataSource = this.mapApplications(applications);
   }
+  @Input() pageIndex: number = 0;
 
   _totalCount = 0;
   @Input() set totalCount(count: number) {
@@ -55,7 +56,6 @@ export class ApplicationSearchTableComponent implements OnDestroy {
 
   displayedColumns = ['fileId', 'dateSubmitted', 'ownerName', 'type', 'government', 'portalStatus'];
   dataSource: SearchResult[] = [];
-  pageIndex = 0;
   itemsPerPage = 20;
   total = 0;
   sortDirection = 'DESC';
