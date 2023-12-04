@@ -54,6 +54,8 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
 
     if (this.application?.status.code === SUBMISSION_STATUS.ALC_DECISION) {
       this.selectedIndex = 2;
+    } else if (this.application?.status.code === SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG) {
+      this.selectedIndex = 1;
     }
     this.loadApplicationDocuments(fileId);
   }

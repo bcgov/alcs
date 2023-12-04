@@ -1,3 +1,11 @@
+<div *ngIf="submission && submission.canEdit" class="action-bar">
+  <button [routerLink]="'/notification/' + submission.fileNumber + '/edit'" mat-button>
+    <div>
+      <span class="subheading2">Continue SRW </span>
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
+  </button>
+</div>
 <div aria-hidden="true" class="banner absolute">
   <div>
     <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
@@ -41,14 +49,6 @@
                 <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
                   Cancel SRW
                 </button>
-                <button
-                  [routerLink]="'/notification/' + submission.fileNumber + '/edit'"
-                  *ngIf="submission.canEdit"
-                  mat-flat-button
-                  color="primary"
-                >
-                  Edit SRW
-                </button>
               </div>
             </div>
             <div>
@@ -67,16 +67,6 @@
               Cancel SRW
             </button>
           </div>
-          <div>
-            <button
-              [routerLink]="'/notification/' + submission.fileNumber + '/edit'"
-              *ngIf="submission.canEdit"
-              mat-flat-button
-              color="primary"
-            >
-              Edit SRW
-            </button>
-          </div>
         </div>
       </mat-tab>
       <mat-tab label="ALC Review and Response">
@@ -89,12 +79,4 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-</div>
-<div *ngIf="submission && submission.canEdit" class="action-bar">
-  <button [routerLink]="'/notification/' + submission.fileNumber + '/edit'" mat-button>
-    <div>
-      <span class="subheading2">Continue SRW </span>
-      <mat-icon>keyboard_double_arrow_right</mat-icon>
-    </div>
-  </button>
 </div>

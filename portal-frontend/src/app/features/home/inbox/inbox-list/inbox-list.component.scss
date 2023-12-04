@@ -7,7 +7,7 @@
 
 .result {
   border-radius: rem(4);
-  border: 2px solid var(--portal-grey-light, #efefef);
+  border: 2px solid colors.$grey-light;
   margin: rem(4) rem(4) rem(20); //BOX SHADOWS
   padding: rem(12) rem(8);
   font-size: rem(14) !important;

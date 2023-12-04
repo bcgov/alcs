@@ -1,0 +1,6 @@
+@use '../../../../../styles/colors';
+
+.mat-mdc-row:hover {
+    background-color: colors.$grey-light !important;
+    cursor: pointer;
+}

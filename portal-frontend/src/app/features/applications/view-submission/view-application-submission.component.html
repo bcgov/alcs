@@ -1,3 +1,33 @@
+<div *ngIf="application && application.canReview" class="action-bar">
+  <button (click)="onReview(application.fileNumber)" mat-button>
+    <div>
+      <span
+        *ngIf="
+          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
+        "
+        (click)="onReview(application.fileNumber)"
+        class="subheading2"
+        >Continue Application Review</span
+      >
+      <span
+        *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG"
+        (click)="onReview(application.fileNumber)"
+        class="subheading2"
+        >Start Application Review</span
+      >
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
+  </button>
+</div>
+<div *ngIf="application && application.canEdit" class="action-bar">
+  <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
+    <div>
+      <span class="subheading2">Continue Application </span>
+      <mat-icon>keyboard_double_arrow_right</mat-icon>
+    </div>
+  </button>
+</div>
 <div aria-hidden="true" class="banner absolute">
   <div>
     <h4 *ngIf="application">Application ID: {{ application.fileNumber }} | {{ application.type }}</h4>
@@ -46,22 +76,6 @@
                 >
                   Cancel Application
                 </button>
-                <button
-                  [routerLink]="'/application/' + application.fileNumber + '/edit'"
-                  *ngIf="application.canEdit"
-                  mat-flat-button
-                  color="primary"
-                >
-                  Edit Application
-                </button>
-                <button
-                  *ngIf="application.canReview"
-                  (click)="onReview(application.fileNumber)"
-                  mat-flat-button
-                  color="primary"
-                >
-                  Review Application
-                </button>
                 <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(application.fileNumber)">
                   Download PDF
                 </button>
@@ -101,14 +115,6 @@
             >
               Edit Application
             </button>
-            <button
-              *ngIf="application.canReview"
-              (click)="onReview(application.fileNumber)"
-              mat-flat-button
-              color="primary"
-            >
-              Review Application
-            </button>
           </div>
         </div>
       </mat-tab>
@@ -131,34 +137,4 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-</div>
-<div *ngIf="application && application.canReview" class="action-bar">
-  <button (click)="onReview(application.fileNumber)" mat-button>
-    <div>
-      <span
-        *ngIf="
-          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
-          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
-        "
-        (click)="onReview(application.fileNumber)"
-        class="subheading2"
-        >Continue Application Review</span
-      >
-      <span
-        *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG"
-        (click)="onReview(application.fileNumber)"
-        class="subheading2"
-        >Start Application Review</span
-      >
-      <mat-icon>keyboard_double_arrow_right</mat-icon>
-    </div>
-  </button>
-</div>
-<div *ngIf="application && application.canEdit" class="action-bar">
-  <button [routerLink]="'/application/' + application.fileNumber + '/edit'" mat-button>
-    <div>
-      <span class="subheading2">Continue Application </span>
-      <mat-icon>keyboard_double_arrow_right</mat-icon>
-    </div>
-  </button>
 </div>

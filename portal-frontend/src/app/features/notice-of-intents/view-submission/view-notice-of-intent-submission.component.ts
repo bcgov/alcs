@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import {
@@ -24,6 +25,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   constructor(
     private noiSubmissionService: NoticeOfIntentSubmissionService,
     private noiDocumentService: NoticeOfIntentDocumentService,
+    private confirmationDialogService: ConfirmationDialogService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -64,8 +66,18 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
   }
 
   async onCancel(uuid: string) {
-    await this.noiSubmissionService.cancel(uuid);
-    await this.router.navigateByUrl(`home`);
+    const dialog = this.confirmationDialogService.openDialog({
+      body: 'Are you sure you want to cancel the application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
+      confirmAction: 'Confirm',
+      cancelAction: 'Return',
+    });
+
+    dialog.subscribe(async (isConfirmed) => {
+      if (isConfirmed) {
+        await this.noiSubmissionService.cancel(uuid);
+        await this.router.navigateByUrl(`/home`);
+      }
+    });
   }
 
   onDownloadSubmissionPdf(fileNumber: string) {
