@@ -1,6 +1,8 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 
@@ -12,19 +14,11 @@ describe('ParcelOwnersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, MatSnackBarModule],
       providers: [
-        {
-          provide: MatDialog,
-          useValue: {},
-        },
-        {
-          provide: ApplicationOwnerService,
-          useValue: {},
-        },
-        {
-          provide: ConfirmationDialogService,
-          useValue: {},
-        },
+        { provide: MatDialog, useValue: {} },
+        { provide: ApplicationOwnerService, useValue: {} },
+        { provide: ConfirmationDialogService, useValue: {} },
       ],
       declarations: [ParcelOwnersComponent],
       schemas: [NO_ERRORS_SCHEMA],

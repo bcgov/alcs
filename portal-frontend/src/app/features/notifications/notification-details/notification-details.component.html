@@ -23,7 +23,7 @@
           <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
         </div>
         <div>
-          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
+          <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask: '(000) 000-0000' }}</span>
         </div>
         <div>{{ transferee.email }}</div>
       </ng-container>
@@ -91,10 +91,11 @@
       {{ localGovernment?.name }}
       <app-no-data [showRequired]="showErrors" *ngIf="!localGovernment"></app-no-data>
       <app-warning-banner *ngIf="showErrors && localGovernment && !localGovernment.hasGuid" class="full-row error">
-        This Local/First Nation Government has not yet been set up with the ALC Portal to receive notice of intents. To
-        submit, you will need to contact the ALC directly: &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca"
-          >ALC.Portal@gov.bc.ca</a
-        >&nbsp;/&nbsp;<a href="tel:236-468-3342">236-468-3342</a>
+        This local/First Nation government is not set up with the ALC Portal to receive submissions. You can continue to
+        fill out the form but you will be unable to submit. Please contact the ALC directly as soon as possible:
+        &nbsp;<a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a>&nbsp;/&nbsp;<a href="tel:236-468-3342"
+          >236-468-3342</a
+        >
       </app-warning-banner>
     </div>
     <div *ngIf="showEdit" class="edit-button">

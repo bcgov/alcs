@@ -101,7 +101,7 @@ export class ViewApplicationSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onNavigateHome() {
-    await this.router.navigateByUrl(`home`);
+    await this.router.navigateByUrl(`home/applications`);
   }
 
   private async loadApplicationDocuments(fileId: string) {

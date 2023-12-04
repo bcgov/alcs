@@ -230,9 +230,8 @@ export class ApplicationDecisionV2Service {
     modifies: ApplicationModification | undefined | null,
     reconsiders: ApplicationReconsideration | undefined | null,
   ) {
-    const existingDecision: Partial<ApplicationDecision> = await this.getOrFail(
-      uuid,
-    );
+    const existingDecision: Partial<ApplicationDecision> =
+      await this.getOrFail(uuid);
 
     await this.validateDecisionChanges(updateDto);
 
@@ -305,9 +304,8 @@ export class ApplicationDecisionV2Service {
     //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
-    const updatedDecision = await this.appDecisionRepository.save(
-      existingDecision,
-    );
+    const updatedDecision =
+      await this.appDecisionRepository.save(existingDecision);
 
     if (dateHasChanged || isChangingDraftStatus) {
       await this.updateApplicationDecisionDates(updatedDecision);
@@ -522,18 +520,16 @@ export class ApplicationDecisionV2Service {
   }
 
   async deleteDocument(decisionDocumentUuid: string) {
-    const decisionDocument = await this.getDecisionDocumentOrFail(
-      decisionDocumentUuid,
-    );
+    const decisionDocument =
+      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     await this.decisionDocumentRepository.softRemove(decisionDocument);
     return decisionDocument;
   }
 
   async getDownloadUrl(decisionDocumentUuid: string, openInline = false) {
-    const decisionDocument = await this.getDecisionDocumentOrFail(
-      decisionDocumentUuid,
-    );
+    const decisionDocument =
+      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     return this.documentService.getDownloadUrl(
       decisionDocument.document,
@@ -622,11 +618,9 @@ export class ApplicationDecisionV2Service {
     updateDto: UpdateApplicationDecisionDto,
     existingDecision: Partial<ApplicationDecision>,
   ) {
+    const outcomeCode = updateDto.outcomeCode ?? existingDecision.outcomeCode;
     if (updateDto.decisionComponents) {
-      if (
-        existingDecision.outcomeCode &&
-        ['APPA', 'APPR'].includes(existingDecision.outcomeCode)
-      ) {
+      if (outcomeCode && outcomeCode === 'APPR') {
         this.decisionComponentService.validate(
           updateDto.decisionComponents,
           updateDto.isDraft,

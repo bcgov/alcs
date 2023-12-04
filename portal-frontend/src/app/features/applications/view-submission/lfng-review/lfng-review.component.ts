@@ -34,6 +34,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
   hasCompletedStepsBeforeResolution = false;
   hasCompletedStepsBeforeDocuments = false;
   submittedToAlcStatus = false;
+  isTurOrCov = false;
 
   constructor(
     private applicationReviewService: ApplicationSubmissionReviewService,
@@ -70,6 +71,7 @@ export class LfngReviewComponent implements OnInit, OnDestroy {
       this.submittedToAlcStatus = !!this.application?.submissionStatuses.find(
         (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate,
       );
+      this.isTurOrCov = this.application?.typeCode === 'COVE' || this.application?.typeCode === 'TURP';
       this.loadReview();
     });
 

@@ -103,7 +103,7 @@
       <mat-spinner></mat-spinner>
     </div>
     <mat-tab-group *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
-      <mat-tab>
+      <mat-tab label="applications">
         <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
         <app-inbox-list
           *ngIf="isMobile"
@@ -123,7 +123,7 @@
         ></app-inbox-table>
       </mat-tab>
 
-      <mat-tab>
+      <mat-tab label="nois">
         <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
         <app-inbox-list
           *ngIf="isMobile"
@@ -142,7 +142,7 @@
         ></app-inbox-table>
       </mat-tab>
 
-      <mat-tab>
+      <mat-tab label="notifications">
         <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }} </ng-template>
         <app-inbox-list
           *ngIf="isMobile"

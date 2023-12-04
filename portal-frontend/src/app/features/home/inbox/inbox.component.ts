@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, Input, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,6 +17,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 import { MOBILE_BREAKPOINT } from '../../../shared/utils/breakpoints';
 import { FileTypeFilterDropDownComponent } from '../../public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { TableChange } from '../../public/search/search.interface';
+import { Router } from '@angular/router';
 
 export interface InboxResultDto extends BaseInboxResultDto {
   statusType: ApplicationStatusDto;
@@ -37,10 +38,23 @@ const CLASS_TO_URL_MAP: Record<string, string> = {
 export class InboxComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
 
+  tabGroup!: MatTabGroup;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
-  @ViewChild('searchResultTabs') tabGroup!: MatTabGroup;
+  @ViewChild(MatTabGroup)
+  set tab(tabGroup: MatTabGroup) {
+    if (tabGroup) {
+      // Override click handler to change URL
+      tabGroup._handleClick = (_tab, _tabHeader, index) => {
+        this.router.navigateByUrl(`/home/${_tab.textLabel}`);
+      };
+    }
+    this.tabGroup = tabGroup;
+  }
   @ViewChild('fileTypeDropDown') fileTypeFilterDropDownComponent!: FileTypeFilterDropDownComponent;
+
+  @Input() currentTabName: string = '';
 
   applications: InboxResultDto[] = [];
   applicationTotal = 0;
@@ -96,7 +110,12 @@ export class InboxComponent implements OnInit, OnDestroy {
         this.itemsPerPage = 20;
         this.pageIndex = 0;
       }
-      this.onSubmit();
+      this.populateTable();
+
+      // push tab activation to next render cycle, after the tabGroup is rendered
+      setTimeout(() => {
+        this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+      });
     }
 
     this.isMobile = isMobile;
@@ -106,7 +125,8 @@ export class InboxComponent implements OnInit, OnDestroy {
     private inboxService: InboxService,
     private toastService: ToastService,
     private titleService: Title,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
     this.titleService.setTitle('ALC Portal | Inbox');
   }
@@ -133,9 +153,34 @@ export class InboxComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    this.currentTabName = changes['currentTabName'].currentValue;
+
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
+  }
+
+  tabIndexFromName(tabName: string) {
+    // Default to 'application' tab
+    if (!this.tabGroup) return 0;
+
+    return this.tabGroup._tabs
+      .map((a) => a.textLabel)
+      .reduce((iPrev, b, i) => {
+        if (b == tabName) return i;
+        return iPrev;
+      }, 0);
+  }
+
   private async setup() {
     await this.loadStatuses();
-    await this.onSubmit();
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
   }
 
   ngOnDestroy(): void {
@@ -145,6 +190,20 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   async onSubmit() {
     this.pageIndex = 0;
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      //Keep this in Tab Order
+      const searchCounts = [this.applicationTotal, this.noticeOfIntentTotal, this.notificationTotal];
+      const index = searchCounts.indexOf(Math.max(...searchCounts));
+      const newTabName: string = this.tabGroup._tabs.get(index)?.textLabel ?? 'applications';
+
+      this.router.navigateByUrl(`/home/${newTabName}`);
+    });
+  }
+
+  async populateTable() {
     const searchParams = this.getSearchParams();
 
     this.isLoading = true;
@@ -154,14 +213,17 @@ export class InboxComponent implements OnInit, OnDestroy {
     // push tab activation to next render cycle, after the tabGroup is rendered
     setTimeout(() => {
       this.mapSearchResults(result);
-
-      this.setActiveTab();
     });
   }
 
-  onClear() {
+  async onClear() {
     this.searchForm.reset();
-    this.onSubmit();
+    await this.populateTable();
+
+    // push tab activation to next render cycle, after the tabGroup is rendered
+    setTimeout(() => {
+      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
+    });
 
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
@@ -312,13 +374,6 @@ export class InboxComponent implements OnInit, OnDestroy {
 
     this.notificationTotal = searchResult.totalNotifications;
     this.notifications = this.hydrateResult(searchResult.notifications);
-  }
-
-  private setActiveTab() {
-    //Keep this in Tab Order
-    const searchCounts = [this.applicationTotal, this.noticeOfIntentTotal, this.notificationTotal];
-
-    this.tabGroup.selectedIndex = searchCounts.indexOf(Math.max(...searchCounts));
   }
 
   private formatStringSearchParam(value: string | undefined | null) {

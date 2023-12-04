@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { LocalGovernment } from '../../../../alcs/local-government/local-government.entity';
 import { NoticeOfIntentDecision } from '../../../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
+import { NOI_SUBMISSION_STATUS } from '../../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.dto';
 import { NoticeOfIntentSubmissionToSubmissionStatus } from '../../../../alcs/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-status.entity';
 import { NoticeOfIntentType } from '../../../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
 import { NoticeOfIntent } from '../../../../alcs/notice-of-intent/notice-of-intent.entity';
@@ -92,11 +93,9 @@ import { LinkedStatusType } from '../public-search.dto';
         '(noi.date_received_all_items IS NOT NULL AND noi.date_received_all_items <= NOW())',
       )
       .andWhere(
-        "alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != 'CNCL'",
+        `alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != '${NOI_SUBMISSION_STATUS.CANCELLED}'`,
       )
-      .andWhere(
-        "decision_date.dest_rank = 1",
-      ),
+      .andWhere('decision_date.dest_rank = 1'),
 })
 export class PublicNoticeOfIntentSubmissionSearchView {
   @ViewColumn()

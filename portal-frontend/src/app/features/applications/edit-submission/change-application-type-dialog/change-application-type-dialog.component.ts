@@ -40,7 +40,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
     private dialogRef: MatDialogRef<ChangeApplicationTypeDialogComponent>,
     private applicationSubmissionService: ApplicationSubmissionService,
     private codeService: CodeService,
-    @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent
+    @Inject(MAT_DIALOG_DATA) public data: ChangeApplicationTypeDialogComponent,
   ) {
     this.submissionUuid = data.submissionUuid;
     this.submissionTypeCode = data.submissionTypeCode;
@@ -59,7 +59,7 @@ export class ChangeApplicationTypeDialogComponent implements OnInit, AfterViewCh
     const codes = await this.codeService.loadCodes();
     this.applicationTypes = codes.applicationTypes
       .filter((type) => !!type.portalLabel)
-      .sort((a, b) => (a.portalLabel > b.portalLabel ? 1 : -1));
+      .sort((a, b) => a.portalOrder - b.portalOrder);
   }
 
   async closeDialog(dialogResult: boolean = false) {

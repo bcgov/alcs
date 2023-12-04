@@ -62,7 +62,7 @@ export class ViewNotificationSubmissionComponent implements OnInit, OnDestroy {
   }
 
   async onNavigateHome() {
-    await this.router.navigateByUrl(`home`);
+    await this.router.navigateByUrl(`home/notifications`);
   }
 
   async onCancel(uuid: string) {

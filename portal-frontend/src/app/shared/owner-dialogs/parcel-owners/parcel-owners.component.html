@@ -1,18 +1,14 @@
 <div class="owner-table-wrapper">
   <table class="owner-table" mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="type">
-      <th mat-header-cell [hidden]="isCrown" *matHeaderCellDef>Type</th>
-      <td mat-cell [hidden]="isCrown" *matCellDef="let element">{{ element.type.label }}</td>
-    </ng-container>
 
     <ng-container matColumnDef="displayName">
-      <th mat-header-cell *matHeaderCellDef>Full Name</th>
+      <th mat-header-cell *matHeaderCellDef>Land Owners</th>
       <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
     </ng-container>
 
     <ng-container *ngIf="!isCrown" matColumnDef="organizationName">
       <ng-container *ngIf="!isShowAllOwners">
-        <th mat-header-cell *matHeaderCellDef>Organization Name</th>
+        <th mat-header-cell *matHeaderCellDef>Organization</th>
       </ng-container>
       <ng-container *ngIf="isShowAllOwners">
         <th mat-header-cell *matHeaderCellDef>Organization Name / Ministry / Department</th>
@@ -39,10 +35,24 @@
       <td mat-cell *matCellDef="let element">{{ element.email }}</td>
     </ng-container>
 
+    <ng-container matColumnDef="corporateSummary">
+      <th mat-header-cell *matHeaderCellDef>Corporate Summary</th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="element.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
+          <a *ngIf="element.corporateSummary" (click)="onOpenFile(element.corporateSummary.uuid)">{{
+            element.corporateSummary.fileName
+          }}</a>
+          <div class="no-data" *ngIf="!element.corporateSummary">
+            <div class="no-data-text">Not Applicable</div>
+          </div>          
+        </div>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell class="actions" *matCellDef="let element">
-        <button [disabled]="_disabled" (click)="onEdit(element)" mat-flat-button color="primary">Edit</button>
+        <button [disabled]="_disabled" (click)="onEdit(element)" mat-stroked-button color="primary">Edit</button>
         <button
           [disabled]="_disabled"
           *ngIf="parcelUuid"

@@ -205,10 +205,35 @@
   </div>
 
   <section *ngIf="enableOwners" class="container">
-    <h6>Owner Information</h6>
+    <h6>Parcel Owners</h6>
     <ng-container *ngIf="!isCrownLand">
-      <p>Provide the following information for all owners listed on the parcel's Certificate of Title</p>
-      <label for="owner-search">Add Owner to Parcel</label>
+      <p>Add an owner for every organization or individual listed on the parcel's Certificate of Title</p>
+      <div>
+        <app-parcel-owners
+          [isDraft]="isDraft"
+          [fileId]="fileId"
+          [submissionUuid]="submissionUuid"
+          [parcelUuid]="parcel.uuid"
+          [owners]="parcel.owners"
+          (onOwnersUpdated)="onOwnersUpdated.emit()"
+          (onOwnerRemoved)="onOwnerRemoved($event)"
+          [ownerService]="noticeOfIntentOwnerService"
+          [documentService]="noticeOfIntentDocumentService"
+          [disabled]="_disabled"
+        ></app-parcel-owners>
+      </div>
+      <button
+        class="new-owner"
+        *ngIf="enableAddNewOwner"
+        (click)="onAddNewOwner()"
+        mat-flat-button
+        color="primary"
+        [disabled]="!parcelType.getRawValue() || _disabled"
+      >
+        Add new owner
+      </button>
+      <h6 class="owner-search-option">OR</h6>
+      <label for="owner-search">Select from Existing Owners</label>
       <mat-form-field class="full-width-input" appearance="outline">
         <input
           [ngClass]="{ 'error-outline': ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled }"
@@ -223,55 +248,30 @@
         />
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
-            (click)="onSelectOwner(option, option.isSelected)"
+            (click)="onSelectOwner($event, option, option.isSelected)"
             *ngFor="let option of filteredOwners"
-            [disabled]="option.isSelected"
           >
-            <div class="owner-option">
-              <div>{{ option.displayName }}</div>
-              <button mat-flat-button color="primary" [disabled]="option.isSelected">
-                {{ option.isSelected ? 'Added' : 'Add' }}
-              </button>
-            </div>
+            <mat-checkbox
+              [checked]="option.isSelected"
+              color="primary"
+            >
+              <div class="owner-option">
+                <div>{{ option.displayName }}</div>
+              </div>
+            </mat-checkbox>
           </mat-option>
           <mat-option class="option" *ngIf="filteredOwners.length === 0 && enableAddNewOwner" (click)="onAddNewOwner()">
             <div class="owner-option">
-              <div>No owner matching search</div>
+              <div *ngIf="owners.length != 0">No owner matching search</div>
+              <div *ngIf="owners.length === 0">No owners added</div>
               <button mat-flat-button color="primary">Add new owner</button>
             </div>
-          </mat-option>
-          <mat-option class="option" *ngIf="owners.length > 0" (click)="onSeeAllOwners()">
-            <span class="link-text">See all Owners</span>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
       <div *ngIf="ownerInput.errors && ownerInput.errors['required'] && !ownerInput.disabled" class="field-error">
         <mat-icon>warning</mat-icon>
         <div *ngIf="ownerInput.errors?.['required']">This field is required</div>
-      </div>
-      <button
-        class="new-owner"
-        *ngIf="enableAddNewOwner"
-        (click)="onAddNewOwner()"
-        mat-stroked-button
-        color="primary"
-        [disabled]="_disabled"
-      >
-        Add new owner
-      </button>
-      <div>
-        <app-parcel-owners
-          [isDraft]="isDraft"
-          [fileId]="fileId"
-          [submissionUuid]="submissionUuid"
-          [parcelUuid]="parcel.uuid"
-          [owners]="parcel.owners"
-          (onOwnersUpdated)="onOwnersUpdated.emit()"
-          (onOwnerRemoved)="onOwnerRemoved($event)"
-          [ownerService]="noticeOfIntentOwnerService"
-          [documentService]="noticeOfIntentDocumentService"
-          [disabled]="_disabled"
-        ></app-parcel-owners>
       </div>
     </ng-container>
     <ng-container *ngIf="isCrownLand">
@@ -304,7 +304,7 @@
         />
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option
-            (click)="onSelectOwner(option, option.isSelected)"
+            (click)="onSelectOwner($event, option, option.isSelected)"
             *ngFor="let option of filteredOwners"
             [disabled]="option.isSelected"
           >
@@ -324,9 +324,6 @@
               <div>No owner matching search</div>
               <button mat-flat-button color="primary">Add new government contact</button>
             </div>
-          </mat-option>
-          <mat-option class="option" *ngIf="owners.length > 0" (click)="onSeeAllOwners()">
-            <span class="link-text">See all Owners</span>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

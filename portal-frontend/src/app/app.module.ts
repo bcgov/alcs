@@ -17,6 +17,7 @@ import { ConfirmationDialogService } from './shared/confirmation-dialog/confirma
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { SharedModule } from './shared/shared.module';
+import { WarningBannerComponent } from './shared/warning-banner/warning-banner.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,9 @@ import { SharedModule } from './shared/shared.module';
     MatSortModule,
     MatPaginatorModule,
     MatToolbarModule,
+  ],
+  exports: [
+    WarningBannerComponent,
   ],
   providers: [
     ConfirmationDialogService,

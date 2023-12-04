@@ -7,6 +7,7 @@ import {
   ViewEntity,
 } from 'typeorm';
 import { ApplicationDecision } from '../../../../alcs/application-decision/application-decision.entity';
+import { SUBMISSION_STATUS } from '../../../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationSubmissionToSubmissionStatus } from '../../../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../../../alcs/application/application.entity';
 import { ApplicationType } from '../../../../alcs/code/application-code/application-type/application-type.entity';
@@ -79,6 +80,7 @@ import { LinkedStatusType } from '../public-search.dto';
                   'RANK() OVER (PARTITION BY application_uuid ORDER BY date DESC, audit_created_at DESC)',
                   'dest_rank',
                 )
+                .where('is_draft = FALSE')
                 .from(ApplicationDecision, 'decision')
                 .getQuery(),
               'decisions',
@@ -92,11 +94,9 @@ import { LinkedStatusType } from '../public-search.dto';
         '(app.date_received_all_items IS NOT NULL AND app.date_received_all_items <= NOW())',
       )
       .andWhere(
-        "alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != 'CNCL'",
+        `alcs.get_current_status_for_application_submission_by_uuid(app_sub.uuid)->>'status_type_code' != '${SUBMISSION_STATUS.CANCELLED}'`,
       )
-      .andWhere(
-        "decision_date.dest_rank = 1",
-      ),
+      .andWhere('decision_date.dest_rank = 1'),
 })
 export class PublicApplicationSubmissionSearchView {
   @ViewColumn()
