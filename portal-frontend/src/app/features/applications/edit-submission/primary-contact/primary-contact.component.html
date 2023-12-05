@@ -130,7 +130,7 @@
     </form>
   </div>
 </section>
-<section>
+<section *ngIf="needsAuthorizationLetter || files.length > 0">
   <h4>Primary Contact Authorization Letters</h4>
   <div>
     <ng-container *ngIf="!isGovernmentUser">

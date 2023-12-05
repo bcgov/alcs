@@ -3,11 +3,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
+import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerDto } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
+import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
@@ -37,6 +40,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isGovernmentUser = false;
   governmentName: string | undefined;
   isDirty = false;
+  hasCrownParcels = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -60,6 +64,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     noticeOfIntentDocumentService: NoticeOfIntentDocumentService,
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private authenticationService: AuthenticationService,
+    private parcelService: NoticeOfIntentParcelService,
     dialog: MatDialog,
     toastService: ToastService
   ) {
@@ -156,16 +161,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (this.selectedLocalGovernment) {
       this.needsAuthorizationLetter = false;
     } else {
-      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
-      this.needsAuthorizationLetter =
-        this.selectedThirdPartyAgent ||
-        !(
-          isSelfApplicant &&
-          (this.owners.length === 1 ||
-            (this.owners.length === 2 &&
-              this.owners[1].type.code === OWNER_TYPE.AGENT &&
-              !this.selectedThirdPartyAgent))
-        );
+      const isSelfApplicant =
+        this.parcelOwners.length === 1 && this.parcelOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
+      this.needsAuthorizationLetter = this.selectedThirdPartyAgent || this.hasCrownParcels || !isSelfApplicant;
     }
 
     this.files = this.files.map((file) => ({
@@ -209,12 +207,30 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   private async loadOwners(submissionUuid: string, primaryContactOwnerUuid?: string | null) {
-    const owners = await this.noticeOfIntentOwnerService.fetchBySubmissionId(submissionUuid);
-    if (owners) {
+    //Map Owners from Parcels to only count linked ones
+    const parcels = await this.parcelService.fetchBySubmissionUuid(submissionUuid);
+    const allOwners = await this.noticeOfIntentOwnerService.fetchBySubmissionId(submissionUuid);
+    if (parcels && allOwners) {
+      this.hasCrownParcels =
+        !!parcels && parcels.some((parcel) => parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPE.CROWN);
+
+      const uniqueParcelOwners = parcels
+        .flatMap((parcel) => parcel.owners)
+        .reduce((map, owner) => {
+          return map.set(owner.uuid, owner);
+        }, new Map<string, NoticeOfIntentOwnerDto>());
+      const nonParcelOwners = allOwners.filter((owner) =>
+        [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+      );
+      const parcelOwners = [...uniqueParcelOwners.values()];
+      const owners = [...parcelOwners, ...nonParcelOwners];
+
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.parcelOwners = owners.filter(
         (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
       );
+
+      this.parcelOwners = parcelOwners;
       this.owners = owners;
 
       if (selectedOwner) {

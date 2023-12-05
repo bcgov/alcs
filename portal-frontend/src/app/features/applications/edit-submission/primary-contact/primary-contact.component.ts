@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -37,6 +38,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   governmentName: string | undefined;
   isDirty = false;
   showVirusError = false;
+  hasCrownParcels = false;
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -57,6 +59,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   constructor(
     private applicationService: ApplicationSubmissionService,
     private applicationOwnerService: ApplicationOwnerService,
+    private applicationParcelService: ApplicationParcelService,
     private authenticationService: AuthenticationService,
     applicationDocumentService: ApplicationDocumentService,
     dialog: MatDialog,
@@ -155,16 +158,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     if (this.selectedLocalGovernment) {
       this.needsAuthorizationLetter = false;
     } else {
-      const isSelfApplicant = this.owners.length > 0 && this.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
-      this.needsAuthorizationLetter =
-        this.selectedThirdPartyAgent ||
-        !(
-          isSelfApplicant &&
-          (this.owners.length === 1 ||
-            (this.owners.length === 2 &&
-              this.owners[1].type.code === OWNER_TYPE.AGENT &&
-              !this.selectedThirdPartyAgent))
-        );
+      const isSelfApplicant =
+        this.parcelOwners.length === 1 && this.parcelOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
+      debugger;
+      this.needsAuthorizationLetter = this.selectedThirdPartyAgent || this.hasCrownParcels || !isSelfApplicant;
     }
 
     this.files = this.files.map((file) => ({
@@ -208,12 +205,30 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   private async loadOwners(submissionUuid: string, primaryContactOwnerUuid?: string) {
-    const owners = await this.applicationOwnerService.fetchBySubmissionId(submissionUuid);
-    if (owners) {
+    //Map Owners from Parcels to only count linked ones
+    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(submissionUuid);
+    const allOwners = await this.applicationOwnerService.fetchBySubmissionId(submissionUuid);
+    if (parcels && allOwners) {
+      this.hasCrownParcels =
+        !!parcels && parcels.some((parcel) => parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPE.CROWN);
+
+      const uniqueParcelOwners = parcels
+        .flatMap((parcel) => parcel.owners)
+        .reduce((map, owner) => {
+          return map.set(owner.uuid, owner);
+        }, new Map<string, ApplicationOwnerDto>());
+      const nonParcelOwners = allOwners.filter((owner) =>
+        [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+      );
+      const parcelOwners = [...uniqueParcelOwners.values()];
+      const owners = [...parcelOwners, ...nonParcelOwners];
+
       const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
       this.parcelOwners = owners.filter(
         (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
       );
+
+      this.parcelOwners = parcelOwners;
       this.owners = owners;
 
       if (selectedOwner) {

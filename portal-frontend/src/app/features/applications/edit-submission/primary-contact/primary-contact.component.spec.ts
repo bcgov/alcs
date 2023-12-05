@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerService } from '../../../../services/application-owner/application-owner.service';
+import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { UserDto } from '../../../../services/authentication/authentication.dto';
@@ -21,6 +22,7 @@ describe('PrimaryContactComponent', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockParcelService: DeepMocked<ApplicationParcelService>;
 
   let applicationDocumentPipe = new BehaviorSubject<ApplicationDocumentDto[]>([]);
 
@@ -29,6 +31,7 @@ describe('PrimaryContactComponent', () => {
     mockAppDocumentService = createMock();
     mockAppOwnerService = createMock();
     mockAuthService = createMock();
+    mockParcelService = createMock();
 
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
@@ -45,6 +48,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: ApplicationOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: ApplicationParcelService,
+          useValue: mockParcelService,
         },
         {
           provide: MatDialog,

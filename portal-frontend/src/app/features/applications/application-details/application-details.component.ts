@@ -3,7 +3,12 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
-import { ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
+import {
+  ApplicationOwnerDetailedDto,
+  ApplicationOwnerDto,
+} from '../../../services/application-owner/application-owner.dto';
+import { PARCEL_OWNERSHIP_TYPE } from '../../../services/application-parcel/application-parcel.dto';
+import { ApplicationParcelService } from '../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
@@ -39,6 +44,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private codeService: CodeService,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationParcelService: ApplicationParcelService,
     private router: Router
   ) {}
 
@@ -49,13 +55,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
       if (app) {
         this.primaryContact = app.owners.find((owner) => owner.uuid === app.primaryContactOwnerUuid);
         this.populateLocalGovernment(app.localGovernmentUuid);
-
-        this.needsAuthorizationLetter =
-          !(this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT) &&
-          !(
-            app.owners.length === 1 &&
-            (app.owners[0].type.code === OWNER_TYPE.INDIVIDUAL || app.owners[0].type.code === OWNER_TYPE.GOVERNMENT)
-          );
+        this.calculateAuthorizationLetterRequired(app.uuid);
       }
     });
 
@@ -110,6 +110,23 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     const lg = this.localGovernments.find((lg) => lg.uuid === governmentUuid);
     if (lg) {
       this.localGovernment = lg;
+    }
+  }
+
+  private async calculateAuthorizationLetterRequired(submissionUuid: string) {
+    //Map Owners from Parcels to only count linked ones
+    const parcels = await this.applicationParcelService.fetchBySubmissionUuid(submissionUuid);
+    if (parcels) {
+      const uniqueOwnerMap = parcels
+        .flatMap((parcel) => parcel.owners)
+        .reduce((map, owner) => {
+          return map.set(owner.uuid, owner);
+        }, new Map<string, ApplicationOwnerDto>());
+      const owners = [...uniqueOwnerMap.values()];
+
+      const isSelfApplicant = owners.length === 1 && this.primaryContact?.type.code === OWNER_TYPE.INDIVIDUAL;
+      const isGovernmentContact = this.primaryContact?.type.code === OWNER_TYPE.GOVERNMENT;
+      this.needsAuthorizationLetter = !isGovernmentContact && !isSelfApplicant;
     }
   }
 }

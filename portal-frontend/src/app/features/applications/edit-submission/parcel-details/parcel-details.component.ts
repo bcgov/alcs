@@ -100,6 +100,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
 
     parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
+    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
     parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
     parcel.purchasedDate =
       formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;

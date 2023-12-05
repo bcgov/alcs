@@ -8,6 +8,7 @@ import { AuthenticationService } from '../../../../services/authentication/authe
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../../services/notice-of-intent-document/notice-of-intent-document.service';
 import { NoticeOfIntentOwnerService } from '../../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
+import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -21,6 +22,7 @@ describe('PrimaryContactComponent', () => {
   let mockAppDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockAppOwnerService: DeepMocked<NoticeOfIntentOwnerService>;
   let mockAuthService: DeepMocked<AuthenticationService>;
+  let mockParcelService: DeepMocked<NoticeOfIntentParcelService>;
 
   let noiDocumentPipe = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
 
@@ -29,6 +31,7 @@ describe('PrimaryContactComponent', () => {
     mockAppDocumentService = createMock();
     mockAppOwnerService = createMock();
     mockAuthService = createMock();
+    mockParcelService = createMock();
 
     mockAuthService.$currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
 
@@ -45,6 +48,10 @@ describe('PrimaryContactComponent', () => {
         {
           provide: NoticeOfIntentOwnerService,
           useValue: mockAppOwnerService,
+        },
+        {
+          provide: NoticeOfIntentParcelService,
+          useValue: mockParcelService,
         },
         {
           provide: MatDialog,
