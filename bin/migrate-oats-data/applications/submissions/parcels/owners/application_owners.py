@@ -132,10 +132,9 @@ def _get_name(row):
 
 
 def _map_owner_type(owner_record):
-    # default to fee simple
-    # need to check what to do with null values
+    # Default to fee simple for missing owner type
     if owner_record["ownership_type_code"] == None:
-        owner_record["ownership_type_code"] = ALCSOwnershipType.FeeSimple.value
+        return ALCSOwnerType.INDV.value
 
     if owner_record["ownership_type_code"] == ALCSOwnershipType.FeeSimple.value:
         if owner_record["person_id"] and not owner_record["organization_id"]:
