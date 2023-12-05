@@ -70,7 +70,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,
     private submissionService: ApplicationSubmissionService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -178,13 +178,11 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
         this.showSupersededWarning = true;
       }
 
-      this.selectableParcels = parcels
-        .filter((parcel) => parcel.parcelType === 'application')
-        .map((parcel, index) => ({
-          uuid: parcel.uuid,
-          pid: parcel.pid,
-          index: index,
-        }));
+      this.selectableParcels = parcels.map((parcel, index) => ({
+        uuid: parcel.uuid,
+        pid: parcel.pid,
+        index: index,
+      }));
     }
   }
 
@@ -264,7 +262,7 @@ export class DocumentUploadDialogComponent implements OnInit, OnDestroy {
     if (this.data.existingDocument) {
       await this.applicationDocumentService.download(
         this.data.existingDocument.uuid,
-        this.data.existingDocument.fileName
+        this.data.existingDocument.fileName,
       );
     }
   }

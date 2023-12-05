@@ -94,16 +94,6 @@ export class ApplicationParcel extends Base {
   })
   isConfirmedByApplicant: boolean;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'varchar',
-    comment:
-      'The Parcels type, "other" means parcels not related to application but related to the owner',
-    nullable: false,
-    default: 'application',
-  })
-  parcelType?: string;
-
   @AutoMap()
   @ManyToOne(() => ApplicationSubmission)
   applicationSubmission: ApplicationSubmission;

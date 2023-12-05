@@ -16,7 +16,6 @@ import {
   OwnerType,
 } from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
@@ -117,7 +116,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
     });
 
@@ -163,7 +161,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
       pid: '1251251',
     });
@@ -193,7 +190,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'CRWN',
       pid: '12512',
     });
@@ -214,37 +210,6 @@ describe('ApplicationSubmissionValidatorService', () => {
         new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
       ),
     ).toBe(true);
-  });
-
-  it('should not require certificate of title for other parcels', async () => {
-    const applicationSubmission = new ApplicationSubmission({
-      owners: [],
-    });
-    const parcel = new ApplicationParcel({
-      uuid: 'parcel-1',
-      owners: [],
-      parcelType: PARCEL_TYPE.OTHER,
-    });
-
-    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
-
-    const res = await service.validateSubmission(applicationSubmission);
-
-    expect(
-      includesError(res.errors, new Error(`Invalid Parcel ${parcel.uuid}`)),
-    ).toBe(false);
-    expect(
-      includesError(
-        res.errors,
-        new Error(`Parcel has no Owners ${parcel.uuid}`),
-      ),
-    ).toBe(true);
-    expect(
-      includesError(
-        res.errors,
-        new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
-      ),
-    ).toBe(false);
   });
 
   it('should return an error for no primary contact', async () => {

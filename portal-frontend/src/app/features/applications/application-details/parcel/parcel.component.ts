@@ -9,13 +9,11 @@ import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
   PARCEL_OWNERSHIP_TYPE,
-  PARCEL_TYPE,
 } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { getLetterCombinations } from '../../../../shared/utils/number-to-letter-helper';
 
 export class ApplicationParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -35,7 +33,6 @@ export class ApplicationParcelBasicValidation {
 }
 
 interface ApplicationParcelExtended extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
-  parcelType: string;
   isFarmText?: string;
   ownershipType?: BaseCodeDto;
   validation?: ApplicationParcelBasicValidation;
@@ -55,9 +52,7 @@ export class ParcelComponent {
   @Input() showErrors = true;
   @Input() showEdit = true;
   @Input() draftMode = false;
-  @Input() parcelType: PARCEL_TYPE = PARCEL_TYPE.APPLICATION;
 
-  PARCEL_TYPES = PARCEL_TYPE;
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
   pageTitle: string = '1. Identify Parcel(s) Under Application';
@@ -85,12 +80,6 @@ export class ParcelComponent {
         this.loadParcels().then(async () => await this.validateParcelDetails());
       }
     });
-
-    if (this.parcelType === PARCEL_TYPE.OTHER) {
-      this.pageTitle = '2. Other Parcels in the Community';
-      this.showCertificateOfTitle = false;
-      this.navigationStepInd = 1;
-    }
   }
 
   ngOnDestroy(): void {
@@ -100,9 +89,7 @@ export class ParcelComponent {
 
   async loadParcels() {
     const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
-    this.parcels = parcels
-      .filter((p) => p.parcelType === this.parcelType)
-      .map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
+    this.parcels = parcels.map((p) => ({ ...p, isFarmText: formatBooleanToYesNoString(p.isFarm) }));
   }
 
   private async validateParcelDetails() {
@@ -201,9 +188,5 @@ export class ParcelComponent {
         `application/${this.fileId}/edit/${this.navigationStepInd}?parcelUuid=${uuid}&errors=t`
       );
     }
-  }
-
-  getLetterIndex(num: number) {
-    return getLetterCombinations(num);
   }
 }

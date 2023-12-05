@@ -53,9 +53,6 @@ export class NoticeOfIntentParcelDto {
 
   ownershipType?: ParcelOwnershipTypeDto;
 
-  @AutoMap(() => String)
-  parcelType: string;
-
   @AutoMap(() => Number)
   alrArea: number | null;
 
@@ -67,10 +64,6 @@ export class NoticeOfIntentParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   noticeOfIntentSubmissionUuid: string;
-
-  @IsOptional()
-  @IsString()
-  parcelType?: string;
 
   @IsOptional()
   @IsString()

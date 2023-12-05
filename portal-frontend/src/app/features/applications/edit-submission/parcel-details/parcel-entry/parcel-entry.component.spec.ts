@@ -25,7 +25,6 @@ describe('ParcelEntryComponent', () => {
 
   let mockParcel: ApplicationParcelDto = {
     isConfirmedByApplicant: false,
-    parcelType: '',
     uuid: '',
     owners: [],
   };

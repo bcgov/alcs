@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application-document/application-document.service';
-import { PARCEL_TYPE } from '../../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import {
   ApplicationSubmissionUpdateDto,
@@ -204,7 +203,6 @@ export class SubdProposalComponent extends FilesStepComponent implements OnInit,
     const parcels = await this.parcelService.fetchBySubmissionUuid(submissionUuid);
     if (parcels) {
       this.totalTargetAcres = parcels
-        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
         .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
         .toFixed(5);
     }

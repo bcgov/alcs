@@ -1,120 +1,74 @@
 <section>
-  <h2>Other Parcels in the Community</h2>
+  <h2>Other Owned Parcels</h2>
   <div class="step-description">
     <div>
-      <p>
-        Identify all ownerships or leases of other lands (ALR or non-ALR) within the community where the parcel(s) under
-        application are located and owned by the following owners:
-      </p>
-      <ul>
-        <li *ngIf="owners.length === 0">No owners found</li>
-        <li *ngFor="let owner of owners">{{ owner.displayName }}</li>
-      </ul>
       <p>*All fields are required unless stated optional.</p>
     </div>
   </div>
-
-  <p *ngIf="hasCrownLandParcels">
-    For applications involving Crown Land, it is not required to indicate other parcel(s) owned by the Crown.<br />
-    However we encourage applicants to use the proposal section of this application to indicate their interest
-    (ownership or lease) in any other land in the community where the application parcel(s) is located.
-  </p>
-
   <form [formGroup]="otherParcelsForm" class="other-parcels-form">
     <div class="full-row">
-      <div for="hasOtherParcelsInCommunity">
-        <b>
-          Does any of the parcel owners hold an interest (ownership or lease) in any other land (ALR or non-ALR) within
-          the <em>community</em> where the application parcel(s) is located?
-        </b>
-      </div>
+      <mat-label for="has-other-parcels">
+        Do any of the land owners added previously own or lease other parcels that might inform this application
+        process?
+      </mat-label>
       <mat-button-toggle-group
         class="input"
-        id="hasOtherParcelsInCommunity"
-        formControlName="hasOtherParcelsInCommunity"
-        (change)="onHasOtherParcelsInCommunityChange($event)"
+        id="has-other-parcels"
+        [formControl]="hasOtherParcelsInCommunity"
+        (change)="onChangeOtherParcels($event)"
       >
         <mat-button-toggle
+          class="toggle-button"
+          [ngClass]="{
+            'error-outline':
+              hasOtherParcelsInCommunity.invalid &&
+              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+          }"
           value="true"
-          [ngClass]="{
-            'error-outline':
-              hasOtherParcelsInCommunity.invalid &&
-              (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
-          }"
-          >Yes</mat-button-toggle
-        >
+          >Yes
+        </mat-button-toggle>
         <mat-button-toggle
-          value="false"
+          class="toggle-button"
           [ngClass]="{
             'error-outline':
               hasOtherParcelsInCommunity.invalid &&
               (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
           }"
-          >No</mat-button-toggle
-        >
+          value="false"
+          >No
+        </mat-button-toggle>
       </mat-button-toggle-group>
+    </div>
+    <div class="full-row">
+      <label for="otherParcelsDescription">
+        Describe the other parcels including their location, who owns or leases them, and their use.
+      </label>
+      <div class="subtext">Be specific and provide the civic address or PID where possible.</div>
+      <mat-form-field class="display-block" appearance="outline">
+        <textarea
+          #otherParcelsDescriptionText
+          id="otherParcelsDescription"
+          matInput
+          [formControl]="otherParcelsDescription"
+          rows="4"
+          maxlength="4000"
+        ></textarea>
+      </mat-form-field>
       <div
-        *ngIf="
-          hasOtherParcelsInCommunity.invalid && (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
-        "
+        *ngIf="otherParcelsDescription.invalid && (otherParcelsDescription.dirty || otherParcelsDescription.touched)"
         class="field-error"
       >
         <mat-icon>warning</mat-icon>
-        <div *ngIf="hasOtherParcelsInCommunity.errors?.['required']">This field is required</div>
+        <div *ngIf="otherParcelsDescription.errors?.['required']">This field is required</div>
       </div>
-    </div>
-    <div class="full-row">
-      <mat-expansion-panel
-        *ngFor="let parcel of otherParcels; let parcelInd = index"
-        [expanded]="
-          hasOtherParcelsInCommunity.value !== 'false' &&
-          (otherParcels.length < 2 || (newParcelAdded && parcelInd === otherParcels.length - 1))
-        "
-      >
-        <mat-expansion-panel-header>
-          <mat-panel-title> Other Parcel {{ getLetterIndex(parcelInd) }} Details</mat-panel-title>
-        </mat-expansion-panel-header>
-        <app-parcel-entry
-          [parcel]="parcel"
-          [$owners]="$owners"
-          [fileId]="fileId"
-          [submissionUuid]="submissionUuid"
-          [enableOwners]="true"
-          [enableCertificateOfTitleUpload]="false"
-          [enableUserSignOff]="false"
-          [enableAddNewOwner]="false"
-          [showErrors]="showErrors"
-          [disabled]="formDisabled"
-          (onFormGroupChange)="onParcelFormChange($event)"
-        ></app-parcel-entry>
-        <div>
-          <div class="flex-evenly-wrap parcel-buttons-wrappers">
-            <button
-              class="margin-top-1-half"
-              mat-stroked-button
-              color="primary"
-              (click)="onSave()"
-              [disabled]="formDisabled"
-            >
-              Save Parcel {{ getLetterIndex(parcelInd) }} Details
-            </button>
-            <button
-              class="margin-top-1-half"
-              *ngIf="otherParcels.length > 1"
-              mat-stroked-button
-              color="accent"
-              (click)="onDelete(parcel.uuid, parcelInd + 1)"
-            >
-              Delete Parcel {{ getLetterIndex(parcelInd) }} Details
-            </button>
-          </div>
-        </div>
-      </mat-expansion-panel>
-      <div>
-        <button mat-stroked-button color="primary" [disabled]="formDisabled" (click)="onAddParcel()">
-          Add another parcel
-        </button>
+      <div class="subtext">
+        Example 1: PID 112-345-678 in Kelowna partially owned by Jane Doe, used for temporary farm worker housing.
       </div>
+      <div class="subtext">
+        Example 2: One parcel in Cranbrook fully owned by John Doe for haying and one parcel in the Regional District of
+        East Kootenay leased by 12345 BC LTD for grazing.
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - otherParcelsDescriptionText.textLength }}</div>
     </div>
   </form>
 </section>

@@ -183,6 +183,10 @@ export class ApplicationSubmissionService {
       updateDto.prescribedBody,
       updateDto.prescribedBody,
     );
+    applicationSubmission.otherParcelsDescription = filterUndefined(
+      updateDto.otherParcelsDescription,
+      applicationSubmission.otherParcelsDescription,
+    );
 
     this.setLandUseFields(applicationSubmission, updateDto);
     this.setNFUFields(applicationSubmission, updateDto);

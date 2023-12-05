@@ -106,7 +106,6 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  DOCUMENT_TYPES = DOCUMENT_TYPE;
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
 
@@ -200,7 +199,7 @@ export class ParcelEntryComponent implements OnInit {
       this.isFarm.value ||
       this.civicAddress.value ||
       this.parcel.owners.length > 0;
-    
+
     const changeParcelType = () => {
       if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
         this.searchBy.setValue(null);
@@ -333,7 +332,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   private isOwnerInParcel(owner: ApplicationOwnerDto): boolean {
-    return this.parcel.owners.some(existingOwner => existingOwner.uuid === owner.uuid);
+    return this.parcel.owners.some((existingOwner) => existingOwner.uuid === owner.uuid);
   }
 
   async onSelectOwner(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {

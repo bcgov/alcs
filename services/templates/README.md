@@ -52,7 +52,6 @@ Example of Body
         "legalDescription": "some legal description",
         "mapAreaHectares": 0.05,
         "isFarm": true,
-        "parcelType": "application",
         "ownershipType": "Fee Simple",
         "purchasedDate": "2023-01-01",
         "documents": [],
@@ -86,7 +85,6 @@ Example of Body
         "mapAreaHectares": 0.04,
         "isConfirmedByApplicant": false,
         "crownLandOwnerType": null,
-        "parcelType": "application",
         "ownershipType": "Fee Simple",
         "documents": [],
         "owners": []

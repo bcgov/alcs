@@ -16,7 +16,6 @@ import {
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
 import { ProposedLot } from './application-submission.entity';
-import { CovenantTransfereeDto } from './covenant-transferee/covenant-transferee.dto';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
 
@@ -68,6 +67,8 @@ export class ApplicationSubmissionDto {
 export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => String)
   purpose: string | null;
+  @AutoMap(() => String)
+  otherParcelsDescription?: string | null;
   @AutoMap()
   parcelsAgricultureDescription: string;
   @AutoMap()
@@ -351,6 +352,11 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   purpose?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  otherParcelsDescription?: string | null;
 
   @IsUUID()
   @IsOptional()

@@ -13,7 +13,6 @@ import { ChangeApplicationTypeDialogComponent } from './change-application-type-
 import { EditSubmissionComponent } from './edit-submission.component';
 import { LandUseComponent } from './land-use/land-use.component';
 import { OtherAttachmentsComponent } from './other-attachments/other-attachments.component';
-import { OtherParcelConfirmationDialogComponent } from './other-parcels/other-parcel-confirmation-dialog/other-parcel-confirmation-dialog.component';
 import { OtherParcelsComponent } from './other-parcels/other-parcels.component';
 import { DeleteParcelDialogComponent } from './parcel-details/delete-parcel/delete-parcel-dialog.component';
 import { ParcelDetailsComponent } from './parcel-details/parcel-details.component';
@@ -51,7 +50,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
-    OtherParcelConfirmationDialogComponent,
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,
@@ -91,7 +89,6 @@ import { SelectGovernmentComponent } from './select-government/select-government
     OtherAttachmentsComponent,
     PrimaryContactComponent,
     ReviewAndSubmitComponent,
-    OtherParcelConfirmationDialogComponent,
     NfuProposalComponent,
     TurProposalComponent,
     SubdProposalComponent,

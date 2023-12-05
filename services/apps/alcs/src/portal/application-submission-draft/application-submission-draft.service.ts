@@ -96,9 +96,8 @@ export class ApplicationSubmissionDraftService {
       parcels: [],
       owners: [],
     });
-    const savedSubmission = await this.applicationSubmissionRepository.save(
-      newSubmission,
-    );
+    const savedSubmission =
+      await this.applicationSubmissionRepository.save(newSubmission);
     const statuses =
       await this.applicationSubmissionStatusService.getCopiedStatuses(
         originalSubmission.uuid,
@@ -135,7 +134,6 @@ export class ApplicationSubmissionDraftService {
     for (const parcel of originalSubmission.parcels) {
       const savedParcel = await this.applicationParcelService.create(
         savedSubmission.uuid,
-        parcel.parcelType,
       );
       updateDtos.push({
         ...parcel,

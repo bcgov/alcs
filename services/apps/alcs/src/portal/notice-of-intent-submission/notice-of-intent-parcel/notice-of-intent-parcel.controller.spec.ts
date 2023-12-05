@@ -115,7 +115,7 @@ describe('NoticeOfIntentParcelController', () => {
     expect(parcel).toBeDefined();
   });
 
-  it('should revert newly created "other" parcel if failed to link', async () => {
+  it('should revert newly created parcel if failed to link', async () => {
     const mockError = new Error('mock error');
     mockNOIService.getByUuid.mockResolvedValue(mockNoticeOfIntentSubmission);
     mockNOIParcelService.create.mockResolvedValue({} as NoticeOfIntentParcel);
@@ -127,7 +127,6 @@ describe('NoticeOfIntentParcelController', () => {
         {
           noticeOfIntentSubmissionUuid: 'fake',
           ownerUuid: 'fake_uuid',
-          parcelType: 'other',
         },
         {
           user: {

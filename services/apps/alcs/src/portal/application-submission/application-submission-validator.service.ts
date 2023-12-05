@@ -6,7 +6,6 @@ import { LocalGovernmentService } from '../../alcs/local-government/local-govern
 import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmission } from './application-submission.entity';
@@ -16,7 +15,6 @@ export class ValidatedApplicationSubmission extends ApplicationSubmission {
   applicant: string;
   localGovernmentUuid: string;
   parcels: ApplicationParcel[];
-  otherParcels: ApplicationParcel[];
   primaryContact: ApplicationOwner;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
@@ -157,12 +155,7 @@ export class ApplicationSubmissionValidatorService {
         ? ({
             ...applicationSubmission,
             primaryContact: validatedPrimaryContact,
-            parcels: validatedParcels.filter(
-              (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
-            ),
-            otherParcels: validatedParcels.filter(
-              (parcel) => parcel.parcelType === PARCEL_TYPE.OTHER,
-            ),
+            parcels: validatedParcels,
           } as ValidatedApplicationSubmission)
         : undefined;
 
@@ -187,6 +180,15 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
+    if (
+      applicationSubmission.hasOtherParcelsInCommunity &&
+      !applicationSubmission.otherParcelsDescription
+    ) {
+      errors.push(
+        new ServiceValidationException(`Missing other parcels description`),
+      );
+    }
+
     for (const parcel of parcels) {
       if (
         parcel.ownershipTypeCode === null ||
@@ -194,8 +196,7 @@ export class ApplicationSubmissionValidatorService {
         parcel.mapAreaHectares === null ||
         parcel.civicAddress === null ||
         parcel.isFarm === null ||
-        (!parcel.isConfirmedByApplicant &&
-          parcel.parcelType === PARCEL_TYPE.APPLICATION)
+        !parcel.isConfirmedByApplicant
       ) {
         errors.push(
           new ServiceValidationException(`Invalid Parcel ${parcel.uuid}`),
@@ -241,7 +242,6 @@ export class ApplicationSubmissionValidatorService {
       }
 
       if (
-        parcel.parcelType === PARCEL_TYPE.APPLICATION &&
         !parcel.certificateOfTitle &&
         (parcel.ownershipTypeCode === 'SMPL' || parcel.pid)
       ) {

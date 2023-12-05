@@ -123,7 +123,6 @@ describe('ApplicationParcelController', () => {
       controller.create({
         applicationSubmissionUuid: 'fake',
         ownerUuid: 'fake_uuid',
-        parcelType: 'other',
       }),
     ).rejects.toMatchObject(mockError);
 

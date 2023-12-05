@@ -36,9 +36,6 @@ export class PublicParcelDto {
 
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
-  @AutoMap(() => String)
-  parcelType: string;
-
   @AutoMap(() => Number)
   alrArea: number | null;
 

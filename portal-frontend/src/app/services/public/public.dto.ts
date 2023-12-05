@@ -35,7 +35,6 @@ export interface PublicParcelDto {
   ownershipTypeCode?: string | null;
   crownLandOwnerType?: string | null;
   ownershipType?: BaseCodeDto;
-  parcelType: string;
   alrArea: number | null;
   owners: PublicOwnerDto[];
 }

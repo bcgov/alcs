@@ -8,13 +8,30 @@
   ></app-parcel>
 </section>
 <section>
-  <app-parcel
-    [$applicationSubmission]="$application"
-    [showErrors]="showErrors"
-    [showEdit]="showEdit"
-    [parcelType]="parcelType.OTHER"
-    [draftMode]="draftMode"
-  ></app-parcel>
+  <h3>2. Other Owned Parcels</h3>
+  <div *ngIf="applicationSubmission" class="review-table">
+    <div class="subheading2 grid-1">
+      Do any of the land owners added previously own or lease other parcels that might inform this application process?
+    </div>
+    <div class="grid-double">
+      <span *ngIf="applicationSubmission.hasOtherParcelsInCommunity !== null">{{
+        applicationSubmission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+      }}</span>
+      <app-no-data
+        [showRequired]="showErrors"
+        *ngIf="applicationSubmission.hasOtherParcelsInCommunity === null"
+      ></app-no-data>
+    </div>
+    <ng-container *ngIf="applicationSubmission.hasOtherParcelsInCommunity">
+      <div class="subheading2 grid-1">
+        Describe the other parcels including their location, who owns or leases them, and their use.
+      </div>
+      <div class="grid-double">
+        {{ applicationSubmission.otherParcelsDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.otherParcelsDescription"></app-no-data>
+      </div>
+    </ng-container>
+  </div>
 </section>
 <section>
   <h3>3. Primary Contact</h3>

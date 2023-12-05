@@ -7,7 +7,6 @@ import { ApplicationOwnerService } from '../../../../services/application-owner/
 import {
   ApplicationParcelDto,
   ApplicationParcelUpdateDto,
-  PARCEL_TYPE,
 } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ToastService } from '../../../../services/toast/toast.service';
@@ -65,8 +64,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   }
 
   async loadParcels() {
-    const parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
-    this.parcels = parcels.filter((p) => p.parcelType === PARCEL_TYPE.APPLICATION);
+    this.parcels = (await this.applicationParcelService.fetchBySubmissionUuid(this.submissionUuid)) || [];
     if (!this.parcels || this.parcels.length === 0) {
       await this.onAddParcel();
     }
@@ -78,7 +76,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     if (parcel) {
       this.parcels.push({
         uuid: parcel!.uuid,
-        parcelType: PARCEL_TYPE.APPLICATION,
         owners: [],
         isConfirmedByApplicant: false,
       });
@@ -103,7 +100,6 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       formData.legalDescription !== undefined ? formData.legalDescription : parcel.legalDescription;
 
     parcel.mapAreaHectares = formData.mapArea !== undefined ? formData.mapArea : parcel.mapAreaHectares;
-    parcel.ownershipTypeCode = formData.parcelType !== undefined ? formData.parcelType : parcel.ownershipTypeCode;
     parcel.isFarm = formData.isFarm !== undefined ? parseStringToBoolean(formData.isFarm) : parcel.isFarm;
     parcel.purchasedDate =
       formData.purchaseDate !== undefined ? formData.purchaseDate?.getTime() : parcel.purchasedDate;
@@ -156,7 +152,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       .beforeClosed()
       .subscribe((result) => {
         if (result) {
-          this.parcels = this.parcels.filter(parcel => parcel.uuid !== parcelUuid);
+          this.parcels = this.parcels.filter((parcel) => parcel.uuid !== parcelUuid);
         }
       });
   }

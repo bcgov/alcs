@@ -212,6 +212,15 @@ export class ApplicationSubmission extends Base {
   })
   hasOtherParcelsInCommunity?: boolean | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Stores the data user entered about other parcels in their community',
+    nullable: true,
+  })
+  otherParcelsDescription?: string;
+
   //NFU Specific Fields
   @AutoMap(() => Number)
   @Column({

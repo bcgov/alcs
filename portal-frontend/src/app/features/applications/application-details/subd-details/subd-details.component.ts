@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
@@ -66,7 +65,6 @@ export class SubdDetailsComponent {
       const parcels = await this.applicationParcelService.fetchBySubmissionUuid(this._applicationSubmission?.uuid);
       if (parcels) {
         this.totalTargetAcres = parcels
-          .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
           .reduce((total, parcel) => total + (parcel.mapAreaHectares ? parseFloat(parcel.mapAreaHectares) : 0), 0)
           .toFixed(2);
       }
