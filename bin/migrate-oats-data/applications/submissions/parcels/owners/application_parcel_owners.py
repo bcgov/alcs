@@ -65,8 +65,8 @@ def link_application_owners_to_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_inserts_count
-                    last_owner_uuid = rows[1]["parcel_uuid"]
-                    last_parcel_uuid = rows[1]["owner_uuid"]
+                    last_owner_uuid = rows[1]["owner_uuid"]
+                    last_parcel_uuid = rows[1]["parcel_uuid"]
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts}"
