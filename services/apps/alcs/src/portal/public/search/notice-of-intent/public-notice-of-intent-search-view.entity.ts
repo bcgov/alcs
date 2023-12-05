@@ -94,8 +94,7 @@ import { LinkedStatusType } from '../public-search.dto';
       )
       .andWhere(
         `alcs.get_current_status_for_notice_of_intent_submission_by_uuid(noi_sub.uuid)->>'status_type_code' != '${NOI_SUBMISSION_STATUS.CANCELLED}'`,
-      )
-      .andWhere('decision_date.dest_rank = 1'),
+      ),
 })
 export class PublicNoticeOfIntentSubmissionSearchView {
   @ViewColumn()
