@@ -37,7 +37,7 @@ def link_notice_of_intent_owners_to_parcels(conn=None, batch_size=BATCH_UPLOAD_S
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND noip.\"uuid\" > '{last_parcel_uuid}' AND noio.\"uuid\" > '{last_owner_uuid}'  ORDER BY parcel_uuid, owner_uuid;"
+                    f"{application_sql} AND ((noip.\"uuid\" = '{last_parcel_uuid}' AND noio.\"uuid\" > '{last_owner_uuid}') OR noip.\"uuid\" > '{last_parcel_uuid}')  ORDER BY parcel_uuid, owner_uuid;"
                 )
 
                 rows = cursor.fetchmany(batch_size)

@@ -39,7 +39,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE osp.subject_property_id > {last_subject_property} AND opo.person_organization_id > {last_person_organization_id}  ORDER BY osp.subject_property_id, opo.person_organization_id;"
+                    f"{application_sql} WHERE (osp.subject_property_id = {last_subject_property} AND opo.person_organization_id > {last_person_organization_id}) OR osp.subject_property_id > {last_subject_property}  ORDER BY osp.subject_property_id, opo.person_organization_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
