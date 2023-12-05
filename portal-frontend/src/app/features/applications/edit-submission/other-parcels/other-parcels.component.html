@@ -38,6 +38,15 @@
           >No
         </mat-button-toggle>
       </mat-button-toggle-group>
+      <div
+        *ngIf="
+          hasOtherParcelsInCommunity.invalid && (hasOtherParcelsInCommunity.dirty || hasOtherParcelsInCommunity.touched)
+        "
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hasOtherParcelsInCommunity.errors?.['required']">This field is required</div>
+      </div>
     </div>
     <div class="full-row">
       <label for="otherParcelsDescription">

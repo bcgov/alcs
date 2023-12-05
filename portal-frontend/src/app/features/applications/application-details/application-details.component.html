@@ -31,6 +31,9 @@
         <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.otherParcelsDescription"></app-no-data>
       </div>
     </ng-container>
+    <div *ngIf="showEdit" class="edit-button">
+      <button mat-flat-button (click)="onNavigateToStep(1)" color="accent">Edit Section</button>
+    </div>
   </div>
 </section>
 <section>
