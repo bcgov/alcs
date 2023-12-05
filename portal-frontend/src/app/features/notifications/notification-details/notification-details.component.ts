@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { NotificationDocumentDto } from '../../../services/notification-document/notification-document.dto';
@@ -23,7 +22,6 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
   @Input() showErrors = true;
   @Input() showEdit = true;
 
-  parcelType = PARCEL_TYPE;
   notificationSubmission: NotificationSubmissionDetailedDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
   otherFiles: NotificationDocumentDto[] = [];

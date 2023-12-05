@@ -106,7 +106,6 @@ export class ParcelEntryComponent implements OnInit {
 
   ownerInput = new FormControl<string | null>(null);
 
-  DOCUMENT_TYPES = DOCUMENT_TYPE;
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
 

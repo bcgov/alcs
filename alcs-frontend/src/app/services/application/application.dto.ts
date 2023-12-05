@@ -90,7 +90,6 @@ export interface ApplicationParcelDto {
   isFarm?: boolean;
   ownershipType?: string;
   crownLandOwnerType?: string;
-  parcelType?: string;
   certificateOfTitleUuid?: string;
   owners: SubmittedApplicationOwnerDto[];
   alrArea: number;
@@ -115,6 +114,7 @@ export interface ApplicationSubmissionDto {
   canView: boolean;
   owners: SubmittedApplicationOwnerDto[];
   hasOtherParcelsInCommunity?: boolean | null;
+  otherParcelsDescription?: string | null;
   returnedComment?: string;
   returnedToLfngComment?: string;
   submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];

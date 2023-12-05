@@ -21,7 +21,6 @@ import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { User } from '../../user/user.entity';
 import { formatBooleanToYesNoString } from '../../utils/boolean-formatter';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
-import { PARCEL_TYPE } from '../application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-submission/application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
@@ -266,12 +265,7 @@ export class GenerateSubmissionDocumentService {
       })),
 
       applicationTypePortalLabel: application?.type.portalLabel,
-      parcels: this.mapParcelsWithOwners(
-        parcels.filter((e) => e.parcelType === PARCEL_TYPE.APPLICATION),
-      ),
-      otherParcels: this.mapParcelsWithOwners(
-        parcels.filter((e) => e.parcelType === PARCEL_TYPE.OTHER),
-      ),
+      parcels: this.mapParcelsWithOwners(parcels),
     };
 
     return data;

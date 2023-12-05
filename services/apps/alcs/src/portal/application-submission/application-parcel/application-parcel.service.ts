@@ -52,10 +52,9 @@ export class ApplicationParcelService {
     });
   }
 
-  async create(applicationSubmissionUuid: string, parcelType?: string) {
+  async create(applicationSubmissionUuid: string) {
     const parcel = new ApplicationParcel({
       applicationSubmissionUuid,
-      parcelType,
     });
 
     return this.parcelRepository.save(parcel);

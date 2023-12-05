@@ -1,12 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
-import { PARCEL_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../../services/code/code.dto';
 import { CodeService } from '../../../../services/code/code.service';
 import { PublicNotificationSubmissionDto } from '../../../../services/public/public-notification.dto';
 import { PublicDocumentDto, PublicOwnerDto, PublicParcelDto } from '../../../../services/public/public.dto';
-import { PublicService } from '../../../../services/public/public.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 
 @Component({
@@ -21,7 +18,6 @@ export class SubmissionDetailsComponent implements OnInit, OnDestroy {
   @Input() documents: PublicDocumentDto[] = [];
   @Input() parcels: PublicParcelDto[] = [];
 
-  parcelType = PARCEL_TYPE;
   primaryContact: PublicOwnerDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
   OWNER_TYPE = OWNER_TYPE;

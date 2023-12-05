@@ -14,7 +14,6 @@ import { NoticeOfIntentParcelService } from '../../../../services/notice-of-inte
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
 import { BaseCodeDto } from '../../../../shared/dto/base.dto';
 import { formatBooleanToYesNoString } from '../../../../shared/utils/boolean-helper';
-import { getLetterCombinations } from '../../../../shared/utils/number-to-letter-helper';
 
 export class NoticeOfIntentParcelBasicValidation {
   // indicates general validity check state, including owner related information
@@ -181,9 +180,5 @@ export class ParcelComponent {
     } else {
       await this.router.navigateByUrl(`notice-of-intent/${this.fileId}/edit/0?parcelUuid=${uuid}&errors=t`);
     }
-  }
-
-  getLetterIndex(num: number) {
-    return getLetterCombinations(num);
   }
 }

@@ -1,5 +1,5 @@
 import { AfterContentChecked, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../../services/application/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
@@ -17,7 +17,6 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
 
   @Input() application!: ApplicationSubmissionDto;
   @Input() files: ApplicationDocumentDto[] = [];
-  @Input() parcelType!: string;
 
   pageTitle: string = 'Application Parcels';
   showCertificateOfTitle: boolean = true;
@@ -31,15 +30,10 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
     private parcelService: ApplicationParcelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    if (this.parcelType === 'other') {
-      this.pageTitle = 'Other Parcels in the Community';
-      this.showCertificateOfTitle = false;
-    }
-
     this.route.fragment.pipe(takeUntil(this.$destroy)).subscribe((fragment) => {
       if (fragment) {
         this.anchorededParcelUuid = fragment;
@@ -52,8 +46,7 @@ export class ParcelComponent implements OnInit, OnChanges, OnDestroy, AfterConte
   }
 
   async loadParcels(fileNumber: string) {
-    const parcels = await this.parcelService.fetchParcels(fileNumber);
-    this.parcels = parcels.filter((e) => e.parcelType === this.parcelType);
+    this.parcels = await this.parcelService.fetchParcels(fileNumber);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -1,10 +1,5 @@
 <section>
-  <app-parcel
-    *ngIf="files && submission"
-    [files]="files"
-    [application]="submission"
-    parcelType="application"
-  ></app-parcel>
+  <app-parcel *ngIf="files && submission" [files]="files" [application]="submission"></app-parcel>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(0)" mat-flat-button color="accent">
@@ -14,7 +9,27 @@
   </div>
 </section>
 <section>
-  <app-parcel *ngIf="files && submission" [files]="files" [application]="submission" parcelType="other"></app-parcel>
+  <h3>Other Owned Parcels</h3>
+  <div *ngIf="submission" class="review-table">
+    <div class="subheading2 grid-1">
+      Do any of the land owners added previously own or lease other parcels that might inform this application process?
+    </div>
+    <div class="grid-double">
+      <span *ngIf="submission.hasOtherParcelsInCommunity !== null">{{
+        submission.hasOtherParcelsInCommunity ? 'Yes' : 'No'
+      }}</span>
+      <app-no-data *ngIf="submission.hasOtherParcelsInCommunity === null"></app-no-data>
+    </div>
+    <ng-container *ngIf="submission.hasOtherParcelsInCommunity">
+      <div class="subheading2 grid-1">
+        Describe the other parcels including their location, who owns or leases them, and their use.
+      </div>
+      <div class="grid-double">
+        {{ submission.otherParcelsDescription }}
+        <app-no-data *ngIf="!submission.otherParcelsDescription"></app-no-data>
+      </div>
+    </ng-container>
+  </div>
   <div class="review-table edit-section">
     <div class="full-width center">
       <button *ngIf="showEdit" [disabled]="disableEdit" (click)="onEdit(1)" mat-flat-button color="accent">

@@ -8,7 +8,6 @@ import {
   OwnerType,
 } from '../../../common/owner-type/owner-type.entity';
 import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
-import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
@@ -252,16 +251,12 @@ export class ApplicationOwnerService {
         submissionUuid,
       );
 
-    const applicationParcels = parcels.filter(
-      (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
-    );
+    if (parcels.length > 0) {
+      const firstParcel = parcels.reduce((a, b) =>
+        a.auditCreatedAt < b.auditCreatedAt ? a : b,
+      );
 
-    if (applicationParcels.length > 0) {
-      const firstParcel = parcels
-        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-        .reduce((a, b) => (a.auditCreatedAt < b.auditCreatedAt ? a : b));
-
-      const ownerCount = applicationParcels.reduce((count, parcel) => {
+      const ownerCount = parcels.reduce((count, parcel) => {
         return count + parcel.owners.length;
       }, 0);
 

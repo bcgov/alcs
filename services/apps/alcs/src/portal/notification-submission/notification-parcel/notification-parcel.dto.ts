@@ -33,9 +33,6 @@ export class NotificationParcelDto {
   @AutoMap(() => Boolean)
   isConfirmedByApplicant?: boolean;
 
-  @AutoMap(() => String)
-  parcelType: string;
-
   @AutoMap(() => Number)
   alrArea: number | null;
 
@@ -49,10 +46,6 @@ export class NotificationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   notificationSubmissionUuid: string;
-
-  @IsOptional()
-  @IsString()
-  parcelType?: string;
 }
 
 export class NotificationParcelUpdateDto {

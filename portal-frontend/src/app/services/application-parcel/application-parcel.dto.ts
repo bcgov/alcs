@@ -18,15 +18,9 @@ export interface ApplicationParcelUpdateDto {
 }
 
 export interface ApplicationParcelDto extends Omit<ApplicationParcelUpdateDto, 'ownerUuids'> {
-  parcelType: string;
   ownershipType?: BaseCodeDto;
   owners: ApplicationOwnerDto[];
   certificateOfTitle?: ApplicationDocumentDto;
-}
-
-export enum PARCEL_TYPE {
-  APPLICATION = 'application',
-  OTHER = 'other',
 }
 
 export enum PARCEL_OWNERSHIP_TYPE {

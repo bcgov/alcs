@@ -4,7 +4,6 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../services/application-document/application-document.service';
 import { ApplicationOwnerDetailedDto } from '../../../services/application-owner/application-owner.dto';
-import { PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../services/application-submission/application-submission.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
@@ -25,7 +24,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
   @Input() showEdit = true;
   @Input() draftMode = false;
 
-  parcelType = PARCEL_TYPE;
   applicationSubmission: ApplicationSubmissionDetailedDto | undefined;
   primaryContact: ApplicationOwnerDetailedDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;

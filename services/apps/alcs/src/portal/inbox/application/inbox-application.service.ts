@@ -157,19 +157,11 @@ export class InboxApplicationService {
   }
 
   private compileParcelSearchQuery(searchDto: InboxRequestDto, query) {
-    if (searchDto.pid || searchDto.civicAddress) {
-      query = query.leftJoin(
-        ApplicationParcel,
-        'parcel',
-        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type IN ('application', 'other')",
-      );
-    } else {
-      query = query.leftJoin(
-        ApplicationParcel,
-        'parcel',
-        "parcel.application_submission_uuid = appSearch.uuid AND parcel.parcel_type = 'application'",
-      );
-    }
+    query = query.leftJoin(
+      ApplicationParcel,
+      'parcel',
+      'parcel.application_submission_uuid = appSearch.uuid',
+    );
 
     if (searchDto.pid) {
       query = query.andWhere('parcel.pid = :pid', { pid: searchDto.pid });

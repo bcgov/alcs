@@ -6,7 +6,6 @@ import { ApplicationDocument } from '../../../alcs/application/application-docum
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../../alcs/application/application.service';
 import { OwnerType } from '../../../common/owner-type/owner-type.entity';
-import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
@@ -232,7 +231,6 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
@@ -271,7 +269,6 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
@@ -303,7 +300,6 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
@@ -337,12 +333,10 @@ describe('ApplicationOwnerService', () => {
       new ApplicationParcel({
         owners: owners1,
         auditCreatedAt: new Date(1),
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
       new ApplicationParcel({
         owners: owners2,
         auditCreatedAt: new Date(100),
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 

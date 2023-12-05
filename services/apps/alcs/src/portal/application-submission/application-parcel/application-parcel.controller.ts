@@ -67,10 +67,7 @@ export class ApplicationParcelController {
     const application = await this.applicationSubmissionService.getOrFailByUuid(
       createDto.applicationSubmissionUuid,
     );
-    const parcel = await this.parcelService.create(
-      application.uuid,
-      createDto.parcelType,
-    );
+    const parcel = await this.parcelService.create(application.uuid);
 
     try {
       if (createDto.ownerUuid) {

@@ -63,6 +63,7 @@ export interface ApplicationSubmissionDto {
 
 export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   primaryContactOwnerUuid?: string;
+  otherParcelsDescription?: string | null;
 
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;
@@ -174,6 +175,7 @@ export interface ApplicationSubmissionUpdateDto {
   typeCode?: string;
   primaryContactOwnerUuid?: string;
   hasOtherParcelsInCommunity?: boolean | null;
+  otherParcelsDescription?: string | null;
 
   //Land use fields
   parcelsAgricultureDescription?: string | null;

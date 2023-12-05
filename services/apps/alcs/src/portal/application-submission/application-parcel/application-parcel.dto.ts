@@ -55,9 +55,6 @@ export class ApplicationParcelDto {
 
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
-  @AutoMap(() => String)
-  parcelType: string;
-
   @AutoMap(() => Number)
   alrArea: number | null;
 
@@ -69,10 +66,6 @@ export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   applicationSubmissionUuid: string;
-
-  @IsOptional()
-  @IsString()
-  parcelType?: string;
 
   @IsOptional()
   @IsString()
@@ -130,11 +123,6 @@ export class ApplicationParcelUpdateDto {
   @IsNumber()
   @IsOptional()
   alrArea?: number | null;
-}
-
-export enum PARCEL_TYPE {
-  APPLICATION = 'application',
-  OTHER = 'other',
 }
 
 export class AttachCertificateOfTitleDto {

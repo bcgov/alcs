@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { PARCEL_TYPE } from '../../../services/application-parcel/application-parcel.dto';
 import { LocalGovernmentDto } from '../../../services/code/code.dto';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
@@ -25,7 +24,6 @@ export class NoticeOfIntentDetailsComponent implements OnInit, OnDestroy {
   @Input() showEdit = true;
   @Input() draftMode = false;
 
-  parcelType = PARCEL_TYPE;
   noiSubmission: NoticeOfIntentSubmissionDetailedDto | undefined;
   primaryContact: NoticeOfIntentOwnerDto | undefined;
   localGovernment: LocalGovernmentDto | undefined;
