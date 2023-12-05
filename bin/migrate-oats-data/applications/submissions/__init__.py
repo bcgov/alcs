@@ -7,3 +7,4 @@ from .parcels import clean_parcels, clean_parcel_owners, clean_owners
 from .migrate_application_parcels import (
     process_application_parcels,
 )
+from .migrate_application_owners import process_application_owners

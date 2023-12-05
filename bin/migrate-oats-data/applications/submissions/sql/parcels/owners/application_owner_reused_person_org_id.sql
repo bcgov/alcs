@@ -1,6 +1,6 @@
 -- finds and returns person_organization_ids reused in alr_applications of class app
 WITH oats_joined_with_alcs_owners_with_parcels AS (
-    SELECT noip.oats_subject_property_id,
+    SELECT appp.oats_subject_property_id,
         opo.person_organization_id
     FROM oats.OATS_SUBJECT_PROPERTIES osp
         LEFT JOIN oats.OATS_PROPERTY_INTERESTS opi ON osp.SUBJECT_PROPERTY_ID = opi.SUBJECT_PROPERTY_ID

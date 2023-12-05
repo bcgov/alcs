@@ -37,7 +37,7 @@ def link_application_owners_to_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} AND appp.\"uuid\" > '{last_parcel_uuid}' AND appo.\"uuid\" > '{last_owner_uuid}'  ORDER BY parcel_uuid, owner_uuid;"
+                    f"{application_sql} AND ((appp.\"uuid\" = '{last_parcel_uuid}' AND appo.\"uuid\" > '{last_owner_uuid}') OR appp.\"uuid\" > '{last_parcel_uuid}') ORDER BY parcel_uuid, owner_uuid;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -47,6 +47,7 @@ def link_application_owners_to_parcels(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 try:
                     records_to_be_inserted_count = len(rows)
 
+                    logger.info(records_to_be_inserted_count)
                     _insert_records(conn, cursor, rows)
 
                     successful_inserts_count = (
