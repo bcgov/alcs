@@ -145,7 +145,7 @@
           </div>
           <div>
             <div class="subheading2">Minimum Lot Size (hectares)</div>
-            <div>{{ applicationReview.zoningMinimumLotSize }}</div>
+            <div>{{ applicationReview.zoningMinimumLotSize }}<span *ngIf="applicationReview.zoningMinimumLotSize"> ha</span></div>
             <app-no-data *ngIf="!applicationReview.zoningMinimumLotSize"></app-no-data>
           </div>
           <div>
