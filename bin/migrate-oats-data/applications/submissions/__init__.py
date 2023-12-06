@@ -3,5 +3,8 @@ from .migrate_application_status import (
     process_application_statuses,
     clean_app_submissions,
 )
-from .parcels import clean_parcels
-from .migrate_application_parcels import process_application_parcels
+from .parcels import clean_parcels, clean_parcel_owners, clean_owners
+from .migrate_application_parcels import (
+    process_application_parcels,
+)
+from .migrate_application_owners import process_application_owners

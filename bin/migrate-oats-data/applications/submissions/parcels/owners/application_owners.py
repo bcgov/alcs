@@ -8,23 +8,23 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
 
-etl_name = "process_notice_of_intent_parcel_owners"
+etl_name = "process_application_parcel_owners"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def init_application_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_submission/parcels/owners/notice_of_intent_owner_count.sql",
+            "applications/submissions/sql/parcels/owners/application_owner_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Notice of Intents data to insert: {count_total}")
+        logger.info(f"Total applications data to insert: {count_total}")
 
         failed_inserts = 0
         successful_updates_count = 0
@@ -32,7 +32,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
         last_person_organization_id = 0
 
         with open(
-            "noi/sql/notice_of_intent_submission/parcels/owners/notice_of_intent_owner.sql",
+            "applications/submissions/sql/parcels/owners/application_owner.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -60,7 +60,7 @@ def init_notice_of_intent_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE)
                     last_person_organization_id = last_record["person_organization_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert applications owners so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -86,11 +86,11 @@ def _insert_records(conn, cursor, rows):
 def _compile_owner_insert_query(number_of_rows_to_insert):
     owners_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-                        INSERT INTO alcs.notice_of_intent_owner(
+                        INSERT INTO alcs.application_owner(
                             first_name, 
                             last_name,
                             organization_name, 
-                            notice_of_intent_submission_uuid, 
+                            application_submission_uuid, 
                             email, 
                             phone_number, 
                             type_code, 
@@ -116,7 +116,7 @@ def _map_data(row):
         "first_name": _get_name(row),
         "last_name": row["last_name"],
         "organization_name": row["organization_name"],
-        "notice_of_intent_submission_uuid": row["notice_of_intent_submission_uuid"],
+        "application_submission_uuid": row["application_submission_uuid"],
         "email": row["email_address"],
         "phone_number": row.get("phone_number", "cell_phone_number"),
         "type_code": _map_owner_type(row),
@@ -132,6 +132,10 @@ def _get_name(row):
 
 
 def _map_owner_type(owner_record):
+    # Default to fee simple for missing owner type
+    if owner_record["ownership_type_code"] == None:
+        return ALCSOwnerType.INDV.value
+
     if owner_record["ownership_type_code"] == ALCSOwnershipType.FeeSimple.value:
         if owner_record["person_id"] and not owner_record["organization_id"]:
             return ALCSOwnerType.INDV.value
@@ -143,11 +147,11 @@ def _map_owner_type(owner_record):
 
 @inject_conn_pool
 def clean_owners(conn=None):
-    logger.info("Start notice of intent owner cleaning")
+    logger.info("Start application owner cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notice_of_intent_owner noio WHERE noio.audit_created_by = '{OATS_ETL_USER}'"
+            f"DELETE FROM alcs.application_owner appo WHERE appo.audit_created_by = '{OATS_ETL_USER}'"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
     conn.commit()
-    logger.info("Done notice of intent owner cleaning")
+    logger.info("Done application owner cleaning")
