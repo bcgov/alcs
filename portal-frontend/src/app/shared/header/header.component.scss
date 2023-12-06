@@ -74,12 +74,7 @@ header {
   }
 
   .mobile-menu-wrapper {
-    width: 100%;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    margin-left: rem(24);
+    margin: rem(24) 0;
     line-height: rem(50);
 
     h1 {
@@ -88,8 +83,16 @@ header {
     }
   }
 
-  @media screen and (min-width: $tabletBreakpoint) {
+  @media screen and (min-width: $desktopBreakpoint) {
     justify-content: space-between;
+
+    .title-wrapper {
+      margin: rem(18) rem(80) !important;
+    }
+
+    .user-menu {
+      margin-left: rem(4);
+    }
 
     .burger-menu {
       display: none;
@@ -114,7 +117,8 @@ header {
           padding: rem(14) rem(27) rem(14) rem(27) !important;
         }
 
-        display: inline-block;
+        display: block;
+        flex-shrink: 0;
       }
 
       .title {
@@ -129,19 +133,20 @@ header {
       }
     }
   }
-
-  @media screen and (min-width: $desktopBreakpoint) {
-    .title-wrapper {
-      margin: rem(18) rem(80) !important;
-    }
-
-    .user-menu {
-      margin-left: rem(4);
-    }
-  }
 }
 
 .item {
   padding: rem(12) rem(16);
   min-width: rem(212);
+}
+
+.username {
+  color: colors.$primary-color;
+  text-transform: uppercase;
+  padding: 0;
+}
+
+.mobile-logout {
+  margin-top: rem(8);
+  width: 100%;
 }
