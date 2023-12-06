@@ -145,7 +145,6 @@ export class PublicSearchController {
       !searchDto.decisionMakerCode &&
       !(searchDto.decisionOutcome && searchDto.decisionOutcome.length > 0) &&
       !isStringSetAndNotEmpty(searchDto.civicAddress);
-    console.log(searchDto.decisionOutcome)
 
     return {
       searchApplications,
