@@ -55,7 +55,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   private submissionUuid = '';
 
   constructor(
-    private router: Router,
     private applicationService: ApplicationSubmissionService,
     private applicationOwnerService: ApplicationOwnerService,
     private authenticationService: AuthenticationService,
