@@ -21,12 +21,12 @@ test('test', async ({ page }) => {
     .getByRole('button', { name: 'Edit Application' })
     .click();
   await page.getByRole('button', { name: 'Fee Simple' }).click();
-  await page.getByPlaceholder('Enter legal description').click();
-  await page.getByPlaceholder('Enter legal description').fill('some description here');
-  await page.getByPlaceholder('Enter parcel size').click();
-  await page.getByPlaceholder('Enter parcel size').fill('11');
-  await page.getByPlaceholder('Enter PID').click();
-  await page.getByPlaceholder('Enter PID').fill('111-111-111');
+  await page.getByPlaceholder('Type legal description').click();
+  await page.getByPlaceholder('Type legal description').fill('some description here');
+  await page.getByPlaceholder('Type parcel size').click();
+  await page.getByPlaceholder('Type parcel size').fill('11');
+  await page.getByPlaceholder('Type PID').click();
+  await page.getByPlaceholder('Type PID').fill('111-111-111');
   await page.getByPlaceholder('YYYY-MMM-DD').click();
   await page.getByPlaceholder('YYYY-MMM-DD').fill('2023-Mar-12');
   await page.getByRole('button', { name: 'Yes' }).click();
@@ -58,10 +58,10 @@ test('test', async ({ page }) => {
     .getByRole('button', { name: 'Crown' })
     .click();
   await page.getByRole('button', { name: 'Crown' }).click();
-  await page.getByRole('textbox', { name: 'Enter legal description' }).click();
-  await page.getByRole('textbox', { name: 'Enter legal description' }).fill('another description');
-  await page.getByRole('textbox', { name: 'Enter parcel size' }).click();
-  await page.getByRole('textbox', { name: 'Enter parcel size' }).fill('22');
+  await page.getByRole('textbox', { name: 'Type legal description' }).click();
+  await page.getByRole('textbox', { name: 'Type legal description' }).fill('another description');
+  await page.getByRole('textbox', { name: 'Type parcel size' }).click();
+  await page.getByRole('textbox', { name: 'Type parcel size' }).fill('22');
   await page.getByRole('button', { name: 'No', exact: true }).click();
   await page.getByLabel('Provincial Crown').check();
   await page.getByRole('button', { name: 'Add new government contact' }).click();
@@ -85,12 +85,12 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Next Step' }).click();
   await page.locator('#mat-button-toggle-16-button').click();
   await page.getByRole('button', { name: 'Fee Simple' }).click();
-  await page.getByPlaceholder('Enter legal description').click();
-  await page.getByPlaceholder('Enter legal description').fill('other parcels description');
-  await page.getByPlaceholder('Enter parcel size').click();
-  await page.getByPlaceholder('Enter parcel size').fill('45');
-  await page.getByPlaceholder('Enter PID').click();
-  await page.getByPlaceholder('Enter PID').fill('444-444-444');
+  await page.getByPlaceholder('Type legal description').click();
+  await page.getByPlaceholder('Type legal description').fill('other parcels description');
+  await page.getByPlaceholder('Type parcel size').click();
+  await page.getByPlaceholder('Type parcel size').fill('45');
+  await page.getByPlaceholder('Type PID').click();
+  await page.getByPlaceholder('Type PID').fill('444-444-444');
   await page.getByRole('region', { name: 'Parcel A Details' }).getByRole('button', { name: 'No' }).click();
   await page.getByPlaceholder('Type owner name').click();
   await page.getByRole('option', { name: 'Test Individual Add' }).getByText('Test Individual').click();

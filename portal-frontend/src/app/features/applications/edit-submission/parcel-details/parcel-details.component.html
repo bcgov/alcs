@@ -19,7 +19,7 @@
     (opened)="openParcel(parcel.uuid)"
   >
     <mat-expansion-panel-header>
-      <mat-panel-title> Parcel #{{ parcelInd + 1 }} Details & Owner Information </mat-panel-title>
+      <mat-panel-title> Parcel #{{ parcelInd + 1 }}</mat-panel-title>
     </mat-expansion-panel-header>
 
     <app-parcel-entry
@@ -36,7 +36,7 @@
     <div>
       <div class="flex-evenly-wrap parcel-buttons-wrappers">
         <button class="margin-top-1-half" mat-stroked-button color="primary" (click)="onSave()">
-          Save Parcel #{{ parcelInd + 1 }} Details & Owner Information
+          Save Parcel #{{ parcelInd + 1 }}
         </button>
         <button
           class="margin-top-1-half"
@@ -45,7 +45,7 @@
           color="accent"
           (click)="onDelete(parcel.uuid, parcelInd + 1)"
         >
-          Delete Parcel #{{ parcelInd + 1 }} Details
+          Delete Parcel #{{ parcelInd + 1 }}
         </button>
       </div>
     </div>

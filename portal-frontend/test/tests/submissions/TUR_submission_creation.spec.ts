@@ -19,16 +19,16 @@ test('test', async ({ page }) => {
   // await page.locator('.btns-wrapper > button:nth-child(1)').click();
 
   await page.getByRole('button', { name: 'Fee Simple' }).click();
-  await page.getByPlaceholder('Enter legal description').click();
-  await page.getByPlaceholder('Enter legal description').fill('1');
+  await page.getByPlaceholder('Type legal description').click();
+  await page.getByPlaceholder('Type legal description').fill('1');
   await page
     .locator(
       'div:nth-child(3) > .mat-mdc-form-field > .mat-mdc-text-field-wrapper > .mat-mdc-form-field-flex > .mat-mdc-form-field-infix'
     )
     .click();
-  await page.getByPlaceholder('Enter parcel size').fill('1');
-  await page.getByPlaceholder('Enter PID').click();
-  await page.getByPlaceholder('Enter PID').fill('111-111-111');
+  await page.getByPlaceholder('Type parcel size').fill('1');
+  await page.getByPlaceholder('Type PID').click();
+  await page.getByPlaceholder('Type PID').fill('111-111-111');
   await page.getByRole('button', { name: 'Open calendar' }).click();
   await page.locator('td:nth-child(3) > .mat-calendar-body-cell').first().click();
   await page.getByRole('button', { name: 'March 23, 2023' }).click();
