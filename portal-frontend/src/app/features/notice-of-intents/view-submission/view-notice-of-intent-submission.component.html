@@ -46,9 +46,6 @@
             <div class="header">
               <h2>Applicant Submission</h2>
               <div class="btns-wrapper">
-                <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
-                  Cancel NOI
-                </button>
                 <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
                   Download PDF
                 </button>
@@ -64,23 +61,6 @@
               ></app-noi-details>
             </div>
           </section>
-        </div>
-        <div class="buttons" *ngIf="submission">
-          <div>
-            <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
-              Cancel NOI
-            </button>
-          </div>
-          <div>
-            <button
-              [routerLink]="'/notice-of-intent/' + submission.fileNumber + '/edit'"
-              *ngIf="submission.canEdit"
-              mat-flat-button
-              color="primary"
-            >
-              Edit NOI
-            </button>
-          </div>
         </div>
       </mat-tab>
       <mat-tab label="ALC Review and Decision">
