@@ -1,14 +1,13 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { DeepMocked, createMock } from '@golevelup/ts-jest';
+import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { CodeService } from '../../../services/code/code.service';
 import { NoticeOfIntentDocumentDto } from '../../../services/notice-of-intent-document/notice-of-intent-document.dto';
 import { NoticeOfIntentDocumentService } from '../../../services/notice-of-intent-document/notice-of-intent-document.service';
+import { NoticeOfIntentParcelService } from '../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
 import { NoticeOfIntentSubmissionDetailedDto } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.dto';
-import { NoticeOfIntentSubmissionService } from '../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
-import { ToastService } from '../../../services/toast/toast.service';
 
 import { NoticeOfIntentDetailsComponent } from './notice-of-intent-details.component';
 
@@ -18,8 +17,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
   let mockCodeService: DeepMocked<CodeService>;
   let mockNoiDocumentService: DeepMocked<NoticeOfIntentDocumentService>;
   let mockRouter: DeepMocked<Router>;
-  let mockToastService: DeepMocked<ToastService>;
-  let mockNoiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let mockNoiParcelService: DeepMocked<NoticeOfIntentParcelService>;
 
   let noiDocumentPipe = new BehaviorSubject<NoticeOfIntentDocumentDto[]>([]);
 
@@ -27,7 +25,7 @@ describe('NoticeOfIntentDetailsComponent', () => {
     mockCodeService = createMock();
     mockNoiDocumentService = createMock();
     mockRouter = createMock();
-    mockNoiSubmissionService = createMock();
+    mockNoiParcelService = createMock();
 
     await TestBed.configureTestingModule({
       providers: [
@@ -44,12 +42,8 @@ describe('NoticeOfIntentDetailsComponent', () => {
           useValue: mockRouter,
         },
         {
-          provide: ToastService,
-          useValue: mockToastService,
-        },
-        {
-          provide: NoticeOfIntentSubmissionService,
-          useValue: mockNoiSubmissionService,
+          provide: NoticeOfIntentParcelService,
+          useValue: mockNoiParcelService,
         },
       ],
       declarations: [NoticeOfIntentDetailsComponent],
