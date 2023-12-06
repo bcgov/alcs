@@ -30,7 +30,7 @@ def process_app_staff_journal(conn=None, batch_size=BATCH_UPLOAD_SIZE):
 
         failed_inserts = 0
         successful_inserts_count = 0
-        last_entry_id = "-"
+        last_entry_id = 0
         with open(
             "applications/sql/app_staff_journal/app_staff_journal.sql",
             "r",
@@ -107,7 +107,7 @@ def _prepare_journal_data(row_data_list):
     for row in row_data_list:
         data = dict(row)
         data = _map_revision(data)
-        data_list.append(dict(row))
+        data_list.append(dict(data))
     return data_list
 
 
@@ -118,6 +118,7 @@ def _map_revision(data):
         data["edit"] = False
     else:
         data["edit"] = True
+    return data
 
 
 @inject_conn_pool
