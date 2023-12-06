@@ -2,7 +2,7 @@
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width parcel-header">
-      <h4>Parcel {{ parcelInd + 1 }} Information</h4>
+      <h4>Parcel {{ parcelInd + 1 }}</h4>
       <div>
         <button
           *ngIf="showEdit"
@@ -24,7 +24,7 @@
         </button>
       </div>
     </div>
-    <div class="subheading2 grid-1">Ownership Type</div>
+    <div class="subheading2 grid-1">Parcel Type</div>
     <div class="grid-double">
       {{ parcel.ownershipType?.label }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
@@ -34,9 +34,10 @@
       {{ parcel.legalDescription }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.legalDescription"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Approx. Map Area (Hectares)</div>
+    <div class="subheading2 grid-1">Approx. Map Area</div>
     <div class="grid-double">
       {{ parcel.mapAreaHectares }}
+      <span *ngIf="parcel.mapAreaHectares !== null">ha</span>
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.mapAreaHectares"></app-no-data>
     </div>
     <div class="subheading2 grid-1">

@@ -1,9 +1,8 @@
 <form [formGroup]="parcelForm" (keydown.enter)="$event.preventDefault()">
   <div class="type">
-    <mat-label for="parcelType">Select ownership type:</mat-label>
+    <mat-label for="parcelType">Select parcel type:</mat-label>
     <div class="warning">
-      The answer to the following question will change the rest of the notice of intent form. Do not change this answer
-      once selected.
+      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands.  Crown land includes crown leases.
     </div>
     <mat-button-toggle-group
       class="input"
@@ -27,8 +26,6 @@
       <div *ngIf="parcelType.errors?.['required']">This field is required</div>
     </div>
   </div>
-
-  <h5>Parcel Lookup</h5>
   <div class="form-row">
     <div class="full-row pmbc-search">
       <label *ngIf="!isCrownLand" for="lookup-pid">Enter PID to auto-fill parcel details</label>
@@ -59,7 +56,11 @@
           <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
             Reset
           </button>
-          <span class="float-right">Powered by PMBC!</span>
+          <span class="float-right">
+            <a class="subtext" href=" https://ltsa.ca/products-services/parcelmap-bc/" target="_blank" rel="noreferrer">
+              Powered by PMBC!
+            </a>
+          </span>
         </div>
       </div>
     </div>
@@ -71,7 +72,7 @@
         <input
           id="legal-description"
           matInput
-          placeholder="Enter legal description"
+          placeholder="Type legal description"
           formControlName="legalDescription"
         />
       </mat-form-field>
@@ -82,7 +83,7 @@
     </div>
 
     <div>
-      <label for="map-area">Approx. Map Area (Hectares)</label>
+      <label for="map-area">Approx. Map Area</label>
       <div class="subtext">The area of the entire parcel in hectares, not just the area under application.</div>
       <mat-form-field class="full-width-input" appearance="outline">
         <input
@@ -91,9 +92,10 @@
           thousandSeparator=","
           separatorLimit="9999999999"
           matInput
-          placeholder="Enter parcel size"
+          placeholder="Type parcel size"
           formControlName="mapArea"
         />
+        <span matTextSuffix>ha</span>
       </mat-form-field>
       <div *ngIf="mapArea.invalid && (mapArea.dirty || mapArea.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -105,7 +107,7 @@
       <label for="pid">PID <span *ngIf="isCrownLand">(optional)</span></label>
       <div class="subtext">A unique nine-digit number found on the parcel's Certificate of Title</div>
       <mat-form-field appearance="outline">
-        <input id="pid" matInput placeholder="Enter PID" formControlName="pid" maxlength="11" mask="000-000-000" />
+        <input id="pid" matInput placeholder="Type PID" formControlName="pid" maxlength="11" mask="000-000-000" />
       </mat-form-field>
       <div *ngIf="pid.invalid && (pid.dirty || pid.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
@@ -118,7 +120,7 @@
       <label for="pin">PIN (optional)</label>
       <div class="subtext">Unique numeric identifier for Crown land parcels</div>
       <mat-form-field appearance="outline">
-        <input id="pin" matInput placeholder="Enter PIN" formControlName="pin" />
+        <input id="pin" matInput placeholder="Type PIN" formControlName="pin" />
       </mat-form-field>
     </div>
 
@@ -150,7 +152,7 @@
       <mat-label for="isFarm">Farm Classification</mat-label>
       <div class="subtext">
         As determined by
-        <a class="subtext" href="https://www.bcassessment.ca/" target="_blank" rel="noreferrer">BC Assessment</a>
+        <a class="subtext" href="https://info.bcassessment.ca/Services-products/property-classes-and-exemptions/farm-land-assessment/about-farm-land-assessment" target="_blank" rel="noreferrer">BC Assessment</a>
       </div>
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
@@ -173,7 +175,7 @@
     <div class="full-row">
       <label for="civicAddress">Civic Address</label>
       <mat-form-field class="full-width-input" appearance="outline">
-        <input id="civicAddress" matInput placeholder="Enter Address" formControlName="civicAddress" />
+        <input id="civicAddress" matInput placeholder="Type Address" formControlName="civicAddress" />
       </mat-form-field>
       <div *ngIf="civicAddress.invalid && (civicAddress.dirty || civicAddress.touched)" class="field-error">
         <mat-icon>warning</mat-icon>
