@@ -1,4 +1,9 @@
-from common import BATCH_UPLOAD_SIZE, OATS_ETL_USER, setup_and_get_logger
+from common import (
+    BATCH_UPLOAD_SIZE,
+    OATS_ETL_USER,
+    setup_and_get_logger,
+    add_timezone_and_keep_date_part,
+)
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
@@ -107,6 +112,7 @@ def _prepare_journal_data(row_data_list):
     for row in row_data_list:
         data = dict(row)
         data = _map_revision(data)
+        data = _map_timezone(data)
         data_list.append(dict(data))
     return data_list
 
@@ -118,6 +124,13 @@ def _map_revision(data):
         data["edit"] = False
     else:
         data["edit"] = True
+    return data
+
+
+def _map_timezone(data):
+    date = data.get("journal_date", "")
+    journal_date = add_timezone_and_keep_date_part(date)
+    data["journal_date"] = journal_date
     return data
 
 
