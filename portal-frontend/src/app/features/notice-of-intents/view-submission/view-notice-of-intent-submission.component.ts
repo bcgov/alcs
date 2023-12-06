@@ -67,7 +67,7 @@ export class ViewNoticeOfIntentSubmissionComponent implements OnInit, OnDestroy 
 
   async onCancel(uuid: string) {
     const dialog = this.confirmationDialogService.openDialog({
-      body: 'Are you sure you want to cancel the application? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
+      body: 'Are you sure you want to cancel the notice of intent? A cancelled application cannot be edited or submitted to the ALC. This cannot be undone.',
       confirmAction: 'Confirm',
       cancelAction: 'Return',
     });

@@ -106,16 +106,6 @@
               Cancel Application
             </button>
           </div>
-          <div>
-            <button
-              [routerLink]="'/application/' + application.fileNumber + '/edit'"
-              *ngIf="application.canEdit"
-              mat-flat-button
-              color="primary"
-            >
-              Edit Application
-            </button>
-          </div>
         </div>
       </mat-tab>
       <mat-tab label="Local/First Nation Gov Review">
