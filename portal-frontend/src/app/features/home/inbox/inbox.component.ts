@@ -67,6 +67,7 @@ export class InboxComponent implements OnInit, OnDestroy {
 
   pageIndex = 0;
   itemsPerPage = 10;
+  tabIndex = 0;
 
   governmentFileNumber = new FormControl<string | undefined>(undefined);
   portalStatusControl = new FormControl<string[]>([]);
@@ -111,11 +112,7 @@ export class InboxComponent implements OnInit, OnDestroy {
         this.pageIndex = 0;
       }
       this.populateTable();
-
-      // push tab activation to next render cycle, after the tabGroup is rendered
-      setTimeout(() => {
-        this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
-      });
+      this.tabIndex = this.tabIndexFromName(this.currentTabName);
     }
 
     this.isMobile = isMobile;
@@ -154,21 +151,24 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.currentTabName = changes['currentTabName'].currentValue;
-
-    setTimeout(() => {
-      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
-    });
+    if (changes['currentTabName']) {
+      this.currentTabName = changes['currentTabName'].currentValue;
+      this.tabIndex = this.tabIndexFromName(this.currentTabName);
+    }
   }
 
   tabIndexFromName(tabName: string) {
     // Default to 'application' tab
-    if (!this.tabGroup) return 0;
+    if (!this.tabGroup) {
+      return 0;
+    }
 
     return this.tabGroup._tabs
       .map((a) => a.textLabel)
       .reduce((iPrev, b, i) => {
-        if (b == tabName) return i;
+        if (b == tabName) {
+          return i;
+        }
         return iPrev;
       }, 0);
   }
@@ -177,10 +177,7 @@ export class InboxComponent implements OnInit, OnDestroy {
     await this.loadStatuses();
     await this.populateTable();
 
-    // push tab activation to next render cycle, after the tabGroup is rendered
-    setTimeout(() => {
-      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
-    });
+    this.tabIndex = this.tabIndexFromName(this.currentTabName);
   }
 
   ngOnDestroy(): void {
@@ -219,12 +216,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   async onClear() {
     this.searchForm.reset();
     await this.populateTable();
-
-    // push tab activation to next render cycle, after the tabGroup is rendered
-    setTimeout(() => {
-      this.tabGroup.selectedIndex = this.tabIndexFromName(this.currentTabName);
-    });
-
+    this.tabIndex = this.tabIndexFromName(this.currentTabName);
     if (this.fileTypeFilterDropDownComponent) {
       this.fileTypeFilterDropDownComponent.reset();
     }

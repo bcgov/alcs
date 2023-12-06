@@ -20,7 +20,9 @@
         <span *ngIf="!isOnPublicPage">Provincial Agricultural Land Commission Portal</span>
       </h5>
       <div *ngIf="isAuthenticated" class="burger-menu">
-        <mat-icon (click)="onMenuToggle()">{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+        <button (click)="onMenuToggle()" mat-icon-button>
+          <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+        </button>
       </div>
     </div>
 
@@ -37,8 +39,11 @@
     </div>
 
     <div *ngIf="isMenuOpen" class="mobile-menu-wrapper">
-      <h1 (click)="onMenuClicked('/home')">Portal Inbox</h1>
-      <h1 (click)="onLogout()">Log Out</h1>
+      <div class="subheading2 username item">{{ user?.name }}</div>
+      <div>User ID: {{ user?.bceidUserName }}</div>
+      <div>Business: {{ user?.government || user?.businessName }}</div>
+      <div>Type: {{ user?.businessName ? 'BCeID Business' : 'BCeID Basic' }}</div>
+      <button class="mobile-logout" mat-stroked-button color="primary" (click)="onLogout()">Log Out</button>
     </div>
   </div>
 </header>
