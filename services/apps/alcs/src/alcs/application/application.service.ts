@@ -419,6 +419,8 @@ export class ApplicationService {
         label: true,
         requiresGovernmentReview: true,
         portalOrder: true,
+        alcFeeAmount: true,
+        governmentFeeAmount: true,
       },
     });
   }

@@ -6,8 +6,13 @@ import { SharedModule } from '../../../shared/shared.module';
 import { EditSubmissionBaseModule } from './edit-submission-base.module';
 import { EditSubmissionComponent } from './edit-submission.component';
 import { StepComponent } from './step.partial';
+import { SuccessComponent } from './success/success.component';
 
 const routes: Routes = [
+  {
+    path: 'success',
+    component: SuccessComponent,
+  },
   {
     path: '',
     component: EditSubmissionComponent,

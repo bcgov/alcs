@@ -58,7 +58,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
 
             await this.updateSubmissionStatus(submissionStatus);
             this.logger.debug(
-              `Status email sent for NOI {submissionStatus.submissionUuid}`,
+              `Status email sent for NOI ${submissionStatus.submissionUuid}`,
             );
           }
         } catch (e) {

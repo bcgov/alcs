@@ -1,0 +1,54 @@
+<h2 class="heading">Application ID: {{ fileId }} Submitted!</h2>
+<p>
+  <ng-container *ngIf="requiresGovernmentReview">
+    <span class="subheading1"
+      >You have submitted a <strong>{{ appLabel }}</strong> application to the
+      <strong>{{ localGovernmentName }}</strong> for their review and decision.</span
+    ><br /><br /><br />
+
+    <span *ngIf="governmentFee">
+      The {{ localGovernmentName }} portion of the fee is <strong>${{ governmentFee }}</strong
+      ><br /><br />
+    </span>
+    <span *ngIf="localGovernmentName && !governmentFee">
+      There is no application fee to for an {{ appLabel }} application.<br /><br />
+    </span>
+    Please contact the {{ localGovernmentName }} to determine the preferred form of payment.<br /><br />
+    Until the {{ localGovernmentName }} resolves to forward your application to the ALC, the ALC cannot view your
+    submission. Any updates to your submission must be provided to the {{ localGovernmentName }}.
+  </ng-container>
+  <ng-container *ngIf="!requiresGovernmentReview">
+    <span class="subheading1">
+      You have submitted a <strong>{{ appLabel }}</strong> application to the
+      <strong>Agricultural Land Commission</strong> for their review and decision. </span
+    ><br /><br /><br />
+
+    <ng-container *ngIf="alcFee">
+      Application Fee is <strong>${{ alcFee }}</strong
+      ><br /><br />
+      This fee can be paid:<br />
+      1. Cheque: Made payable to the Minister of Finance c/o the ALC<br />
+      2. Credit card: Over the phone or in-person<br /><br />
+      Please include your assigned Application ID with your payment.<br /><br />
+      <strong>Mailing address:</strong><br />
+      Agricultural Land Commission<br />
+      201-4940 Canada Way, Burnaby, BC, Canada, V5G 4K6<br /><br />
+      <strong>Paying via telephone:</strong><br />
+      Tel: 604-660-7000<br />
+      If you are making a long-distance call to a provincial government agency, you can place your call through Enquiry
+      BC free of charge:<br />
+      In Victoria call: 250-387-6121<br />
+      Elsewhere in BC call: 1-800-663-7867
+    </ng-container>
+    <ng-container *ngIf="!alcFee">
+      There is no application fee to register a {{ appLabel }} on ALR land. An ALC Land Use Planner will reach out if
+      further information is required.
+    </ng-container>
+  </ng-container>
+  <br /><br />
+  The Primary Contact will be emailed this information and all future correspondence.
+</p>
+<div class="buttons">
+  <button routerLink="/home" mat-flat-button color="primary">View Submission</button>
+  <button [routerLink]="'/application/' + fileId" mat-stroked-button color="primary">Return to inbox</button>
+</div>
