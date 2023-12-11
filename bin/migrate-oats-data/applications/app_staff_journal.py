@@ -14,7 +14,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def process_app_staff_journal(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for initializing the users table in ALCS.
+    This function is responsible for initializing applications in the staff_journal table in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
