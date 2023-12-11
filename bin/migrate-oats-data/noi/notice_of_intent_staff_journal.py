@@ -139,11 +139,11 @@ def _map_timezone(data):
 
 
 @inject_conn_pool
-def clean_staff_journal(conn=None):
+def clean_noi_staff_journal(conn=None):
     logger.info("Start staff journal cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.staff_journal asj WHERE asj.audit_created_by = '{OATS_ETL_USER}'"
+            f"DELETE FROM alcs.staff_journal AS asj WHERE asj.audit_created_by = '{OATS_ETL_USER}' AND asj.notice_of_intent_uuid IS NOT NULL"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
