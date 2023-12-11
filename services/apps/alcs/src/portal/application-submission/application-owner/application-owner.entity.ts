@@ -3,9 +3,9 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
+import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 
 @Entity()
 export class ApplicationOwner extends Base {
@@ -59,6 +59,15 @@ export class ApplicationOwner extends Base {
       'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_person_organization to alcs.application_owner. Note that this id is unique only in scope of parcel.',
   })
   oatsPersonOrganizationId: number;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_property_interest to alcs.application_owner. Note that this id is unique only in scope of parcel.',
+  })
+  oatsPropertyInterestId: number;
 
   @AutoMap(() => ApplicationDocumentDto)
   @ManyToOne(() => ApplicationDocument, {

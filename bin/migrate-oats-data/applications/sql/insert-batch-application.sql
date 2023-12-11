@@ -153,7 +153,8 @@ SELECT
     END AS applicant,
 	ar.code AS region_code,
     alcs_gov.gov_uuid AS local_government_uuid,
-    'oats_etl'
+    'oats_etl',
+    'APPLICANT' as source
 FROM
     oats.oats_alr_applications AS oa
     JOIN oats.alcs_etl_application_duplicate AS ae ON oa.alr_application_id = ae.application_id AND ae.duplicated IS false
