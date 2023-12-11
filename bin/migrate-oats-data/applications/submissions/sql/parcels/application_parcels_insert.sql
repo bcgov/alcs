@@ -22,7 +22,8 @@ SELECT uuid AS application_submission_uuid,
     op.pin,
     osp.purchase_date,
     gopi.property_owner_type_code,
-    osp.subject_property_id
+    osp.subject_property_id,
+    op.property_id
 FROM parcels_to_insert pti
     JOIN oats.oats_subject_properties osp ON osp.subject_property_id = pti.subject_property_id
     JOIN oats.oats_properties op ON op.property_id = osp.property_id
