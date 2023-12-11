@@ -68,7 +68,7 @@ def process_noi_staff_journal(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_inserts_count
-                    last_submission_id = last_submission_id + 1
+                    last_entry_id = last_entry_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts}"
