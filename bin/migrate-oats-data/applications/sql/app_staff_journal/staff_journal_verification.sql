@@ -10,7 +10,7 @@ WITH alcs_rows AS (
 	JOIN oats.oats_alr_applications oaa ON osje.alr_application_id = oaa.alr_application_id
 	WHERE oaa.application_class_code IN ('LOA', 'BLK')
 )
-select oar.journal_text, oar.alr_application_id, ar.file_number
+SELECT oar.journal_text, oar.alr_application_id, ar.file_number
 FROM oats_rows oar
 JOIN alcs_rows ar ON oar.journal_text = ar.body
 WHERE ar.file_number <> oar.alr_application_id::TEXT;

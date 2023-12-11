@@ -15,26 +15,29 @@ from .application_submission_status_email import (
     process_application_submission_status_emails,
     clean_application_submission_status_emails,
 )
-from .app_staff_journal import process_app_staff_journal, clean_staff_journal
+from .app_staff_journal import (
+    process_app_staff_journal,
+    clean_application_staff_journal,
+)
 
 
 def process_application_etl(batch_size):
-    # process_alcs_application_prep_fields(batch_size)
-    # update_application_date_rx_all_items(batch_size)
-    # process_alcs_app_submissions(batch_size)
-    # process_application_statuses(batch_size)
-    # process_application_parcels(batch_size)
-    # process_application_owners(batch_size)
+    process_alcs_application_prep_fields(batch_size)
+    update_application_date_rx_all_items(batch_size)
+    process_alcs_app_submissions(batch_size)
+    process_application_statuses(batch_size)
+    process_application_parcels(batch_size)
+    process_application_owners(batch_size)
     process_app_staff_journal(batch_size)
-    # process_application_submission_status_emails()
+    process_application_submission_status_emails()
 
 
 def clean_alcs_applications():
-    # clean_application_submission_status_emails()
-    clean_staff_journal()
-    # clean_application_parcels()
-    # clean_app_submissions()
-    # clean_applications()
+    clean_application_submission_status_emails()
+    clean_application_staff_journal()
+    clean_application_parcels()
+    clean_app_submissions()
+    clean_applications()
 
 
 def init_applications(batch_size):
