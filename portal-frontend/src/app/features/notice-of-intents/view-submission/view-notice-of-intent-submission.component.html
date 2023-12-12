@@ -45,6 +45,9 @@
           <section>
             <div class="header">
               <h2>Applicant Submission</h2>
+              <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
+                Cancel NOI
+              </button>
               <div class="btns-wrapper">
                 <button mat-flat-button color="accent" (click)="onDownloadSubmissionPdf(submission.fileNumber)">
                   Download PDF
