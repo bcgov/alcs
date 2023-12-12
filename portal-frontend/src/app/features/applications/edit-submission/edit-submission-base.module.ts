@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { ApplicationDetailsModule } from '../application-details/application-details.module';
@@ -34,6 +35,7 @@ import { TurProposalComponent } from './proposal/tur-proposal/tur-proposal.compo
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { SuccessComponent } from './success/success.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +64,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     InclProposalComponent,
     CoveProposalComponent,
     CovenantTransfereeDialogComponent,
+    SuccessComponent,
   ],
   imports: [
     CommonModule,
@@ -75,6 +78,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     MatOptionModule,
     MatSelectModule,
     MatTableModule,
+    RouterLink,
   ],
   exports: [
     ParcelDetailsComponent,
@@ -100,6 +104,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     InclProposalComponent,
     CoveProposalComponent,
     CovenantTransfereeDialogComponent,
+    SuccessComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

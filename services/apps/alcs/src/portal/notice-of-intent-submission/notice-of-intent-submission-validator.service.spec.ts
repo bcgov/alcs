@@ -6,12 +6,12 @@ import { LocalGovernmentService } from '../../alcs/local-government/local-govern
 import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 import { NoticeOfIntentDocumentService } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.service';
 import {
-  OwnerType,
   OWNER_TYPE,
+  OwnerType,
 } from '../../common/owner-type/owner-type.entity';
 import {
-  DocumentCode,
   DOCUMENT_TYPE,
+  DocumentCode,
 } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
@@ -285,6 +285,13 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
       firstName: 'Bruce',
       lastName: 'Wayne',
     });
+
+    mockNoiParcelService.fetchByFileId.mockResolvedValue([
+      new NoticeOfIntentParcel({
+        owners: [mockOwner],
+      }),
+    ]);
+
     const noticeOfIntentSubmission = new NoticeOfIntentSubmission({
       owners: [mockOwner],
       primaryContactOwnerUuid: mockOwner.uuid,

@@ -16,4 +16,10 @@ export class ApplicationTypeDto extends BaseCodeDto {
 
   @AutoMap()
   portalOrder: number;
+
+  @AutoMap()
+  alcFeeAmount?: number | null;
+
+  @AutoMap()
+  governmentFeeAmount?: number | null;
 }
