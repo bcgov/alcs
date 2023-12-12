@@ -191,7 +191,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     if (submission) {
       const didSubmit = await this.notificationSubmissionService.submitToAlcs(submission.uuid);
       if (didSubmit) {
-        await this.router.navigateByUrl(`/notification/${submission?.fileNumber}`);
+        await this.router.navigateByUrl(`/notification/${submission?.fileNumber}/edit/success`);
       }
     }
   }

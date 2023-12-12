@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { Observable } from 'rxjs';
 import { CodeService } from '../../../../services/code/code.service';
-import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
+import { NotificationSubmissionService } from '../../../../services/notification-submission/notification-submission.service';
 import { OverlaySpinnerService } from '../../../../shared/overlay-spinner/overlay-spinner.service';
 
 import { SuccessComponent } from './success.component';
@@ -11,13 +11,13 @@ import { SuccessComponent } from './success.component';
 describe('SuccessComponent', () => {
   let component: SuccessComponent;
   let fixture: ComponentFixture<SuccessComponent>;
-  let noiSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
+  let notificationSubmissionService: DeepMocked<NotificationSubmissionService>;
   let activatedRoute: DeepMocked<ActivatedRoute>;
   let overlayService: DeepMocked<OverlaySpinnerService>;
   let codeService: DeepMocked<CodeService>;
 
   beforeEach(() => {
-    noiSubmissionService = createMock();
+    notificationSubmissionService = createMock();
     activatedRoute = createMock();
     overlayService = createMock();
     codeService = createMock();
@@ -39,8 +39,8 @@ describe('SuccessComponent', () => {
       declarations: [SuccessComponent],
       providers: [
         {
-          provide: NoticeOfIntentSubmissionService,
-          useValue: noiSubmissionService,
+          provide: NotificationSubmissionService,
+          useValue: notificationSubmissionService,
         },
         {
           provide: ActivatedRoute,

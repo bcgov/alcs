@@ -21,10 +21,15 @@ import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { StepComponent } from './step.partial';
+import { SuccessComponent } from './success/success.component';
 import { TransfereeDialogComponent } from './transferees/transferee-dialog/transferee-dialog.component';
 import { TransfereesComponent } from './transferees/transferees.component';
 
 const routes: Routes = [
+  {
+    path: 'success',
+    component: SuccessComponent,
+  },
   {
     path: '',
     component: EditSubmissionComponent,
@@ -54,6 +59,7 @@ const routes: Routes = [
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     ChangeSurveyPlanConfirmationDialogComponent,
+    SuccessComponent,
   ],
   imports: [
     CommonModule,
