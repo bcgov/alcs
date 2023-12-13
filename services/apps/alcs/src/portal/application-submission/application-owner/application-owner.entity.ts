@@ -60,6 +60,15 @@ export class ApplicationOwner extends Base {
   })
   oatsPersonOrganizationId: number;
 
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_application_parties to alcs.application_owner.',
+  })
+  oatsApplicationPartyId: number;
+
   @AutoMap(() => ApplicationDocumentDto)
   @ManyToOne(() => ApplicationDocument, {
     onDelete: 'SET NULL',

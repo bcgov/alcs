@@ -16,21 +16,21 @@ def init_application_primary_contacts(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_submission/primary_contact/notice_of_intent_primary_contact_count.sql",
+            "applications/submissions/sql/parcels/primary_contact/application_primary_contact_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Notice of Intents data to insert: {count_total}")
+        logger.info(f"Total Application data to insert: {count_total}")
 
         failed_inserts = 0
         successful_updates_count = 0
         last_file_number = 0
 
         with open(
-            "noi/sql/notice_of_intent_submission/primary_contact/notice_of_intent_primary_contact.sql",
+            "applications/submissions/sql/parcels/primary_contact/application_primary_contact.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -56,7 +56,7 @@ def init_application_primary_contacts(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_file_number = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert notice of intents owners so far {successful_updates_count}; last updated {last_file_number}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert application owners so far {successful_updates_count}; last updated {last_file_number}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -129,11 +129,11 @@ def _get_name(row):
 
 @inject_conn_pool
 def clean_primary_contacts(conn=None):
-    logger.info("Start notice of intent primary contact cleaning")
+    logger.info("Start application primary contact cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
             f"UPDATE alcs.application_submission SET primary_contact_owner_uuid = NULL WHERE audit_created_by = '{OATS_ETL_USER}'"
         )
         logger.info(f"Unassigned items count = {cursor.rowcount}")
     conn.commit()
-    logger.info("Done notice of intent primary contact cleaning")
+    logger.info("Done application primary contact cleaning")

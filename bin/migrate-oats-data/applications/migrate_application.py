@@ -7,6 +7,7 @@ from .submissions import (
     clean_owners,
     clean_parcel_owners,
     process_application_owners,
+    clean_primary_contacts,
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -39,6 +40,7 @@ def init_applications(batch_size):
 
 
 def clean_application_parcels():
+    clean_primary_contacts()
     clean_parcel_owners()
     clean_owners()
     clean_parcels()
