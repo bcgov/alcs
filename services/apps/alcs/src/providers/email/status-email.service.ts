@@ -17,6 +17,9 @@ import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-s
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { EmailService } from './email.service';
 import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
+import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -73,6 +76,7 @@ export class StatusEmailService {
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private emailService: EmailService,
     private applicationDecisionService: ApplicationDecisionV2Service,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV2Service,
   ) {}
 
   async getSubmissionGovernmentOrFail(
@@ -133,13 +137,37 @@ export class StatusEmailService {
     const decisions =
       await this.applicationDecisionService.getByAppFileNumber(fileNumber);
 
-    const documents = decisions
+    const documents = this.mapDecisionDocuments(
+      decisions,
+      PARENT_TYPE.APPLICATION,
+    );
+
+    return documents;
+  }
+
+  async getNoticeOfIntentDocumentEmailData(fileNumber: string) {
+    const decisions =
+      await this.noticeOfIntentDecisionService.getByFileNumber(fileNumber);
+
+    const documents = this.mapDecisionDocuments(
+      decisions,
+      PARENT_TYPE.NOTICE_OF_INTENT,
+    );
+
+    return documents;
+  }
+
+  private mapDecisionDocuments(
+    decisions: ApplicationDecision[] | NoticeOfIntentDecision[],
+    type: PARENT_TYPE,
+  ) {
+    return decisions
       .sort(
         (a, b) => new Date(b.date!).valueOf() - new Date(a.date!).valueOf(),
       )[0]
       .documents.map((doc) => {
         const baseUrl = this.config.get<string>('ALCS.BASE_URL');
-        const controller = 'public/application/decision';
+        const controller = `public/${type}/decision`;
         const endpoint = 'email';
 
         const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
@@ -149,8 +177,6 @@ export class StatusEmailService {
           url,
         };
       });
-
-    return documents;
   }
 
   private async getApplicationEmailTemplate(data: ApplicationEmailData) {
@@ -218,6 +244,7 @@ export class StatusEmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
+      documents: data.documents,
     });
 
     const parentId = await this.noticeOfIntentService.getUuid(fileNumber);

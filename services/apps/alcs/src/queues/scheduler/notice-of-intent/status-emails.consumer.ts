@@ -45,6 +45,10 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
               submissionStatus.submission,
             );
 
+          const documents = await this.getDecisionDocuments(
+            submissionStatus.submission.fileNumber,
+          );
+
           if (primaryContact) {
             await this.statusEmailService.sendNoticeOfIntentStatusEmail({
               generateStatusHtml: generateALCDNoticeOfIntentHtml,
@@ -54,6 +58,7 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
               parentType: PARENT_TYPE.NOTICE_OF_INTENT,
               primaryContact,
               ccGovernment: true,
+              documents,
             });
 
             await this.updateSubmissionStatus(submissionStatus);
@@ -88,6 +93,12 @@ export class NoticeOfIntentSubmissionStatusEmailConsumer extends WorkerHost {
     submissionStatus.emailSentDate = today;
     await this.submissionStatusService.saveSubmissionToSubmissionStatus(
       submissionStatus,
+    );
+  }
+
+  private async getDecisionDocuments(fileNumber: string) {
+    return this.statusEmailService.getNoticeOfIntentDocumentEmailData(
+      fileNumber,
     );
   }
 }

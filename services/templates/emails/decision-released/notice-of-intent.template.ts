@@ -1,10 +1,13 @@
 import { MJMLParseResults } from 'mjml-core';
-import { StatusUpdateEmail } from '../../../apps/alcs/src/providers/email/status-email.service';
+import {
+  DocumentEmailData,
+  StatusUpdateEmail,
+} from '../../../apps/alcs/src/providers/email/status-email.service';
 import { EmailTemplateService } from '../../../libs/common/src/email-template-service/email-template.service';
 import { footer, header, notificationOnly, portalButton } from '../partials';
 
 type DecisionReleasedStatusEmail = StatusUpdateEmail & {
-  decisionDate: number;
+  documents: DocumentEmailData[];
 };
 
 const template = `<mjml>
@@ -25,10 +28,20 @@ const template = `<mjml>
     <mj-section background-color="white" padding="48px 0px 48px 0px">
       <mj-column width="600px" css-class='line-height'>
         <mj-text font-size='16px'>
-        The decision for the above noted Notice of Intent (NOI) has been released on the the ALC Portal. 
+          This email is to advise that the Reasons for Decision for the above noted Notice of Intent (NOI) has been released.
         </mj-text>
         <mj-text font-size='16px'>
-          The decision document can be found by clicking 'View' from the NOI Inbox table in the ALC Portal, and then navigating to the 'ALC Review and Decision' tab. The decision will also be available to the public.
+          You can access the decision document by clicking the link(s) below:
+        </mj-text>
+        <mj-text font-size='16px'>
+          <ul style="list-style-position: inside; padding: 0; margin: 0;">
+           {{#each documents}}
+            <li><a href={{url}}>{{name}}</a></li>
+           {{/each}}
+          </ul>
+        </mj-text>
+        <mj-text font-size='16px'>
+          The decision can also be accessed via the ALC Portal and Public Search tool.
         </mj-text>
         <mj-text font-size='16px'>
           Further correspondence with respect to this NOI should be directed to <a href="mailto:ALC.Soil@gov.bc.ca">ALC.Soil@gov.bc.ca</a>. 

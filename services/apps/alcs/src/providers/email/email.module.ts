@@ -10,6 +10,7 @@ import { NoticeOfIntentModule } from '../../alcs/notice-of-intent/notice-of-inte
 import { NoticeOfIntentSubmissionModule } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { StatusEmailService } from './status-email.service';
 import { ApplicationDecisionV2Module } from '../../alcs/application-decision/application-decision-v2/application-decision-v2.module';
+import { NoticeOfIntentDecisionModule } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ApplicationDecisionV2Module } from '../../alcs/application-decision/app
     forwardRef(() => NoticeOfIntentModule),
     forwardRef(() => NoticeOfIntentSubmissionModule),
     forwardRef(() => ApplicationDecisionV2Module),
+    forwardRef(() => NoticeOfIntentDecisionModule),
   ],
   providers: [EmailService, StatusEmailService],
   exports: [EmailService, StatusEmailService],
