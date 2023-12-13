@@ -13,7 +13,8 @@ SELECT osp.subject_property_id,
     noip.ownership_type_code,
     opi.prin_type,
     opi.active_ind,
-    noip.notice_of_intent_submission_uuid
+    noip.notice_of_intent_submission_uuid,
+    opi.property_interest_id
 FROM oats.OATS_PROPERTY_INTERESTS opi
     JOIN oats.OATS_SUBJECT_PROPERTIES osp ON osp.SUBJECT_PROPERTY_ID = opi.SUBJECT_PROPERTY_ID
     JOIN alcs.notice_of_intent_parcel noip ON noip.oats_subject_property_id = osp.subject_property_id -- ensure GET records only for parcels imported into ALCS

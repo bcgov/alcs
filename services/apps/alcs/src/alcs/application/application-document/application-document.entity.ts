@@ -3,15 +3,16 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
-import { DocumentCode } from '../../../document/document-code.entity';
 
 export enum VISIBILITY_FLAG {
   APPLICANT = 'A',
@@ -47,6 +48,7 @@ export class ApplicationDocument extends BaseEntity {
   application: Application;
 
   @Column()
+  @Index()
   applicationUuid: string;
 
   @Column({ nullable: true, type: 'uuid' })

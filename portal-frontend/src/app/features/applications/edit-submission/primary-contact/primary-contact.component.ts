@@ -160,7 +160,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     } else {
       const isSelfApplicant =
         this.parcelOwners.length === 1 && this.parcelOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
-      debugger;
       this.needsAuthorizationLetter = this.selectedThirdPartyAgent || this.hasCrownParcels || !isSelfApplicant;
     }
 

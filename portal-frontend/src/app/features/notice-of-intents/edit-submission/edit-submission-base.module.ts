@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { SharedModule } from '../../../shared/shared.module';
 import { AdditionalInformationComponent } from './additional-information/additional-information.component';
@@ -27,6 +28,7 @@ import { RosoProposalComponent } from './proposal/roso/roso-proposal.component';
 import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.component';
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
+import { SuccessComponent } from './success/success.component';
 
 @NgModule({
   imports: [
@@ -41,6 +43,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     MatSelectModule,
     MatTableModule,
     NoticeOfIntentDetailsModule,
+    RouterLink,
   ],
   declarations: [
     EditSubmissionComponent,
@@ -61,6 +64,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     ChangeNoiTypeDialogComponent,
+    SuccessComponent,
   ],
   exports: [
     EditSubmissionComponent,
@@ -79,6 +83,7 @@ import { SelectGovernmentComponent } from './select-government/select-government
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     ChangeNoiTypeDialogComponent,
+    SuccessComponent,
   ],
 })
 export class EditSubmissionBaseModule {}

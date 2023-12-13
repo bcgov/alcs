@@ -48,12 +48,18 @@ from .notice_of_intent_submissions.parcels.primary_contacts import (
     link_notice_of_intent_primary_contacts,
 )
 
+from noi.notice_of_intent_staff_journal import (
+    process_noi_staff_journal,
+    clean_noi_staff_journal,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
 
 
 def clean_notice_of_intent():
+    clean_noi_staff_journal()
     clean_primary_contacts()
     clean_parcel_owners()
     clean_owners()
@@ -111,6 +117,8 @@ def process_notice_of_intent(batch_size):
     init_notice_of_intent_primary_contacts(batch_size)
 
     link_notice_of_intent_primary_contacts(batch_size)
+
+    process_noi_staff_journal(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()

@@ -1,6 +1,7 @@
 -- retrieve owners per parcel
 SELECT osp.subject_property_id,
     opo.person_organization_id,
+    opi.property_interest_id,
     op.person_id,
     op.first_name,
     op.last_name,

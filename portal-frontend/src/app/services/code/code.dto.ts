@@ -19,10 +19,14 @@ export interface ApplicationTypeDto {
   portalLabel: string;
   htmlDescription: string;
   portalOrder: number;
+  alcFeeAmount?: number | null;
+  governmentFeeAmount?: number | null;
 }
 
 export interface NoticeOfIntentTypeDto {
   code: string;
   portalLabel: string;
   htmlDescription: string;
+  alcFeeAmount?: number | null;
+  governmentFeeAmount?: number | null;
 }
