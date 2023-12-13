@@ -47,7 +47,7 @@ const template = `<mjml>
           Further correspondence with respect to this NOI should be directed to <a href="mailto:ALC.Soil@gov.bc.ca">ALC.Soil@gov.bc.ca</a>. 
         </mj-text>
         <mj-text font-size='16px'>
-          If you are an agent acting on behalf of the applicant(s)/landowner(s), it is your responsibility to advise your client(s) of this, and any future, correspondence.
+          If you are an agent acting on behalf of the applicant(s)/landowner(s), it is your responsibility to advise them of this, and any future, correspondence.
         </mj-text>
         ${notificationOnly}
       </mj-column>

@@ -553,7 +553,7 @@ export class ApplicationDecisionV2Service {
     if (decisionDocument) {
       return this.documentService.getDownloadUrl(
         decisionDocument.document,
-        true,
+        true, // FIXME: Document does not open inline despite flag being true
       );
     }
     throw new ServiceNotFoundException('Failed to find document');
