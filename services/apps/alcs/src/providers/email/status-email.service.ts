@@ -16,6 +16,7 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { EmailService } from './email.service';
+import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 
 export interface StatusUpdateEmail {
   fileNumber: string;
@@ -26,11 +27,17 @@ export interface StatusUpdateEmail {
   parentType: PARENT_TYPE;
 }
 
+export type DocumentEmailData = {
+  name: string;
+  url: string;
+};
+
 type BaseStatusEmailData = {
   generateStatusHtml: MJMLParseResults;
   government: LocalGovernment | null;
   parentType: PARENT_TYPE;
   ccGovernment?: boolean;
+  documents?: DocumentEmailData[];
 };
 
 type ApplicationEmailData = BaseStatusEmailData & {
@@ -65,6 +72,7 @@ export class StatusEmailService {
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
     private emailService: EmailService,
+    private applicationDecisionService: ApplicationDecisionV2Service,
   ) {}
 
   async getSubmissionGovernmentOrFail(
@@ -121,6 +129,26 @@ export class StatusEmailService {
     return { primaryContact, submissionGovernment };
   }
 
+  async getApplicationDecisionDocumentEmailData(fileNumber: string) {
+    const decisions =
+      await this.applicationDecisionService.getByAppFileNumber(fileNumber);
+
+    const documents = decisions[0].documents.map((doc) => {
+      const baseUrl = this.config.get<string>('ALCS.BASE_URL');
+      const controller = 'public/application/decision';
+      const endpoint = 'email';
+
+      const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
+
+      return {
+        name: doc.document.fileName,
+        url,
+      };
+    });
+
+    return documents;
+  }
+
   private async getApplicationEmailTemplate(data: ApplicationEmailData) {
     const status = await this.applicationSubmissionService.getStatus(
       data.status,
@@ -146,6 +174,7 @@ export class StatusEmailService {
       governmentName: data.government?.name,
       status: status.label,
       parentTypeLabel: parentTypeLabel[data.parentType],
+      documents: data.documents,
     });
 
     const parentId = await this.applicationService.getUuid(fileNumber);

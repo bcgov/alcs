@@ -553,7 +553,7 @@ export class ApplicationDecisionV2Service {
     if (decisionDocument) {
       return this.documentService.getDownloadUrl(
         decisionDocument.document,
-        false,
+        true,
       );
     }
     throw new ServiceNotFoundException('Failed to find document');

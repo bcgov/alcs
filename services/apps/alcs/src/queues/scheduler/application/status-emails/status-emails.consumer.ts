@@ -96,6 +96,13 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
           ? generateALCDApplicationHtml
           : generateREVAHtml;
 
+      const documents =
+        submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION
+          ? await this.statusEmailService.getApplicationDecisionDocumentEmailData(
+              applicationSubmission.fileNumber,
+            )
+          : [];
+
       await this.statusEmailService.sendApplicationStatusEmail({
         applicationSubmission,
         government: submissionGovernment,
@@ -104,6 +111,7 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
         ccGovernment: true,
         generateStatusHtml,
         status: <SUBMISSION_STATUS>submissionStatus.statusTypeCode,
+        documents,
       });
 
       await this.updateSubmissionStatus(submissionStatus);
