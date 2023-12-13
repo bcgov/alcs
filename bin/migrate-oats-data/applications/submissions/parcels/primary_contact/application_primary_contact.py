@@ -2,44 +2,42 @@ from common import (
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
     OATS_ETL_USER,
-    ALCSOwnershipType,
     ALCSOwnerType,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor
 
-etl_name = "process_application_parcel_owners"
+etl_name = "init_application_primary_contacts"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_application_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def init_application_primary_contacts(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "applications/submissions/sql/parcels/owners/application_owner_count.sql",
+            "applications/submissions/sql/parcels/primary_contact/application_primary_contact_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total applications data to insert: {count_total}")
+        logger.info(f"Total Application data to insert: {count_total}")
 
         failed_inserts = 0
         successful_updates_count = 0
-        last_subject_property = 0
-        last_person_organization_id = 0
+        last_file_number = 0
 
         with open(
-            "applications/submissions/sql/parcels/owners/application_owner.sql",
+            "applications/submissions/sql/parcels/primary_contact/application_primary_contact.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE (osp.subject_property_id = {last_subject_property} AND opo.person_organization_id > {last_person_organization_id}) OR osp.subject_property_id > {last_subject_property}  ORDER BY osp.subject_property_id, opo.person_organization_id;"
+                    f"{application_sql} AND alr_application_id > {last_file_number} ORDER BY alr_application_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -55,18 +53,16 @@ def init_application_parcel_owners(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                         successful_updates_count + records_to_be_inserted_count
                     )
 
-                    last_record = dict(rows[-1])
-                    last_subject_property = last_record["subject_property_id"]
-                    last_person_organization_id = last_record["person_organization_id"]
+                    last_file_number = dict(rows[-1])["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert applications owners so far {successful_updates_count}; last updated {last_subject_property} {last_person_organization_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert application owners so far {successful_updates_count}; last updated {last_file_number}"
                     )
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
-                    last_person_organization_id = last_person_organization_id + 1
+                    last_file_number += 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful inserts {successful_updates_count}, total failed inserts {failed_inserts}"
@@ -94,8 +90,7 @@ def _compile_owner_insert_query(number_of_rows_to_insert):
                             email, 
                             phone_number, 
                             type_code, 
-                            oats_person_organization_id,
-                            oats_property_interest_id,
+                            oats_application_party_id,
                             audit_created_by
                         )
                         VALUES{owners_to_insert}
@@ -120,43 +115,25 @@ def _map_data(row):
         "application_submission_uuid": row["application_submission_uuid"],
         "email": row["email_address"],
         "phone_number": row.get("phone_number", "cell_phone_number"),
-        "type_code": _map_owner_type(row),
-        "oats_person_organization_id": row["person_organization_id"],
-        "oats_property_interest_id": row["property_interest_id"],
+        "type_code": ALCSOwnerType.AGEN.value,
+        "oats_application_party_id": row["alr_application_party_id"],
         "audit_created_by": OATS_ETL_USER,
     }
 
 
 def _get_name(row):
-    first_name = row.get("first_name", None)
-    middle_name = row.get("middle_name", None)
-
-    return " ".join(
-        [name for name in (first_name, middle_name) if name is not None]
-    ).strip()
-
-
-def _map_owner_type(owner_record):
-    # Default to fee simple for missing owner type
-    if owner_record["ownership_type_code"] == None:
-        return ALCSOwnerType.INDV.value
-
-    if owner_record["ownership_type_code"] == ALCSOwnershipType.FeeSimple.value:
-        if owner_record["person_id"] and not owner_record["organization_id"]:
-            return ALCSOwnerType.INDV.value
-        elif owner_record["organization_id"]:
-            return ALCSOwnerType.ORGZ.value
-    elif owner_record["ownership_type_code"] == ALCSOwnershipType.Crown.value:
-        return ALCSOwnerType.CRWN.value
+    first_name = row.get("first_name", "")
+    middle_name = row.get("middle_name", "")
+    return f"{first_name} {middle_name}".strip()
 
 
 @inject_conn_pool
-def clean_owners(conn=None):
-    logger.info("Start application owner cleaning")
+def clean_primary_contacts(conn=None):
+    logger.info("Start application primary contact cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.application_owner appo WHERE appo.audit_created_by = '{OATS_ETL_USER}'"
+            f"UPDATE alcs.application_submission SET primary_contact_owner_uuid = NULL WHERE audit_created_by = '{OATS_ETL_USER}'"
         )
-        logger.info(f"Deleted items count = {cursor.rowcount}")
+        logger.info(f"Unassigned items count = {cursor.rowcount}")
     conn.commit()
-    logger.info("Done application owner cleaning")
+    logger.info("Done application primary contact cleaning")
