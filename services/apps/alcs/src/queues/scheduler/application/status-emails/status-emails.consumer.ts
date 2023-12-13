@@ -98,9 +98,7 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
 
       const documents =
         submissionStatus.statusTypeCode === SUBMISSION_STATUS.ALC_DECISION
-          ? await this.statusEmailService.getApplicationDecisionDocumentEmailData(
-              applicationSubmission.fileNumber,
-            )
+          ? await this.getDecisionDocuments(applicationSubmission.fileNumber)
           : [];
 
       await this.statusEmailService.sendApplicationStatusEmail({
@@ -133,5 +131,9 @@ export class ApplicationSubmissionStatusEmailConsumer extends WorkerHost {
     await this.submissionStatusService.saveSubmissionToSubmissionStatus(
       submissionStatus,
     );
+  }
+
+  private async getDecisionDocuments(fileNumber: string) {
+    return this.statusEmailService.getApplicationDocumentEmailData(fileNumber);
   }
 }

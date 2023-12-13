@@ -129,22 +129,26 @@ export class StatusEmailService {
     return { primaryContact, submissionGovernment };
   }
 
-  async getApplicationDecisionDocumentEmailData(fileNumber: string) {
+  async getApplicationDocumentEmailData(fileNumber: string) {
     const decisions =
       await this.applicationDecisionService.getByAppFileNumber(fileNumber);
 
-    const documents = decisions[0].documents.map((doc) => {
-      const baseUrl = this.config.get<string>('ALCS.BASE_URL');
-      const controller = 'public/application/decision';
-      const endpoint = 'email';
+    const documents = decisions
+      .sort(
+        (a, b) => new Date(b.date!).valueOf() - new Date(a.date!).valueOf(),
+      )[0]
+      .documents.map((doc) => {
+        const baseUrl = this.config.get<string>('ALCS.BASE_URL');
+        const controller = 'public/application/decision';
+        const endpoint = 'email';
 
-      const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
+        const url = `${baseUrl}/${controller}/${doc.uuid}/${endpoint}`;
 
-      return {
-        name: doc.document.fileName,
-        url,
-      };
-    });
+        return {
+          name: doc.document.fileName,
+          url,
+        };
+      });
 
     return documents;
   }
