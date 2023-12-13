@@ -137,30 +137,23 @@ export class StatusEmailService {
     const decisions =
       await this.applicationDecisionService.getByAppFileNumber(fileNumber);
 
-    const documents = this.mapDecisionDocuments(
-      decisions,
-      PARENT_TYPE.APPLICATION,
-    );
-
-    return documents;
+    return this.sortAndMapDecisionDocuments(decisions, PARENT_TYPE.APPLICATION);
   }
 
   async getNoticeOfIntentDocumentEmailData(fileNumber: string) {
     const decisions =
       await this.noticeOfIntentDecisionService.getByFileNumber(fileNumber);
 
-    const documents = this.mapDecisionDocuments(
+    return this.sortAndMapDecisionDocuments(
       decisions,
       PARENT_TYPE.NOTICE_OF_INTENT,
     );
-
-    return documents;
   }
 
-  private mapDecisionDocuments(
+  private sortAndMapDecisionDocuments(
     decisions: ApplicationDecision[] | NoticeOfIntentDecision[],
     type: PARENT_TYPE,
-  ) {
+  ): DocumentEmailData[] {
     return decisions
       .sort(
         (a, b) => new Date(b.date!).valueOf() - new Date(a.date!).valueOf(),
