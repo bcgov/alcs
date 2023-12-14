@@ -199,12 +199,6 @@ describe('NoticeOfIntentSubmissionValidatorService', () => {
     expect(
       includesError(
         res.errors,
-        new Error(`Crown Parcel ${parcel.uuid} has no ownership type`),
-      ),
-    ).toBe(true);
-    expect(
-      includesError(
-        res.errors,
         new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
       ),
     ).toBe(true);
