@@ -44,12 +44,12 @@ export class SuccessComponent implements OnInit, OnDestroy {
 
   private async loadApplication(fileId: string) {
     this.overlayService.showSpinner();
-    const noiSubmission = await this.notificationSubmissionService.getByFileId(fileId);
-    if (noiSubmission) {
+    const notiSubmission = await this.notificationSubmissionService.getByFileId(fileId);
+    if (notiSubmission) {
       this.fileId = fileId;
-      this.appType = noiSubmission.typeCode;
-      this.appLabel = noiSubmission.type;
-      this.populateFees(noiSubmission.typeCode);
+      this.appType = notiSubmission.typeCode;
+      this.appLabel = notiSubmission.type;
+      this.populateFees(notiSubmission.typeCode);
     }
     this.overlayService.hideSpinner();
   }
