@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { ApplicationOwnerService } from '../../../services/application-owner/application-owner.service';
 
@@ -28,6 +28,10 @@ describe('ApplicationCrownOwnerDialogComponent', () => {
           provide: MAT_DIALOG_DATA,
           useValue: {},
         },
+        {
+          provide: MatDialog,
+          useValue: {},
+        }
       ],
       declarations: [CrownOwnerDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
