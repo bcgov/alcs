@@ -97,7 +97,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     const isValid = this.runValidation();
     if (isValid && this.fileId) {
       const government = await this.loadGovernment(this.localGovernmentUuid);
-      const governmentName = government?.name ?? 'selected local / first nation government';
+      const governmentName = government?.name ?? 'selected local / First Nation government';
 
       this.dialog
         .open(SubmitConfirmationDialogComponent, {
