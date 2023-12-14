@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -14,7 +14,6 @@ import {
 } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { OWNER_TYPE } from '../../dto/owner.dto';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
@@ -29,7 +28,6 @@ export class CrownOwnerDialogComponent {
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
   email = new FormControl<string | null>('', [Validators.required, Validators.email]);
   crownLandOwnerType = new FormControl<string | null>('', [Validators.required]);
-  @Output() crownlandOwnerChanged = new EventEmitter<string | null>();
 
   isEdit = false;
   existingUuid: string | undefined;
@@ -86,10 +84,6 @@ export class CrownOwnerDialogComponent {
 
   async onClose() {
     this.dialogRef.close();
-  }
-
-  async onChangeType($event: MatButtonToggleChange) { 
-    this.crownlandOwnerChanged.emit($event.value);
   }
 
   async onDelete() {
