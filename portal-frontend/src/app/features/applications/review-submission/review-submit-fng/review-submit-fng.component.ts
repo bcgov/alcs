@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
@@ -7,12 +8,14 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../../services/application-submission/application-submission.dto';
+import { CodeService } from '../../../../services/code/code.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom-stepper.component';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationFngSteps } from '../review-submission.component';
 import { ToastService } from '../../../../services/toast/toast.service';
+import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
 
 @Component({
   selector: 'app-review-submit-fng[stepper]',
@@ -38,13 +41,16 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   resolutionDocument: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
   private fileId: string | undefined;
+  private localGovernmentUuid = '';
 
   constructor(
     private router: Router,
     private applicationReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
     private toastService: ToastService,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
+    private codeService: CodeService,
+    private dialog: MatDialog
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -71,6 +77,7 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
+        this.localGovernmentUuid = application.localGovernmentUuid;
       }
     });
   }
@@ -89,8 +96,23 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
   async onSubmit() {
     const isValid = this.runValidation();
     if (isValid && this.fileId) {
-      await this.applicationReviewService.complete(this.fileId);
-      await this.router.navigateByUrl(`/application/${this.fileId}`);
+      const government = await this.loadGovernment(this.localGovernmentUuid);
+      const governmentName = government?.name ?? 'selected local / First Nation government';
+
+      this.dialog
+        .open(SubmitConfirmationDialogComponent, {
+          data: {
+            governmentName,
+            isAuthorizing: this._applicationReview?.isAuthorized ?? true,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm) {
+            await this.applicationReviewService.complete(this.fileId!);
+            await this.router.navigateByUrl(`/application/${this.fileId}/review/success`);
+          }
+        });
     }
   }
 
@@ -130,10 +152,10 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
           behavior: 'smooth',
           block: 'center',
         });
+
+        this.toastService.showErrorToast('Please correct all errors before submitting the form');
       }
     }, 5);
-
-    this.toastService.showErrorToast('Please correct all errors before submitting the form');
 
     return contactInfoValid && resolutionValid && attachmentsValid;
   }
@@ -173,5 +195,14 @@ export class ReviewSubmitFngComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.pdfGenerationService.generateReview(this.fileId);
     }
+  }
+
+  private async loadGovernment(uuid: string) {
+    const codes = await this.codeService.loadCodes();
+    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
+    if (localGovernment) {
+      return localGovernment;
+    }
+    return;
   }
 }
