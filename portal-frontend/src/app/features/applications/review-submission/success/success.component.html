@@ -1,0 +1,25 @@
+<ng-container *ngIf="didAuthorize">
+  <h2 class="heading">Application ID: {{ fileId }} Forwarded!</h2>
+  <p>
+    <span class="subheading1"
+      ><strong
+        >The application and the local/First Nation government review have been submitted to the ALC</strong
+      ></span
+    ><br /><br /><br />
+    {{ localGovernmentName }} will be cc'd on the email notifying the applicant that the application has been forwarded
+    to the ALC.<br /><br />ALC Staff may contact you with application related inquiries prior to the Commission review.
+  </p>
+</ng-container>
+<ng-container *ngIf="!didAuthorize">
+  <h2 class="heading">Application ID: {{ fileId }} has been refused by the {{ localGovernmentName }}.</h2>
+  <p>
+    <span class="subheading1"><strong>Your review and decision has been submitted to the ALC.</strong></span
+    ><br /><br /><br />
+    {{ localGovernmentName }} will be cc'd on the email notifying the applicant that the application has not been
+    forwarded to the ALC.
+  </p>
+</ng-container>
+
+<div class="buttons">
+  <button routerLink="/home" mat-stroked-button color="primary">Return to inbox</button>
+</div>
