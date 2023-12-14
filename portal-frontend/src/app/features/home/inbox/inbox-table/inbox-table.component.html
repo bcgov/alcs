@@ -2,7 +2,14 @@
   <div class="table-container">
     <table mat-table [dataSource]="dataSource">
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClick($event)"></tr>
+      <tr
+        mat-row
+        [ngClass]="{
+          link: !!row.routerLink
+        }"
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="onRowClick(row.routerLink)"
+      ></tr>
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>

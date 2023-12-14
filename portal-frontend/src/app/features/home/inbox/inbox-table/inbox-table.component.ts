@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@a
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { TableChange } from '../../../public/search/search.interface';
 import { InboxResultDto } from '../inbox.component';
@@ -44,7 +45,7 @@ export class InboxTableComponent implements OnDestroy {
 
   private subscribedToSort = false;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   async onTableChange() {
     this.tableChange.emit({
@@ -89,9 +90,9 @@ export class InboxTableComponent implements OnDestroy {
     });
   }
 
-  onRowClick(event: Event) {
-    if (event.currentTarget instanceof HTMLElement) {
-      console.log(event.currentTarget.querySelector<HTMLElement>('td > a')!.click());
+  async onRowClick(link: string) {
+    if (link) {
+      await this.router.navigateByUrl(link);
     }
   }
 }
