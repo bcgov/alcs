@@ -17,8 +17,6 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
-import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { EmailService } from '../../../providers/email/email.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
 import { NoticeOfIntentDecisionComponentType } from '../notice-of-intent-decision-component/notice-of-intent-decision-component-type.entity';
 import { NoticeOfIntentDecisionComponentTypeDto } from '../notice-of-intent-decision-component/notice-of-intent-decision-component.dto';
@@ -42,8 +40,6 @@ export class NoticeOfIntentDecisionV2Controller {
   constructor(
     private noticeOfIntentDecisionV2Service: NoticeOfIntentDecisionV2Service,
     private noticeOfIntentService: NoticeOfIntentService,
-    private noticeOfIntentSubmissionService: NoticeOfIntentSubmissionService,
-    private emailService: EmailService,
     private modificationService: NoticeOfIntentModificationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
