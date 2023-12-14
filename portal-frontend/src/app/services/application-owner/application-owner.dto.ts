@@ -14,6 +14,7 @@ export interface ApplicationOwnerDto {
   email: string | null;
   type: OwnerTypeDto;
   corporateSummary?: ApplicationDocumentDto;
+  crownLandOwnerType?: string | null;
 }
 
 export interface ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
@@ -28,6 +29,7 @@ export interface ApplicationOwnerUpdateDto {
   email: string;
   typeCode: string;
   corporateSummaryUuid?: string | null;
+  crownLandOwnerType?: string | null;
 }
 
 export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {

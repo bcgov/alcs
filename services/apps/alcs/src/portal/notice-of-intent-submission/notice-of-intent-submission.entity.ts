@@ -194,6 +194,14 @@ export class NoticeOfIntentSubmission extends Base {
   })
   typeCode: string;
 
+  @AutoMap()
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    default: null
+  })
+  crownLandOwnerType?: string | null;
+
   //Soil & Fill
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })

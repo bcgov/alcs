@@ -92,4 +92,11 @@ export class NoticeOfIntentOwner extends Base {
 
   @ManyToMany(() => NoticeOfIntentParcel, (appParcel) => appParcel.owners)
   parcels: NoticeOfIntentParcel[];
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    default: null
+  })
+  crownLandOwnerType?: string | null;
 }

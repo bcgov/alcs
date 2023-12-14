@@ -188,6 +188,7 @@ export class NoticeOfIntentOwnerController {
           phoneNumber: data.phoneNumber,
           organizationName: data.organization,
           noticeOfIntentSubmissionUuid: data.noticeOfIntentSubmissionUuid,
+          crownLandOwnerType: data.crownLandOwnerType,
         },
         applicationSubmission,
         req.user.entity,
@@ -216,6 +217,7 @@ export class NoticeOfIntentOwnerController {
             firstName: data.firstName,
             phoneNumber: data.phoneNumber,
             organizationName: data.organization,
+            crownLandOwnerType: data.crownLandOwnerType,
           },
           user,
         );

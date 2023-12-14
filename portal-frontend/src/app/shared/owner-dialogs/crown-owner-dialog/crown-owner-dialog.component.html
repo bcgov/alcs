@@ -4,6 +4,9 @@
 </div>
 <div mat-dialog-content>
   <form [formGroup]="form">
+    <app-warning-banner *ngIf="isEdit" class="full-row error" class="changes-banner">
+      The changes made to this crown will be reflected across the submission.
+    </app-warning-banner>
     <div class="form-row">
       <div class="full-row">
         <label for="ministryName">Ministry or Department Responsible</label>
@@ -71,11 +74,22 @@
           <div *ngIf="email.errors?.['email']">Invalid format</div>
         </div>
       </div>
+      <div class="full-row">
+        <mat-label for="type">Crown Type</mat-label>
+        <mat-button-toggle-group formControlName="crownLandOwnerType"  (change)="onChangeType($event)" class="input" id="crownLandOwnerType">
+          <mat-button-toggle value="provincial">Provincial Crown</mat-button-toggle>
+          <mat-button-toggle value="federal">Federal Crown</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
     </div>
   </form>
 </div>
+
 <div mat-dialog-actions class="actions">
-  <button mat-stroked-button (click)="onClose()">Cancel</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="!isEdit" (click)="onCreate()">Add</button>
-  <button mat-flat-button color="primary" [disabled]="form.invalid" *ngIf="isEdit" (click)="onSave()">Save</button>
+  <button *ngIf="isEdit" mat-stroked-button color="warn" style="margin-right: auto;" class="delete-btn" (click)="onDelete()">Delete Contact</button>
+  <div class="btn-group">
+    <button mat-stroked-button (click)="onClose()" style="margin-left: auto;">Cancel</button>
+    <button mat-flat-button color="primary" *ngIf="!isEdit" (click)="onCreate()">Add</button>
+    <button mat-flat-button color="primary" *ngIf="isEdit" (click)="onSave()">Save</button>
+  </div>
 </div>

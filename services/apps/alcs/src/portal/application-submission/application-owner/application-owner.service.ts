@@ -66,6 +66,7 @@ export class ApplicationOwnerService {
       phoneNumber: createDto.phoneNumber,
       corporateSummaryUuid: createDto.corporateSummaryUuid,
       applicationSubmission: applicationSubmission,
+      crownLandOwnerType: createDto.crownLandOwnerType,
       type,
     });
 
@@ -175,6 +176,9 @@ export class ApplicationOwnerService {
 
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
+
+    existingOwner.crownLandOwnerType = 
+      updateDto.crownLandOwnerType !== undefined ? updateDto.crownLandOwnerType : existingOwner.crownLandOwnerType;
 
     const result = await this.repository.save(existingOwner);
 

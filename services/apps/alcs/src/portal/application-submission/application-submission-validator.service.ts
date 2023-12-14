@@ -191,7 +191,6 @@ export class ApplicationSubmissionValidatorService {
 
     for (const parcel of parcels) {
       if (
-        parcel.ownershipTypeCode === null ||
         parcel.legalDescription === null ||
         parcel.mapAreaHectares === null ||
         parcel.civicAddress === null ||
@@ -223,14 +222,6 @@ export class ApplicationSubmissionValidatorService {
         errors.push(
           new ServiceValidationException(
             `Fee Simple Parcel ${parcel.uuid} has no purchase date`,
-          ),
-        );
-      }
-
-      if (parcel.ownershipTypeCode === 'CRWN' && !parcel.crownLandOwnerType) {
-        errors.push(
-          new ServiceValidationException(
-            `Crown Parcel ${parcel.uuid} has no ownership type`,
           ),
         );
       }
