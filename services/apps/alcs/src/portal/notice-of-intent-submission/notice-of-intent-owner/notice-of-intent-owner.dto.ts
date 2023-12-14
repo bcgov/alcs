@@ -46,6 +46,9 @@ export class NoticeOfIntentOwnerDto {
 
   @AutoMap(() => NoticeOfIntentDocumentDto)
   corporateSummary?: NoticeOfIntentDocumentDto;
+
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
 }
 
 export class NoticeOfIntentOwnerDetailedDto extends NoticeOfIntentOwnerDto {
@@ -72,6 +75,10 @@ export class NoticeOfIntentOwnerUpdateDto {
   @Matches(emailRegex)
   @IsOptional()
   email?: string;
+  
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string;
 
   @IsString()
   @IsOptional()
@@ -118,6 +125,10 @@ export class SetPrimaryContactDto {
 
   @IsString()
   noticeOfIntentSubmissionUuid: string;
+  
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string;
 }
 
 export class AttachCorporateSummaryDto {

@@ -14,6 +14,7 @@ import {
 } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.dto';
 import { NoticeOfIntentOwnerService } from '../../../services/notice-of-intent-owner/notice-of-intent-owner.service';
 import { OWNER_TYPE } from '../../dto/owner.dto';
+import { ConfirmationDialogService } from '../../confirmation-dialog/confirmation-dialog.service';
 
 @Component({
   selector: 'app-crown-owner-dialog',
@@ -26,6 +27,7 @@ export class CrownOwnerDialogComponent {
   lastName = new FormControl<string | null>('', [Validators.required]);
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
   email = new FormControl<string | null>('', [Validators.required, Validators.email]);
+  crownLandOwnerType = new FormControl<string | null>('', [Validators.required]);
 
   isEdit = false;
   existingUuid: string | undefined;
@@ -36,10 +38,12 @@ export class CrownOwnerDialogComponent {
     lastName: this.lastName,
     phoneNumber: this.phoneNumber,
     email: this.email,
+    crownLandOwnerType: this.crownLandOwnerType,
   });
 
   constructor(
     private dialogRef: MatDialogRef<CrownOwnerDialogComponent>,
+    private confDialogService: ConfirmationDialogService,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       submissionUuid: string;
@@ -57,6 +61,7 @@ export class CrownOwnerDialogComponent {
       this.phoneNumber.setValue(data.existingOwner.phoneNumber);
       this.email.setValue(data.existingOwner.email);
       this.existingUuid = data.existingOwner.uuid;
+      this.crownLandOwnerType.setValue(data.existingOwner.crownLandOwnerType ?? '');
     }
   }
 
@@ -70,14 +75,28 @@ export class CrownOwnerDialogComponent {
       typeCode: OWNER_TYPE.CROWN,
       applicationSubmissionUuid: this.data.submissionUuid,
       noticeOfIntentSubmissionUuid: this.data.submissionUuid,
+      crownLandOwnerType: this.crownLandOwnerType.getRawValue(),
     };
 
     const res = await this.data.ownerService.create(createDto);
-    this.dialogRef.close(res);
+    this.dialogRef.close({ ...res});
   }
 
   async onClose() {
     this.dialogRef.close();
+  }
+
+  async onDelete() {
+    this.confDialogService
+    .openDialog({
+      body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
+    })
+    .subscribe(async (didConfirm) => {
+      if (didConfirm) {
+        const res = await this.data.ownerService.delete(this.existingUuid ?? '');        
+        this.dialogRef.close({...res, type:'delete' });
+      }
+    });
   }
 
   async onSave() {
@@ -88,10 +107,11 @@ export class CrownOwnerDialogComponent {
       email: this.email.getRawValue()!,
       phoneNumber: this.phoneNumber.getRawValue()!,
       typeCode: OWNER_TYPE.CROWN,
+      crownLandOwnerType: this.crownLandOwnerType.getRawValue(),
     };
     if (this.existingUuid) {
       const res = await this.data.ownerService.update(this.existingUuid, updateDto);
-      this.dialogRef.close(res);
+      this.dialogRef.close({...res, type:'update'});
     }
   }
 }

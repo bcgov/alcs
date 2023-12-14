@@ -101,4 +101,11 @@ export class ApplicationOwner extends Base {
 
   @ManyToMany(() => ApplicationParcel, (appParcel) => appParcel.owners)
   parcels: ApplicationParcel[];
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    default: null
+  })
+  crownLandOwnerType?: string | null;
 }

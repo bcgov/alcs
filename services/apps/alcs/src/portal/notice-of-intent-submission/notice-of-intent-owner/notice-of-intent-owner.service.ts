@@ -68,6 +68,7 @@ export class NoticeOfIntentOwnerService {
       phoneNumber: createDto.phoneNumber,
       corporateSummaryUuid: createDto.corporateSummaryUuid,
       noticeOfIntentSubmission,
+      crownLandOwnerType: createDto.crownLandOwnerType,
       type,
     });
 
@@ -191,6 +192,9 @@ export class NoticeOfIntentOwnerService {
 
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
+
+    existingOwner.crownLandOwnerType = 
+      updateDto.crownLandOwnerType !== undefined ? updateDto.crownLandOwnerType : existingOwner.crownLandOwnerType;
 
     const savedOwner = await this.repository.save(existingOwner);
 

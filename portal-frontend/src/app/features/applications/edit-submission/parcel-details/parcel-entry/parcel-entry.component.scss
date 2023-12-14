@@ -98,3 +98,39 @@ mat-button-toggle-group#isFarm {
     height: 100%;
   }
 }
+
+.radio-option {
+  display: block !important;
+
+  & .mdc-label {
+    cursor: pointer !important;
+  }
+}
+
+.warning-banner {
+  margin-top: rem(8);
+  background-color: rgba(colors.$accent-color-light, 0.5);
+  padding: rem(16);
+
+  .owner-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .row {
+    display: flex;
+    margin-bottom: rem(10);
+  }
+  
+  .key {
+    font-weight: bold;
+    margin-right: rem(5);
+    width: rem(300);
+  }
+  
+  .value {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }  
+}

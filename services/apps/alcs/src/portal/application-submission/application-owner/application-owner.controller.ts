@@ -168,6 +168,7 @@ export class ApplicationOwnerController {
           phoneNumber: data.phoneNumber,
           organizationName: data.organization,
           applicationSubmissionUuid: data.applicationSubmissionUuid,
+          crownLandOwnerType: data.crownLandOwnerType,
         },
         applicationSubmission,
       );
@@ -192,6 +193,7 @@ export class ApplicationOwnerController {
           firstName: data.firstName,
           phoneNumber: data.phoneNumber,
           organizationName: data.organization,
+          crownLandOwnerType: data.crownLandOwnerType,
         });
       } else {
         //Delete Non parcel owners if we aren't using one

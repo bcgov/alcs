@@ -98,6 +98,7 @@ export class ParcelEntryComponent implements OnInit {
     searchBy: this.searchBy,
   });
   pidPinPlaceholder = '';
+  selectedOwner?: NoticeOfIntentOwnerDto = undefined;
 
   ownerInput = new FormControl<string | null>(null);
 
@@ -119,6 +120,11 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
+      const selectedOwner = this.parcel.owners.length > 0
+        ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
+        : undefined;
+
+      this.selectedOwner = selectedOwner;
       this.parcel.owners = this.parcel.owners.map((owner) => {
         const updatedOwner = owners.find((updatedOwner) => updatedOwner.uuid === owner.uuid)!;
         if (!updatedOwner) {
@@ -299,7 +305,7 @@ export class ParcelEntryComponent implements OnInit {
         documentService: this.noticeOfIntentDocumentService,
       },
     });
-    dialog.beforeClosed().subscribe((createdDto) => {
+    dialog.afterClosed().subscribe((createdDto) => {
       if (createdDto) {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
@@ -317,11 +323,39 @@ export class ParcelEntryComponent implements OnInit {
         ownerService: this.noticeOfIntentOwnerService,
       },
     });
-    dialog.beforeClosed().subscribe((createdDto) => {
+    dialog.afterClosed().subscribe((createdDto) => {
       if (createdDto) {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
         this.updateParcelOwners(updatedArray);
+        this.selectedOwner = createdDto;
+      }
+    });
+  }
+
+  async onCrownOwnerSelected(event: Event, owner: NoticeOfIntentOwnerDto, isSelected: boolean) { 
+    this.selectedOwner = owner;
+    const selectedOwners = [owner];
+    this.updateParcelOwners(selectedOwners);
+  }
+
+  onEdit(owner: NoticeOfIntentOwnerDto) {
+    let dialog;
+    dialog = this.dialog.open(CrownOwnerDialogComponent, {
+      data: {
+        isDraft: this.isDraft,
+        parcelUuid: this.parcel.uuid,
+        existingOwner: owner,
+        submissionUuid: this.submissionUuid,
+        ownerService: this.noticeOfIntentOwnerService,
+      },
+    });
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        if(result.type === 'delete') {
+          this.onOwnerRemoved(result.uuid)
+        }
+        this.onOwnersUpdated.emit();
       }
     });
   }
@@ -337,7 +371,7 @@ export class ParcelEntryComponent implements OnInit {
         this.updateParcelOwners(selectedOwners);
       }
     } else {
-      event.preventDefault()
+      this.onOwnerRemoved(owner.uuid);
     }
   }
 
@@ -382,7 +416,6 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
-      crownLandOwnerType: this.parcel.crownLandOwnerType,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
 

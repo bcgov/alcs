@@ -25,6 +25,7 @@ export interface NoticeOfIntentOwnerDto {
   email: string | null;
   type: OwnerTypeDto;
   corporateSummary?: NoticeOfIntentDocumentDto;
+  crownLandOwnerType?: string | null;
 }
 
 export interface NoticeOfIntentOwnerDetailedDto extends NoticeOfIntentOwnerDto {
@@ -39,6 +40,7 @@ export interface NoticeOfIntentOwnerUpdateDto {
   email: string;
   typeCode: string;
   corporateSummaryUuid?: string | null;
+  crownLandOwnerType?: string | null;
 }
 
 export interface NoticeOfIntentOwnerCreateDto extends NoticeOfIntentOwnerUpdateDto {
