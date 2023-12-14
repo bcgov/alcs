@@ -103,6 +103,7 @@ export class ParcelEntryComponent implements OnInit {
     searchBy: this.searchBy,
   });
   pidPinPlaceholder = '';
+  selectedOwner?: ApplicationOwnerDto = undefined;
 
   ownerInput = new FormControl<string | null>(null);
 
@@ -124,6 +125,11 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
+      const selectedOwner = this.parcel.owners.length > 0
+        ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
+        : undefined;
+
+      this.selectedOwner = selectedOwner;
       this.parcel.owners = this.parcel.owners
         .filter((owner) => owners.some((updatedOwner) => updatedOwner.uuid === owner.uuid))
         .map((owner) => {
@@ -320,7 +326,7 @@ export class ParcelEntryComponent implements OnInit {
         ownerService: this.applicationOwnerService,
       },
     });
-    dialog.beforeClosed().subscribe((createdDto) => {
+    dialog.afterClosed().subscribe((createdDto) => {
       if (createdDto) {
         this.onOwnersUpdated.emit();
         const updatedArray = [...this.parcel.owners, createdDto];
@@ -342,6 +348,33 @@ export class ParcelEntryComponent implements OnInit {
     } else {
       this.onOwnerRemoved(owner.uuid);
     }
+  }
+
+  async onCrownOwnerSelected(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) { 
+    this.selectedOwner = owner;
+    const selectedOwners = [owner];
+    this.updateParcelOwners(selectedOwners);
+  }
+
+  onEdit(owner: ApplicationOwnerDto) {
+    let dialog;
+    dialog = this.dialog.open(CrownOwnerDialogComponent, {
+      data: {
+        isDraft: this.isDraft,
+        parcelUuid: this.parcel.uuid,
+        existingOwner: owner,
+        submissionUuid: this.submissionUuid,
+        ownerService: this.applicationOwnerService,
+      },
+    });
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.onOwnersUpdated.emit();
+        if(result.type === 'delete') {
+          this.onOwnerRemoved(result.uuid)
+        }
+      }
+    });
   }
 
   async onOwnerRemoved(uuid: string) {
@@ -395,7 +428,6 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
       isFarm: formatBooleanToString(this.parcel.isFarm),
       purchaseDate: this.parcel.purchasedDate ? new Date(this.parcel.purchasedDate) : null,
-      crownLandOwnerType: this.parcel.crownLandOwnerType,
       isConfirmedByApplicant: this.enableUserSignOff ? this.parcel.isConfirmedByApplicant : false,
     });
 

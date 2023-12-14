@@ -6,3 +6,8 @@ from .owners import (
     init_application_parcel_owners,
     link_application_owners_to_parcels,
 )
+from .primary_contact import (
+    clean_primary_contacts,
+    init_application_primary_contacts,
+    link_application_primary_contacts,
+)

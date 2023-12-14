@@ -92,6 +92,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       ccGovernment: true,
       generateStatusHtml: generateREVAHtml,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+      documents: [],
     });
   });
 
@@ -99,6 +100,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
     const mockSubmission = new ApplicationSubmission({ fileNumber: 'fake' });
     const mockPrimaryContact = new ApplicationOwner();
     const mockLocalGovernment = new LocalGovernment();
+    const mockDocuments = [{ name: 'fake-document', url: 'fake-url' }];
 
     mockApplicationSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails.mockResolvedValue(
       [
@@ -117,6 +119,9 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       primaryContact: mockPrimaryContact,
       submissionGovernment: mockLocalGovernment,
     });
+    mockStatusEmailService.getApplicationDocumentEmailData.mockResolvedValue(
+      mockDocuments,
+    );
     mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await consumer.process();
@@ -132,6 +137,9 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       'fake',
     );
     expect(mockStatusEmailService.getApplicationEmailData).toBeCalledTimes(1);
+    expect(
+      mockStatusEmailService.getApplicationDocumentEmailData,
+    ).toBeCalledTimes(1);
     expect(mockStatusEmailService.sendApplicationStatusEmail).toBeCalledTimes(
       1,
     );
@@ -143,6 +151,7 @@ describe('ApplicationSubmissionStatusEmailConsumer', () => {
       ccGovernment: true,
       generateStatusHtml: generateALCDApplicationHtml,
       status: SUBMISSION_STATUS.ALC_DECISION,
+      documents: mockDocuments,
     });
   });
 

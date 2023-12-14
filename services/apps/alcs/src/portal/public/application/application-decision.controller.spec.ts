@@ -1,5 +1,6 @@
 import { classes } from 'automapper-classes';
 import { AutomapperModule } from 'automapper-nestjs';
+import { FastifyReply } from 'fastify';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -62,6 +63,18 @@ describe('ApplicationDecisionController', () => {
     const res = await controller.openFile('');
 
     expect(res.url).toBeTruthy();
+    expect(mockDecisionService.getDownloadForPortal).toHaveBeenCalledTimes(1);
+  });
+
+  it('should redirect for emailed files', async () => {
+    const res = createMock<FastifyReply>();
+
+    mockDecisionService.getDownloadForPortal.mockResolvedValue('Mock Url');
+
+    await controller.emailFile('', res);
+
+    expect(res.status).toHaveBeenCalledWith(302);
+    expect(res.redirect).toHaveBeenCalledWith('Mock Url');
     expect(mockDecisionService.getDownloadForPortal).toHaveBeenCalledTimes(1);
   });
 });

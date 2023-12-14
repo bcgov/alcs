@@ -19,7 +19,6 @@ import { RolesGuard } from '../../../../common/authorization/roles-guard.service
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { NaruSubtypeDto } from '../../../../portal/application-submission/application-submission.dto';
 import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
-import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
@@ -48,7 +47,6 @@ export class ApplicationDecisionV2Controller {
   constructor(
     private appDecisionService: ApplicationDecisionV2Service,
     private applicationService: ApplicationService,
-    private emailService: EmailService,
     private modificationService: ApplicationModificationService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,

@@ -1,7 +1,8 @@
-import { ConfigModule } from '@app/common/config/config.module';
+import { CONFIG_TOKEN, ConfigModule } from '@app/common/config/config.module';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MJMLParseResults } from 'mjml-core';
+import * as config from 'config';
 import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
 import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../alcs/application/application.service';
@@ -19,6 +20,13 @@ import { NoticeOfIntentSubmission } from '../../portal/notice-of-intent-submissi
 import { NoticeOfIntentSubmissionService } from '../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
 import { EmailService } from './email.service';
 import { StatusEmailService } from './status-email.service';
+import { ApplicationDecisionV2Service } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
+import { NoticeOfIntentDecisionV2Service } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-v2/notice-of-intent-decision-v2.service';
+import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
+import { ApplicationDecisionDocument } from '../../alcs/application-decision/application-decision-document/application-decision-document.entity';
+import { Document } from '../../document/document.entity';
+import { NoticeOfIntentDecisionDocument } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision-document/notice-of-intent-decision-document.entity';
+import { NoticeOfIntentDecision } from '../../alcs/notice-of-intent-decision/notice-of-intent-decision.entity';
 
 describe('StatusEmailService', () => {
   let service: StatusEmailService;
@@ -28,6 +36,8 @@ describe('StatusEmailService', () => {
   let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let mockEmailService: DeepMocked<EmailService>;
+  let mockApplicationDecisionService: DeepMocked<ApplicationDecisionV2Service>;
+  let mockNoticeOfIntentDecisionService: DeepMocked<NoticeOfIntentDecisionV2Service>;
 
   beforeEach(async () => {
     mockEmailService = createMock();
@@ -36,11 +46,17 @@ describe('StatusEmailService', () => {
     mockApplicationService = createMock();
     mockNoticeOfIntentSubmissionService = createMock();
     mockNoticeOfIntentService = createMock();
+    mockApplicationDecisionService = createMock();
+    mockNoticeOfIntentDecisionService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
       providers: [
         StatusEmailService,
+        {
+          provide: CONFIG_TOKEN,
+          useValue: config,
+        },
         {
           provide: EmailService,
           useValue: mockEmailService,
@@ -64,6 +80,14 @@ describe('StatusEmailService', () => {
         {
           provide: NoticeOfIntentService,
           useValue: mockNoticeOfIntentService,
+        },
+        {
+          provide: ApplicationDecisionV2Service,
+          useValue: mockApplicationDecisionService,
+        },
+        {
+          provide: NoticeOfIntentDecisionV2Service,
+          useValue: mockNoticeOfIntentDecisionService,
         },
       ],
     }).compile();
@@ -129,9 +153,83 @@ describe('StatusEmailService', () => {
     });
   });
 
+  it('should call through services and return application documents', async () => {
+    const mockDocument1 = new ApplicationDecisionDocument({
+      uuid: 'fake-uuid-1',
+      document: new Document({ fileName: 'document-1' }),
+    });
+    const mockDocument2 = new ApplicationDecisionDocument({
+      uuid: 'fake-uuid-2',
+      document: new Document({ fileName: 'document-2' }),
+    });
+    const mockDecision = new ApplicationDecision({
+      documents: [mockDocument1, mockDocument2],
+    });
+
+    mockApplicationDecisionService.getByAppFileNumber.mockResolvedValue([
+      mockDecision,
+    ]);
+
+    const res = await service.getApplicationDocumentEmailData('file-number');
+
+    expect(mockApplicationDecisionService.getByAppFileNumber).toBeCalledTimes(
+      1,
+    );
+
+    const baseUrl = config.get('ALCS.BASE_URL');
+
+    expect(res).toStrictEqual([
+      {
+        name: 'document-1',
+        url: `${baseUrl}/public/application/decision/${mockDocument1.uuid}/email`,
+      },
+      {
+        name: 'document-2',
+        url: `${baseUrl}/public/application/decision/${mockDocument2.uuid}/email`,
+      },
+    ]);
+  });
+
+  it('should call through services and return notice of intent documents', async () => {
+    const mockDocument1 = new NoticeOfIntentDecisionDocument({
+      uuid: 'fake-uuid-1',
+      document: new Document({ fileName: 'document-1' }),
+    });
+    const mockDocument2 = new NoticeOfIntentDecisionDocument({
+      uuid: 'fake-uuid-2',
+      document: new Document({ fileName: 'document-2' }),
+    });
+    const mockDecision = new NoticeOfIntentDecision({
+      documents: [mockDocument1, mockDocument2],
+    });
+
+    mockNoticeOfIntentDecisionService.getByFileNumber.mockResolvedValue([
+      mockDecision,
+    ]);
+
+    const res = await service.getNoticeOfIntentDocumentEmailData('file-number');
+
+    expect(mockNoticeOfIntentDecisionService.getByFileNumber).toBeCalledTimes(
+      1,
+    );
+
+    const baseUrl = config.get('ALCS.BASE_URL');
+
+    expect(res).toStrictEqual([
+      {
+        name: 'document-1',
+        url: `${baseUrl}/public/notice-of-intent/decision/${mockDocument1.uuid}/email`,
+      },
+      {
+        name: 'document-2',
+        url: `${baseUrl}/public/notice-of-intent/decision/${mockDocument2.uuid}/email`,
+      },
+    ]);
+  });
+
   it('should call through services to set application email template', async () => {
     const mockData = {
-      generateStatusHtml: () => ({} as MJMLParseResults),
+      generateStatusHtml: () => ({}) as MJMLParseResults,
       status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
       applicationSubmission: new ApplicationSubmission({ typeCode: 'TURP' }),
       parentType: 'application' as PARENT_TYPE,
@@ -156,7 +254,7 @@ describe('StatusEmailService', () => {
 
   it('should call through services to set notice of intent email template', async () => {
     const mockData = {
-      generateStatusHtml: () => ({} as MJMLParseResults),
+      generateStatusHtml: () => ({}) as MJMLParseResults,
       status: NOI_SUBMISSION_STATUS.SUBMITTED_TO_ALC,
       noticeOfIntentSubmission: new NoticeOfIntentSubmission(),
       parentType: 'notice-of-intent' as PARENT_TYPE,

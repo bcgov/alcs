@@ -7,8 +7,6 @@ import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { NoticeOfIntentDecisionProfile } from '../../../common/automapper/notice-of-intent-decision.automapper.profile';
 import { NoticeOfIntentProfile } from '../../../common/automapper/notice-of-intent.automapper.profile';
 import { UserProfile } from '../../../common/automapper/user.automapper.profile';
-import { NoticeOfIntentSubmissionService } from '../../../portal/notice-of-intent-submission/notice-of-intent-submission.service';
-import { EmailService } from '../../../providers/email/email.service';
 import { CodeService } from '../../code/code.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
@@ -28,8 +26,6 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
   let mockNoticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockModificationService: DeepMocked<NoticeOfIntentModificationService>;
-  let mockNoticeOfIntentSubmissionService: DeepMocked<NoticeOfIntentSubmissionService>;
-  let mockEmailService: DeepMocked<EmailService>;
 
   let mockNoticeOfintent;
   let mockDecision;
@@ -39,8 +35,6 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
     mockNoticeOfIntentService = createMock();
     mockCodeService = createMock();
     mockModificationService = createMock();
-    mockNoticeOfIntentSubmissionService = createMock();
-    mockEmailService = createMock();
 
     mockNoticeOfintent = new NoticeOfIntent();
     mockDecision = new NoticeOfIntentDecision({
@@ -73,14 +67,6 @@ describe('NoticeOfIntentDecisionV2Controller', () => {
         {
           provide: NoticeOfIntentModificationService,
           useValue: mockModificationService,
-        },
-        {
-          provide: NoticeOfIntentSubmissionService,
-          useValue: mockNoticeOfIntentSubmissionService,
-        },
-        {
-          provide: EmailService,
-          useValue: mockEmailService,
         },
         {
           provide: ClsService,

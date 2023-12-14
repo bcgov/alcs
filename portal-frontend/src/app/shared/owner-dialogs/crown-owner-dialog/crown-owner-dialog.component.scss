@@ -2,6 +2,9 @@
 @use '../../../../styles/colors';
 
 .actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 24px 10px 24px;
   button:not(:last-child) {
     margin-right: rem(8) !important;
   }
@@ -14,4 +17,13 @@
   display: flex;
   align-items: center;
   margin-top: rem(4);
+}
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  background-color: colors.$primary-color-light;
+}
+:host::ng-deep {
+  .warning-banner {
+    padding: 0 !important;
+  }
 }

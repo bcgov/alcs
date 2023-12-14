@@ -47,6 +47,9 @@ export class ApplicationOwnerDto {
 
   @AutoMap(() => ApplicationDocumentDto)
   corporateSummary?: ApplicationDocumentDto;
+
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
 }
 
 export class ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
@@ -73,6 +76,10 @@ export class ApplicationOwnerUpdateDto {
   @Matches(emailRegex)
   @IsOptional()
   email?: string;
+
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string;
 
   @IsString()
   @IsOptional()
@@ -119,6 +126,10 @@ export class SetPrimaryContactDto {
 
   @IsString()
   applicationSubmissionUuid: string;
+
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string;
 }
 
 export class AttachCorporateSummaryDto {

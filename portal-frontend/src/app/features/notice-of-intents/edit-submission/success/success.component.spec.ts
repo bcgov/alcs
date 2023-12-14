@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { Observable } from 'rxjs';
-import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { CodeService } from '../../../../services/code/code.service';
 import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { OverlaySpinnerService } from '../../../../shared/overlay-spinner/overlay-spinner.service';

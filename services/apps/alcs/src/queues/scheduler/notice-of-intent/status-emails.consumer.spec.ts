@@ -47,6 +47,7 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
     const mockSubmission = new NoticeOfIntentSubmission({ fileNumber: 'fake' });
     const mockPrimaryContact = new NoticeOfIntentOwner();
     const mockLocalGovernment = new LocalGovernment();
+    const mockDocuments = [{ name: 'fake-document', url: 'fake-url' }];
 
     mockNoticeOfIntentSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails.mockResolvedValue(
       [
@@ -64,6 +65,9 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       primaryContact: mockPrimaryContact,
       submissionGovernment: mockLocalGovernment,
     });
+    mockStatusEmailService.getNoticeOfIntentDocumentEmailData.mockResolvedValue(
+      mockDocuments,
+    );
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await consumer.process();
@@ -82,6 +86,9 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       1,
     );
     expect(
+      mockStatusEmailService.getNoticeOfIntentDocumentEmailData,
+    ).toBeCalledTimes(1);
+    expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toBeCalledTimes(1);
     expect(mockStatusEmailService.sendNoticeOfIntentStatusEmail).toBeCalledWith(
@@ -93,6 +100,7 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
         ccGovernment: true,
         generateStatusHtml: generateALCDNoticeOfIntentHtml,
         status: NOI_SUBMISSION_STATUS.ALC_DECISION,
+        documents: mockDocuments,
       },
     );
   });
@@ -100,6 +108,7 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
   it('should not send email if no primary contact', async () => {
     const mockSubmission = new NoticeOfIntentSubmission({ fileNumber: 'fake' });
     const mockLocalGovernment = new LocalGovernment();
+    const mockDocuments = [{ name: 'fake-document', url: 'fake-url' }];
 
     mockNoticeOfIntentSubmissionStatusService.getSubmissionToSubmissionStatusForSendingEmails.mockResolvedValue(
       [
@@ -117,6 +126,9 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
       primaryContact: undefined,
       submissionGovernment: mockLocalGovernment,
     });
+    mockStatusEmailService.getNoticeOfIntentDocumentEmailData.mockResolvedValue(
+      mockDocuments,
+    );
     mockStatusEmailService.sendNoticeOfIntentStatusEmail.mockResolvedValue();
 
     await consumer.process();
@@ -134,6 +146,9 @@ describe('NoticeOfIntentSubmissionStatusEmailConsumer', () => {
     expect(mockStatusEmailService.getNoticeOfIntentEmailData).toBeCalledTimes(
       1,
     );
+    expect(
+      mockStatusEmailService.getNoticeOfIntentDocumentEmailData,
+    ).toBeCalledTimes(1);
     expect(
       mockStatusEmailService.sendNoticeOfIntentStatusEmail,
     ).toBeCalledTimes(0);

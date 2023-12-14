@@ -11,7 +11,6 @@ import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v2.automapper.profile';
 import { ApplicationProfile } from '../../../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
-import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { CodeService } from '../../../code/code.service';
 import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
@@ -32,7 +31,6 @@ describe('ApplicationDecisionV2Controller', () => {
   let mockCodeService: DeepMocked<CodeService>;
   let mockModificationService: DeepMocked<ApplicationModificationService>;
   let mockReconService: DeepMocked<ApplicationReconsiderationService>;
-  let mockEmailService: DeepMocked<EmailService>;
 
   let mockApplication;
   let mockDecision;
@@ -43,7 +41,6 @@ describe('ApplicationDecisionV2Controller', () => {
     mockCodeService = createMock();
     mockModificationService = createMock();
     mockReconService = createMock();
-    mockEmailService = createMock();
 
     mockApplication = initApplicationMockEntity();
     mockDecision = initApplicationDecisionMock(mockApplication);
@@ -78,10 +75,6 @@ describe('ApplicationDecisionV2Controller', () => {
         {
           provide: ApplicationReconsiderationService,
           useValue: mockReconService,
-        },
-        {
-          provide: EmailService,
-          useValue: mockEmailService,
         },
         {
           provide: ClsService,

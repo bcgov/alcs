@@ -1,0 +1,24 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+.heading {
+  color: colors.$primary-color;
+  margin-bottom: rem(12) !important;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-column-gap: rem(24);
+  margin-top: rem(48);
+
+  button {
+    margin-bottom: rem(20) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: left;
+  }
+}

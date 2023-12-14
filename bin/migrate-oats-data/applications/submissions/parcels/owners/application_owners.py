@@ -128,9 +128,12 @@ def _map_data(row):
 
 
 def _get_name(row):
-    first_name = row.get("first_name", "")
-    middle_name = row.get("middle_name", "")
-    return f"{first_name} {middle_name}".strip()
+    first_name = row.get("first_name", None)
+    middle_name = row.get("middle_name", None)
+
+    return " ".join(
+        [name for name in (first_name, middle_name) if name is not None]
+    ).strip()
 
 
 def _map_owner_type(owner_record):
