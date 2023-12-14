@@ -128,6 +128,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
     for row in row_data_list:
         data = dict(row)
         data = map_basic_field(data)
+        data = map_prop_end_date(data)
         data_list.append(data)
     return data_list
 
@@ -141,10 +142,17 @@ def map_basic_field(data):
         data["agri_capability_code"] = str(
             OatsToAlcsAgCap[data["agri_capability_code"]].value
         )
+    return data
+
+
+def map_prop_end_date(data):
     date = data.get("nonfarm_use_end_date", "")
-    if date is None:
-        data["proposal_end_date"] = None
+    alcs_date = data.get("proposal_end_date", "")
+    if date is None and alcs_date is None:
         return data
-    proposal_end = add_timezone_and_keep_date_part(date)
-    data["proposal_end_date"] = proposal_end
+    elif date is None:
+        return data
+    else:
+        proposal_end = add_timezone_and_keep_date_part(date)
+        data["proposal_end_date"] = proposal_end
     return data
