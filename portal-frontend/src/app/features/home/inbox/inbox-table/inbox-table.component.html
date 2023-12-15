@@ -20,6 +20,7 @@
         <th mat-header-cell *matHeaderCellDef>{{ type }} ID</th>
         <td mat-cell *matCellDef="let row">
           <a [routerLink]="row.routerLink" *ngIf="row.routerLink">{{ row.fileNumber }}</a>
+          <span *ngIf="!row.routerLink">{{ row.fileNumber }}</span>
         </td>
       </ng-container>
 
