@@ -63,6 +63,7 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onSaveProgress = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Output() onOwnersDeleted = new EventEmitter<void>();
 
   owners: NoticeOfIntentOwnerDto[] = [];
   filteredOwners: (NoticeOfIntentOwnerDto & { isSelected: boolean })[] = [];
@@ -120,9 +121,10 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
-      const selectedOwner = this.parcel.owners.length > 0
-        ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
-        : undefined;
+      const selectedOwner =
+        this.parcel.owners.length > 0
+          ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
+          : undefined;
 
       this.selectedOwner = selectedOwner;
       this.parcel.owners = this.parcel.owners.map((owner) => {
@@ -333,13 +335,13 @@ export class ParcelEntryComponent implements OnInit {
     });
   }
 
-  async onCrownOwnerSelected(event: Event, owner: NoticeOfIntentOwnerDto, isSelected: boolean) { 
+  async onCrownOwnerSelected(event: Event, owner: NoticeOfIntentOwnerDto, isSelected: boolean) {
     this.selectedOwner = owner;
     const selectedOwners = [owner];
     this.updateParcelOwners(selectedOwners);
   }
 
-  onEdit(owner: NoticeOfIntentOwnerDto) {
+  onEditCrownOwner(owner: NoticeOfIntentOwnerDto) {
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
@@ -352,8 +354,8 @@ export class ParcelEntryComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((result) => {
       if (result) {
-        if(result.type === 'delete') {
-          this.onOwnerRemoved(result.uuid)
+        if (result.type === 'delete') {
+          this.onOwnersDeleted.emit();
         }
         this.onOwnersUpdated.emit();
       }
@@ -361,7 +363,7 @@ export class ParcelEntryComponent implements OnInit {
   }
 
   private isOwnerInParcel(owner: NoticeOfIntentOwnerDto): boolean {
-    return this.parcel.owners.some(existingOwner => existingOwner.uuid === owner.uuid);
+    return this.parcel.owners.some((existingOwner) => existingOwner.uuid === owner.uuid);
   }
 
   async onSelectOwner(event: Event, owner: NoticeOfIntentOwnerDto, isSelected: boolean) {
@@ -378,6 +380,10 @@ export class ParcelEntryComponent implements OnInit {
   async onOwnerRemoved(uuid: string) {
     const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== uuid);
     this.updateParcelOwners(updatedArray);
+  }
+
+  async onDeleteOwner() {
+    this.onOwnersDeleted.emit();
   }
 
   mapOwners(owners: NoticeOfIntentOwnerDto[]) {

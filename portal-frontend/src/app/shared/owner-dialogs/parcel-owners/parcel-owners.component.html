@@ -44,7 +44,7 @@
           }}</a>
           <div class="no-data" *ngIf="!element.corporateSummary">
             <div class="no-data-text">Not Applicable</div>
-          </div>          
+          </div>
         </div>
       </td>
     </ng-container>
@@ -61,9 +61,6 @@
           color="accent"
         >
           Remove
-        </button>
-        <button [disabled]="_disabled" *ngIf="!parcelUuid" (click)="onDelete(element)" mat-stroked-button color="warn">
-          Delete
         </button>
       </td>
     </ng-container>
