@@ -8,13 +8,12 @@ import { ApplicationDocumentService } from '../../../../services/application-doc
 import { ApplicationSubmissionReviewDto } from '../../../../services/application-submission-review/application-submission-review.dto';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
 import { ApplicationSubmissionDto } from '../../../../services/application-submission/application-submission.dto';
-import { CodeService } from '../../../../services/code/code.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
+import { ToastService } from '../../../../services/toast/toast.service';
 import { CustomStepperComponent } from '../../../../shared/custom-stepper/custom-stepper.component';
 import { DOCUMENT_TYPE } from '../../../../shared/dto/document.dto';
 import { MOBILE_BREAKPOINT } from '../../../../shared/utils/breakpoints';
 import { ReviewApplicationSteps } from '../review-submission.component';
-import { ToastService } from '../../../../services/toast/toast.service';
 import { SubmitConfirmationDialogComponent } from '../submit-confirmation-dialog/submit-confirmation-dialog.component';
 
 @Component({
@@ -45,7 +44,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   staffReport: ApplicationDocumentDto[] = [];
   otherAttachments: ApplicationDocumentDto[] = [];
   private fileId: string | undefined;
-  private localGovernmentUuid = '';
 
   constructor(
     private router: Router,
@@ -53,7 +51,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     private applicationDocumentService: ApplicationDocumentService,
     private toastService: ToastService,
     private pdfGenerationService: PdfGenerationService,
-    private codeService: CodeService,
     private dialog: MatDialog
   ) {}
 
@@ -90,7 +87,6 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     this.$application.pipe(takeUntil(this.$destroy)).subscribe((application) => {
       if (application) {
         this.fileId = application.fileNumber;
-        this.localGovernmentUuid = application.localGovernmentUuid;
       }
     });
   }
@@ -109,8 +105,7 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
   async onSubmit() {
     const isValid = this.runValidation();
     if (isValid && this.fileId) {
-      const government = await this.loadGovernment(this.localGovernmentUuid);
-      const governmentName = government?.name ?? 'selected local / First Nation government';
+      const governmentName = this._applicationReview?.governmentName ?? 'selected local / First Nation government';
 
       this.dialog
         .open(SubmitConfirmationDialogComponent, {
@@ -247,14 +242,5 @@ export class ReviewSubmitComponent implements OnInit, OnDestroy {
     if (this.fileId) {
       await this.pdfGenerationService.generateReview(this.fileId);
     }
-  }
-
-  private async loadGovernment(uuid: string) {
-    const codes = await this.codeService.loadCodes();
-    const localGovernment = codes.localGovernments.find((a) => a.uuid === uuid);
-    if (localGovernment) {
-      return localGovernment;
-    }
-    return;
   }
 }

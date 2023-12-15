@@ -143,6 +143,15 @@ form {
 
     .mat-button-toggle {
       width: 100%;
+      text-wrap: initial;
+
+      .mat-button-toggle-label-content {
+        line-height: rem(24) !important;
+
+        @media screen and (min-width: $tabletBreakpoint) {
+          line-height: rem(36) !important;
+        }
+      }
     }
 
     .mat-button-toggle-disabled {

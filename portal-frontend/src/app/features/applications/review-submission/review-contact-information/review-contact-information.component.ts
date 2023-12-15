@@ -24,6 +24,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
   phoneNumber = new FormControl<string | null>('', [Validators.required]);
   email = new FormControl<string | null>('', [Validators.required, Validators.email]);
   isFirstNationGovernment = false;
+  governmentName = '';
 
   contactForm = new FormGroup({
     lgFileNumber: this.lgFileNumber,
@@ -51,6 +52,7 @@ export class ReviewContactInformationComponent implements OnInit, OnDestroy {
         this.phoneNumber.setValue(applicationReview.phoneNumber);
         this.email.setValue(applicationReview.email);
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        this.governmentName = applicationReview.governmentName;
 
         if (this.showErrors) {
           this.contactForm.markAllAsTouched();

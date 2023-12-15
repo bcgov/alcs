@@ -2,8 +2,7 @@
   <h2>Contact Information</h2>
   <div>
     <div class="description">
-      <div *ngIf="isFirstNationGovernment">Provide contact information for First Nation government staff</div>
-      <div *ngIf="!isFirstNationGovernment">Provide contact information for Local government staff</div>
+      <div>Provide contact information for {{ governmentName }} staff</div>
     </div>
     <form [formGroup]="contactForm">
       <div class="form-row">

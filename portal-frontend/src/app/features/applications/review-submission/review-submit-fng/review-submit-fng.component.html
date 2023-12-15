@@ -1,7 +1,7 @@
 <h2>Review & Submit</h2>
 <div>
-  <div class="description">
-    <div>Complete First Nation government review and submit to ALC</div>
+  <div *ngIf="_applicationReview" class="description">
+    <div>Complete {{ _applicationReview.governmentName }} review and submit to ALC</div>
   </div>
   <div *ngIf="_applicationReview && !isMobile">
     <section>
@@ -66,10 +66,10 @@
       <h4>2. Resolution</h4>
       <div class="review-table">
         <div class="full-width">
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
@@ -175,10 +175,10 @@
       </mat-expansion-panel-header>
       <div class="review-table">
         <div class="full-width">
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Yes' : 'No'
+              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>

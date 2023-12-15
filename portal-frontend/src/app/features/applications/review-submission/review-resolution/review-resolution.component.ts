@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationSubmissionReviewService } from '../../../../services/application-submission-review/application-submission-review.service';
+import { CodeService } from '../../../../services/code/code.service';
 import { ReviewApplicationFngSteps, ReviewApplicationSteps } from '../review-submission.component';
 
 @Component({
@@ -25,6 +25,7 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
   isOCPDesignation: boolean | null = null;
   isSubjectToZoning: boolean | null = null;
   isFirstNationGovernment = false;
+  governmentName = '';
 
   constructor(private applicationReviewService: ApplicationSubmissionReviewService) {}
 
@@ -35,9 +36,11 @@ export class ReviewResolutionComponent implements OnInit, OnDestroy {
         this.isOCPDesignation = applicationReview.isOCPDesignation;
         this.isSubjectToZoning = applicationReview.isSubjectToZoning;
         this.isFirstNationGovernment = applicationReview.isFirstNationGovernment;
+        this.governmentName = applicationReview.governmentName;
         if (this.isFirstNationGovernment) {
           this.currentStep = ReviewApplicationFngSteps.Resolution;
         }
+        applicationReview.isFirstNationGovernment;
 
         if (applicationReview.isAuthorized !== null) {
           this.isAuthorized.setValue(applicationReview.isAuthorized ? 'true' : 'false');
