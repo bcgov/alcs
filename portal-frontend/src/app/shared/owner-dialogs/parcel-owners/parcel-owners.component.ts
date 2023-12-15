@@ -21,7 +21,8 @@ import { OwnerDialogComponent } from '../owner-dialog/owner-dialog.component';
 export class ParcelOwnersComponent {
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnerRemoved = new EventEmitter<string>();
-  
+  @Output() onOwnersDeleted = new EventEmitter<string>();
+
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
   @Input() ownerService!: ApplicationOwnerService | NoticeOfIntentOwnerService;
@@ -61,7 +62,7 @@ export class ParcelOwnersComponent {
   displayedColumns = ['displayName', 'organizationName', 'phone', 'email', 'corporateSummary', 'actions'];
 
   constructor(
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private confDialogService: ConfirmationDialogService,
     private applicationDocumentService: ApplicationDocumentService
   ) {}
@@ -93,7 +94,11 @@ export class ParcelOwnersComponent {
     }
     dialog.afterClosed().subscribe((result) => {
       if (result) {
-        this.onOwnersUpdated.emit();
+        if (result.action === 'delete') {
+          this.onOwnersDeleted.emit();
+        } else {
+          this.onOwnersUpdated.emit();
+        }
       }
     });
   }
@@ -107,18 +112,5 @@ export class ParcelOwnersComponent {
     if (res) {
       window.open(res.url, '_blank');
     }
-  }
-  
-  async onDelete(owner: ApplicationOwnerDto | NoticeOfIntentOwnerDto) {
-    this.confDialogService
-      .openDialog({
-        body: `This action will remove ${owner.displayName} and its usage from the entire application. Are you sure you want to remove this owner? `,
-      })
-      .subscribe(async (didConfirm) => {
-        if (didConfirm) {
-          await this.ownerService.delete(owner.uuid);
-          this.onOwnersUpdated.emit();
-        }
-      });
   }
 }

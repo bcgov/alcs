@@ -227,6 +227,7 @@
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
           (onOwnerRemoved)="onOwnerRemoved($event)"
+          (onOwnersDeleted)="onDeleteOwner()"
           [ownerService]="noticeOfIntentOwnerService"
           [documentService]="noticeOfIntentDocumentService"
           [disabled]="_disabled"
@@ -316,32 +317,32 @@
 
         <div class="warning-banner" *ngIf="selectedOwner">
           <div class="owner-details">
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>First Name:</strong> </div>
               <div class="value">{{ selectedOwner.firstName }}</div>
             </div>
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>Last Name:</strong> </div>
               <div class="value">{{ selectedOwner.lastName }}</div>
             </div>
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>Ministry/ Department:</strong> </div>
               <div class="value">{{ selectedOwner.organizationName }}</div>
             </div>
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>Phone Number:</strong> </div>
               <div class="value">{{ selectedOwner.phoneNumber }}</div>
             </div>
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>Email:</strong> </div>
               <div class="value">{{ selectedOwner.email }}</div>
             </div>
-            <div class="row"> 
+            <div class="row">
               <div class="key"><strong>Crown Type:</strong> </div>
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
-            <div class="row"> 
-              <button [disabled]="_disabled" (click)="onEdit(selectedOwner)" mat-stroked-button>Edit information</button>
+            <div class="row">
+              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-stroked-button>Edit information</button>
             </div>
           </div>
         </div>

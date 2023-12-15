@@ -88,11 +88,12 @@ TS implementation of \*.proto files can be provided manually or generated using 
 ### Backup
 - Install & add open shift to path
 - Login to with token from silver cluster
+- Set preferred project ```oc project NAMESPACE```
 - Forward port, usually 5432
 ```bash
   oc port-forward service/alcs-patroni 5432:5432
   ```
-- Add new connection to app with preffered DB tool (DBeaver, TablePlus)
+- Add new connection to app with preferred DB tool (DBeaver, TablePlus)
 - Backup DB & save dump file. ensure postgresql 12.x is selected
 - Stop port forwarding
 

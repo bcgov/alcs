@@ -2,7 +2,8 @@
   <div class="type">
     <mat-label for="parcelType">Select parcel type:</mat-label>
     <div class="warning">
-      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands.  Crown land includes crown leases.
+      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands. Crown land includes
+      crown leases.
     </div>
     <mat-button-toggle-group
       class="input"
@@ -40,7 +41,14 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field class="lookup-input" appearance="outline">
-            <input id="lookup-pid" matInput [placeholder]="pidPinPlaceholder" maxlength="11" mask="000-000-000" formControlName="pidPin" />
+            <input
+              id="lookup-pid"
+              matInput
+              [placeholder]="pidPinPlaceholder"
+              maxlength="11"
+              mask="000-000-000"
+              formControlName="pidPin"
+            />
           </mat-form-field>
           <button
             class="lookup-search-button"
@@ -152,7 +160,13 @@
       <mat-label for="isFarm">Farm Classification</mat-label>
       <div class="subtext">
         As determined by
-        <a class="subtext" href="https://info.bcassessment.ca/Services-products/property-classes-and-exemptions/farm-land-assessment/about-farm-land-assessment" target="_blank" rel="noreferrer">BC Assessment</a>
+        <a
+          class="subtext"
+          href="https://info.bcassessment.ca/Services-products/property-classes-and-exemptions/farm-land-assessment/about-farm-land-assessment"
+          target="_blank"
+          rel="noreferrer"
+          >BC Assessment</a
+        >
       </div>
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
@@ -222,7 +236,8 @@
           [parcelUuid]="parcel.uuid"
           [owners]="parcel.owners"
           (onOwnersUpdated)="onOwnersUpdated.emit()"
-          (onOwnerRemoved)="onOwnerRemoved($event)"
+          (onOwnerRemoved)="onRemoveOwner($event)"
+          (onOwnersDeleted)="onDeleteOwner()"
           [documentService]="applicationDocumentService"
           [ownerService]="applicationOwnerService"
           [disabled]="_disabled"
@@ -253,15 +268,8 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            (click)="onSelectOwner($event, option, option.isSelected)"
-            *ngFor="let option of filteredOwners"
-          >
-            <mat-checkbox
-              class="owner-checkbox"
-              [checked]="option.isSelected"
-              color="primary"
-            >
+          <mat-option (click)="onSelectOwner($event, option, option.isSelected)" *ngFor="let option of filteredOwners">
+            <mat-checkbox class="owner-checkbox" [checked]="option.isSelected" color="primary">
               <div class="owner-option">
                 <div>{{ option.displayName }}</div>
               </div>
@@ -296,10 +304,7 @@
       <h6 class="owner-search-option" *ngIf="filteredOwners.length">OR</h6>
       <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government</label>
       <div>
-        <mat-radio-group
-          color="primary"
-          [value]="selectedOwner?.uuid" required
-        >
+        <mat-radio-group color="primary" [value]="selectedOwner?.uuid" required>
           <mat-radio-button
             *ngFor="let owner of filteredOwners"
             [value]="owner.uuid"
@@ -307,38 +312,40 @@
             (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
             required
           >
-          {{ owner.firstName + ' ' + owner.lastName }}
+            {{ owner.firstName + ' ' + owner.lastName }}
           </mat-radio-button>
         </mat-radio-group>
 
         <div class="warning-banner" *ngIf="selectedOwner">
           <div class="owner-details">
-            <div class="row"> 
-              <div class="key"><strong>First Name:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>First Name:</strong></div>
               <div class="value">{{ selectedOwner.firstName }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Last Name:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Last Name:</strong></div>
               <div class="value">{{ selectedOwner.lastName }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Ministry/ Department:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Ministry/ Department:</strong></div>
               <div class="value">{{ selectedOwner.organizationName }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Phone Number:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Phone Number:</strong></div>
               <div class="value">{{ selectedOwner.phoneNumber }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Email:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Email:</strong></div>
               <div class="value">{{ selectedOwner.email }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Crown Type:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Crown Type:</strong></div>
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
-            <div class="row"> 
-              <button [disabled]="_disabled" (click)="onEdit(selectedOwner)" mat-stroked-button>Edit information</button>
+            <div class="row">
+              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-stroked-button>
+                Edit information
+              </button>
             </div>
           </div>
         </div>
