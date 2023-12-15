@@ -5,6 +5,7 @@ from common import (
     AlcsAgCap,
     AlcsAgCapSource,
     setup_and_get_logger,
+    add_timezone_and_keep_date_part,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -114,6 +115,7 @@ def _get_update_query_from_oats_alr_applications_fields():
                     ag_cap_consultant = COALESCE(%(agri_cap_consultant)s, ag_cap_consultant),
                     ag_cap = COALESCE(%(agri_capability_code)s, ag_cap),
                     legacy_id= COALESCE(%(legacy_application_nbr)s, legacy_id),
+                    proposal_end_date = %(proposal_end_date)s,
                     source = 'APPLICANT'
                 WHERE
                     alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;
@@ -126,6 +128,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
     for row in row_data_list:
         data = dict(row)
         data = map_basic_field(data)
+        data = map_prop_end_date(data)
         data_list.append(data)
     return data_list
 
@@ -139,4 +142,17 @@ def map_basic_field(data):
         data["agri_capability_code"] = str(
             OatsToAlcsAgCap[data["agri_capability_code"]].value
         )
+    return data
+
+
+def map_prop_end_date(data):
+    date = data.get("nonfarm_use_end_date", "")
+    alcs_date = data.get("proposal_end_date", "")
+    if date is None and alcs_date is None:
+        return data
+    elif date is None:
+        return data
+    else:
+        proposal_end = add_timezone_and_keep_date_part(date)
+        data["proposal_end_date"] = proposal_end
     return data

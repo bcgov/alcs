@@ -67,7 +67,7 @@ def clean_notice_of_intents(conn=None):
     logger.info("Start NOI cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notice_of_intent WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by = null"
+            f"DELETE FROM alcs.notice_of_intent WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by IS NULL"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
