@@ -57,6 +57,7 @@ export class ApplicationSubmissionReviewDto {
   isAuthorized: boolean | null;
 
   isFirstNationGovernment: boolean;
+  governmentName: string;
 }
 
 export class UpdateApplicationSubmissionReviewDto {

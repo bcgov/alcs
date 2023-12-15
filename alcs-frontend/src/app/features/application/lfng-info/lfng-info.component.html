@@ -185,9 +185,9 @@
       </div>
 
       <div class="full-row" *ngIf="hasCompletedStepsBeforeResolution">
-        <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+        <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
         <div *ngIf="applicationReview.isAuthorized !== null">
-          {{ applicationReview.isAuthorized ? 'Authorized' : 'Refused to Authorize' }}
+          {{ applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC' }}
         </div>
         <app-no-data *ngIf="applicationReview.isAuthorized === null"></app-no-data>
       </div>

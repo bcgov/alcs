@@ -39,7 +39,10 @@ export class AuthenticationService {
   $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
   currentUser: ICurrentUser | undefined;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   async setTokens(token: string, refreshToken: string) {
     this.token = token;
@@ -80,7 +83,7 @@ export class AuthenticationService {
 
   async refreshTokens() {
     if (this.refreshToken) {
-      if (this.refreshExpires && this.refreshExpires < Date.now()) {
+      if (this.expires && this.expires < Date.now()) {
         await this.router.navigateByUrl('/login');
         return;
       }
@@ -116,7 +119,7 @@ export class AuthenticationService {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        }),
       );
       return true;
     } catch (e) {
@@ -137,7 +140,7 @@ export class AuthenticationService {
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${environment.authUrl}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.authUrl}/authorize/refresh?r=${refreshToken}`),
     );
     return res;
   }
