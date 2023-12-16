@@ -160,4 +160,13 @@ export class NoticeOfIntentDecision extends Base {
     { cascade: ['insert', 'update'] },
   )
   conditions: NoticeOfIntentDecisionCondition[];
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.notice_of_intent_decisions.',
+  })
+  oatsAlrApplDecisionId: number;
 }
