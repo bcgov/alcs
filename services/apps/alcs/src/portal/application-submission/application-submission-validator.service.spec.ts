@@ -282,6 +282,11 @@ describe('ApplicationSubmissionValidatorService', () => {
       owners: [mockOwner],
       primaryContactOwnerUuid: mockOwner.uuid,
     });
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners: [mockOwner],
+      }),
+    ]);
 
     const res = await service.validateSubmission(applicationSubmission);
 

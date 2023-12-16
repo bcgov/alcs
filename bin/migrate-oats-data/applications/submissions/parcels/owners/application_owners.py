@@ -95,6 +95,7 @@ def _compile_owner_insert_query(number_of_rows_to_insert):
                             phone_number, 
                             type_code, 
                             oats_person_organization_id,
+                            oats_property_interest_id,
                             audit_created_by
                         )
                         VALUES{owners_to_insert}
@@ -121,14 +122,18 @@ def _map_data(row):
         "phone_number": row.get("phone_number", "cell_phone_number"),
         "type_code": _map_owner_type(row),
         "oats_person_organization_id": row["person_organization_id"],
+        "oats_property_interest_id": row["property_interest_id"],
         "audit_created_by": OATS_ETL_USER,
     }
 
 
 def _get_name(row):
-    first_name = row.get("first_name", "")
-    middle_name = row.get("middle_name", "")
-    return f"{first_name} {middle_name}".strip()
+    first_name = row.get("first_name", None)
+    middle_name = row.get("middle_name", None)
+
+    return " ".join(
+        [name for name in (first_name, middle_name) if name is not None]
+    ).strip()
 
 
 def _map_owner_type(owner_record):

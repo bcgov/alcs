@@ -1,0 +1,29 @@
+<h2 class="heading">NOI ID: {{ fileId }} Submitted!</h2>
+<p>
+  <span class="subheading1">
+    You have submitted a <strong>{{ appLabel }}</strong> notice of intent to the
+    <strong>Agricultural Land Commission</strong> for their review and decision. </span
+  ><br /><br /><br />
+
+  Notice of Intent Fee is <strong>${{ alcFee }}</strong
+  ><br /><br />
+  This fee can be paid:<br />
+  1. Cheque: Made payable to the Minister of Finance c/o the ALC<br />
+  2. Credit card: Over the phone or in-person<br /><br />
+  Please include your assigned Notice of Intent ID with your payment.<br /><br />
+  <strong>Mailing address:</strong><br />
+  Agricultural Land Commission<br />
+  201-4940 Canada Way, Burnaby, BC, Canada, V5G 4K6<br /><br />
+  <strong>Paying via telephone:</strong><br />
+  Tel: 604-660-7000<br />
+  If you are making a long-distance call to a provincial government agency, you can place your call through Enquiry BC
+  free of charge:<br />
+  In Victoria call: 250-387-6121<br />
+  Elsewhere in BC call: 1-800-663-7867
+  <br /><br />
+  The Primary Contact will be emailed this information and all future correspondence.
+</p>
+<div class="buttons">
+  <button [routerLink]="'/notice-of-intent/' + fileId" mat-flat-button color="primary">View Submission</button>
+  <button routerLink="/home" mat-stroked-button color="primary">Return to inbox</button>
+</div>

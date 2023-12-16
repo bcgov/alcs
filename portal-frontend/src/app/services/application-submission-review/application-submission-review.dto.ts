@@ -18,6 +18,7 @@ export interface ApplicationSubmissionReviewDto {
   isZoningConsistent: boolean | null;
   isAuthorized: boolean | null;
   isFirstNationGovernment: boolean;
+  governmentName: string;
 }
 
 export interface UpdateApplicationSubmissionReviewDto {

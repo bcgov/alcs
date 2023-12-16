@@ -14,14 +14,12 @@ import {
 import { ApplicationParcelService } from '../../../../../services/application-parcel/application-parcel.service';
 import { ParcelService } from '../../../../../services/parcel/parcel.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
-import { DOCUMENT_TYPE } from '../../../../../shared/dto/document.dto';
 import { OWNER_TYPE } from '../../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../../shared/file-drag-drop/drag-drop.directive';
-import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
-import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { CrownOwnerDialogComponent } from '../../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
-import { AllOwnersDialogComponent } from '../../../../../shared/owner-dialogs/owners-dialog/all-owners-dialog.component';
+import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
+import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
 
 export interface ParcelEntryFormData {
@@ -69,6 +67,7 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
   @Output() private onSaveProgress = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
+  @Output() onOwnersDeleted = new EventEmitter<void>();
 
   owners: ApplicationOwnerDto[] = [];
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
@@ -125,9 +124,10 @@ export class ParcelEntryComponent implements OnInit {
     this.$owners.subscribe((owners) => {
       this.owners = owners;
       this.filteredOwners = this.mapOwners(owners);
-      const selectedOwner = this.parcel.owners.length > 0
-        ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
-        : undefined;
+      const selectedOwner =
+        this.parcel.owners.length > 0
+          ? this.filteredOwners.find((owner) => owner.uuid === this.parcel.owners[0].uuid)
+          : undefined;
 
       this.selectedOwner = selectedOwner;
       this.parcel.owners = this.parcel.owners
@@ -346,17 +346,17 @@ export class ParcelEntryComponent implements OnInit {
         this.updateParcelOwners(selectedOwners);
       }
     } else {
-      this.onOwnerRemoved(owner.uuid);
+      await this.onRemoveOwner(owner.uuid);
     }
   }
 
-  async onCrownOwnerSelected(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) { 
+  async onCrownOwnerSelected(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {
     this.selectedOwner = owner;
     const selectedOwners = [owner];
     this.updateParcelOwners(selectedOwners);
   }
 
-  onEdit(owner: ApplicationOwnerDto) {
+  onEditCrownOwner(owner: ApplicationOwnerDto) {
     let dialog;
     dialog = this.dialog.open(CrownOwnerDialogComponent, {
       data: {
@@ -370,16 +370,20 @@ export class ParcelEntryComponent implements OnInit {
     dialog.afterClosed().subscribe((result) => {
       if (result) {
         this.onOwnersUpdated.emit();
-        if(result.type === 'delete') {
-          this.onOwnerRemoved(result.uuid)
+        if (result.type === 'delete') {
+          this.onRemoveOwner(result.uuid);
         }
       }
     });
   }
 
-  async onOwnerRemoved(uuid: string) {
+  async onRemoveOwner(uuid: string) {
     const updatedArray = this.parcel.owners.filter((existingOwner) => existingOwner.uuid !== uuid);
     this.updateParcelOwners(updatedArray);
+  }
+
+  async onDeleteOwner() {
+    this.onOwnersDeleted.emit();
   }
 
   mapOwners(owners: ApplicationOwnerDto[]) {

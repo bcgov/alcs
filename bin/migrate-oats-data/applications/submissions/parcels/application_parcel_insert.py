@@ -107,6 +107,7 @@ def _map_data(row):
         "pin": row["pin"],
         "purchased_date": _map_purchased_date(row["purchase_date"]),
         "oats_subject_property_id": row["subject_property_id"],
+        "oats_property_id": row["property_id"],
     }
 
 
@@ -143,7 +144,8 @@ def _compile_application_insert_query(number_of_rows_to_insert):
                         pid,
                         pin,
                         purchased_date,
-                        oats_subject_property_id
+                        oats_subject_property_id,
+                        oats_property_id
                     )
                     VALUES{parcels_to_insert}
                     ON CONFLICT DO NOTHING

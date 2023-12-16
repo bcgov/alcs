@@ -51,7 +51,11 @@ export class NoticeOfIntentSubmissionValidatorService {
       errors.push(new ServiceValidationException('Missing purpose'));
     }
 
-    await this.validateParcels(noticeOfIntentSubmission, errors);
+    const parcels = await this.noiParcelService.fetchByFileId(
+      noticeOfIntentSubmission.fileNumber,
+    );
+
+    await this.validateParcels(parcels, errors);
 
     const applicantDocuments =
       await this.noiDocumentService.getApplicantDocuments(
@@ -61,6 +65,7 @@ export class NoticeOfIntentSubmissionValidatorService {
     await this.validatePrimaryContact(
       noticeOfIntentSubmission,
       applicantDocuments,
+      parcels,
       errors,
     );
 
@@ -115,13 +120,9 @@ export class NoticeOfIntentSubmissionValidatorService {
   }
 
   private async validateParcels(
-    noticeOfIntentSubmission: NoticeOfIntentSubmission,
+    parcels: NoticeOfIntentParcel[],
     errors: Error[],
   ) {
-    const parcels = await this.noiParcelService.fetchByFileId(
-      noticeOfIntentSubmission.fileNumber,
-    );
-
     if (parcels.length === 0) {
       errors.push(
         new ServiceValidationException(`Notice of Intent has no parcels`),
@@ -191,6 +192,7 @@ export class NoticeOfIntentSubmissionValidatorService {
   private async validatePrimaryContact(
     noticeOfIntentSubmission: NoticeOfIntentSubmission,
     documents: NoticeOfIntentDocument[],
+    parcels: NoticeOfIntentParcel[],
     errors: Error[],
   ): Promise<NoticeOfIntentOwner | undefined> {
     const primaryOwner = noticeOfIntentSubmission.owners.find(
@@ -206,10 +208,16 @@ export class NoticeOfIntentSubmissionValidatorService {
       );
       return;
     }
+    const parcelOwnerUuids = parcels
+      .flatMap((parcel) => parcel.owners)
+      .map((owner) => owner.uuid);
+    const linkedOwners = noticeOfIntentSubmission.owners.filter((owner) =>
+      parcelOwnerUuids.includes(owner.uuid),
+    );
 
     const onlyHasIndividualOwner =
-      noticeOfIntentSubmission.owners.length === 1 &&
-      noticeOfIntentSubmission.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
+      linkedOwners.length === 1 &&
+      linkedOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
 
     const isGovernmentContact =
       primaryOwner.type.code === OWNER_TYPE.GOVERNMENT;

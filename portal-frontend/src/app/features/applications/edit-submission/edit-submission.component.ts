@@ -321,7 +321,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
             await this.router.navigateByUrl(`/application/${submission?.fileNumber}/review`);
           }
         } else {
-          await this.router.navigateByUrl(`/application/${submission?.fileNumber}`);
+          await this.router.navigateByUrl(`/application/${submission?.fileNumber}/edit/success`);
         }
       }
     }

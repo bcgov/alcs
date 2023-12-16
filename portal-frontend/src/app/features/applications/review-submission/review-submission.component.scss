@@ -27,9 +27,11 @@
   background-color: colors.$white;
   padding: rem(16) 0;
 
-  .next-step {
-    align-self: flex-end;
-    margin-left: rem(32) !important;
+  @media screen and (min-width: $tabletBreakpoint) {
+    .next-step {
+      align-self: flex-end;
+      margin-left: rem(32) !important;
+    }
   }
 }
 

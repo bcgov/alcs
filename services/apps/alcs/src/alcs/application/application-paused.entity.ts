@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { Application } from './application.entity';
 
@@ -29,5 +29,6 @@ export class ApplicationPaused extends Base {
   application: Application;
 
   @Column()
+  @Index()
   applicationUuid: string;
 }

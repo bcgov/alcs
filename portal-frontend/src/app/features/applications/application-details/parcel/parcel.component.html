@@ -2,7 +2,7 @@
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width parcel-header">
-      <h4>Parcel {{ parcelInd + 1 }}</h4>
+      <h4>Parcel #{{ parcelInd + 1 }}</h4>
       <div>
         <button
           *ngIf="showEdit"

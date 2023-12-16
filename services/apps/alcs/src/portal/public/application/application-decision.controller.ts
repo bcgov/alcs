@@ -1,6 +1,7 @@
 import { Mapper } from 'automapper-core';
 import { InjectMapper } from 'automapper-nestjs';
-import { Controller, Get, Param } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
+import { Controller, Get, Param, Res } from '@nestjs/common';
 import { Public } from 'nest-keycloak-connect';
 import { ApplicationDecisionV2Service } from '../../../alcs/application-decision/application-decision-v2/application-decision/application-decision-v2.service';
 import { ApplicationDecision } from '../../../alcs/application-decision/application-decision.entity';
@@ -32,5 +33,13 @@ export class ApplicationDecisionController {
     const url = await this.decisionService.getDownloadForPortal(fileUuid);
 
     return { url };
+  }
+
+  @Get('/:uuid/email')
+  async emailFile(@Param('uuid') fileUuid: string, @Res() res: FastifyReply) {
+    const url = await this.decisionService.getDownloadForPortal(fileUuid);
+
+    res.status(302);
+    res.redirect(url);
   }
 }

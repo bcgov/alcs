@@ -292,6 +292,7 @@ export class Application extends Base {
   card: Card | null;
 
   @AutoMap()
+  @Index()
   @Column({
     type: 'uuid',
     nullable: true,

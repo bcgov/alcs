@@ -36,7 +36,6 @@ import { NoDataComponent } from './no-data/no-data.component';
 import { FileOverlaySpinnerComponent } from './overlay-spinner/file-overlay-spinner/file-overlay-spinner.component';
 import { CrownOwnerDialogComponent } from './owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { OwnerDialogComponent } from './owner-dialogs/owner-dialog/owner-dialog.component';
-import { AllOwnersDialogComponent } from './owner-dialogs/owners-dialog/all-owners-dialog.component';
 import { ParcelOwnersComponent } from './owner-dialogs/parcel-owners/parcel-owners.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
@@ -95,7 +94,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PrescribedBodyComponent,
     OwnerDialogComponent,
     CrownOwnerDialogComponent,
-    AllOwnersDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
     TableColumnNoDataPipe,
@@ -144,7 +142,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PrescribedBodyComponent,
     OwnerDialogComponent,
     CrownOwnerDialogComponent,
-    AllOwnersDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
     TableColumnNoDataPipe,

@@ -236,9 +236,8 @@ export class NoticeOfIntentDecisionV2Service {
     //Must be called after update components
     await this.updateConditions(updateDto, existingDecision);
 
-    const updatedDecision = await this.noticeOfIntentDecisionRepository.save(
-      existingDecision,
-    );
+    const updatedDecision =
+      await this.noticeOfIntentDecisionRepository.save(existingDecision);
 
     if (dateHasChanged || isChangingDraftStatus) {
       await this.updateDecisionDates(updatedDecision);
@@ -345,9 +344,8 @@ export class NoticeOfIntentDecisionV2Service {
           conditions: [],
         }),
     );
-    const savedDecision = await this.noticeOfIntentDecisionRepository.save(
-      decision,
-    );
+    const savedDecision =
+      await this.noticeOfIntentDecisionRepository.save(decision);
 
     savedDecision.conditions = existingDecision.conditions.map((condition) => {
       const conditionsComponents = condition.components?.map(
@@ -448,18 +446,16 @@ export class NoticeOfIntentDecisionV2Service {
   }
 
   async deleteDocument(decisionDocumentUuid: string) {
-    const decisionDocument = await this.getDecisionDocumentOrFail(
-      decisionDocumentUuid,
-    );
+    const decisionDocument =
+      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     await this.decisionDocumentRepository.softRemove(decisionDocument);
     return decisionDocument;
   }
 
   async getDownloadUrl(decisionDocumentUuid: string, openInline = false) {
-    const decisionDocument = await this.getDecisionDocumentOrFail(
-      decisionDocumentUuid,
-    );
+    const decisionDocument =
+      await this.getDecisionDocumentOrFail(decisionDocumentUuid);
 
     return this.documentService.getDownloadUrl(
       decisionDocument.document,
@@ -483,7 +479,7 @@ export class NoticeOfIntentDecisionV2Service {
     if (decisionDocument) {
       return this.documentService.getDownloadUrl(
         decisionDocument.document,
-        true,
+        true, // FIXME: Document does not open inline despite flag being true
       );
     }
 

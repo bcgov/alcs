@@ -70,6 +70,7 @@ export class ApplicationSubmissionValidatorService {
 
     const validatedPrimaryContact = await this.validatePrimaryContact(
       applicationSubmission,
+      parcels,
       applicantDocuments,
       errors,
     );
@@ -251,6 +252,7 @@ export class ApplicationSubmissionValidatorService {
 
   private async validatePrimaryContact(
     applicationSubmission: ApplicationSubmission,
+    parcels: ApplicationParcel[],
     documents: ApplicationDocument[],
     errors: Error[],
   ): Promise<ApplicationOwner | undefined> {
@@ -265,9 +267,17 @@ export class ApplicationSubmissionValidatorService {
       return;
     }
 
+    const linkedOwnerUuids = parcels
+      .flatMap((parcel) => parcel.owners)
+      .map((owner) => owner.uuid);
+
+    const linkedOwners = applicationSubmission.owners.filter((owner) =>
+      linkedOwnerUuids.includes(owner.uuid),
+    );
+
     const onlyHasIndividualOwner =
-      applicationSubmission.owners.length === 1 &&
-      applicationSubmission.owners[0].type.code === OWNER_TYPE.INDIVIDUAL;
+      linkedOwners.length === 1 &&
+      linkedOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
 
     const isGovernmentContact =
       primaryOwner.type.code === OWNER_TYPE.GOVERNMENT;

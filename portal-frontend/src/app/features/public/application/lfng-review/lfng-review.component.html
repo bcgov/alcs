@@ -132,9 +132,9 @@
           Parcels not subject to OCP or Zoning do not require local government authorization
         </div>
         <div *ngIf="applicationReview.isAuthorized !== null" class="full-width">
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
-            <span>{{ applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize' }}</span>
+            <span>{{ applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC' }}</span>
           </div>
         </div>
       </div>

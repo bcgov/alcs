@@ -1,5 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { Base } from '../../../../common/entities/base.entity';
 import { Application } from '../../../application/application.entity';
 
@@ -17,6 +17,7 @@ export class ApplicationDecisionMeeting extends Base {
   date: Date;
 
   @AutoMap()
+  @Index()
   @Column()
   applicationUuid: string;
 

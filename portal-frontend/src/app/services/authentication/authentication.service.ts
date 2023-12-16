@@ -44,6 +44,11 @@ export class AuthenticationService {
     this.expires = decodedToken.exp! * 1000;
     this.currentUser = decodedToken as ICurrentUser;
     this.$currentTokenUser.next(this.currentUser);
+
+    console.debug(
+      `Token Successfully Refreshed, Expires at: ${new Date(this.expires)} Refresh at: ${new Date(this.refreshExpires)}`
+    );
+
     this.loadUser();
   }
 
@@ -74,7 +79,7 @@ export class AuthenticationService {
 
   async refreshTokens(redirect = true) {
     if (this.refreshToken) {
-      if (this.refreshExpires && this.refreshExpires < Date.now()) {
+      if (this.expires && this.expires < Date.now()) {
         if (redirect) {
           await this.router.navigateByUrl('/login');
         }
@@ -128,13 +133,12 @@ export class AuthenticationService {
   }
 
   private async getNewTokens(refreshToken: string) {
-    const res = await firstValueFrom(
+    return await firstValueFrom(
       this.http.get<{
         refresh_token: string;
         token: string;
       }>(`${environment.authUrl}/authorize/refresh?r=${refreshToken}`)
     );
-    return res;
   }
 
   private async getLogoutUrl() {

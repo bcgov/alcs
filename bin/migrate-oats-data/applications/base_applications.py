@@ -109,7 +109,7 @@ def _compile_application_insert_query(number_of_rows_to_insert):
     applications_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
         INSERT INTO alcs.application (file_number, type_code, 
-                                      applicant, region_code, local_government_uuid, audit_created_by)
+                                      applicant, region_code, local_government_uuid, audit_created_by, source)
 
         VALUES{applications_to_insert}
         ON CONFLICT (file_number) DO UPDATE SET

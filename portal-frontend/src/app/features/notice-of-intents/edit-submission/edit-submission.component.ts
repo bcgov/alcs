@@ -1,4 +1,3 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -225,7 +224,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     if (submission) {
       const didSubmit = await this.noticeOfIntentSubmissionService.submitToAlcs(submission.uuid);
       if (didSubmit) {
-        await this.router.navigateByUrl(`/notice-of-intent/${submission?.fileNumber}`);
+        await this.router.navigateByUrl(`/notice-of-intent/${submission?.fileNumber}/edit/success`);
       }
     }
   }

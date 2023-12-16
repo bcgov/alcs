@@ -1,15 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationSubmissionDetailedDto } from '../../../../services/application-submission/application-submission.dto';
-import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
-import { CodeService } from '../../../../services/code/code.service';
 import { PdfGenerationService } from '../../../../services/pdf-generation/pdf-generation.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { StepComponent } from '../step.partial';
-import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/submit-confirmation-dialog.component';
 
 @Component({
   selector: 'app-review-and-submit',
@@ -26,7 +22,6 @@ export class ReviewAndSubmitComponent extends StepComponent implements OnInit, O
   constructor(
     private router: Router,
     private toastService: ToastService,
-    private applicationService: ApplicationSubmissionService,
     private pdfGenerationService: PdfGenerationService
   ) {
     super();

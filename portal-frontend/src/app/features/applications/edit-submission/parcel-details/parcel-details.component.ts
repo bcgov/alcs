@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, takeUntil } from 'rxjs';
@@ -9,6 +9,7 @@ import {
   ApplicationParcelUpdateDto,
 } from '../../../../services/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../../../../services/application-parcel/application-parcel.service';
+import { ApplicationSubmissionService } from '../../../../services/application-submission/application-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -35,6 +36,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
 
   constructor(
     private router: Router,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private toastService: ToastService,
@@ -168,8 +170,12 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
     }
   }
 
-  expandedParcel: string = '';
+  async reloadApplication() {
+    const updatedApp = await this.applicationSubmissionService.getByUuid(this.submissionUuid);
+    this.$applicationSubmission.next(updatedApp);
+  }
 
+  expandedParcel: string = '';
   openParcel(index: string) {
     this.expandedParcel = index;
   }

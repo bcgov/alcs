@@ -12,9 +12,15 @@ import { ReviewOcpComponent } from './review-ocp/review-ocp.component';
 import { ReviewResolutionComponent } from './review-resolution/review-resolution.component';
 import { ReviewSubmitFngComponent } from './review-submit-fng/review-submit-fng.component';
 import { ReviewSubmitComponent } from './review-submit/review-submit.component';
+import { SubmitConfirmationDialogComponent } from './submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { ReviewZoningComponent } from './review-zoning/review-zoning.component';
+import { SuccessComponent } from './success/success.component';
 
 const routes: Routes = [
+  {
+    path: 'success',
+    component: SuccessComponent,
+  },
   {
     path: '',
     component: ReviewSubmissionComponent,
@@ -38,6 +44,8 @@ const routes: Routes = [
     ReviewSubmitComponent,
     ReviewSubmitFngComponent,
     ReturnApplicationDialogComponent,
+    SuccessComponent,
+    SubmitConfirmationDialogComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule.forChild(routes), NgxMaskDirective, NgxMaskPipe],
 })

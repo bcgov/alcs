@@ -39,7 +39,7 @@ export class OwnerDialogComponent {
   showVirusError = false;
   existingUuid: string | undefined;
   files: ApplicationDocumentDto[] = [];
-  showFileErrors = false
+  showFileErrors = false;
 
   form = new FormGroup({
     type: this.type,
@@ -128,10 +128,13 @@ export class OwnerDialogComponent {
       };
 
       const res = await this.data.ownerService.create(createDto);
-      this.dialogRef.close(res);
+      this.dialogRef.close({
+        ...res,
+        action: 'create',
+      });
     } else {
-      this.form.markAllAsTouched()
-      this.showFileErrors = true
+      this.form.markAllAsTouched();
+      this.showFileErrors = true;
     }
   }
 
@@ -141,15 +144,17 @@ export class OwnerDialogComponent {
 
   async onDelete() {
     this.confDialogService
-    .openDialog({
-      body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
-    })
-    .subscribe(async (didConfirm) => {
-      if (didConfirm) {
-        const res = await this.data.ownerService.delete(this.existingUuid ?? '');        
-        this.dialogRef.close(res);
-      }
-    });
+      .openDialog({
+        body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
+          const res = await this.data.ownerService.delete(this.existingUuid ?? '');
+          this.dialogRef.close({
+            action: 'delete',
+          });
+        }
+      });
   }
 
   async onSave() {
@@ -166,7 +171,10 @@ export class OwnerDialogComponent {
       };
       if (this.existingUuid) {
         const res = await this.data.ownerService.update(this.existingUuid, updateDto);
-        this.dialogRef.close(res);
+        this.dialogRef.close({
+          ...res,
+          action: 'edit',
+        });
       }
     } else {
       this.form.markAllAsTouched();
