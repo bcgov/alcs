@@ -107,6 +107,12 @@ mat-button-toggle-group#isFarm {
   }
 }
 
+:host::ng-deep {
+  .mat-mdc-radio-group.error .mdc-radio__outer-circle {
+    border-color: colors.$error-color !important;
+  }
+}
+
 .warning-banner {
   margin-top: rem(8);
   background-color: rgba(colors.$accent-color-light, 0.5);

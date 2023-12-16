@@ -99,7 +99,7 @@
     </div>
 
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <h4 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h4>
+      <h5 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h5>
       <div class="subheading2 grid-1">First Name</div>
       <div class="grid-double">
         {{ parcel.owners[0].firstName }}

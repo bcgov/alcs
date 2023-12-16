@@ -199,14 +199,6 @@ export class ApplicationSubmission extends Base {
   })
   typeCode: string;
 
-  @AutoMap()
-  @Column({
-    type: 'varchar',
-    nullable: true,
-    default: null
-  })
-  crownLandOwnerType?: string | null;
-
   @AutoMap(() => [ApplicationOwner])
   @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];

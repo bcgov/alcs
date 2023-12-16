@@ -100,7 +100,7 @@ export class ParcelEntryComponent implements OnInit {
     purchaseDate: this.purchaseDate,
     crownLandOwnerType: this.crownLandOwnerType,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
-    searchBy: this.searchBy,
+    searchBy: this.searchBy
   });
   pidPinPlaceholder = '';
   selectedOwner?: ApplicationOwnerDto = undefined;
