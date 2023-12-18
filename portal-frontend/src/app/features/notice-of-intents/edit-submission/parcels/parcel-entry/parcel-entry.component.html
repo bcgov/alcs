@@ -293,7 +293,7 @@
         (click)="onAddNewGovernmentContact()"
         mat-flat-button
         color="primary"
-        [disabled]="_disabled || parcel.owners.length > 0"
+        [ngClass]="{ 'mat-error': ownerInput.errors && ownerInput.errors['required'] }"
       >
         Add new gov contact
       </button>

@@ -66,20 +66,23 @@ export class CrownOwnerDialogComponent {
   }
 
   async onCreate() {
-    const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
-      organizationName: this.ministryName.getRawValue() || undefined,
-      firstName: this.firstName.getRawValue() || undefined,
-      lastName: this.lastName.getRawValue() || undefined,
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: OWNER_TYPE.CROWN,
-      applicationSubmissionUuid: this.data.submissionUuid,
-      noticeOfIntentSubmissionUuid: this.data.submissionUuid,
-      crownLandOwnerType: this.crownLandOwnerType.getRawValue(),
-    };
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      const createDto: ApplicationOwnerCreateDto & NoticeOfIntentOwnerCreateDto = {
+        organizationName: this.ministryName.getRawValue() || undefined,
+        firstName: this.firstName.getRawValue() || undefined,
+        lastName: this.lastName.getRawValue() || undefined,
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: OWNER_TYPE.CROWN,
+        applicationSubmissionUuid: this.data.submissionUuid,
+        noticeOfIntentSubmissionUuid: this.data.submissionUuid,
+        crownLandOwnerType: this.crownLandOwnerType.getRawValue() || undefined,
+      };
 
-    const res = await this.data.ownerService.create(createDto);
-    this.dialogRef.close({ ...res});
+      const res = await this.data.ownerService.create(createDto);
+      this.dialogRef.close({ ...res });
+    }
   }
 
   async onClose() {
@@ -88,30 +91,33 @@ export class CrownOwnerDialogComponent {
 
   async onDelete() {
     this.confDialogService
-    .openDialog({
-      body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
-    })
-    .subscribe(async (didConfirm) => {
-      if (didConfirm) {
-        const res = await this.data.ownerService.delete(this.existingUuid ?? '');        
-        this.dialogRef.close({...res, type:'delete' });
-      }
-    });
+      .openDialog({
+        body: `This action will remove ${this.firstName.value} ${this.lastName.value} and its usage from the entire application. Are you sure you want to remove this owner? `,
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
+          const res = await this.data.ownerService.delete(this.existingUuid ?? '');
+          this.dialogRef.close({ ...res, type: 'delete' });
+        }
+      });
   }
 
   async onSave() {
-    const updateDto: ApplicationOwnerUpdateDto & NoticeOfIntentOwnerUpdateDto = {
-      organizationName: this.ministryName.getRawValue(),
-      firstName: this.firstName.getRawValue(),
-      lastName: this.lastName.getRawValue(),
-      email: this.email.getRawValue()!,
-      phoneNumber: this.phoneNumber.getRawValue()!,
-      typeCode: OWNER_TYPE.CROWN,
-      crownLandOwnerType: this.crownLandOwnerType.getRawValue(),
-    };
-    if (this.existingUuid) {
-      const res = await this.data.ownerService.update(this.existingUuid, updateDto);
-      this.dialogRef.close({...res, type:'update'});
+    this.form.markAllAsTouched();
+    if (this.form.valid) {
+      const updateDto: ApplicationOwnerUpdateDto & NoticeOfIntentOwnerUpdateDto = {
+        organizationName: this.ministryName.getRawValue(),
+        firstName: this.firstName.getRawValue(),
+        lastName: this.lastName.getRawValue(),
+        email: this.email.getRawValue()!,
+        phoneNumber: this.phoneNumber.getRawValue()!,
+        typeCode: OWNER_TYPE.CROWN,
+        crownLandOwnerType: this.crownLandOwnerType.getRawValue(),
+      };
+      if (this.existingUuid) {
+        const res = await this.data.ownerService.update(this.existingUuid, updateDto);
+        this.dialogRef.close({ ...res, type: 'update' });
+      }
     }
   }
 }
