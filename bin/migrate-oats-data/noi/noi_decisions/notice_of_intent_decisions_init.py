@@ -30,7 +30,7 @@ def init_notice_of_intent_decisions(conn=None, batch_size=1000):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Notice of Intent Submission data to insert: {count_total}")
+        logger.info(f"Total Notice of Intent Decisions data to insert: {count_total}")
 
         failed_inserts = 0
         successful_inserts_count = 0
@@ -184,7 +184,7 @@ def clean_notice_of_intents(conn=None):
     logger.info("Start notice_of_intent_decisions cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
-            f"DELETE FROM alcs.notice_of_intent_decision WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by = null"
+            f"DELETE FROM alcs.notice_of_intent_decision WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by is NULL"
         )
         logger.info(f"Deleted items count = {cursor.rowcount}")
 
