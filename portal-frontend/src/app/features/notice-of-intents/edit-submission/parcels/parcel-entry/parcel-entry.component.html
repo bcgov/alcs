@@ -298,11 +298,13 @@
         Add new gov contact
       </button>
       <h6 class="owner-search-option" *ngIf="filteredOwners.length">OR</h6>
-      <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government</label>
+      <label for="owner-search" *ngIf="filteredOwners.length">Select from Existing Government Contacts</label>
       <div>
         <mat-radio-group
           color="primary"
           [value]="selectedOwner?.uuid" required
+          [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }"
+          formControlName="selectedOwnerVal"
         >
           <mat-radio-button
             *ngFor="let owner of filteredOwners"
@@ -325,8 +327,8 @@
               <div class="key"><strong>Last Name:</strong> </div>
               <div class="value">{{ selectedOwner.lastName }}</div>
             </div>
-            <div class="row">
-              <div class="key"><strong>Ministry/ Department:</strong> </div>
+            <div class="row"> 
+              <div class="key"><strong>Ministry or Department:</strong> </div>
               <div class="value">{{ selectedOwner.organizationName }}</div>
             </div>
             <div class="row">
@@ -342,7 +344,7 @@
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
             <div class="row">
-              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-stroked-button>Edit information</button>
+              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
             </div>
           </div>
         </div>

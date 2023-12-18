@@ -99,38 +99,41 @@
     </div>
 
     <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <h4 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h4>
-      <div class="subheading2 grid-1">First Name</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].firstName }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].firstName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Last Name</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].lastName }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].lastName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Ministry or Department</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].organizationName }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].organizationName"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Phone</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].phoneNumber }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Email</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].email }}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].email"></app-no-data>
-      </div>
-      <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Type</div>
-      <div class="grid-double">
-        {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : ''}}
-        {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : ''}}
-        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].crownLandOwnerType"></app-no-data>
-      </div>
+      <h5 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h5>
+      <ng-container *ngIf="parcel.owners[0]">
+        <div class="subheading2 grid-1">First Name</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].firstName }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].firstName"></app-no-data>
+        </div>
+        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Last Name</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].lastName }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].lastName"></app-no-data>
+        </div>
+        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Ministry or Department</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].organizationName }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].organizationName"></app-no-data>
+        </div>
+        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Phone</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].phoneNumber }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
+        </div>
+        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Email</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].email }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].email"></app-no-data>
+        </div>
+        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Type</div>
+        <div class="grid-double">
+          {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : ''}}
+          {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : ''}}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].crownLandOwnerType"></app-no-data>
+        </div>
+      </ng-container>
+      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0]"></app-no-data>      
     </ng-container>
 
     <div

@@ -62,7 +62,7 @@
       <div class="subheading2">Land Owner(s)</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-        Ministry/ Department
+        Ministry or Department
       </div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.displayName }}</div>
