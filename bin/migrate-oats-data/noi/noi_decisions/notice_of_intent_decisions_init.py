@@ -161,9 +161,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
 
 
 def _map_outcome_code(row):
-    if row.get("rescinded_date", None) is not None:
-        return "ONTP"
-    elif row.get("outright_refusal_ind", None) == "N":
+    if row.get("outright_refusal_ind", None) == "N":
         return "APPR"
     elif row.get("outright_refusal_ind", None) == "Y":
         return "ONTP"
