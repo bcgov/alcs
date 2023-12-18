@@ -199,3 +199,7 @@ form {
     }
   }
 }
+
+.mat-mdc-radio-group.error .mdc-radio__outer-circle {
+  border-color: colors.$error-color !important;
+}

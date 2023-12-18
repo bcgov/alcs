@@ -303,6 +303,8 @@
         <mat-radio-group
           color="primary"
           [value]="selectedOwner?.uuid" required
+          [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }"
+          formControlName="selectedOwnerVal"
         >
           <mat-radio-button
             *ngFor="let owner of filteredOwners"

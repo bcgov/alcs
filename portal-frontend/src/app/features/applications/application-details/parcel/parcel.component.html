@@ -104,6 +104,7 @@
         <div class="subheading2 grid-1">First Name</div>
         <div class="grid-double">
           {{ parcel.owners[0].firstName }}
+          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].firstName"></app-no-data>
         </div>
         <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Last Name</div>
         <div class="grid-double">
