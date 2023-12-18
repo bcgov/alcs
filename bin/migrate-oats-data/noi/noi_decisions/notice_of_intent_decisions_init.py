@@ -127,7 +127,12 @@ def _get_insert_query():
                 DO UPDATE SET 
                 date = COALESCE(EXCLUDED.date, alcs.notice_of_intent_decision.date),
                 decision_maker = COALESCE(EXCLUDED.decision_maker, alcs.notice_of_intent_decision.decision_maker),
-                outcome_code = COALESCE(EXCLUDED.outcome_code, alcs.notice_of_intent_decision.outcome_code);
+                outcome_code = COALESCE(EXCLUDED.outcome_code, alcs.notice_of_intent_decision.outcome_code),
+                decision_description = COALESCE(EXCLUDED.decision_description, alcs.notice_of_intent_decision.decision_description),
+                rescinded_comment =  COALESCE(EXCLUDED.rescinded_comment, alcs.notice_of_intent_decision.rescinded_comment),
+                rescinded_date =  COALESCE(EXCLUDED.rescinded_date, alcs.notice_of_intent_decision.rescinded_date),
+                is_subject_to_conditions = COALESCE(EXCLUDED.is_subject_to_conditions, alcs.notice_of_intent_decision.is_subject_to_conditions),
+                oats_alr_appl_decision_id = EXCLUDED.oats_alr_appl_decision_id;
     """
     return query
 
