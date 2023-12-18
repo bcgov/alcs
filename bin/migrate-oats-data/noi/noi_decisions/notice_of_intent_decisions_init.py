@@ -153,7 +153,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "was_released": True,
             "notice_of_intent_uuid": row.get("noi_uuid"),
             "is_subject_to_conditions": _map_is_subject_to_conditions(row),
-            "oats_alr_appl_decision_id": row.get("oats_alr_appl_decision_id"),
+            "oats_alr_appl_decision_id": row.get("alr_appl_decision_id"),
         }
         data_list.append(mapped_row)
 
