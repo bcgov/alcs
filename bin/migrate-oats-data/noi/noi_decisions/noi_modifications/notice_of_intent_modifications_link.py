@@ -13,7 +13,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def link_notice_of_intent_modifications(conn=None, batch_size=1000):
     """
-    This function is responsible for updating existing the notice_of_intent_modification in ALCS.
+    This function is responsible for linking notice_of_intent_modification to notice_of_intent_decisions in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -30,9 +30,7 @@ def link_notice_of_intent_modifications(conn=None, batch_size=1000):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(
-            f"Total Notice of Intent Modifications data to updated: {count_total}"
-        )
+        logger.info(f"Total Notice of Intent Modifications data to link: {count_total}")
 
         failed_updates = 0
         successful_updates_count = 0
@@ -66,7 +64,7 @@ def link_notice_of_intent_modifications(conn=None, batch_size=1000):
                     last_modification_id = dict(rows[-1])["reconsideration_request_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {modifications_to_be_updated_count}; total successfully update modifications so far {successful_updates_count}; last updated reconsideration_request_id: {last_modification_id}"
+                        f"retrieved/linked items count: {modifications_to_be_updated_count}; total successfully linked modifications so far {successful_updates_count}; last updated reconsideration_request_id: {last_modification_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -75,7 +73,7 @@ def link_notice_of_intent_modifications(conn=None, batch_size=1000):
                     last_modification_id = last_modification_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_updates}"
+        f"Finished {etl_name}: total amount of successful linked {successful_updates_count}, total failed updates {failed_updates}"
     )
 
 
