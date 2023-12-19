@@ -22,3 +22,4 @@ from .application_status_returned_incomplete_lfng import (
 from .application_status_submitted_lfng import (
     process_alcs_application_submitted_lfng_status,
 )
+from .application_status_refused import process_alcs_application_status_refused
