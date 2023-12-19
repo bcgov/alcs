@@ -61,6 +61,7 @@ from .noi_decisions.noi_modifications import (
     init_notice_of_intent_modifications,
     clean_notice_of_intent_modifications,
     update_notice_of_intent_modifications,
+    link_notice_of_intent_modifications,
 )
 
 
@@ -89,6 +90,7 @@ def process_notice_of_intent_decisions(batch_size):
     init_notice_of_intent_decisions(batch_size)
     update_notice_of_intent_modifications(batch_size)
     init_notice_of_intent_modifications(batch_size)
+    link_notice_of_intent_modifications(batch_size)
 
 
 def clean_notice_of_intent_decision():
