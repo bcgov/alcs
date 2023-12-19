@@ -12,6 +12,7 @@ from .statuses import (
     process_alcs_application_wrong_lfng_status,
     process_alcs_application_returned_incomplete_lfng_status,
     process_alcs_application_submitted_lfng_status,
+    process_alcs_application_status_refused,
 )
 
 
@@ -32,3 +33,4 @@ def process_application_statuses(batch_size):
     process_alcs_application_wrong_lfng_status(batch_size)
     process_alcs_application_returned_incomplete_lfng_status(batch_size)
     process_alcs_application_submitted_lfng_status(batch_size)
+    process_alcs_application_status_refused(batch_size)
