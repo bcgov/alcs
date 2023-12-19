@@ -53,6 +53,11 @@ from noi.notice_of_intent_staff_journal import (
     clean_noi_staff_journal,
 )
 
+from noi.noi_decisions.notice_of_intent_decisions_init import (
+    init_notice_of_intent_decisions,
+    clean_notice_of_intents,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
@@ -66,12 +71,21 @@ def clean_notice_of_intent():
     clean_parcels()
     clean_notice_of_intent_submission_statuses()
     clean_notice_of_intent_submissions()
+    clean_notice_of_intent_decisions()
     clean_notice_of_intents()
 
 
 def process_notice_of_intent_soil(batch_size):
     process_alcs_notice_of_intent_soil_fields(batch_size)
     update_alcs_notice_of_intent_soil_fill_fields(batch_size)
+
+
+def process_notice_of_intent_decisions(batch_size):
+    init_notice_of_intent_decisions(batch_size)
+
+
+def clean_notice_of_intent_decisions():
+    clean_notice_of_intents()
 
 
 def process_notice_of_intent(batch_size):
@@ -119,6 +133,8 @@ def process_notice_of_intent(batch_size):
     link_notice_of_intent_primary_contacts(batch_size)
 
     process_noi_staff_journal(batch_size)
+
+    process_notice_of_intent_decisions(batch_size)
 
     # this script must be the last one
     process_notice_of_intent_submission_status_emails()
