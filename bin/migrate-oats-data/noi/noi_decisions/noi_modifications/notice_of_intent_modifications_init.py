@@ -67,7 +67,7 @@ def init_notice_of_intent_modifications(conn=None, batch_size=1000):
                     last_modification_id = dict(rows[-1])["reconsideration_request_id"]
 
                     logger.debug(
-                        f"retrieved/inserted items count: {modifications_to_be_inserted_count}; total successfully inserted modifications so far {successful_inserts_count}; last inserted alr_appl_decision_id: {last_modification_id}"
+                        f"retrieved/inserted items count: {modifications_to_be_inserted_count}; total successfully inserted modifications so far {successful_inserts_count}; last inserted reconsideration_request_id: {last_modification_id}"
                     )
                 except Exception as err:
                     logger.exception(err)

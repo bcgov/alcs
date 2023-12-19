@@ -139,13 +139,3 @@ def _map_outcome_code(row):
     return None
 
 
-@inject_conn_pool
-def clean_notice_of_intent_modifications(conn=None):
-    logger.info("Start notice_of_intent_modification cleaning")
-    with conn.cursor() as cursor:
-        cursor.execute(
-            f"DELETE FROM alcs.notice_of_intent_modification WHERE audit_created_by = '{OATS_ETL_USER}' AND audit_updated_by IS NULL"
-        )
-        logger.info(f"Deleted items count = {cursor.rowcount}")
-
-    conn.commit()
