@@ -55,7 +55,11 @@ from noi.notice_of_intent_staff_journal import (
 
 from noi.noi_decisions.notice_of_intent_decisions_init import (
     init_notice_of_intent_decisions,
-    clean_notice_of_intents,
+    clean_notice_of_intent_decisions,
+)
+from .noi_decisions.noi_modifications import (
+    init_notice_of_intent_modifications,
+    clean_notice_of_intent_modifications,
 )
 
 
@@ -71,7 +75,7 @@ def clean_notice_of_intent():
     clean_parcels()
     clean_notice_of_intent_submission_statuses()
     clean_notice_of_intent_submissions()
-    clean_notice_of_intent_decisions()
+    clean_notice_of_intent_decision()
     clean_notice_of_intents()
 
 
@@ -82,10 +86,12 @@ def process_notice_of_intent_soil(batch_size):
 
 def process_notice_of_intent_decisions(batch_size):
     init_notice_of_intent_decisions(batch_size)
+    init_notice_of_intent_modifications(batch_size)
 
 
-def clean_notice_of_intent_decisions():
-    clean_notice_of_intents()
+def clean_notice_of_intent_decision():
+    clean_notice_of_intent_modifications()
+    clean_notice_of_intent_decisions()
 
 
 def process_notice_of_intent(batch_size):

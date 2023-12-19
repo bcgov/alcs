@@ -185,7 +185,7 @@ def _map_is_subject_to_conditions(row):
 
 
 @inject_conn_pool
-def clean_notice_of_intents(conn=None):
+def clean_notice_of_intent_decisions(conn=None):
     logger.info("Start notice_of_intent_decisions cleaning")
     with conn.cursor() as cursor:
         cursor.execute(
