@@ -77,9 +77,19 @@
       <div class="full-row">
         <mat-label for="type">Crown Type</mat-label>
         <mat-button-toggle-group formControlName="crownLandOwnerType" class="input" id="crownLandOwnerType">
-          <mat-button-toggle value="provincial">Provincial Crown</mat-button-toggle>
-          <mat-button-toggle value="federal">Federal Crown</mat-button-toggle>
+          <mat-button-toggle value="provincial"
+            [ngClass]="{ 'error-outline': crownLandOwnerType.touched && crownLandOwnerType.errors?.['required'] }">
+            Provincial Crown
+          </mat-button-toggle>
+          <mat-button-toggle value="federal"
+            [ngClass]="{ 'error-outline': crownLandOwnerType.touched && crownLandOwnerType.errors?.['required'] }">
+            Federal Crown
+          </mat-button-toggle>
         </mat-button-toggle-group>
+        <div *ngIf="crownLandOwnerType.touched && crownLandOwnerType.errors?.['required']" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="crownLandOwnerType.errors?.['required']">This field is required</div>
+        </div>
       </div>
     </div>
   </form>

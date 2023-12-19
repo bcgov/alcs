@@ -295,6 +295,7 @@
         class="new-owner"
         *ngIf="enableAddNewOwner"
         (click)="onAddNewGovernmentContact()"
+        [ngClass]="{ 'mat-error': ownerInput.errors && ownerInput.errors['required'] }"
         mat-flat-button
         color="primary"
       >
