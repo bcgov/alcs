@@ -60,8 +60,8 @@ export class NoticeOfIntentModification extends Base {
   card: Card | null;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string | null;
 
   @ManyToMany(() => NoticeOfIntentDecision, (decision) => decision.modifiedBy)
   @JoinTable({
@@ -71,4 +71,13 @@ export class NoticeOfIntentModification extends Base {
 
   @OneToOne(() => NoticeOfIntentDecision, (dec) => dec.modifies)
   resultingDecision?: NoticeOfIntentDecision;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_reconsideration_requests to alcs.notice_of_intent_modification.',
+  })
+  oatsReconsiderationRequestId: number;
 }

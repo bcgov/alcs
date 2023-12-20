@@ -77,9 +77,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const modifications = await this.modificationService.getDeletedCards(
-      fileId,
-    );
+    const modifications =
+      await this.modificationService.getDeletedCards(fileId);
     for (const modification of modifications) {
       result.push({
         cardUuid: modification.cardUuid,
@@ -99,9 +98,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const planningReviews = await this.planningReviewService.getDeletedCards(
-      fileId,
-    );
+    const planningReviews =
+      await this.planningReviewService.getDeletedCards(fileId);
     for (const planningReview of planningReviews) {
       result.push({
         cardUuid: planningReview.cardUuid,
@@ -121,9 +119,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const reconsiderations = await this.reconsiderationService.getDeletedCards(
-      fileId,
-    );
+    const reconsiderations =
+      await this.reconsiderationService.getDeletedCards(fileId);
     for (const reconsideration of reconsiderations) {
       result.push({
         cardUuid: reconsideration.cardUuid,
@@ -143,9 +140,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const noticeOfIntents = await this.noticeOfIntentService.getDeletedCards(
-      fileId,
-    );
+    const noticeOfIntents =
+      await this.noticeOfIntentService.getDeletedCards(fileId);
     for (const noi of noticeOfIntents) {
       result.push({
         cardUuid: noi.cardUuid,
@@ -160,7 +156,7 @@ export class UnarchiveCardService {
 
     for (const noi of modificationNOIs) {
       result.push({
-        cardUuid: noi.cardUuid,
+        cardUuid: noi.cardUuid ?? '',
         createdAt: noi.auditCreatedAt.getTime(),
         type: 'NOI MODI',
         status: noi.card!.status.label,
@@ -177,9 +173,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const notifications = await this.notificationService.getDeletedCards(
-      fileId,
-    );
+    const notifications =
+      await this.notificationService.getDeletedCards(fileId);
     for (const notification of notifications) {
       result.push({
         cardUuid: notification.cardUuid,
