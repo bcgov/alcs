@@ -1,7 +1,6 @@
 from common import (
+    OATS_ETL_USER,
     setup_and_get_logger,
-    add_timezone_and_keep_date_part,
-    AlcsNoiModificationOutcomeCodeEnum,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -111,3 +110,19 @@ def _prepare_oats_alr_applications_data(row_data_list):
         data_list.append(mapped_row)
 
     return data_list
+
+
+@inject_conn_pool
+def unlink_etl_modifications(conn=None):
+    logger.info("Start notice_of_intent_modification link cleaning")
+    with conn.cursor() as cursor:
+        cursor.execute(
+            f"""UPDATE alcs.notice_of_intent_decision 
+                SET modifies_uuid = NULL 
+                FROM alcs.notice_of_intent_modification 
+                WHERE alcs.notice_of_intent_decision.modifies_uuid = notice_of_intent_modification.uuid 
+                AND alcs.notice_of_intent_modification.audit_created_by = '{OATS_ETL_USER}';"""
+        )
+        logger.info(f"Unlinked items count = {cursor.rowcount}")
+
+    conn.commit()
