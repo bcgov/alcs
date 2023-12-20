@@ -59,8 +59,9 @@
               <div class="key"><strong>Last Name:</strong></div>
               <div class="value">{{ lastName.value }}</div>
             </div>
-            <div class="row">
-              <div class="key"><strong>Organization:</strong></div>
+            <div *ngIf="organizationName.value" class="row">
+              <div *ngIf="!isCrownOwner && !isGovernmentUser" class="key"><strong>Organization:</strong></div>
+              <div *ngIf="isCrownOwner" class="key"><strong>Ministry/Department:</strong></div>
               <div class="value">{{ organizationName.value }}</div>
             </div>
             <div class="row">
