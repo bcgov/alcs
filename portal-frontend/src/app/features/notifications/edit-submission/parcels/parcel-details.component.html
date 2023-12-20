@@ -2,7 +2,7 @@
   <div class="step-description">
     <h3>Identify Parcel(s) Under the Statutory Right of Way</h3>
     <p>Provide parcel identification information for each parcel under the SRW.</p>
-    <p>*All fields are required unless stated optional.</p>
+    <p>*All fields are required unless stated optional or disabled.</p>
   </div>
   <mat-expansion-panel
     *ngFor="let parcel of parcels; let parcelInd = index"
@@ -13,7 +13,7 @@
   >
     <mat-expansion-panel-header>
       <mat-panel-title>
-        <span class='subheading1'>Parcel #{{ parcelInd + 1 }} Details</span>
+        <span class="subheading1">Parcel #{{ parcelInd + 1 }} Details</span>
       </mat-panel-title>
     </mat-expansion-panel-header>
 
