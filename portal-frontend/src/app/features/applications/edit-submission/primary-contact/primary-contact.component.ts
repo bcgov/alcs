@@ -16,6 +16,7 @@ import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 
 @Component({
   selector: 'app-primary-contact',
@@ -281,6 +282,27 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
+    if (this.form.dirty || (this.selectedOwnerUuid !== 'agent' && this.selectedOwnerUuid !== 'government')) {
+      await this.dialog
+        .open(PrimaryContactConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (confirmed) => {
+          if (confirmed) {
+            this.switchPrimaryContactType(selectedThirdPartyAgent);
+          } else {
+            console.log(selectedThirdPartyAgent);
+            this.primaryContactType.setValue(selectedThirdPartyAgent);
+          }
+        });
+    } else {
+      this.switchPrimaryContactType(selectedThirdPartyAgent);
+    }
+  }
+
+  switchPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
     if (selectedThirdPartyAgent) {
       this.onSelectAgent();
     } else if (this.isGovernmentUser) {
