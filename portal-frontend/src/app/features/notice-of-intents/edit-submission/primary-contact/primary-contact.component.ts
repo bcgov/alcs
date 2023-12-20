@@ -19,6 +19,7 @@ import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { OwnerDialogComponent } from 'src/app/shared/owner-dialogs/owner-dialog/owner-dialog.component';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
+import { CrownOwnerDialogComponent } from 'src/app/shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 
 @Component({
   selector: 'app-primary-contact',
@@ -317,13 +318,25 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   onEdit(selectedOwnerUuid: string) {
     const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === selectedOwnerUuid);
 
-    const dialog = this.dialog.open(OwnerDialogComponent, {
-      data: {
-        existingOwner: selectedOwner,
-        submissionUuid: this.submissionUuid,
-        ownerService: this.noticeOfIntentOwnerService,
-      },
-    });
+    let dialog;
+
+    if (this.isCrownOwner) {
+      dialog = this.dialog.open(CrownOwnerDialogComponent, {
+        data: {
+          existingOwner: selectedOwner,
+          submissionUuid: this.submissionUuid,
+          ownerService: this.noticeOfIntentOwnerService,
+        },
+      });
+    } else {
+      dialog = this.dialog.open(OwnerDialogComponent, {
+        data: {
+          existingOwner: selectedOwner,
+          submissionUuid: this.submissionUuid,
+          ownerService: this.noticeOfIntentOwnerService,
+        },
+      });
+    }
 
     dialog.afterClosed().subscribe(async (updatedContact) => {
       if (updatedContact && this.selectedOwnerUuid !== undefined) {
