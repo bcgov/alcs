@@ -3,3 +3,26 @@
 section {
   margin-top: rem(36);
 }
+
+.proposal-toggle-content {
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.section-header {
+  margin-bottom: 10px;
+}
+
+.list-item {
+  counter-reset: listCounter;
+}
+
+.list-item li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+
+.list-item li:before {
+  content: "(" counter(listCounter, lower-alpha) ") ";
+  counter-increment: listCounter;
+}
