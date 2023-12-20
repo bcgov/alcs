@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs';
-import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
 import { PARCEL_OWNERSHIP_TYPE } from '../../../../services/application-parcel/application-parcel.dto';
 import { AuthenticationService } from '../../../../services/authentication/authentication.service';
 import { NoticeOfIntentDocumentDto } from '../../../../services/notice-of-intent-document/notice-of-intent-document.dto';
