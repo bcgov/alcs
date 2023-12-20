@@ -315,8 +315,14 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       this.onSelectAgent();
     } else if (this.isGovernmentUser) {
       this.onSelectGovernment();
+      if (this.parcelOwners.length == 1) {
+        this.onSelectOwner(this.parcelOwners[0].uuid);
+      }
     } else {
       this.selectedThirdPartyAgent = false;
+      if (this.parcelOwners.length == 1) {
+        this.onSelectOwner(this.parcelOwners[0].uuid);
+      }
     }
   }
 
