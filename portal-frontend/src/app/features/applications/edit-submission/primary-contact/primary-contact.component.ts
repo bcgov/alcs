@@ -17,6 +17,7 @@ import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directiv
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
+import { OwnerDialogComponent } from 'src/app/shared/owner-dialogs/owner-dialog/owner-dialog.component';
 
 @Component({
   selector: 'app-primary-contact',
@@ -310,5 +311,28 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     } else {
       this.selectedThirdPartyAgent = false;
     }
+  }
+
+  onEdit(selectedOwnerUuid: string) {
+    const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === selectedOwnerUuid);
+
+    const dialog = this.dialog.open(OwnerDialogComponent, {
+      data: {
+        existingOwner: selectedOwner,
+        submissionUuid: this.submissionUuid,
+        ownerService: this.applicationOwnerService,
+      },
+    });
+
+    dialog.afterClosed().subscribe(async (updatedContact) => {
+      console.log(updatedContact);
+      if (updatedContact && this.selectedOwnerUuid !== undefined) {
+        this.firstName.setValue(updatedContact.firstName);
+        this.lastName.setValue(updatedContact.lastName);
+        this.organizationName.setValue(updatedContact.organizationName);
+        this.phoneNumber.setValue(updatedContact.phoneNumber);
+        this.email.setValue(updatedContact.email);
+      }
+    });
   }
 }
