@@ -40,6 +40,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   showVirusError = false;
   hasCrownParcels = false;
 
+  primaryContactType = new FormControl<boolean | null>(null, [Validators.required]);
+
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -235,6 +237,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
       }
 
+      this.primaryContactType.setValue(!this.selectedThirdPartyAgent);
+
       if (this.selectedLocalGovernment) {
         this.organizationName.setValidators([Validators.required]);
       } else {
@@ -274,5 +278,15 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   private prepareGovernmentOwners() {
     this.parcelOwners = [];
+  }
+
+  async onSelectPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
+    if (selectedThirdPartyAgent) {
+      this.onSelectAgent();
+    } else if (this.isGovernmentUser) {
+      this.onSelectGovernment();
+    } else {
+      this.selectedThirdPartyAgent = false;
+    }
   }
 }
