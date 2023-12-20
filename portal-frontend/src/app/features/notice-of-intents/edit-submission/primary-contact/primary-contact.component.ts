@@ -296,7 +296,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           if (confirmed) {
             this.switchPrimaryContactType(selectedThirdPartyAgent);
           } else {
-            console.log(selectedThirdPartyAgent);
             this.primaryContactType.setValue(selectedThirdPartyAgent);
           }
         });
@@ -327,7 +326,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     });
 
     dialog.afterClosed().subscribe(async (updatedContact) => {
-      console.log(updatedContact);
       if (updatedContact && this.selectedOwnerUuid !== undefined) {
         this.firstName.setValue(updatedContact.firstName);
         this.lastName.setValue(updatedContact.lastName);
