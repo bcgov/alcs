@@ -1,67 +1,90 @@
 <div class="step-description">
   <h2>Primary Contact</h2>
-  <p *ngIf="!isGovernmentUser">Select from the listed parcel owners or identify a third party agent</p>
-  <p *ngIf="isGovernmentUser">
-    Identify staff from the local or first nation government listed below or a third-party agent to act as the primary
-    contact.
+  <p>
+    The primary contact becomes the single point of contact and must ensure that landowners are notified of all
+    information exchanged between the primary contact, local or First Nation government, and the ALC.
   </p>
   <p>*All fields are required unless stated optional.</p>
-  <div class="step-documents">
-    <h6>Documents needed for this step:</h6>
-    <ul>
-      <li>Authorization Letters (if applicable)</li>
-    </ul>
-  </div>
 </div>
-<section>
-  <div class="contacts">
-    <ng-container *ngFor="let owner of parcelOwners">
-      <h5>{{ owner.displayName }}</h5>
-      <button
-        (click)="onSelectOwner(owner.uuid)"
-        *ngIf="owner.uuid !== selectedOwnerUuid"
-        color="primary"
-        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
-        mat-stroked-button
-      >
-        Make Primary Contact
-      </button>
-      <div class="selected" *ngIf="owner.uuid === selectedOwnerUuid"><mat-icon>check</mat-icon>Primary Contact</div>
-    </ng-container>
-    <ng-container *ngIf="isGovernmentUser || selectedLocalGovernment">
-      <h5>{{ governmentName ?? 'Local / First Nation Government' }} Staff</h5>
-      <button
-        (click)="onSelectGovernment()"
-        *ngIf="!selectedLocalGovernment"
-        color="primary"
-        [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
-        mat-stroked-button
-      >
-        Make Primary Contact
-      </button>
-      <div class="selected" *ngIf="selectedLocalGovernment"><mat-icon>check</mat-icon>Primary Contact</div>
-    </ng-container>
-    <h5>Third-Party Agent</h5>
-    <button
-      *ngIf="!selectedThirdPartyAgent"
-      color="primary"
-      (click)="onSelectAgent()"
-      [ngClass]="{ 'mat-error': !selectedOwnerUuid && showErrors }"
-      mat-stroked-button
-    >
-      Make Primary Contact
-    </button>
-    <div class="selected" *ngIf="selectedThirdPartyAgent"><mat-icon>check</mat-icon>Primary Contact</div>
-    <div><!--this is required for correct responsive view --></div>
-    <app-validation-error *ngIf="!selectedOwnerUuid && showErrors">
-      Please select a primary contact
-    </app-validation-error>
-  </div>
 
+<section>
   <div class="agent-form">
     <h4>Primary Contact Information</h4>
     <form [formGroup]="form">
-      <div class="form-row">
+      <div class="full-row">
+        <p *ngIf="isGovernmentUser">
+          <strong>Will {{ governmentName ?? 'Local / First Nation Government' }} staff be the primary contact?</strong>
+        </p>
+        <p *ngIf="!isGovernmentUser">
+          <strong>Will one of the landowners or government contacts added previously be the primary contact?</strong>
+        </p>
+
+        <mat-button-toggle-group
+          class="input"
+          [formControl]="primaryContactType"
+          (change)="onSelectPrimaryContactType(!primaryContactType.value)"
+        >
+          <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+          <mat-button-toggle [value]="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Owner -->
+      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0">
+        <label *ngIf="owners.length"
+          >Select a Primary Contact from the listed land owners and government contacts</label
+        >
+
+        <mat-radio-group color="primary" [value]="selectedOwnerUuid" required>
+          <mat-radio-button
+            *ngFor="let owner of parcelOwners"
+            [value]="owner.uuid"
+            class="radio-option"
+            (click)="onSelectOwner(owner.uuid)"
+            required
+          >
+            {{ owner.firstName }} {{ owner.lastName }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div
+          class="warning-banner"
+          *ngIf="selectedOwnerUuid && selectedOwnerUuid !== 'agent' && !selectedLocalGovernment"
+        >
+          <div class="owner-details">
+            <div class="row">
+              <div class="key"><strong>First Name:</strong></div>
+              <div class="value">{{ firstName.value }}</div>
+            </div>
+            <div class="row">
+              <div class="key"><strong>Last Name:</strong></div>
+              <div class="value">{{ lastName.value }}</div>
+            </div>
+            <div class="row">
+              <div class="key"><strong>Organization:</strong></div>
+              <div class="value">{{ organizationName.value }}</div>
+            </div>
+            <div class="row">
+              <div class="key"><strong>Phone Number:</strong></div>
+              <div class="value">{{ phoneNumber.value }}</div>
+            </div>
+            <div class="row">
+              <div class="key"><strong>Email:</strong></div>
+              <div class="value">{{ email.value }}</div>
+            </div>
+            <div class="row">
+              <button mat-stroked-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0">
+        No landowners or government contacts are added. Please go back to Step 1 to add information.
+      </div>
+      <!-- /Owner -->
+
+      <!-- Third-Part Agent/Government -->
+      <div *ngIf="selectedThirdPartyAgent || selectedLocalGovernment" class="form-row">
         <div>
           <label for="firstName">First Name</label>
           <mat-form-field appearance="outline">
@@ -127,33 +150,17 @@
           </div>
         </div>
       </div>
+      <!-- /Third-Part Agent/Government -->
     </form>
   </div>
 </section>
 <section *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
-  <h4>Primary Contact Authorization Letters</h4>
-  <div>
-    <ng-container *ngIf="!isGovernmentUser">
-      An authorization letter must be provided if:
-      <ol>
-        <li>the parcel under notice of intent is owned by more than one person;</li>
-        <li>the parcel(s) is owned by an organization; or</li>
-        <li>the parcel(s) is owned by a corporation (private, Crown, local government, First Nations); or</li>
-        <li>the notice of intent is being submitted by a third-party agent on behalf of the land owner(s)</li>
-      </ol>
-      <p>
-        The authorization letter must be signed by all individual land owners and the majority of directors in
-        organization land owners listed in Step 1. Please consult the Supporting Documentation page of ALC website for
-        further instruction and an Authorization Letter template.
-      </p>
-    </ng-container>
-    <ng-container *ngIf="isGovernmentUser">
-      An authorization letter must be provided only if the notice of intent is being submitted by a third-party agent.
-      Please consult the Supporting Documentation page of the <a>TODO: FIX THIS: ALC website</a> for further
-      instruction.
-    </ng-container>
-  </div>
-  <h6>Authorization Letters (if applicable)</h6>
+  <h6>Authorization Letters</h6>
+  <p class="subtext">
+    For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the majority of
+    directors within the organization.For Crown parcels or Fee Simple parcels owned by a government, the letter must be
+    signed by senior level staff.
+  </p>
   <div class="uploader">
     <app-file-drag-drop
       [allowMultiple]="true"

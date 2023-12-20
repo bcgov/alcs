@@ -17,6 +17,8 @@ import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditNoiSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { OwnerDialogComponent } from 'src/app/shared/owner-dialogs/owner-dialog/owner-dialog.component';
+import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 
 @Component({
   selector: 'app-primary-contact',
@@ -40,6 +42,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   governmentName: string | undefined;
   isDirty = false;
   hasCrownParcels = false;
+
+  primaryContactType = new FormControl<boolean | null>(null, [Validators.required]);
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -237,6 +241,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
       }
 
+      this.primaryContactType.setValue(!this.selectedThirdPartyAgent);
+
       if (this.selectedLocalGovernment) {
         this.organizationName.setValidators([Validators.required]);
       } else {
@@ -276,5 +282,59 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   private prepareGovernmentOwners() {
     this.parcelOwners = [];
+  }
+
+  async onSelectPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
+    if (this.form.dirty || (this.selectedOwnerUuid !== 'agent' && this.selectedOwnerUuid !== 'government')) {
+      await this.dialog
+        .open(PrimaryContactConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (confirmed) => {
+          if (confirmed) {
+            this.switchPrimaryContactType(selectedThirdPartyAgent);
+          } else {
+            console.log(selectedThirdPartyAgent);
+            this.primaryContactType.setValue(selectedThirdPartyAgent);
+          }
+        });
+    } else {
+      this.switchPrimaryContactType(selectedThirdPartyAgent);
+    }
+  }
+
+  switchPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
+    if (selectedThirdPartyAgent) {
+      this.onSelectAgent();
+    } else if (this.isGovernmentUser) {
+      this.onSelectGovernment();
+    } else {
+      this.selectedThirdPartyAgent = false;
+    }
+  }
+
+  onEdit(selectedOwnerUuid: string) {
+    const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === selectedOwnerUuid);
+
+    const dialog = this.dialog.open(OwnerDialogComponent, {
+      data: {
+        existingOwner: selectedOwner,
+        submissionUuid: this.submissionUuid,
+        ownerService: this.noticeOfIntentOwnerService,
+      },
+    });
+
+    dialog.afterClosed().subscribe(async (updatedContact) => {
+      console.log(updatedContact);
+      if (updatedContact && this.selectedOwnerUuid !== undefined) {
+        this.firstName.setValue(updatedContact.firstName);
+        this.lastName.setValue(updatedContact.lastName);
+        this.organizationName.setValue(updatedContact.organizationName);
+        this.phoneNumber.setValue(updatedContact.phoneNumber);
+        this.email.setValue(updatedContact.email);
+      }
+    });
   }
 }
