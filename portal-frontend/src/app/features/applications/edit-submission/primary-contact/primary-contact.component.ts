@@ -17,9 +17,9 @@ import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directiv
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
-import { OwnerDialogComponent } from 'src/app/shared/owner-dialogs/owner-dialog/owner-dialog.component';
-import { CrownOwnerDialogComponent } from 'src/app/shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
-import { scrollToElement } from 'src/app/shared/utils/scroll-helper';
+import { OwnerDialogComponent } from '../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
+import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 
 @Component({
   selector: 'app-primary-contact',
