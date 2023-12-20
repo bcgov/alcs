@@ -16,7 +16,11 @@
           <strong>Will {{ governmentName ?? 'Local / First Nation Government' }} staff be the primary contact?</strong>
         </p>
         <p *ngIf="!isGovernmentUser">
-          <strong>Will one of the landowners or government contacts added previously be the primary contact?</strong>
+          <strong
+            >Will one of the landowners
+            <ng-container *ngIf="hasCrownParcels">or government contacts</ng-container> added previously be the primary
+            contact?</strong
+          >
         </p>
         <mat-button-toggle-group
           class="input"
@@ -31,7 +35,8 @@
       <!-- Owner -->
       <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0">
         <label *ngIf="owners.length"
-          >Select a Primary Contact from the listed land owners and government contacts</label
+          >Select a Primary Contact from the listed land owners
+          <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
         >
 
         <mat-radio-group color="primary" [value]="selectedOwnerUuid" required>
