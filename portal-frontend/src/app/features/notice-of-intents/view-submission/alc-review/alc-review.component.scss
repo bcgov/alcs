@@ -5,4 +5,11 @@
   background-color: rgba(colors.$accent-color-light, 0.5);
   padding: rem(16);
   margin-bottom: rem(24);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    margin-right: 12px;
+  }
 }
