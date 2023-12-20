@@ -19,6 +19,7 @@ import { FilesStepComponent } from '../files-step.partial';
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { OwnerDialogComponent } from 'src/app/shared/owner-dialogs/owner-dialog/owner-dialog.component';
 import { CrownOwnerDialogComponent } from 'src/app/shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { scrollToElement } from 'src/app/shared/utils/scroll-helper';
 
 @Component({
   selector: 'app-primary-contact',
@@ -157,6 +158,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       }
     }
     this.calculateLetterRequired();
+
+    setTimeout(() => {
+      scrollToElement({ id: 'owner-info', center: false });
+    });
   }
 
   private calculateLetterRequired() {
