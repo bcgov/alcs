@@ -29,7 +29,7 @@
       </div>
 
       <!-- Owner -->
-      <div *ngIf="selectedThirdPartyAgent === false">
+      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0">
         <label *ngIf="owners.length"
           >Select a Primary Contact from the listed land owners and government contacts</label
         >
@@ -46,7 +46,10 @@
           </mat-radio-button>
         </mat-radio-group>
 
-        <div class="warning-banner" *ngIf="selectedOwnerUuid && !selectedLocalGovernment">
+        <div
+          class="warning-banner"
+          *ngIf="selectedOwnerUuid && selectedOwnerUuid !== 'agent' && !selectedLocalGovernment"
+        >
           <div class="owner-details">
             <div class="row">
               <div class="key"><strong>First Name:</strong></div>
@@ -74,6 +77,9 @@
           </div>
         </div>
       </div>
+      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0">
+        No landowners or government contacts are added. Please go back to Step 1 to add information.
+      </div>
       <!-- /Owner -->
 
       <!-- Third-Part Agent/Government -->
@@ -99,11 +105,23 @@
           </div>
         </div>
         <div class="full-row">
-          <label *ngIf="!isCrownOwner && !selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
-          <label *ngIf="isCrownOwner" for="orgName">Ministry or Department</label>
+          <label *ngIf="!selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
           <label *ngIf="selectedLocalGovernment" for="orgName">Department</label>
           <mat-form-field appearance="outline">
-            <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+            <input
+              *ngIf="!selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Organization Name"
+              formControlName="organizationName"
+            />
+            <input
+              *ngIf="selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Department Name"
+              formControlName="organizationName"
+            />
           </mat-form-field>
           <div
             *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"

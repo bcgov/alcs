@@ -78,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0">
+      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0 && !isGovernmentUser">
         No landowners or government contacts are added. Please go back to Step 1 to add information.
       </div>
       <!-- /Owner -->
@@ -106,11 +106,23 @@
           </div>
         </div>
         <div class="full-row">
-          <label *ngIf="!isCrownOwner && !selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
-          <label *ngIf="isCrownOwner" for="orgName">Ministry or Department</label>
+          <label *ngIf="!selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
           <label *ngIf="selectedLocalGovernment" for="orgName">Department</label>
           <mat-form-field appearance="outline">
-            <input id="orgName" matInput placeholder="Enter Organization Name" formControlName="organizationName" />
+            <input
+              *ngIf="!selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Organization Name"
+              formControlName="organizationName"
+            />
+            <input
+              *ngIf="selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Department Name"
+              formControlName="organizationName"
+            />
           </mat-form-field>
           <div
             *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"
