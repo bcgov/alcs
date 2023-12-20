@@ -1,9 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import { ModificationProfile } from '../../../common/automapper/modification.automapper.profile';
 import { Board } from '../../board/board.entity';
@@ -12,8 +12,8 @@ import { Card } from '../../card/card.entity';
 import { CardService } from '../../card/card.service';
 import { NoticeOfIntent } from '../../notice-of-intent/notice-of-intent.entity';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
-import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
+import { NoticeOfIntentDecision } from '../notice-of-intent-decision.entity';
 import {
   NoticeOfIntentModificationCreateDto,
   NoticeOfIntentModificationUpdateDto,
@@ -97,7 +97,7 @@ describe('NoticeOfIntentModificationService', () => {
       NoticeOfIntentModificationService,
     );
 
-    mockModification = new NoticeOfIntentModification();
+    mockModification = new NoticeOfIntentModification({ cardUuid: 'mockUuid' });
     modificationRepoMock.findOneOrFail.mockResolvedValue(mockModification);
     modificationRepoMock.findOneBy.mockResolvedValue(mockModification);
     modificationRepoMock.find.mockResolvedValue([mockModification]);
@@ -219,11 +219,28 @@ describe('NoticeOfIntentModificationService', () => {
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
       uuid,
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call archive card if modification does not have card attached (only modifications imported from OATS) on delete', async () => {
+    const uuid = 'fake';
+    modificationRepoMock.findOneBy.mockResolvedValue(
+      new NoticeOfIntentModification(),
+    );
+    modificationRepoMock.softRemove.mockResolvedValue({} as any);
+    cardServiceMock.archive.mockResolvedValue();
+
+    await service.delete(uuid);
+
+    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
+      uuid,
+    });
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 
   it('should fail on delete if modification does not exist', async () => {

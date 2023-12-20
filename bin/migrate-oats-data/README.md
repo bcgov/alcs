@@ -55,3 +55,13 @@ Prerequisites:
 - activate virtual env, the same way you would do it for starting etl,
 - install python requirements `pip install -r requirements.txt`
 - run data obfuscation `python migrate.py obfuscate`
+
+## Fixing Public Visibility Issue
+
+Applications imported from OATS will not properly display in the public search. The following hack can circumvent this issue:
+
+```sql
+UPDATE alcs.application a
+SET date_received_all_items = CURRENT_TIMESTAMP
+WHERE a.audit_created_by = 'oats_etl';
+```

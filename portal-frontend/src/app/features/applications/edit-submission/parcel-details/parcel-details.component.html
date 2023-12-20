@@ -2,7 +2,7 @@
   <div class="step-description">
     <h2>Identify Parcels Under Application</h2>
     <p>Provide parcel identification and registered ownership information for each parcel under application.</p>
-    <p>*All fields are required unless stated optional.</p>
+    <p>*All fields are required unless stated optional or disabled.</p>
     <div class="step-documents">
       <h6>Documents needed for this step:</h6>
       <ul>
@@ -31,6 +31,7 @@
       [showErrors]="showErrors"
       (onFormGroupChange)="onParcelFormChange($event)"
       (onOwnersUpdated)="onOwnersUpdated()"
+      (onOwnersDeleted)="reloadApplication()"
     ></app-parcel-entry>
 
     <div>

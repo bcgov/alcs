@@ -9,6 +9,7 @@ import {
   NoticeOfIntentParcelUpdateDto,
 } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.dto';
 import { NoticeOfIntentParcelService } from '../../../../services/notice-of-intent-parcel/notice-of-intent-parcel.service';
+import { NoticeOfIntentSubmissionService } from '../../../../services/notice-of-intent-submission/notice-of-intent-submission.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { parseStringToBoolean } from '../../../../shared/utils/string-helper';
@@ -34,7 +35,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
   isDirty = false;
 
   constructor(
-    private router: Router,
+    private noiSubmissionService: NoticeOfIntentSubmissionService,
     private noiParcelService: NoticeOfIntentParcelService,
     private noticeOfIntentOwnerService: NoticeOfIntentOwnerService,
     private toastService: ToastService,
@@ -152,7 +153,7 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       .beforeClosed()
       .subscribe((result) => {
         if (result) {
-          this.parcels = this.parcels.filter(parcel => parcel.uuid !== parcelUuid);
+          this.parcels = this.parcels.filter((parcel) => parcel.uuid !== parcelUuid);
         }
       });
   }
@@ -165,6 +166,11 @@ export class ParcelDetailsComponent extends StepComponent implements OnInit, Aft
       );
       this.$owners.next(parcelOwners);
     }
+  }
+
+  async reloadSubmission() {
+    const updatedNoi = await this.noiSubmissionService.getByUuid(this.submissionUuid);
+    this.$noiSubmission.next(updatedNoi);
   }
 
   expandedParcel: string = '';

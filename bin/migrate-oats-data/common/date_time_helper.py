@@ -21,6 +21,8 @@ def convert_timezone(date_str, timezone_str="America/Vancouver"):
 
 
 def add_timezone_and_keep_date_part(date_str, timezone_str="America/Vancouver"):
+    if date_str is None:
+        return None
     # Convert the string to a datetime object if it's a string
     if isinstance(date_str, str):
         naive_dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")

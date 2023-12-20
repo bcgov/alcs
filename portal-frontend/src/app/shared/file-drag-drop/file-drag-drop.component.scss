@@ -8,6 +8,7 @@
 .desktop-file-drag-drop {
   display: none;
   margin-top: rem(5);
+  margin-bottom: rem(5);
   width: 100%;
   border-radius: rem(4);
 
@@ -27,6 +28,7 @@
 
 .mobile-file-drag-drop {
   width: 100%;
+  margin-bottom: rem(2) !important;
 }
 
 a {

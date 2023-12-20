@@ -1,7 +1,7 @@
 <h2>Review & Submit</h2>
 <div>
-  <div class="description">
-    <div>Complete Local government review and submit to ALC</div>
+  <div *ngIf="_applicationReview" class="description">
+    <div>Complete {{ _applicationReview.governmentName }} review and submit to ALC</div>
   </div>
   <div *ngIf="_applicationReview && !isMobile" class="mobile-hidden">
     <section>
@@ -140,7 +140,8 @@
         <div *ngIf="_applicationReview.isSubjectToZoning">
           <div class="subheading2">Minimum Lot Size (hectares)</div>
           <div>
-            {{ _applicationReview.zoningMinimumLotSize }}<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span>
+            {{ _applicationReview.zoningMinimumLotSize
+            }}<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span>
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningMinimumLotSize"></app-no-data>
           </div>
         </div>
@@ -186,10 +187,10 @@
           "
           class="full-width"
         >
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>
@@ -384,7 +385,9 @@
           </div>
         </div>
         <div *ngIf="_applicationReview.isSubjectToZoning">
-          <div class="subheading2">Minimum Lot Size (hectares)<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span></div>
+          <div class="subheading2">
+            Minimum Lot Size (hectares)<span *ngIf="_applicationReview.zoningMinimumLotSize"> ha</span>
+          </div>
           <div>
             {{ _applicationReview.zoningMinimumLotSize }}
             <app-no-data [showRequired]="showErrors" *ngIf="!_applicationReview.zoningMinimumLotSize"></app-no-data>
@@ -434,10 +437,10 @@
           "
           class="full-width"
         >
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
             <span *ngIf="_applicationReview.isAuthorized !== null">{{
-              _applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+              _applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
             }}</span>
             <app-no-data [showRequired]="showErrors" *ngIf="_applicationReview.isAuthorized === null"></app-no-data>
           </div>

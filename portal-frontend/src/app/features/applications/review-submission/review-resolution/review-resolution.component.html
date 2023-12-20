@@ -1,8 +1,7 @@
 <h2>Resolution</h2>
 <div>
   <div class="description">
-    <div *ngIf="isFirstNationGovernment">Provide First Nation government authorizing resolution</div>
-    <div *ngIf="!isFirstNationGovernment">Provide Local government authorizing resolution</div>
+    <div>Provide the {{ governmentName }} resolution outcome</div>
   </div>
   <div *ngIf="!isFirstNationGovernment && (this.isOCPDesignation === null || this.isSubjectToZoning === null)">
     Please complete both Step 2 Plans & Bylaws: OCP and Step 3 Plans & Bylaws: Zoning to continue with this step.
@@ -23,14 +22,14 @@
           this.isFirstNationGovernment
         "
       >
-        <label for="is-consistent">Resolution for Application to Proceed to the ALC</label>
+        <label for="is-consistent">What is the outcome of the Board/Council resolution?</label>
         <mat-button-toggle-group class="input" id="is-consistent" formControlName="isAuthorized">
           <mat-button-toggle value="true" [ngClass]="{ 'error-outline': isAuthorized.invalid && showErrors }"
-            >Authorize</mat-button-toggle
-          >
+            >Forward for ALC decision
+          </mat-button-toggle>
           <mat-button-toggle value="false" [ngClass]="{ 'error-outline': isAuthorized.invalid && showErrors }"
-            >Refuse to Authorize</mat-button-toggle
-          >
+            >Refuse to forward to ALC
+          </mat-button-toggle>
         </mat-button-toggle-group>
         <div *ngIf="isAuthorized.invalid && showErrors" class="field-error">
           <mat-icon>warning</mat-icon>

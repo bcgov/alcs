@@ -253,6 +253,7 @@ export class ApplicationSubmissionReviewService {
     return {
       ...mappedReview,
       isFirstNationGovernment: localGovernment.isFirstNation,
+      governmentName: localGovernment.name,
     };
   }
 

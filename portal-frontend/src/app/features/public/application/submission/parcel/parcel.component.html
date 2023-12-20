@@ -4,7 +4,7 @@
 <div class="review-table">
   <ng-container *ngFor="let parcel of parcels; let parcelInd = index">
     <div class="full-width flex-space-between-wrap">
-      <h4>Parcel {{ parcelInd + 1 }}</h4>
+      <h4>Parcel #{{ parcelInd + 1 }}</h4>
     </div>
     <div class="subheading2 grid-1">Parcel Type</div>
     <div class="grid-double">
@@ -62,7 +62,7 @@
       <div class="subheading2">Land Owner(s)</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
       <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-        Ministry/ Department
+        Ministry or Department
       </div>
       <ng-container *ngFor="let owner of parcel.owners">
         <div>{{ owner.displayName }}</div>

@@ -160,9 +160,9 @@ export class GenerateReviewDocumentService {
   private mapAuthorizationValueToStr(isAuthorized: boolean | null) {
     switch (isAuthorized) {
       case true:
-        return 'Authorize';
+        return 'Forward for ALC decision';
       case false:
-        return 'Refuse to Authorize';
+        return 'Refuse to forward to ALC';
       default:
         return NO_DATA;
     }

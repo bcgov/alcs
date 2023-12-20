@@ -222,10 +222,10 @@
           The only option available is to forward this application on to the ALC.
         </div>
         <div *ngIf="hasCompletedStepsBeforeResolution" class="full-width">
-          <div class="subheading2">Resolution for Application to Proceed to the ALC</div>
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
           <div>
             <span *ngIf="applicationReview.isAuthorized !== null">{{
-              applicationReview.isAuthorized ? 'Authorized' : 'Refuse to Authorize'
+              applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC'
             }}</span>
             <app-no-data *ngIf="applicationReview.isAuthorized === null"></app-no-data>
           </div>
