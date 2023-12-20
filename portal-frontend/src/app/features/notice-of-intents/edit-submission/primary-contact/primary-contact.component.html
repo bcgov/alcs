@@ -80,9 +80,9 @@
           </div>
         </div>
       </div>
-      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0 && !isGovernmentUser">
+      <app-warning-banner *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0 && !isGovernmentUser">
         No landowners or government contacts are added. Please go back to Step 1 to add information.
-      </div>
+      </app-warning-banner>
       <!-- /Owner -->
 
       <!-- Third-Part Agent/Government -->
