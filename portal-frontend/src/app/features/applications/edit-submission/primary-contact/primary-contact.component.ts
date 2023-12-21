@@ -16,6 +16,10 @@ import { OWNER_TYPE } from '../../../../shared/dto/owner.dto';
 import { FileHandle } from '../../../../shared/file-drag-drop/drag-drop.directive';
 import { EditApplicationSteps } from '../edit-submission.component';
 import { FilesStepComponent } from '../files-step.partial';
+import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
+import { OwnerDialogComponent } from '../../../../shared/owner-dialogs/owner-dialog/owner-dialog.component';
+import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { scrollToElement } from '../../../../shared/utils/scroll-helper';
 
 @Component({
   selector: 'app-primary-contact',
@@ -39,6 +43,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isDirty = false;
   showVirusError = false;
   hasCrownParcels = false;
+
+  isExistingOwner = new FormControl<boolean | null>(null, [Validators.required]);
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -152,6 +158,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       }
     }
     this.calculateLetterRequired();
+
+    setTimeout(() => {
+      scrollToElement({ id: 'owner-info', center: false });
+    });
   }
 
   private calculateLetterRequired() {
@@ -233,6 +243,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       if (selectedOwner) {
         this.selectedThirdPartyAgent = selectedOwner.type.code === OWNER_TYPE.AGENT;
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
+
+        this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
       }
 
       if (this.selectedLocalGovernment) {
@@ -274,5 +286,71 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   private prepareGovernmentOwners() {
     this.parcelOwners = [];
+  }
+
+  async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
+    if (this.form.dirty || (this.selectedOwnerUuid !== 'agent' && this.selectedOwnerUuid !== 'government')) {
+      await this.dialog
+        .open(PrimaryContactConfirmationDialogComponent, {
+          panelClass: 'no-padding',
+          disableClose: true,
+        })
+        .beforeClosed()
+        .subscribe(async (confirmed) => {
+          if (confirmed) {
+            this.switchPrimaryContactType(isExistingOwner);
+          } else {
+            this.isExistingOwner.setValue(!isExistingOwner);
+          }
+        });
+    } else {
+      this.switchPrimaryContactType(isExistingOwner);
+    }
+  }
+
+  switchPrimaryContactType(isExistingOwner: boolean | null) {
+    if (!isExistingOwner) {
+      this.onSelectAgent();
+    } else if (this.isGovernmentUser) {
+      this.onSelectGovernment();
+    } else if (this.parcelOwners.length === 1) {
+      this.onSelectOwner(this.parcelOwners[0].uuid);
+    } else {
+      this.selectedThirdPartyAgent = false;
+    }
+  }
+
+  onEdit(selectedOwnerUuid: string) {
+    const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === selectedOwnerUuid);
+
+    let dialog;
+
+    if (this.isCrownOwner) {
+      dialog = this.dialog.open(CrownOwnerDialogComponent, {
+        data: {
+          existingOwner: selectedOwner,
+          submissionUuid: this.submissionUuid,
+          ownerService: this.applicationOwnerService,
+        },
+      });
+    } else {
+      dialog = this.dialog.open(OwnerDialogComponent, {
+        data: {
+          existingOwner: selectedOwner,
+          submissionUuid: this.submissionUuid,
+          ownerService: this.applicationOwnerService,
+        },
+      });
+    }
+
+    dialog.afterClosed().subscribe(async (updatedContact) => {
+      if (updatedContact && this.selectedOwnerUuid !== undefined) {
+        this.firstName.setValue(updatedContact.firstName);
+        this.lastName.setValue(updatedContact.lastName);
+        this.organizationName.setValue(updatedContact.organizationName);
+        this.phoneNumber.setValue(updatedContact.phoneNumber);
+        this.email.setValue(updatedContact.email);
+      }
+    });
   }
 }
