@@ -978,13 +978,9 @@ export class ApplicationSubmissionService {
       updateDto.naruFillOrigin,
       applicationSubmission.naruFillOrigin,
     );
-    applicationSubmission.naruProjectDurationAmount = filterUndefined(
-      updateDto.naruProjectDurationAmount,
-      applicationSubmission.naruProjectDurationAmount,
-    );
-    applicationSubmission.naruProjectDurationUnit = filterUndefined(
-      updateDto.naruProjectDurationUnit,
-      applicationSubmission.naruProjectDurationUnit,
+    applicationSubmission.naruProjectDuration = filterUndefined(
+      updateDto.naruProjectDuration,
+      applicationSubmission.naruProjectDuration,
     );
     applicationSubmission.naruToPlaceVolume = filterUndefined(
       updateDto.naruToPlaceVolume,

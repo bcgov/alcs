@@ -126,6 +126,11 @@
       {{ _applicationSubmission.naruFillOrigin }}
     </div>
 
+    <div class="subheading2 grid-1">Fill Project Duration</div>
+    <div class="grid-double">
+      {{ _applicationSubmission.naruProjectDuration }}
+    </div>
+
     <div class="subheading1 full-width">Fill to be Placed</div>
     <div class="full-width soil-table">
       <div class="grid-1"><strong>Volume</strong></div>
@@ -136,18 +141,6 @@
       <div class="grid-2">{{ _applicationSubmission.naruToPlaceMaximumDepth }} m</div>
       <div class="grid-1"><strong>Average Depth</strong></div>
       <div class="grid-2">{{ _applicationSubmission.naruToPlaceAverageDepth }} m</div>
-    </div>
-
-    <div class="full-width">
-      <span class="subheading1">Project Duration</span>
-    </div>
-    <div class="subheading2 grid-1">Duration</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationUnit }}
-    </div>
-    <div class="subheading2 grid-1">Length</div>
-    <div class="grid-double">
-      {{ _applicationSubmission.naruProjectDurationAmount }}
     </div>
   </ng-container>
 </div>

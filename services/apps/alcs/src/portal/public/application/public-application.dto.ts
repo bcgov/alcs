@@ -256,11 +256,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => String)
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   naruToPlaceVolume: number | null;

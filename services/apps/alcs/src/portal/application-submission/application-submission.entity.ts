@@ -630,19 +630,9 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   @Column({

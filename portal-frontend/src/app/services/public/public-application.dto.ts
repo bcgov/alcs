@@ -108,8 +108,7 @@ export interface PublicApplicationSubmissionDto {
   naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
-  naruProjectDurationAmount: number | null;
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
   naruToPlaceVolume: number | null;
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;

@@ -273,11 +273,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => String)
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   naruToPlaceVolume: number | null;
@@ -669,13 +666,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   naruFillOrigin?: string | null;
 
-  @IsNumber()
-  @IsOptional()
-  naruProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  naruProjectDurationUnit?: string | null;
+  naruProjectDuration?: string | null;
 
   @IsNumber()
   @IsOptional()

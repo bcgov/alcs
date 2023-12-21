@@ -166,21 +166,8 @@
 
     <div class="subheading2 grid-1">Fill Project Duration</div>
     <div class="grid-double">
-      <div *ngIf="_applicationSubmission.naruProjectDurationAmount && _applicationSubmission.naruProjectDurationUnit">
-        {{ _applicationSubmission.naruProjectDurationAmount }}
-        <ng-container [ngPlural]="_applicationSubmission.naruProjectDurationAmount">
-          <ng-template ngPluralCase="=1">
-            {{ _applicationSubmission.naruProjectDurationUnit.slice(0, -1) | titlecase }}
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            {{ _applicationSubmission.naruProjectDurationUnit | titlecase }}
-          </ng-template>
-        </ng-container>
-      </div>
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="!_applicationSubmission.naruProjectDurationAmount || !_applicationSubmission.naruProjectDurationUnit"
-      ></app-no-data>
+      <div *ngIf="_applicationSubmission.naruProjectDuration">{{ _applicationSubmission.naruProjectDuration }}</div>
+      <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruProjectDuration"></app-no-data>
     </div>
 
     <div class="grid-1"></div>
