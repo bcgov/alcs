@@ -1,12 +1,5 @@
 import { AutoMap } from 'automapper-classes';
-import {
-  Column,
-  Entity,
-  Index,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
 import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
@@ -17,10 +10,6 @@ import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
 @Entity()
-@Index(['applicationDecisionComponentTypeCode', 'applicationDecisionUuid'], {
-  unique: true,
-  where: '"audit_deleted_date_at" is null',
-})
 export class ApplicationDecisionComponent extends Base {
   constructor(data?: Partial<ApplicationDecisionComponent>) {
     super();
