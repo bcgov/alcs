@@ -306,8 +306,9 @@
       <div>
         <mat-radio-group
           color="primary"
-          [value]="selectedOwner?.uuid" required
-          [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }"
+          [value]="selectedOwner?.uuid"
+          required
+          [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
           formControlName="selectedOwnerVal"
         >
           <mat-radio-button
@@ -321,7 +322,7 @@
           </mat-radio-button>
         </mat-radio-group>
 
-        <div class="warning-banner" *ngIf="selectedOwner">
+        <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
           <div class="owner-details">
             <div class="row">
               <div class="key"><strong>First Name:</strong></div>
@@ -331,8 +332,8 @@
               <div class="key"><strong>Last Name:</strong></div>
               <div class="value">{{ selectedOwner.lastName }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Ministry or Department:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Ministry or Department:</strong></div>
               <div class="value">{{ selectedOwner.organizationName }}</div>
             </div>
             <div class="row">

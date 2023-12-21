@@ -19,6 +19,7 @@ import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../../applications/alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
+import { scrollToElement } from '../../../../../shared/utils/scroll-helper';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -339,6 +340,10 @@ export class ParcelEntryComponent implements OnInit {
     this.selectedOwner = owner;
     const selectedOwners = [owner];
     this.updateParcelOwners(selectedOwners);
+
+    setTimeout(() => {
+      scrollToElement({ id: 'owner-info', center: false });
+    });
   }
 
   onEditCrownOwner(owner: NoticeOfIntentOwnerDto) {
