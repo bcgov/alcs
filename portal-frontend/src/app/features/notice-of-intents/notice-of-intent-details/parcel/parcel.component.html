@@ -5,7 +5,7 @@
       <h4>Parcel #{{ parcelInd + 1 }}</h4>
       <div>
         <button
-          *ngIf="showEdit"
+          *ngIf="showEdit && parcels.length > 1"
           class="mobile-hidden"
           mat-flat-button
           color="accent"
