@@ -3,6 +3,8 @@ from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
     ALRChangeCode,
+    OatsToAlcsAgCap,
+    OatsToAlcsAgCapSource,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -139,10 +141,16 @@ def _prepare_oats_alr_applications_data(row_data_list):
             ALRChangeCode.EXT.value,
         ]:
             mapped_row = {
-                "ag_cap": row.get("agri_capability_code"),
+                "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
+                if row.get("agri_capability_code")
+                else None,
                 "ag_cap_consultant": row.get("agri_cap_consultant"),
                 "ag_cap_map": row.get("agri_cap_map"),
-                "ag_cap_source": row.get("capability_source_code"),
+                "ag_cap_source": str(
+                    OatsToAlcsAgCapSource[row["capability_source_code"]].value
+                )
+                if row.get("capability_source_code")
+                else None,
                 "alr_area": row.get("component_area"),
                 "audit_created_by": OATS_ETL_USER,
                 "end_date": add_timezone_and_keep_date_part(
