@@ -313,10 +313,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   private switchPrimaryContactType(isExistingOwner: boolean | null) {
     if (!isExistingOwner) {
       this.onSelectAgent();
-    } else if (this.parcelOwners.length === 1) {
-      this.onSelectOwner(this.parcelOwners[0].uuid);
     } else if (this.isGovernmentUser) {
       this.onSelectGovernment();
+    } else if (this.parcelOwners.length === 1) {
+      this.onSelectOwner(this.parcelOwners[0].uuid);
     } else {
       this.selectedThirdPartyAgent = false;
     }
