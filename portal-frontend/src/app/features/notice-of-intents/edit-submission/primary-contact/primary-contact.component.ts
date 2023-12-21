@@ -245,9 +245,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       if (selectedOwner) {
         this.selectedThirdPartyAgent = selectedOwner.type.code === OWNER_TYPE.AGENT;
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
-      }
 
-      this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
+        this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
+      }
 
       if (this.selectedLocalGovernment) {
         this.organizationName.setValidators([Validators.required]);
