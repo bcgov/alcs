@@ -216,4 +216,13 @@ export class ApplicationDecision extends Base {
     { cascade: ['insert', 'update'] },
   )
   conditions: ApplicationDecisionCondition[];
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.application_decisions.',
+  })
+  oatsAlrApplDecisionId: number;
 }

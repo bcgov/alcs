@@ -20,6 +20,7 @@ from .app_staff_journal import (
     process_app_staff_journal,
     clean_application_staff_journal,
 )
+from .decisions import clean_application_decisions, init_application_decisions
 
 
 def process_application_etl(batch_size):
@@ -30,6 +31,7 @@ def process_application_etl(batch_size):
     process_application_parcels(batch_size)
     process_application_owners(batch_size)
     process_app_staff_journal(batch_size)
+    process_application_decisions(batch_size)
     process_application_submission_status_emails()
 
 
@@ -37,12 +39,17 @@ def clean_alcs_applications():
     clean_application_submission_status_emails()
     clean_application_staff_journal()
     clean_application_parcels()
+    clean_application_decisions()
     clean_app_submissions()
     clean_applications()
 
 
 def init_applications(batch_size):
     process_applications(batch_size)
+
+
+def process_application_decisions(batch_size):
+    init_application_decisions(batch_size)
 
 
 def clean_application_parcels():
