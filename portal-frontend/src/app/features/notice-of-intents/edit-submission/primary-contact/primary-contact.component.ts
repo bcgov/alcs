@@ -45,7 +45,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isDirty = false;
   hasCrownParcels = false;
 
-  primaryContactType = new FormControl<boolean | null>(null, [Validators.required]);
+  isExistingOwner = new FormControl<boolean | null>(null, [Validators.required]);
 
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
@@ -247,7 +247,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
       }
 
-      this.primaryContactType.setValue(!this.selectedThirdPartyAgent);
+      this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
 
       if (this.selectedLocalGovernment) {
         this.organizationName.setValidators([Validators.required]);
@@ -290,7 +290,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     this.parcelOwners = [];
   }
 
-  async onSelectPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
+  async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
     if (this.form.dirty || (this.selectedOwnerUuid !== 'agent' && this.selectedOwnerUuid !== 'government')) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
@@ -300,29 +300,25 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .beforeClosed()
         .subscribe(async (confirmed) => {
           if (confirmed) {
-            this.switchPrimaryContactType(selectedThirdPartyAgent);
+            this.switchPrimaryContactType(isExistingOwner);
           } else {
-            this.primaryContactType.setValue(selectedThirdPartyAgent);
+            this.isExistingOwner.setValue(!isExistingOwner);
           }
         });
     } else {
-      this.switchPrimaryContactType(selectedThirdPartyAgent);
+      this.switchPrimaryContactType(isExistingOwner);
     }
   }
 
-  switchPrimaryContactType(selectedThirdPartyAgent: boolean | null) {
-    if (selectedThirdPartyAgent) {
+  private switchPrimaryContactType(isExistingOwner: boolean | null) {
+    if (!isExistingOwner) {
       this.onSelectAgent();
+    } else if (this.parcelOwners.length == 1) {
+      this.onSelectOwner(this.parcelOwners[0].uuid);
     } else if (this.isGovernmentUser) {
       this.onSelectGovernment();
-      if (this.parcelOwners.length == 1) {
-        this.onSelectOwner(this.parcelOwners[0].uuid);
-      }
     } else {
       this.selectedThirdPartyAgent = false;
-      if (this.parcelOwners.length == 1) {
-        this.onSelectOwner(this.parcelOwners[0].uuid);
-      }
     }
   }
 

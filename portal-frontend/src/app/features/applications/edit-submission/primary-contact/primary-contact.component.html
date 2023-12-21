@@ -4,7 +4,7 @@
     The primary contact becomes the single point of contact and must ensure that landowners are notified of all
     information exchanged between the primary contact, local or First Nation government, and the ALC.
   </p>
-  <p>*All fields are required unless stated optional.</p>
+  <p>*All fields are required unless stated optional or disabled.</p>
 </div>
 
 <section>
@@ -24,8 +24,8 @@
         </p>
         <mat-button-toggle-group
           class="input"
-          [formControl]="primaryContactType"
-          (change)="onSelectPrimaryContactType(!primaryContactType.value)"
+          [formControl]="isExistingOwner"
+          (change)="onSelectPrimaryContactType(isExistingOwner.value)"
         >
           <mat-button-toggle [value]="true">Yes</mat-button-toggle>
           <mat-button-toggle [value]="false">No</mat-button-toggle>
