@@ -16,3 +16,4 @@ fi
 ## Commands
 
 * `alcs docker [up/down] (--metabase)`
+..
