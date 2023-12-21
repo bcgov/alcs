@@ -2,6 +2,7 @@ from common import (
     OATS_ETL_USER,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
+    AlcsDecisionOutcomeCodeEnum,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -166,19 +167,18 @@ def _prepare_oats_alr_applications_data(row_data_list):
 
 def _map_outcome_code(row):
     if row.get("rescinded_date", None):
-        return "RESC"
+        return AlcsDecisionOutcomeCodeEnum.RESCINDED.value
     elif row.get("outright_refusal_ind", None) == "N":
-        return "APPR"
+        return AlcsDecisionOutcomeCodeEnum.APPROVED.value
     elif row.get("outright_refusal_ind", None) == "Y":
-        return "REFU"
+        return AlcsDecisionOutcomeCodeEnum.REFUSED.value
     return None
 
 
 def _map_resolution_number_and_year(row):
     year_and_number = str(row["resolution_number"])
     # some data appears to only have a year, if this is the case the number will be set to 0
-    year_and_number_length = len(year_and_number)
-    if year_and_number_length == 4:
+    if len(year_and_number) == 4:
         resolution_number = 0
     else:
         resolution_number = int(year_and_number[:-4])
