@@ -26,3 +26,34 @@ class OatsToAlcsAgCap(Enum):
     MIX = AlcsAgCap.Mixed_Prime_Secondary.value
     S = AlcsAgCap.Secondary.value
     U = AlcsAgCap.Unclassified.value
+
+
+class OatsToAlcsConditionTypeMapping(Enum):
+    ADO = "ACBO"
+    ACC = "ACCE"
+    ADF = "AFEE"
+    BON = "BOND"
+    BAG = "BTOA"
+    BUF = "BUFF"
+    CON = "CONS"
+    RCV = "COVE"
+    FEN = "FENC"
+    RPF = "FRPT"
+    HOS = "HOME"
+    INC = "INCL"
+    LEP = "LEAS"
+    MON = "MBRP"
+    NEX = "NOEX"
+    NHS = "NOHS"
+    # NONT no mapping for this one in OATS
+    OTH = "OTHR"
+    RHB = "RERC"
+    RFR = "ROFR"
+    PLN = "RSPL"
+    SRP = "SCAR"
+    SCO = "SCSP"
+    STA = "SRPT"
+    SIT = "SSDP"
+    SRC = "STRC"
+    TIM = "TIME"
+    VGS = "VEGS"

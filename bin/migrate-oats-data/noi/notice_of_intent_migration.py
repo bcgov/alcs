@@ -72,6 +72,11 @@ from .noi_decisions.noi_components import (
     update_notice_of_intent_decision_component_soil_details,
 )
 
+from .noi_decisions.noi_conditions import (
+    init_notice_of_intent_conditions,
+    clean_notice_of_intent_conditions,
+)
+
 
 def init_notice_of_intent(batch_size):
     init_notice_of_intents(batch_size=batch_size)
@@ -101,6 +106,7 @@ def process_notice_of_intent_decisions(batch_size):
     link_notice_of_intent_modifications(batch_size)
     init_notice_of_intent_decision_components(batch_size)
     update_notice_of_intent_decision_component_soil_details(batch_size)
+    init_notice_of_intent_conditions(batch_size)
 
 
 def clean_notice_of_intent_decision():
@@ -108,6 +114,7 @@ def clean_notice_of_intent_decision():
     unlink_etl_modifications()
     clean_notice_of_intent_modifications()
     clean_notice_of_intent_decisions()
+    clean_notice_of_intent_conditions()
 
 
 def process_notice_of_intent(batch_size):
