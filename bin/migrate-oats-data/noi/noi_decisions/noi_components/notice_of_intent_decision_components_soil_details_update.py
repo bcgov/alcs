@@ -132,7 +132,7 @@ def _prepare_oats_alr_decision_component_data(row_data_list):
 
 def map_soil_fields(data):
     soil_type = data.get("material_desc", "")
-    soil_origin = data.get("material_desc", "")
+    soil_origin = data.get("material_origin_desc", "")
 
     if not soil_type and not soil_origin:
         data["type"] = NO_DATA_IN_OATS
