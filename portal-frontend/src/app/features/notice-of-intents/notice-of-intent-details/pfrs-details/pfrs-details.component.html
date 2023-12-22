@@ -48,11 +48,6 @@
   <div class="grid-double">
     <div *ngIf="_noiSubmission.soilProjectDuration">
       {{ _noiSubmission.soilProjectDuration }}
-      <ng-container>
-        <ng-template>
-          {{ _noiSubmission.soilProjectDuration | titlecase }}
-        </ng-template>
-      </ng-container>
     </div>
     <app-no-data
       [showRequired]="showErrors"

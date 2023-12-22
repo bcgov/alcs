@@ -96,7 +96,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilFillTypeToPlace: noiSubmission.soilFillTypeToPlace,
-          projectDuration: noiSubmission.soilProjectDuration?.toString() ?? null,
+          projectDuration: noiSubmission.soilProjectDuration ?? null,
           isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
         });
         if (this.showErrors) {
@@ -137,11 +137,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilFillTypeToPlace = this.soilFillTypeToPlace.getRawValue();
+      const soilProjectDuration = this.projectDuration.getRawValue();
       const isAreaWideFilling = this.isAreaWideFilling.getRawValue();
 
       const updateDto: NoticeOfIntentSubmissionUpdateDto = {
         purpose,
         soilFillTypeToPlace,
+        soilProjectDuration,
         soilIsFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilFollowUpIDs,
         soilToPlaceVolume: this.fillToPlaceTableData?.volume ?? null,
@@ -151,8 +153,6 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedVolume: this.fillAlreadyPlacedTableData?.volume ?? null,
         soilAlreadyPlacedArea: this.fillAlreadyPlacedTableData?.area ?? null,
         soilAlreadyPlacedMaximumDepth: this.fillAlreadyPlacedTableData?.maximumDepth ?? null,
-        soilAlreadyPlacedAverageDepth: this.fillAlreadyPlacedTableData?.averageDepth ?? null,
-        soilProjectDuration: this.projectDuration.value ?? null,
         soilIsAreaWideFilling: parseStringToBoolean(isAreaWideFilling),
       };
 
