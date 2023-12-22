@@ -42,8 +42,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
   followUpIds = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(null, [Validators.required]);
   areComponentsDirty = false;
   isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
   hasSubmittedNotice = new FormControl<string | null>(null, [Validators.required]);
@@ -53,8 +52,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
     followUpIds: this.followUpIds,
     purpose: this.purpose,
     soilTypeRemoved: this.soilTypeRemoved,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    projectDuration: this.projectDuration,
     isExtractionOrMining: this.isExtractionOrMining,
     hasSubmittedNotice: this.hasSubmittedNotice,
   });
@@ -111,8 +109,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilTypeRemoved: noiSubmission.soilTypeRemoved,
-          projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
-          projectDurationUnit: noiSubmission.soilProjectDurationUnit,
+          projectDuration: noiSubmission.soilProjectDuration?.toString() ?? null,
           isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
         });
@@ -176,10 +173,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
         soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
         soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
-        soilProjectDurationAmount: this.projectDurationAmount.value
-          ? parseFloat(this.projectDurationAmount.value)
-          : null,
-        soilProjectDurationUnit: this.projectDurationUnit.value,
+        soilProjectDuration: this.projectDuration.value ?? null,
         soilIsExtractionOrMining: parseStringToBoolean(isExtractionOrMining),
         soilHasSubmittedNotice: parseStringToBoolean(hasSubmittedNotice),
       };

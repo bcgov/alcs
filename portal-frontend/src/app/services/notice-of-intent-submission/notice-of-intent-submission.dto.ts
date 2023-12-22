@@ -76,10 +76,8 @@ export interface NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmi
   soilAlreadyPlacedArea: number | null;
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
-  soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit: string | null;
-  fillProjectDurationAmount: number | null;
-  fillProjectDurationUnit: string | null;
+  soilProjectDuration: string | null;
+  fillProjectDuration: string | null;
   soilFillTypeToPlace: string | null;
   soilIsExtractionOrMining: boolean | null;
   soilIsAreaWideFilling: boolean | null;
@@ -130,10 +128,8 @@ export interface NoticeOfIntentSubmissionUpdateDto {
   soilAlreadyPlacedArea?: number | null;
   soilAlreadyPlacedMaximumDepth?: number | null;
   soilAlreadyPlacedAverageDepth?: number | null;
-  soilProjectDurationAmount?: number | null;
-  soilProjectDurationUnit?: string | null;
-  fillProjectDurationAmount?: number | null;
-  fillProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
+  fillProjectDuration?: string | null;
   soilFillTypeToPlace?: string | null;
   soilIsExtractionOrMining?: boolean | null;
   soilIsAreaWideFilling?: boolean | null;

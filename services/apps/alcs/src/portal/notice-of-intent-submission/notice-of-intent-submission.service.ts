@@ -522,21 +522,13 @@ export class NoticeOfIntentSubmissionService {
       updateDto.soilAlreadyPlacedAverageDepth,
       noticeOfIntentSubmission.soilAlreadyPlacedAverageDepth,
     );
-    noticeOfIntentSubmission.soilProjectDurationAmount = filterUndefined(
-      updateDto.soilProjectDurationAmount,
-      noticeOfIntentSubmission.soilProjectDurationAmount,
+    noticeOfIntentSubmission.soilProjectDuration = filterUndefined(
+      updateDto.soilProjectDuration,
+      noticeOfIntentSubmission.soilProjectDuration,
     );
-    noticeOfIntentSubmission.soilProjectDurationUnit = filterUndefined(
-      updateDto.soilProjectDurationUnit,
-      noticeOfIntentSubmission.soilProjectDurationUnit,
-    );
-    noticeOfIntentSubmission.fillProjectDurationAmount = filterUndefined(
-      updateDto.fillProjectDurationAmount,
-      noticeOfIntentSubmission.fillProjectDurationAmount,
-    );
-    noticeOfIntentSubmission.fillProjectDurationUnit = filterUndefined(
-      updateDto.fillProjectDurationUnit,
-      noticeOfIntentSubmission.fillProjectDurationUnit,
+    noticeOfIntentSubmission.fillProjectDuration = filterUndefined(
+      updateDto.fillProjectDuration,
+      noticeOfIntentSubmission.fillProjectDuration,
     );
     noticeOfIntentSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,

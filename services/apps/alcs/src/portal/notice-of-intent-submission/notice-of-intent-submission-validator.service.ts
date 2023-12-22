@@ -474,8 +474,7 @@ export class NoticeOfIntentSubmissionValidatorService {
   ) {
     if (
       noticeOfIntentSubmission.soilIsFollowUp === null ||
-      noticeOfIntentSubmission.soilProjectDurationAmount === null ||
-      noticeOfIntentSubmission.soilProjectDurationUnit === null
+      noticeOfIntentSubmission.soilProjectDuration === null
     ) {
       errors.push(
         new ServiceValidationException(

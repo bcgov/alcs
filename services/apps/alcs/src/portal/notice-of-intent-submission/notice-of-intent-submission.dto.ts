@@ -134,17 +134,11 @@ export class NoticeOfIntentSubmissionDetailedDto extends NoticeOfIntentSubmissio
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
-
-  @AutoMap(() => Number)
-  fillProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  fillProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
@@ -334,21 +328,13 @@ export class NoticeOfIntentSubmissionUpdateDto {
   @IsOptional()
   soilAlreadyPlacedAverageDepth?: number | null;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  soilProjectDurationAmount?: number | null;
+  soilProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
-  soilProjectDurationUnit?: string | null;
-
-  @IsNumber()
-  @IsOptional()
-  fillProjectDurationAmount?: number | null;
-
-  @IsString()
-  @IsOptional()
-  fillProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
