@@ -726,13 +726,9 @@ export class ApplicationSubmissionService {
       updateDto.nfuFillVolume,
       application.nfuFillVolume,
     );
-    application.nfuProjectDurationUnit = filterUndefined(
-      updateDto.nfuProjectDurationUnit,
-      application.nfuProjectDurationUnit,
-    );
-    application.nfuProjectDurationAmount = filterUndefined(
-      updateDto.nfuProjectDurationAmount,
-      application.nfuProjectDurationAmount,
+    application.nfuProjectDuration = filterUndefined(
+      updateDto.nfuProjectDuration,
+      application.nfuProjectDuration,
     );
     application.nfuFillTypeDescription = filterUndefined(
       updateDto.nfuFillTypeDescription,

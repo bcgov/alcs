@@ -525,8 +525,7 @@ describe('ApplicationSubmissionValidatorService', () => {
         nfuMaxFillDepth: 1.5125,
         nfuAverageFillDepth: 1261.21,
         nfuFillVolume: 742.1,
-        nfuProjectDurationAmount: 12,
-        nfuProjectDurationUnit: 'VALID',
+        nfuProjectDuration: '1 day',
       });
 
       const res = await service.validateSubmission(application);
@@ -574,8 +573,7 @@ describe('ApplicationSubmissionValidatorService', () => {
         nfuMaxFillDepth: 1.5125,
         nfuAverageFillDepth: 121,
         nfuFillVolume: 742.1,
-        nfuProjectDurationAmount: 12,
-        nfuProjectDurationUnit: 'VALID',
+        nfuProjectDuration: '1 day',
         typeCode: 'NFUP',
       });
 

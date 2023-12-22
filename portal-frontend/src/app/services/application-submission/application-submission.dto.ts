@@ -86,8 +86,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   nfuMaxFillDepth: number | null;
   nfuAverageFillDepth: number | null;
   nfuFillVolume: number | null;
-  nfuProjectDurationAmount: number | null;
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
 
@@ -198,8 +197,7 @@ export interface ApplicationSubmissionUpdateDto {
   nfuMaxFillDepth?: number | null;
   nfuAverageFillDepth?: number | null;
   nfuFillVolume?: number | null;
-  nfuProjectDurationAmount?: number | null;
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
   nfuFillTypeDescription?: string | null;
   nfuFillOriginDescription?: string | null;
 

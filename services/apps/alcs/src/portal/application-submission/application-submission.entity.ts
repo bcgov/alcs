@@ -288,19 +288,9 @@ export class ApplicationSubmission extends Base {
   })
   nfuFillVolume: number | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  nfuProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })

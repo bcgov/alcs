@@ -31,8 +31,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
   agricultureSupport = new FormControl<string | null>(null, [Validators.required]);
   willImportFill = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(null, [Validators.required]);
   fillTypeDescription = new FormControl<string | null>(null, [Validators.required]);
   fillOriginDescription = new FormControl<string | null>(null, [Validators.required]);
 
@@ -42,8 +41,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
     outsideLands: this.outsideLands,
     agricultureSupport: this.agricultureSupport,
     willImportFill: this.willImportFill,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    projectDuration: this.projectDuration,
     fillTypeDescription: this.fillTypeDescription,
     fillOriginDescription: this.fillOriginDescription,
   });
@@ -71,8 +69,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
           purpose: applicationSubmission.purpose,
           outsideLands: applicationSubmission.nfuOutsideLands,
           agricultureSupport: applicationSubmission.nfuAgricultureSupport,
-          projectDurationAmount: applicationSubmission.nfuProjectDurationAmount?.toString(),
-          projectDurationUnit: applicationSubmission.nfuProjectDurationUnit,
+          projectDuration: applicationSubmission.nfuProjectDuration,
           fillTypeDescription: applicationSubmission.nfuFillTypeDescription,
           fillOriginDescription: applicationSubmission.nfuFillOriginDescription,
         });
@@ -116,8 +113,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
       const nfuOutsideLands = this.outsideLands.getRawValue();
       const nfuAgricultureSupport = this.agricultureSupport.getRawValue();
       const nfuWillImportFill = this.willImportFill.getRawValue();
-      const nfuProjectDurationAmount = this.projectDurationAmount.getRawValue();
-      const nfuProjectDurationUnit = this.projectDurationUnit.getRawValue();
+      const nfuProjectDuration = this.projectDuration.getRawValue();
       const nfuFillTypeDescription = this.fillTypeDescription.getRawValue();
       const nfuFillOriginDescription = this.fillOriginDescription.getRawValue();
 
@@ -131,8 +127,7 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
         nfuMaxFillDepth: this.fillTableData.maximumDepth ?? null,
         nfuAverageFillDepth: this.fillTableData.averageDepth ?? null,
         nfuFillVolume: this.fillTableData.volume ?? null,
-        nfuProjectDurationAmount: nfuProjectDurationAmount ? parseFloat(nfuProjectDurationAmount) : null,
-        nfuProjectDurationUnit,
+        nfuProjectDuration,
         nfuFillTypeDescription,
         nfuFillOriginDescription,
       };
@@ -144,18 +139,15 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
 
   onChangeFill(value: string) {
     if (value === 'true') {
-      this.projectDurationAmount.enable();
-      this.projectDurationUnit.enable();
+      this.projectDuration.enable();
       this.fillTypeDescription.enable();
       this.fillOriginDescription.enable();
     } else {
-      this.projectDurationAmount.disable();
-      this.projectDurationUnit.disable();
+      this.projectDuration.disable();
       this.fillTypeDescription.disable();
       this.fillOriginDescription.disable();
 
-      this.projectDurationAmount.setValue(null);
-      this.projectDurationUnit.setValue(null);
+      this.projectDuration.setValue(null);
       this.fillTypeDescription.setValue(null);
       this.fillOriginDescription.setValue(null);
     }

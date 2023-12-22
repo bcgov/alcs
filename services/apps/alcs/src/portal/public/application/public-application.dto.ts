@@ -102,11 +102,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => Number)
   nfuFillVolume?: number | null;
 
-  @AutoMap(() => Number)
-  nfuProjectDurationAmount?: number | null;
-
   @AutoMap(() => String)
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;

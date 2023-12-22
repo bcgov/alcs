@@ -430,8 +430,7 @@ export class ApplicationSubmissionValidatorService {
         applicationSubmission.nfuMaxFillDepth === null ||
         applicationSubmission.nfuAverageFillDepth === null ||
         applicationSubmission.nfuFillVolume === null ||
-        applicationSubmission.nfuProjectDurationAmount === null ||
-        !applicationSubmission.nfuProjectDurationUnit
+        !applicationSubmission.nfuProjectDuration
       ) {
         errors.push(
           new ServiceValidationException(`NFU Fill Section incomplete`),

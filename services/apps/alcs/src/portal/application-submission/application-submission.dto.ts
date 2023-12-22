@@ -119,11 +119,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Number)
   nfuFillVolume?: number | null;
 
-  @AutoMap(() => Number)
-  nfuProjectDurationAmount?: number | null;
-
   @AutoMap(() => String)
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;
@@ -453,13 +450,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   nfuFillVolume?: number | null;
 
-  @IsNumber()
-  @IsOptional()
-  nfuProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)

@@ -143,8 +143,7 @@ export interface ApplicationSubmissionDto {
   nfuMaxFillDepth: number | null;
   nfuAverageFillDepth: number | null;
   nfuFillVolume: number | null;
-  nfuProjectDurationAmount: number | null;
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
 

@@ -55,21 +55,8 @@
 
     <div class="subheading2 grid-1">Fill Project Duration</div>
     <div class="grid-double">
-      <div *ngIf="applicationSubmission.nfuProjectDurationAmount && applicationSubmission.nfuProjectDurationUnit">
-        {{ applicationSubmission.nfuProjectDurationAmount }}
-        <ng-container [ngPlural]="applicationSubmission.nfuProjectDurationAmount">
-          <ng-template ngPluralCase="=1">
-            {{ applicationSubmission.nfuProjectDurationUnit.slice(0, -1) | titlecase }}
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            {{ applicationSubmission.nfuProjectDurationUnit | titlecase }}
-          </ng-template>
-        </ng-container>
-      </div>
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="!applicationSubmission.nfuProjectDurationAmount || !applicationSubmission.nfuProjectDurationUnit"
-      ></app-no-data>
+      <div *ngIf="applicationSubmission.nfuProjectDuration">{{ applicationSubmission.nfuProjectDuration }}</div>
+      <app-no-data [showRequired]="showErrors" *ngIf="!applicationSubmission.nfuProjectDuration"></app-no-data>
     </div>
 
     <div class="grid-1"></div>
