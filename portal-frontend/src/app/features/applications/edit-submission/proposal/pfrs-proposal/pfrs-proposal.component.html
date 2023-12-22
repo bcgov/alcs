@@ -89,6 +89,51 @@
         <div *ngIf="purpose.errors?.['required']">This field is required</div>
       </div>
     </div>
+
+    <div class="form-row full-row">
+      <div>
+        <mat-label for="soilProjectDuration">Placement of Fill Project Duration</mat-label>
+        <div class="subtext">Length of time you anticipate it would take to complete the project</div>
+        <mat-form-field appearance="outline">
+          <input
+            id="fillProjectDuration"
+            matInput
+            formControlName="fillProjectDuration"
+            placeholder="Type project duration"
+          />
+        </mat-form-field>
+        <div
+          *ngIf="fillProjectDuration.invalid && (fillProjectDuration.dirty || fillProjectDuration.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillProjectDuration.errors?.['required']">This field is required</div>
+          <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+        </div>
+      </div>
+
+      <div>
+        <mat-label for="soilProjectDuration">Removal of Soil Project Duration</mat-label>
+        <div class="subtext">Length of time you anticipate it would take to complete the project</div>
+        <mat-form-field appearance="outline">
+          <input
+            id="soilProjectDuration"
+            matInput
+            formControlName="soilProjectDuration"
+            placeholder="Type project duration"
+          />
+        </mat-form-field>
+        <div
+          *ngIf="soilProjectDuration.invalid && (soilProjectDuration.dirty || soilProjectDuration.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="soilProjectDuration.errors?.['required']">This field is required</div>
+          <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+        </div>
+      </div>
+    </div>
+
     <div class="full-row">
       <mat-label>Proposal Dimensions</mat-label>
       <div class="subtext">
@@ -145,84 +190,6 @@
         [(data)]="alreadyFilledTableData"
         (dataChange)="markDirty()"
       ></app-soil-table>
-    </div>
-
-    <div class="full-row">
-      <h4>Placement of Fill Project Duration</h4>
-      <div class="subtext">Estimated duration of the project</div>
-      <div class="form-row">
-        <div>
-          <label for="fillProjectDurationUnit">Duration</label>
-          <div class="subtext">Days, Months, or Years</div>
-          <mat-form-field appearance="outline">
-            <mat-select placeholder="Select one" id="fillProjectDurationUnit" formControlName="fillProjectDurationUnit">
-              <mat-option value="days">Days</mat-option>
-              <mat-option value="months">Months</mat-option>
-              <mat-option value="years">Years</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div
-            *ngIf="
-              fillProjectDurationUnit.invalid && (fillProjectDurationUnit.dirty || fillProjectDurationUnit.touched)
-            "
-            class="field-error"
-          >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="fillProjectDurationUnit.errors?.['required']">This field is required</div>
-          </div>
-        </div>
-        <div>
-          <label for="fillProjectDurationUnit">Length</label>
-          <div class="subtext">Decimals can be used - e.g. 3.5 months or 1.5 years</div>
-          <mat-form-field appearance="outline">
-            <input
-              id="fillProjectDurationAmount"
-              mask="separator.2"
-              thousandSeparator=","
-              separatorLimit="9999999999"
-              min="0.01"
-              matInput
-              formControlName="fillProjectDurationAmount"
-              placeholder="Type length"
-            />
-          </mat-form-field>
-          <div
-            *ngIf="
-              fillProjectDurationAmount.invalid &&
-              (fillProjectDurationAmount.dirty || fillProjectDurationAmount.touched)
-            "
-            class="field-error"
-          >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="fillProjectDurationAmount.errors?.['required']">This field is required</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="full-row">
-      <div class="form-row">
-        <div>
-          <mat-label for="soilProjectDuration">Removal of Soil Project Duration</mat-label>
-          <div class="subtext">Length of time you anticipate it would take to complete the project</div>
-          <mat-form-field appearance="outline">
-            <input
-              id="soilProjectDuration"
-              matInput
-              formControlName="soilProjectDuration"
-              placeholder="Type project duration"
-            />
-          </mat-form-field>
-          <div
-            *ngIf="soilProjectDuration.invalid && (soilProjectDuration.dirty || soilProjectDuration.touched)"
-            class="field-error"
-          >
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="soilProjectDuration.errors?.['required']">This field is required</div>
-            <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="full-row">

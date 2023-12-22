@@ -49,8 +49,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
   soilProjectDuration = new FormControl<string | null>(null, [Validators.required]);
-  fillProjectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  fillProjectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  fillProjectDuration = new FormControl<string | null>(null, [Validators.required]);
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
   alternativeMeasures = new FormControl<string | null>(null, [Validators.required]);
   isExtractionOrMining = new FormControl<string | null>(null, [Validators.required]);
@@ -63,8 +62,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
     soilTypeRemoved: this.soilTypeRemoved,
     reduceNegativeImpacts: this.reduceNegativeImpacts,
     soilProjectDuration: this.soilProjectDuration,
-    fillProjectDurationAmount: this.fillProjectDurationAmount,
-    fillProjectDurationUnit: this.fillProjectDurationUnit,
+    fillProjectDuration: this.fillProjectDuration,
     fillTypeToPlace: this.fillTypeToPlace,
     alternativeMeasures: this.alternativeMeasures,
     isExtractionOrMining: this.isExtractionOrMining,
@@ -145,8 +143,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           soilProjectDuration: applicationSubmission.soilProjectDuration,
-          fillProjectDurationAmount: applicationSubmission.fillProjectDurationAmount?.toString() ?? null,
-          fillProjectDurationUnit: applicationSubmission.fillProjectDurationUnit,
+          fillProjectDuration: applicationSubmission.fillProjectDuration,
           isExtractionOrMining: formatBooleanToString(applicationSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(applicationSubmission.soilHasSubmittedNotice),
         });
@@ -223,10 +220,7 @@ export class PfrsProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
         soilAlreadyPlacedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
         soilProjectDuration: this.soilProjectDuration.value,
-        fillProjectDurationAmount: this.fillProjectDurationAmount.value
-          ? parseFloat(this.fillProjectDurationAmount.value)
-          : null,
-        fillProjectDurationUnit: this.fillProjectDurationUnit.value,
+        fillProjectDuration: this.fillProjectDuration.value,
         soilHasSubmittedNotice: parseStringToBoolean(this.hasSubmittedNotice.getRawValue()),
         soilIsExtractionOrMining: parseStringToBoolean(this.isExtractionOrMining.getRawValue()),
       };

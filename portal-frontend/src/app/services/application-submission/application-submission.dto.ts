@@ -124,8 +124,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
   soilProjectDuration: string | null;
-  fillProjectDurationAmount: number | null;
-  fillProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
   soilFillTypeToPlace: string | null;
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean;
@@ -234,8 +233,7 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlreadyPlacedMaximumDepth?: number | null;
   soilAlreadyPlacedAverageDepth?: number | null;
   soilProjectDuration?: string | null;
-  fillProjectDurationAmount?: number | null;
-  fillProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;

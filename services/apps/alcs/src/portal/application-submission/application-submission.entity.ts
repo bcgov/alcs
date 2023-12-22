@@ -533,19 +533,9 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   soilProjectDuration: string | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  fillProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  fillProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })

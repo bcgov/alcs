@@ -204,11 +204,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => String)
   soilProjectDuration?: string | null;
 
-  @AutoMap(() => Number)
-  fillProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  fillProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
