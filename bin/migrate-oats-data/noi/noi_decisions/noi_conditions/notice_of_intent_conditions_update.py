@@ -61,7 +61,7 @@ def update_notice_of_intent_conditions(conn=None, batch_size=1000):
                     last_condition_id = dict(rows[-1])["condition_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {conditions_to_be_updated_count}; total successfully update conditions so far {successful_updates_count}; last updated reconsideration_request_id: {last_condition_id}"
+                        f"retrieved/updated items count: {conditions_to_be_updated_count}; total successfully update conditions so far {successful_updates_count}; last updated condition: {last_condition_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
