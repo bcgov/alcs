@@ -884,13 +884,9 @@ export class ApplicationSubmissionService {
       updateDto.soilAlreadyPlacedAverageDepth,
       applicationSubmission.soilAlreadyPlacedAverageDepth,
     );
-    applicationSubmission.soilProjectDurationAmount = filterUndefined(
-      updateDto.soilProjectDurationAmount,
-      applicationSubmission.soilProjectDurationAmount,
-    );
-    applicationSubmission.soilProjectDurationUnit = filterUndefined(
-      updateDto.soilProjectDurationUnit,
-      applicationSubmission.soilProjectDurationUnit,
+    applicationSubmission.soilProjectDuration = filterUndefined(
+      updateDto.soilProjectDuration,
+      applicationSubmission.soilProjectDuration,
     );
     applicationSubmission.fillProjectDurationUnit = filterUndefined(
       updateDto.fillProjectDurationUnit,

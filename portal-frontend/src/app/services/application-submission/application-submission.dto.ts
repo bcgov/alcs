@@ -1,6 +1,5 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
-import { CovenantTransfereeDto } from '../covenant-transferee/covenant-transferee.dto';
 
 export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
@@ -124,8 +123,7 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlreadyPlacedArea: number | null;
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
-  soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit: string | null;
+  soilProjectDuration: string | null;
   fillProjectDurationAmount: number | null;
   fillProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
@@ -235,8 +233,7 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlreadyPlacedArea?: number | null;
   soilAlreadyPlacedMaximumDepth?: number | null;
   soilAlreadyPlacedAverageDepth?: number | null;
-  soilProjectDurationAmount?: number | null;
-  soilProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
   fillProjectDurationAmount?: number | null;
   fillProjectDurationUnit?: string | null;
   soilFillTypeToPlace?: string | null;

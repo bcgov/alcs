@@ -218,11 +218,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => Number)
   fillProjectDurationAmount: number | null;
@@ -590,13 +587,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   soilAlreadyPlacedAverageDepth?: number | null;
 
-  @IsNumber()
-  @IsOptional()
-  soilProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  soilProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
 
   @IsNumber()
   @IsOptional()

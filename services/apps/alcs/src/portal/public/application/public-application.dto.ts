@@ -201,11 +201,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => Number)
   fillProjectDurationAmount: number | null;

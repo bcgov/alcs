@@ -181,8 +181,7 @@ export interface ApplicationSubmissionDto {
   soilAlreadyPlacedArea: number | null;
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
-  soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit: string | null;
+  soilProjectDuration: string | null;
   fillProjectDurationAmount: number | null;
   fillProjectDurationUnit: string | null;
   soilFillTypeToPlace: string | null;
