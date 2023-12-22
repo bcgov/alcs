@@ -135,7 +135,7 @@ def _prepare_oats_conditions_data(row_data_list):
 
 
 def _map_condition_type_code(row):
-    type_code = row.get("type_code")
+    type_code = row.get("condition_code")
     if type_code is not None:
         return OatsToAlcsConditionTypeMapping[type_code].value
 
