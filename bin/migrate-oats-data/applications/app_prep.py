@@ -2,12 +2,12 @@ from common import (
     ALRChangeCode,
     AlcsNfuTypeCode,
     OATS_NFU_SUBTYPES,
-    AlcsAgCap,
-    AlcsAgCapSource,
     OatsLegislationCodes,
     AlcsApplicantType,
     setup_and_get_logger,
     BATCH_UPLOAD_SIZE,
+    OatsToAlcsAgCapSource,
+    OatsToAlcsAgCap,
 )
 from db import inject_conn_pool
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -24,20 +24,6 @@ class OatsToAlcsNfuTypes(Enum):
     RES = AlcsNfuTypeCode.Residential.value
     TRA = AlcsNfuTypeCode.Transportation_Utilities.value
     UNU = AlcsNfuTypeCode.Unused.value
-
-
-class OatsToAlcsAgCapSource(Enum):
-    BCLI = AlcsAgCapSource.BCLI.value
-    CLI = AlcsAgCapSource.CLI.value
-    ONSI = AlcsAgCapSource.On_site.value
-
-
-class OatsToAlcsAgCap(Enum):
-    P = AlcsAgCap.Prime.value
-    PD = AlcsAgCap.Prime_Dominant.value
-    MIX = AlcsAgCap.Mixed_Prime_Secondary.value
-    S = AlcsAgCap.Secondary.value
-    U = AlcsAgCap.Unclassified.value
 
 
 class OatsLegislationCodes(Enum):
