@@ -127,7 +127,7 @@ def _prepare_oats_conditions_data(row_data_list):
             "decision_uuid": row.get("decision_uuid"),
             "description": row.get("description"),
             "type_code": _map_condition_type_code(row),
-            "oats_condition_id": row.get("oats_condition_id"),
+            "oats_condition_id": row.get("condition_id"),
         }
         data_list.append(mapped_row)
 

@@ -110,11 +110,11 @@ def process_notice_of_intent_decisions(batch_size):
 
 
 def clean_notice_of_intent_decision():
+    clean_notice_of_intent_conditions()
     clean_notice_of_intent_decision_components()
     unlink_etl_modifications()
     clean_notice_of_intent_modifications()
     clean_notice_of_intent_decisions()
-    clean_notice_of_intent_conditions()
 
 
 def process_notice_of_intent(batch_size):
