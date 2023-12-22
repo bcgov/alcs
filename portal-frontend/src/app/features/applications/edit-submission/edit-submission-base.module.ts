@@ -36,6 +36,7 @@ import { ReviewAndSubmitComponent } from './review-and-submit/review-and-submit.
 import { SubmitConfirmationDialogComponent } from './review-and-submit/submit-confirmation-dialog/submit-confirmation-dialog.component';
 import { SelectGovernmentComponent } from './select-government/select-government.component';
 import { SuccessComponent } from './success/success.component';
+import { PrimaryContactConfirmationDialogComponent } from './primary-contact/primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { SuccessComponent } from './success/success.component';
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     PrimaryContactComponent,
+    PrimaryContactConfirmationDialogComponent,
     ReviewAndSubmitComponent,
     SubmitConfirmationDialogComponent,
     NfuProposalComponent,
@@ -92,6 +94,7 @@ import { SuccessComponent } from './success/success.component';
     OtherParcelsComponent,
     OtherAttachmentsComponent,
     PrimaryContactComponent,
+    PrimaryContactConfirmationDialogComponent,
     ReviewAndSubmitComponent,
     NfuProposalComponent,
     TurProposalComponent,
