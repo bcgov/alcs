@@ -78,7 +78,7 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-row-gap: rem(24);
-    margin-bottom: rem(32);
+    margin-bottom: rem(16);
   }
 
   .step-documents {
@@ -208,11 +208,16 @@
     }
 
     .button-container {
+      position: sticky;
+      bottom: 0;
       margin-top: rem(40);
-      margin-bottom: rem(24);
+      background-color: colors.$white;
       display: flex;
+      padding: rem(16) 0;
       flex-direction: column-reverse;
       justify-content: space-between;
+      z-index: 2;
+      box-shadow: -3px 0 colors.$white, 3px 0 colors.$white;
 
       @media screen and (min-width: $tabletBreakpoint) {
         flex-direction: row;
