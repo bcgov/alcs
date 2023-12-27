@@ -11,9 +11,19 @@ p {
 
 .step-controls {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
 
-  button:not(:last-child) {
-    margin-right: rem(16) !important;
+  button {
+    width: 100%;
+    margin-top: rem(12) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: row;
+    justify-content: space-between;
+
+    button {
+      width: unset;
+    }
   }
 }
