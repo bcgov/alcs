@@ -109,7 +109,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilTypeRemoved: noiSubmission.soilTypeRemoved,
-          projectDuration: noiSubmission.soilProjectDuration ?? null,
+          projectDuration: noiSubmission.soilProjectDuration,
           isExtractionOrMining: formatBooleanToString(noiSubmission.soilIsExtractionOrMining),
           hasSubmittedNotice: formatBooleanToString(noiSubmission.soilHasSubmittedNotice),
         });

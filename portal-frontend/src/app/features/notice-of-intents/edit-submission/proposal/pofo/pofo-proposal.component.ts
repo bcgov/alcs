@@ -96,7 +96,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilFillTypeToPlace: noiSubmission.soilFillTypeToPlace,
-          projectDuration: noiSubmission.soilProjectDuration ?? null,
+          projectDuration: noiSubmission.soilProjectDuration,
           isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
         });
         if (this.showErrors) {
@@ -153,6 +153,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedVolume: this.fillAlreadyPlacedTableData?.volume ?? null,
         soilAlreadyPlacedArea: this.fillAlreadyPlacedTableData?.area ?? null,
         soilAlreadyPlacedMaximumDepth: this.fillAlreadyPlacedTableData?.maximumDepth ?? null,
+        soilAlreadyPlacedAverageDepth: this.fillAlreadyPlacedTableData?.averageDepth ?? null,
         soilIsAreaWideFilling: parseStringToBoolean(isAreaWideFilling),
       };
 
