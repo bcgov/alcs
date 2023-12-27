@@ -13,7 +13,7 @@
 
   <div class="subheading2 grid-1">Total area of the SRW</div>
   <div class="grid-double">
-    {{ _notificationSubmission.totalArea }}
+    {{ _notificationSubmission.totalArea }} <ng-container *ngIf="_notificationSubmission.totalArea">ha</ng-container>
     <app-no-data [showRequired]="showErrors" *ngIf="!_notificationSubmission.totalArea"></app-no-data>
   </div>
 
