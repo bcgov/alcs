@@ -39,77 +39,80 @@
     ></app-no-data>
   </div>
   
-  <div class="grid-1"></div>
-  <div class="subheading2 grid-double">Soil to be Removed</div>
+  <div class="full-width soil-table">
+    <div></div>
+    <div class="subheading2">Soil to be Removed</div>
 
-  <div class="subheading2 grid-1">Volume</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToRemoveVolume }}
-    <span *ngIf="applicationSubmission.soilToRemoveVolume">m<sup>3</sup></span>
-    <app-no-data *ngIf="!applicationSubmission.soilToRemoveVolume"></app-no-data>
-  </div>
+    <div class="subheading2">Volume</div>
+    <div>
+      {{ applicationSubmission.soilToRemoveVolume }}
+      <span *ngIf="applicationSubmission.soilToRemoveVolume !== null">m<sup>3</sup></span>
+      <app-no-data [*ngIf="applicationSubmission.soilToRemoveVolume === null"></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Area</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToRemoveArea }} <span *ngIf="applicationSubmission.soilToRemoveArea">ha</span>
-    <app-no-data *ngIf="!applicationSubmission.soilToRemoveArea"></app-no-data>
-  </div>
+    <div class="subheading2">Area</div>
+    <div>
+      {{ applicationSubmission.soilToRemoveArea }}
+      <span *ngIf="applicationSubmission.soilToRemoveArea !== null">m<sup>2</sup></span>
+      <app-no-data [*ngIf="applicationSubmission.soilToRemoveArea === null"></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Maximum Depth</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToRemoveMaximumDepth }}
-    <span *ngIf="applicationSubmission.soilToRemoveMaximumDepth">m</span>
-    <app-no-data *ngIf="!applicationSubmission.soilToRemoveMaximumDepth"></app-no-data>
-  </div>
+    <div class="subheading2">Maximum Depth</div>
+    <div>
+      {{ applicationSubmission.soilToRemoveMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilToRemoveMaximumDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilToRemoveMaximumDepth === null"
+      ></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Average Depth</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToRemoveAverageDepth }}
-    <span *ngIf="applicationSubmission.soilToRemoveAverageDepth">m</span>
-    <app-no-data *ngIf="!applicationSubmission.soilToRemoveAverageDepth"></app-no-data>
-  </div>
+    <div class="subheading2">Average Depth</div>
+    <div>
+      {{ applicationSubmission.soilToRemoveAverageDepth }}
+      <span *ngIf="applicationSubmission.soilToRemoveAverageDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilToRemoveAverageDepth === null"
+      ></app-no-data>
+    </div>
 
-  <div class="grid-1"></div>
-  <div class="subheading2 grid-double">Soil already Removed</div>
+    <div></div>
+    <div class="subheading2">Soil already Removed</div>
 
-  <div class="subheading2 grid-1">Volume</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyRemovedVolume }}
-    <span *ngIf="applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
-    <app-no-data
-     
-      *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"
-    ></app-no-data>
-  </div>
+    <div class="subheading2">Volume</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyRemovedVolume }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedVolume !== null">m<sup>3</sup></span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyRemovedVolume === null"
+      ></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Area</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyRemovedArea }}
-    <span *ngIf="applicationSubmission.soilAlreadyRemovedArea !== null">ha</span>
-    <app-no-data
-     
-      *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"
-    ></app-no-data>
-  </div>
+    <div class="subheading2">Area</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyRemovedArea }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedArea !== null">m<sup>2</sup></span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyRemovedArea === null"
+      ></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Maximum Depth</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
-    <span *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
-    <app-no-data
-     
-      *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"
-    ></app-no-data>
-  </div>
+    <div class="subheading2">Maximum Depth</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyRemovedMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyRemovedMaximumDepth === null"
+      ></app-no-data>
+    </div>
 
-  <div class="subheading2 grid-1">Average Depth</div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
-    <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
-    <app-no-data
-     
-      *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"
-    ></app-no-data>
+    <div class="subheading2">Average Depth</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyRemovedAverageDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyRemovedAverageDepth === null"
+      ></app-no-data>
+    </div>
   </div>
 
   <div class="subheading2 grid-1">Describe the type of soil proposed to be removed.</div>

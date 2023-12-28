@@ -39,61 +39,80 @@
     ></app-no-data>
   </div>
 
-  <div class="grid-1"></div>
-  <div class="grid-double">
-    <strong> Fill to be Placed</strong>
-  </div>
-  <div class="grid-1"><strong>Volume</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToPlaceVolume }}
-    <span *ngIf="applicationSubmission.soilToPlaceVolume">m<sup>3</sup></span>
-    <app-no-data *ngIf="!applicationSubmission.soilToPlaceVolume"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Area</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToPlaceArea }} <span *ngIf="applicationSubmission.soilToPlaceArea">m<sup>2</sup></span>
-    <app-no-data *ngIf="!applicationSubmission.soilToPlaceArea"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Maximum Depth</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToPlaceMaximumDepth }}
-    <span *ngIf="applicationSubmission.soilToPlaceMaximumDepth">m</span>
-    <app-no-data *ngIf="!applicationSubmission.soilToPlaceMaximumDepth"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Average Depth</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilToPlaceAverageDepth }}
-    <span *ngIf="applicationSubmission.soilToPlaceAverageDepth">m</span>
-    <app-no-data *ngIf="!applicationSubmission.soilToPlaceAverageDepth"></app-no-data>
-  </div>
+  <div *ngIf="applicationSubmission" class="full-width soil-table">
+    <div></div>
+    <div class="subheading2">Fill to be Placed</div>
 
-  <div class="grid-1"></div>
-  <div class="grid-double">
-    <strong> Fill already Placed</strong>
-  </div>
-  <div class="grid-1"><strong>Volume</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyPlacedVolume }}
-    <span *ngIf="applicationSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
-    <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedVolume === null"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Area</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyPlacedArea }}
-    <span *ngIf="applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
-    <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedArea === null"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Maximum Depth</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyPlacedMaximumDepth }}
-    <span *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
-    <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth === null"></app-no-data>
-  </div>
-  <div class="grid-1"><strong>Average Depth</strong></div>
-  <div class="grid-double">
-    {{ applicationSubmission.soilAlreadyPlacedAverageDepth }}
-    <span *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
-    <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
+    <div class="subheading2">Volume</div>
+    <div>
+      {{ applicationSubmission.soilToPlaceVolume }}
+      <span *ngIf="applicationSubmission.soilToPlaceVolume !== null">m<sup>3</sup></span>
+      <app-no-data *ngIf="applicationSubmission.soilToPlaceVolume === null"></app-no-data>
+    </div>
+
+    <div class="subheading2">Area</div>
+    <div>
+      {{ applicationSubmission.soilToPlaceArea }}
+      <span *ngIf="applicationSubmission.soilToPlaceArea !== null">m<sup>2</sup></span>
+      <app-no-data *ngIf="applicationSubmission.soilToPlaceArea === null"></app-no-data>
+    </div>
+
+    <div class="subheading2">Maximum Depth</div>
+    <div>
+      {{ applicationSubmission.soilToPlaceMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilToPlaceMaximumDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilToPlaceMaximumDepth === null"
+      ></app-no-data>
+    </div>
+
+    <div class="subheading2">Average Depth</div>
+    <div>
+      {{ applicationSubmission.soilToPlaceAverageDepth }}
+      <span *ngIf="applicationSubmission.soilToPlaceAverageDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilToPlaceAverageDepth === null"
+      ></app-no-data>
+    </div>
+
+    <div></div>
+    <div class="subheading2">Fill already Placed</div>
+
+    <div class="subheading2">Volume</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyPlacedVolume }}
+      <span *ngIf="applicationSubmission.soilAlreadyPlacedVolume !== null">m<sup>3</sup></span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyPlacedVolume === null"
+      ></app-no-data>
+    </div>
+
+    <div class="subheading2">Area</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyPlacedArea }}
+      <span *ngIf="applicationSubmission.soilAlreadyPlacedArea !== null">m<sup>2</sup></span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyPlacedArea === null"
+      ></app-no-data>
+    </div>
+
+    <div class="subheading2">Maximum Depth</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyPlacedMaximumDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyPlacedMaximumDepth === null"
+      ></app-no-data>
+    </div>
+
+    <div class="subheading2">Average Depth</div>
+    <div>
+      {{ applicationSubmission.soilAlreadyPlacedAverageDepth }}
+      <span *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
+      <app-no-data
+        *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"
+      ></app-no-data>
+    </div>
   </div>
   
   <div class="subheading2 grid-1">

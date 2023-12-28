@@ -72,32 +72,43 @@
       ></app-no-data>
     </div>
 
-    <div class="grid-1"></div>
-    <div class="subheading2 grid-double">Fill to be Placed</div>
-
-    <div class="subheading2 grid-1">Volume</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuFillVolume }}
-      <span *ngIf="applicationSubmission.nfuFillVolume !== null">m<sup>3</sup></span>
-      <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuFillVolume === null"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Area=</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuTotalFillArea }}
-      <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">m<sup>2</sup></span>
-      <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuTotalFillArea === null"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Maximum Depth</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuMaxFillDepth }}
-      <span *ngIf="applicationSubmission.nfuMaxFillDepth !== null">m</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuMaxFillDepth === null"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Average Depth</div>
-    <div class="grid-double">
-      {{ applicationSubmission.nfuAverageFillDepth }}
-      <span *ngIf="applicationSubmission.nfuAverageFillDepth !== null">m</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuAverageFillDepth === null"></app-no-data>
+    <div class="full-width soil-table">
+      <div></div>
+      <div class="subheading2">Fill to be Placed</div>
+  
+      <div class="subheading2">Volume</div>
+      <div>
+        {{ applicationSubmission.nfuFillVolume }}
+        <span *ngIf="applicationSubmission.nfuFillVolume !== null">m<sup>3</sup></span>
+        <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuFillVolume === null"></app-no-data>
+      </div>
+  
+      <div class="subheading2">Area</div>
+      <div>
+        {{ applicationSubmission.nfuTotalFillArea }}
+        <span *ngIf="applicationSubmission.nfuTotalFillArea !== null">m<sup>2</sup></span>
+        <app-no-data [showRequired]="showErrors" *ngIf="applicationSubmission.nfuTotalFillArea === null"></app-no-data>
+      </div>
+  
+      <div class="subheading2">Maximum Depth</div>
+      <div>
+        {{ applicationSubmission.nfuMaxFillDepth }}
+        <span *ngIf="applicationSubmission.nfuMaxFillDepth !== null">m</span>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="applicationSubmission.nfuMaxFillDepth === null"
+        ></app-no-data>
+      </div>
+  
+      <div class="subheading2">Average Depth</div>
+      <div>
+        {{ applicationSubmission.nfuAverageFillDepth }}
+        <span *ngIf="applicationSubmission.nfuAverageFillDepth !== null">m</span>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="applicationSubmission.nfuAverageFillDepth === null"
+        ></app-no-data>
+      </div>
     </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">
