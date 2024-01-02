@@ -169,30 +169,37 @@
         </div>
       </div>
       <!-- /Third-Part Agent/Government -->
+
+      <div class="form-row" *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
+        <div class="full-row">
+          <label for="authorization-letter" class="subheading2">Authorization Letters</label>
+          <p class="subtext">
+            For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the
+            majority of directors within the organization.For Crown parcels or Fee Simple parcels owned by a government,
+            the letter must be signed by senior level staff.
+          </p>
+          <app-info-banner>
+            Visit the <a href="https://www.alc.gov.bc.ca/" target="_blank">ALC website</a> for a template.
+          </app-info-banner>
+          <div class="uploader">
+            <app-file-drag-drop
+              id="authorization-letter"
+              [allowMultiple]="true"
+              [uploadedFiles]="files"
+              (uploadFiles)="attachAuthorizationLetter($event)"
+              (deleteFile)="onDeleteFile($event)"
+              (openFile)="openFile($event)"
+              [showErrors]="showErrors"
+              [isRequired]="needsAuthorizationLetter"
+              [showVirusError]="showVirusError"
+            ></app-file-drag-drop>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </section>
-<section *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
-  <h6>Authorization Letters</h6>
-  <p class="subtext">
-    For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the majority of
-    directors within the organization.For Crown parcels or Fee Simple parcels owned by a government, the letter must be
-    signed by senior level staff.
-  </p>
-  <p class="alc-link">Visit the <a href="https://www.alc.gov.bc.ca/" target="_blank">ALC website</a> for a template.</p>
-  <div class="uploader">
-    <app-file-drag-drop
-      [allowMultiple]="true"
-      [uploadedFiles]="files"
-      (uploadFiles)="attachAuthorizationLetter($event)"
-      (deleteFile)="onDeleteFile($event)"
-      (openFile)="openFile($event)"
-      [showErrors]="showErrors"
-      [isRequired]="needsAuthorizationLetter"
-      [showVirusError]="showVirusError"
-    ></app-file-drag-drop>
-  </div>
-</section>
+
 <div class="button-container">
   <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
   <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
