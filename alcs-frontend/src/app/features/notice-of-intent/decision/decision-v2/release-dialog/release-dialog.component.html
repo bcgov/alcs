@@ -13,8 +13,8 @@
     </p>
     <app-warning-banner> If there is more than one decision, the status will not change</app-warning-banner>
     <p *ngIf="wasReleased">
-      The Applicant and Local/First Nation Government will not receive an auto-email notification. Please complete any
-      notification manually.
+      If this decision is being released for the first time, the Applicant and Local/First Nation Government will receive 
+      an auto-email containing a link to the decision document(s). Otherwise an auto-email will not be sent.
     </p>
     <p *ngIf="!wasReleased">The Applicant and Local/First Nation Government will receive an auto-email notification.</p>
   </div>
