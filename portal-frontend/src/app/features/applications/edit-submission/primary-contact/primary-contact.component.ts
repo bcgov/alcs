@@ -294,6 +294,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
           disableClose: true,
+          data: {
+            isGovernmentUser: this.isGovernmentUser,
+            governmentName: this.governmentName,
+          },
         })
         .beforeClosed()
         .subscribe(async (confirmed) => {
