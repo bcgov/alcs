@@ -307,8 +307,7 @@ export class GenerateSubmissionDocumentService {
       nfuMaxFillDepth: submission.nfuMaxFillDepth,
       nfuAverageFillDepth: submission.nfuAverageFillDepth,
       nfuFillVolume: submission.nfuFillVolume,
-      nfuProjectDurationAmount: submission.nfuProjectDurationAmount,
-      nfuProjectDurationUnit: submission.nfuProjectDurationUnit,
+      nfuProjectDuration: submission.nfuProjectDuration,
     };
   }
 

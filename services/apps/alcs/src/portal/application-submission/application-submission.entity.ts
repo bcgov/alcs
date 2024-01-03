@@ -288,19 +288,9 @@ export class ApplicationSubmission extends Base {
   })
   nfuFillVolume: number | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  nfuProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -539,33 +529,13 @@ export class ApplicationSubmission extends Base {
   })
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  soilProjectDurationUnit: string | null;
-
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  fillProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  fillProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -630,19 +600,9 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   @Column({
