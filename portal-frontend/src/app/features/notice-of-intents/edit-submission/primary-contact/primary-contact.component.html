@@ -170,7 +170,10 @@
       </div>
       <!-- /Third-Part Agent/Government -->
 
-      <div class="form-row" *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
+      <div
+        class="form-row"
+        *ngIf="isExistingOwner.value !== null && (needsAuthorizationLetter || hasCrownParcels || files.length > 0)"
+      >
         <div class="full-row">
           <label for="authorization-letter" class="subheading2">Authorization Letters</label>
           <p class="subtext">
