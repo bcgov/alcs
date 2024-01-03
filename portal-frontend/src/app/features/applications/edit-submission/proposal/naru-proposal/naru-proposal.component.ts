@@ -42,8 +42,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   willImportFill = new FormControl<string | null>(null, [Validators.required]);
   fillType = new FormControl<string | null>(null, [Validators.required]);
   fillOrigin = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(null, [Validators.required]);
   sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
   agriTourism = new FormControl<string | null>(null, [Validators.required]);
 
@@ -61,8 +60,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
     willImportFill: this.willImportFill,
     fillType: this.fillType,
     fillOrigin: this.fillOrigin,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    projectDuration: this.projectDuration,
     sleepingUnits: this.sleepingUnits,
     agriTourism: this.agriTourism,
   });
@@ -97,10 +95,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
           floorArea: applicationSubmission.naruFloorArea ? applicationSubmission.naruFloorArea.toString() : null,
           infrastructure: applicationSubmission.naruInfrastructure,
           locationRationale: applicationSubmission.naruLocationRationale,
-          projectDurationAmount: applicationSubmission.naruProjectDurationAmount
-            ? applicationSubmission.naruProjectDurationAmount.toString()
-            : null,
-          projectDurationUnit: applicationSubmission.naruProjectDurationUnit,
+          projectDuration: applicationSubmission.naruProjectDuration,
           purpose: applicationSubmission.purpose,
           residenceNecessity: applicationSubmission.naruResidenceNecessity,
           agriTourism: applicationSubmission.naruAgriTourism,
@@ -164,18 +159,15 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
 
   onChangeFill(value: string) {
     if (value === 'true') {
-      this.projectDurationAmount.enable();
-      this.projectDurationUnit.enable();
+      this.projectDuration.enable();
       this.fillOrigin.enable();
       this.fillType.enable();
     } else {
-      this.projectDurationAmount.disable();
-      this.projectDurationUnit.disable();
+      this.projectDuration.disable();
       this.fillOrigin.disable();
       this.fillType.disable();
 
-      this.projectDurationAmount.setValue(null);
-      this.projectDurationUnit.setValue(null);
+      this.projectDuration.setValue(null);
       this.fillOrigin.setValue(null);
       this.fillType.setValue(null);
     }
@@ -191,8 +183,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         floorArea,
         infrastructure,
         locationRationale,
-        projectDurationAmount,
-        projectDurationUnit,
+        projectDuration,
         purpose,
         residenceNecessity,
         subtype,
@@ -212,8 +203,7 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
         naruFloorArea: floorArea ? parseFloat(floorArea) : null,
         naruInfrastructure: infrastructure,
         naruLocationRationale: locationRationale,
-        naruProjectDurationAmount: projectDurationAmount ? parseFloat(projectDurationAmount) : null,
-        naruProjectDurationUnit: projectDurationUnit,
+        naruProjectDuration: projectDuration,
         purpose: purpose,
         naruResidenceNecessity: residenceNecessity,
         naruSubtypeCode: subtype,

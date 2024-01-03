@@ -23,20 +23,10 @@
 
   <div class="subheading2 grid-1">Project Duration</div>
   <div class="grid-double">
-    <div *ngIf="applicationSubmission.soilProjectDurationAmount && applicationSubmission.soilProjectDurationUnit">
-      {{ applicationSubmission.soilProjectDurationAmount }}
-      <ng-container [ngPlural]="applicationSubmission.soilProjectDurationAmount">
-        <ng-template ngPluralCase="=1">
-          {{ applicationSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
-        </ng-template>
-        <ng-template ngPluralCase="other">
-          {{ applicationSubmission.soilProjectDurationUnit | titlecase }}
-        </ng-template>
-      </ng-container>
+    <div *ngIf="applicationSubmission.soilProjectDuration">
+      {{ applicationSubmission.soilProjectDuration }}
     </div>
-    <app-no-data
-      *ngIf="!applicationSubmission.soilProjectDurationAmount || !applicationSubmission.soilProjectDurationUnit"
-    ></app-no-data>
+    <app-no-data *ngIf="!applicationSubmission.soilProjectDuration"></app-no-data>
   </div>
 
   <div class="grid-1"></div>
@@ -95,7 +85,7 @@
     <span *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth !== null">m</span>
     <app-no-data *ngIf="applicationSubmission.soilAlreadyPlacedAverageDepth === null"></app-no-data>
   </div>
-  
+
   <div class="subheading2 grid-1">
     What alternative measures have you considered or attempted before proposing to place fill?
   </div>

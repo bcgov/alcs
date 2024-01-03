@@ -53,22 +53,12 @@
       <app-no-data *ngIf="!applicationSubmission.nfuFillOriginDescription"></app-no-data>
     </div>
 
-    <div class="subheading2 grid-1">Project Duration</div>
+    <div class="subheading2 grid-1">Placement of Fill Project Duration</div>
     <div class="grid-double">
-      <div *ngIf="applicationSubmission.soilProjectDurationAmount && applicationSubmission.soilProjectDurationUnit">
-        {{ applicationSubmission.soilProjectDurationAmount }}
-        <ng-container [ngPlural]="applicationSubmission.soilProjectDurationAmount">
-          <ng-template ngPluralCase="=1">
-            {{ applicationSubmission.soilProjectDurationUnit.slice(0, -1) | titlecase }}
-          </ng-template>
-          <ng-template ngPluralCase="other">
-            {{ applicationSubmission.soilProjectDurationUnit | titlecase }}
-          </ng-template>
-        </ng-container>
+      <div *ngIf="applicationSubmission.nfuProjectDuration">
+        {{ applicationSubmission.nfuProjectDuration }}
       </div>
-      <app-no-data
-        *ngIf="!applicationSubmission.soilProjectDurationAmount || !applicationSubmission.soilProjectDurationUnit"
-      ></app-no-data>
+      <app-no-data *ngIf="!applicationSubmission.nfuProjectDuration"></app-no-data>
     </div>
 
     <div class="grid-1"></div>
@@ -90,17 +80,13 @@
     <div class="grid-double">
       {{ applicationSubmission.nfuMaxFillDepth }}
       <span *ngIf="applicationSubmission.nfuMaxFillDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.nfuMaxFillDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.nfuMaxFillDepth === null"></app-no-data>
     </div>
     <div class="subheading2 grid-1">Average Depth</div>
     <div class="grid-double">
       {{ applicationSubmission.nfuAverageFillDepth }}
       <span *ngIf="applicationSubmission.nfuAverageFillDepth !== null">m</span>
-      <app-no-data
-        *ngIf="applicationSubmission.nfuAverageFillDepth === null"
-      ></app-no-data>
+      <app-no-data *ngIf="applicationSubmission.nfuAverageFillDepth === null"></app-no-data>
     </div>
   </ng-container>
 </div>

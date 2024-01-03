@@ -102,11 +102,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => Number)
   nfuFillVolume?: number | null;
 
-  @AutoMap(() => Number)
-  nfuProjectDurationAmount?: number | null;
-
   @AutoMap(() => String)
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;
@@ -204,17 +201,11 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
-
-  @AutoMap(() => Number)
-  fillProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  fillProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
@@ -256,11 +247,8 @@ export class PublicApplicationSubmissionDto {
   @AutoMap(() => String)
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   naruToPlaceVolume: number | null;
