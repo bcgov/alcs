@@ -27,7 +27,7 @@
           <app-no-data [showRequired]="showErrors" *ngIf="!structure.type"></app-no-data>
         </div>
         <div class="grid-3">
-          {{ structure.area }}
+          {{ structure.area }} <span *ngIf="structure.area">m<sup>2</sup></span>
           <app-no-data [showRequired]="showErrors" *ngIf="!structure.area"></app-no-data>
         </div>
       </ng-container>
