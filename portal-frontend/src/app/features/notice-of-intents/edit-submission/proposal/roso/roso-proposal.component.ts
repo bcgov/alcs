@@ -173,7 +173,7 @@ export class RosoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyRemovedArea: this.alreadyRemovedTableData?.area ?? null,
         soilAlreadyRemovedMaximumDepth: this.alreadyRemovedTableData?.maximumDepth ?? null,
         soilAlreadyRemovedAverageDepth: this.alreadyRemovedTableData?.averageDepth ?? null,
-        soilProjectDuration: this.projectDuration.value ?? null,
+        soilProjectDuration: this.projectDuration.value,
         soilIsExtractionOrMining: parseStringToBoolean(isExtractionOrMining),
         soilHasSubmittedNotice: parseStringToBoolean(hasSubmittedNotice),
       };
