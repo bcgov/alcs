@@ -119,11 +119,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Number)
   nfuFillVolume?: number | null;
 
-  @AutoMap(() => Number)
-  nfuProjectDurationAmount?: number | null;
-
   @AutoMap(() => String)
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;
@@ -221,17 +218,11 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
-
-  @AutoMap(() => Number)
-  fillProjectDurationAmount: number | null;
-
-  @AutoMap(() => String)
-  fillProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
@@ -273,11 +264,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => String)
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   naruToPlaceVolume: number | null;
@@ -456,13 +444,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   nfuFillVolume?: number | null;
 
-  @IsNumber()
-  @IsOptional()
-  nfuProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
@@ -600,21 +584,13 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   soilAlreadyPlacedAverageDepth?: number | null;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  soilProjectDurationAmount?: number | null;
+  soilProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
-  soilProjectDurationUnit?: string | null;
-
-  @IsNumber()
-  @IsOptional()
-  fillProjectDurationAmount?: number | null;
-
-  @IsString()
-  @IsOptional()
-  fillProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
@@ -669,13 +645,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   naruFillOrigin?: string | null;
 
-  @IsNumber()
-  @IsOptional()
-  naruProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  naruProjectDurationUnit?: string | null;
+  naruProjectDuration?: string | null;
 
   @IsNumber()
   @IsOptional()

@@ -39,8 +39,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   followUpIds = new FormControl<string | null>({ value: null, disabled: true }, [Validators.required]);
   purpose = new FormControl<string | null>(null, [Validators.required]);
   soilFillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(null, [Validators.required]);
   areComponentsDirty = false;
   isAreaWideFilling = new FormControl<string | null>(null, [Validators.required]);
 
@@ -49,8 +48,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     followUpIds: this.followUpIds,
     purpose: this.purpose,
     soilFillTypeToPlace: this.soilFillTypeToPlace,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    projectDuration: this.projectDuration,
     isAreaWideFilling: this.isAreaWideFilling,
   });
 
@@ -98,8 +96,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           followUpIds: noiSubmission.soilFollowUpIDs,
           purpose: noiSubmission.purpose,
           soilFillTypeToPlace: noiSubmission.soilFillTypeToPlace,
-          projectDurationAmount: noiSubmission.soilProjectDurationAmount?.toString() ?? null,
-          projectDurationUnit: noiSubmission.soilProjectDurationUnit,
+          projectDuration: noiSubmission.soilProjectDuration,
           isAreaWideFilling: formatBooleanToString(noiSubmission.soilIsAreaWideFilling),
         });
         if (this.showErrors) {
@@ -140,11 +137,13 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
       const soilFollowUpIDs = this.followUpIds.getRawValue();
       const purpose = this.purpose.getRawValue();
       const soilFillTypeToPlace = this.soilFillTypeToPlace.getRawValue();
+      const soilProjectDuration = this.projectDuration.getRawValue();
       const isAreaWideFilling = this.isAreaWideFilling.getRawValue();
 
       const updateDto: NoticeOfIntentSubmissionUpdateDto = {
         purpose,
         soilFillTypeToPlace,
+        soilProjectDuration,
         soilIsFollowUp: parseStringToBoolean(isNOIFollowUp),
         soilFollowUpIDs,
         soilToPlaceVolume: this.fillToPlaceTableData?.volume ?? null,
@@ -155,10 +154,6 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedArea: this.fillAlreadyPlacedTableData?.area ?? null,
         soilAlreadyPlacedMaximumDepth: this.fillAlreadyPlacedTableData?.maximumDepth ?? null,
         soilAlreadyPlacedAverageDepth: this.fillAlreadyPlacedTableData?.averageDepth ?? null,
-        soilProjectDurationAmount: this.projectDurationAmount.value
-          ? parseFloat(this.projectDurationAmount.value)
-          : null,
-        soilProjectDurationUnit: this.projectDurationUnit.value,
         soilIsAreaWideFilling: parseStringToBoolean(isAreaWideFilling),
       };
 

@@ -50,8 +50,7 @@ export interface PublicApplicationSubmissionDto {
   nfuMaxFillDepth?: number | null;
   nfuAverageFillDepth?: number | null;
   nfuFillVolume?: number | null;
-  nfuProjectDurationAmount?: number | null;
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
   nfuFillTypeDescription?: string | null;
   nfuFillOriginDescription?: string | null;
 
@@ -89,10 +88,8 @@ export interface PublicApplicationSubmissionDto {
   soilAlreadyPlacedArea: number | null;
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
-  soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit?: string | null;
-  fillProjectDurationAmount: number | null;
-  fillProjectDurationUnit: string | null;
+  soilProjectDuration?: string | null;
+  fillProjectDuration: string | null;
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean;
@@ -108,8 +105,7 @@ export interface PublicApplicationSubmissionDto {
   naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
-  naruProjectDurationAmount: number | null;
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
   naruToPlaceVolume: number | null;
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;

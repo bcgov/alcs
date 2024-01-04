@@ -726,13 +726,9 @@ export class ApplicationSubmissionService {
       updateDto.nfuFillVolume,
       application.nfuFillVolume,
     );
-    application.nfuProjectDurationUnit = filterUndefined(
-      updateDto.nfuProjectDurationUnit,
-      application.nfuProjectDurationUnit,
-    );
-    application.nfuProjectDurationAmount = filterUndefined(
-      updateDto.nfuProjectDurationAmount,
-      application.nfuProjectDurationAmount,
+    application.nfuProjectDuration = filterUndefined(
+      updateDto.nfuProjectDuration,
+      application.nfuProjectDuration,
     );
     application.nfuFillTypeDescription = filterUndefined(
       updateDto.nfuFillTypeDescription,
@@ -888,21 +884,13 @@ export class ApplicationSubmissionService {
       updateDto.soilAlreadyPlacedAverageDepth,
       applicationSubmission.soilAlreadyPlacedAverageDepth,
     );
-    applicationSubmission.soilProjectDurationAmount = filterUndefined(
-      updateDto.soilProjectDurationAmount,
-      applicationSubmission.soilProjectDurationAmount,
+    applicationSubmission.soilProjectDuration = filterUndefined(
+      updateDto.soilProjectDuration,
+      applicationSubmission.soilProjectDuration,
     );
-    applicationSubmission.soilProjectDurationUnit = filterUndefined(
-      updateDto.soilProjectDurationUnit,
-      applicationSubmission.soilProjectDurationUnit,
-    );
-    applicationSubmission.fillProjectDurationUnit = filterUndefined(
-      updateDto.fillProjectDurationUnit,
-      applicationSubmission.fillProjectDurationUnit,
-    );
-    applicationSubmission.fillProjectDurationAmount = filterUndefined(
-      updateDto.fillProjectDurationAmount,
-      applicationSubmission.fillProjectDurationAmount,
+    applicationSubmission.fillProjectDuration = filterUndefined(
+      updateDto.fillProjectDuration,
+      applicationSubmission.fillProjectDuration,
     );
     applicationSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
@@ -978,13 +966,9 @@ export class ApplicationSubmissionService {
       updateDto.naruFillOrigin,
       applicationSubmission.naruFillOrigin,
     );
-    applicationSubmission.naruProjectDurationAmount = filterUndefined(
-      updateDto.naruProjectDurationAmount,
-      applicationSubmission.naruProjectDurationAmount,
-    );
-    applicationSubmission.naruProjectDurationUnit = filterUndefined(
-      updateDto.naruProjectDurationUnit,
-      applicationSubmission.naruProjectDurationUnit,
+    applicationSubmission.naruProjectDuration = filterUndefined(
+      updateDto.naruProjectDuration,
+      applicationSubmission.naruProjectDuration,
     );
     applicationSubmission.naruToPlaceVolume = filterUndefined(
       updateDto.naruToPlaceVolume,

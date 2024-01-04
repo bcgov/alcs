@@ -39,8 +39,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
   fillTypeToPlace = new FormControl<string | null>(null, [Validators.required]);
   reduceNegativeImpacts = new FormControl<string | null>(null, [Validators.required]);
   alternativeMeasures = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationAmount = new FormControl<string | null>(null, [Validators.required]);
-  projectDurationUnit = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(null, [Validators.required]);
 
   form = new FormGroup({
     isFollowUp: this.isFollowUp,
@@ -49,8 +48,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
     fillTypeToPlace: this.fillTypeToPlace,
     alternativeMeasures: this.alternativeMeasures,
     reduceNegativeImpacts: this.reduceNegativeImpacts,
-    projectDurationAmount: this.projectDurationAmount,
-    projectDurationUnit: this.projectDurationUnit,
+    projectDuration: this.projectDuration,
   });
 
   private submissionUuid = '';
@@ -99,8 +97,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
           fillTypeToPlace: applicationSubmission.soilFillTypeToPlace,
           alternativeMeasures: applicationSubmission.soilAlternativeMeasures,
           reduceNegativeImpacts: applicationSubmission.soilReduceNegativeImpacts,
-          projectDurationAmount: applicationSubmission.soilProjectDurationAmount?.toString() ?? null,
-          projectDurationUnit: applicationSubmission.soilProjectDurationUnit,
+          projectDuration: applicationSubmission.soilProjectDuration,
         });
         if (this.showErrors) {
           this.form.markAllAsTouched();
@@ -158,10 +155,7 @@ export class PofoProposalComponent extends FilesStepComponent implements OnInit,
         soilAlreadyPlacedArea: this.alreadyFilledTableData?.area ?? null,
         soilAlreadyPlacedMaximumDepth: this.alreadyFilledTableData?.maximumDepth ?? null,
         soilAlreadyPlacedAverageDepth: this.alreadyFilledTableData?.averageDepth ?? null,
-        soilProjectDurationAmount: this.projectDurationAmount.value
-          ? parseFloat(this.projectDurationAmount.value)
-          : null,
-        soilProjectDurationUnit: this.projectDurationUnit.value,
+        soilProjectDuration: this.projectDuration.value,
       };
 
       const updatedApp = await this.applicationService.updatePending(this.submissionUuid, updateDto);
