@@ -315,14 +315,14 @@
             *ngFor="let owner of filteredOwners"
             [value]="owner.uuid"
             class="radio-option"
-            (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
+            (click)="onCrownOwnerSelected(owner, owner.isSelected)"
             required
           >
             {{ owner.firstName + ' ' + owner.lastName }}
           </mat-radio-button>
         </mat-radio-group>
 
-        <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
+        <div #ownerInfo class="warning-banner" *ngIf="selectedOwner">
           <div class="owner-details">
             <div class="row">
               <div class="key"><strong>First Name:</strong></div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,7 +21,6 @@ import { OwnerDialogComponent } from '../../../../../shared/owner-dialogs/owner-
 import { formatBooleanToString } from '../../../../../shared/utils/boolean-helper';
 import { RemoveFileConfirmationDialogComponent } from '../../../alcs-edit-submission/remove-file-confirmation-dialog/remove-file-confirmation-dialog.component';
 import { ParcelEntryConfirmationDialogComponent } from './parcel-entry-confirmation-dialog/parcel-entry-confirmation-dialog.component';
-import { scrollToElement } from '../../../../../shared/utils/scroll-helper';
 
 export interface ParcelEntryFormData {
   uuid: string;
@@ -69,6 +68,8 @@ export class ParcelEntryComponent implements OnInit {
   @Output() private onSaveProgress = new EventEmitter<void>();
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnersDeleted = new EventEmitter<void>();
+
+  @ViewChild('ownerInfo') ownerInfo!: ElementRef<HTMLElement>;
 
   owners: ApplicationOwnerDto[] = [];
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
@@ -351,13 +352,13 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async onCrownOwnerSelected(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {
+  async onCrownOwnerSelected(owner: ApplicationOwnerDto, isSelected: boolean) {
     this.selectedOwner = owner;
     const selectedOwners = [owner];
     this.updateParcelOwners(selectedOwners);
 
     setTimeout(() => {
-      scrollToElement({ id: 'owner-info', center: false });
+      this.ownerInfo.nativeElement.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
