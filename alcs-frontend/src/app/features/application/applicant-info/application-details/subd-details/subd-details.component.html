@@ -11,7 +11,7 @@
       <div class="grid-2">
         {{ lot.type }}
       </div>
-      <div class="grid-3">{{ lot.size }} <span *ngIf="lot.size">ha</span></div>
+      <div class="grid-3">{{ lot.size }} <span *ngIf="lot.size !== null">ha</span></div>
     </ng-container>
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
