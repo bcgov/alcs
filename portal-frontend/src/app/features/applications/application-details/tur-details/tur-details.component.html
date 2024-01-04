@@ -1,7 +1,5 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
@@ -21,16 +19,12 @@
     {{ _applicationSubmission.turReduceNegativeImpacts }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turReduceNegativeImpacts"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Could this proposal be accommodated on lands outside of the ALR?
-  </div>
+  <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
   <div class="grid-double">
     {{ _applicationSubmission.turOutsideLands }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turOutsideLands"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Total area of corridor
-  </div>
+  <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
     <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null">{{
       _applicationSubmission.turTotalCorridorArea
@@ -44,7 +38,7 @@
     </a>
     <app-no-data [showRequired]="showErrors" *ngIf="servingNotice.length === 0"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">Proposal Map / Sketch Plan</div>
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let file of proposalMap" (click)="openFile(file.uuid)">
       {{ file.fileName }}
