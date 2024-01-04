@@ -289,7 +289,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
-    if (this.form.dirty || (this.selectedOwnerUuid && this.selectedOwnerUuid !== 'agent')) {
+    if (this.form.dirty || (!isExistingOwner && this.selectedOwnerUuid && !this.isGovernmentUser)) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -303,11 +303,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .subscribe(async (confirmed) => {
           if (confirmed) {
             this.switchPrimaryContactType(isExistingOwner);
-
-            // Ensure form is cleared after switching to existing user
-            if (this.selectedOwnerUuid === 'agent') {
-              this.form.reset();
-            }
           } else {
             this.isExistingOwner.setValue(!isExistingOwner);
           }
@@ -326,6 +321,12 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       this.onSelectOwner(this.parcelOwners[0].uuid);
     } else {
       this.selectedThirdPartyAgent = false;
+      this.selectedOwnerUuid = undefined;
+    }
+
+    // Ensure form is cleared to avoid erroneous confirmation dialogs
+    if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
+      this.form.reset();
     }
 
     this.showNoOwnersWarning = isExistingOwner === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
