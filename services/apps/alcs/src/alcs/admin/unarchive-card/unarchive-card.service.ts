@@ -81,7 +81,7 @@ export class UnarchiveCardService {
       await this.modificationService.getDeletedCards(fileId);
     for (const modification of modifications) {
       result.push({
-        cardUuid: modification.cardUuid,
+        cardUuid: modification.cardUuid ?? '',
         createdAt: modification.auditCreatedAt.getTime(),
         type: 'Modification',
         status: modification.card!.status.label,

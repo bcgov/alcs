@@ -1,8 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -196,7 +196,10 @@ export class ApplicationModificationService {
 
   async delete(uuid: string) {
     const modification = await this.getByUuidOrFail(uuid);
-    await this.cardService.archive(modification.cardUuid);
+    if (modification.cardUuid) {
+      await this.cardService.archive(modification.cardUuid);
+    }
+
     return this.modificationRepository.softRemove([modification]);
   }
 

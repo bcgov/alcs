@@ -18,8 +18,9 @@ def application_import(console, args):
             f"Processing applications import in batch size = {import_batch_size}"
         )
 
-        init_applications(batch_size=import_batch_size)
-        init_alcs_users(batch_size=import_batch_size)
+        # TODO uncomment this
+        # init_applications(batch_size=import_batch_size)
+        # init_alcs_users(batch_size=import_batch_size)
         process_application_etl(batch_size=import_batch_size)
 
 

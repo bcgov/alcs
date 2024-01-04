@@ -147,7 +147,7 @@ const initApplicationModificationMockEntity = (
   card?: Card,
 ): ApplicationModification => {
   const app = application ?? initApplicationMockEntity();
-  const reconsideration = new ApplicationModification({
+  const modification = new ApplicationModification({
     application: app,
     applicationUuid: app.uuid,
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
@@ -161,10 +161,10 @@ const initApplicationModificationMockEntity = (
   });
 
   const cardEntity = card ?? initCardMockEntity('222');
-  reconsideration.card = cardEntity;
-  reconsideration.cardUuid = cardEntity.uuid;
+  modification.card = cardEntity;
+  modification.cardUuid = cardEntity.uuid;
 
-  return reconsideration;
+  return modification;
 };
 
 const initApplicationMockEntity = (fileNumber?: string): Application => {
