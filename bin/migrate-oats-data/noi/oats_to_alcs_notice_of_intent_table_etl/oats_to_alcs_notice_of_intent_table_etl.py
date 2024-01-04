@@ -6,6 +6,7 @@ from common import (
     AlcsAgCapSource,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
+    ALRChangeCode,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -80,7 +81,7 @@ def process_alcs_notice_of_intent_base_fields(conn=None, batch_size=BATCH_UPLOAD
                     )
                 except Exception as err:
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
-                    logger.exception()
+                    logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_updates_count
                     last_application_id = last_application_id + 1
@@ -116,6 +117,7 @@ def _get_update_query_from_oats_alr_applications_fields():
                     ag_cap = COALESCE(%(agri_capability_code)s, ag_cap),
                     legacy_id= COALESCE(%(legacy_application_nbr)s, legacy_id),
                     proposal_end_date = %(proposal_end_date)s,
+                    proposal_end_date2 = %(proposal_end_date2)s,
                     source = 'APPLICANT'
                 WHERE
                     alcs.notice_of_intent.file_number = %(alr_application_id)s::TEXT;
@@ -146,13 +148,18 @@ def map_basic_field(data):
 
 
 def map_prop_end_date(data):
-    date = data.get("nonfarm_use_end_date", "")
-    alcs_date = data.get("proposal_end_date", "")
-    if date is None and alcs_date is None:
-        return data
-    elif date is None:
-        return data
-    else:
+    data["proposal_end_date"] = None
+    data["proposal_end_date2"] = None
+    date = data.get("nonfarm_use_end_date", None)
+    noi_type = data.get("alr_change_code", None)
+
+    if date is not None:
         proposal_end = add_timezone_and_keep_date_part(date)
-        data["proposal_end_date"] = proposal_end
+
+        if noi_type == ALRChangeCode.SCH.value:
+            data["proposal_end_date"] = proposal_end
+            data["proposal_end_date2"] = proposal_end
+        elif noi_type in [ALRChangeCode.FILL.value, ALRChangeCode.EXT.value]:
+            data["proposal_end_date"] = proposal_end
+
     return data

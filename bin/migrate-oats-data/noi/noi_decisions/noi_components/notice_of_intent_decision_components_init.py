@@ -140,6 +140,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             ALRChangeCode.FILL.value,
             ALRChangeCode.EXT.value,
         ]:
+            end_date, end_date2 = _map_end_date(row)
             mapped_row = {
                 "ag_cap": str(OatsToAlcsAgCap[row["agri_capability_code"]].value)
                 if row.get("agri_capability_code")
@@ -153,12 +154,8 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 else None,
                 "alr_area": row.get("component_area"),
                 "audit_created_by": OATS_ETL_USER,
-                "end_date": add_timezone_and_keep_date_part(
-                    row.get("nonfarm_use_end_date")
-                ),
-                "end_date2": add_timezone_and_keep_date_part(
-                    row.get("nonfarm_use_end_date")
-                ),
+                "end_date": end_date,
+                "end_date2": end_date2,
                 "expiry_date": add_timezone_and_keep_date_part(
                     row.get("decision_expiry_date")
                 ),
@@ -185,6 +182,19 @@ def _map_component_type_code(row):
         return "POFO"
 
     return None
+
+
+def _map_end_date(row):
+    alr_change_code = row.get("alr_change_code")
+    date = add_timezone_and_keep_date_part(row.get("nonfarm_use_end_date"))
+
+    if alr_change_code in [
+        ALRChangeCode.SCH.value,
+        ALRChangeCode.EXT.value,
+        ALRChangeCode.FILL.value,
+    ]:
+        return date, date if alr_change_code == ALRChangeCode.SCH.value else None
+    return None, None
 
 
 @inject_conn_pool
