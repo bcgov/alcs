@@ -43,9 +43,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isDirty = false;
   showVirusError = false;
   hasCrownParcels = false;
+  showNoOwnersWarning = false;
 
   isExistingOwner = new FormControl<boolean | null>(null, [Validators.required]);
-
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -322,6 +322,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     } else {
       this.selectedThirdPartyAgent = false;
     }
+
+    this.showNoOwnersWarning = isExistingOwner === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
   }
 
   onEdit(selectedOwnerUuid: string) {
