@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -69,6 +69,8 @@ export class ParcelEntryComponent implements OnInit {
   @Output() onOwnersUpdated = new EventEmitter<void>();
   @Output() onOwnersDeleted = new EventEmitter<void>();
 
+  @ViewChild('ownerInfo') ownerInfo!: ElementRef<HTMLElement>;
+
   owners: ApplicationOwnerDto[] = [];
   filteredOwners: (ApplicationOwnerDto & { isSelected: boolean })[] = [];
 
@@ -99,7 +101,7 @@ export class ParcelEntryComponent implements OnInit {
     purchaseDate: this.purchaseDate,
     crownLandOwnerType: this.crownLandOwnerType,
     isConfirmedByApplicant: this.isConfirmedByApplicant,
-    searchBy: this.searchBy
+    searchBy: this.searchBy,
   });
   pidPinPlaceholder = '';
   selectedOwner?: ApplicationOwnerDto = undefined;
@@ -350,10 +352,14 @@ export class ParcelEntryComponent implements OnInit {
     }
   }
 
-  async onCrownOwnerSelected(event: Event, owner: ApplicationOwnerDto, isSelected: boolean) {
+  async onCrownOwnerSelected(owner: ApplicationOwnerDto, isSelected: boolean) {
     this.selectedOwner = owner;
     const selectedOwners = [owner];
     this.updateParcelOwners(selectedOwners);
+
+    setTimeout(() => {
+      this.ownerInfo.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    });
   }
 
   onEditCrownOwner(owner: ApplicationOwnerDto) {
