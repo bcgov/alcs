@@ -110,7 +110,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     if (this.isHiddenFromPortal) {
       this.confirmationDialogService
         .openDialog({
-          body: 'Are you sure you want to remove the access restriction for the L/FNG and public? If you continue, this File ID could return search results for the L/FNG and the public. Standard rules for showing/hiding content will apply.',
+          body: 'If you continue, this File ID will not return any search results for the L/FNG and the public. Please add a journal note to explain why this file is restricted.',
         })
         .subscribe((didConfirm) => {
           this.isHiddenFromPortal = didConfirm;
@@ -123,7 +123,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     } else {
       this.confirmationDialogService
         .openDialog({
-          body: 'If you continue, this File ID will not return any search results for the L/FNG and the public. Please add a journal note to explain why this file is restricted.',
+          body: 'Are you sure you want to remove the access restriction for the L/FNG and public? If you continue, this File ID could return search results for the L/FNG and the public. Standard rules for showing/hiding content will apply.',
         })
         .subscribe((didConfirm) => {
           this.isHiddenFromPortal = !didConfirm;
