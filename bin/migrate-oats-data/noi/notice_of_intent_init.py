@@ -3,6 +3,7 @@ from common import (
     setup_and_get_logger,
     exclusion_table_create,
     exclusion_table_count,
+    BATCH_UPLOAD_SIZE
 )
 from db import inject_conn_pool
 
@@ -11,7 +12,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notice_of_intents(conn=None, batch_size=10000):
+def init_notice_of_intents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor() as cursor:
         exclusion_table_create(cursor, conn)
