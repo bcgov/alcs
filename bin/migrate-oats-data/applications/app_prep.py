@@ -8,6 +8,7 @@ from common import (
     BATCH_UPLOAD_SIZE,
     OatsToAlcsAgCapSource,
     OatsToAlcsAgCap,
+    add_timezone_and_keep_date_part,
 )
 from db import inject_conn_pool
 from psycopg2.extras import execute_batch, RealDictCursor
@@ -121,6 +122,7 @@ def _update_app_prep_records(conn, batch_size, cursor, rows):
         other_data_list,
         exc_data_list,
         inc_data_list,
+        pofo_roso_pfrs_data_list,
     ) = _prepare_app_prep_data(rows)
 
     if len(nfu_data_list) > 0:
@@ -155,6 +157,14 @@ def _update_app_prep_records(conn, batch_size, cursor, rows):
             page_size=batch_size,
         )
 
+    if len(pofo_roso_pfrs_data_list) > 0:
+        execute_batch(
+            cursor,
+            _get_update_query_for_soil(),
+            pofo_roso_pfrs_data_list,
+            page_size=batch_size,
+        )
+
     if len(other_data_list) > 0:
         execute_batch(
             cursor,
@@ -183,6 +193,7 @@ def _prepare_app_prep_data(app_prep_raw_data_list):
     nar_data_list = []
     exc_data_list = []
     inc_data_list = []
+    pofo_roso_pfrs_data_list = []
     other_data_list = []
 
     for row in app_prep_raw_data_list:
@@ -193,6 +204,7 @@ def _prepare_app_prep_data(app_prep_raw_data_list):
             data = _mapOatsToAlcsAppPrep(data)
             nfu_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.NAR.value:
+            data = _mapOatsResidentialEndDateToAlcs(data)
             nar_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.EXC.value:
             data = _mapOatsToAlcsLegislationCode(data)
@@ -200,10 +212,24 @@ def _prepare_app_prep_data(app_prep_raw_data_list):
         elif data["alr_change_code"] == ALRChangeCode.INC.value:
             data = _mapOatsToAlcsLegislationCode(data)
             inc_data_list.append(data)
+        elif data["alr_change_code"] in [
+            ALRChangeCode.SCH.value,
+            ALRChangeCode.EXT.value,
+            ALRChangeCode.FILL.value,
+        ]:
+            data = _mapProposalEndDatesForSoilComponents(data)
+            pofo_roso_pfrs_data_list.append(data)
         else:
             other_data_list.append(data)
 
-    return nfu_data_list, nar_data_list, other_data_list, exc_data_list, inc_data_list
+    return (
+        nfu_data_list,
+        nar_data_list,
+        other_data_list,
+        exc_data_list,
+        inc_data_list,
+        pofo_roso_pfrs_data_list,
+    )
 
 
 def _mapOatsToAlcsAppPrep(data):
@@ -219,6 +245,18 @@ def _mapOatsToAlcsAppPrep(data):
             oats_type_code, oats_subtype_code
         )
 
+    data["nonfarm_use_end_date"] = add_timezone_and_keep_date_part(
+        data.get("nonfarm_use_end_date", None)
+    )
+
+    return data
+
+
+def _mapOatsResidentialEndDateToAlcs(data):
+    data["rsdntl_use_end_date"] = add_timezone_and_keep_date_part(
+        data.get("rsdntl_use_end_date", None)
+    )
+
     return data
 
 
@@ -227,6 +265,24 @@ def _mapOatsToAlcsLegislationCode(data):
         data["legislation_code"] = str(
             OatsLegislationCodes[data["legislation_code"]].value
         )
+
+    return data
+
+
+def _mapProposalEndDatesForSoilComponents(data):
+    data["proposal_end_date"] = None
+    data["proposal_end_date2"] = None
+    date = data.get("nonfarm_use_end_date", None)
+    noi_type = data.get("alr_change_code", None)
+
+    if date is not None:
+        proposal_end = add_timezone_and_keep_date_part(date)
+
+        if noi_type == ALRChangeCode.SCH.value:
+            data["proposal_end_date"] = proposal_end
+            data["proposal_end_date2"] = proposal_end
+        elif noi_type in [ALRChangeCode.FILL.value, ALRChangeCode.EXT.value]:
+            data["proposal_end_date"] = proposal_end
 
     return data
 
@@ -285,6 +341,13 @@ def _get_update_query_for_inc():
 def _get_update_query_for_other():
     # leaving blank insert for now
     unique_fields = """"""
+    return _get_update_query(unique_fields)
+
+
+def _get_update_query_for_soil():
+    unique_fields = """,
+            proposal_end_date = %(proposal_end_date)s,
+            proposal_end_date2 = %(proposal_end_date2)s"""
     return _get_update_query(unique_fields)
 
 
