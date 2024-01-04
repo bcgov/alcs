@@ -1,4 +1,5 @@
 from db import inject_conn_pool
+from common import BATCH_UPLOAD_SIZE
 
 """
     This script connects to postgress version of OATS DB and transfers data from OATS documents table to ALCS document table.
@@ -31,7 +32,7 @@ def compile_document_insert_query(number_of_rows_to_insert):
 
 
 @inject_conn_pool
-def import_oats_noi_documents(conn=None, batch_size=10000):
+def import_oats_noi_documents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of documents and prints it to the console. Then, it fetches the documents to insert in batches using document IDs, constructs an insert query, and processes them.
     """

@@ -7,14 +7,14 @@ from common import (
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "update_notice_of_intent_modifications"
+etl_name = "update_application_modifications"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def update_notice_of_intent_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def update_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for updating existing the notice_of_intent_modification in ALCS.
+    This function is responsible for updating existing application_modification in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -24,23 +24,21 @@ def update_notice_of_intent_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZ
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "noi/sql/notice_of_intent_decisions/modifications/notice_of_intent_modification_update_count.sql",
+            "applications/decisions/sql/modifications/application_modification_update_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(
-            f"Total Notice of Intent Modifications data to updated: {count_total}"
-        )
+        logger.info(f"Total Application Modifications data to updated: {count_total}")
 
         failed_updates = 0
         successful_updates_count = 0
         last_modification_id = 0
 
         with open(
-            "noi/sql/notice_of_intent_decisions/modifications/notice_of_intent_modification_update.sql",
+            "applications/decisions/sql/modifications/application_modification_update.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -57,9 +55,7 @@ def update_notice_of_intent_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZ
                 try:
                     modifications_to_be_updated_count = len(rows)
 
-                    _update_notice_of_intent_modifications(
-                        conn, batch_size, cursor, rows
-                    )
+                    _update_application_modifications(conn, batch_size, cursor, rows)
 
                     successful_updates_count = (
                         successful_updates_count + modifications_to_be_updated_count
@@ -80,7 +76,7 @@ def update_notice_of_intent_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZ
     )
 
 
-def _update_notice_of_intent_modifications(conn, batch_size, cursor, rows):
+def _update_application_modifications(conn, batch_size, cursor, rows):
     data = _prepare_oats_alr_applications_data(rows)
 
     if len(data) > 0:
@@ -96,12 +92,12 @@ def _update_notice_of_intent_modifications(conn, batch_size, cursor, rows):
 
 def _get_update_query():
     query = f"""
-                 UPDATE alcs.notice_of_intent_modification
+                 UPDATE alcs.application_modification
                     SET submitted_date = %(submitted_date)s
                         , review_outcome_code = %(review_outcome_code)s
                         , description = %(description)s
                         , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s
-                    WHERE alcs.notice_of_intent_modification."uuid" = %(modification_uuid)s
+                    WHERE alcs.application_modification."uuid" = %(modification_uuid)s
     """
     return query
 

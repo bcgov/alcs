@@ -1,9 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import {
   initApplicationMockEntity,
@@ -249,11 +249,28 @@ describe('ApplicationModificationService', () => {
 
     await service.delete(uuid);
 
-    expect(modificationRepoMock.findOneBy).toBeCalledWith({
+    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
       uuid,
     });
     expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call archive card if modification does not have card attached (only modifications imported from OATS) on delete', async () => {
+    const uuid = 'fake';
+    modificationRepoMock.findOneBy.mockResolvedValue(
+      new ApplicationModification(),
+    );
+    modificationRepoMock.softRemove.mockResolvedValue({} as any);
+    cardServiceMock.archive.mockResolvedValue();
+
+    await service.delete(uuid);
+
+    expect(modificationRepoMock.findOneBy).toHaveBeenCalledWith({
+      uuid,
+    });
+    expect(modificationRepoMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 
   it('should fail on delete if modification does not exist', async () => {

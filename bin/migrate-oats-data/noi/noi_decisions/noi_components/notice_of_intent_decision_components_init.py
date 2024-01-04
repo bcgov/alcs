@@ -5,6 +5,7 @@ from common import (
     ALRChangeCode,
     OatsToAlcsAgCap,
     OatsToAlcsAgCapSource,
+    BATCH_UPLOAD_SIZE
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -14,7 +15,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notice_of_intent_decision_components(conn=None, batch_size=1000):
+def init_notice_of_intent_decision_components(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for initializing the notice_of_intent_decision_components in ALCS.
 
