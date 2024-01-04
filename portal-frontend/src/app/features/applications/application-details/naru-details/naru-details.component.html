@@ -18,7 +18,7 @@
       What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
     </div>
 
@@ -52,7 +52,7 @@
       What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
     </div>
 
@@ -84,7 +84,7 @@
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
     <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
       <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.naruFloorArea"></app-no-data>
     </div>
 
@@ -173,21 +173,24 @@
     <div class="full-width soil-table">
       <div></div>
       <div class="subheading2">Fill to be Placed</div>
-  
+
       <div class="subheading2">Volume</div>
       <div>
         {{ _applicationSubmission.naruToPlaceVolume }}
         <span *ngIf="_applicationSubmission.naruToPlaceVolume !== null">m<sup>3</sup></span>
-        <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceVolume === null"></app-no-data>
+        <app-no-data
+          [showRequired]="showErrors"
+          *ngIf="_applicationSubmission.naruToPlaceVolume === null"
+        ></app-no-data>
       </div>
-  
+
       <div class="subheading2">Area</div>
       <div>
         {{ _applicationSubmission.naruToPlaceArea }}
         <span *ngIf="_applicationSubmission.naruToPlaceArea !== null">m<sup>2</sup></span>
         <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.naruToPlaceArea === null"></app-no-data>
       </div>
-  
+
       <div class="subheading2">Maximum Depth</div>
       <div>
         {{ _applicationSubmission.naruToPlaceMaximumDepth }}
@@ -197,7 +200,7 @@
           *ngIf="_applicationSubmission.naruToPlaceMaximumDepth === null"
         ></app-no-data>
       </div>
-  
+
       <div class="subheading2">Average Depth</div>
       <div>
         {{ _applicationSubmission.naruToPlaceAverageDepth }}

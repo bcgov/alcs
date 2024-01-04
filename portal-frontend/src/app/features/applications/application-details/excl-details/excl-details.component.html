@@ -1,16 +1,12 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    The governmental or prescribed public body that is applying to exclude land
-  </div>
+  <div class="subheading2 grid-1">The governmental or prescribed public body that is applying to exclude land</div>
   <div class="grid-double">
     {{ _applicationSubmission.prescribedBody }}
   </div>
 
-  <div class="subheading2 grid-1">
-    How many hectares are you proposing to exclude? (hectares)
-  </div>
+  <div class="subheading2 grid-1">How many hectares are you proposing to exclude?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.inclExclHectares }}
+    {{ _applicationSubmission.inclExclHectares }} <span *ngIf="_applicationSubmission.inclExclHectares">ha</span>
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclExclHectares"></app-no-data>
   </div>
 
@@ -27,17 +23,13 @@
     ></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Explain why you believe that the parcel(s) should be excluded from the ALR
-  </div>
+  <div class="subheading2 grid-1">Explain why you believe that the parcel(s) should be excluded from the ALR</div>
   <div class="grid-double">
     {{ _applicationSubmission.exclWhyLand }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.exclWhyLand"></app-no-data>

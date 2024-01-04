@@ -4,9 +4,9 @@
     {{ applicationSubmission.prescribedBody }}
   </div>
 
-  <div class="subheading2 grid-1">How many hectares are you proposing to exclude? (hectares)</div>
+  <div class="subheading2 grid-1">How many hectares are you proposing to exclude?</div>
   <div class="grid-double">
-    {{ applicationSubmission.inclExclHectares }}
+    {{ applicationSubmission.inclExclHectares }} <span *ngIf="applicationSubmission.inclExclHectares">ha</span>
     <app-no-data *ngIf="!applicationSubmission.inclExclHectares"></app-no-data>
   </div>
 

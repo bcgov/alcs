@@ -1,7 +1,5 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
@@ -21,20 +19,16 @@
     {{ _applicationSubmission.turReduceNegativeImpacts }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turReduceNegativeImpacts"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Could this proposal be accommodated on lands outside of the ALR?
-  </div>
+  <div class="subheading2 grid-1">Could this proposal be accommodated on lands outside of the ALR?</div>
   <div class="grid-double">
     {{ _applicationSubmission.turOutsideLands }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.turOutsideLands"></app-no-data>
   </div>
-  <div class="subheading2 grid-1">
-    Total area of corridor
-  </div>
+  <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null">{{
-      _applicationSubmission.turTotalCorridorArea
-    }}</span>
+    <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null"
+      >{{ _applicationSubmission.turTotalCorridorArea }} ha</span
+    >
     <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.turTotalCorridorArea === null"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
