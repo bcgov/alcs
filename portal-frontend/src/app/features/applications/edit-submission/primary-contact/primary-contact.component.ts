@@ -289,7 +289,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
-    if (this.form.dirty || (this.selectedOwnerUuid !== 'agent' && this.selectedOwnerUuid !== 'government')) {
+    if (this.form.dirty || (this.selectedOwnerUuid && this.selectedOwnerUuid !== 'agent')) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -303,6 +303,11 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .subscribe(async (confirmed) => {
           if (confirmed) {
             this.switchPrimaryContactType(isExistingOwner);
+
+            // Ensure form is cleared after switching to existing user
+            if (this.selectedOwnerUuid === 'agent') {
+              this.form.reset();
+            }
           } else {
             this.isExistingOwner.setValue(!isExistingOwner);
           }
