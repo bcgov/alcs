@@ -226,6 +226,7 @@ export interface ApplicationDto {
   fileNumber: string;
   applicant: string;
   summary?: string;
+  hideFromPortal: boolean;
   type: ApplicationTypeDto;
   dateSubmittedToAlc: number;
   feePaidDate?: number;
@@ -264,6 +265,7 @@ export interface ApplicationDto {
 export interface UpdateApplicationDto {
   dateSubmittedToAlc?: number;
   applicant?: string;
+  hideFromPortal?: boolean;
   statusCode?: string;
   regionCode?: string;
   summary?: string;

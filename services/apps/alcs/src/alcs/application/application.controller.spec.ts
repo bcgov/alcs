@@ -43,6 +43,7 @@ describe('ApplicationController', () => {
   const mockApplicationDto: ApplicationDto = {
     uuid: 'fake',
     summary: 'summary',
+    hideFromPortal: false,
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     type: mockApplicationEntity.type,

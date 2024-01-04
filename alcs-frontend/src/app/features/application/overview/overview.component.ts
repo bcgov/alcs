@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationSubmissionToSubmissionStatusDto } from '../../../services/application/application-submission-status/application-submission-status.dto';
@@ -21,13 +22,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
   events: TimelineEventDto[] = [];
   summary = '';
   isCancelled = false;
+  isHiddenFromPortal = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     private applicationTimelineService: ApplicationTimelineService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.summary = application.summary ?? '';
         this.events = await this.applicationTimelineService.fetchByFileNumber(application.fileNumber);
         this.loadStatusHistory(this.application.fileNumber);
+        this.isHiddenFromPortal = application.hideFromPortal;
       }
     });
   }
@@ -92,7 +95,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     try {
       statusHistory = await this.applicationSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
         fileNumber,
-        false
+        false,
       );
     } catch (e) {
       console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
@@ -101,5 +104,35 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.isCancelled =
       statusHistory.filter((status) => status.effectiveDate && status.statusTypeCode === SUBMISSION_STATUS.CANCELLED)
         .length > 0;
+  }
+
+  onTogglePortalVisible() {
+    if (this.isHiddenFromPortal) {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'Are you sure you want to remove the access restriction for the L/FNG and public? If you continue, this File ID could return search results for the L/FNG and the public. Standard rules for showing/hiding content will apply.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = didConfirm;
+          if (didConfirm && this.application) {
+            this.applicationDetailService.updateApplication(this.application.fileNumber, {
+              hideFromPortal: true,
+            });
+          }
+        });
+    } else {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'If you continue, this File ID will not return any search results for the L/FNG and the public. Please add a journal note to explain why this file is restricted.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = !didConfirm;
+          if (didConfirm && this.application) {
+            this.applicationDetailService.updateApplication(this.application.fileNumber, {
+              hideFromPortal: false,
+            });
+          }
+        });
+    }
   }
 }

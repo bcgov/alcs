@@ -53,6 +53,13 @@ export class Application extends Base {
   @Column({ type: 'text', nullable: true })
   summary: string | null;
 
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  hideFromPortal?: boolean;
+
   @AutoMap()
   @Column({
     type: 'timestamptz',

@@ -60,6 +60,7 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
 
 const registerCors = (app: NestFastifyApplication) => {
   app.enableCors({
+    maxAge: 3600,
     origin: [
       config.get<string>('ALCS.BASE_URL'),
       config.get<string>('KEYCLOAK.AUTH_SERVER'),

@@ -32,6 +32,7 @@ describe('NoticeOfIntentDialogComponent', () => {
 
   const mockDto: NoticeOfIntentDto = {
     applicant: 'fake-type',
+    hideFromPortal: false,
     region: {
       code: 'region-code',
       label: 'region',

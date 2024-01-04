@@ -40,7 +40,11 @@ import { LinkedStatusType } from '../public-search.dto';
         'status',
       )
       .from(NoticeOfIntentSubmission, 'noi_sub')
-      .innerJoin(NoticeOfIntent, 'noi', 'noi.file_number = noi_sub.file_number')
+      .innerJoin(
+        NoticeOfIntent,
+        'noi',
+        'noi.file_number = noi_sub.file_number AND noi.hide_from_portal = FALSE',
+      )
       .innerJoinAndSelect(
         NoticeOfIntentType,
         'noticeOfIntentType',

@@ -24,13 +24,14 @@ export class OverviewComponent implements OnInit, OnDestroy {
   events: TimelineEventDto[] = [];
   summary = '';
   isCancelled = false;
+  isHiddenFromPortal = false;
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
     private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private noticeOfIntentTimelineService: NoticeOfIntentTimelineService,
     private confirmationDialogService: ConfirmationDialogService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +40,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       .subscribe(async (noticeOfIntent) => {
         if (noticeOfIntent) {
           this.noticeOfIntent = noticeOfIntent;
+          this.isHiddenFromPortal = noticeOfIntent.hideFromPortal;
           this.summary = noticeOfIntent.summary ?? '';
           this.events = await this.noticeOfIntentTimelineService.fetchByFileNumber(noticeOfIntent.fileNumber);
           this.loadStatusHistory(this.noticeOfIntent.fileNumber);
@@ -64,7 +66,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
     try {
       statusHistory = await this.noticeOfIntentSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
         fileNumber,
-        false
+        false,
       );
     } catch (e) {
       console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
@@ -72,7 +74,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     this.isCancelled =
       statusHistory.filter(
-        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.CANCELLED
+        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.CANCELLED,
       ).length > 0;
   }
 
@@ -104,6 +106,36 @@ export class OverviewComponent implements OnInit, OnDestroy {
           if (didConfirm && this.noticeOfIntent) {
             await this.noticeOfIntentDetailService.uncancel(this.noticeOfIntent.fileNumber);
             await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+          }
+        });
+    }
+  }
+
+  onTogglePortalVisible() {
+    if (this.isHiddenFromPortal) {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'Are you sure you want to remove the access restriction for the L/FNG and public? If you continue, this File ID could return search results for the L/FNG and the public. Standard rules for showing/hiding content will apply.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = didConfirm;
+          if (didConfirm && this.noticeOfIntent) {
+            this.noticeOfIntentDetailService.update(this.noticeOfIntent.fileNumber, {
+              hideFromPortal: true,
+            });
+          }
+        });
+    } else {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'If you continue, this File ID will not return any search results for the L/FNG and the public. Please add a journal note to explain why this file is restricted.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = !didConfirm;
+          if (didConfirm && this.noticeOfIntent) {
+            this.noticeOfIntentDetailService.update(this.noticeOfIntent.fileNumber, {
+              hideFromPortal: false,
+            });
           }
         });
     }

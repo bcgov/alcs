@@ -44,7 +44,11 @@ import { LinkedStatusType } from '../inbox.dto';
         'status',
       )
       .from(ApplicationSubmission, 'app_sub')
-      .innerJoin(Application, 'app', 'app.file_number = app_sub.file_number')
+      .innerJoin(
+        Application,
+        'app',
+        'app.file_number = app_sub.file_number AND app.hide_from_portal = FALSE',
+      )
       .leftJoin(User, 'user', 'user.uuid = app_sub.created_by_uuid')
       .leftJoin(
         ApplicationSubmissionReview,

@@ -36,6 +36,13 @@ export class NoticeOfIntent extends Base {
   @Column()
   applicant: string;
 
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  hideFromPortal?: boolean;
+
   @Column({ type: 'uuid', nullable: true })
   cardUuid: string;
 
