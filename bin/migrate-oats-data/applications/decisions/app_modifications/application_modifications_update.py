@@ -31,9 +31,7 @@ def update_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(
-            f"Total Notice of Intent Modifications data to updated: {count_total}"
-        )
+        logger.info(f"Total Application Modifications data to updated: {count_total}")
 
         failed_updates = 0
         successful_updates_count = 0
