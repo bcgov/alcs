@@ -211,7 +211,10 @@ export class ApplicationSubmissionService {
     return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
-  async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {
+  async setPrimaryContact(
+    submissionUuid: string,
+    primaryContactUuid: string | null,
+  ) {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
     applicationSubmission.primaryContactOwnerUuid = primaryContactUuid;
     await this.applicationSubmissionRepository.save(applicationSubmission);
