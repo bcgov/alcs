@@ -233,6 +233,21 @@ export class ApplicationDecisionV2Service {
     const existingDecision: Partial<ApplicationDecision> =
       await this.getOrFail(uuid);
 
+    const componentCodes = existingDecision.components
+      ? existingDecision.components.map(
+          (component) => component.applicationDecisionComponentTypeCode,
+        )
+      : [];
+    const duplicateComponentCodes = componentCodes.filter(
+      (item, index) => componentCodes.indexOf(item) !== index,
+    );
+
+    if (duplicateComponentCodes.length > 0) {
+      throw new ServiceValidationException(
+        'Cannot revert to Draft Decisions with Duplicate Component Codes',
+      );
+    }
+
     await this.validateDecisionChanges(updateDto);
 
     // resolution number is int64 in postgres, which means it is a string in JS

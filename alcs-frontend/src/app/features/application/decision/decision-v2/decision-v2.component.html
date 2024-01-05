@@ -89,14 +89,14 @@
 
         <div
           *ngIf="!decision.isDraft"
-          matTooltip="{{ disabledCreateBtnTooltip }}"
-          [matTooltipDisabled]="!isPaused && !isDraftExists"
+          [matTooltip]="decision.disabledMessage"
+          [matTooltipDisabled]="!isPaused && !isDraftExists && !decision.hasDuplicateComponents"
         >
           <button
             mat-stroked-button
             color="primary"
             (click)="onRevertToDraft(decision.uuid)"
-            [disabled]="isDraftExists"
+            [disabled]="isDraftExists || decision.hasDuplicateComponents"
           >
             Revert to draft
           </button>
