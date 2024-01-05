@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>Portal Maintenance</h2>
+  <div>
+    <div class="subheading2">Maintenance Mode</div>
+    <div>
+      <span class="value" *ngIf="!isEditing">
+        {{ maintenanceMode === 'true' ? 'On' : 'Off' }}
+        <button class="edit-button" mat-icon-button (click)="toggleEdit()">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+      </span>
+      <div
+        class="editing"
+        [ngClass]="{
+          hidden: !isEditing
+        }"
+      >
+        <mat-button-toggle-group [(value)]="maintenanceMode">
+          <mat-button-toggle value="true">On</mat-button-toggle>
+          <mat-button-toggle value="false">Off</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div class="button-container">
+          <button mat-button (click)="toggleEdit()">CANCEL</button>
+          <button mat-button color="primary" (click)="onSave()">SAVE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

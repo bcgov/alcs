@@ -116,7 +116,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${environment.authUrl}/token`, {
+        this.http.get(`${environment.authUrl}/portal/token`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
