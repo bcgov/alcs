@@ -43,7 +43,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   isDirty = false;
   showVirusError = false;
   hasCrownParcels = false;
-  showNoOwnersWarning = false;
 
   isExistingOwner = new FormControl<boolean | null>(null, [Validators.required]);
   firstName = new FormControl<string | null>('', [Validators.required]);
@@ -133,19 +132,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     }
 
     if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
-      this.firstName.enable();
-      this.lastName.enable();
-      this.organizationName.enable();
-      this.email.enable();
-      this.phoneNumber.enable();
       this.isCrownOwner = false;
     } else {
-      this.firstName.disable();
-      this.lastName.disable();
-      this.organizationName.disable();
-      this.email.disable();
-      this.phoneNumber.disable();
-
       if (selectedOwner) {
         this.form.patchValue({
           firstName: selectedOwner.firstName,
@@ -182,7 +170,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   protected async save() {
-    if (this.isDirty || this.form.dirty) {
+    if (this.isDirty || this.form.dirty || this.isExistingOwner.value) {
       let selectedOwner: ApplicationOwnerDto | undefined = this.owners.find(
         (owner) => owner.uuid === this.selectedOwnerUuid
       );
@@ -198,10 +186,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           ownerUuid: selectedOwner?.uuid,
           type: this.selectedThirdPartyAgent ? OWNER_TYPE.AGENT : OWNER_TYPE.GOVERNMENT,
         });
-      } else if (selectedOwner) {
+      } else {
         await this.applicationOwnerService.setPrimaryContact({
           applicationSubmissionUuid: this.submissionUuid,
-          ownerUuid: selectedOwner.uuid,
+          ownerUuid: selectedOwner?.uuid,
         });
       }
       await this.reloadApplication();
@@ -243,9 +231,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       if (selectedOwner) {
         this.selectedThirdPartyAgent = selectedOwner.type.code === OWNER_TYPE.AGENT;
         this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
-
-        this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
       }
+      this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
+      this.switchPrimaryContactType(!this.selectedThirdPartyAgent);
 
       if (this.selectedLocalGovernment) {
         this.organizationName.setValidators([Validators.required]);
@@ -264,12 +252,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         });
       } else if (selectedOwner) {
         this.onSelectOwner(selectedOwner.uuid);
-      } else {
-        this.firstName.disable();
-        this.lastName.disable();
-        this.organizationName.disable();
-        this.email.disable();
-        this.phoneNumber.disable();
       }
 
       if (this.isGovernmentUser || this.selectedLocalGovernment) {
@@ -289,7 +271,14 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
-    if (this.form.dirty || (!isExistingOwner && this.selectedOwnerUuid && !this.isGovernmentUser)) {
+    const isDirty =
+      this.firstName.value ||
+      this.lastName.value ||
+      this.organizationName.value ||
+      this.phoneNumber.value ||
+      this.email.value;
+
+    if (isDirty) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -302,6 +291,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .beforeClosed()
         .subscribe(async (confirmed) => {
           if (confirmed) {
+            this.form.reset();
             this.switchPrimaryContactType(isExistingOwner);
           } else {
             this.isExistingOwner.setValue(!isExistingOwner);
@@ -327,13 +317,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       this.selectedThirdPartyAgent = false;
       this.selectedOwnerUuid = undefined;
     }
-
-    // Ensure form is cleared to avoid erroneous confirmation dialogs
-    if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
-      this.form.reset();
-    }
-
-    this.showNoOwnersWarning = isExistingOwner === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
   }
 
   onEdit(selectedOwnerUuid: string) {
@@ -371,9 +354,6 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       if (updatedContact['action'] === 'delete') {
         this.parcelOwners = this.parcelOwners.filter((owner) => owner.uuid !== this.selectedOwnerUuid);
         this.selectedOwnerUuid = undefined;
-
-        this.showNoOwnersWarning =
-          this.isExistingOwner.value === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
       }
     });
   }

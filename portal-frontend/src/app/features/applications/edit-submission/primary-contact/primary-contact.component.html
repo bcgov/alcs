@@ -83,7 +83,9 @@
           </div>
         </div>
       </div>
-      <app-warning-banner *ngIf="showNoOwnersWarning">
+      <app-warning-banner
+        *ngIf="this.isExistingOwner.value === true && this.parcelOwners.length === 0 && !this.isGovernmentUser"
+      >
         No landowners or government contacts are added. Please go back to Step 1 to add information.
       </app-warning-banner>
       <!-- /Owner -->
