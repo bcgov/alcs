@@ -1,16 +1,19 @@
-from common import OATS_ETL_USER, setup_and_get_logger, BATCH_UPLOAD_SIZE
+from common import (
+    setup_and_get_logger,
+    add_timezone_and_keep_date_part,
+    AlcsNoiModificationOutcomeCodeEnum,
+)
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "link_application_modifications"
+etl_name = "update_application_modifications"
 logger = setup_and_get_logger(etl_name)
 
 
-# TODO do not need this one for modifications, will assume that everything is done correctly by the staff
 @inject_conn_pool
-def link_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
+def update_application_modifications(conn=None, batch_size=1000):
     """
-    This function is responsible for linking application_modification to application_decisions in ALCS.
+    This function is responsible for updating existing application_modification in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -20,21 +23,23 @@ def link_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "applications/decisions/sql/modifications/application_modification_link_to_decisions_count.sql",
+            "applications/decisions/sql/modifications/application_modification_update_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(f"Total Application Modifications data to link: {count_total}")
+        logger.info(
+            f"Total Notice of Intent Modifications data to updated: {count_total}"
+        )
 
         failed_updates = 0
         successful_updates_count = 0
         last_modification_id = 0
 
         with open(
-            "applications/decisions/sql/modifications/application_modification_link_to_decisions.sql",
+            "applications/decisions/sql/modifications/application_modification_update.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -59,7 +64,7 @@ def link_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_modification_id = dict(rows[-1])["reconsideration_request_id"]
 
                     logger.debug(
-                        f"retrieved/linked items count: {modifications_to_be_updated_count}; total successfully linked modifications so far {successful_updates_count}; last updated reconsideration_request_id: {last_modification_id}"
+                        f"retrieved/updated items count: {modifications_to_be_updated_count}; total successfully update modifications so far {successful_updates_count}; last updated reconsideration_request_id: {last_modification_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
@@ -68,7 +73,7 @@ def link_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                     last_modification_id = last_modification_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful linked {successful_updates_count}, total failed updates {failed_updates}"
+        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_updates}"
     )
 
 
@@ -88,9 +93,12 @@ def _update_application_modifications(conn, batch_size, cursor, rows):
 
 def _get_update_query():
     query = f"""
-                 UPDATE alcs.application_decision
-                    SET modifies_uuid = %(modification_uuid)s
-                    WHERE alcs.application_decision."uuid" = %(decision_uuid)s
+                 UPDATE alcs.application_modification
+                    SET submitted_date = %(submitted_date)s
+                        , review_outcome_code = %(review_outcome_code)s
+                        , description = %(description)s
+                        , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s
+                    WHERE alcs.application_modification."uuid" = %(modification_uuid)s
     """
     return query
 
@@ -99,26 +107,19 @@ def _prepare_oats_alr_applications_data(row_data_list):
     data_list = []
     for row in row_data_list:
         mapped_row = {
-            "modification_uuid": row["modification_uuid"],
-            "decision_uuid": row["decision_uuid"],
-            "reconsideration_request_id": row["reconsideration_request_id"],
+            "submitted_date": add_timezone_and_keep_date_part(row.get("received_date")),
+            "review_outcome_code": _map_outcome_code(row),
+            "modification_uuid": row.get("modification_uuid"),
+            "description": row.get("description"),
+            "oats_reconsideration_request_id": row.get("reconsideration_request_id"),
         }
         data_list.append(mapped_row)
 
     return data_list
 
 
-@inject_conn_pool
-def unlink_application_modifications(conn=None):
-    logger.info("Start application_modification link cleaning")
-    with conn.cursor() as cursor:
-        cursor.execute(
-            f"""UPDATE alcs.application_decision 
-                SET modifies_uuid = NULL 
-                FROM alcs.application_modification 
-                WHERE alcs.application_decision.modifies_uuid = application_modification.uuid 
-                AND alcs.application_modification.audit_created_by = '{OATS_ETL_USER}';"""
-        )
-        logger.info(f"Unlinked items count = {cursor.rowcount}")
-
-    conn.commit()
+def _map_outcome_code(row):
+    if row.get("approved_date", None) is not None:
+        return AlcsNoiModificationOutcomeCodeEnum.PROCEED_TO_MODIFY.value
+    else:
+        return AlcsNoiModificationOutcomeCodeEnum.PENDING.value
