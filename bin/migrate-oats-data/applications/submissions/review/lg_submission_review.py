@@ -57,7 +57,7 @@ def insert_application_submission_review(conn=None, batch_size=BATCH_UPLOAD_SIZE
                     last_application_id = last_record["alr_application_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert applications owners so far {successful_updates_count}; last updated {last_application_id}"
+                        f"retrieved/updated items count: {records_to_be_inserted_count}; total successfully insert applications reviews so far {successful_updates_count}; last updated {last_application_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
