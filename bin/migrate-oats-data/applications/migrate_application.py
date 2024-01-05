@@ -29,12 +29,12 @@ def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
     update_application_date_rx_all_items(batch_size)
     process_alcs_app_submissions(batch_size)
+    insert_application_submission_review(batch_size)
     process_application_statuses(batch_size)
     process_application_parcels(batch_size)
     process_application_owners(batch_size)
     process_app_staff_journal(batch_size)
     process_application_decisions(batch_size)
-    insert_application_submission_review(batch_size)
     process_application_submission_status_emails()
 
 
