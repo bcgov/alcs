@@ -365,6 +365,14 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.phoneNumber.setValue(updatedContact.phoneNumber);
         this.email.setValue(updatedContact.email);
       }
+
+      if (updatedContact['action'] === 'delete') {
+        this.parcelOwners = this.parcelOwners.filter((owner) => owner.uuid !== this.selectedOwnerUuid);
+        this.selectedOwnerUuid = undefined;
+
+        this.showNoOwnersWarning =
+          this.isExistingOwner.value === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
+      }
     });
   }
 }
