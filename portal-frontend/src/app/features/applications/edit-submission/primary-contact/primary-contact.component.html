@@ -32,7 +32,7 @@
       </div>
 
       <!-- Owner -->
-      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0">
+      <div *ngIf="isExistingOwner.value !== null && selectedThirdPartyAgent === false && parcelOwners.length > 0">
         <label
           >Select a Primary Contact from the listed land owners
           <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
