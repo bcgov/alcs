@@ -27,6 +27,7 @@ export interface NoticeOfIntentTypeDto extends BaseCodeDto {
 export interface NoticeOfIntentDto {
   uuid: string;
   fileNumber: string;
+  hideFromPortal: boolean;
   card: CardDto;
   localGovernment: ApplicationLocalGovernmentDto;
   region: ApplicationRegionDto;
@@ -64,6 +65,7 @@ export interface NoticeOfIntentDto {
 
 export interface UpdateNoticeOfIntentDto {
   dateSubmittedToAlc?: number;
+  hideFromPortal?: boolean;
   feePaidDate?: number;
   feeWaived?: boolean | null;
   feeSplitWithLg?: boolean | null;

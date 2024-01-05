@@ -328,6 +328,11 @@ export class NoticeOfIntentService {
       noticeOfIntent.proposalEndDate2,
     );
 
+    noticeOfIntent.hideFromPortal = filterUndefined(
+      updateDto.hideFromPortal,
+      noticeOfIntent.hideFromPortal,
+    );
+
     await this.repository.save(noticeOfIntent);
 
     await this.updateStatus(updateDto, noticeOfIntent);

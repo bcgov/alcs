@@ -21,6 +21,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -132,6 +133,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatDatepickerModule,
     MatDialogModule,
     NgSelectModule,
+    MatSlideToggleModule,
   ],
   exports: [
     CommonModule,
@@ -201,7 +203,8 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     LotsTableFormComponent,
     ApplicationLegacyIdComponent,
     TableColumnNoDataPipe,
-    InlineChairReviewOutcomeComponent
+    InlineChairReviewOutcomeComponent,
+    MatSlideToggleModule,
   ],
 })
 export class SharedModule {

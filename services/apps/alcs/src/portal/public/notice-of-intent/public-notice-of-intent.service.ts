@@ -32,7 +32,11 @@ export class PublicNoticeOfIntentService {
       await this.noticeOfIntentService.getByFileNumber(fileNumber);
 
     //Easy way to check if its public
-    if (!noticeOfIntent?.dateReceivedAllItems) {
+    if (
+      !noticeOfIntent ||
+      !noticeOfIntent.dateReceivedAllItems ||
+      noticeOfIntent.hideFromPortal
+    ) {
       throw new ServiceNotFoundException(
         `Failed to find application with File ID ${fileNumber}`,
       );

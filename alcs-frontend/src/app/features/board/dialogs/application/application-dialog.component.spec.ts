@@ -48,6 +48,7 @@ describe('ApplicationDialogComponent', () => {
 
   const mockApplication: ApplicationDto = {
     uuid: '',
+    hideFromPortal: false,
     type: mockApplicationType,
     region: mockApplicationRegion,
     fileNumber: '1111',

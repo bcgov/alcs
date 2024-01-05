@@ -47,7 +47,11 @@ export class PublicApplicationService {
     const application = await this.applicationService.get(fileNumber);
 
     //Easy way to check if its public
-    if (!application?.dateReceivedAllItems) {
+    if (
+      !application ||
+      !application.dateReceivedAllItems ||
+      application.hideFromPortal
+    ) {
       throw new ServiceNotFoundException(
         `Failed to find application with File ID ${fileNumber}`,
       );
