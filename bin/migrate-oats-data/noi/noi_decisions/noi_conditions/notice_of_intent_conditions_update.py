@@ -1,5 +1,6 @@
 from common import (
     setup_and_get_logger,
+    BATCH_UPLOAD_SIZE
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -9,7 +10,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def update_notice_of_intent_conditions(conn=None, batch_size=1000):
+def update_notice_of_intent_conditions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for updating existing the notice_of_intent_decision_condition in ALCS.
 

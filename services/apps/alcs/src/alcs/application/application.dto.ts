@@ -56,6 +56,10 @@ export class UpdateApplicationDto {
   applicant?: string;
 
   @IsOptional()
+  @IsBoolean()
+  hideFromPortal?: boolean;
+
+  @IsOptional()
   @IsString()
   typeCode?: string;
 
@@ -174,6 +178,9 @@ export class ApplicationDto {
   @AutoMap()
   applicant: string;
 
+  @AutoMap()
+  hideFromPortal: boolean;
+
   activeDays: number;
 
   pausedDays: number;
@@ -267,6 +274,7 @@ export class ApplicationDto {
 export class ApplicationUpdateServiceDto {
   dateSubmittedToAlc?: Date | null | undefined;
   applicant?: string;
+  hideFromPortal?: boolean;
   typeCode?: string;
   regionCode?: string;
   feePaidDate?: Date | null;

@@ -1,6 +1,7 @@
 from common import (
     OATS_ETL_USER,
     setup_and_get_logger,
+    BATCH_UPLOAD_SIZE
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -10,7 +11,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def link_notice_of_intent_modifications(conn=None, batch_size=1000):
+def link_notice_of_intent_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for linking notice_of_intent_modification to notice_of_intent_decisions in ALCS.
 

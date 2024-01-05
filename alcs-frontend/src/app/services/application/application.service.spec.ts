@@ -15,6 +15,7 @@ describe('ApplicationService', () => {
 
   const mockApplication: ApplicationDto = {
     uuid: '',
+    hideFromPortal: false,
     activeDays: 0,
     applicant: '',
     dateSubmittedToAlc: 0,
@@ -80,7 +81,7 @@ describe('ApplicationService', () => {
             code: 'region',
           },
         ],
-      })
+      }),
     );
   });
 
@@ -136,7 +137,7 @@ describe('ApplicationService', () => {
     httpClient.post.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -168,7 +169,7 @@ describe('ApplicationService', () => {
     httpClient.patch.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -195,7 +196,7 @@ describe('ApplicationService', () => {
     httpClient.patch.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.updateApplicationCard('1', {});

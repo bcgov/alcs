@@ -202,7 +202,7 @@ export class ApplicationComponent implements OnInit, OnDestroy {
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
 
-        this.isApplicantSubmission = application.source === SYSTEM_SOURCE_TYPES.APPLICANT;
+        this.isApplicantSubmission = application.source !== SYSTEM_SOURCE_TYPES.ALCS;
         let wasSubmittedToLfng = false;
 
         if (this.isApplicantSubmission) {

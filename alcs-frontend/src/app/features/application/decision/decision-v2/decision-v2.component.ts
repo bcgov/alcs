@@ -26,6 +26,8 @@ import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to
 
 type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
+  hasDuplicateComponents: boolean;
+  disabledMessage: string;
 };
 
 @Component({
@@ -85,15 +87,32 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.ceoCriterion = codes.ceoCriterion;
     this.decisionService.loadDecisions(fileNumber);
 
+    this.isDraftExists = this.decisions.some((d) => d.isDraft);
+
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => ({
-        ...decision,
-        loading: false,
-      }));
+      this.decisions = decisions.map((decision) => {
+        const componentCodes = decision.components.map((component) => component.applicationDecisionComponentTypeCode);
+        const duplicateComponentCodes = componentCodes.filter((item, index) => componentCodes.indexOf(item) !== index);
+
+        let disabledMessage =
+          'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
+        if (this.isPaused) {
+          disabledMessage = 'This application is currently paused. Only active applications can have decisions.';
+        }
+        if (duplicateComponentCodes.length > 0) {
+          disabledMessage = 'Editing disabled - contact admin';
+        }
+
+        return {
+          ...decision,
+          loading: false,
+          hasDuplicateComponents: duplicateComponentCodes.length > 0,
+          disabledMessage,
+        };
+      });
 
       this.scrollToDecision();
 
-      this.isDraftExists = this.decisions.some((d) => d.isDraft);
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
         : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';

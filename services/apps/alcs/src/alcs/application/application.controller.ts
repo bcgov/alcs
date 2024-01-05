@@ -116,6 +116,7 @@ export class ApplicationController {
         nfuUseType: updates.nfuUseType,
         inclExclApplicantType: updates.inclExclApplicantType,
         staffObservations: updates.staffObservations,
+        hideFromPortal: updates.hideFromPortal,
       },
     );
 

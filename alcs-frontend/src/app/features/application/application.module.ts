@@ -1,5 +1,6 @@
 import { NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule, Routes } from '@angular/router';
 import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
@@ -82,6 +83,6 @@ const routes: Routes = [
     UncancelApplicationDialogComponent,
     ReturnApplicationDialogComponent,
   ],
-  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule, NgIf],
+  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
 export class ApplicationModule {}

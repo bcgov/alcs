@@ -2,6 +2,7 @@ from common import (
     OATS_ETL_USER,
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
+    BATCH_UPLOAD_SIZE
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -11,7 +12,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_notice_of_intent_decisions(conn=None, batch_size=1000):
+def init_notice_of_intent_decisions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for initializing the notice_of_intent_decisions in ALCS.
 

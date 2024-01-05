@@ -5,3 +5,9 @@ h5 {
 section {
   margin: 32px 0;
 }
+
+:host::ng-deep {
+  .toggle .mdc-label {
+    font-size: 16px;
+  }
+}

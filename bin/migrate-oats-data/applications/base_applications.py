@@ -3,6 +3,7 @@ from common import (
     setup_and_get_logger,
     exclusion_table_create,
     exclusion_table_count,
+    BATCH_UPLOAD_SIZE
 )
 
 etl_name = "process_applications"
@@ -10,7 +11,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def process_applications(conn=None, batch_size=10000):
+def process_applications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     function uses a decorator pattern @inject_conn_pool to inject a database connection pool to the function. It fetches the total count of non duplicate applications and prints it to the console. Then, it fetches the applications to insert in batches using application IDs / file_number, constructs an insert query, and processes them.
     """

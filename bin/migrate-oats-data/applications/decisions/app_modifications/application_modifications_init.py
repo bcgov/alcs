@@ -3,6 +3,7 @@ from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
     AlcsNoiModificationOutcomeCodeEnum,
+    BATCH_UPLOAD_SIZE,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -12,7 +13,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def init_application_modifications(conn=None, batch_size=1000):
+def init_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for initializing the application_modification in ALCS.
 
@@ -33,7 +34,7 @@ def init_application_modifications(conn=None, batch_size=1000):
             count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Application Modifications data to insert: {count_total}")
 
-        failed_inserts = 0
+        failed_inserts_count = 0
         successful_inserts_count = 0
         last_modification_id = 0
 
@@ -68,11 +69,11 @@ def init_application_modifications(conn=None, batch_size=1000):
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
-                    failed_inserts = count_total - successful_inserts_count
+                    failed_inserts_count = count_total - successful_inserts_count
                     last_modification_id = last_modification_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts_count}"
     )
 
 

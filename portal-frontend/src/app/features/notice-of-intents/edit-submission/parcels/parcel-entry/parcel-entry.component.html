@@ -2,7 +2,8 @@
   <div class="type">
     <mat-label for="parcelType">Select parcel type:</mat-label>
     <div class="warning">
-      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands.  Crown land includes crown leases.
+      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands. Crown land includes
+      crown leases.
     </div>
     <mat-button-toggle-group
       class="input"
@@ -152,7 +153,13 @@
       <mat-label for="isFarm">Farm Classification</mat-label>
       <div class="subtext">
         As determined by
-        <a class="subtext" href="https://info.bcassessment.ca/Services-products/property-classes-and-exemptions/farm-land-assessment/about-farm-land-assessment" target="_blank" rel="noreferrer">BC Assessment</a>
+        <a
+          class="subtext"
+          href="https://info.bcassessment.ca/Services-products/property-classes-and-exemptions/farm-land-assessment/about-farm-land-assessment"
+          target="_blank"
+          rel="noreferrer"
+          >BC Assessment</a
+        >
       </div>
       <mat-button-toggle-group class="input" id="isFarm" formControlName="isFarm">
         <mat-button-toggle
@@ -258,14 +265,8 @@
           [formControl]="ownerInput"
         />
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option
-            (click)="onSelectOwner($event, option, option.isSelected)"
-            *ngFor="let option of filteredOwners"
-          >
-            <mat-checkbox
-              [checked]="option.isSelected"
-              color="primary"
-            >
+          <mat-option (click)="onSelectOwner($event, option, option.isSelected)" *ngFor="let option of filteredOwners">
+            <mat-checkbox [checked]="option.isSelected" color="primary">
               <div class="owner-option">
                 <div>{{ option.displayName }}</div>
               </div>
@@ -302,8 +303,9 @@
       <div>
         <mat-radio-group
           color="primary"
-          [value]="selectedOwner?.uuid" required
-          [ngClass]="{ 'error': ownerInput.errors && ownerInput.errors['required'] }"
+          [value]="selectedOwner?.uuid"
+          required
+          [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
           formControlName="selectedOwnerVal"
         >
           <mat-radio-button
@@ -313,38 +315,40 @@
             (click)="onCrownOwnerSelected($event, owner, owner.isSelected)"
             required
           >
-          {{ owner.firstName + ' ' + owner.lastName }}
+            {{ owner.firstName + ' ' + owner.lastName }}
           </mat-radio-button>
         </mat-radio-group>
 
-        <div class="warning-banner" *ngIf="selectedOwner">
+        <div id="owner-info" class="warning-banner" *ngIf="selectedOwner">
           <div class="owner-details">
             <div class="row">
-              <div class="key"><strong>First Name:</strong> </div>
+              <div class="key"><strong>First Name:</strong></div>
               <div class="value">{{ selectedOwner.firstName }}</div>
             </div>
             <div class="row">
-              <div class="key"><strong>Last Name:</strong> </div>
+              <div class="key"><strong>Last Name:</strong></div>
               <div class="value">{{ selectedOwner.lastName }}</div>
             </div>
-            <div class="row"> 
-              <div class="key"><strong>Ministry or Department:</strong> </div>
+            <div class="row">
+              <div class="key"><strong>Ministry or Department:</strong></div>
               <div class="value">{{ selectedOwner.organizationName }}</div>
             </div>
             <div class="row">
-              <div class="key"><strong>Phone Number:</strong> </div>
+              <div class="key"><strong>Phone Number:</strong></div>
               <div class="value">{{ selectedOwner.phoneNumber }}</div>
             </div>
             <div class="row">
-              <div class="key"><strong>Email:</strong> </div>
+              <div class="key"><strong>Email:</strong></div>
               <div class="value">{{ selectedOwner.email }}</div>
             </div>
             <div class="row">
-              <div class="key"><strong>Crown Type:</strong> </div>
+              <div class="key"><strong>Crown Type:</strong></div>
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
             <div class="row">
-              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
+              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
+                Edit information
+              </button>
             </div>
           </div>
         </div>

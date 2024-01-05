@@ -59,6 +59,9 @@ export class NoticeOfIntentDto {
   uuid: string;
 
   @AutoMap()
+  hideFromPortal: boolean;
+
+  @AutoMap()
   fileNumber: string;
 
   @AutoMap()
@@ -137,6 +140,10 @@ export class UpdateNoticeOfIntentDto {
   @IsOptional()
   @IsNumber()
   dateSubmittedToAlc?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  hideFromPortal?: boolean;
 
   @IsOptional()
   @IsNumber()

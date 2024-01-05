@@ -2,6 +2,7 @@ from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
     AlcsNoiModificationOutcomeCodeEnum,
+    BATCH_UPLOAD_SIZE,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -11,7 +12,7 @@ logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def update_application_modifications(conn=None, batch_size=1000):
+def update_application_modifications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
     This function is responsible for updating existing application_modification in ALCS.
 
@@ -30,9 +31,7 @@ def update_application_modifications(conn=None, batch_size=1000):
             count_query = sql_file.read()
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
-        logger.info(
-            f"Total Notice of Intent Modifications data to updated: {count_total}"
-        )
+        logger.info(f"Total Application Modifications data to updated: {count_total}")
 
         failed_updates = 0
         successful_updates_count = 0

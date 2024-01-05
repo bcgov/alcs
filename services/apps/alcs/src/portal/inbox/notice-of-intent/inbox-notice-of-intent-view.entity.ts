@@ -38,7 +38,11 @@ import { LinkedStatusType } from '../inbox.dto';
         'status',
       )
       .from(NoticeOfIntentSubmission, 'noi_sub')
-      .innerJoin(NoticeOfIntent, 'noi', 'noi.file_number = noi_sub.file_number')
+      .innerJoin(
+        NoticeOfIntent,
+        'noi',
+        'noi.file_number = noi_sub.file_number AND noi.hide_from_portal = false',
+      )
       .leftJoin(User, 'user', 'user.uuid = noi_sub.created_by_uuid')
       .innerJoinAndSelect(
         NoticeOfIntentType,

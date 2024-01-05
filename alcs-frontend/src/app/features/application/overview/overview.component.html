@@ -24,3 +24,9 @@
   <h5>Application Event Timeline</h5>
   <app-timeline [events]="events"></app-timeline>
 </section>
+<section>
+  <h5>Portal Access</h5>
+  <mat-slide-toggle class="toggle" [(ngModel)]="isHiddenFromPortal" (change)="onTogglePortalVisible()">
+    Restrict Access for the Local/First Nation Government and Public
+  </mat-slide-toggle>
+</section>
