@@ -103,6 +103,7 @@ def _get_update_query():
                         , is_new_evidence = %(is_new_evidence)s
                         , is_incorrect_false_info = %(is_incorrect_false_info)s
                         , review_outcome_code = COALESCE(alcs.application_reconsideration.review_outcome_code, %(review_outcome_code)s)
+                        , review_date = %(review_date)s
                     WHERE alcs.application_reconsideration."uuid" = %(reconsideration_uuid)s;
     """
     return query
@@ -120,6 +121,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "is_new_evidence": "new_information_ind",
             "is_incorrect_false_info": "error_information_ind",
             "review_outcome_code": _map_review_outcome_code(row),
+            "review_date": _map_review_date,
         }
         data_list.append(mapped_row)
 
@@ -131,3 +133,14 @@ def _map_review_outcome_code(row):
         return AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
     else:
         return AlcsAppReconsiderationOutcomeCodeEnum.PENDING.value
+
+
+def _map_review_date(row):
+    review_code = _map_review_outcome_code(row)
+    approved_date = add_timezone_and_keep_date_part(row.get("approved_date"))
+    return (
+        approved_date
+        if review_code
+        == AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
+        else None
+    )

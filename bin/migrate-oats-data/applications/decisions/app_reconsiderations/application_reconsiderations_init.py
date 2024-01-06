@@ -135,6 +135,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "is_new_proposal": row.get("new_proposal_ind"),
             "type_code": "33",
             "review_outcome_code": _map_review_outcome_code(row),
+            "review_date": _map_review_date(row),
         }
         data_list.append(mapped_row)
 
@@ -146,6 +147,17 @@ def _map_review_outcome_code(row):
         return AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
     else:
         return AlcsAppReconsiderationOutcomeCodeEnum.PENDING.value
+
+
+def _map_review_date(row):
+    review_code = _map_review_outcome_code(row)
+    approved_date = add_timezone_and_keep_date_part(row.get("approved_date"))
+    return (
+        approved_date
+        if review_code
+        == AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
+        else None
+    )
 
 
 @inject_conn_pool
