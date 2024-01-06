@@ -134,7 +134,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "is_new_evidence": row.get("new_information_ind"),
             "is_new_proposal": row.get("new_proposal_ind"),
             "type_code": "33",
-            "review_outcome_code": _map_review_outcome_code(row.get("approved_date")),
+            "review_outcome_code": _map_review_outcome_code(row),
         }
         data_list.append(mapped_row)
 

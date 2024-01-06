@@ -23,8 +23,6 @@ from .app_staff_journal import (
 from .decisions import clean_application_decisions, init_application_decisions
 from .decisions.app_modifications import (
     update_application_modifications,
-    link_application_modifications,
-    unlink_application_modifications,
 )
 from .decisions.app_reconsiderations import (
     init_application_reconsiderations,
@@ -65,7 +63,6 @@ def init_applications(batch_size):
 def process_application_decisions(batch_size):
     init_application_decisions(batch_size)
     update_application_modifications(batch_size)
-    link_application_modifications(batch_size)
     init_application_reconsiderations(batch_size)
     link_application_reconsiderations(batch_size)
     update_application_reconsiderations(batch_size)
@@ -73,7 +70,6 @@ def process_application_decisions(batch_size):
 
 def clean_application_decisions_etl():
     # modifications do not have clean since all of them were created in ALCS and ETL is not introducing new records.
-    unlink_application_modifications()
     unlink_application_reconsiderations()
     clean_application_reconsiderations()
     clean_application_decisions()
