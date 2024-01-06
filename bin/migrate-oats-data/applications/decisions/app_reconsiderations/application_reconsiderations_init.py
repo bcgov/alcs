@@ -3,6 +3,7 @@ from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
     BATCH_UPLOAD_SIZE,
+    AlcsAppReconsiderationOutcomeCodeEnum,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
@@ -100,7 +101,8 @@ def _get_insert_query():
                     is_incorrect_false_info,
                     is_new_evidence,
                     is_new_proposal,
-                    type_code
+                    type_code,
+                    review_outcome_code
                 )
                 VALUES (
                     %(audit_created_by)s,
@@ -111,7 +113,8 @@ def _get_insert_query():
                     %(is_incorrect_false_info)s,
                     %(is_new_evidence)s,
                     %(is_new_proposal)s,
-                    %(type_code)s
+                    %(type_code)s,
+                    %(review_outcome_code)s
                 )
                 ON CONFLICT DO NOTHING;
     """
@@ -131,10 +134,18 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "is_new_evidence": row.get("new_information_ind"),
             "is_new_proposal": row.get("new_proposal_ind"),
             "type_code": "33",
+            "review_outcome_code": _map_review_outcome_code(row.get("approved_date")),
         }
         data_list.append(mapped_row)
 
     return data_list
+
+
+def _map_review_outcome_code(row):
+    if row.get("approved_date", None) is not None:
+        return AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
+    else:
+        return AlcsAppReconsiderationOutcomeCodeEnum.PENDING.value
 
 
 @inject_conn_pool

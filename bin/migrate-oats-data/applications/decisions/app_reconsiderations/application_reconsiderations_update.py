@@ -1,19 +1,19 @@
 from common import (
     setup_and_get_logger,
     add_timezone_and_keep_date_part,
-    AlcsNoiModificationOutcomeCodeEnum,
+    AlcsAppReconsiderationOutcomeCodeEnum,
 )
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
-etl_name = "update_application_modifications"
+etl_name = "update_application_reconsiderations"
 logger = setup_and_get_logger(etl_name)
 
 
 @inject_conn_pool
-def update_application_modifications(conn=None, batch_size=1000):
+def update_application_reconsiderations(conn=None, batch_size=1000):
     """
-    This function is responsible for updating existing application_modification in ALCS.
+    This function is responsible for updating existing application_reconsideration in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
@@ -23,7 +23,7 @@ def update_application_modifications(conn=None, batch_size=1000):
     logger.info(f"Start {etl_name}")
     with conn.cursor(cursor_factory=RealDictCursor) as cursor:
         with open(
-            "applications/decisions/sql/modifications/application_modification_update_count.sql",
+            "applications/decisions/sql/reconsiderations/application_reconsideration_update_count.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
@@ -31,22 +31,22 @@ def update_application_modifications(conn=None, batch_size=1000):
             cursor.execute(count_query)
             count_total = dict(cursor.fetchone())["count"]
         logger.info(
-            f"Total Notice of Intent Modifications data to updated: {count_total}"
+            f"Total Application reconsiderations data to updated: {count_total}"
         )
 
         failed_updates = 0
         successful_updates_count = 0
-        last_modification_id = 0
+        last_reconsideration_id = 0
 
         with open(
-            "applications/decisions/sql/modifications/application_modification_update.sql",
+            "applications/decisions/sql/reconsiderations/application_reconsideration_update.sql",
             "r",
             encoding="utf-8",
         ) as sql_file:
             query = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{query} and orr.reconsideration_request_id > {last_modification_id} ORDER BY orr.reconsideration_request_id;"
+                    f"{query} and orr.reconsideration_request_id > {last_reconsideration_id} ORDER BY orr.reconsideration_request_id;"
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -54,30 +54,32 @@ def update_application_modifications(conn=None, batch_size=1000):
                 if not rows:
                     break
                 try:
-                    modifications_to_be_updated_count = len(rows)
+                    reconsiderations_to_be_updated_count = len(rows)
 
-                    _update_application_modifications(conn, batch_size, cursor, rows)
+                    _update_application_reconsiderations(conn, batch_size, cursor, rows)
 
                     successful_updates_count = (
-                        successful_updates_count + modifications_to_be_updated_count
+                        successful_updates_count + reconsiderations_to_be_updated_count
                     )
-                    last_modification_id = dict(rows[-1])["reconsideration_request_id"]
+                    last_reconsideration_id = dict(rows[-1])[
+                        "reconsideration_request_id"
+                    ]
 
                     logger.debug(
-                        f"retrieved/updated items count: {modifications_to_be_updated_count}; total successfully update modifications so far {successful_updates_count}; last updated reconsideration_request_id: {last_modification_id}"
+                        f"retrieved/updated items count: {reconsiderations_to_be_updated_count}; total successfully update reconsiderations so far {successful_updates_count}; last updated reconsideration_request_id: {last_reconsideration_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
                     failed_updates = count_total - successful_updates_count
-                    last_modification_id = last_modification_id + 1
+                    last_reconsideration_id = last_reconsideration_id + 1
 
     logger.info(
         f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_updates}"
     )
 
 
-def _update_application_modifications(conn, batch_size, cursor, rows):
+def _update_application_reconsiderations(conn, batch_size, cursor, rows):
     data = _prepare_oats_alr_applications_data(rows)
 
     if len(data) > 0:
@@ -93,12 +95,15 @@ def _update_application_modifications(conn, batch_size, cursor, rows):
 
 def _get_update_query():
     query = f"""
-                 UPDATE alcs.application_modification
+                 UPDATE alcs.application_reconsideration
                     SET submitted_date = %(submitted_date)s
-                        , review_outcome_code = %(review_outcome_code)s
-                        , description = %(description)s
-                        , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s
-                    WHERE alcs.application_modification."uuid" = %(modification_uuid)s
+                        , description = COALESCE(alcs.application_reconsideration.description, %(description)s)
+                        , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s,
+                        , is_new_proposal = %(is_new_proposal)s
+                        , is_new_evidence = %(is_new_evidence)s
+                        , is_incorrect_false_info = %(is_incorrect_false_info)s
+                        , review_outcome_code = COALESCE(alcs.application_reconsideration.review_outcome_code, %(review_outcome_code)s)
+                    WHERE alcs.application_reconsideration."uuid" = %(reconsideration_uuid)s;
     """
     return query
 
@@ -108,18 +113,21 @@ def _prepare_oats_alr_applications_data(row_data_list):
     for row in row_data_list:
         mapped_row = {
             "submitted_date": add_timezone_and_keep_date_part(row.get("received_date")),
-            "review_outcome_code": _map_outcome_code(row),
-            "modification_uuid": row.get("modification_uuid"),
+            "reconsideration_uuid": row.get("reconsideration_uuid"),
             "description": row.get("description"),
             "oats_reconsideration_request_id": row.get("reconsideration_request_id"),
+            "is_new_proposal": "new_proposal_ind",
+            "is_new_evidence": "new_information_ind",
+            "is_incorrect_false_info": "error_information_ind",
+            "review_outcome_code": _map_review_outcome_code(row.get("approved_date")),
         }
         data_list.append(mapped_row)
 
     return data_list
 
 
-def _map_outcome_code(row):
+def _map_review_outcome_code(row):
     if row.get("approved_date", None) is not None:
-        return AlcsNoiModificationOutcomeCodeEnum.PROCEED_TO_MODIFY.value
+        return AlcsAppReconsiderationOutcomeCodeEnum.PROCEED_TO_RECONSIDER.value
     else:
-        return AlcsNoiModificationOutcomeCodeEnum.PENDING.value
+        return AlcsAppReconsiderationOutcomeCodeEnum.PENDING.value

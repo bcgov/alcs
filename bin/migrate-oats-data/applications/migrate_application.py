@@ -31,6 +31,7 @@ from .decisions.app_reconsiderations import (
     clean_application_reconsiderations,
     link_application_reconsiderations,
     unlink_application_reconsiderations,
+    update_application_reconsiderations,
 )
 
 
@@ -67,6 +68,7 @@ def process_application_decisions(batch_size):
     link_application_modifications(batch_size)
     init_application_reconsiderations(batch_size)
     link_application_reconsiderations(batch_size)
+    update_application_reconsiderations(batch_size)
 
 
 def clean_application_decisions_etl():

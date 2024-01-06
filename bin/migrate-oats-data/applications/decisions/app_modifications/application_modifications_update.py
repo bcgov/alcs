@@ -95,7 +95,7 @@ def _get_update_query():
                  UPDATE alcs.application_modification
                     SET submitted_date = %(submitted_date)s
                         , review_outcome_code = %(review_outcome_code)s
-                        , description = %(description)s
+                        , description = COALESCE(alcs.application_modification.description, %(description)s)
                         , oats_reconsideration_request_id = %(oats_reconsideration_request_id)s
                     WHERE alcs.application_modification."uuid" = %(modification_uuid)s
     """
