@@ -336,7 +336,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.email.setValue(updatedContact.email);
       }
 
-      if (updatedContact?.action === 'delete') {
+      if (updatedContact?.action === 'delete' || updatedContact?.type === 'delete') {
         this.parcelOwners = this.parcelOwners.filter((owner) => owner.uuid !== this.selectedOwnerUuid);
 
         if (this.parcelOwners.length === 1) {
