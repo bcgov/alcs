@@ -269,15 +269,9 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   async onSelectPrimaryContactType(event: MatButtonToggleChange) {
     const isExistingOwner = event.value;
+    const hasValues = Object.values(this.form.value).some((value) => value);
 
-    const isDirty =
-      this.firstName.value ||
-      this.lastName.value ||
-      this.organizationName.value ||
-      this.phoneNumber.value ||
-      this.email.value;
-
-    if (isDirty) {
+    if (hasValues) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
