@@ -297,12 +297,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     } else if (this.parcelOwners.length === 1) {
       // Only 1 existing user
       this.onSelectOwner(this.parcelOwners[0].uuid);
-    } else {
+    } else if (this.selectedThirdPartyAgent) {
       // = 0 or > 1 existing owners
-      if (this.selectedThirdPartyAgent) {
-        this.selectedOwnerUuid = undefined;
-        this.selectedThirdPartyAgent = false;
-      }
+      this.selectedOwnerUuid = undefined;
+      this.selectedThirdPartyAgent = false;
     }
   }
 
