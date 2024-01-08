@@ -33,7 +33,7 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
             count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Notice of Intents data to update: {count_total}")
 
-        failed_inserts = 0
+        failed_inserts_count = 0
         successful_updates_count = 0
         last_soil_change_element_id = 0
 
@@ -71,11 +71,11 @@ def process_alcs_notice_of_intent_soil_fields(conn=None, batch_size=BATCH_UPLOAD
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception()
                     conn.rollback()
-                    failed_inserts = count_total - successful_updates_count
+                    failed_inserts_count = count_total - successful_updates_count
                     last_soil_change_element_id = last_soil_change_element_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts_count}"
     )
 
 
@@ -108,8 +108,7 @@ _soil_fill_query = """
                         , soil_to_place_maximum_depth = %(depth)s
                         , soil_to_place_average_depth = %(depth)s
                         , soil_fill_type_to_place  = %(type)s
-                        , fill_project_duration_amount = %(project_duration)s
-                        , fill_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
+                        , fill_project_duration = %(project_duration)s
                         , soil_already_placed_volume = 0
                         , soil_already_placed_area  = 0
                         , soil_already_placed_maximum_depth  = 0
@@ -124,8 +123,7 @@ _soil_remove_query = """
                         , soil_to_remove_maximum_depth = %(depth)s
                         , soil_to_remove_average_depth = %(depth)s
                         , soil_type_removed  = %(type)s
-                        , soil_project_duration_amount = %(project_duration)s
-                        , soil_project_duration_unit = CASE WHEN %(project_duration)s is NOT NULL THEN 'months' ELSE NULL END
+                        , soil_project_duration = %(project_duration)s
                         , soil_already_removed_volume = 0
                         , soil_already_removed_area = 0
                         , soil_already_removed_maximum_depth = 0
@@ -160,5 +158,8 @@ def map_soil_fields(data):
     data["volume"] = data.get("volume", 0)
     data["project_area"] = data.get("project_area", 0)
     data["depth"] = data.get("depth", 0)
+
+    duration = data.get("project_duration", None)
+    data["project_duration"] = f"{duration} months" if duration else None
 
     return data
