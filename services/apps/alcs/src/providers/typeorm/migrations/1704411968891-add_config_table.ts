@@ -8,6 +8,10 @@ export class AddConfigTable1704411968891 implements MigrationInterface {
       `CREATE TABLE "alcs"."configuration" ("name" character varying NOT NULL, "value" character varying NOT NULL, CONSTRAINT "PK_28ac27674364374c342e83cba9d" PRIMARY KEY ("name"))`,
     );
 
+    await queryRunner.query(
+      `COMMENT ON TABLE "alcs"."configuration" IS 'Stores real time config values editable by ALCS Admin.'`,
+    );
+
     await queryRunner.query(`
       INSERT INTO "alcs"."configuration" ("name", "value") VALUES ('portal_maintenance_mode', 'false');
     `);
