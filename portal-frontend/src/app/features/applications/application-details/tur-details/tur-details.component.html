@@ -26,9 +26,9 @@
   </div>
   <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
-    <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null">{{
-      _applicationSubmission.turTotalCorridorArea
-    }}</span>
+    <span *ngIf="_applicationSubmission.turTotalCorridorArea !== null"
+      >{{ _applicationSubmission.turTotalCorridorArea }} ha</span
+    >
     <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.turTotalCorridorArea === null"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>

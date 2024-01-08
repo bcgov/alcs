@@ -1,0 +1,17 @@
+@use '../../../styles/functions' as *;
+@use '../../../styles/colors';
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  background-color: #fbe0d1;
+  min-height: calc(100vh - 200px);
+
+  & > * {
+    margin-bottom: rem(36) !important;
+  }
+}

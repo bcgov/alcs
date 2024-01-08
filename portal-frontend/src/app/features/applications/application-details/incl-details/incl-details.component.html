@@ -1,23 +1,17 @@
 <div *ngIf="_applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">
-    How many hectares are you proposing to include? (hectares)
-  </div>
+  <div class="subheading2 grid-1">How many hectares are you proposing to include?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.inclExclHectares }}
+    {{ _applicationSubmission.inclExclHectares }} <span *ngIf="_applicationSubmission.inclExclHectares">ha</span>
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclExclHectares"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    What is the purpose of the proposal?
-  </div>
+  <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
     {{ _applicationSubmission.purpose }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
   </div>
 
-  <div class="subheading2 grid-1">
-    Does the proposal support agriculture in the short or long term?
-  </div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ _applicationSubmission.inclAgricultureSupport }}
     <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.inclAgricultureSupport"></app-no-data>

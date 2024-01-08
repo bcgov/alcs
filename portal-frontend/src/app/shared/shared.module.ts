@@ -47,6 +47,7 @@ import { SoilTableComponent } from './soil-table/soil-table.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
+import { CommissionPurposesPanelComponent } from './commission-purposes-panel/commission-purposes-panel.component';
 
 @NgModule({
   providers: [
@@ -78,6 +79,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     MatAutocompleteModule,
     MatTreeModule,
     MatProgressSpinnerModule,
+    MatExpansionModule,
   ],
   declarations: [
     FileDragDropComponent,
@@ -99,6 +101,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
     FileOverlaySpinnerComponent,
+    CommissionPurposesPanelComponent,
   ],
   exports: [
     CommonModule,
@@ -146,6 +149,7 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     SoilTableComponent,
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
+    CommissionPurposesPanelComponent,
   ],
 })
 export class SharedModule {

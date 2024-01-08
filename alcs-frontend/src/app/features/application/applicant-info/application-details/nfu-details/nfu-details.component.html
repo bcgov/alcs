@@ -1,7 +1,7 @@
 <div *ngIf="applicationSubmission" class="review-table">
-  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use? (hectares)</div>
+  <div class="subheading2 grid-1">How many hectares are proposed for non-farm use?</div>
   <div class="grid-double">
-    {{ applicationSubmission.nfuHectares }}
+    {{ applicationSubmission.nfuHectares }} <span *ngIf="applicationSubmission.nfuHectares">ha</span>
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">

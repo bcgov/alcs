@@ -16,9 +16,11 @@ export class StatusService {
   async getStatuses() {
     try {
       return await firstValueFrom(this.http.get<ApplicationStatusDto[]>(`${this.baseUrl}`));
-    } catch (e) {
-      console.error(e);
-      this.toastService.showErrorToast(`Failed to load Statuses. Please refresh the page and try again`);
+    } catch (e: any) {
+      if (e.status && e.status !== 503) {
+        console.error(e);
+        this.toastService.showErrorToast(`Failed to load Statuses. Please refresh the page and try again`);
+      }
       return undefined;
     }
   }
