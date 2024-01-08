@@ -237,7 +237,10 @@ describe('NoticeOfIntentOwnerController', () => {
     );
 
     await controller.setPrimaryContact(
-      { noticeOfIntentSubmissionUuid: '' },
+      {
+        noticeOfIntentSubmissionUuid: '',
+        type: OWNER_TYPE.AGENT,
+      },
       {
         user: {
           entity: {},
