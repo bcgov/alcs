@@ -16,8 +16,10 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { ConfirmationDialogService } from './shared/confirmation-dialog/confirmation-dialog.service';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { MaintenanceInterceptorService } from './shared/maintenance/maintenance-interceptor.service';
 import { SharedModule } from './shared/shared.module';
 import { WarningBannerComponent } from './shared/warning-banner/warning-banner.component';
+import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { WarningBannerComponent } from './shared/warning-banner/warning-banner.c
     LoginComponent,
     AuthorizationComponent,
     ConfirmationDialogComponent,
+    MaintenanceComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,12 +40,11 @@ import { WarningBannerComponent } from './shared/warning-banner/warning-banner.c
     MatPaginatorModule,
     MatToolbarModule,
   ],
-  exports: [
-    WarningBannerComponent,
-  ],
+  exports: [WarningBannerComponent],
   providers: [
     ConfirmationDialogService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: MaintenanceInterceptorService, multi: true },
     {
       provide: APP_INITIALIZER,
       useFactory: (service: TokenRefreshService) => () => {
