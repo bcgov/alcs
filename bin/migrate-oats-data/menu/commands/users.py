@@ -1,6 +1,5 @@
-from common import init_alcs_users, clean_users
-
 from common import setup_and_get_logger
+from users import init_alcs_users, clean_users
 
 logger = setup_and_get_logger("user_import")
 
