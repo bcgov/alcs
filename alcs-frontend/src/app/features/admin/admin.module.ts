@@ -11,6 +11,7 @@ import { CardStatusDialogComponent } from './card-status/card-status-dialog/card
 import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionDialogComponent } from './ceo-criterion/ceo-criterion-dialog/ceo-criterion-dialog.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { ConfigurationComponent } from './configuration/configuration.component';
 import { DecisionConditionTypesDialogComponent } from './decision-condition-types/decision-condition-types-dialog/decision-condition-types-dialog.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerDialogComponent } from './decision-maker/decision-maker-dialog/decision-maker-dialog.component';
@@ -50,6 +51,7 @@ const routes: Routes = [
     CardStatusDialogComponent,
     BoardManagementComponent,
     BoardManagementDialogComponent,
+    ConfigurationComponent,
   ],
   imports: [CommonModule, SharedModule.forRoot(), RouterModule.forChild(routes), MatPaginatorModule, DragDropModule],
 })

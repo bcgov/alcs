@@ -11,7 +11,6 @@ import {
   KEYCLOAK_CONNECT_OPTIONS,
   KEYCLOAK_INSTANCE,
   KEYCLOAK_LOGGER,
-  KEYCLOAK_MULTITENANT_SERVICE,
   RoleGuard as KeyCloakRoleGuard,
 } from 'nest-keycloak-connect';
 import { KeycloakConnectConfig } from 'nest-keycloak-connect/interface/keycloak-connect-options.interface';

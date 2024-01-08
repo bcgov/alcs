@@ -12,8 +12,17 @@ p {
 .step-controls {
   display: flex;
   justify-content: flex-end;
+  flex-direction: column-reverse;
 
-  button:not(:last-child) {
-    margin-right: rem(16) !important;
+  button {
+    margin-top: rem(12) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: row;
+
+    button:not(:last-child) {
+      margin-right: rem(16) !important;
+    }
   }
 }

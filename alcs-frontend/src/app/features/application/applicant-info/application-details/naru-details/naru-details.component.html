@@ -12,7 +12,7 @@
       What is the total floor area (m<sup>2</sup>) of the proposed additional residence?
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
     </div>
     <div class="subheading2 grid-1">
       Describe the necessity for an additional residence for farm use and how it will support agriculture in the short
@@ -38,7 +38,7 @@
       What is the total floor area (m<sup>2</sup>) of the proposed principal residence?
     </div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
     </div>
     <div class="subheading2 grid-1">
       Describe how the proposal for a principal residence more than 500 m<sup>2</sup> will support agriculture in the
@@ -63,7 +63,7 @@
   <ng-container *ngIf="_applicationSubmission.naruSubtype?.code === 'TOUR'">
     <div class="subheading2 grid-1">What is the total floor area (m<sup>2</sup>) of the proposed accommodation?</div>
     <div class="grid-double">
-      {{ _applicationSubmission.naruFloorArea }}
+      {{ _applicationSubmission.naruFloorArea }} <span *ngIf="_applicationSubmission.naruFloorArea">m<sup>2</sup></span>
     </div>
     <div class="subheading2 grid-1">How many "sleeping units" in total are proposed?</div>
     <div class="grid-double">

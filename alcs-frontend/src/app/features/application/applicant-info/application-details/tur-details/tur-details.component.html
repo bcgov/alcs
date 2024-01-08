@@ -22,7 +22,7 @@
   </div>
   <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
-    <span>{{ _application.turTotalCorridorArea }}</span>
+    {{ _application.turTotalCorridorArea }}<span *ngIf="_application.turTotalCorridorArea">ha</span>
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
   <div class="grid-double">

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BoardManagementComponent } from './board-management/board-management.component';
 import { CardStatusComponent } from './card-status/card-status.component';
 import { CeoCriterionComponent } from './ceo-criterion/ceo-criterion.component';
+import { ConfigurationComponent } from './configuration/configuration.component';
 import { DecisionConditionTypesComponent } from './decision-condition-types/decision-condition-types.component';
 import { DecisionMakerComponent } from './decision-maker/decision-maker.component';
 import { HolidayComponent } from './holiday/holiday.component';
@@ -64,6 +65,12 @@ export const childRoutes = [
     menuTitle: 'Columns',
     icon: 'view_week',
     component: CardStatusComponent,
+  },
+  {
+    path: 'configuration',
+    menuTitle: 'Portal Maintenance',
+    icon: 'settings_configuration',
+    component: ConfigurationComponent,
   },
 ];
 

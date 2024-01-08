@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
 import { LoginComponent } from './features/login/login.component';
+import { MaintenanceComponent } from './features/maintenance/maintenance.component';
 import { AlcsAuthGuard } from './services/authentication/alcs-auth.guard';
 import { AuthGuard } from './services/authentication/auth.guard';
 
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'authorized',
     component: AuthorizationComponent,
+  },
+  {
+    path: 'maintenance',
+    component: MaintenanceComponent,
   },
   {
     title: 'Home',

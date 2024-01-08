@@ -26,9 +26,9 @@
   </div>
   <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
-    <span *ngIf="applicationSubmission.turTotalCorridorArea !== null">{{
-      applicationSubmission.turTotalCorridorArea
-    }}</span>
+    <span *ngIf="applicationSubmission.turTotalCorridorArea !== null"
+      >{{ applicationSubmission.turTotalCorridorArea }} ha</span
+    >
     <app-no-data *ngIf="applicationSubmission.turTotalCorridorArea === null"></app-no-data>
   </div>
   <div class="subheading2 grid-1">Proposal Map / Site Plan</div>

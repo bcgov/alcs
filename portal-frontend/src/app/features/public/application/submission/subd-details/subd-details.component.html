@@ -13,7 +13,7 @@
         <app-no-data *ngIf="!lot.type"></app-no-data>
       </div>
       <div class="grid-3">
-        {{ lot.size }}
+        {{ lot.size }} <span *ngIf="lot.size !== null">ha</span>
         <app-no-data *ngIf="!lot.size"></app-no-data>
       </div>
     </ng-container>

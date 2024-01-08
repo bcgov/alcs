@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Configuration } from '../../common/entities/configuration.entity';
 import { ApplicationDecisionConditionType } from '../application-decision/application-decision-condition/application-decision-condition-code.entity';
 import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationModule } from '../application/application.module';
@@ -21,6 +22,8 @@ import { ApplicationDecisionMakerController } from './application-decision-maker
 import { ApplicationDecisionMakerService } from './application-decision-maker/application-decision-maker.service';
 import { BoardManagementController } from './board-management/board-management.controller';
 import { CardStatusController } from './card-status/card-status.controller';
+import { ConfigurationController } from './configuration/configuration.controller';
+import { ConfigurationService } from './configuration/configuration.service';
 import { HolidayController } from './holiday/holiday.controller';
 import { HolidayEntity } from './holiday/holiday.entity';
 import { HolidayService } from './holiday/holiday.service';
@@ -38,6 +41,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
       ApplicationDecisionMakerCode,
       NoticeOfIntentSubtype,
       ApplicationDecisionConditionType,
+      Configuration,
     ]),
     ApplicationModule,
     NoticeOfIntentModule,
@@ -61,6 +65,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     ApplicationDecisionConditionTypesController,
     CardStatusController,
     BoardManagementController,
+    ConfigurationController,
   ],
   providers: [
     HolidayService,
@@ -69,6 +74,7 @@ import { UnarchiveCardService } from './unarchive-card/unarchive-card.service';
     UnarchiveCardService,
     NoiSubtypeService,
     ApplicationDecisionConditionTypesService,
+    ConfigurationService,
   ],
 })
 export class AdminModule {}
