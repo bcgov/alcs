@@ -38,13 +38,7 @@
           <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
         >
 
-        <mat-radio-group
-          [formControl]="ownersList"
-          color="primary"
-          [value]="selectedOwnerUuid"
-          (change)="onSelectOwner($event.value)"
-          required
-        >
+        <mat-radio-group [formControl]="ownersList" color="primary" (change)="onSelectOwner($event.value)" required>
           <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
             {{ owner.firstName }} {{ owner.lastName }}
           </mat-radio-button>

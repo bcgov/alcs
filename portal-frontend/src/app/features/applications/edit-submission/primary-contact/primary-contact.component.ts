@@ -37,7 +37,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   needsAuthorizationLetter = false;
   selectedThirdPartyAgent = false;
   selectedLocalGovernment = false;
-  selectedOwnerUuid: string | undefined = undefined;
+  _selectedOwnerUuid: string | undefined = undefined;
   isCrownOwner = false;
   isGovernmentUser = false;
   governmentName: string | undefined;
@@ -103,6 +103,16 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   async attachAuthorizationLetter(file: FileHandle) {
     const res = await this.attachFile(file, DOCUMENT_TYPE.AUTHORIZATION_LETTER);
     this.showVirusError = !res;
+  }
+
+  set selectedOwnerUuid(value: string | undefined) {
+    this._selectedOwnerUuid = value;
+    // Input expects null instead of undefined
+    this.ownersList.setValue(value ?? null);
+  }
+
+  get selectedOwnerUuid() {
+    return this._selectedOwnerUuid;
   }
 
   onSelectAgent() {
