@@ -13,3 +13,4 @@ from .migrate_application_parcels import (
     process_application_parcels,
 )
 from .migrate_application_owners import process_application_owners
+from .review import insert_application_submission_review, clean_reviews
