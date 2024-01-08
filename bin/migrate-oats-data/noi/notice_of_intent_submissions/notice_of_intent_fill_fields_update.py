@@ -25,7 +25,7 @@ def update_alcs_notice_of_intent_soil_fill_fields(
             count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Notice of Intents data to update: {count_total}")
 
-        failed_inserts = 0
+        failed_inserts_count = 0
         successful_updates_count = 0
         last_document_id = 0
 
@@ -61,11 +61,11 @@ def update_alcs_notice_of_intent_soil_fill_fields(
                     # this is NOT going to be caused by actual data update failure. This code is only executed when the code error appears or connection to DB is lost
                     logger.exception()
                     conn.rollback()
-                    failed_inserts = count_total - successful_updates_count
+                    failed_inserts_count = count_total - successful_updates_count
                     last_document_id = last_document_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful updates {successful_updates_count}, total failed updates {failed_inserts_count}"
     )
 
 
@@ -83,9 +83,7 @@ def _update_records(conn, batch_size, cursor, rows):
 
 _update_query = """
                     UPDATE alcs.notice_of_intent_submission 
-                            SET soil_project_duration_amount  = %(fill_project_duration_amount)s,
-                                soil_project_duration_unit = %(fill_project_duration_unit)s,
-                                fill_project_duration_amount = NULL,
-                                fill_project_duration_unit = NULL
+                            SET soil_project_duration = %(fill_project_duration)s,
+                                fill_project_duration = NULL
                     WHERE file_number = %(file_number)s
 """
