@@ -21,6 +21,7 @@ import { OwnerDialogComponent } from '../../../../shared/owner-dialogs/owner-dia
 import { PrimaryContactConfirmationDialogComponent } from './primary-contact-confirmation-dialog/primary-contact-confirmation-dialog.component';
 import { CrownOwnerDialogComponent } from '../../../../shared/owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
 import { scrollToElement } from '../../../../shared/utils/scroll-helper';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-primary-contact',
@@ -44,9 +45,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   governmentName: string | undefined;
   isDirty = false;
   hasCrownParcels = false;
-  showNoOwnersWarning = false;
 
-  isExistingOwner = new FormControl<boolean | null>(null, [Validators.required]);
+  ownersList = new FormControl<string | null>(null, [Validators.required]);
   firstName = new FormControl<string | null>('', [Validators.required]);
   lastName = new FormControl<string | null>('', [Validators.required]);
   organizationName = new FormControl<string | null>('');
@@ -117,16 +117,15 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   onSelectOwner(uuid: string) {
     this.isDirty = true;
-    this.selectedOwnerUuid = uuid;
+
     const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === uuid);
     this.parcelOwners = this.parcelOwners.map((owner) => ({
       ...owner,
       isSelected: owner.uuid === uuid,
     }));
-    this.selectedThirdPartyAgent = (selectedOwner && selectedOwner.type.code === OWNER_TYPE.AGENT) || uuid == 'agent';
-    this.selectedLocalGovernment =
-      (selectedOwner && selectedOwner.type.code === OWNER_TYPE.GOVERNMENT) || uuid == 'government';
-    this.form.reset();
+
+    this.selectedThirdPartyAgent = selectedOwner?.type.code === OWNER_TYPE.AGENT || uuid == 'agent';
+    this.selectedLocalGovernment = selectedOwner?.type.code === OWNER_TYPE.GOVERNMENT || uuid == 'government';
 
     if (this.selectedLocalGovernment) {
       this.organizationName.setValidators([Validators.required]);
@@ -134,34 +133,21 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       this.organizationName.setValidators([]);
     }
 
-    if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
-      this.firstName.enable();
-      this.lastName.enable();
-      this.organizationName.enable();
-      this.email.enable();
-      this.phoneNumber.enable();
-      this.isCrownOwner = false;
-    } else {
-      this.firstName.disable();
-      this.lastName.disable();
-      this.organizationName.disable();
-      this.email.disable();
-      this.phoneNumber.disable();
-
-      if (selectedOwner) {
-        this.form.patchValue({
-          firstName: selectedOwner.firstName,
-          lastName: selectedOwner.lastName,
-          organizationName: selectedOwner.organizationName,
-          phoneNumber: selectedOwner.phoneNumber,
-          email: selectedOwner.email,
-        });
-        this.isCrownOwner = selectedOwner.type.code === OWNER_TYPE.CROWN;
-      }
+    if (selectedOwner) {
+      this.form.patchValue({
+        firstName: selectedOwner.firstName,
+        lastName: selectedOwner.lastName,
+        organizationName: selectedOwner.organizationName,
+        phoneNumber: selectedOwner.phoneNumber,
+        email: selectedOwner.email,
+      });
+      this.isCrownOwner = selectedOwner.type.code === OWNER_TYPE.CROWN;
     }
+
     this.calculateLetterRequired();
 
     setTimeout(() => {
+      this.selectedOwnerUuid = uuid;
       scrollToElement({ id: 'owner-info', center: false });
     });
   }
@@ -184,7 +170,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   }
 
   protected async save() {
-    if (this.isDirty || this.form.dirty) {
+    if (this.isDirty || this.form.dirty || !this.selectedThirdPartyAgent) {
       let selectedOwner: NoticeOfIntentOwnerDto | undefined = this.owners.find(
         (owner) => owner.uuid === this.selectedOwnerUuid
       );
@@ -200,10 +186,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
           ownerUuid: selectedOwner?.uuid,
           type: this.selectedThirdPartyAgent ? OWNER_TYPE.AGENT : OWNER_TYPE.GOVERNMENT,
         });
-      } else if (selectedOwner) {
+      } else {
         await this.noticeOfIntentOwnerService.setPrimaryContact({
           noticeOfIntentSubmissionUuid: this.submissionUuid,
-          ownerUuid: selectedOwner.uuid,
+          ownerUuid: selectedOwner?.uuid,
         });
       }
       await this.reloadSubmission();
@@ -219,79 +205,69 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     //Map Owners from Parcels to only count linked ones
     const parcels = await this.parcelService.fetchBySubmissionUuid(submissionUuid);
     const allOwners = await this.noticeOfIntentOwnerService.fetchBySubmissionId(submissionUuid);
-    if (parcels && allOwners) {
-      this.hasCrownParcels =
-        !!parcels && parcels.some((parcel) => parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPE.CROWN);
 
-      const uniqueParcelOwners = parcels
-        .flatMap((parcel) => parcel.owners)
-        .reduce((map, owner) => {
-          return map.set(owner.uuid, owner);
-        }, new Map<string, NoticeOfIntentOwnerDto>());
-      const nonParcelOwners = allOwners.filter((owner) =>
-        [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
-      );
-      const parcelOwners = [...uniqueParcelOwners.values()];
-      const owners = [...parcelOwners, ...nonParcelOwners];
-
-      const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
-      this.parcelOwners = owners.filter(
-        (owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
-      );
-
-      this.parcelOwners = parcelOwners;
-      this.owners = owners;
-
-      if (selectedOwner) {
-        this.selectedThirdPartyAgent = selectedOwner.type.code === OWNER_TYPE.AGENT;
-        this.selectedLocalGovernment = selectedOwner.type.code === OWNER_TYPE.GOVERNMENT;
-
-        this.isExistingOwner.setValue(!this.selectedThirdPartyAgent);
-      }
-
-      if (this.selectedLocalGovernment) {
-        this.organizationName.setValidators([Validators.required]);
-      } else {
-        this.organizationName.setValidators([]);
-      }
-
-      if (selectedOwner && (this.selectedThirdPartyAgent || this.selectedLocalGovernment)) {
-        this.selectedOwnerUuid = selectedOwner.uuid;
-        this.form.patchValue({
-          firstName: selectedOwner.firstName,
-          lastName: selectedOwner.lastName,
-          organizationName: selectedOwner.organizationName,
-          phoneNumber: selectedOwner.phoneNumber,
-          email: selectedOwner.email,
-        });
-      } else if (selectedOwner) {
-        this.onSelectOwner(selectedOwner.uuid);
-      } else {
-        this.firstName.disable();
-        this.lastName.disable();
-        this.organizationName.disable();
-        this.email.disable();
-        this.phoneNumber.disable();
-      }
-
-      if (this.isGovernmentUser || this.selectedLocalGovernment) {
-        this.prepareGovernmentOwners();
-      }
-
-      if (this.showErrors) {
-        this.form.markAllAsTouched();
-      }
-      this.isDirty = false;
-      this.calculateLetterRequired();
+    if (!parcels || !allOwners) {
+      return;
     }
+
+    this.hasCrownParcels =
+      !!parcels && parcels.some((parcel) => parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPE.CROWN);
+
+    const uniqueParcelOwners = parcels
+      .flatMap((parcel) => parcel.owners)
+      .reduce((map, owner) => {
+        return map.set(owner.uuid, owner);
+      }, new Map<string, NoticeOfIntentOwnerDto>());
+    const nonParcelOwners = allOwners.filter((owner) =>
+      [OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code)
+    );
+    const parcelOwners = [...uniqueParcelOwners.values()];
+    const owners = [...parcelOwners, ...nonParcelOwners];
+
+    const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
+    this.parcelOwners = owners.filter((owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code));
+
+    this.parcelOwners = parcelOwners;
+    this.owners = owners;
+
+    // onSelectOwner only not called on first load of page
+    if (selectedOwner) {
+      this.onSelectOwner(selectedOwner.uuid);
+    } else if (parcelOwners.length === 1) {
+      this.onSelectOwner(parcelOwners[0].uuid);
+    }
+
+    // Needed for L/FNG user on first load
+    this.selectedLocalGovernment = selectedOwner?.type.code === OWNER_TYPE.GOVERNMENT;
+    if (this.selectedLocalGovernment) {
+      this.organizationName.setValidators([Validators.required]);
+      this.prepareGovernmentOwners();
+    } else {
+      this.organizationName.setValidators([]);
+    }
+
+    if (this.showErrors) {
+      this.form.markAllAsTouched();
+    }
+    this.isDirty = false;
+    this.calculateLetterRequired();
   }
 
   private prepareGovernmentOwners() {
     this.parcelOwners = [];
   }
 
-  async onSelectPrimaryContactType(isExistingOwner: boolean | null) {
-    if (this.form.dirty || (!isExistingOwner && this.selectedOwnerUuid && !this.isGovernmentUser)) {
+  async onSelectPrimaryContactType(event: MatButtonToggleChange) {
+    const isExistingOwner = event.value;
+
+    const isDirty =
+      this.firstName.value ||
+      this.lastName.value ||
+      this.organizationName.value ||
+      this.phoneNumber.value ||
+      this.email.value;
+
+    if (isDirty) {
       await this.dialog
         .open(PrimaryContactConfirmationDialogComponent, {
           panelClass: 'no-padding',
@@ -304,9 +280,8 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         .beforeClosed()
         .subscribe(async (confirmed) => {
           if (confirmed) {
+            this.form.reset();
             this.switchPrimaryContactType(isExistingOwner);
-          } else {
-            this.isExistingOwner.setValue(!isExistingOwner);
           }
         });
     } else {
@@ -316,22 +291,19 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   private switchPrimaryContactType(isExistingOwner: boolean | null) {
     if (!isExistingOwner) {
+      // '3rd-party agent
       this.onSelectAgent();
     } else if (this.isGovernmentUser) {
+      // L/FNG contact
       this.onSelectGovernment();
     } else if (this.parcelOwners.length === 1) {
+      // Only 1 existing user
       this.onSelectOwner(this.parcelOwners[0].uuid);
-    } else {
-      this.selectedThirdPartyAgent = false;
+    } else if (this.selectedThirdPartyAgent) {
+      // = 0 or > 1 existing owners
       this.selectedOwnerUuid = undefined;
+      this.selectedThirdPartyAgent = false;
     }
-
-    // Ensure form is cleared to avoid erroneous confirmation dialogs
-    if (this.selectedThirdPartyAgent || this.selectedLocalGovernment) {
-      this.form.reset();
-    }
-
-    this.showNoOwnersWarning = isExistingOwner === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
   }
 
   onEdit(selectedOwnerUuid: string) {
@@ -366,12 +338,14 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
         this.email.setValue(updatedContact.email);
       }
 
-      if (updatedContact['action'] === 'delete') {
+      if (updatedContact?.action === 'delete') {
         this.parcelOwners = this.parcelOwners.filter((owner) => owner.uuid !== this.selectedOwnerUuid);
-        this.selectedOwnerUuid = undefined;
 
-        this.showNoOwnersWarning =
-          this.isExistingOwner.value === true && this.parcelOwners.length === 0 && !this.isGovernmentUser;
+        if (this.parcelOwners.length === 1) {
+          this.onSelectOwner(this.parcelOwners[0].uuid);
+        } else {
+          this.selectedOwnerUuid = undefined;
+        }
       }
     });
   }

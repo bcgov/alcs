@@ -24,8 +24,8 @@
 
         <mat-button-toggle-group
           class="input"
-          [formControl]="isExistingOwner"
-          (change)="onSelectPrimaryContactType(isExistingOwner.value)"
+          [value]="!selectedThirdPartyAgent"
+          (change)="onSelectPrimaryContactType($event)"
         >
           <mat-button-toggle [value]="true">Yes</mat-button-toggle>
           <mat-button-toggle [value]="false">No</mat-button-toggle>
@@ -33,23 +33,27 @@
       </div>
 
       <!-- Owner -->
-      <div *ngIf="isExistingOwner.value !== null && selectedThirdPartyAgent === false && parcelOwners.length > 0">
-        <label
+      <div *ngIf="selectedThirdPartyAgent === false">
+        <label *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0"
           >Select a Primary Contact from the listed land owners
           <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
         >
 
-        <mat-radio-group color="primary" [value]="selectedOwnerUuid" required>
-          <mat-radio-button
-            *ngFor="let owner of parcelOwners"
-            [value]="owner.uuid"
-            class="radio-option"
-            (click)="onSelectOwner(owner.uuid)"
-            required
-          >
+        <mat-radio-group
+          [formControl]="ownersList"
+          color="primary"
+          [value]="selectedOwnerUuid"
+          (change)="onSelectOwner($event.value)"
+          required
+        >
+          <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
             {{ owner.firstName }} {{ owner.lastName }}
           </mat-radio-button>
         </mat-radio-group>
+        <div *ngIf="ownersList.invalid && (ownersList.dirty || ownersList.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="ownersList.errors?.['required']">This field is required</div>
+        </div>
 
         <div
           id="owner-info"
@@ -84,7 +88,7 @@
           </div>
         </div>
       </div>
-      <app-warning-banner *ngIf="showNoOwnersWarning">
+      <app-warning-banner *ngIf="parcelOwners.length === 0 && !isGovernmentUser && !selectedThirdPartyAgent">
         No landowners or government contacts are added. Please go back to Step 1 to add information.
       </app-warning-banner>
       <!-- /Owner -->
@@ -170,10 +174,7 @@
       </div>
       <!-- /Third-Part Agent/Government -->
 
-      <div
-        class="form-row"
-        *ngIf="isExistingOwner.value !== null && (needsAuthorizationLetter || hasCrownParcels || files.length > 0)"
-      >
+      <div class="form-row" *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
         <div class="full-row">
           <label for="authorization-letter" class="subheading2">Authorization Letters</label>
           <p class="subtext">
