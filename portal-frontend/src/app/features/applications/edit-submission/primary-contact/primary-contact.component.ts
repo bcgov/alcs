@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { distinct, first, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { ApplicationDocumentDto } from '../../../../services/application-document/application-document.dto';
 import { ApplicationDocumentService } from '../../../../services/application-document/application-document.service';
 import { ApplicationOwnerDto } from '../../../../services/application-owner/application-owner.dto';
