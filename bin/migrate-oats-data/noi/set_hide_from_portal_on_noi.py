@@ -29,10 +29,10 @@ def set_hide_from_portal_on_notice_of_intent(conn=None):
             logger.info(f"Total application to set hide_from_portal: {count_total}")
 
             update_query = f"""
-                                UPDATE oats.oats_alr_applications AS oaa
-                                SET hide_from_portal = true
-                                FROM alcs.notice_of_intent AS a
-                                WHERE a.file_number = oaa.alr_application_id::TEXT
+                                UPDATE alcs.notice_of_intent AS noi
+                                SET hide_from_portal = TRUE
+                                FROM oats.oats_alr_applications AS oaa
+                                WHERE noi.file_number = oaa.alr_application_id::TEXT
                                     AND oaa.who_created <> 'PROXY_OATS_APPLICANT';
                             """
             cursor.execute(update_query)

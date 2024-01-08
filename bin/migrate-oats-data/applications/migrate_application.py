@@ -34,7 +34,7 @@ from .decisions.app_reconsiderations import (
     update_application_reconsiderations,
 )
 
-from .set_hide_from_portal import set_hide_from_portal_on_application
+from .set_hide_from_portal_on_application import set_hide_from_portal_on_application
 
 
 def process_application_etl(batch_size):
