@@ -245,10 +245,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
       this.onSelectOwner(selectedOwner.uuid);
     } else if (parcelOwners.length === 1) {
       this.onSelectOwner(parcelOwners[0].uuid);
+    } else if (this.isGovernmentUser) {
+      this.onSelectGovernment();
     }
 
-    // Needed for L/FNG user on first load
-    this.selectedLocalGovernment = selectedOwner?.type.code === OWNER_TYPE.GOVERNMENT;
     if (this.selectedLocalGovernment) {
       this.organizationName.setValidators([Validators.required]);
       this.prepareGovernmentOwners();
