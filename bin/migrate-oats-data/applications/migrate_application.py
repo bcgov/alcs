@@ -9,7 +9,7 @@ from .submissions import (
     process_application_owners,
     clean_primary_contacts,
     insert_application_submission_review,
-    clean_reviews
+    clean_reviews,
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields

@@ -1,4 +1,3 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -65,6 +64,7 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
+  isDeactivating = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -119,6 +119,8 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
+        this.isDeactivating = false;
+
         const fileId = paramMap.get('fileId');
         if (fileId) {
           this.loadApplication(fileId).then(() => {
@@ -190,7 +192,15 @@ export class EditSubmissionComponent implements OnInit, OnDestroy, AfterViewInit
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    await this.saveApplication(this.customStepper.selectedIndex);
+    if (!this.isDeactivating) {
+      this.isDeactivating = true;
+
+      try {
+        await this.saveApplication(this.customStepper.selectedIndex);
+      } catch (e) {
+        console.error('Failed to save application');
+      }
+    }
 
     return of(true);
   }

@@ -60,7 +60,7 @@ export class AuthenticationService {
   }
 
   async getLoginUrl() {
-    return firstValueFrom(this.http.get<{ loginUrl: string }>(`${environment.authUrl}/authorize/login`));
+    return firstValueFrom(this.http.get<{ loginUrl: string }>(`${environment.apiUrl}/authorize/login`));
   }
 
   async getToken(redirect = true) {
@@ -116,7 +116,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${environment.authUrl}/portal/token`, {
+        this.http.get(`${environment.apiUrl}/token`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -137,7 +137,7 @@ export class AuthenticationService {
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${environment.authUrl}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.apiUrl}/authorize/refresh?r=${refreshToken}`)
     );
   }
 

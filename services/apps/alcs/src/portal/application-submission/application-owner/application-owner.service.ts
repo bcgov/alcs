@@ -198,10 +198,13 @@ export class ApplicationOwnerService {
     return res;
   }
 
-  async setPrimaryContact(submissionUuid: string, owner: ApplicationOwner) {
+  async setPrimaryContact(
+    submissionUuid: string,
+    owner: ApplicationOwner | undefined,
+  ) {
     await this.applicationSubmissionService.setPrimaryContact(
       submissionUuid,
-      owner.uuid,
+      owner?.uuid ?? null,
     );
   }
 

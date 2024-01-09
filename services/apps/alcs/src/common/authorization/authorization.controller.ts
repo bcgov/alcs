@@ -15,7 +15,8 @@ import { KEYCLOAK_INSTANCE, Public } from 'nest-keycloak-connect';
 import { v4 } from 'uuid';
 import { AuthorizationService } from './authorization.service';
 
-@Controller('/authorize')
+//One for ALCS, One for Portal that triggers maintenance guard
+@Controller(['/authorize', '/portal/authorize'])
 export class AuthorizationController {
   private logger = new Logger(AuthorizationController.name);
 

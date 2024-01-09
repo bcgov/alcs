@@ -8,14 +8,14 @@ import { AuthenticationService } from './authentication.service';
 export class AlcsAuthGuard implements CanActivate {
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
-  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+  async canActivate(): Promise<boolean> {
     const hasToken = await this.authenticationService.getToken(false);
     if (hasToken) {
       return true;
     }
 
     const res = await this.authenticationService.getLoginUrl();
-    if (res) {
+    if (res && res.loginUrl) {
       //Set desired return URL to current page
       const targetUrl = window.location.href;
       localStorage.setItem('targetUrl', targetUrl);
