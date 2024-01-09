@@ -9,7 +9,6 @@
 
 <section>
   <div class="agent-form">
-    <h4>Primary Contact Information</h4>
     <form [formGroup]="form">
       <div class="full-row">
         <p *ngIf="isGovernmentUser">
@@ -24,8 +23,8 @@
         </p>
         <mat-button-toggle-group
           class="input"
-          [formControl]="isExistingOwner"
-          (change)="onSelectPrimaryContactType(isExistingOwner.value)"
+          [value]="!selectedThirdPartyAgent"
+          (change)="onSelectPrimaryContactType($event)"
         >
           <mat-button-toggle [value]="true">Yes</mat-button-toggle>
           <mat-button-toggle [value]="false">No</mat-button-toggle>
@@ -33,28 +32,26 @@
       </div>
 
       <!-- Owner -->
-      <div *ngIf="selectedThirdPartyAgent === false && parcelOwners.length > 0">
-        <label *ngIf="parcelOwners.length"
+      <div *ngIf="selectedThirdPartyAgent === false">
+        <label *ngIf="parcelOwners.length > 0"
           >Select a Primary Contact from the listed land owners
           <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
         >
 
-        <mat-radio-group color="primary" [value]="selectedOwnerUuid" required>
-          <mat-radio-button
-            *ngFor="let owner of parcelOwners"
-            [value]="owner.uuid"
-            class="radio-option"
-            (click)="onSelectOwner(owner.uuid)"
-            required
-          >
+        <mat-radio-group [formControl]="ownersList" color="primary" (change)="onSelectOwner($event.value)" required>
+          <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
             {{ owner.firstName }} {{ owner.lastName }}
           </mat-radio-button>
         </mat-radio-group>
+        <div *ngIf="ownersList.invalid && (ownersList.dirty || ownersList.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="ownersList.errors?.['required']">This field is required</div>
+        </div>
 
         <div
           id="owner-info"
           class="warning-banner"
-          *ngIf="selectedOwnerUuid && selectedOwnerUuid !== 'agent' && !selectedLocalGovernment"
+          *ngIf="selectedOwnerUuid && !selectedThirdPartyAgent && !selectedLocalGovernment"
         >
           <div class="owner-details">
             <div class="row">
@@ -79,12 +76,12 @@
               <div class="value">{{ email.value }}</div>
             </div>
             <div class="row">
-              <button mat-stroked-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
+              <button mat-flat-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
             </div>
           </div>
         </div>
       </div>
-      <app-warning-banner *ngIf="selectedThirdPartyAgent === false && parcelOwners.length === 0 && !isGovernmentUser">
+      <app-warning-banner *ngIf="parcelOwners.length === 0 && !selectedThirdPartyAgent && !isGovernmentUser">
         No landowners or government contacts are added. Please go back to Step 1 to add information.
       </app-warning-banner>
       <!-- /Owner -->
@@ -169,29 +166,34 @@
         </div>
       </div>
       <!-- /Third-Part Agent/Government -->
-    </form>
-  </div>
-</section>
 
-<section *ngIf="needsAuthorizationLetter || files.length > 0">
-  <h6>Authorization Letters</h6>
-  <p class="subtext">
-    For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the majority of
-    directors within the organization.For Crown parcels or Fee Simple parcels owned by a government, the letter must be
-    signed by senior level staff.
-  </p>
-  <p class="alc-link">Visit the <a href="https://www.alc.gov.bc.ca/" target="_blank">ALC website</a> for a template.</p>
-  <div class="uploader">
-    <app-file-drag-drop
-      [allowMultiple]="true"
-      [uploadedFiles]="files"
-      (uploadFiles)="attachAuthorizationLetter($event)"
-      (deleteFile)="onDeleteFile($event)"
-      (openFile)="openFile($event)"
-      [showErrors]="showErrors"
-      [isRequired]="needsAuthorizationLetter"
-      [showVirusError]="showVirusError"
-    ></app-file-drag-drop>
+      <div class="form-row" *ngIf="needsAuthorizationLetter || files.length > 0">
+        <div class="full-row">
+          <label for="authorization-letter" class="subheading2">Authorization Letters</label>
+          <p class="subtext">
+            For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the
+            majority of directors within the organization.For Crown parcels or Fee Simple parcels owned by a government,
+            the letter must be signed by senior level staff.
+          </p>
+          <app-info-banner>
+            Visit the <a href="https://www.alc.gov.bc.ca/" target="_blank">ALC website</a> for a template.
+          </app-info-banner>
+          <div class="uploader">
+            <app-file-drag-drop
+              id="authorization-letter"
+              [allowMultiple]="true"
+              [uploadedFiles]="files"
+              (uploadFiles)="attachAuthorizationLetter($event)"
+              (deleteFile)="onDeleteFile($event)"
+              (openFile)="openFile($event)"
+              [showErrors]="showErrors"
+              [isRequired]="needsAuthorizationLetter"
+              [showVirusError]="showVirusError"
+            ></app-file-drag-drop>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </section>
 
