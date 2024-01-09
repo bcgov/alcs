@@ -123,7 +123,7 @@ export class UnarchiveCardService {
       await this.reconsiderationService.getDeletedCards(fileId);
     for (const reconsideration of reconsiderations) {
       result.push({
-        cardUuid: reconsideration.cardUuid,
+        cardUuid: reconsideration.cardUuid ?? '',
         createdAt: reconsideration.auditCreatedAt.getTime(),
         type: 'Reconsideration',
         status: reconsideration.card!.status.label,
