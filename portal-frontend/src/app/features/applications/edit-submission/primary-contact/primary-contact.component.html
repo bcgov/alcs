@@ -30,9 +30,8 @@
           <mat-button-toggle [value]="false">No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-
       <!-- Owner -->
-      <div *ngIf="selectedThirdPartyAgent === false">
+      <div *ngIf="!selectedThirdPartyAgent">
         <label *ngIf="parcelOwners.length > 0"
           >Select a Primary Contact from the listed land owners
           <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label

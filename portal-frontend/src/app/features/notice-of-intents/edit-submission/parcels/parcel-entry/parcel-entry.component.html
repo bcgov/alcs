@@ -48,15 +48,13 @@
             mat-flat-button
             color="primary"
             (click)="onSearch()"
-            [disabled]="!parcelType.getRawValue() || _disabled || (!!isCrownLand && !searchBy.getRawValue())"
+            [disabled]="!parcelType.getRawValue() || (!!isCrownLand && !searchBy.getRawValue())"
           >
             Search
           </button>
         </div>
         <div class="lookup-bottom-row">
-          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
-            Reset
-          </button>
+          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()">Reset</button>
           <span class="float-right">
             <a class="subtext" href=" https://ltsa.ca/products-services/parcelmap-bc/" target="_blank" rel="noreferrer">
               Powered by PMBC!
@@ -207,6 +205,7 @@
       >
       to obtain a recent copy (not older than 1 year) of the Certificate of Title
     </div>
+    {{ parcelForm.controls.pid.disabled }}
     <app-file-drag-drop
       id="certificate-of-title-upload"
       [uploadedFiles]="parcel.certificateOfTitle ? [parcel.certificateOfTitle] : []"
@@ -217,6 +216,7 @@
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"
       [showVirusError]="showVirusError"
+      [disabled]="parcelForm.controls.pid.disabled"
     ></app-file-drag-drop>
   </div>
 
@@ -237,7 +237,6 @@
           (onOwnersDeleted)="onDeleteOwner()"
           [ownerService]="noticeOfIntentOwnerService"
           [documentService]="noticeOfIntentDocumentService"
-          [disabled]="_disabled"
         ></app-parcel-owners>
       </div>
       <button
@@ -246,7 +245,7 @@
         (click)="onAddNewOwner()"
         mat-flat-button
         color="primary"
-        [disabled]="!parcelType.getRawValue() || _disabled"
+        [disabled]="!parcelType.getRawValue()"
       >
         Add new owner
       </button>
@@ -304,9 +303,8 @@
         <mat-radio-group
           color="primary"
           [value]="selectedOwner?.uuid"
-          required
+          [required]="true"
           [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
-          formControlName="selectedOwnerVal"
         >
           <mat-radio-button
             *ngFor="let owner of filteredOwners"
@@ -346,9 +344,7 @@
               <div class="value">{{ selectedOwner.crownLandOwnerType }}</div>
             </div>
             <div class="row">
-              <button [disabled]="_disabled" (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>
-                Edit information
-              </button>
+              <button (click)="onEditCrownOwner(selectedOwner)" mat-flat-button>Edit information</button>
             </div>
           </div>
         </div>

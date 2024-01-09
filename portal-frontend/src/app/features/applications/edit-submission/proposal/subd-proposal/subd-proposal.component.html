@@ -264,9 +264,9 @@
         (deleteFile)="onDeleteFile($event)"
         (openFile)="openFile($event)"
         [showErrors]="showErrors"
-        [isRequired]="isHomeSiteSeverance.getRawValue() !== 'false'"
+        [isRequired]="isHomeSiteSeverance.getRawValue() !== 'true'"
         [allowMultiple]="true"
-        [disabled]="isHomeSiteSeverance.getRawValue() === 'false'"
+        [disabled]="isHomeSiteSeverance.getRawValue() !== 'true'"
         [showVirusError]="showHomesiteSeveranceVirus"
       ></app-file-drag-drop>
     </div>
