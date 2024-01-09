@@ -41,13 +41,13 @@ describe('AuthGuard', () => {
   });
 
   it('should allow activation when a token is present', async () => {
-    const canActivate = await guard.canActivate({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
+    const canActivate = await guard.canActivate();
     expect(canActivate).toBeTruthy();
   });
 
   it('should redirect to login when there is no token', async () => {
     mockAuthService.getToken.mockResolvedValue(undefined);
-    const canActivate = await guard.canActivate({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot);
+    const canActivate = await guard.canActivate();
     expect(canActivate).toBeFalsy();
     expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('/login');
   });

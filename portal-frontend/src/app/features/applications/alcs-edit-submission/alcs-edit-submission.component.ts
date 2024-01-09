@@ -50,6 +50,7 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   expandedParcelUuid?: string;
 
   showValidationErrors = false;
+  isDeactivating = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -89,6 +90,8 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
+        this.isDeactivating = false;
+
         const fileId = paramMap.get('fileId');
         if (fileId) {
           this.loadDraftSubmission(fileId).then(() => {
@@ -143,7 +146,16 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    await this.saveApplication(this.customStepper.selectedIndex);
+    if (!this.isDeactivating) {
+      this.isDeactivating = true;
+
+      try {
+        await this.saveApplication(this.customStepper.selectedIndex);
+      } catch (e) {
+        console.error('Failed to save application');
+      }
+    }
+
     return of(true);
   }
 

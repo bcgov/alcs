@@ -51,6 +51,7 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
   doNotSaveAppReview = false;
   showValidationErrors = false;
   isOnLastStep = false;
+  isDeactivating = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
 
@@ -74,6 +75,8 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
+        this.isDeactivating = false;
+
         const fileId = paramMap.get('fileId');
         if (fileId) {
           if (this.fileId !== fileId) {
@@ -185,11 +188,16 @@ export class ReviewSubmissionComponent implements OnInit, OnDestroy {
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    if (this.doNotSaveAppReview) {
+    if (this.doNotSaveAppReview || this.isDeactivating) {
       return of(true);
     }
+    this.isDeactivating = true;
 
-    await this.saveApplicationReview(this.customStepper.selectedIndex);
+    try {
+      await this.saveApplicationReview(this.customStepper.selectedIndex);
+    } catch (e) {
+      console.error('Failed to save application');
+    }
 
     return of(true);
   }

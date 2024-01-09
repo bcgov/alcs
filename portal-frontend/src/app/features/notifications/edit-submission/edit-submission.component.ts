@@ -47,6 +47,7 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
   steps = EditNotificationSteps;
   expandedParcelUuid?: string;
   showValidationErrors = false;
+  isDeactivating = false;
 
   @ViewChild('cdkStepper') public customStepper!: CustomStepperComponent;
   @ViewChild(ParcelDetailsComponent) parcelDetailsComponent!: ParcelDetailsComponent;
@@ -75,6 +76,8 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
     combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.paramMap])
       .pipe(takeUntil(this.$destroy))
       .subscribe(([queryParamMap, paramMap]) => {
+        this.isDeactivating = false;
+
         const fileId = paramMap.get('fileId');
         if (fileId) {
           this.loadSubmission(fileId).then(() => {
@@ -111,7 +114,15 @@ export class EditSubmissionComponent implements OnDestroy, AfterViewInit {
 
   // this gets fired whenever applicant navigates away from edit page
   async canDeactivate(): Promise<Observable<boolean>> {
-    await this.saveSubmission(this.customStepper.selectedIndex);
+    if (!this.isDeactivating) {
+      this.isDeactivating = true;
+
+      try {
+        await this.saveSubmission(this.customStepper.selectedIndex);
+      } catch (e) {
+        console.error('Failed to save application');
+      }
+    }
 
     return of(true);
   }
