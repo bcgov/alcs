@@ -128,7 +128,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   onSelectOwner(uuid: string) {
     this.isDirty = true;
 
-    const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === uuid);
+    const selectedOwner = this.owners.find((owner) => owner.uuid === uuid);
     this.parcelOwners = this.parcelOwners.map((owner) => ({
       ...owner,
       isSelected: owner.uuid === uuid,
@@ -234,11 +234,10 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     const parcelOwners = [...uniqueParcelOwners.values()];
     const owners = [...parcelOwners, ...nonParcelOwners];
 
-    const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
-    this.parcelOwners = owners.filter((owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code));
-
     this.parcelOwners = parcelOwners;
     this.owners = owners;
+
+    const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
 
     // onSelectOwner only not called on first load of page
     if (selectedOwner) {
