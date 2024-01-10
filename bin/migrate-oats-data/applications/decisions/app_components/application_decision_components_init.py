@@ -46,8 +46,6 @@ def init_application_decision_components(conn=None, batch_size=BATCH_UPLOAD_SIZE
         successful_inserts_count = 0
         last_decision_component_id = 0
 
-        tmp_counter = 0
-
         with open(
             "applications/decisions/sql/components/application_decision_components_insert.sql",
             "r",
@@ -135,10 +133,10 @@ def _get_insert_query():
                     %(application_decision_component_type_code)s,
                     %(application_decision_uuid)s,
                     %(alr_appl_component_id)s,
-                    %(naru_type_code),
-                    %(nfu_sub_type),
-                    %(nfu_type),
-                    %(applicant_type)
+                    %(naru_type_code)s,
+                    %(nonfarm_use_subtype_code)s,
+                    %(nonfarm_use_type_code)s,
+                    %(applicant_type)s
 
                 )
                 ON CONFLICT DO NOTHING; -- there are no components on prod
@@ -178,6 +176,10 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 ),
                 "application_decision_uuid": row.get("decision_uuid"),
                 "alr_appl_component_id": row.get("component_id"),
+                "naru_type_code": None,
+                "nonfarm_use_subtype_code": None,
+                "nonfarm_use_type_code": None,
+                "applicant_type": None,
             }
             data_list.append(mapped_row)
 
@@ -204,6 +206,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
                 "alr_area": row.get("component_area"),
                 "audit_created_by": OATS_ETL_USER,
                 "end_date": nfu_end_date,
+                "end_date2": None,
                 "expiry_date": add_timezone_and_keep_date_part(
                     row.get("decision_expiry_date")
                 ),
@@ -326,19 +329,20 @@ def _map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
 
 
 def _map_legislation_to_applicant_type(row):
-    if row["legislation_code"]:
+    if row.get("legislation_code"):
         row["legislation_code"] = str(
             OatsLegislationCodes[row["legislation_code"]].value
         )
 
-    return row["legislation_code"]
+    return row.get("legislation_code")
 
 
 def _map_naru_subtype(row):
-    row["rsdntl_use_type_code"] = str(
-        OatsToAlcsNaruType[row["rsdntl_use_type_code"]].value
-    )
-    return row["rsdntl_use_type_code"]
+    if row.get("rsdntl_use_type_code"):
+        row["rsdntl_use_type_code"] = str(
+            OatsToAlcsNaruType[row["rsdntl_use_type_code"]].value
+        )
+    return row.get("rsdntl_use_type_code")
 
 
 def _map_end_date(row):
