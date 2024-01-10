@@ -35,7 +35,7 @@ export class InclProposalComponent extends FilesStepComponent implements OnInit,
   private submissionUuid = '';
   showGovernmentQuestions = false;
   governmentName? = '';
-  disableNotificationFileUploads = false;
+  disableNotificationFileUploads = true;
 
   showProposalMapVirus = false;
   showProofOfAdvertisingVirus = false;

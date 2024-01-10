@@ -209,7 +209,7 @@
     </div>
 
     <app-soil-table
-      [disabled]="willImportFill.value === 'false'"
+      [disabled]="willImportFill.value !== 'true'"
       tableHeader="Fill to be Placed"
       [(data)]="fillTableData"
       (dataChange)="markDirty()"

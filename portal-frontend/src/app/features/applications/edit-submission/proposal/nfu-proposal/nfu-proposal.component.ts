@@ -31,9 +31,27 @@ export class NfuProposalComponent extends FilesStepComponent implements OnInit, 
   outsideLands = new FormControl<string | null>(null, [Validators.required]);
   agricultureSupport = new FormControl<string | null>(null, [Validators.required]);
   willImportFill = new FormControl<string | null>(null, [Validators.required]);
-  projectDuration = new FormControl<string | null>(null, [Validators.required]);
-  fillTypeDescription = new FormControl<string | null>(null, [Validators.required]);
-  fillOriginDescription = new FormControl<string | null>(null, [Validators.required]);
+  projectDuration = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  fillTypeDescription = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  fillOriginDescription = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
 
   form = new FormGroup({
     hectares: this.hectares,
