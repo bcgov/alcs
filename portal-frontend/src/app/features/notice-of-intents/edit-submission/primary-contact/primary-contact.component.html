@@ -39,7 +39,7 @@
       </div>
 
       <!-- Existing owner -->
-      <div class="form-row" *ngIf="selectedThirdPartyAgent === false">
+      <div class="form-row" *ngIf="!selectedThirdPartyAgent && !selectedLocalGovernment">
         <div class="full-row">
           <label *ngIf="parcelOwners.length > 0"
             >Select a Primary Contact from the listed land owners
