@@ -63,3 +63,11 @@ class OatsToAlcsConditionTypeMapping(Enum):
     SRC = "STRC"
     TIM = "TIME"
     VGS = "VEGS"
+
+
+class OatsToAlcsDecisionMakerCodeMappingEnum(Enum):
+    ACD = "ALCS"
+    ALD = "ALCS"
+    LGD = "LGOV"
+    OGD = "BCER"
+    PGD = "BCGO"
