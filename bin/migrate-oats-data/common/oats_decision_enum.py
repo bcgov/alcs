@@ -14,6 +14,12 @@ class AlcsNoiModificationOutcomeCodeEnum(Enum):
     REFUSE_TO_MODIFY = "REF"
 
 
+class AlcsAppReconsiderationOutcomeCodeEnum(Enum):
+    PENDING = "PEN"
+    PROCEED_TO_RECONSIDER = "PRC"
+    REFUSE_TO_RECONSIDER = "REF"
+
+
 class OatsToAlcsAgCapSource(Enum):
     BCLI = AlcsAgCapSource.BCLI.value
     CLI = AlcsAgCapSource.CLI.value

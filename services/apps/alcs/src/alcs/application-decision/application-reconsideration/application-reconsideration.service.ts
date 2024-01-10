@@ -1,8 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from 'automapper-core';
-import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -235,7 +235,10 @@ export class ApplicationReconsiderationService {
 
   async delete(uuid: string) {
     const reconToDelete = await this.fetchAndValidateReconsideration(uuid);
-    await this.cardService.archive(reconToDelete.cardUuid);
+    if (reconToDelete.cardUuid) {
+      await this.cardService.archive(reconToDelete.cardUuid);
+    }
+
     return this.reconsiderationRepository.softRemove([reconToDelete]);
   }
 

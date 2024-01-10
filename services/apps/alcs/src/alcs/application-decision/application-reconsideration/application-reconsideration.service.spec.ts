@@ -1,9 +1,9 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from 'automapper-classes';
-import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { FindOptionsRelations, IsNull, Repository } from 'typeorm';
 import {
   initApplicationMockEntity,
@@ -305,6 +305,28 @@ describe('ReconsiderationService', () => {
     expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
     expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
     expect(cardServiceMock.archive).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not call archive card if reconsideration does not have card attached (only reconsiderations imported from OATS) on delete', async () => {
+    const uuid = 'fake';
+    reconsiderationRepositoryMock.findOne.mockResolvedValue(
+      new ApplicationReconsideration(),
+    );
+    reconsiderationRepositoryMock.softRemove.mockResolvedValue({} as any);
+    cardServiceMock.archive.mockResolvedValue();
+
+    await service.delete(uuid);
+
+    expect(reconsiderationRepositoryMock.findOne).toHaveBeenCalledWith({
+      relations: {
+        type: true,
+      },
+      where: {
+        uuid,
+      },
+    });
+    expect(reconsiderationRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(cardServiceMock.archive).toHaveBeenCalledTimes(0);
   });
 
   it('should fail on delete if reconsideration does not exist', async () => {

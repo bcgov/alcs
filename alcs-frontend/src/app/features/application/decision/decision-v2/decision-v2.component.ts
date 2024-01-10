@@ -111,6 +111,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
         };
       });
 
+      this.isDraftExists = this.decisions.some((d) => d.isDraft);
       this.scrollToDecision();
 
       this.disabledCreateBtnTooltip = this.isPaused
