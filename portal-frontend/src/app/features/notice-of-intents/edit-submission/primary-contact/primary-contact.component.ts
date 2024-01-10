@@ -257,6 +257,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
     if (this.showErrors) {
       this.form.markAllAsTouched();
+      this.ownersList.markAsTouched();
     }
     this.isDirty = false;
     this.calculateLetterRequired();
