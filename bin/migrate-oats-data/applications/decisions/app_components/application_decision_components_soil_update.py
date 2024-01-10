@@ -50,7 +50,7 @@ def update_application_decision_component_soil_details(
             while True:
                 cursor.execute(
                     f"""{query} 
-                    WHERE appdc.oats_alr_appl_component_id > {last_component_id} ORDER BY appdc.oats_alr_appl_component_id;"""
+                    WHERE osce.soil_change_element_id > {last_component_id} ORDER BY osce.soil_change_element_id;"""
                 )
 
                 rows = cursor.fetchmany(batch_size)
@@ -65,10 +65,10 @@ def update_application_decision_component_soil_details(
                     successful_updates_count = (
                         successful_updates_count + components_to_be_updated_count
                     )
-                    last_component_id = dict(rows[-1])["oats_alr_appl_component_id"]
+                    last_component_id = dict(rows[-1])["soil_change_element_id"]
 
                     logger.debug(
-                        f"retrieved/updated items count: {components_to_be_updated_count}; total successfully update application_decision_components so far {successful_updates_count}; last updated oats_alr_appl_component_id: {last_component_id}"
+                        f"retrieved/updated items count: {components_to_be_updated_count}; total successfully update application_decision_components so far {successful_updates_count}; last updated soil_change_element_id: {last_component_id}"
                     )
                 except Exception as err:
                     logger.exception(err)
