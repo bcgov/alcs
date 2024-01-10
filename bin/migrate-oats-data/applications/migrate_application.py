@@ -9,7 +9,7 @@ from .submissions import (
     process_application_owners,
     clean_primary_contacts,
     insert_application_submission_review,
-    clean_reviews
+    clean_reviews,
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -34,6 +34,8 @@ from .decisions.app_reconsiderations import (
     update_application_reconsiderations,
 )
 
+from .set_hide_from_portal_on_application import set_hide_from_portal_on_application
+
 
 def process_application_etl(batch_size):
     process_alcs_application_prep_fields(batch_size)
@@ -45,6 +47,7 @@ def process_application_etl(batch_size):
     process_application_owners(batch_size)
     process_app_staff_journal(batch_size)
     process_application_decisions(batch_size)
+    set_hide_from_portal_on_application()
     process_application_submission_status_emails()
 
 

@@ -9,7 +9,7 @@ from applications.application_submission_status_email import (
 from noi.noi_submission_status_email import (
     clean_notice_of_intent_submission_status_emails,
 )
-from common.alcs_init_users import clean_users
+from users.alcs_init_users import clean_users
 from documents import (
     clean_application_documents,
     clean_documents,
