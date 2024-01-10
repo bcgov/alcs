@@ -3,7 +3,7 @@ INSERT INTO alcs.application_submission_to_submission_status(submission_uuid, st
         SELECT oaac.alr_application_id
         FROM oats.oats_alr_appl_components oaac
             JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
-        WHERE oaa.application_class_code IN ('LOA', 'BLK')
+        WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         GROUP BY oaac.alr_application_id
         HAVING count(oaac.alr_application_id) < 2 -- ignore applications with multiple components
     ),

@@ -19,7 +19,7 @@ cancelled_accomplishments_for_app_only AS (
         oaa.cancelled_date
     FROM oats.oats_alr_applications oaa
         LEFT JOIN first_cancelled_accomplishment_per_file_number AS first_cancelled ON first_cancelled.alr_application_id = oaa.alr_application_id
-    WHERE oaa.application_class_code IN ('LOA', 'BLK')
+    WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 )
 SELECT oats_cancelled.alr_application_id,
     oats_cancelled.accomplishment_code,

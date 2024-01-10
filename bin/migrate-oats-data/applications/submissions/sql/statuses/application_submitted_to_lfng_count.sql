@@ -19,7 +19,7 @@ submitted_lg_accomplishments_for_app_only AS (
         oaa.submitted_to_lg_date
     FROM oats.oats_alr_applications oaa
         LEFT JOIN submitted_accomplishment_per_file_number AS last_sub ON last_sub.alr_application_id = oaa.alr_application_id
-    WHERE oaa.application_class_code IN ('LOA', 'BLK')
+    WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 ), 
 rows_to_update as (
 SELECT oats_sub_lg.alr_application_id,

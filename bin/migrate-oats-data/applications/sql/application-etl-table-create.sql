@@ -20,7 +20,7 @@ CREATE TABLE oats.alcs_etl_application_exclude (
     component_id INT
 );
     
--- function inserts data into prevoisly created table and decipers duplication of uuids
+-- function inserts data into previously created table and deciphers duplication of uuids
 -- application_id is copied from oats.oats_alr_applications.alr_application_id
 INSERT INTO
             oats.alcs_etl_application_duplicate (application_id, duplicated)

@@ -35,7 +35,7 @@ WITH
             oats.oats_alr_applications oaa
             LEFT JOIN last_return_per_file_number AS last_return ON last_return.alr_application_id = oaa.alr_application_id
         WHERE
-            oaa.application_class_code IN ('LOA', 'BLK')
+            oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
     ),
     all_returned AS (
         SELECT

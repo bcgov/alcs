@@ -8,7 +8,7 @@ WITH alcs_rows AS (
 	SELECT osje.alr_application_id, osje.journal_text
 	FROM oats.oats_staff_journal_entries osje
 	JOIN oats.oats_alr_applications oaa ON osje.alr_application_id = oaa.alr_application_id
-	WHERE oaa.application_class_code IN ('LOA', 'BLK')
+	WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 )
 SELECT oar.journal_text, oar.alr_application_id, ar.file_number
 FROM oats_rows oar

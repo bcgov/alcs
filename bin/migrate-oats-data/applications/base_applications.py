@@ -3,7 +3,7 @@ from common import (
     setup_and_get_logger,
     exclusion_table_create,
     exclusion_table_count,
-    BATCH_UPLOAD_SIZE
+    BATCH_UPLOAD_SIZE,
 )
 
 etl_name = "process_applications"
@@ -39,7 +39,9 @@ def process_applications(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             application_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{application_sql} WHERE ae.application_id > {last_application_id} AND (oa.application_class_code = 'LOA' OR oa.application_class_code = 'BLK') ORDER by ae.application_id;"
+                    f"""{application_sql} 
+                        AND ae.application_id > {last_application_id} AND (oa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')) ORDER by ae.application_id;
+                    """
                 )
 
                 rows = cursor.fetchmany(batch_size)

@@ -163,6 +163,7 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
+WHERE atl.code <> 'SRW' -- filter out SRW type as it is a "notification" type
  
 
 

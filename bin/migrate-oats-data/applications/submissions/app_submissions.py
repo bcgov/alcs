@@ -50,7 +50,10 @@ def process_alcs_app_submissions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             submission_sql = sql_file.read()
             while True:
                 cursor.execute(
-                    f"{submission_sql} WHERE acg.alr_application_id > {last_submission_id} ORDER BY acg.alr_application_id;"
+                    f"""
+                        {submission_sql} 
+                        AND acg.alr_application_id > {last_submission_id} ORDER BY acg.alr_application_id;
+                    """
                 )
 
                 rows = cursor.fetchmany(batch_size)

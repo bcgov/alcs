@@ -6,7 +6,7 @@ WITH
             oats.oats_alr_appl_components oaac
             JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
         WHERE
-            oaa.application_class_code IN ('LOA', 'BLK')
+            oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         GROUP BY
             oaac.alr_application_id
         HAVING
@@ -49,3 +49,4 @@ FROM
     JOIN oats.oats_alr_appl_components oc ON acg.alr_application_id = oc.alr_application_id
     JOIN oats.oats_alr_applications oa ON acg.alr_application_id = oa.alr_application_id
     LEFT JOIN alcs."user" au ON oa.created_guid = au.bceid_guid
+WHERE aa.type_code <> 'SRW'

@@ -41,7 +41,7 @@ WITH
             oats.oats_alr_applications oaa
             LEFT JOIN last_sub_lg_accomplishment_per_file_number AS last_sub_lg ON last_sub_lg.alr_application_id = oaa.alr_application_id
         WHERE
-            oaa.application_class_code IN ('LOA', 'BLK')
+            oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
             AND (
                 last_sub_lg.completion_date IS NOT NULL
                 OR oaa.submitted_to_lg_date IS NOT NULL
@@ -54,7 +54,7 @@ WITH
         FROM
             oats.oats_alr_appl_components oaac
             JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
-            AND oaa.application_class_code IN ('LOA', 'BLK')
+            AND oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
         GROUP BY
             oaac.alr_application_id
         HAVING

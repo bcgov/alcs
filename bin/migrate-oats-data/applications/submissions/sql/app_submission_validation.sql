@@ -28,7 +28,7 @@ oats_app_data AS (
     FROM alcs.application_submission app_sub
         JOIN apps_with_one_or_zero_component_only oats_asub ON oats_asub.alr_application_id::TEXT = app_sub.file_number
         JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oats_asub.alr_application_id
-        AND oaa.application_class_code = 'LOA' OR oaa.application_class_code = 'BLK'
+        AND oaa.application_class_code in ('LOA', 'BLK', 'SCH', 'NAN')
         JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = oats_asub.alr_application_id
 )
 SELECT oats_app.alr_application_id,
