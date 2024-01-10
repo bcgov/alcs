@@ -265,7 +265,10 @@ describe('ApplicationOwnerController', () => {
     );
 
     await controller.setPrimaryContact(
-      { applicationSubmissionUuid: '' },
+      {
+        applicationSubmissionUuid: '',
+        type: OWNER_TYPE.AGENT,
+      },
       {
         user: {
           entity: {},

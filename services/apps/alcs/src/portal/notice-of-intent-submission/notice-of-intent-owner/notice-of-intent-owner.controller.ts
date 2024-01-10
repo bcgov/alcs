@@ -179,20 +179,23 @@ export class NoticeOfIntentOwnerController {
     //Create Owner
     if (!data.ownerUuid) {
       await this.ownerService.deleteNonParcelOwners(applicationSubmission.uuid);
-      const newOwner = await this.ownerService.create(
-        {
-          email: data.email,
-          typeCode: data.type,
-          lastName: data.lastName,
-          firstName: data.firstName,
-          phoneNumber: data.phoneNumber,
-          organizationName: data.organization,
-          noticeOfIntentSubmissionUuid: data.noticeOfIntentSubmissionUuid,
-          crownLandOwnerType: data.crownLandOwnerType,
-        },
-        applicationSubmission,
-        req.user.entity,
-      );
+      const newOwner =
+        data.type === OWNER_TYPE.AGENT || data.type == OWNER_TYPE.GOVERNMENT
+          ? await this.ownerService.create(
+              {
+                email: data.email,
+                typeCode: data.type,
+                lastName: data.lastName,
+                firstName: data.firstName,
+                phoneNumber: data.phoneNumber,
+                organizationName: data.organization,
+                noticeOfIntentSubmissionUuid: data.noticeOfIntentSubmissionUuid,
+                crownLandOwnerType: data.crownLandOwnerType,
+              },
+              applicationSubmission,
+              req.user.entity,
+            )
+          : undefined;
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,
         newOwner,

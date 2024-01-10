@@ -30,11 +30,14 @@ from .decisions import (
     update_application_decision_component_soil_details,
 )
 from .decisions.app_modifications import (
-    init_application_modifications,
-    clean_application_modifications,
     update_application_modifications,
-    link_application_modifications,
-    unlink_application_modifications,
+)
+from .decisions.app_reconsiderations import (
+    init_application_reconsiderations,
+    clean_application_reconsiderations,
+    link_application_reconsiderations,
+    unlink_application_reconsiderations,
+    update_application_reconsiderations,
 )
 
 
@@ -67,17 +70,19 @@ def init_applications(batch_size):
 
 def process_application_decisions(batch_size):
     init_application_decisions(batch_size)
-    init_application_modifications(batch_size)
     update_application_modifications(batch_size)
-    link_application_modifications(batch_size)
+    init_application_reconsiderations(batch_size)
+    link_application_reconsiderations(batch_size)
+    update_application_reconsiderations(batch_size)
     init_application_decision_components(batch_size)
     update_application_decision_component_soil_details(batch_size)
 
 
 def clean_application_decisions_etl():
+    # modifications do not have clean since all of them were created in ALCS and ETL is not introducing new records.
     clean_application_decision_components()
-    unlink_application_modifications()
-    clean_application_modifications()
+    unlink_application_reconsiderations()
+    clean_application_reconsiderations()
     clean_application_decisions()
 
 

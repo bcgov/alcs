@@ -12,11 +12,7 @@ export interface CanComponentDeactivate {
   providedIn: 'root',
 })
 export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-  canDeactivate(
-    component: CanComponentDeactivate,
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): CanDeactivateType {
+  canDeactivate(component: CanComponentDeactivate): CanDeactivateType {
     return component.canDeactivate();
   }
 }

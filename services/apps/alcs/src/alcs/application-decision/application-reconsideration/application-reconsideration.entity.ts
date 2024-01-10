@@ -92,8 +92,8 @@ export class ApplicationReconsideration extends Base {
   application: Application;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string | null;
 
   @AutoMap(() => Card)
   @OneToOne(() => Card, { cascade: true })
@@ -111,4 +111,13 @@ export class ApplicationReconsideration extends Base {
   @AutoMap(() => ApplicationDecision)
   @OneToOne(() => ApplicationDecision, (dec) => dec.reconsiders)
   resultingDecision?: ApplicationDecision;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_reconsideration_requests to alcs.application_reconsideration.',
+  })
+  oatsReconsiderationRequestId: number;
 }

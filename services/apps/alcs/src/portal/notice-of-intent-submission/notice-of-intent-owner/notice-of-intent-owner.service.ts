@@ -92,9 +92,8 @@ export class NoticeOfIntentOwnerService {
       },
     });
 
-    const parcel = await this.noticeOfIntentParcelService.getOneOrFail(
-      parcelUuid,
-    );
+    const parcel =
+      await this.noticeOfIntentParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
     await this.repository.save(existingOwner);
@@ -193,8 +192,10 @@ export class NoticeOfIntentOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
-    existingOwner.crownLandOwnerType = 
-      updateDto.crownLandOwnerType !== undefined ? updateDto.crownLandOwnerType : existingOwner.crownLandOwnerType;
+    existingOwner.crownLandOwnerType =
+      updateDto.crownLandOwnerType !== undefined
+        ? updateDto.crownLandOwnerType
+        : existingOwner.crownLandOwnerType;
 
     const savedOwner = await this.repository.save(existingOwner);
 
@@ -217,12 +218,12 @@ export class NoticeOfIntentOwnerService {
 
   async setPrimaryContact(
     submissionUuid: string,
-    owner: NoticeOfIntentOwner,
+    owner: NoticeOfIntentOwner | undefined,
     user: User,
   ) {
     await this.noticeOfIntentSubmissionService.setPrimaryContact(
       submissionUuid,
-      owner.uuid,
+      owner?.uuid ?? null,
       user,
     );
   }
