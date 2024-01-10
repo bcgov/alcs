@@ -117,5 +117,11 @@ def _map_decision_maker_code(row):
     if accomplishment_code is not None:
         for decision_maker_code_enum in OatsToAlcsDecisionMakerCodeMappingEnum:
             if decision_maker_code_enum.name == accomplishment_code:
-                return decision_maker_code_enum.value
+                if (
+                    decision_maker_code_enum.value
+                    == OatsToAlcsDecisionMakerCodeMappingEnum.ALD.value
+                ):
+                    return OatsToAlcsDecisionMakerCodeMappingEnum.ACD.value  # ALCS code
+                else:
+                    return decision_maker_code_enum.value
     return None

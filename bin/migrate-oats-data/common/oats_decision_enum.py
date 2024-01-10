@@ -67,7 +67,7 @@ class OatsToAlcsConditionTypeMapping(Enum):
 
 class OatsToAlcsDecisionMakerCodeMappingEnum(Enum):
     ACD = "ALCS"
-    ALD = "ALCS"
+    ALD = "ALCS_ALD"  # need to have unique value for this, later in mapping function will be replaced with proper ALCS code
     LGD = "LGOV"
     OGD = "BCER"
     PGD = "BCGO"
