@@ -59,3 +59,22 @@ class AlcsNaruTypeCode(Enum):
     Principal_Residence = "PRIN"  # Principal Residence More Than 500m²
     Additional_Residence = "ARFU"  # Additional Residence for Farm Use
     Tourism_Accomodation = "TOUR"  # Non-Adhering Tourism Accommodation
+
+
+class OatsToAlcsNfuTypes(Enum):
+    AGR = AlcsNfuTypeCode.Agricultural_Farm.value
+    CIV = AlcsNfuTypeCode.Civic_Institutional.value
+    COM = AlcsNfuTypeCode.Commercial_Retail.value
+    IND = AlcsNfuTypeCode.Industrial.value
+    OTH = AlcsNfuTypeCode.Other.value
+    REC = AlcsNfuTypeCode.Recreational.value
+    RES = AlcsNfuTypeCode.Residential.value
+    TRA = AlcsNfuTypeCode.Transportation_Utilities.value
+    UNU = AlcsNfuTypeCode.Unused.value
+
+
+class OatsLegislationCodes(Enum):
+    SEC_30_1 = AlcsApplicantType.Land_owner.value
+    SEC_29_1 = AlcsApplicantType.LFNG.value
+    SEC_17_3 = AlcsApplicantType.Land_owner.value
+    SEC_17_1 = AlcsApplicantType.LFNG.value
