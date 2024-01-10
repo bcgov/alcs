@@ -9,7 +9,7 @@ from .submissions import (
     process_application_owners,
     clean_primary_contacts,
     insert_application_submission_review,
-    clean_reviews
+    clean_reviews,
 )
 from .base_applications import process_applications, clean_applications
 from .app_prep import process_alcs_application_prep_fields
@@ -22,7 +22,13 @@ from .app_staff_journal import (
     process_app_staff_journal,
     clean_application_staff_journal,
 )
-from .decisions import clean_application_decisions, init_application_decisions
+from .decisions import (
+    clean_application_decisions,
+    init_application_decisions,
+    clean_application_decision_components,
+    init_application_decision_components,
+    update_application_decision_component_soil_details,
+)
 from .decisions.app_modifications import (
     init_application_modifications,
     clean_application_modifications,
@@ -64,9 +70,12 @@ def process_application_decisions(batch_size):
     init_application_modifications(batch_size)
     update_application_modifications(batch_size)
     link_application_modifications(batch_size)
+    init_application_decision_components(batch_size)
+    update_application_decision_component_soil_details(batch_size)
 
 
 def clean_application_decisions_etl():
+    clean_application_decision_components()
     unlink_application_modifications()
     clean_application_modifications()
     clean_application_decisions()
