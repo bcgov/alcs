@@ -22,7 +22,11 @@ from .app_staff_journal import (
     process_app_staff_journal,
     clean_application_staff_journal,
 )
-from .decisions import clean_application_decisions, init_application_decisions
+from .decisions import (
+    clean_application_decisions,
+    init_application_decisions,
+    update_application_decision,
+)
 from .decisions.app_modifications import (
     update_application_modifications,
 )
@@ -67,6 +71,7 @@ def init_applications(batch_size):
 
 def process_application_decisions(batch_size):
     init_application_decisions(batch_size)
+    update_application_decision(batch_size)
     update_application_modifications(batch_size)
     init_application_reconsiderations(batch_size)
     link_application_reconsiderations(batch_size)
