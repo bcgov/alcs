@@ -142,8 +142,8 @@ SELECT
         WHEN atl.code = 'EXT' THEN 'ROSO'
         WHEN atl.code = 'FILL' THEN 'POFO'
         -- WHEN atl.code = 'SRW' THEN 'NARU'
-        -- WHEN atl.code = 'CSC' THEN 'NARU'
         WHEN atl.code = 'NAR' THEN 'NARU'
+        WHEN atl.code = 'CSC' THEN 'COVE'
         ELSE 'NARU'
     END AS type_code,
     CASE
