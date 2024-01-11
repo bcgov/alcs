@@ -1,15 +1,11 @@
 <div class="step-description">
   <h2>Proposal</h2>
-  <p>
-    Considerations are subject to
-    <a>FIXME: Section 6 of the ALC Act. </a>
-  </p>
   <p>All fields are required unless stated optional or disabled.</p>
   <app-commission-purposes-panel></app-commission-purposes-panel>
 </div>
 <app-warning-banner>
   In order to complete this step, please consult the following pages on the ALC website:
-  <ul>
+  <ul class="steps-list">
     <li>
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
@@ -19,7 +15,11 @@
       </a>
     </li>
     <li>
-      <a href="TODO" target="_blank">FIXME: Placement of Fill</a>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/#noi-documents"
+        target="_blank"
+        >Placement of Fill</a
+      >
     </li>
   </ul>
 </app-warning-banner>
@@ -149,7 +149,15 @@
         The Commission will consider your proposal dimensions when determining the potential impact it will have on the
         agricultural capability of the land.
       </div>
-      <app-info-banner> Please refer to <a>FIXME: Contact Us</a> on the ALC website for more detail.</app-info-banner>
+      <app-info-banner>
+        Please refer to
+        <a
+          href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/#noi-documents"
+          target="_blank"
+          >Placement of Fill</a
+        >
+        on the ALC website for more detail.</app-info-banner
+      >
       <app-soil-table
         tableHeader="Fill to be placed"
         [(data)]="fillToPlaceTableData"
@@ -215,7 +223,13 @@
       <mat-label class="subheading2" for="cross-section">Cross Sections</mat-label>
       <div class="subtext">Include North-South and East-West cross sections</div>
       <app-info-banner>
-        Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
+        Please refer to
+        <a
+          href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/#noi-documents"
+          target="_blank"
+          >Placement of Fill</a
+        >
+        on the ALC website for more information
       </app-info-banner>
       <app-file-drag-drop
         id="cross-section"
@@ -237,7 +251,13 @@
         agricultural capability assessment.
       </div>
       <app-info-banner>
-        Please refer to <a>FIXME: Removal of Soil</a> on the ALC website for more information
+        Please refer to
+        <a
+          href="https://www.alc.gov.bc.ca/application-and-notice-process/soil-and-fill-notice-of-intent/#noi-documents"
+          target="_blank"
+          >Placement of Fill</a
+        >
+        on the ALC website for more information
       </app-info-banner>
       <app-file-drag-drop
         id="reclamation-plan"
