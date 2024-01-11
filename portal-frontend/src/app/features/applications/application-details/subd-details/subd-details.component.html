@@ -57,18 +57,17 @@
       *ngIf="_applicationSubmission.subdIsHomeSiteSeverance === null"
     ></app-no-data>
   </div>
-  <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
-  <div class="grid-double">
-    <div *ngFor="let file of homesiteDocuments">
-      <a (click)="openFile(file.uuid)">
-        {{ file.fileName }}
-      </a>
+  <ng-container *ngIf="_applicationSubmission.subdIsHomeSiteSeverance === true">
+    <div class="subheading2 grid-1">Proof of Homesite Severance Qualification</div>
+    <div class="grid-double">
+      <div *ngFor="let file of homesiteDocuments">
+        <a (click)="openFile(file.uuid)">
+          {{ file.fileName }}
+        </a>
+      </div>
+      <app-no-data [showRequired]="showErrors" *ngIf="homesiteDocuments.length === 0"></app-no-data>
     </div>
-    <app-no-data
-      [showRequired]="showErrors && !!_applicationSubmission.subdIsHomeSiteSeverance"
-      *ngIf="homesiteDocuments.length === 0"
-    ></app-no-data>
-  </div>
+  </ng-container>
   <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onEditSection(5)" color="accent">Edit Section</button>
   </div>
