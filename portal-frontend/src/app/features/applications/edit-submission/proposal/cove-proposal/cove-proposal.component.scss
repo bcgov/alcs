@@ -1,6 +1,10 @@
 @use '../../../../../../styles/functions' as *;
 @use '../../../../../../styles/colors';
 
+.steps-list {
+  margin: rem(16) 0;
+}
+
 .no-data {
   color: colors.$grey-dark;
   text-align: center;

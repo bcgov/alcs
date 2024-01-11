@@ -1,21 +1,28 @@
 <div class="step-description">
   <h2>Proposal</h2>
-  <p>
-    Considerations are subject to
-    <a> Section 6 of the ALC Act. </a>
-  </p>
   <p>*All fields are required unless stated optional or disabled.</p>
   <app-commission-purposes-panel></app-commission-purposes-panel>
 </div>
 <app-warning-banner>
-  Please consult the '
-  <a
-    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
-    target="_blank"
-  >
-    What the Commission Considers
-  </a>
-  ' page of the ALC website for more information.
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul class="steps-list">
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#inc"
+        target="_blank"
+      >
+        Inclusion
+      </a>
+    </li>
+  </ul>
 </app-warning-banner>
 <form [formGroup]="form">
   <div class="form-row">
@@ -131,7 +138,13 @@
         inclusion application parcel(s) are owned by the {{ governmentName }}.
       </div>
       <app-info-banner>
-        Please refer to <a>FIXME: Inclusion</a> page on the ALC website for more information.
+        Please refer to
+        <a
+          href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#inc"
+          target="_blank"
+          >Inclusion</a
+        >
+        page on the ALC website for more information.
       </app-info-banner>
       <mat-button-toggle-group
         (change)="onSelectLocalGovernmentParcelOwner($event)"
