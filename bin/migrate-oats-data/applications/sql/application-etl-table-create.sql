@@ -72,7 +72,8 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
                    WHEN 'SDV' THEN 3
                    WHEN 'SCH' THEN 4
                    WHEN 'NFU' THEN 5
-                   ELSE 6
+                   WHEN 'CSC' THEN 6
+                   ELSE 7
                END) AS rank
     FROM duplicate_ids dis
     )

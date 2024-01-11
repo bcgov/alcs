@@ -371,5 +371,9 @@ def _map_basic_field(data):
         data["agri_capability_code"] = str(
             OatsToAlcsAgCap[data["agri_capability_code"]].value
         )
+    if data["submitted_to_alc_date"]:
+        data["submitted_to_alc_date"] = add_timezone_and_keep_date_part(
+            data.get("submitted_to_alc_date", None)
+        )
 
     return data
