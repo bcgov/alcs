@@ -5,7 +5,7 @@ from common import (
     ALRChangeCode,
     OatsToAlcsAgCap,
     OatsToAlcsAgCapSource,
-    OatsLegislationCodes,
+    OatsLegislationCodesToAlcsApplicant,
     OatsToAlcsNfuTypes,
     OATS_NFU_SUBTYPES,
     BATCH_UPLOAD_SIZE,
@@ -257,42 +257,6 @@ def _map_component_type_code(row):
     return None
 
 
-# def _map_nfu_subtype_code(row):
-#     nfu_subtype_code = row.get("nonfarm_use_subtype_code")
-#     if nfu_subtype_code == ALRChangeCode.NAR.value:
-#         return "NARU"
-
-
-# def _map_nfu_type_code(row):
-#     nfu_code = row.get("nonfarm_use_type_code")
-#     if nfu_code == AlcsAdjacentLandUseType.AGR:
-#         return AlcsAdjacentLandUseType.AGR.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.CIV:
-#         return AlcsAdjacentLandUseType.CIV.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.COM:
-#         return AlcsAdjacentLandUseType.COM.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.IND:
-#         return AlcsAdjacentLandUseType.IND.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.OTH:
-#         return AlcsAdjacentLandUseType.OTH.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.REC:
-#         return AlcsAdjacentLandUseType.REC.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.RES:
-#         return AlcsAdjacentLandUseType.RES.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.TRA:
-#         return AlcsAdjacentLandUseType.TRA.value
-
-#     if nfu_code == AlcsAdjacentLandUseType.UNU:
-#         return AlcsAdjacentLandUseType.UNU.value
-
-
 def _map_oats_to_alcs_nfu(data):
     oats_type_code = data["nonfarm_use_type_code"]
     oats_subtype_code = data["nonfarm_use_subtype_code"]
@@ -331,7 +295,7 @@ def _map_oats_to_alcs_nfu_subtypes(nfu_type_code, nfu_subtype_code):
 def _map_legislation_to_applicant_type(row):
     if row.get("legislation_code"):
         row["legislation_code"] = str(
-            OatsLegislationCodes[row["legislation_code"]].value
+            OatsLegislationCodesToAlcsApplicant[row["legislation_code"]].value
         )
 
     return row.get("legislation_code")

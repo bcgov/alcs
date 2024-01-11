@@ -12,7 +12,8 @@ SELECT
     oaac.alr_change_code,
     oaac.nonfarm_use_type_code,
     oaac.nonfarm_use_subtype_code,
-    oaac.rsdntl_use_type_code
+    oaac.rsdntl_use_type_code,
+    oaac.legislation_code
 FROM
     oats.oats_alr_appl_decisions oaad
     JOIN oats.oats_alr_appl_components oaac ON oaac.alr_appl_decision_id = oaad.alr_appl_decision_id
