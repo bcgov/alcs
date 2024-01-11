@@ -35,7 +35,9 @@ export class NotificationDocumentService {
         source,
         `${this.serviceUrl}/notification/${fileNumber}/attachExternal`
       );
-      this.toastService.showSuccessToast('Document uploaded');
+      if (res) {
+        this.toastService.showSuccessToast('Document uploaded');
+      }
       return res;
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 403) {
