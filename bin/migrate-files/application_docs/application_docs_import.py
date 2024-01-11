@@ -177,12 +177,21 @@ def _get_total_number_of_files(cursor, start_document_id, end_document_id):
     try:
         cursor.execute(
             """
+                WITH app_docs_without_srw AS (
+                    
+                        SELECT document_id FROM oats.oats_documents od 
+                        LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
+                        WHERE oaac.alr_change_code <> 'SRW'
+                        GROUP BY od.document_id
+                        
+                )
                 SELECT COUNT(*) 
-                FROM OATS.OATS_DOCUMENTS 
+                FROM OATS.OATS_DOCUMENTS od
+                JOIN app_docs_without_srw ON app_docs_without_srw.document_id = od.document_id
                 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
                 AND ALR_APPLICATION_ID IS NOT NULL 
-                AND (:start_document_id = 0 OR DOCUMENT_ID > :start_document_id)
-                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+                AND (:start_document_id = 0 OR od.DOCUMENT_ID > :start_document_id)
+                AND (:end_document_id = 0 OR od.DOCUMENT_ID <= :end_document_id)
             """,
             {
                 "start_document_id": start_document_id,
@@ -198,12 +207,21 @@ def _get_total_number_of_transferred_files(cursor, start_document_id, end_docume
     try:
         cursor.execute(
             """
+                WITH app_docs_without_srw AS (
+                    
+                        SELECT document_id FROM oats.oats_documents od 
+                        LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
+                        WHERE oaac.alr_change_code <> 'SRW'
+                        GROUP BY od.document_id
+                        
+                )
                 SELECT COUNT(*)
-                FROM OATS.OATS_DOCUMENTS 
+                FROM OATS.OATS_DOCUMENTS od
+                JOIN app_docs_without_srw ON app_docs_without_srw.document_id = od.document_id
                 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
                 AND ALR_APPLICATION_ID IS NOT NULL 
-                AND DOCUMENT_ID > :start_document_id
-                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+                AND od.DOCUMENT_ID > :start_document_id
+                AND (:end_document_id = 0 OR od.DOCUMENT_ID <= :end_document_id)
             """,
             {
                 "start_document_id": start_document_id,
