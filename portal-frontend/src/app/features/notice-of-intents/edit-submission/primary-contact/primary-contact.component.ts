@@ -128,7 +128,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
   onSelectOwner(uuid: string) {
     this.isDirty = true;
 
-    const selectedOwner = this.parcelOwners.find((owner) => owner.uuid === uuid);
+    const selectedOwner = this.owners.find((owner) => owner.uuid === uuid);
     this.parcelOwners = this.parcelOwners.map((owner) => ({
       ...owner,
       isSelected: owner.uuid === uuid,
@@ -234,21 +234,20 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
     const parcelOwners = [...uniqueParcelOwners.values()];
     const owners = [...parcelOwners, ...nonParcelOwners];
 
-    const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
-    this.parcelOwners = owners.filter((owner) => ![OWNER_TYPE.AGENT, OWNER_TYPE.GOVERNMENT].includes(owner.type.code));
-
     this.parcelOwners = parcelOwners;
     this.owners = owners;
+
+    const selectedOwner = owners.find((owner) => owner.uuid === primaryContactOwnerUuid);
 
     // onSelectOwner only not called on first load of page
     if (selectedOwner) {
       this.onSelectOwner(selectedOwner.uuid);
     } else if (parcelOwners.length === 1) {
       this.onSelectOwner(parcelOwners[0].uuid);
+    } else if (this.isGovernmentUser) {
+      this.onSelectGovernment();
     }
 
-    // Needed for L/FNG user on first load
-    this.selectedLocalGovernment = selectedOwner?.type.code === OWNER_TYPE.GOVERNMENT;
     if (this.selectedLocalGovernment) {
       this.organizationName.setValidators([Validators.required]);
       this.prepareGovernmentOwners();
@@ -258,6 +257,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
     if (this.showErrors) {
       this.form.markAllAsTouched();
+      this.ownersList.markAsTouched();
     }
     this.isDirty = false;
     this.calculateLetterRequired();

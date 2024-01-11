@@ -1,20 +1,28 @@
 <div class="step-description">
   <h2>Proposal</h2>
-  <p>
-    Considerations are subject to
-    <a> Section 6 of the ALC Act. </a>
-  </p>
   <p>*All fields are required unless stated optional or disabled.</p>
+  <app-commission-purposes-panel></app-commission-purposes-panel>
 </div>
 <app-warning-banner>
-  Please consult the '
-  <a
-    href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
-    target="_blank"
-  >
-    What the Commission Considers
-  </a>
-  ' page of the ALC website for more information.
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul class="steps-list">
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#naru"
+        target="_blank"
+      >
+        Non-Adhering Residential Use within the ALR</a
+      >
+    </li>
+  </ul>
 </app-warning-banner>
 <form [formGroup]="form">
   <div class="form-row">
@@ -378,7 +386,14 @@
         <label for="agriTourism"> Describe any agri-tourism that is currently taking place on the property. </label>
         <div class="subtext">Agri-tourism activities are defined in the Agricultural Land Reserve Use Regulation.</div>
         <app-info-banner>
-          Please refer to the <a>FIXME: Non-Adhering Residential</a> Use page on the ALC website for more information
+          Please refer to the
+          <a
+            href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#naru"
+            target="_blank"
+          >
+            Non-Adhering Residential Use</a
+          >
+          page on the ALC website for more information
         </app-info-banner>
         <mat-form-field appearance="outline">
           <textarea
@@ -540,7 +555,7 @@
       </div>
 
       <app-soil-table
-        [disabled]="willImportFill.value === 'false'"
+        [disabled]="willImportFill.value !== 'true'"
         tableHeader="Fill to be Placed"
         [(data)]="fillTableData"
         (dataChange)="markDirty()"

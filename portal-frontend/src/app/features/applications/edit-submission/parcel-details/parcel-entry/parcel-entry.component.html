@@ -220,6 +220,7 @@
       [showErrors]="showErrors"
       [isRequired]="isCertificateOfTitleRequired"
       [showVirusError]="showVirusError"
+      [disabled]="parcelForm.controls.pid.disabled"
     ></app-file-drag-drop>
   </div>
 
@@ -307,9 +308,8 @@
         <mat-radio-group
           color="primary"
           [value]="selectedOwner?.uuid"
-          required
+          [required]="true"
           [ngClass]="{ error: ownerInput.errors && ownerInput.errors['required'] }"
-          formControlName="selectedOwnerVal"
         >
           <mat-radio-button
             *ngFor="let owner of filteredOwners"
