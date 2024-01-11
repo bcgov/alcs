@@ -3,7 +3,8 @@ from noi.notice_of_intent_migration import (
     process_notice_of_intent,
     clean_notice_of_intent,
 )
-from common import setup_and_get_logger, init_alcs_users
+from common import setup_and_get_logger
+from users import init_alcs_users
 
 logger = setup_and_get_logger("noi_import")
 

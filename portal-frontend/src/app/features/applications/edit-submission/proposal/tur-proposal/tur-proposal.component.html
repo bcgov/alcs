@@ -1,10 +1,7 @@
 <div class="step-description">
   <h2>Proposal</h2>
-  <p>
-    Considerations are subject to
-    <a> Section 6 of the ALC Act. </a>
-  </p>
   <p>*All fields are required unless stated optional or disabled.</p>
+  <app-commission-purposes-panel></app-commission-purposes-panel>
   <div class="step-documents">
     <h6>Documents needed for this step:</h6>
     <ul>
@@ -15,7 +12,7 @@
 </div>
 <app-warning-banner>
   In order to complete this step, please consult the following pages on the ALC website:
-  <ul>
+  <ul class="steps-list">
     <li>
       <a
         href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
@@ -25,7 +22,11 @@
       </a>
     </li>
     <li>
-      <a href="TODO" target="_blank">FIXME: Transportation, Utility and Recreational Trail</a>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#tur"
+        target="_blank"
+        >Transportation, Utility and Recreational Trail</a
+      >
     </li>
   </ul>
 </app-warning-banner>
@@ -165,7 +166,17 @@
   <div class="section">
     <mat-label class="subheading2" for="proof-of-serving">Proof of Serving Notice</mat-label>
     <div class="subtext">Proof that all affected property owners with land in the ALR were notified as required.</div>
-    <div class="subtext template-link-container">Visit the <a href="">FIXME:ALC website</a> for more information</div>
+
+    <app-info-banner>
+      Please refer to
+      <a
+        target="_blank"
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#tur"
+      >Transportation, Utility and Recreational Trail</a
+      >
+      page on the ALC website for more information.
+    </app-info-banner>
+
     <app-file-drag-drop
       id="proof-of-serving"
       [uploadedFiles]="servingNotice"

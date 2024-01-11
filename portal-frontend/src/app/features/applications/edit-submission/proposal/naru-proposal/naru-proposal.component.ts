@@ -39,12 +39,30 @@ export class NaruProposalComponent extends FilesStepComponent implements OnInit,
   locationRationale = new FormControl<string | null>(null, [Validators.required]);
   infrastructure = new FormControl<string | null>(null, [Validators.required]);
   existingStructures = new FormControl<string | null>(null, [Validators.required]);
-  willImportFill = new FormControl<string | null>(null, [Validators.required]);
-  fillType = new FormControl<string | null>(null, [Validators.required]);
-  fillOrigin = new FormControl<string | null>(null, [Validators.required]);
-  projectDuration = new FormControl<string | null>(null, [Validators.required]);
   sleepingUnits = new FormControl<string | null>(null, [Validators.required]);
   agriTourism = new FormControl<string | null>(null, [Validators.required]);
+  willImportFill = new FormControl<string | null>(null, [Validators.required]);
+  fillType = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  fillOrigin = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  projectDuration = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
 
   proposalMap: ApplicationDocumentDto[] = [];
   fillTableData: SoilTableData = {};

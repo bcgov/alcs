@@ -8,3 +8,7 @@ from .migrate_application import (
     clean_alcs_applications,
     init_applications,
 )
+
+from .set_hide_from_portal_on_application import (
+    set_hide_from_portal_on_application,
+)

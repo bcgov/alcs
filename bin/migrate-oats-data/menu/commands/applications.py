@@ -3,7 +3,7 @@ from applications import (
     clean_alcs_applications,
     init_applications,
 )
-from common.alcs_init_users import init_alcs_users
+from users.alcs_init_users import init_alcs_users
 
 
 def application_import(console, args):

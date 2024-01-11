@@ -12,7 +12,7 @@ from noi.noi_submission_status_email import (
 from noi import (
     process_notice_of_intent,
 )
-from common.alcs_init_users import init_alcs_users
+from users.alcs_init_users import init_alcs_users
 from documents import (
     import_oats_noi_documents,
     import_oats_app_documents,

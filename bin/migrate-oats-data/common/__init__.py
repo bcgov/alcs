@@ -9,7 +9,6 @@ from .date_time_helper import *
 from .oats_to_alcs_naru_code_enum import *
 from .oats_temp_tables import *
 from .oats_to_alcs_parcel_enum import *
-from .alcs_init_users import *
 from .oats_decision_enum import *
 from .oats_legislation_to_alcs_applicant_enum import *
 from .oats_to_alcs_nfu_type_enum import *

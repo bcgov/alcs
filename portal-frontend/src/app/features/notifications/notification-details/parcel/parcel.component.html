@@ -29,42 +29,44 @@
       {{ parcel.ownershipType?.label }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Legal Description</div>
-    <div class="grid-double">
-      {{ parcel.legalDescription }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.legalDescription"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Approx. Map Area</div>
-    <div class="grid-double">
-      {{ parcel.mapAreaHectares }}
-      <span *ngIf="parcel.mapAreaHectares !== null">ha</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.mapAreaHectares"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
-    </div>
-    <div class="grid-double">
-      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
-      <app-no-data
-        [showRequired]="showErrors && parcel.ownershipType?.code !== PARCEL_OWNERSHIP_TYPES.CROWN"
-        *ngIf="!parcel.pid"
-      ></app-no-data>
-      <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
-        Invalid Format
-      </app-validation-error>
-    </div>
-    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <div class="subheading2 grid-1">PIN (optional)</div>
+    <ng-container *ngIf="parcel.ownershipType">
+      <div class="subheading2 grid-1">Legal Description</div>
       <div class="grid-double">
-        {{ parcel.pin }}
-        <app-no-data [showRequired]="false" *ngIf="!parcel.pin"></app-no-data>
+        {{ parcel.legalDescription }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.legalDescription"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">Approx. Map Area</div>
+      <div class="grid-double">
+        {{ parcel.mapAreaHectares }}
+        <span *ngIf="parcel.mapAreaHectares !== null">ha</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.mapAreaHectares"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">
+        PID {{ parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
+      </div>
+      <div class="grid-double">
+        <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+        <app-no-data
+          [showRequired]="showErrors && parcel.ownershipType.code !== PARCEL_OWNERSHIP_TYPES.CROWN"
+          *ngIf="!parcel.pid"
+        ></app-no-data>
+        <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
+          Invalid Format
+        </app-validation-error>
+      </div>
+      <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <div class="subheading2 grid-1">PIN (optional)</div>
+        <div class="grid-double">
+          {{ parcel.pin }}
+          <app-no-data [showRequired]="false" *ngIf="!parcel.pin"></app-no-data>
+        </div>
+      </ng-container>
+      <div class="subheading2 grid-1">Civic Address</div>
+      <div class="grid-double">
+        {{ parcel.civicAddress }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
       </div>
     </ng-container>
-    <div class="subheading2 grid-1">Civic Address</div>
-    <div class="grid-double">
-      {{ parcel.civicAddress }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
-    </div>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>

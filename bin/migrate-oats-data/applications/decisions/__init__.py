@@ -7,3 +7,5 @@ from .app_components import (
     update_application_decision_component_soil_details,
     clean_application_decision_components,
 )
+
+from .application_decision_update import update_application_decision
