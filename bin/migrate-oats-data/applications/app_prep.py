@@ -375,5 +375,9 @@ def _map_basic_field(data):
         data["submitted_to_alc_date"] = add_timezone_and_keep_date_part(
             data.get("submitted_to_alc_date", None)
         )
+    if data["fee_received_date"]:
+        data["fee_received_date"] = add_timezone_and_keep_date_part(
+            data.get("fee_received_date", None)
+        )
 
     return data
