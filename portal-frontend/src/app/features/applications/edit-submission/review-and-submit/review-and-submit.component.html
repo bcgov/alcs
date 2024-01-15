@@ -15,17 +15,7 @@
     </button>
   </div>
 
-  <div class="button-container">
-    <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <app-button-container [draftMode]="draftMode" [currentStep]="7" (saveExit)="onSaveExit()" [reviewStep]="true"
+  (navigateStep)="onNavigateToStep($event)" (onSubmitToAlcs)="onSubmitToAlcs()"></app-button-container>
 
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">
-        {{ draftMode ? 'Update Submission' : 'Submit' }}
-      </button>
-    </div>
-  </div>
 </section>

@@ -48,6 +48,7 @@ import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 import { CommissionPurposesPanelComponent } from './commission-purposes-panel/commission-purposes-panel.component';
+import { ButtonContainerComponent } from './button-container/button-container.component';
 
 @NgModule({
   providers: [
@@ -98,6 +99,7 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
     CrownOwnerDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
+    ButtonContainerComponent,
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
     FileOverlaySpinnerComponent,
@@ -147,6 +149,7 @@ import { CommissionPurposesPanelComponent } from './commission-purposes-panel/co
     CrownOwnerDialogComponent,
     ParcelOwnersComponent,
     SoilTableComponent,
+    ButtonContainerComponent,
     TableColumnNoDataPipe,
     FileTypeFilterDropDownComponent,
     CommissionPurposesPanelComponent,

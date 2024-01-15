@@ -82,15 +82,5 @@
   </form>
 </section>
 
-<div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
-  <div>
-    <button mat-stroked-button (click)="onNavigateToStep(currentStep - 1)" color="primary">
-      Previous<span class="mobile-hidden"> Step</span>
-    </button>
-    <button mat-flat-button (click)="onNavigateToStep(currentStep + 1)" color="primary">
-      Next<span class="mobile-hidden"> Step</span>
-    </button>
-  </div>
-</div>
+<app-button-container [draftMode]="draftMode" [currentStep]="currentStep" (saveExit)="onSaveExit()"
+    (navigateStep)="onNavigateToStep($event)"></app-button-container>

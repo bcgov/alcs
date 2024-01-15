@@ -205,43 +205,6 @@
         }
       }
     }
-
-    .button-container {
-      position: sticky;
-      bottom: 0;
-      margin-top: rem(40);
-      background-color: colors.$white;
-      display: flex;
-      padding: rem(16) 0;
-      flex-direction: column-reverse;
-      justify-content: space-between;
-      z-index: 2;
-
-      @media screen and (min-width: $tabletBreakpoint) {
-        flex-direction: row;
-        justify-content: space-between;
-      }
-
-      div {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-column-gap: rem(8);
-
-        @media screen and (min-width: $tabletBreakpoint) {
-          display: flex;
-          justify-content: space-between;
-        }
-
-        button {
-          margin-bottom: rem(24) !important;
-
-          @media screen and (min-width: $tabletBreakpoint) {
-            margin-left: rem(24) !important;
-            margin-bottom: 0 !important;
-          }
-        }
-      }
-    }
   }
 
   // parcel entry details

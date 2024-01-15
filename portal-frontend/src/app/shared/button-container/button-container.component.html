@@ -1,0 +1,15 @@
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button class="grid-left-column" mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)" *ngIf="currentStep !== undefined && currentStep !== 0">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button class="grid-right-column" mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)" *ngIf="currentStep !== undefined && !reviewStep">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+    <button class="grid-right-column" mat-flat-button color="primary" (click)="onSubmit()" *ngIf="reviewStep">
+      {{ draftMode ? 'Update Submission' : 'Submit' }}
+    </button>
+  </div>
+</div>

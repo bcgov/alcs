@@ -47,13 +47,6 @@
     <button mat-stroked-button color="primary" (click)="onAddParcel()">Add another parcel</button>
   </div>
 
-  <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <div></div>
-      <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
-    </div>
-  </div>
+  <app-button-container [currentStep]="currentStep" (saveExit)="onSaveExit()"
+    (navigateStep)="onNavigateToStep($event)"></app-button-container>
 </div>

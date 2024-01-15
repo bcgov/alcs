@@ -4,14 +4,6 @@
     [$notificationDocuments]="$notificationDocuments"
   ></app-notification-details>
 
-  <div class="button-container">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(6)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button mat-flat-button color="primary" (click)="onSubmitToAlcs()">Submit</button>
-    </div>
-  </div>
+  <app-button-container [currentStep]="6" (saveExit)="onSaveExit()" [reviewStep]="true"
+    (navigateStep)="onNavigateToStep($event)" (onSubmitToAlcs)="onSubmitToAlcs()"></app-button-container>
 </section>
