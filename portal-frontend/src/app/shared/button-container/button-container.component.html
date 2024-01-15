@@ -1,6 +1,5 @@
 <div class="button-container">
-  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <button (click)="onSaveExit()" mat-stroked-button color="accent">{{ draftMode ? 'Discard all Changes' : 'Save and Exit' }}</button>
   <div>
     <button class="grid-left-column" mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)" *ngIf="currentStep !== undefined && currentStep !== 0">
       Previous<span class="mobile-hidden"> Step</span>
