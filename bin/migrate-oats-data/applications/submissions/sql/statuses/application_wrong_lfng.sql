@@ -13,7 +13,7 @@ wrong_lfng_accomplishments_for_app_only AS (
         oaa.alr_application_id
     FROM oats.oats_alr_applications oaa
         LEFT JOIN last_wlg_per_file_number AS last_wlg ON last_wlg.alr_application_id = oaa.alr_application_id
-    WHERE oaa.application_class_code IN ('LOA', 'BLK')
+    WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 )
 SELECT oats_lfng_wrong.alr_application_id,
     oats_lfng_wrong.accomplishment_code,

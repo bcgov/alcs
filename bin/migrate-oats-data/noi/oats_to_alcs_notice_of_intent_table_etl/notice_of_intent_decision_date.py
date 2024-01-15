@@ -1,4 +1,8 @@
-from common import BATCH_UPLOAD_SIZE, setup_and_get_logger
+from common import (
+    BATCH_UPLOAD_SIZE,
+    setup_and_get_logger,
+    add_timezone_and_keep_date_part,
+)
 from db import inject_conn_pool
 from psycopg2.extras import RealDictCursor, execute_batch
 
@@ -95,5 +99,9 @@ def _get_update_query_from_oats_alr_applications_fields():
 def _prepare_oats_alr_applications_data(row_data_list):
     data_list = []
     for row in row_data_list:
-        data_list.append(dict(row))
+        data = dict(row)
+        data["decision_date"] = add_timezone_and_keep_date_part(
+            row.get("decision_date")
+        )
+        data_list.append(data)
     return data_list

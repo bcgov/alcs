@@ -142,8 +142,8 @@ SELECT
         WHEN atl.code = 'EXT' THEN 'ROSO'
         WHEN atl.code = 'FILL' THEN 'POFO'
         -- WHEN atl.code = 'SRW' THEN 'NARU'
-        -- WHEN atl.code = 'CSC' THEN 'NARU'
         WHEN atl.code = 'NAR' THEN 'NARU'
+        WHEN atl.code = 'CSC' THEN 'COVE'
         ELSE 'NARU'
     END AS type_code,
     CASE
@@ -163,6 +163,7 @@ FROM
     LEFT JOIN application_type_lookup AS atl ON oa.alr_application_id = atl.application_id
 	LEFT JOIN alcs.application_region ar ON panel_lookup.panel_region = ar."label"
     LEFT JOIN alcs_gov ON oa.alr_application_id = alcs_gov.application_id
+WHERE atl.code <> 'SRW' -- filter out SRW type as it is a "notification" type
  
 
 

@@ -38,7 +38,7 @@ WITH
             oats.oats_alr_applications oaa
             LEFT JOIN inp_accomplishment_per_file_number AS inp_accomplishments ON inp_accomplishments.alr_application_id = oaa.alr_application_id
         WHERE
-            oaa.application_class_code IN ('LOA', 'BLK')
+            oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
             AND (oaa.when_created IS NOT NULL)
     ),
     apps_with_one_or_zero_component_only AS (
@@ -48,7 +48,7 @@ WITH
         FROM
             oats.oats_alr_appl_components oaac
             JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
-            AND oaa.application_class_code IN ('LOA', 'BLK')
+            AND oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN') AND oaac.alr_change_code <> 'SRW'
         GROUP BY
             oaac.alr_application_id
         HAVING

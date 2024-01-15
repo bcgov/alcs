@@ -12,4 +12,4 @@ FROM oats.oats_documents od
     JOIN alcs.application_document appd ON appd.oats_document_id::bigint = od.document_id
     JOIN alcs.application_parcel appp ON appp.oats_subject_property_id = osp.subject_property_id
 WHERE od.document_code = 'CT'
-    AND oaa.application_class_code IN ('LOA', 'BLK')
+    AND oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')

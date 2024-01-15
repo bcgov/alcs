@@ -20,7 +20,7 @@ CREATE TABLE oats.alcs_etl_application_exclude (
     component_id INT
 );
     
--- function inserts data into prevoisly created table and decipers duplication of uuids
+-- function inserts data into previously created table and deciphers duplication of uuids
 -- application_id is copied from oats.oats_alr_applications.alr_application_id
 INSERT INTO
             oats.alcs_etl_application_duplicate (application_id, duplicated)
@@ -72,7 +72,8 @@ INSERT INTO oats.alcs_etl_application_exclude (component_id)
                    WHEN 'SDV' THEN 3
                    WHEN 'SCH' THEN 4
                    WHEN 'NFU' THEN 5
-                   ELSE 6
+                   WHEN 'CSC' THEN 6
+                   ELSE 7
                END) AS rank
     FROM duplicate_ids dis
     )

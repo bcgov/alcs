@@ -121,14 +121,22 @@ def import_application_docs(
 
 
 _document_query = """
-                            WITH documents_with_cumulative_file_size AS (
+                            WITH app_docs_without_srw AS (
+                                
+                                    SELECT document_id FROM oats.oats_documents od 
+                                    LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
+                                    WHERE oaac.alr_change_code <> 'SRW'
+                                    GROUP BY od.document_id
+                                    
+                            ),
+                            documents_with_cumulative_file_size AS (
                                         SELECT 
                                             ROW_NUMBER() OVER(
-                                                ORDER BY DOCUMENT_ID ASC
+                                                ORDER BY od.DOCUMENT_ID ASC
                                             ) row_num, 
                                             dbms_lob.getLength(DOCUMENT_BLOB) file_size,
-                                            SUM(dbms_lob.getLength(DOCUMENT_BLOB)) OVER (ORDER BY DOCUMENT_ID ASC ROWS UNBOUNDED PRECEDING) AS cumulative_file_size,
-                                            DOCUMENT_ID,
+                                            SUM(dbms_lob.getLength(DOCUMENT_BLOB)) OVER (ORDER BY od.DOCUMENT_ID ASC ROWS UNBOUNDED PRECEDING) AS cumulative_file_size,
+                                            od.DOCUMENT_ID,
                                             ALR_APPLICATION_ID,
                                             FILE_NAME,
                                             DOCUMENT_BLOB,
@@ -139,28 +147,29 @@ _document_query = """
                                             WHEN_UPDATED,
                                             REVISION_COUNT
                                         FROM
-                                            OATS.OATS_DOCUMENTS
+                                            OATS.OATS_DOCUMENTS od
+                                        JOIN app_docs_without_srw appds ON appds.document_id = od.document_id -- this will filter out all SRW related documents
                                         WHERE
                                             dbms_lob.getLength(DOCUMENT_BLOB) > 0
-                                            AND DOCUMENT_ID > :starting_document_id
-                                            AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+                                            AND od.DOCUMENT_ID > :starting_document_id
+                                            AND (:end_document_id = 0 OR od.DOCUMENT_ID <= :end_document_id)
                                             AND ALR_APPLICATION_ID IS NOT NULL
                                         ORDER BY
                                             DOCUMENT_ID ASC
                                         )
                                         SELECT
                                             file_size,
-                                            DOCUMENT_ID,
+                                            docwc.DOCUMENT_ID,
                                             ALR_APPLICATION_ID,
                                             FILE_NAME,
                                             DOCUMENT_BLOB
                                         FROM
-                                            documents_with_cumulative_file_size
+                                            documents_with_cumulative_file_size docwc
                                         WHERE 
                                             cumulative_file_size < :max_file_size
                                             AND row_num < :batch_size
                                         ORDER BY
-                                            DOCUMENT_ID ASC
+                                            docwc.DOCUMENT_ID ASC
                             """
 
 
@@ -168,12 +177,21 @@ def _get_total_number_of_files(cursor, start_document_id, end_document_id):
     try:
         cursor.execute(
             """
+                WITH app_docs_without_srw AS (
+                    
+                        SELECT document_id FROM oats.oats_documents od 
+                        LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
+                        WHERE oaac.alr_change_code <> 'SRW'
+                        GROUP BY od.document_id
+                        
+                )
                 SELECT COUNT(*) 
-                FROM OATS.OATS_DOCUMENTS 
+                FROM OATS.OATS_DOCUMENTS od
+                JOIN app_docs_without_srw ON app_docs_without_srw.document_id = od.document_id
                 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
                 AND ALR_APPLICATION_ID IS NOT NULL 
-                AND (:start_document_id = 0 OR DOCUMENT_ID > :start_document_id)
-                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+                AND (:start_document_id = 0 OR od.DOCUMENT_ID > :start_document_id)
+                AND (:end_document_id = 0 OR od.DOCUMENT_ID <= :end_document_id)
             """,
             {
                 "start_document_id": start_document_id,
@@ -189,12 +207,21 @@ def _get_total_number_of_transferred_files(cursor, start_document_id, end_docume
     try:
         cursor.execute(
             """
+                WITH app_docs_without_srw AS (
+                    
+                        SELECT document_id FROM oats.oats_documents od 
+                        LEFT JOIN oats.oats_alr_appl_components oaac ON oaac.alr_application_id = od.alr_application_id
+                        WHERE oaac.alr_change_code <> 'SRW'
+                        GROUP BY od.document_id
+                        
+                )
                 SELECT COUNT(*)
-                FROM OATS.OATS_DOCUMENTS 
+                FROM OATS.OATS_DOCUMENTS od
+                JOIN app_docs_without_srw ON app_docs_without_srw.document_id = od.document_id
                 WHERE dbms_lob.getLength(DOCUMENT_BLOB) > 0 
                 AND ALR_APPLICATION_ID IS NOT NULL 
-                AND DOCUMENT_ID > :start_document_id
-                AND (:end_document_id = 0 OR DOCUMENT_ID <= :end_document_id)
+                AND od.DOCUMENT_ID > :start_document_id
+                AND (:end_document_id = 0 OR od.DOCUMENT_ID <= :end_document_id)
             """,
             {
                 "start_document_id": start_document_id,

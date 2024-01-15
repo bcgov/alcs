@@ -23,7 +23,7 @@ latest_in_progress_accomplishments_for_app_only AS (
         oaa.when_created
     FROM oats.oats_alr_applications oaa
         LEFT JOIN latest_in_progress_accomplishment_per_file_number AS latest_in_prog ON latest_in_prog.alr_application_id = oaa.alr_application_id
-    WHERE oaa.application_class_code IN ('LOA', 'BLK')
+    WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 ),
 submission_statuses_to_update AS (
     SELECT count(*)

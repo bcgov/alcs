@@ -99,7 +99,9 @@ ORDER BY
 ```
 
 ```sh
-# start_document_id - starting document id of batch; end_document_id - end document id of batch; last_imported_document_id - the last successfully imported file id of batch. Could be found in [dateTime]_last_imported_application_file.txt or leave it empty and it defaults to 0.
+# start_document_id - starting document id of batch;
+# end_document_id - end document id of batch;
+# last_imported_document_id - the last successfully imported file id of batch. Could be found in [dateTime]_last_imported_application_file.txt or leave it empty and it defaults to 0.
 
 python migrate-files.py application --start_document_id=500240 --end_document_id=505260 --last_imported_document_id=500475
 

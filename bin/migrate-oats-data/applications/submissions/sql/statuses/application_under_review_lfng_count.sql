@@ -13,7 +13,7 @@ lfng_rev_accomplishments_for_app_only AS (
         oaa.alr_application_id
     FROM oats.oats_alr_applications oaa
         LEFT JOIN last_review_per_file_number AS last_rev ON last_rev.alr_application_id = oaa.alr_application_id
-    WHERE oaa.application_class_code IN ('LOA', 'BLK')
+    WHERE oaa.application_class_code IN ('LOA', 'BLK', 'SCH', 'NAN')
 )
 SELECT count(*)
 FROM lfng_rev_accomplishments_for_app_only oats_lfng_rev
