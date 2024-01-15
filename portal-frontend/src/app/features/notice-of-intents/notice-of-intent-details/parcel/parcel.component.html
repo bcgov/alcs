@@ -29,153 +29,168 @@
       {{ parcel.ownershipType?.label }}
       <app-no-data [showRequired]="showErrors" *ngIf="!parcel.ownershipType"></app-no-data>
     </div>
-    <div class="subheading2 grid-1">Legal Description</div>
-    <div class="grid-double">
-      {{ parcel.legalDescription }}
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
-      ></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Approx. Map Area</div>
-    <div class="grid-double">
-      {{ parcel.mapAreaHectares }}
-      <span *ngIf="parcel.mapAreaHectares !== null">ha</span>
-      <app-no-data
-        [showRequired]="showErrors"
-        *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"
-      ></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">
-      PID {{ parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
-    </div>
-    <div class="grid-double">
-      <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
-      <app-no-data [showRequired]="showErrors && !!parcel.validation?.isPidRequired" *ngIf="!parcel.pid"></app-no-data>
-      <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
-        Invalid Format
-      </app-validation-error>
-    </div>
-    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <div class="subheading2 grid-1">PIN (optional)</div>
+    <ng-container *ngIf="parcel.ownershipType">
+      <div class="subheading2 grid-1">Legal Description</div>
       <div class="grid-double">
-        {{ parcel.pin }}
+        {{ parcel.legalDescription }}
         <app-no-data
-          [showRequired]="showErrors && !!parcel.validation?.isPinRequired"
-          *ngIf="!parcel.pin"
+          [showRequired]="showErrors"
+          *ngIf="parcel.validation?.isLegalDescriptionRequired || false"
         ></app-no-data>
       </div>
-    </ng-container>
-    <ng-container *ngIf="parcel.ownershipType?.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
-      <div class="subheading2 grid-1">Purchase Date</div>
+      <div class="subheading2 grid-1">Approx. Map Area</div>
       <div class="grid-double">
-        {{ parcel.purchasedDate | date }}
+        {{ parcel.mapAreaHectares }}
+        <span *ngIf="parcel.mapAreaHectares !== null">ha</span>
         <app-no-data
-          [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
-          *ngIf="!parcel.purchasedDate"
-        >
-        </app-no-data>
+          [showRequired]="showErrors"
+          *ngIf="parcel.validation?.isMapAreaHectaresRequired || false"
+        ></app-no-data>
       </div>
-    </ng-container>
-    <div class="subheading2 grid-1">Farm Classification</div>
-    <div class="grid-double">
-      <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Civic Address</div>
-    <div class="grid-double">
-      {{ parcel.civicAddress }}
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
-    </div>
-    <div class="subheading2 grid-1">Certificate Of Title</div>
-    <div class="grid-double">
-      <div *ngIf="parcel.certificateOfTitle">
-        <a (click)="onOpenFile(parcel.certificateOfTitle.uuid)">{{ parcel.certificateOfTitle.fileName }}</a>
+      <div class="subheading2 grid-1">
+        PID {{ parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.CROWN ? '(optional)' : '' }}
       </div>
-      <app-no-data
-        [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
-        *ngIf="!parcel.validation?.isCertificateUploaded"
-      ></app-no-data>
-    </div>
-
-    <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-      <h5 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h5>
-      <ng-container *ngIf="parcel.owners[0]">
-        <div class="subheading2 grid-1">First Name</div>
+      <div class="grid-double">
+        <span *ngIf="parcel.pid">{{ parcel.pid | mask : '000-000-000' }}</span>
+        <app-no-data
+          [showRequired]="showErrors && !!parcel.validation?.isPidRequired"
+          *ngIf="!parcel.pid"
+        ></app-no-data>
+        <app-validation-error *ngIf="showErrors && parcel.pid && parcel.pid.length < 9">
+          Invalid Format
+        </app-validation-error>
+      </div>
+      <ng-container *ngIf="parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <div class="subheading2 grid-1">PIN (optional)</div>
         <div class="grid-double">
-          {{ parcel.owners[0].firstName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].firstName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Last Name</div>
-        <div class="grid-double">
-          {{ parcel.owners[0].lastName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].lastName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Ministry or Department</div>
-        <div class="grid-double">
-          {{ parcel.owners[0].organizationName }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].organizationName"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Phone</div>
-        <div class="grid-double">
-          {{ parcel.owners[0].phoneNumber }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Email</div>
-        <div class="grid-double">
-          {{ parcel.owners[0].email }}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].email"></app-no-data>
-        </div>
-        <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Type</div>
-        <div class="grid-double">
-          {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : ''}}
-          {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : ''}}
-          <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].crownLandOwnerType"></app-no-data>
+          {{ parcel.pin }}
+          <app-no-data
+            [showRequired]="showErrors && !!parcel.validation?.isPinRequired"
+            *ngIf="!parcel.pin"
+          ></app-no-data>
         </div>
       </ng-container>
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0]"></app-no-data>      
-    </ng-container>
-
-    <div
-      class="full-width owner-information"
-      [ngClass]="{ 'crown-owner-information': parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN }"
-      *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN"
-    >
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Land Owner(s)</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Crown Contact(s)</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
-        Ministry/Department
-      </div>
-      <div class="subheading2">Phone</div>
-      <div class="subheading2">Email</div>
-      <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Corporate Summary</div>
-      <ng-container *ngFor="let owner of parcel.owners">
-        <div>{{ owner.displayName }}</div>
-        <div>
-          <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
-          <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
-        </div>
-        <div>{{ owner.phoneNumber }}</div>
-        <div>{{ owner.email }}</div>
-        <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
-          <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
-            owner.corporateSummary.fileName
-          }}</a>
-          <app-no-data [showRequired]="false" *ngIf="!owner.corporateSummary"></app-no-data>
+      <ng-container *ngIf="parcel.ownershipType.code === PARCEL_OWNERSHIP_TYPES.FEE_SIMPLE">
+        <div class="subheading2 grid-1">Purchase Date</div>
+        <div class="grid-double">
+          {{ parcel.purchasedDate | date }}
+          <app-no-data
+            [showRequired]="showErrors && !!parcel.validation?.isPurchasedDateRequired"
+            *ngIf="!parcel.purchasedDate"
+          >
+          </app-no-data>
         </div>
       </ng-container>
-      <div class="full-width">
-        <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
+      <div class="subheading2 grid-1">Farm Classification</div>
+      <div class="grid-double">
+        <span *ngIf="parcel.isFarm !== null">{{ parcel.isFarm ? 'Yes' : 'No' }}</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="parcel.isFarm === null"></app-no-data>
       </div>
-    </div>
-    <div class="subheading2 grid-1">
-      I confirm that the owner information provided above matches the current Certificate of Title
-    </div>
-    <div class="grid-double">
-      <span *ngIf="parcel.isConfirmedByApplicant">Yes</span>
-      <app-no-data [showRequired]="showErrors" *ngIf="!parcel.isConfirmedByApplicant"></app-no-data>
-    </div>
+      <div class="subheading2 grid-1">Civic Address</div>
+      <div class="grid-double">
+        {{ parcel.civicAddress }}
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.civicAddress"></app-no-data>
+      </div>
+      <div class="subheading2 grid-1">Certificate Of Title</div>
+      <div class="grid-double">
+        <div *ngIf="parcel.certificateOfTitle">
+          <a (click)="onOpenFile(parcel.certificateOfTitle.uuid)">{{ parcel.certificateOfTitle.fileName }}</a>
+        </div>
+        <app-no-data
+          [showRequired]="showErrors && !!parcel.validation?.isCertificateRequired"
+          *ngIf="!parcel.validation?.isCertificateUploaded"
+        ></app-no-data>
+      </div>
+
+      <ng-container *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+        <h5 *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Government Parcel Contact</h5>
+        <ng-container *ngIf="parcel.owners[0]">
+          <div class="subheading2 grid-1">First Name</div>
+          <div class="grid-double">
+            {{ parcel.owners[0].firstName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].firstName"></app-no-data>
+          </div>
+          <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+            Last Name
+          </div>
+          <div class="grid-double">
+            {{ parcel.owners[0].lastName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].lastName"></app-no-data>
+          </div>
+          <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+            Ministry or Department
+          </div>
+          <div class="grid-double">
+            {{ parcel.owners[0].organizationName }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].organizationName"></app-no-data>
+          </div>
+          <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Phone</div>
+          <div class="grid-double">
+            {{ parcel.owners[0].phoneNumber }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].phoneNumber"></app-no-data>
+          </div>
+          <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">Email</div>
+          <div class="grid-double">
+            {{ parcel.owners[0].email }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].email"></app-no-data>
+          </div>
+          <div class="subheading2 grid-1" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+            Crown Type
+          </div>
+          <div class="grid-double">
+            {{ parcel.owners[0].crownLandOwnerType === 'provincial' ? 'Provincial Crown' : '' }}
+            {{ parcel.owners[0].crownLandOwnerType === 'federal' ? 'Federal Crown' : '' }}
+            <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0].crownLandOwnerType"></app-no-data>
+          </div>
+        </ng-container>
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.owners[0]"></app-no-data>
+      </ng-container>
+
+      <div
+        class="full-width owner-information"
+        [ngClass]="{ 'crown-owner-information': parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN }"
+        *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN"
+      >
+        <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Land Owner(s)</div>
+        <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+          Crown Contact(s)
+        </div>
+        <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">Organization</div>
+        <div class="subheading2" *ngIf="parcel.ownershipTypeCode === PARCEL_OWNERSHIP_TYPES.CROWN">
+          Ministry/Department
+        </div>
+        <div class="subheading2">Phone</div>
+        <div class="subheading2">Email</div>
+        <div class="subheading2" *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
+          Corporate Summary
+        </div>
+        <ng-container *ngFor="let owner of parcel.owners">
+          <div>{{ owner.displayName }}</div>
+          <div>
+            <span *ngIf="owner.organizationName"></span>{{ owner.organizationName }}
+            <app-no-data [showRequired]="false" *ngIf="!owner.organizationName"></app-no-data>
+          </div>
+          <div>{{ owner.phoneNumber }}</div>
+          <div>{{ owner.email }}</div>
+          <div *ngIf="parcel.ownershipTypeCode !== PARCEL_OWNERSHIP_TYPES.CROWN">
+            <a *ngIf="owner.corporateSummary" (click)="onOpenFile(owner.corporateSummary.uuid)">{{
+              owner.corporateSummary.fileName
+            }}</a>
+            <app-no-data [showRequired]="false" *ngIf="!owner.corporateSummary"></app-no-data>
+          </div>
+        </ng-container>
+        <div class="full-width">
+          <app-no-data [showRequired]="showErrors" *ngIf="parcel.owners.length === 0"></app-no-data>
+        </div>
+      </div>
+      <div class="subheading2 grid-1">
+        I confirm that the owner information provided above matches the current Certificate of Title
+      </div>
+      <div class="grid-double">
+        <span *ngIf="parcel.isConfirmedByApplicant">Yes</span>
+        <app-no-data [showRequired]="showErrors" *ngIf="!parcel.isConfirmedByApplicant"></app-no-data>
+      </div>
+    </ng-container>
   </ng-container>
   <div *ngIf="showEdit" class="edit-button">
     <button mat-flat-button (click)="onEditParcelsClick($event)" color="accent">Edit Section</button>

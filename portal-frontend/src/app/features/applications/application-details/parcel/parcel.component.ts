@@ -55,7 +55,6 @@ export class ParcelComponent {
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
 
-  pageTitle: string = '1. Identify Parcel(s) Under Application';
   showCertificateOfTitle: boolean = true;
   navigationStepInd = 0;
 
@@ -67,7 +66,6 @@ export class ParcelComponent {
   constructor(
     private applicationParcelService: ApplicationParcelService,
     private applicationDocumentService: ApplicationDocumentService,
-    private ownerService: ApplicationOwnerService,
     private router: Router
   ) {}
 
