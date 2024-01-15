@@ -2,7 +2,8 @@
   <div class="type">
     <mat-label>Select parcel type:</mat-label>
     <div class="subtext">
-      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands.  Crown land includes crown leases.
+      Fee simple includes privately-owned parcels and parcels within First Nation treaty lands. Crown land includes
+      crown leases.
     </div>
     <mat-button-toggle-group
       class="input"
@@ -47,15 +48,13 @@
             mat-flat-button
             color="primary"
             (click)="onSearch()"
-            [disabled]="!parcelType.getRawValue() || _disabled || (!!isCrownLand && !searchBy.getRawValue())"
+            [disabled]="!parcelType.getRawValue() || (!!isCrownLand && !searchBy.getRawValue())"
           >
             Search
           </button>
         </div>
         <div class="lookup-bottom-row">
-          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()" [disabled]="_disabled">
-            Reset
-          </button>
+          <button class="reset-button" mat-stroked-button color="accent" (click)="onReset()">Reset</button>
           <span class="float-right">
             <a class="subtext" href=" https://ltsa.ca/products-services/parcelmap-bc/" target="_blank" rel="noreferrer">
               Powered by PMBC!

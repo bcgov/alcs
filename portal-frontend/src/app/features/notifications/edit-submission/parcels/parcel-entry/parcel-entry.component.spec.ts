@@ -14,7 +14,6 @@ describe('ParcelEntryComponent', () => {
   let fixture: ComponentFixture<ParcelEntryComponent>;
   let mockParcelService: DeepMocked<ParcelService>;
   let mockHttpClient: DeepMocked<HttpClient>;
-  let mockNotificationParcelService: DeepMocked<NotificationParcelService>;
 
   let mockParcel: NotificationParcelDto = {
     uuid: '',
@@ -23,7 +22,6 @@ describe('ParcelEntryComponent', () => {
   beforeEach(async () => {
     mockParcelService = createMock();
     mockHttpClient = createMock();
-    mockNotificationParcelService = createMock();
 
     await TestBed.configureTestingModule({
       imports: [MatAutocompleteModule],
@@ -36,10 +34,6 @@ describe('ParcelEntryComponent', () => {
         {
           provide: HttpClient,
           useValue: mockHttpClient,
-        },
-        {
-          provide: NotificationParcelService,
-          useValue: mockNotificationParcelService,
         },
         {
           provide: MatDialog,

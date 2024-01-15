@@ -33,28 +33,50 @@ export class ParcelEntryComponent implements OnInit {
   @Input() submissionUuid!: string;
 
   @Input() showErrors = false;
-  @Input() _disabled = false;
   @Input() isDraft = false;
 
-  @Input()
-  public set disabled(disabled: boolean) {
-    this._disabled = disabled;
-    this.onFormDisabled();
-  }
-
   @Output() private onFormGroupChange = new EventEmitter<Partial<ParcelEntryFormData>>();
-  @Output() private onSaveProgress = new EventEmitter<void>();
 
   searchBy = new FormControl<string | null>(null);
   isCrownLand: boolean | null = null;
 
-  pidPin = new FormControl<string>('');
-  legalDescription = new FormControl<string | null>(null, [Validators.required]);
-  mapArea = new FormControl<string | null>(null, [Validators.required]);
-  pid = new FormControl<string | null>(null, [Validators.required]);
-  pin = new FormControl<string | null>(null);
-  civicAddress = new FormControl<string | null>(null, [Validators.required]);
   parcelType = new FormControl<string | null>(null, [Validators.required]);
+  pidPin = new FormControl<string>({
+    disabled: true,
+    value: '',
+  });
+  legalDescription = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  mapArea = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  pid = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
+  pin = new FormControl<string | null>({
+    disabled: true,
+    value: null,
+  });
+  civicAddress = new FormControl<string | null>(
+    {
+      disabled: true,
+      value: null,
+    },
+    [Validators.required]
+  );
   parcelForm = new FormGroup({
     pidPin: this.pidPin,
     legalDescription: this.legalDescription,
@@ -67,16 +89,9 @@ export class ParcelEntryComponent implements OnInit {
   });
   pidPinPlaceholder = '';
 
-  ownerInput = new FormControl<string | null>(null);
-
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
-  maxPurchasedDate = new Date();
 
-  constructor(
-    private parcelService: ParcelService,
-    private notificationParcelService: NotificationParcelService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private parcelService: ParcelService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.setupForm();
@@ -136,6 +151,8 @@ export class ParcelEntryComponent implements OnInit {
     const dirtyForm =
       this.legalDescription.value || this.mapArea.value || this.pid.value || this.pin.value || this.civicAddress.value;
 
+    this.parcelForm.enable();
+
     const changeParcelType = () => {
       if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
         this.searchBy.setValue(null);
@@ -189,6 +206,10 @@ export class ParcelEntryComponent implements OnInit {
       parcelType: this.parcel.ownershipTypeCode,
     });
 
+    if (this.parcel.ownershipType) {
+      this.parcelForm.enable();
+    }
+
     this.isCrownLand = this.parcelType.value
       ? this.parcelType.getRawValue() === this.PARCEL_OWNERSHIP_TYPES.CROWN
       : null;
@@ -210,7 +231,7 @@ export class ParcelEntryComponent implements OnInit {
         return;
       }
 
-      if ((this.isCrownLand && !this.searchBy.getRawValue()) || this.disabled) {
+      if (this.isCrownLand && !this.searchBy.getRawValue()) {
         this.pidPin.disable({
           emitEvent: false,
         });
@@ -225,16 +246,6 @@ export class ParcelEntryComponent implements OnInit {
         uuid: this.parcel.uuid,
       });
     });
-  }
-
-  private onFormDisabled() {
-    if (this._disabled) {
-      this.parcelForm.disable();
-      this.ownerInput.disable();
-    } else {
-      this.parcelForm.enable();
-      this.ownerInput.enable();
-    }
   }
 
   onChangeSearchBy(value: string) {

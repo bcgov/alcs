@@ -68,7 +68,10 @@ export class ParcelEntryComponent implements OnInit {
   showVirusError = false;
 
   parcelType = new FormControl<string | null>(null, [Validators.required]);
-  pidPin = new FormControl<string>('');
+  pidPin = new FormControl<string>({
+    disabled: true,
+    value: '',
+  });
   legalDescription = new FormControl<string | null>(
     {
       disabled: true,
@@ -141,7 +144,10 @@ export class ParcelEntryComponent implements OnInit {
   pidPinPlaceholder = '';
   selectedOwner?: NoticeOfIntentOwnerDto = undefined;
 
-  ownerInput = new FormControl<string | null>(null);
+  ownerInput = new FormControl<string | null>({
+    disabled: true,
+    value: null,
+  });
 
   PARCEL_OWNERSHIP_TYPES = PARCEL_OWNERSHIP_TYPE;
   maxPurchasedDate = new Date();
@@ -243,6 +249,7 @@ export class ParcelEntryComponent implements OnInit {
       this.civicAddress.value;
 
     this.parcelForm.enable();
+    this.ownerInput.enable();
 
     const changeParcelType = () => {
       if ($event.value === this.PARCEL_OWNERSHIP_TYPES.CROWN) {
@@ -473,6 +480,7 @@ export class ParcelEntryComponent implements OnInit {
 
     if (this.parcel.ownershipTypeCode) {
       this.parcelForm.enable();
+      this.ownerInput.enable();
     }
 
     this.isCrownLand = this.parcelType.value

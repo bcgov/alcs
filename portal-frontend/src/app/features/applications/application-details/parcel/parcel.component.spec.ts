@@ -14,12 +14,10 @@ describe('ParcelComponent', () => {
   let fixture: ComponentFixture<ParcelComponent>;
 
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
-  let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockAppDocService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockApplicationParcelService = createMock();
-    mockAppOwnerService = createMock();
     mockAppDocService = createMock();
 
     await TestBed.configureTestingModule({
@@ -28,10 +26,6 @@ describe('ParcelComponent', () => {
         {
           provide: ApplicationParcelService,
           useValue: mockApplicationParcelService,
-        },
-        {
-          provide: ApplicationOwnerService,
-          useValue: mockAppOwnerService,
         },
         {
           provide: ApplicationDocumentService,
