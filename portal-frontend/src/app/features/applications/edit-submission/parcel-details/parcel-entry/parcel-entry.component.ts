@@ -263,8 +263,9 @@ export class ParcelEntryComponent implements OnInit {
         this.purchaseDate.enable();
       }
 
-      this.updateParcelOwners([]);
       this.filteredOwners = this.mapOwners(this.owners);
+      this.selectedOwner = undefined;
+      this.updateParcelOwners([]);
       this.pid.updateValueAndValidity();
     };
 
