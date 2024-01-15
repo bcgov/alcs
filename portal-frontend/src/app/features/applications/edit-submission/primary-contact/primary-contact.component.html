@@ -40,58 +40,60 @@
       <!-- Existing owner -->
       <div class="form-row" *ngIf="!selectedThirdPartyAgent && !selectedLocalGovernment">
         <div class="full-row">
-          <label *ngIf="parcelOwners.length > 0"
-            >Select a Primary Contact from the listed land owners
-            <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
-          >
-          <mat-radio-group
-            [formControl]="ownersList"
-            color="primary"
-            (change)="onSelectOwner($event.value)"
-            required
-            [ngClass]="{ error: ownersList.invalid && (ownersList.dirty || ownersList.touched) }"
-          >
-            <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
-              {{ owner.firstName }} {{ owner.lastName }}
-            </mat-radio-button>
-          </mat-radio-group>
-          <div *ngIf="ownersList.invalid && (ownersList.dirty || ownersList.touched)" class="field-error">
-            <mat-icon>warning</mat-icon>
-            <div *ngIf="ownersList.errors?.['required']">This field is required</div>
-          </div>
+          <ng-container *ngIf="parcelOwners.length > 0">
+            <label
+              >Select a Primary Contact from the listed land owners
+              <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
+            >
+            <mat-radio-group
+              [formControl]="ownersList"
+              color="primary"
+              (change)="onSelectOwner($event.value)"
+              required
+              [ngClass]="{ error: ownersList.invalid && (ownersList.dirty || ownersList.touched) }"
+            >
+              <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
+                {{ owner.firstName }} {{ owner.lastName }}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="ownersList.invalid && (ownersList.dirty || ownersList.touched)" class="field-error">
+              <mat-icon>warning</mat-icon>
+              <div *ngIf="ownersList.errors?.['required']">This field is required</div>
+            </div>
 
-          <div
-            id="owner-info"
-            class="warning-banner"
-            *ngIf="selectedOwnerUuid && !selectedThirdPartyAgent && !selectedLocalGovernment"
-          >
-            <div class="owner-details">
-              <div class="row">
-                <div class="key"><strong>First Name:</strong></div>
-                <div class="value">{{ firstName.value }}</div>
-              </div>
-              <div class="row">
-                <div class="key"><strong>Last Name:</strong></div>
-                <div class="value">{{ lastName.value }}</div>
-              </div>
-              <div *ngIf="organizationName.value" class="row">
-                <div *ngIf="!isCrownOwner && !isGovernmentUser" class="key"><strong>Organization:</strong></div>
-                <div *ngIf="isCrownOwner" class="key"><strong>Ministry/Department:</strong></div>
-                <div class="value">{{ organizationName.value }}</div>
-              </div>
-              <div class="row">
-                <div class="key"><strong>Phone Number:</strong></div>
-                <div class="value">{{ phoneNumber.value }}</div>
-              </div>
-              <div class="row">
-                <div class="key"><strong>Email:</strong></div>
-                <div class="value">{{ email.value }}</div>
-              </div>
-              <div class="row">
-                <button mat-flat-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
+            <div
+              id="owner-info"
+              class="warning-banner"
+              *ngIf="selectedOwnerUuid && !selectedThirdPartyAgent && !selectedLocalGovernment"
+            >
+              <div class="owner-details">
+                <div class="row">
+                  <div class="key"><strong>First Name:</strong></div>
+                  <div class="value">{{ firstName.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Last Name:</strong></div>
+                  <div class="value">{{ lastName.value }}</div>
+                </div>
+                <div *ngIf="organizationName.value" class="row">
+                  <div *ngIf="!isCrownOwner && !isGovernmentUser" class="key"><strong>Organization:</strong></div>
+                  <div *ngIf="isCrownOwner" class="key"><strong>Ministry/Department:</strong></div>
+                  <div class="value">{{ organizationName.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Phone Number:</strong></div>
+                  <div class="value">{{ phoneNumber.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Email:</strong></div>
+                  <div class="value">{{ email.value }}</div>
+                </div>
+                <div class="row">
+                  <button mat-flat-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
+                </div>
               </div>
             </div>
-          </div>
+          </ng-container>
 
           <app-warning-banner *ngIf="parcelOwners.length === 0 && !selectedThirdPartyAgent && !isGovernmentUser">
             No landowners or government contacts are added. Please go back to Step 1 to add information.
