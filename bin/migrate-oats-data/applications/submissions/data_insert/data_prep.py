@@ -60,6 +60,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
         if data["alr_appl_component_id"] in soil_data:
             data = map_soil_data(data, soil_data)
         if data["alr_change_code"] == ALRChangeCode.NFU.value:
+            data = _map_duration_field(data, "fill_duration")
             nfu_data_list.append(data)
         elif (
             data["alr_change_code"] == ALRChangeCode.EXC.value
@@ -70,6 +71,7 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
             data["rsdntl_use_type_code"] = str(
                 OatsToAlcsNaruType[data["rsdntl_use_type_code"]].value
             )
+            data = _map_duration_field(data, "fill_duration")
             naru_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.TUR.value:
             tur_data_list.append(data)
@@ -81,6 +83,8 @@ def prepare_app_sub_data(app_sub_raw_data_list, direction_data, subdiv_data, soi
         ):
             soil_data_list.append(data)
         elif data["alr_change_code"] == ALRChangeCode.SCH.value:
+            data = _map_duration_field(data, "remove_duration")
+            data = _map_duration_field(data, "fill_duration")
             pfrs_data_list.append(data)
         else:
             other_data_list.append(data)
@@ -115,3 +119,9 @@ def get_soil_data(rows, cursor):
     soil_rows = get_soil_rows(rows, cursor)
     soil_data = create_soil_dict(soil_rows)
     return soil_data
+
+
+def _map_duration_field(data, field_key):
+    duration = data.get(field_key)
+    data[field_key] = f"{duration} months" if duration is not None else None
+    return data
