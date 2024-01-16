@@ -15,7 +15,7 @@ logger = setup_and_get_logger(etl_name)
 @inject_conn_pool
 def init_application_conditions(conn=None, batch_size=BATCH_UPLOAD_SIZE):
     """
-    This function is responsible for initializing the application_conditions in ALCS.
+    This function is responsible for initializing the application_decision_condition in ALCS.
 
     Args:
     conn (psycopg2.extensions.connection): PostgreSQL database connection. Provided by the decorator.
