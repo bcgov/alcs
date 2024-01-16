@@ -19,6 +19,7 @@ from documents import (
     link_alcs_docs_to_noi_docs,
     link_alcs_docs_to_app_docs,
 )
+from staf_journal_users import populate_default_staff_journal_user
 
 
 def import_all(console, args):
@@ -57,6 +58,9 @@ def import_all(console, args):
 
         console.log("Processing notice of intents")
         process_notice_of_intent(batch_size=import_batch_size)
+
+        console.log("Processing staff journal users")
+        populate_default_staff_journal_user(batch_size=import_batch_size)
 
         # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
         #       must be the last ones in the migrate etl
