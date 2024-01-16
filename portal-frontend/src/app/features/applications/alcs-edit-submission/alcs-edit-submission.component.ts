@@ -197,7 +197,6 @@ export class AlcsEditSubmissionComponent implements OnInit, OnDestroy, AfterView
   }
 
   private async saveProposalSteps() {
-    console.log('here');
     if (this.nfuProposalComponent) {
       await this.nfuProposalComponent.onSave();
     }
