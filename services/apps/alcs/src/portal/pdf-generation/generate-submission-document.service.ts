@@ -228,7 +228,7 @@ export class GenerateSubmissionDocumentService {
     );
 
     const data = {
-      noData: 'No Data',
+      noData: NO_DATA,
       generatedDateTime: dayjs
         .tz(new Date(), 'Canada/Pacific')
         .format('MMM DD, YYYY hh:mm:ss Z'),
@@ -238,11 +238,11 @@ export class GenerateSubmissionDocumentService {
       localGovernment: localGovernment?.name,
       status: submission.status.statusType,
       applicant: submission.applicant,
-      hasOtherParcelsInCommunity: formatBooleanToYesNoString(
-        submission.hasOtherParcelsInCommunity,
-      ),
+      hasOtherParcelsInCommunity:
+        formatBooleanToYesNoString(submission.hasOtherParcelsInCommunity) ??
+        NO_DATA,
       otherParcelsDescription: submission.otherParcelsDescription,
-      selectedThirdPartyAgent: primaryContact?.type.code !== OWNER_TYPE.AGENT,
+      selectedThirdPartyAgent: primaryContact?.type.code === OWNER_TYPE.AGENT,
       primaryContact,
       primaryContactType: primaryContact?.type?.label,
       organizationText:
