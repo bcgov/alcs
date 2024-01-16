@@ -14,6 +14,7 @@ import {
 } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_TYPE } from '../../document/document-code.entity';
@@ -73,15 +74,13 @@ export class GenerateSubmissionDocumentService {
     const template = await this.getPdfTemplateBySubmissionType(submission);
 
     if (template) {
-      const pdf = await this.documentGenerationService.generateDocument(
+      return await this.documentGenerationService.generateDocument(
         `${fileNumber}_submission_Date_Time`,
         `${config.get<string>('CDOGS.TEMPLATE_FOLDER')}/${
           template.templateName
         }`,
         template.payload,
       );
-
-      return pdf;
     }
     return;
   }
@@ -195,7 +194,7 @@ export class GenerateSubmissionDocumentService {
       submission.fileNumber,
     );
 
-    let localGovernment;
+    let localGovernment: LocalGovernment | undefined;
     if (submission.localGovernmentUuid) {
       localGovernment = await this.localGovernmentService.getByUuid(
         submission.localGovernmentUuid,
@@ -224,6 +223,10 @@ export class GenerateSubmissionDocumentService {
         ].includes((e.typeCode ?? 'undefined') as DOCUMENT_TYPE),
     );
 
+    const proposalMap = documents.filter(
+      (document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+
     const data = {
       noData: 'No Data',
       generatedDateTime: dayjs
@@ -235,11 +238,19 @@ export class GenerateSubmissionDocumentService {
       localGovernment: localGovernment?.name,
       status: submission.status.statusType,
       applicant: submission.applicant,
+      hasOtherParcelsInCommunity: formatBooleanToYesNoString(
+        submission.hasOtherParcelsInCommunity,
+      ),
+      otherParcelsDescription: submission.otherParcelsDescription,
+      selectedThirdPartyAgent: primaryContact?.type.code !== OWNER_TYPE.AGENT,
       primaryContact,
+      primaryContactType: primaryContact?.type?.label,
       organizationText:
         primaryContact?.type.code === OWNER_TYPE.CROWN
           ? 'Ministry/Department Responsible'
           : 'Organization (If Applicable)',
+      isGovernmentSetup:
+        !localGovernment || localGovernment.bceidBusinessGuid !== null,
 
       // Land use
       parcelsAgricultureDescription: submission.parcelsAgricultureDescription,
@@ -255,6 +266,9 @@ export class GenerateSubmissionDocumentService {
       southLandUseTypeDescription: submission.southLandUseTypeDescription,
       westLandUseType: submission.westLandUseType,
       westLandUseTypeDescription: submission.westLandUseTypeDescription,
+
+      //Common File Types
+      proposalMap: proposalMap.find((d) => d)?.document.fileName,
 
       // Other attachments
       otherAttachments: otherDocuments.map((e) => ({
@@ -319,9 +333,6 @@ export class GenerateSubmissionDocumentService {
     const servingNotice = documents.filter(
       (document) => document.type?.code === DOCUMENT_TYPE.SERVING_NOTICE,
     );
-    const proposalMap = documents.filter(
-      (document) => document.type?.code === DOCUMENT_TYPE.PROPOSAL_MAP,
-    );
 
     pdfData = {
       ...pdfData,
@@ -332,7 +343,6 @@ export class GenerateSubmissionDocumentService {
       turOutsideLands: submission.turOutsideLands,
       turTotalCorridorArea: submission.turTotalCorridorArea,
       servingNotice: servingNotice.find((d) => d)?.document.fileName,
-      proposalMap: proposalMap.find((d) => d)?.document.fileName,
     };
 
     return pdfData;
