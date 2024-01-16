@@ -9,29 +9,8 @@
 </ng-template>
 
 <ng-template #menu let-stepper="stepper">
-  <div class="menu">
-    <button (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <div *ngIf="stepper.selectedIndex === 0"></div>
-      <button
-        *ngIf="stepper.selectedIndex > 0"
-        mat-stroked-button
-        color="primary"
-        (click)="onNavigateToStep(stepper.selectedIndex - 1)"
-      >
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button
-        class="next-step"
-        *ngIf="!isOnLastStep"
-        mat-flat-button
-        color="primary"
-        (click)="onNavigateToStep(stepper.selectedIndex + 1)"
-      >
-        Next<span class="mobile-hidden"> Step</span>
-      </button>
-    </div>
-  </div>
+  <app-button-container [currentStep]="stepper.selectedIndex" (saveExit)="onSaveExit()"
+    (navigateStep)="onNavigateToStep($event)"></app-button-container>
 </ng-template>
 
 <app-custom-stepper

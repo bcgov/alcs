@@ -505,13 +505,6 @@
   <div>
     <button (click)="onDownloadPdf()" mat-flat-button color="primary">Download PDF</button>
   </div>
-  <div class="menu">
-    <button (click)="onExit()" mat-stroked-button color="accent">Save and Exit</button>
-    <div>
-      <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
-        Previous<span class="mobile-hidden"> Step</span>
-      </button>
-      <button (click)="onSubmit()" mat-flat-button color="primary">Submit</button>
-    </div>
-  </div>
+  <app-button-container [currentStep]="currentStep" (saveExit)="onExit()" [reviewStep]="true"
+    (navigateStep)="onNavigateToStep($event)" (onSubmitToAlcs)="onSubmit()"></app-button-container>
 </div>
