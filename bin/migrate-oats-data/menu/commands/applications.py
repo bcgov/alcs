@@ -25,7 +25,7 @@ def application_import(console, args):
         init_applications(batch_size=import_batch_size)
         init_alcs_users(batch_size=import_batch_size)
         process_application_etl(batch_size=import_batch_size)
-        populate_default_staff_journal_user(batch_size=import_batch_size)
+        populate_default_staff_journal_user()
 
 
 def application_clean(console):

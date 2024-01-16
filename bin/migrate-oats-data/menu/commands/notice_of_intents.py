@@ -26,7 +26,7 @@ def notice_of_intent_import(console, args):
         init_notice_of_intents(batch_size=import_batch_size)
         init_alcs_users(batch_size=import_batch_size)
         process_notice_of_intent(batch_size=import_batch_size)
-        populate_default_staff_journal_user(batch_size=import_batch_size)
+        populate_default_staff_journal_user()
 
 
 def notice_of_intent_clean(console):

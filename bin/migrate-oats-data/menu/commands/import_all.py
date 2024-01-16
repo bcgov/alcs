@@ -60,7 +60,7 @@ def import_all(console, args):
         process_notice_of_intent(batch_size=import_batch_size)
 
         console.log("Processing staff journal users")
-        populate_default_staff_journal_user(batch_size=import_batch_size)
+        populate_default_staff_journal_user()
 
         # NOTE: both process_application_submission_status_emails(), process_notice_of_intent_submission_status_emails()
         #       must be the last ones in the migrate etl
