@@ -92,15 +92,6 @@ export class ApplicationDecisionCondition extends Base {
   })
   components: ApplicationDecisionComponent[] | null;
 
-  @Column({
-    select: false,
-    nullable: true,
-    type: 'int8',
-    comment:
-      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_conditions to alcs.application_decision_condition.',
-  })
-  oatsConditionId: number;
-
   @OneToMany(
     () => ApplicationDecisionConditionComponentPlanNumber,
     (c) => c.condition,
