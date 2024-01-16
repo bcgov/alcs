@@ -15,7 +15,7 @@ from documents import (
     clean_documents,
     clean_noi_documents,
 )
-from staf_journal_users import clean_staff_journal_users
+from staff_journal_users import clean_staff_journal_users
 
 def clean_all(console, args):
     with console.status("[bold green]Cleaning previous ETL...\n") as status:

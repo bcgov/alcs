@@ -5,7 +5,7 @@ from noi.notice_of_intent_migration import (
 )
 from common import setup_and_get_logger
 from users import init_alcs_users
-from staf_journal_users import (
+from staff_journal_users import (
     clean_staff_journal_users,
     populate_default_staff_journal_user,
 )

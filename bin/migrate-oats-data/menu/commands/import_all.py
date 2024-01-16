@@ -19,7 +19,7 @@ from documents import (
     link_alcs_docs_to_noi_docs,
     link_alcs_docs_to_app_docs,
 )
-from staf_journal_users import populate_default_staff_journal_user
+from staff_journal_users import populate_default_staff_journal_user
 
 
 def import_all(console, args):
