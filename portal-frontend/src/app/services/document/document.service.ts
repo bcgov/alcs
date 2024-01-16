@@ -54,7 +54,7 @@ export class DocumentService {
   ) {
     if (file.size > environment.maxFileSize) {
       const niceSize = environment.maxFileSize / 1048576;
-      this.toastService.showWarningToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
+      this.toastService.showErrorToast(`Maximum file size is ${niceSize}MB, please choose a smaller file`);
       return undefined;
     }
 
