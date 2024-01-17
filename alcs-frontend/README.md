@@ -2,9 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.5.
 
+## Run alcs
 
-## Run alcs 
-Run `npm install --legacy-peer-deps` 
+Run `npm install --legacy-peer-deps`
 Run `npm run start`
 
 ## Code scaffolding
