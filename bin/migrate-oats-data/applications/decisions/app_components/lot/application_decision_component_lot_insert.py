@@ -32,7 +32,7 @@ def init_application_component_lots(conn=None, batch_size=BATCH_UPLOAD_SIZE):
             count_total = dict(cursor.fetchone())["count"]
         logger.info(f"Total Application Component Lots data to insert: {count_total}")
 
-        failed_inserts = 0
+        failed_inserts_count = 0
         successful_inserts_count = 0
         last_parcel_intent_id = 0
 
@@ -68,11 +68,11 @@ def init_application_component_lots(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                 except Exception as err:
                     logger.exception(err)
                     conn.rollback()
-                    failed_inserts = count_total - successful_inserts_count
+                    failed_inserts_count = count_total - successful_inserts_count
                     last_parcel_intent_id = last_parcel_intent_id + 1
 
     logger.info(
-        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts}"
+        f"Finished {etl_name}: total amount of successful inserts {successful_inserts_count}, total failed inserts {failed_inserts_count}"
     )
 
 
