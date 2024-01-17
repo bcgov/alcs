@@ -7,12 +7,10 @@ WHERE status_type_code = 'SUIN'
     AND effective_date IS NOT NULL;
 -- total count of expected 'AKI' - Submitted to ALC Incomplete status
 WITH noi_components_grouped AS (
-    SELECT oaac.alr_application_id
-    FROM oats.oats_alr_appl_components oaac
-        JOIN oats.oats_alr_applications oaa ON oaa.alr_application_id = oaac.alr_application_id
+    SELECT oaa.alr_application_id
+    FROM oats.alcs_etl_applications_nois oaa
     WHERE oaa.application_class_code = 'NOI'
-    GROUP BY oaac.alr_application_id
-    HAVING count(oaac.alr_application_id) < 2 -- ignore notice of intents with multiple components
+        and oaa.alr_change_code <> 'SRW'
 )
 SELECT count(*)
 FROM noi_components_grouped ncg
