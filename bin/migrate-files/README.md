@@ -135,3 +135,35 @@ python3-intel64 migrate-files.py issue
 ```
 
 The script will start uploading files from the Oracle database to DELL ECS. The upload progress will be displayed in a progress bar. For Planning and Issues documents the script will also save the last uploaded document id, so the upload process can be resumed from where it left off in case of any interruption. For Application documents import it is responsibility of whoever is running the process to specify "last_imported_document_id"
+
+## Windows
+
+### Prerequisites
+
+- python is installed and configured
+- python virtual environment activated in .\bin\migrate-files folder
+- navigate to migrate-files folder
+
+### How to run
+- navigate to migrate files
+```cmd
+cd .\bin\migrate-files
+```
+
+- activate python virtual environment
+
+```cmd
+.\venv\Scripts\activate
+```
+
+- install requirements if this is the first run
+
+```cmd
+pip install -r requirements
+```
+
+- run import for application document (for other options refer to command line documentation of import command)
+
+```cmd
+python migrate-files.py application
+```
