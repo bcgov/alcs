@@ -1,11 +1,3 @@
-<div *ngIf="submission && submission.canEdit" class="action-bar">
-  <button [routerLink]="'/notification/' + submission.fileNumber + '/edit'" mat-button>
-    <div>
-      <span class="subheading2">Continue SRW </span>
-      <mat-icon>keyboard_double_arrow_right</mat-icon>
-    </div>
-  </button>
-</div>
 <div aria-hidden="true" class="banner absolute">
   <div>
     <h4 *ngIf="submission">Notification ID: {{ submission.fileNumber }} | {{ submission.type }}</h4>
@@ -46,8 +38,12 @@
             <div class="header">
               <h2>Applicant Submission</h2>
               <div class="btns-wrapper">
-                <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
-                  Cancel SRW
+                <button mat-flat-button color="primary" *ngIf="submission && submission.canEdit" 
+                [routerLink]="'/notification/' + submission.fileNumber + '/edit'">
+                  <div class="continue-button-content">
+                    <span>Continue SRW</span>
+                    <mat-icon>keyboard_double_arrow_right</mat-icon>
+                  </div>
                 </button>
               </div>
             </div>
@@ -61,13 +57,6 @@
             </div>
           </section>
         </div>
-        <div class="buttons" *ngIf="submission">
-          <div>
-            <button *ngIf="submission.canEdit" mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
-              Cancel SRW
-            </button>
-          </div>
-        </div>
       </mat-tab>
       <mat-tab label="ALC Review and Response">
         <div class="content">
@@ -78,5 +67,17 @@
         </div>
       </mat-tab>
     </mat-tab-group>
+    <div *ngIf="submission && submission.canEdit" class="continue-button-container">
+      <button mat-stroked-button color="warn" (click)="onCancel(submission.uuid)">
+        Cancel SRW
+      </button>
+      <button mat-flat-button color="primary"
+        [routerLink]="'/notification/' + submission.fileNumber + '/edit'">
+          <div class="continue-button-content">
+            <span>Continue SRW</span>
+            <mat-icon>keyboard_double_arrow_right</mat-icon>
+          </div>
+        </button>
+    </div>
   </div>
 </div>
