@@ -6,6 +6,8 @@ from .app_components import (
     init_application_decision_components,
     update_application_decision_component_soil_details,
     clean_application_decision_components,
+    init_application_component_lots,
+    clean_application_component_lots
 )
 
 from .application_decision_update import update_application_decision
