@@ -243,11 +243,15 @@ export class GenerateSubmissionDocumentService {
         NO_DATA,
       otherParcelsDescription: submission.otherParcelsDescription,
       selectedThirdPartyAgent: primaryContact?.type.code === OWNER_TYPE.AGENT,
-      primaryContact,
+      primaryContactFirstName: primaryContact?.firstName,
+      primaryContactLastName: primaryContact?.lastName,
+      primaryContactOrganizationName: primaryContact?.organizationName,
+      primaryContactEmail: primaryContact?.email,
+      primaryContactPhoneNumber: primaryContact?.phoneNumber,
       primaryContactType: primaryContact?.type?.label,
       organizationText:
         primaryContact?.type.code === OWNER_TYPE.CROWN
-          ? 'Ministry/Department Responsible'
+          ? 'Department'
           : 'Organization (If Applicable)',
       isGovernmentSetup:
         !localGovernment || localGovernment.bceidBusinessGuid !== null,
@@ -288,6 +292,7 @@ export class GenerateSubmissionDocumentService {
   private mapParcelsWithOwners(parcels: ApplicationParcel[]) {
     return parcels.map((e) => ({
       ...e,
+      pid: this.formatPid(e.pid),
       noData: NO_DATA,
       purchasedDate: e.purchasedDate ? e.purchasedDate : undefined,
       certificateOfTitle: e.certificateOfTitle?.document.fileName,
@@ -378,5 +383,13 @@ export class GenerateSubmissionDocumentService {
     };
 
     return pdfData;
+  }
+
+  private formatPid(pid?: string | null) {
+    const matches = pid?.match(/(.{1,3})/g);
+    if (matches) {
+      return matches.join('-');
+    }
+    return undefined;
   }
 }
