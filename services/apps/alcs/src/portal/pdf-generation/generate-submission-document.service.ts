@@ -386,9 +386,9 @@ export class GenerateSubmissionDocumentService {
   }
 
   private formatPid(pid?: string | null) {
-    const matches = pid?.match(/(.{3})(.{3})(.{3})/);
+    const matches = pid?.match(/(.{1,3})/g);
     if (matches) {
-      return matches.slice(1).join('-');
+      return matches.join('-');
     }
     return undefined;
   }
