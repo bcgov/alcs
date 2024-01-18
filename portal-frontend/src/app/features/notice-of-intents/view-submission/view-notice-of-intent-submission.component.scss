@@ -195,9 +195,16 @@ section {
   z-index: 2;
   box-shadow: -3px 0 colors.$white, 3px 0 colors.$white;
 
+  button:nth-child(1) {
+    margin-top: rem(16) !important;
+  }
+
   @media screen and (min-width: $tabletBreakpoint) {
     flex-direction: row;
     justify-content: center;
+    button:nth-child(1) {
+      margin-top: 0 !important;
+    }
   }
 
   button {
