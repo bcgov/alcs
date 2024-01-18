@@ -3,14 +3,6 @@
     <h2>Local/First Nation Gov Review</h2>
     <div class="btns-wrapper">
       <button
-        *ngIf="application.canEdit || application.canReview"
-        mat-stroked-button
-        color="warn"
-        (click)="onCancelClicked(application.uuid)"
-      >
-        Cancel Application
-      </button>
-      <button
         [disabled]="
           !applicationReview ||
           (!application.canReview && application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG)
@@ -20,6 +12,39 @@
         color="accent"
       >
         Download PDF
+      </button>
+      <button mat-flat-button color="primary" *ngIf="application && application.canEdit" 
+        [routerLink]="'/application/' + application.fileNumber + '/edit'">
+        <div class="continue-button-content">
+          <span>Continue Application</span>
+          <mat-icon>keyboard_double_arrow_right</mat-icon>
+        </div>
+      </button>
+      <button (click)="onReview(application.fileNumber)"  mat-flat-button color="primary"
+        *ngIf="
+          application && application.canReview && (
+          application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG || 
+          application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG || 
+          application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG)
+        ">
+        <div class="continue-button-content">
+          <span
+            *ngIf="
+              application.status.code === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+              application.status.code === SUBMISSION_STATUS.RETURNED_TO_LG
+            "
+            (click)="onReview(application.fileNumber)"
+            class="subheading2"
+            >Continue Application Review</span
+          >
+          <span
+            *ngIf="application.status.code === SUBMISSION_STATUS.SUBMITTED_TO_LG"
+            (click)="onReview(application.fileNumber)"
+            class="subheading2"
+            >Start Application Review</span
+          >
+          <mat-icon>keyboard_double_arrow_right</mat-icon>
+        </div>
       </button>
     </div>
   </div>
