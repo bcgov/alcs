@@ -217,6 +217,7 @@
       flex-direction: column-reverse;
       justify-content: space-between;
       z-index: 2;
+      box-shadow: -3px 0 colors.$white, 3px 0 colors.$white;
 
       @media screen and (min-width: $tabletBreakpoint) {
         flex-direction: row;
