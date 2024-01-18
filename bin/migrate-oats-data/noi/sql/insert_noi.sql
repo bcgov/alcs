@@ -32,7 +32,7 @@ oats_gov AS (
     FROM oats.oats_alr_application_parties oaap
         JOIN oats.oats_person_organizations opo ON oaap.person_organization_id = opo.person_organization_id
         JOIN oats.oats_organizations oo ON opo.organization_id = oo.organization_id
-    WHERE oo.organization_type_cd IN ('MUNI', 'FN', 'RD')
+    WHERE oo.organization_type_cd IN ('MUNI', 'FN', 'RD', 'RM')
 ),
 alcs_gov AS (
     SELECT oats_gov.application_id AS application_id,
@@ -117,8 +117,7 @@ application_type_lookup AS (
         LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
     WHERE aee.component_id IS NULL
 )
-SELECT 
-    ng.noi_application_id::text AS file_number,
+SELECT ng.noi_application_id::text AS file_number,
     CASE
         WHEN atl.code = 'SCH' THEN 'PFRS'
         WHEN atl.code = 'EXT' THEN 'ROSO'
