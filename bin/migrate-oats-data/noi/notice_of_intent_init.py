@@ -3,7 +3,7 @@ from common import (
     setup_and_get_logger,
     exclusion_table_create,
     exclusion_table_count,
-    BATCH_UPLOAD_SIZE
+    BATCH_UPLOAD_SIZE,
 )
 from db import inject_conn_pool
 
@@ -53,7 +53,7 @@ def init_notice_of_intents(conn=None, batch_size=BATCH_UPLOAD_SIZE):
                         f"retrieved/inserted items count: {applications_to_be_inserted_count}; total successfully inserted/updated NOIs so far {successful_inserts_count}; last inserted noi_id: {last_application_id}"
                     )
                 except Exception as err:
-                    logger.exception()
+                    logger.exception(err)
                     conn.rollback()
                     failed_inserts = count_total - successful_inserts_count
                     last_application_id = last_application_id + 1
@@ -78,15 +78,18 @@ def clean_notice_of_intents(conn=None):
 def _noi_insert_query(number_of_rows_to_insert):
     nois_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
-        INSERT INTO alcs.notice_of_intent (file_number, 
-                                      applicant, region_code, local_government_uuid, audit_created_by, type_code)
-
-        VALUES{nois_to_insert}
+        WITH cte AS (
+            SELECT file_number, type_code, applicant, region_code, local_government_uuid::UUID, audit_created_by,
+            ROW_NUMBER() OVER (PARTITION BY file_number, type_code, applicant, region_code, audit_created_by ORDER BY local_government_uuid) AS rn
+            FROM (VALUES{nois_to_insert}) AS t(file_number, type_code, applicant, region_code, local_government_uuid, audit_created_by)
+        )
+        INSERT INTO alcs.notice_of_intent (file_number, type_code, 
+                                      applicant, region_code, local_government_uuid, audit_created_by)
+        SELECT file_number, type_code, applicant, region_code, local_government_uuid, audit_created_by FROM cte WHERE rn = 1
         ON CONFLICT (file_number) DO UPDATE SET
-            file_number = EXCLUDED.file_number,
+            type_code = EXCLUDED.type_code,
             applicant = COALESCE((CASE WHEN EXCLUDED.applicant = 'Unknown' THEN alcs.notice_of_intent.applicant ELSE EXCLUDED.applicant END), EXCLUDED.applicant),
             region_code = COALESCE(EXCLUDED.region_code, alcs.notice_of_intent.region_code),
             local_government_uuid = COALESCE(EXCLUDED.local_government_uuid, alcs.notice_of_intent.local_government_uuid),
-            audit_created_by = EXCLUDED.audit_created_by,
-            type_code = EXCLUDED.type_code
+            audit_created_by = EXCLUDED.audit_created_by
     """

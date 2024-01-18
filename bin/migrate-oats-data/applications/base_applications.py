@@ -111,17 +111,21 @@ def _compile_application_insert_query(number_of_rows_to_insert):
 
     applications_to_insert = ",".join(["%s"] * number_of_rows_to_insert)
     return f"""
+        WITH cte AS (
+            SELECT file_number, type_code, applicant, region_code, local_government_uuid::UUID, audit_created_by, source,
+            ROW_NUMBER() OVER (PARTITION BY file_number, type_code, applicant, region_code, audit_created_by, source ORDER BY local_government_uuid) AS rn
+            FROM (VALUES{applications_to_insert}) AS t(file_number, type_code, applicant, region_code, local_government_uuid, audit_created_by, source)
+        )
         INSERT INTO alcs.application (file_number, type_code, 
                                       applicant, region_code, local_government_uuid, audit_created_by, source)
-
-        VALUES{applications_to_insert}
+        SELECT file_number, type_code, applicant, region_code, local_government_uuid, audit_created_by, source FROM cte WHERE rn = 1
         ON CONFLICT (file_number) DO UPDATE SET
-            file_number = EXCLUDED.file_number,
             type_code = EXCLUDED.type_code,
             applicant = COALESCE((CASE WHEN EXCLUDED.applicant = 'Unknown' THEN alcs.application.applicant ELSE EXCLUDED.applicant END), EXCLUDED.applicant),
             region_code = COALESCE(EXCLUDED.region_code, alcs.application.region_code),
             local_government_uuid = COALESCE(EXCLUDED.local_government_uuid, alcs.application.local_government_uuid),
-            audit_created_by = EXCLUDED.audit_created_by
+            audit_created_by = EXCLUDED.audit_created_by,
+            source = EXCLUDED.source
     """
 
 

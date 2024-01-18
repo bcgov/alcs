@@ -65,3 +65,27 @@ UPDATE alcs.application a
 SET date_received_all_items = CURRENT_TIMESTAMP
 WHERE a.audit_created_by = 'oats_etl';
 ```
+
+## Full DB backup and restore on local machine
+
+### Prerequisites
+
+- docker installed
+- docker postgres container
+- pg_restore and pg_dump installed locally
+- IDE to browse DB
+
+Full db restore steps on example of ALCS DEV environment:
+
+- login to openshift using the oc command
+- switch to dev : `oc project a5cf88-dev`
+- port-forward dev : `oc port-forward  service/alcs-patroni 15432:5432`
+- create dev db dump: `pg_dump -U postgres -h localhost -p 15432  -W -F t app > app_back.tar`  
+  This command will ask for DEV DB password. The app_back.tar file will be approximately 1.3GB
+- disconnect from dev
+- start the local docker db container. The Postgres version should be 12.4
+- make sure that you do not have db named "app" in your local postgres and
+  create db app: `createdb -U postgres -h localhost -p 5432 -W app`
+- restore dump from dev: `pg_restore -U postgres -h localhost -p 5432 -d app -F t -C -v < app_back.tar`
+  NOTE: restore will finish with some warnings/errors related to the "readaccess" user that could be safely ignored.
+- once restore is done check that alcs-obfuscated schema exists and the comment table has lorem ipsum in body column

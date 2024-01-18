@@ -117,7 +117,14 @@ application_type_lookup AS (
         LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
     WHERE aee.component_id IS NULL
 )
-SELECT ng.noi_application_id::text AS file_number,
+SELECT 
+    ng.noi_application_id::text AS file_number,
+    CASE
+        WHEN atl.code = 'SCH' THEN 'PFRS'
+        WHEN atl.code = 'EXT' THEN 'ROSO'
+        WHEN atl.code = 'FILL' THEN 'POFO'
+        ELSE 'POFO' -- POFO if value is null
+    END AS type_code,
     CASE
         WHEN noi_lookup.orgs IS NOT NULL THEN noi_lookup.orgs
         WHEN noi_lookup.persons IS NOT NULL THEN noi_lookup.persons
@@ -128,13 +135,7 @@ SELECT ng.noi_application_id::text AS file_number,
         WHEN alcs_gov.gov_uuid IS NOT NULL THEN alcs_gov.gov_uuid
         ELSE '001cfdad-bc6e-4d25-9294-1550603da980' --Peace River if unable to find uuid
     END AS local_government_uuid,
-    'oats_etl' AS audit_created_by,
-    CASE
-        WHEN atl.code = 'SCH' THEN 'PFRS'
-        WHEN atl.code = 'EXT' THEN 'ROSO'
-        WHEN atl.code = 'FILL' THEN 'POFO'
-        ELSE 'POFO' -- POFO if value is null
-    END AS type_code
+    'oats_etl' AS audit_created_by
 FROM noi_grouped AS ng
     LEFT JOIN noi_lookup ON ng.noi_application_id = noi_lookup.application_id
     LEFT JOIN panel_lookup ON ng.noi_application_id = panel_lookup.application_id
