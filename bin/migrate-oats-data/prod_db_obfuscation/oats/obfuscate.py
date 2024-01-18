@@ -21,7 +21,8 @@ def process_oats_data():
     _update_term_columns()
     _update_with_random_oats_issues()
     _update_with_random_oats_documents()
-    _update_with_random_oats_organization()
+    # organization name is not 'personally identifiable information' so its not protected under Personal Information Protection Act
+    # _update_with_random_oats_organization()
     _update_with_random_oats_planning_review()
     _update_comment_columns()
     _update_with_random_oats_alr_application()
