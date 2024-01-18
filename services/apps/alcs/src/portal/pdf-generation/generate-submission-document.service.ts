@@ -46,6 +46,7 @@ class PdfTemplate {
 }
 
 const NO_DATA = 'No Data';
+const NOT_APPLICABLE = 'Not Applicable';
 
 @Injectable()
 export class GenerateSubmissionDocumentService {
@@ -232,7 +233,6 @@ export class GenerateSubmissionDocumentService {
       generatedDateTime: dayjs
         .tz(new Date(), 'Canada/Pacific')
         .format('MMM DD, YYYY hh:mm:ss Z'),
-
       purpose: submission.purpose,
       fileNumber: submission.fileNumber,
       localGovernment: localGovernment?.name,
@@ -300,6 +300,7 @@ export class GenerateSubmissionDocumentService {
       owners: e.owners.map((o) => ({
         ...o,
         noData: NO_DATA,
+        notApplicable: NOT_APPLICABLE,
         name: `${o.firstName} ${o.lastName}`,
         organizationName: o.organizationName,
         corporateSummary: o.corporateSummary?.document.fileName,
