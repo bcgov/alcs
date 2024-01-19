@@ -122,7 +122,7 @@ def _prepare_oats_alr_applications_data(row_data_list):
             "is_new_evidence": "new_information_ind",
             "is_incorrect_false_info": "error_information_ind",
             "review_outcome_code": _map_review_outcome_code(row),
-            "review_date": _map_review_date,
+            "review_date": _map_review_date(row),
         }
         data_list.append(mapped_row)
 
