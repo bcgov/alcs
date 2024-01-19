@@ -164,7 +164,7 @@ export class PrimaryContactComponent extends FilesStepComponent implements OnIni
 
   private calculateLetterRequired() {
     if (this.selectedLocalGovernment) {
-      this.needsAuthorizationLetter = false;
+      this.needsAuthorizationLetter = true;
     } else {
       const isSelfApplicant =
         this.parcelOwners.length === 1 && this.parcelOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;

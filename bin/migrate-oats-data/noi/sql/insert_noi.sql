@@ -117,7 +117,14 @@ application_type_lookup AS (
         LEFT JOIN oats.alcs_etl_application_exclude aee ON oaac.alr_appl_component_id = aee.component_id
     WHERE aee.component_id IS NULL
 )
-SELECT ng.noi_application_id::text AS file_number,
+SELECT 
+    ng.noi_application_id::text AS file_number,
+    CASE
+        WHEN atl.code = 'SCH' THEN 'PFRS'
+        WHEN atl.code = 'EXT' THEN 'ROSO'
+        WHEN atl.code = 'FILL' THEN 'POFO'
+        ELSE 'POFO' -- POFO if value is null
+    END AS type_code,
     CASE
         WHEN atl.code = 'SCH' THEN 'PFRS'
         WHEN atl.code = 'EXT' THEN 'ROSO'
