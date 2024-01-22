@@ -1,7 +1,7 @@
 <div *ngIf="_application" class="review-table">
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
-    {{ _application.turPurpose }}
+    {{ _application.purpose }}
   </div>
   <div class="subheading2 grid-1">
     Specify any agricultural activities such as livestock operations, greenhouses or horticultural activities in
@@ -22,7 +22,7 @@
   </div>
   <div class="subheading2 grid-1">Total area of corridor</div>
   <div class="grid-double">
-    <span>{{ _application.turTotalCorridorArea }}</span>
+    {{ _application.turTotalCorridorArea }}<span *ngIf="_application.turTotalCorridorArea">ha</span>
   </div>
   <div class="subheading2 grid-1">Proof of Serving Notice</div>
   <div class="grid-double">
@@ -30,7 +30,7 @@
       {{ notice.fileName }}
     </a>
   </div>
-  <div class="subheading2 grid-1">Proposal Map / Sketch Plan</div>
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
   <div class="grid-double">
     <a *ngFor="let file of proposalMap" (click)="openFile(file)">
       {{ file.fileName }}

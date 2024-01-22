@@ -1,0 +1,23 @@
+<p>Individual landowners may not submit exclusion applications to the ALC.</p>
+<div>
+  <mat-radio-button
+    color="primary"
+    [disabled]="!body.enabled"
+    [checked]="body.label === selectedValue"
+    class="radio-group"
+    (change)="onSelect(body.label)"
+    *ngFor="let body of prescribedBodies"
+  >
+    {{ body.label }}
+  </mat-radio-button>
+</div>
+<app-warning-banner *ngIf="isLocalGovernmentUser">
+  This option is selected because your BCeID is associated with a local government.
+</app-warning-banner>
+<app-warning-banner *ngIf="isFirstNationUser">
+  This option is selected because your BCeID is associated with a first nation government.
+</app-warning-banner>
+<app-warning-banner *ngIf="showGovernmentWarning">
+  In order to proceed, you must either use a BCeID that is associated with a {{ selectedValue }} or change your
+  selection above.
+</app-warning-banner>

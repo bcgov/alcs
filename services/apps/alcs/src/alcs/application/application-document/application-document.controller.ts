@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,
@@ -13,21 +13,22 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import * as path from 'path';
 import { ANY_AUTH_ROLE } from '../../../common/authorization/roles';
 import { RolesGuard } from '../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../common/authorization/roles.decorator';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
+  DocumentTypeDto,
 } from '../../../document/document.dto';
+import { ApplicationOwnerService } from '../../../portal/application-submission/application-owner/application-owner.service';
+import { ApplicationParcelService } from '../../../portal/application-submission/application-parcel/application-parcel.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from './application-document-code.entity';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-} from './application-document.dto';
+} from '../../../document/document-code.entity';
+import { ApplicationDocumentDto } from './application-document.dto';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -40,6 +41,8 @@ import { ApplicationDocumentService } from './application-document.service';
 export class ApplicationDocumentController {
   constructor(
     private applicationDocumentService: ApplicationDocumentService,
+    private parcelService: ApplicationParcelService,
+    private ownerService: ApplicationOwnerService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -66,22 +69,24 @@ export class ApplicationDocumentController {
       throw new BadRequestException('Request is not multipart');
     }
 
-    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
-    const file = req.body.file;
-    const fileName = req.body.fileName.value as string;
-    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
-    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+    const savedDocument = await this.saveUploadedFile(req, fileNumber);
 
-    const savedDocument = await this.applicationDocumentService.attachDocument({
-      fileNumber,
-      fileName,
-      file,
-      user: req.user.entity,
-      documentType: documentType as DOCUMENT_TYPE,
-      source: documentSource,
-      visibilityFlags,
-      system: DOCUMENT_SYSTEM.ALCS,
-    });
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
+
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
+    }
+
     return this.mapper.map(
       savedDocument,
       ApplicationDocument,
@@ -114,6 +119,22 @@ export class ApplicationDocumentController {
       visibilityFlags,
       user: req.user.entity,
     });
+
+    const parcelUuid = req.body.parcelUuid?.value as string | undefined;
+    if (
+      parcelUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CERTIFICATE_OF_TITLE
+    ) {
+      await this.handleCertificateOfTitleUpdates(parcelUuid, savedDocument);
+    }
+
+    const ownerUuid = req.body.ownerUuid?.value as string | undefined;
+    if (
+      ownerUuid &&
+      savedDocument.typeCode === DOCUMENT_TYPE.CORPORATE_SUMMARY
+    ) {
+      await this.handleCorporateSummaryUpdates(ownerUuid, savedDocument);
+    }
 
     return this.mapper.map(
       savedDocument,
@@ -176,11 +197,7 @@ export class ApplicationDocumentController {
   @UserRoles(...ANY_AUTH_ROLE)
   async listTypes() {
     const types = await this.applicationDocumentService.fetchTypes();
-    return this.mapper.mapArray(
-      types,
-      ApplicationDocumentCode,
-      ApplicationDocumentTypeDto,
-    );
+    return this.mapper.mapArray(types, DocumentCode, DocumentTypeDto);
   }
 
   @Get('/:uuid/open')
@@ -217,5 +234,72 @@ export class ApplicationDocumentController {
     @Body() data: { uuid: string; order: number }[],
   ): Promise<void> {
     await this.applicationDocumentService.setSorting(data);
+  }
+
+  private async handleCertificateOfTitleUpdates(
+    parcelUuid: string,
+    savedDocument: ApplicationDocument,
+  ) {
+    const parcel = await this.parcelService.getOneOrFail(parcelUuid);
+    if (parcel) {
+      if (
+        parcel.certificateOfTitleUuid &&
+        parcel.certificateOfTitleUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(parcel.certificateOfTitleUuid);
+      }
+
+      await this.parcelService.setCertificateOfTitle(parcel, savedDocument);
+    }
+  }
+
+  private async supersedeDocument(documentUuid: string) {
+    const document = await this.applicationDocumentService.get(documentUuid);
+    const parsedFileName = path.parse(document.document.fileName);
+    await this.applicationDocumentService.update({
+      uuid: document.uuid,
+      fileName: `${parsedFileName.name}_superseded${parsedFileName.ext}`,
+      source: document.document.source as DOCUMENT_SOURCE,
+      visibilityFlags: [],
+      documentType: document.type!.code as DOCUMENT_TYPE,
+      user: document.document.uploadedBy!,
+    });
+  }
+
+  private async handleCorporateSummaryUpdates(
+    ownerUuid: string,
+    savedDocument: ApplicationDocument,
+  ) {
+    const owner = await this.ownerService.getOwner(ownerUuid);
+    if (owner) {
+      if (
+        owner.corporateSummaryUuid &&
+        owner.corporateSummaryUuid !== savedDocument.uuid
+      ) {
+        await this.supersedeDocument(owner.corporateSummaryUuid);
+      }
+
+      owner.corporateSummary = savedDocument;
+      await this.ownerService.save(owner);
+    }
+  }
+
+  private async saveUploadedFile(req, fileNumber: string) {
+    const documentType = req.body.documentType.value as DOCUMENT_TYPE;
+    const file = req.body.file;
+    const fileName = req.body.fileName.value as string;
+    const documentSource = req.body.source.value as DOCUMENT_SOURCE;
+    const visibilityFlags = req.body.visibilityFlags.value.split(', ');
+
+    return await this.applicationDocumentService.attachDocument({
+      fileNumber,
+      fileName,
+      file,
+      user: req.user.entity,
+      documentType: documentType as DOCUMENT_TYPE,
+      source: documentSource,
+      visibilityFlags,
+      system: DOCUMENT_SYSTEM.ALCS,
+    });
   }
 }

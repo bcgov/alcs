@@ -1,13 +1,64 @@
 @use '../../../styles/functions' as *;
+@use '../../../styles/colors' as colors;
+
+::ng-deep {
+  .user-menu-button {
+    position: relative;
+  }
+
+  .user-menu {
+    max-width: unset !important;
+    border-radius: rem(4);
+    position: absolute;
+    margin: 0;
+    padding: rem(8) 0;
+    background-color: colors.$white;
+    z-index: 2;
+  }
+}
+
+.top-nav {
+  background-color: colors.$primary-color-dark;
+  padding: rem(8) rem(24);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    padding: rem(8) rem(36);
+  }
+
+  @media screen and (min-width: $desktopBreakpoint) {
+    padding: rem(8) rem(80);
+  }
+
+  a {
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    line-height: rem(16);
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin-right: rem(20);
+    font-size: rem(14);
+    letter-spacing: rem(0.14);
+  }
+}
 
 header {
   .title-wrapper {
-    margin: rem(8) rem(24);
+    margin: rem(16) rem(24);
 
     .title {
       .logo {
         width: rem(49);
         height: rem(32);
+        cursor: pointer;
       }
       h5 {
         display: none;
@@ -23,12 +74,7 @@ header {
   }
 
   .mobile-menu-wrapper {
-    width: 100%;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-    margin-left: rem(24);
+    margin: rem(24) 0;
     line-height: rem(50);
 
     h1 {
@@ -37,23 +83,26 @@ header {
     }
   }
 
-  @media screen and (min-width: $tabletBreakpoint) {
-    margin: rem(12) rem(36) !important;
+  @media screen and (min-width: $desktopBreakpoint) {
     justify-content: space-between;
+
+    .title-wrapper {
+      margin: rem(18) rem(80) !important;
+    }
+
+    .user-menu {
+      margin-left: rem(4);
+    }
 
     .burger-menu {
       display: none;
     }
 
     .title-wrapper {
+      margin: rem(12) rem(36) !important;
       display: flex;
-      margin: 0;
       justify-content: space-between;
       align-items: center;
-
-      button:not(:last-child) {
-        margin-right: rem(28) !important;
-      }
 
       .title,
       .title h5 {
@@ -68,7 +117,8 @@ header {
           padding: rem(14) rem(27) rem(14) rem(27) !important;
         }
 
-        display: inline-block;
+        display: block;
+        flex-shrink: 0;
       }
 
       .title {
@@ -83,8 +133,20 @@ header {
       }
     }
   }
+}
 
-  @media screen and (min-width: $desktopBreakpoint) {
-    margin: rem(18) rem(80) !important;
-  }
+.item {
+  padding: rem(12) rem(16);
+  min-width: rem(212);
+}
+
+.username {
+  color: colors.$primary-color;
+  text-transform: uppercase;
+  padding: 0;
+}
+
+.mobile-logout {
+  margin-top: rem(8);
+  width: 100%;
 }

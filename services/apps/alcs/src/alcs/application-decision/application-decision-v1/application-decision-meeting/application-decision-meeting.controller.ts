@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -13,12 +13,13 @@ import {
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Any } from 'typeorm';
-import { ApplicationService } from '../../../application/application.service';
 import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
 import { UserDto } from '../../../../user/user.dto';
 import { User } from '../../../../user/user.entity';
+import { formatIncomingDate } from '../../../../utils/incoming-date.formatter';
+import { ApplicationService } from '../../../application/application.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import {
   ApplicationDecisionMeetingDto,
@@ -29,6 +30,8 @@ import {
 import { ApplicationDecisionMeeting } from './application-decision-meeting.entity';
 import { ApplicationDecisionMeetingService } from './application-decision-meeting.service';
 
+import { EmailService } from '../../../../providers/email/email.service';
+
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision-meeting')
 @UseGuards(RolesGuard)
@@ -36,6 +39,7 @@ export class ApplicationDecisionMeetingController {
   constructor(
     private appDecisionMeetingService: ApplicationDecisionMeetingService,
     private applicationService: ApplicationService,
+    private emailService: EmailService,
     private reconsiderationService: ApplicationReconsiderationService,
     @InjectMapper() private mapper: Mapper,
   ) {}
@@ -61,9 +65,8 @@ export class ApplicationDecisionMeetingController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionMeetingDto[]> {
-    const meetings = await this.appDecisionMeetingService.getByAppFileNumber(
-      fileNumber,
-    );
+    const meetings =
+      await this.appDecisionMeetingService.getByAppFileNumber(fileNumber);
     return this.mapper.mapArrayAsync(
       meetings,
       ApplicationDecisionMeeting,
@@ -100,7 +103,7 @@ export class ApplicationDecisionMeetingController {
     );
 
     const newMeeting = await this.appDecisionMeetingService.createOrUpdate({
-      date: new Date(meeting.date),
+      date: formatIncomingDate(meeting.date) ?? new Date(),
       applicationUuid: application.uuid,
     });
 
@@ -121,9 +124,8 @@ export class ApplicationDecisionMeetingController {
       ApplicationDecisionMeetingDto,
       ApplicationDecisionMeeting,
     );
-    const updatedMeeting = await this.appDecisionMeetingService.createOrUpdate(
-      appDecEntity,
-    );
+    const updatedMeeting =
+      await this.appDecisionMeetingService.createOrUpdate(appDecEntity);
     return this.mapper.map(
       updatedMeeting,
       ApplicationDecisionMeeting,
@@ -157,9 +159,8 @@ export class ApplicationDecisionMeetingController {
       await this.appDecisionMeetingService.getUpcomingReconsiderationMeetings();
 
     const reconIds = upcomingReconsiderationMeetings.map((a) => a.uuid);
-    const reconsiderations = await this.reconsiderationService.getMany(
-      reconIds,
-    );
+    const reconsiderations =
+      await this.reconsiderationService.getMany(reconIds);
     return reconsiderations.map((recon): UpcomingMeetingDto => {
       const meetingDate = upcomingReconsiderationMeetings.find(
         (meeting) => meeting.uuid === recon.uuid,

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
@@ -9,9 +9,12 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import {
+  ApplicationStatusDto,
+  ApplicationSubmissionToSubmissionStatusDto,
+} from '../../alcs/application/application-submission-status/submission-status.dto';
 import { BaseCodeDto } from '../../common/dtos/base.dto';
 import { ApplicationOwnerDto } from './application-owner/application-owner.dto';
-import { ApplicationStatusDto } from './application-status/application-status.dto';
 import { ProposedLot } from './application-submission.entity';
 
 export const MAX_DESCRIPTION_FIELD_LENGTH = 4000;
@@ -37,7 +40,6 @@ export class ApplicationSubmissionDto {
   @AutoMap()
   localGovernmentUuid: string;
 
-  @AutoMap()
   status: ApplicationStatusDto;
 
   @AutoMap(() => Boolean)
@@ -46,9 +48,13 @@ export class ApplicationSubmissionDto {
   @AutoMap(() => String)
   returnedComment: string | null;
 
+  @AutoMap(() => String)
+  returnedToLfngComment: string | null;
+
   lastStatusUpdate: number;
   owners: ApplicationOwnerDto[];
   type: string;
+  requiresGovernmentReview: boolean;
 
   @AutoMap()
   typeCode: string;
@@ -59,6 +65,10 @@ export class ApplicationSubmissionDto {
 }
 
 export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
+  @AutoMap(() => String)
+  purpose: string | null;
+  @AutoMap(() => String)
+  otherParcelsDescription?: string | null;
   @AutoMap()
   parcelsAgricultureDescription: string;
   @AutoMap()
@@ -89,9 +99,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   nfuHectares?: number | null;
 
   @AutoMap(() => String)
-  nfuPurpose?: string | null;
-
-  @AutoMap(() => String)
   nfuOutsideLands?: string | null;
 
   @AutoMap(() => String)
@@ -101,19 +108,19 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   nfuWillImportFill?: boolean | null;
 
   @AutoMap(() => Number)
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
 
   @AutoMap(() => Number)
   nfuMaxFillDepth?: number | null;
 
   @AutoMap(() => Number)
-  nfuFillVolume?: number | null;
+  nfuAverageFillDepth?: number | null;
 
   @AutoMap(() => Number)
-  nfuProjectDurationAmount?: number | null;
+  nfuFillVolume?: number | null;
 
   @AutoMap(() => String)
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @AutoMap(() => String)
   nfuFillTypeDescription?: string | null;
@@ -122,9 +129,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   nfuFillOriginDescription?: string | null;
 
   //TUR Fields
-  @AutoMap(() => String)
-  turPurpose?: string | null;
-
   @AutoMap(() => String)
   turAgriculturalActivities?: string | null;
 
@@ -142,9 +146,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   //Subdivision Fields
   @AutoMap(() => String)
-  subdPurpose?: string | null;
-
-  @AutoMap(() => String)
   subdSuitability?: string | null;
 
   @AutoMap(() => String)
@@ -153,23 +154,15 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Boolean)
   subdIsHomeSiteSeverance?: boolean | null;
 
+  @AutoMap(() => [ProposedLot])
   subdProposedLots?: ProposedLot[];
 
   //Soil Fields
   @AutoMap(() => Boolean)
-  soilIsNOIFollowUp: boolean | null;
+  soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
-  soilNOIIDs: string | null;
-
-  @AutoMap(() => Boolean)
-  soilHasPreviousALCAuthorization: boolean | null;
-
-  @AutoMap(() => String)
-  soilApplicationIDs: string | null;
-
-  @AutoMap(() => String)
-  soilPurpose: string | null;
+  soilFollowUpIDs: string | null;
 
   @AutoMap(() => String)
   soilTypeRemoved: string | null;
@@ -225,11 +218,11 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => Number)
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  soilProjectDuration?: string | null;
 
   @AutoMap(() => String)
-  soilProjectDurationUnit?: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   soilFillTypeToPlace?: string | null;
@@ -246,9 +239,6 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   //NARU Fields
   @AutoMap(() => [NaruSubtypeDto])
   naruSubtype: NaruSubtypeDto | null;
-
-  @AutoMap(() => String)
-  naruPurpose: string | null;
 
   @AutoMap(() => Number)
   naruFloorArea: number | null;
@@ -274,11 +264,8 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   @AutoMap(() => String)
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   naruToPlaceVolume: number | null;
@@ -291,18 +278,73 @@ export class ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
 
   @AutoMap(() => Number)
   naruToPlaceAverageDepth: number | null;
+
+  @AutoMap(() => Number)
+  naruSleepingUnits: number | null;
+
+  @AutoMap(() => String)
+  naruAgriTourism: string | null;
+
+  @AutoMap(() => ApplicationSubmissionToSubmissionStatusDto)
+  submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
+
+  //Inclusion / Exclusion Fields
+  @AutoMap(() => String)
+  prescribedBody: string | null;
+
+  @AutoMap(() => Number)
+  inclExclHectares: number | null;
+
+  @AutoMap(() => String)
+  exclWhyLand: string | null;
+
+  @AutoMap(() => String)
+  inclAgricultureSupport: string | null;
+
+  @AutoMap(() => String)
+  inclImprovements: string | null;
+
+  @AutoMap(() => Boolean)
+  exclShareGovernmentBorders: boolean | null;
+
+  @AutoMap(() => Boolean)
+  inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  @AutoMap(() => Boolean)
+  coveHasDraft: boolean | null;
+
+  @AutoMap(() => String)
+  coveFarmImpact: string | null;
+
+  @AutoMap(() => Number)
+  coveAreaImpacted: number | null;
 }
 
 export class ApplicationSubmissionCreateDto {
   @IsString()
   @IsNotEmpty()
   type: string;
+
+  @IsString()
+  @IsOptional()
+  prescribedBody?: string;
 }
 
 export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   applicant?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  purpose?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
+  otherParcelsDescription?: string | null;
 
   @IsUUID()
   @IsOptional()
@@ -375,11 +417,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
-  nfuPurpose?: string | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
   nfuOutsideLands?: string | null;
 
   @IsString()
@@ -393,7 +430,7 @@ export class ApplicationSubmissionUpdateDto {
 
   @IsNumber()
   @IsOptional()
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
 
   @IsNumber()
   @IsOptional()
@@ -401,15 +438,15 @@ export class ApplicationSubmissionUpdateDto {
 
   @IsNumber()
   @IsOptional()
-  nfuFillVolume?: number | null;
+  nfuAverageFillDepth?: number | null;
 
   @IsNumber()
   @IsOptional()
-  nfuProjectDurationAmount?: number | null;
+  nfuFillVolume?: number | null;
 
   @IsString()
   @IsOptional()
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
@@ -420,12 +457,6 @@ export class ApplicationSubmissionUpdateDto {
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
   nfuFillOriginDescription?: string | null;
-
-  //TUR Fields
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  turPurpose?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
@@ -454,11 +485,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
-  subdPurpose?: string | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
   subdSuitability?: string | null;
 
   @IsString()
@@ -477,26 +503,12 @@ export class ApplicationSubmissionUpdateDto {
   //Soil Fields
   @IsBoolean()
   @IsOptional()
-  soilIsNOIFollowUp?: boolean | null;
+  soilIsFollowUp?: boolean | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
   @IsOptional()
-  soilNOIIDs?: string | null;
-
-  @IsBoolean()
-  @IsOptional()
-  soilHasPreviousALCAuthorization?: boolean | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  soilApplicationIDs?: string | null;
-
-  @IsString()
-  @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
-  @IsOptional()
-  soilPurpose?: string | null;
+  soilFollowUpIDs?: string | null;
 
   @IsString()
   @MaxLength(MAX_DESCRIPTION_FIELD_LENGTH)
@@ -572,13 +584,13 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   soilAlreadyPlacedAverageDepth?: number | null;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  soilProjectDurationAmount?: number | null;
+  soilProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
-  soilProjectDurationUnit?: string | null;
+  fillProjectDuration?: string | null;
 
   @IsString()
   @IsOptional()
@@ -600,10 +612,6 @@ export class ApplicationSubmissionUpdateDto {
   @IsString()
   @IsOptional()
   naruSubtypeCode?: string | null;
-
-  @IsString()
-  @IsOptional()
-  naruPurpose?: string | null;
 
   @IsNumber()
   @IsOptional()
@@ -637,13 +645,9 @@ export class ApplicationSubmissionUpdateDto {
   @IsOptional()
   naruFillOrigin?: string | null;
 
-  @IsNumber()
-  @IsOptional()
-  naruProjectDurationAmount?: number | null;
-
   @IsString()
   @IsOptional()
-  naruProjectDurationUnit?: string | null;
+  naruProjectDuration?: string | null;
 
   @IsNumber()
   @IsOptional()
@@ -660,4 +664,54 @@ export class ApplicationSubmissionUpdateDto {
   @IsNumber()
   @IsOptional()
   naruToPlaceAverageDepth?: number | null;
+
+  @IsNumber()
+  @IsOptional()
+  naruSleepingUnits?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruAgriTourism?: string | null;
+
+  //Inclusion / Exclusion Fields
+  @IsString()
+  @IsOptional()
+  prescribedBody?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  inclExclHectares?: number | null;
+
+  @IsString()
+  @IsOptional()
+  exclWhyLand?: string | null;
+
+  @IsString()
+  @IsOptional()
+  inclAgricultureSupport?: string | null;
+
+  @IsString()
+  @IsOptional()
+  inclImprovements?: string | null;
+
+  @IsBoolean()
+  @IsOptional()
+  exclShareGovernmentBorders?: boolean | null;
+
+  @IsBoolean()
+  @IsOptional()
+  inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  @IsBoolean()
+  @IsOptional()
+  coveHasDraft?: boolean | null;
+
+  @IsString()
+  @IsOptional()
+  coveFarmImpact?: string | null;
+
+  @IsNumber()
+  @IsOptional()
+  coveAreaImpacted?: number | null;
 }

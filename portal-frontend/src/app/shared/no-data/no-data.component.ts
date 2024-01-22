@@ -7,7 +7,8 @@ import { Component, Input } from '@angular/core';
 })
 export class NoDataComponent {
   @Input() showRequired = false;
-  @Input() text?: string | null;
+  @Input() text = 'No Data';
+  @Input() errorText = 'Required Field';
 
   constructor() {}
 }

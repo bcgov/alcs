@@ -1,13 +1,13 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import * as config from 'config';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import {
   ApplicationDocument,
   VISIBILITY_FLAG,
@@ -41,7 +41,7 @@ export class GenerateReviewDocumentService {
     @Inject(forwardRef(() => ApplicationSubmissionReviewService))
     private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -146,7 +146,7 @@ export class GenerateReviewDocumentService {
       isZoningConsistent: formatBooleanToYesNoString(dto.isZoningConsistent),
       isAuthorized: isAuthorized,
       fileNumber: submission.fileNumber,
-      status: submission.status,
+      status: submission.status.statusType,
       applicationTypePortalLabel: application.type.portalLabel,
       applicant: submission.applicant,
       localGovernment: localGovernment ? localGovernment.name : NO_DATA,
@@ -160,9 +160,9 @@ export class GenerateReviewDocumentService {
   private mapAuthorizationValueToStr(isAuthorized: boolean | null) {
     switch (isAuthorized) {
       case true:
-        return 'Authorize';
+        return 'Forward for ALC decision';
       case false:
-        return 'Refuse to Authorize';
+        return 'Refuse to forward to ALC';
       default:
         return NO_DATA;
     }

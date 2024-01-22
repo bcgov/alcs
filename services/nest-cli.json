@@ -3,7 +3,7 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/alcs/src",
   "compilerOptions": {
-    "plugins": ["@nestjs/swagger", "@automapper/classes/transformer-plugin"],
+    "plugins": ["@nestjs/swagger", "automapper-classes/transformer-plugin"],
     "assets": [
       "common/envs/*",
       {

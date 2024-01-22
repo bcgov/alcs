@@ -1,4 +1,6 @@
+import { NgIf } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule, Routes } from '@angular/router';
 import { MTX_DATETIME_FORMATS } from '@ng-matero/extensions/core';
 import { ApplicationDetailService } from '../../services/application/application-detail.service';
@@ -17,12 +19,18 @@ import { InfoRequestsComponent } from './info-requests/info-requests.component';
 import { InfoRequestDialogComponent } from './info-requests/info-rquest-dialog/info-request-dialog.component';
 import { IntakeComponent } from './intake/intake.component';
 import { LfngInfoComponent } from './lfng-info/lfng-info.component';
+import { ReturnApplicationDialogComponent } from './lfng-info/return-application-dialog/return-application-dialog.component';
 import { OverviewComponent } from './overview/overview.component';
+import { UncancelApplicationDialogComponent } from './overview/uncancel-application-dialog/uncancel-application-dialog.component';
 import { EditModificationDialogComponent } from './post-decision/edit-modification-dialog/edit-modification-dialog.component';
 import { EditReconsiderationDialogComponent } from './post-decision/edit-reconsideration-dialog/edit-reconsideration-dialog.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
+import { InclProposalComponent } from './proposal/incl/incl.component';
+import { NaruProposalComponent } from './proposal/naru/naru.component';
 import { NfuProposalComponent } from './proposal/nfu/nfu.component';
+import { ParcelPrepComponent } from './proposal/parcel-prep/parcel-prep.component';
 import { ProposalComponent } from './proposal/proposal.component';
+import { ExclProposalComponent } from './proposal/excl/excl.component';
 import { SoilProposalComponent } from './proposal/soil/soil.component';
 import { SubdProposalComponent } from './proposal/subd/subd.component';
 import { DecisionMeetingDialogComponent } from './review/decision-meeting-dialog/decision-meeting-dialog.component';
@@ -68,7 +76,13 @@ const routes: Routes = [
     NfuProposalComponent,
     SubdProposalComponent,
     SoilProposalComponent,
+    ExclProposalComponent,
+    NaruProposalComponent,
+    InclProposalComponent,
+    ParcelPrepComponent,
+    UncancelApplicationDialogComponent,
+    ReturnApplicationDialogComponent,
   ],
-  imports: [SharedModule.forRoot(), RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
+  imports: [SharedModule, RouterModule.forChild(routes), ApplicationDetailsModule, DecisionModule],
 })
 export class ApplicationModule {}

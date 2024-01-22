@@ -1,6 +1,6 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
@@ -19,8 +19,9 @@ import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../notification/notification.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
-import { BoardDto } from './board.dto';
+import { BoardDto, MinimalBoardDto } from './board.dto';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -38,6 +39,7 @@ export class BoardController {
     private noiModificationService: NoticeOfIntentModificationService,
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
+    private notificationService: NotificationService,
     @InjectMapper() private autoMapper: Mapper,
   ) {}
 
@@ -45,12 +47,22 @@ export class BoardController {
   @UserRoles(...ANY_AUTH_ROLE)
   async getBoards() {
     const boards = await this.boardService.list();
-    return this.autoMapper.mapArray(boards, Board, BoardDto);
+    return this.autoMapper.mapArray(boards, Board, MinimalBoardDto);
   }
 
   @Get('/:boardCode')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async getCards(@Param('boardCode') boardCode: string) {
+  async getBoardDetail(@Param('boardCode') boardCode: string) {
+    const board = await this.boardService.getOneOrFail({
+      code: boardCode,
+    });
+
+    return await this.autoMapper.mapAsync(board, Board, BoardDto);
+  }
+
+  @Get('/:boardCode/cards')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async getBoardWithCards(@Param('boardCode') boardCode: string) {
     const board = await this.boardService.getOneOrFail({
       code: boardCode,
     });
@@ -85,20 +97,23 @@ export class BoardController {
       ? await this.noiModificationService.getByBoard(board.uuid)
       : [];
 
+    const notifications = allowedCodes.includes(CARD_TYPE.NOTIFICATION)
+      ? await this.notificationService.getByBoard(board.uuid)
+      : [];
+
     return {
+      board: await this.autoMapper.mapAsync(board, Board, BoardDto),
       applications: await this.applicationService.mapToDtos(applications),
       reconsiderations: await this.reconsiderationService.mapToDtos(recons),
-      planningReviews: await this.planningReviewService.mapToDtos(
-        planningReviews,
-      ),
+      planningReviews:
+        await this.planningReviewService.mapToDtos(planningReviews),
       modifications: await this.appModificationService.mapToDtos(modifications),
       covenants: await this.covenantService.mapToDtos(covenants),
-      noticeOfIntents: await this.noticeOfIntentService.mapToDtos(
-        noticeOfIntents,
-      ),
-      noiModifications: await this.noiModificationService.mapToDtos(
-        noiModifications,
-      ),
+      noticeOfIntents:
+        await this.noticeOfIntentService.mapToDtos(noticeOfIntents),
+      noiModifications:
+        await this.noiModificationService.mapToDtos(noiModifications),
+      notifications: await this.notificationService.mapToDtos(notifications),
     };
   }
 

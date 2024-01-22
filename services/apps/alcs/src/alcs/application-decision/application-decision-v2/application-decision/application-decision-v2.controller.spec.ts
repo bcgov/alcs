@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -14,6 +14,7 @@ import { UserProfile } from '../../../../common/automapper/user.automapper.profi
 import { ApplicationService } from '../../../application/application.service';
 import { CodeService } from '../../../code/code.service';
 import { ApplicationDecisionOutcomeCode } from '../../application-decision-outcome.entity';
+import { ApplicationDecision } from '../../application-decision.entity';
 import { ApplicationModificationService } from '../../application-modification/application-modification.service';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
 import { ApplicationDecisionV2Controller } from './application-decision-v2.controller';
@@ -98,7 +99,7 @@ describe('ApplicationDecisionV2Controller', () => {
       decisionMakers: [],
       decisionComponentTypes: [],
       decisionConditionTypes: [],
-      linkedResolutionOutcomeType: [],
+      naruSubtypes: [],
     });
   });
 
@@ -156,11 +157,18 @@ describe('ApplicationDecisionV2Controller', () => {
       mockApplication,
       undefined,
       undefined,
+      undefined,
     );
   });
 
   it('should update the decision', async () => {
+    mockApplicationService.getFileNumber.mockResolvedValue('file-number');
+    mockDecisionService.get.mockResolvedValue(new ApplicationDecision());
+    mockDecisionService.getByAppFileNumber.mockResolvedValue([
+      new ApplicationDecision(),
+    ]);
     mockDecisionService.update.mockResolvedValue(mockDecision);
+
     const updates = {
       outcome: 'New Outcome',
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),
@@ -219,6 +227,15 @@ describe('ApplicationDecisionV2Controller', () => {
 
     expect(mockDecisionService.getDownloadUrl).toBeCalledTimes(1);
     expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for updating the file', async () => {
+    mockDecisionService.updateDocument.mockResolvedValue({} as any);
+    await controller.updateDocument('fake-uuid', 'document-uuid', {
+      fileName: '',
+    });
+
+    expect(mockDecisionService.updateDocument).toBeCalledTimes(1);
   });
 
   it('should call through for getting open url', async () => {

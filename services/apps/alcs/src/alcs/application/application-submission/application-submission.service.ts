@@ -1,23 +1,30 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationOwnerDto } from '../../../portal/application-submission/application-owner/application-owner.dto';
 import { ApplicationOwner } from '../../../portal/application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../../../portal/application-submission/application-status/application-status.dto';
-import { ApplicationStatus } from '../../../portal/application-submission/application-status/application-status.entity';
 import { ApplicationSubmission } from '../../../portal/application-submission/application-submission.entity';
-import { SubmittedApplicationDto } from '../application.dto';
+import { CovenantTransferee } from '../../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { filterUndefined } from '../../../utils/undefined';
+import { ApplicationSubmissionStatusService } from '../application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../application-submission-status/submission-status.dto';
+import { AlcsApplicationSubmissionDto } from '../application.dto';
+import { AlcsApplicationSubmissionUpdateDto } from './application-submission.dto';
 
 @Injectable()
 export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectMapper() private mapper: Mapper,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    @InjectRepository(CovenantTransferee)
+    private covenantTransfereeRepository: Repository<CovenantTransferee>,
   ) {}
 
   async get(fileNumber: string) {
@@ -30,18 +37,23 @@ export class ApplicationSubmissionService {
             document: true,
           },
         },
-        parcels: {
-          owners: {
-            type: true,
-          },
-          certificateOfTitle: {
-            document: true,
-          },
-          ownershipType: true,
-        },
         owners: {
           type: true,
         },
+      },
+    });
+  }
+
+  async getTransferees(fileNumber: string) {
+    return this.covenantTransfereeRepository.find({
+      where: {
+        applicationSubmission: {
+          fileNumber,
+          isDraft: false,
+        },
+      },
+      relations: {
+        type: true,
       },
     });
   }
@@ -50,7 +62,7 @@ export class ApplicationSubmissionService {
     const mappedSubmission = await this.mapper.mapAsync(
       submission,
       ApplicationSubmission,
-      SubmittedApplicationDto,
+      AlcsApplicationSubmissionDto,
     );
 
     const primaryContact = submission.owners.find(
@@ -66,7 +78,7 @@ export class ApplicationSubmissionService {
     return mappedSubmission;
   }
 
-  async getStatus(code: APPLICATION_STATUS) {
+  async getStatus(code: SUBMISSION_STATUS) {
     return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code,
@@ -74,21 +86,37 @@ export class ApplicationSubmissionService {
     });
   }
 
-  async updateStatus(fileNumber: string, statusCode: APPLICATION_STATUS) {
-    const status = await this.getStatus(statusCode);
+  async updateStatus(fileNumber: string, statusCode: SUBMISSION_STATUS) {
+    const submission = await this.loadBarebonesSubmission(fileNumber);
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      statusCode,
+    );
+  }
 
-    //Load submission without relations to prevent save from crazy cascading
-    const submission = await this.applicationSubmissionRepository.findOneOrFail(
-      {
-        where: {
-          fileNumber: fileNumber,
-        },
-      },
+  async update(
+    fileNumber: string,
+    updateDto: AlcsApplicationSubmissionUpdateDto,
+  ) {
+    const submission = await this.loadBarebonesSubmission(fileNumber);
+    submission.subdProposedLots = filterUndefined(
+      updateDto.subProposedLots,
+      submission.subdProposedLots,
+    );
+    submission.returnedToLfngComment = filterUndefined(
+      updateDto.returnComment,
+      submission.returnedToLfngComment,
     );
 
-    submission.status = status;
-
-    //Use save to trigger subscriber
     await this.applicationSubmissionRepository.save(submission);
+  }
+
+  private loadBarebonesSubmission(fileNumber: string) {
+    //Load submission without relations to prevent save from crazy cascading
+    return this.applicationSubmissionRepository.findOneOrFail({
+      where: {
+        fileNumber,
+      },
+    });
   }
 }

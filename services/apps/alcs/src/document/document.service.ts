@@ -1,8 +1,9 @@
 import { CONFIG_TOKEN, IConfig } from '@app/common/config/config.module';
+import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
-  PutObjectTaggingCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -11,6 +12,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { v4 } from 'uuid';
+import { ClamAVService } from '../clamav/clamav.service';
 import { User } from '../user/user.entity';
 import {
   CreateDocumentDto,
@@ -33,6 +35,7 @@ export class DocumentService {
     @Inject(CONFIG_TOKEN) private config: IConfig,
     @InjectRepository(Document)
     private documentRepository: Repository<Document>,
+    private clamAvService: ClamAVService,
   ) {
     this.dataStore = new S3Client({
       region: 'us-east-1',
@@ -100,9 +103,9 @@ export class DocumentService {
     });
     await this.dataStore.send(command);
     const document = await this.createDocumentRecord({
-      fileKey: fileKey,
-      fileSize: fileSize,
-      mimeType: mimeType,
+      fileKey,
+      fileSize,
+      mimeType,
       uploadedBy: user,
       fileName,
       source,
@@ -115,6 +118,10 @@ export class DocumentService {
 
   async softRemove(document: Document) {
     await this.documentRepository.softRemove(document);
+  }
+
+  async softRemoveMany(documents: Document[]) {
+    await this.documentRepository.softRemove(documents);
   }
 
   async getUploadUrl(filePath: string) {
@@ -147,33 +154,27 @@ export class DocumentService {
     });
   }
 
-  //One time function used to apply default tags to existing documents
-  async applyDefaultTags() {
-    const documents = await this.documentRepository.find();
-    console.warn(
-      `Applying default document tags to ${documents.length} Documents`,
-    );
-    for (const document of documents) {
-      document.tags = DEFAULT_DB_TAGS;
-      const command = new PutObjectTaggingCommand({
-        Bucket: this.config.get('STORAGE.BUCKET'),
-        Key: document.fileKey,
-        Tagging: {
-          TagSet: [
-            {
-              Key: 'ORCS-Classification',
-              Value: '85100-20',
-            },
-          ],
-        },
-      });
-      await this.dataStore.send(command);
-      await this.documentRepository.save(document);
-    }
-    console.warn(`${documents.length} Documents tagged successfully`);
-  }
-
   async createDocumentRecord(data: CreateDocumentDto) {
+    const command = new GetObjectCommand({
+      Bucket: this.config.get('STORAGE.BUCKET'),
+      Key: data.fileKey,
+      ResponseContentDisposition: `attachment; filename="${data.fileName}"`,
+    });
+
+    const fileUrl = await getSignedUrl(this.dataStore, command, {
+      expiresIn: this.documentTimeout,
+    });
+
+    const isInfected = await this.clamAvService.scanFile(fileUrl);
+    if (isInfected) {
+      await this.deleteDocument(data.fileKey);
+      this.logger.warn(`Deleted malicious file ${data.fileKey}`);
+      throw new BaseServiceException(
+        'File may contain malicious data, upload blocked',
+        403,
+      );
+    }
+
     return this.documentRepository.save(
       new Document({
         mimeType: data.mimeType,
@@ -194,6 +195,14 @@ export class DocumentService {
         uuid,
       },
     });
+  }
+
+  private async deleteDocument(fileKey: string) {
+    const command = new DeleteObjectCommand({
+      Bucket: this.config.get('STORAGE.BUCKET'),
+      Key: fileKey,
+    });
+    await this.dataStore.send(command);
   }
 
   async update(

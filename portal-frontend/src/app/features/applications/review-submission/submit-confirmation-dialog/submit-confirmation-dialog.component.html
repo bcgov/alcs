@@ -1,0 +1,58 @@
+<div mat-dialog-title>
+  <h4>Submit Local/First Nation Government Review</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <ng-container *ngIf="data.isAuthorizing">
+    <div>
+      <div class="subheading2">Terms and Conditions:</div>
+      <mat-checkbox #checkbox1 color="primary" class="checkbox">
+        I/we understand that {{ data.governmentName }} is forwarding this application to the ALC.
+      </mat-checkbox>
+      <mat-checkbox #checkbox2 color="primary" class="checkbox">
+        I/we understand that the submission will be visible to the public after ALC confirms receipt.
+      </mat-checkbox>
+    </div>
+    <p>
+      {{ data.governmentName }} will be cc'd on the email notifying the applicant that the application has been
+      forwarded to the ALC.<br /><br />
+      Any updates should be emailed to the ALC. Visit the
+      <a target="_blank" href="https://www.alc.gov.bc.ca/contact/">Contact Us</a> page on the ALC Website for more
+      information.
+    </p>
+    <div>
+      <div class="step-controls">
+        <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+        <button
+          mat-flat-button
+          color="primary"
+          [disabled]="!checkbox1.checked || !checkbox2.checked"
+          [mat-dialog-close]="true"
+        >
+          submit
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!data.isAuthorizing">
+    <div>
+      <div class="subheading2">Terms and Conditions:</div>
+      <mat-checkbox #checkbox1 color="primary" class="checkbox">
+        I/we understand that {{ data.governmentName }} is refusing this application. It will not be forwarded to the
+        ALC.
+      </mat-checkbox>
+    </div>
+    <p>
+      {{ data.governmentName }} will be cc'd on the email notifying the applicant that the application has not been
+      forwarded to the ALC.
+    </p>
+    <div>
+      <div class="step-controls">
+        <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+        <button mat-flat-button color="primary" [disabled]="!checkbox1.checked" [mat-dialog-close]="true">
+          submit
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

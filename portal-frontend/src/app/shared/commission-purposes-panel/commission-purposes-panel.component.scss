@@ -1,0 +1,12 @@
+.list-item {
+  counter-reset: listCounter;
+}
+
+.list-item li {
+  list-style-type: none;
+}
+
+.list-item li:before {
+  content: '(' counter(listCounter, lower-alpha) ') ';
+  counter-increment: listCounter;
+}

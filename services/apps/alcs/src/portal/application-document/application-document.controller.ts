@@ -1,10 +1,12 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,
@@ -22,8 +23,13 @@ import {
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import {
+  DEFAULT_PUBLIC_TYPES,
+  DOCUMENT_TYPE,
+} from '../../document/document-code.entity';
 import { DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { DocumentService } from '../../document/document.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import {
   AttachExternalDocumentDto,
@@ -62,15 +68,34 @@ export class ApplicationDocumentController {
   @Get('/:uuid/open')
   async open(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can access?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canAccessDocument =
+      await this.applicationSubmissionService.canAccessDocument(document, user);
 
-    const url = await this.applicationDocumentService.getInlineUrl(document);
-    return { url };
+    if (canAccessDocument) {
+      const url = await this.applicationDocumentService.getInlineUrl(document);
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
+  }
+
+  @Get('/:uuid/download')
+  async download(@Param('uuid') fileUuid: string, @Req() req) {
+    const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
+
+    const canAccessDocument =
+      await this.applicationSubmissionService.canAccessDocument(document, user);
+
+    if (canAccessDocument) {
+      const url =
+        await this.applicationDocumentService.getDownloadUrl(document);
+      return { url };
+    }
+
+    throw new NotFoundException('Failed to find document');
   }
 
   @Patch('/application/:fileNumber')
@@ -97,14 +122,17 @@ export class ApplicationDocumentController {
   @Delete('/:uuid')
   async delete(@Param('uuid') fileUuid: string, @Req() req) {
     const document = await this.applicationDocumentService.get(fileUuid);
+    const user = req.user.entity as User;
 
-    //TODO: How do we know which documents applicant can delete?
-    // await this.applicationSubmissionService.verifyAccess(
-    //   document.applicationUuid,
-    //   req.user.entity,
-    // );
+    const canDeleteDocument =
+      await this.applicationSubmissionService.canDeleteDocument(document, user);
 
-    await this.applicationDocumentService.delete(document);
+    if (canDeleteDocument) {
+      await this.applicationDocumentService.delete(document);
+    } else {
+      throw new ForbiddenException('Not allowed to delete document');
+    }
+
     return {};
   }
 
@@ -125,6 +153,16 @@ export class ApplicationDocumentController {
       system: DOCUMENT_SYSTEM.PORTAL,
     });
 
+    const visibilityFlags = [
+      VISIBILITY_FLAG.APPLICANT,
+      VISIBILITY_FLAG.GOVERNMENT,
+      VISIBILITY_FLAG.COMMISSIONER,
+    ];
+
+    if (data.documentType && DEFAULT_PUBLIC_TYPES.includes(data.documentType)) {
+      visibilityFlags.push(VISIBILITY_FLAG.PUBLIC);
+    }
+
     const savedDocument =
       await this.applicationDocumentService.attachExternalDocument(
         submission.fileNumber,
@@ -132,11 +170,7 @@ export class ApplicationDocumentController {
           documentUuid: document.uuid,
           type: data.documentType,
         },
-        [
-          VISIBILITY_FLAG.APPLICANT,
-          VISIBILITY_FLAG.GOVERNMENT,
-          VISIBILITY_FLAG.COMMISSIONER,
-        ],
+        visibilityFlags,
       );
 
     const mappedDocs = this.mapPortalDocuments([savedDocument]);

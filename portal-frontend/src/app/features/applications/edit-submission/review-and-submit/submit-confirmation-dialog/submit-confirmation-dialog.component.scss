@@ -1,0 +1,28 @@
+@use '../../../../../../styles/functions' as *;
+
+.checkbox {
+  margin: rem(10) 0;
+  width: 100%;
+}
+
+p {
+  margin: rem(28) 0 !important;
+}
+
+.step-controls {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column-reverse;
+
+  button {
+    margin-top: rem(12) !important;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-direction: row;
+
+    button:not(:last-child) {
+      margin-right: rem(16) !important;
+    }
+  }
+}

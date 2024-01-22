@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { CommentMentionDto } from './mention/comment-mention.dto';
 

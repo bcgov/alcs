@@ -8,7 +8,7 @@ Using the template below these jobs can be executed inside openshift. Once logge
 * Replace the JOB_NAME with the jobs name
 * Replace NAMESPACE with the project where you want to run the job
 * Replace VERSION_HERE with the version of the image to use
-* Replace COMMAND_HERE with the command to execute such as tagDocuments
+* Replace COMMAND_HERE with the command to execute such as import
 
 ## Template
 ```

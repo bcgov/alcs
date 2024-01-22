@@ -8,6 +8,11 @@
     "USER": "postgres",
     "PASSWORD": "postgres"
   },
+  "REDIS": {
+    "HOST": "localhost",
+    "PORT": "6379",
+    "PASSWORD": "redis"
+  },
   "VERBOSE": "false",
   "KEYCLOAK": {
     "SCOPES": ["openid"]

@@ -2,8 +2,8 @@ import {
   ServiceNotFoundException,
   ServiceValidationException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -16,11 +16,13 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { ApplicationSubmissionStatusService } from './application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
-import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -30,10 +32,7 @@ import {
   ApplicationUpdateServiceDto,
   CreateApplicationServiceDto,
 } from './application.dto';
-import {
-  Application,
-  APPLICATION_FILE_NUMBER_SEQUENCE,
-} from './application.entity';
+import { Application } from './application.entity';
 
 export const APPLICATION_EXPIRATION_DAY_RANGES = {
   ACTIVE_DAYS_START: 55,
@@ -82,8 +81,9 @@ export class ApplicationService {
     private applicationTypeRepository: Repository<ApplicationType>,
     private applicationTimeTrackingService: ApplicationTimeTrackingService,
     private codeService: CodeService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private fileNumberService: FileNumberService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private applicationMapper: Mapper,
   ) {}
 
@@ -105,7 +105,6 @@ export class ApplicationService {
       localGovernmentUuid: createDto.localGovernmentUuid,
       typeCode: createDto.typeCode,
       region,
-      statusHistory: createDto.statusHistory,
       source: createDto.source,
     });
 
@@ -159,7 +158,6 @@ export class ApplicationService {
     existingApplication.localGovernmentUuid = application.localGovernmentUuid;
     existingApplication.typeCode = application.typeCode;
     existingApplication.region = region;
-    existingApplication.statusHistory = application.statusHistory ?? [];
 
     if (createCard) {
       existingApplication.card = new Card();
@@ -187,17 +185,18 @@ export class ApplicationService {
   }
 
   async updateByUuid(uuid: string, updates: ApplicationUpdateServiceDto) {
-    const existingApplication = await this.applicationRepository.findOne({
+    const appExists = await this.applicationRepository.exist({
       where: { uuid },
     });
 
-    if (!existingApplication) {
+    if (!appExists) {
       throw new ServiceNotFoundException(
         `Application not found with file number ${uuid}`,
       );
     }
 
-    return this.update(existingApplication, updates);
+    await this.applicationRepository.update(uuid, updates);
+    return this.getByUuidOrFail(uuid);
   }
 
   async update(
@@ -205,12 +204,54 @@ export class ApplicationService {
     updates: ApplicationUpdateServiceDto,
   ): Promise<Application> {
     await this.applicationRepository.update(existingApplication.uuid, updates);
+
+    try {
+      if (updates.dateAcknowledgedIncomplete !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+          updates.dateAcknowledgedIncomplete,
+        );
+      }
+
+      if (updates.dateReceivedAllItems !== undefined) {
+        await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+          existingApplication.fileNumber,
+          SUBMISSION_STATUS.RECEIVED_BY_ALC,
+          updates.dateReceivedAllItems,
+        );
+      }
+    } catch (error) {
+      if (error instanceof ServiceNotFoundException) {
+        this.logger.warn(error.message, error);
+      } else {
+        throw error;
+      }
+    }
+
     return this.getOrFail(existingApplication.fileNumber);
   }
 
   async delete(applicationNumber: string): Promise<void> {
     const application = await this.getOrFail(applicationNumber);
     await this.applicationRepository.softRemove([application]);
+    return;
+  }
+
+  async cancel(fileNumber: string): Promise<void> {
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      SUBMISSION_STATUS.CANCELLED,
+    );
+    return;
+  }
+
+  async uncancel(fileNumber: string) {
+    await this.applicationSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
     return;
   }
 
@@ -376,28 +417,12 @@ export class ApplicationService {
         portalLabel: true,
         htmlDescription: true,
         label: true,
+        requiresGovernmentReview: true,
+        portalOrder: true,
+        alcFeeAmount: true,
+        governmentFeeAmount: true,
       },
     });
-  }
-
-  private async getNextFileNumber() {
-    const fileNumberArr = await this.applicationRepository.query(
-      `select nextval('${APPLICATION_FILE_NUMBER_SEQUENCE}') limit 1`,
-    );
-    return fileNumberArr[0].nextval;
-  }
-
-  async generateNextFileNumber(): Promise<string> {
-    let fileNumber: string;
-    let application: Application | null = null;
-    do {
-      fileNumber = await this.getNextFileNumber();
-      application = await this.applicationRepository.findOne({
-        where: { fileNumber },
-      });
-    } while (application);
-
-    return fileNumber;
   }
 
   async getUuid(fileNumber: string) {
@@ -418,6 +443,7 @@ export class ApplicationService {
         uuid,
       },
       select: {
+        uuid: true,
         fileNumber: true,
       },
     });
@@ -430,5 +456,16 @@ export class ApplicationService {
         uuid,
       },
     });
+  }
+
+  async updateApplicant(fileNumber: string, applicantName: string) {
+    await this.applicationRepository.update(
+      {
+        fileNumber,
+      },
+      {
+        applicant: applicantName,
+      },
+    );
   }
 }

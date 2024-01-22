@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -31,10 +31,16 @@ export class UserController {
   ) {}
 
   @Get('/profile')
-  @UserRoles(...ANY_AUTH_ROLE)
+  @UserRoles()
   async getMyself(@Req() req) {
     const user = req.user.entity;
-    return this.userMapper.mapAsync(user, User, UserDto);
+    const mappedUser = await this.userMapper.mapAsync(user, User, UserDto);
+    const government = await this.userService.getUserLocalGovernment(user);
+    mappedUser.government = government ? government.name : undefined;
+    mappedUser.isLocalGovernment = !!government && !government.isFirstNation;
+    mappedUser.isFirstNationGovernment =
+      !!government && government.isFirstNation;
+    return mappedUser;
   }
 
   @Get('/assignable')

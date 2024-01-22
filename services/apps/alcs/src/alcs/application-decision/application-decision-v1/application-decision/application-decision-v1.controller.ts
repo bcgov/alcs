@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,
@@ -51,9 +51,8 @@ export class ApplicationDecisionV1Controller {
   async getByFileNumber(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionDto[]> {
-    const decisions = await this.appDecisionService.getByAppFileNumber(
-      fileNumber,
-    );
+    const decisions =
+      await this.appDecisionService.getByAppFileNumber(fileNumber);
     return await this.mapper.mapArrayAsync(
       decisions,
       ApplicationDecision,
@@ -205,9 +204,8 @@ export class ApplicationDecisionV1Controller {
     @Param('uuid') decisionUuid: string,
     @Param('fileUuid') documentUuid: string,
   ) {
-    const downloadUrl = await this.appDecisionService.getDownloadUrl(
-      documentUuid,
-    );
+    const downloadUrl =
+      await this.appDecisionService.getDownloadUrl(documentUuid);
     return {
       url: downloadUrl,
     };

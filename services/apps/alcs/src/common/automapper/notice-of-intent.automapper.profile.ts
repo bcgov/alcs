@@ -1,6 +1,10 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
+import { NoticeOfIntentTypeDto } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
+import { NoticeOfIntentType } from '../../alcs/notice-of-intent/notice-of-intent-type/notice-of-intent-type.entity';
+import { NoticeOfIntentDocumentDto } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.dto';
+import { NoticeOfIntentDocument } from '../../alcs/notice-of-intent/notice-of-intent-document/notice-of-intent-document.entity';
 
 import { NoticeOfIntentMeetingType } from '../../alcs/notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting-type.entity';
 import {
@@ -14,6 +18,8 @@ import {
   NoticeOfIntentSubtypeDto,
 } from '../../alcs/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntent } from '../../alcs/notice-of-intent/notice-of-intent.entity';
+import { DocumentCode } from '../../document/document-code.entity';
+import { DocumentTypeDto } from '../../document/document.dto';
 
 @Injectable()
 export class NoticeOfIntentProfile extends AutomapperProfile {
@@ -24,6 +30,7 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, NoticeOfIntentSubtype, NoticeOfIntentSubtypeDto);
+      createMap(mapper, NoticeOfIntentType, NoticeOfIntentTypeDto);
 
       createMap(
         mapper,
@@ -54,6 +61,14 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
           mapFrom((ad) => ad.decisionDate?.getTime()),
         ),
         forMember(
+          (a) => a.proposalEndDate,
+          mapFrom((ad) => ad.proposalEndDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalEndDate2,
+          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
+        ),
+        forMember(
           (a) => a.activeDays,
           mapFrom((_) => 0),
         ),
@@ -66,6 +81,7 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
           mapFrom((_) => false),
         ),
       );
+
       createMap(
         mapper,
         NoticeOfIntentMeeting,
@@ -87,11 +103,51 @@ export class NoticeOfIntentProfile extends AutomapperProfile {
           mapFrom((m) => m.endDate?.getTime()),
         ),
       );
+
       createMap(
         mapper,
         NoticeOfIntentMeetingType,
         NoticeOfIntentMeetingTypeDto,
       );
+
+      createMap(
+        mapper,
+        NoticeOfIntentDocument,
+        NoticeOfIntentDocumentDto,
+        forMember(
+          (a) => a.mimeType,
+          mapFrom((ad) => ad.document.mimeType),
+        ),
+        forMember(
+          (a) => a.fileName,
+          mapFrom((ad) => ad.document.fileName),
+        ),
+        forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
+        ),
+        forMember(
+          (a) => a.uploadedBy,
+          mapFrom((ad) => ad.document.uploadedBy?.name),
+        ),
+        forMember(
+          (a) => a.uploadedAt,
+          mapFrom((ad) => ad.document.uploadedAt.getTime()),
+        ),
+        forMember(
+          (a) => a.documentUuid,
+          mapFrom((ad) => ad.document.uuid),
+        ),
+        forMember(
+          (a) => a.source,
+          mapFrom((ad) => ad.document.source),
+        ),
+        forMember(
+          (a) => a.system,
+          mapFrom((ad) => ad.document.system),
+        ),
+      );
+      createMap(mapper, DocumentCode, DocumentTypeDto);
     };
   }
 }

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, PrimaryColumn } from 'typeorm';
 import { Auditable } from './audit.entity';
 

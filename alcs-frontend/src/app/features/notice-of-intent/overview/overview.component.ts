@@ -1,34 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
-import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
-import { ApplicationDecisionDto } from '../../../services/application/decision/application-decision-v1/application-decision.dto';
-import { NoticeOfIntentDecisionDto } from '../../../services/notice-of-intent/decision/notice-of-intent-decision.dto';
-import { NoticeOfIntentDecisionService } from '../../../services/notice-of-intent/decision/notice-of-intent-decision.service';
-import { NoticeOfIntentMeetingDto } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.dto';
-import { NoticeOfIntentMeetingService } from '../../../services/notice-of-intent/meeting/notice-of-intent-meeting.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
 import { NoticeOfIntentDetailService } from '../../../services/notice-of-intent/notice-of-intent-detail.service';
-import { NoticeOfIntentModificationDto } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
-import { NoticeOfIntentModificationService } from '../../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
-import { NoticeOfIntentDto } from '../../../services/notice-of-intent/notice-of-intent.dto';
-import { TimelineEvent } from '../../../shared/timeline/timeline.component';
-
-const editLink = new Map<string, string>([['IR', './info-request']]);
-
-const SORTING_ORDER = {
-  //high comes first, 1 shows at bottom
-  MODIFICATION_REVIEW: 12,
-  MODIFICATION_REQUEST: 11,
-  CHAIR_REVIEW_DECISION: 10,
-  AUDITED_DECISION: 9,
-  DECISION_MADE: 8,
-  VISIT_REPORTS: 7,
-  VISIT_REQUESTS: 6,
-  ACKNOWLEDGE_COMPLETE: 5,
-  RECEIVED_ALL_ITEMS: 4,
-  FEE_RECEIVED: 3,
-  ACKNOWLEDGED_INCOMPLETE: 2,
-  SUBMITTED: 1,
-};
+import { NoticeOfIntentSubmissionStatusService } from '../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { TimelineEventDto } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.dto';
+import { NoticeOfIntentTimelineService } from '../../../services/notice-of-intent/notice-of-intent-timeline/notice-of-intent-timeline.service';
+import {
+  NOI_SUBMISSION_STATUS,
+  NoticeOfIntentDto,
+  NoticeOfIntentSubmissionToSubmissionStatusDto,
+} from '../../../services/notice-of-intent/notice-of-intent.dto';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { UncancelNoticeOfIntentDialogComponent } from './uncancel-notice-of-intent-dialog/uncancel-notice-of-intent-dialog.component';
 
 @Component({
   selector: 'app-overview',
@@ -38,43 +21,29 @@ const SORTING_ORDER = {
 export class OverviewComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   noticeOfIntent?: NoticeOfIntentDto;
-  events: TimelineEvent[] = [];
+  events: TimelineEventDto[] = [];
   summary = '';
-
-  private $decisions = new BehaviorSubject<NoticeOfIntentDecisionDto[]>([]);
+  isCancelled = false;
+  isHiddenFromPortal = false;
 
   constructor(
     private noticeOfIntentDetailService: NoticeOfIntentDetailService,
-    private noticeOfIntentMeetingService: NoticeOfIntentMeetingService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
-    private noticeOfIntentModificationService: NoticeOfIntentModificationService
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
+    private noticeOfIntentTimelineService: NoticeOfIntentTimelineService,
+    private confirmationDialogService: ConfirmationDialogService,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
     this.noticeOfIntentDetailService.$noticeOfIntent
       .pipe(takeUntil(this.$destroy))
-      .pipe(
-        tap((noi) => {
-          if (noi) {
-            this.noticeOfIntentMeetingService.fetch(noi.uuid);
-            this.noticeOfIntentDecisionService.fetchByFileNumber(noi.fileNumber).then((res) => {
-              this.$decisions.next(res);
-            });
-          }
-        })
-      )
-      .pipe(
-        combineLatestWith(
-          this.noticeOfIntentMeetingService.$meetings,
-          this.noticeOfIntentModificationService.$modifications,
-          this.$decisions
-        )
-      )
-      .subscribe(([noticeOfIntent, meetings, modifications, decisions]) => {
+      .subscribe(async (noticeOfIntent) => {
         if (noticeOfIntent) {
-          this.summary = noticeOfIntent.summary || '';
           this.noticeOfIntent = noticeOfIntent;
-          this.populateEvents(noticeOfIntent, meetings, modifications, decisions);
+          this.isHiddenFromPortal = noticeOfIntent.hideFromPortal;
+          this.summary = noticeOfIntent.summary ?? '';
+          this.events = await this.noticeOfIntentTimelineService.fetchByFileNumber(noticeOfIntent.fileNumber);
+          this.loadStatusHistory(this.noticeOfIntent.fileNumber);
         }
       });
   }
@@ -92,111 +61,83 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private populateEvents(
-    noticeOfIntent: NoticeOfIntentDto,
-    meetings: NoticeOfIntentMeetingDto[],
-    modifications: NoticeOfIntentModificationDto[],
-    decisions: NoticeOfIntentDecisionDto[]
-  ) {
-    const mappedEvents: TimelineEvent[] = [];
-    if (noticeOfIntent.dateSubmittedToAlc) {
-      mappedEvents.push({
-        name: 'Submitted to ALC',
-        startDate: new Date(noticeOfIntent.dateSubmittedToAlc + SORTING_ORDER.SUBMITTED),
-        isFulfilled: true,
-      });
+  private async loadStatusHistory(fileNumber: string) {
+    let statusHistory: NoticeOfIntentSubmissionToSubmissionStatusDto[] = [];
+    try {
+      statusHistory = await this.noticeOfIntentSubmissionStatusService.fetchSubmissionStatusesByFileNumber(
+        fileNumber,
+        false,
+      );
+    } catch (e) {
+      console.warn(`No statuses for ${fileNumber}. Is it a manually created submission?`);
     }
 
-    if (noticeOfIntent.dateAcknowledgedIncomplete) {
-      mappedEvents.push({
-        name: 'Acknowledged Incomplete',
-        startDate: new Date(noticeOfIntent.dateAcknowledgedIncomplete + SORTING_ORDER.ACKNOWLEDGED_INCOMPLETE),
-        isFulfilled: true,
-      });
-    }
-
-    if (noticeOfIntent.dateAcknowledgedComplete) {
-      mappedEvents.push({
-        name: 'Acknowledged Complete',
-        startDate: new Date(noticeOfIntent.dateAcknowledgedComplete + SORTING_ORDER.ACKNOWLEDGE_COMPLETE),
-        isFulfilled: true,
-      });
-    }
-
-    if (noticeOfIntent.feePaidDate) {
-      mappedEvents.push({
-        name: 'Fee Received Date',
-        startDate: new Date(noticeOfIntent.feePaidDate + SORTING_ORDER.FEE_RECEIVED),
-        isFulfilled: true,
-      });
-    }
-
-    if (noticeOfIntent.dateReceivedAllItems) {
-      mappedEvents.push({
-        name: 'Received All Items',
-        startDate: new Date(noticeOfIntent.dateReceivedAllItems + SORTING_ORDER.FEE_RECEIVED),
-        isFulfilled: true,
-      });
-    }
-
-    for (const [index, decision] of decisions.entries()) {
-      if (decision.auditDate) {
-        mappedEvents.push({
-          name: `Audited Decision #${decisions.length - index}`,
-          startDate: new Date(decision.auditDate + SORTING_ORDER.AUDITED_DECISION),
-          isFulfilled: true,
-        });
-      }
-
-      mappedEvents.push({
-        name: `Decision #${decisions.length - index} Made${
-          decisions.length - 1 === index ? ` - Active Days: ${noticeOfIntent.activeDays}` : ''
-        }`,
-        startDate: new Date(decision.date + SORTING_ORDER.DECISION_MADE),
-        isFulfilled: true,
-      });
-    }
-
-    meetings.sort((a, b) => a.meetingStartDate - b.meetingStartDate);
-    const typeCount = new Map<string, number>();
-    meetings.forEach((meeting) => {
-      const count = typeCount.get(meeting.meetingType.code) || 0;
-      mappedEvents.push({
-        name: `${meeting.meetingType.label} #${count + 1}`,
-        startDate: new Date(meeting.meetingStartDate + SORTING_ORDER.VISIT_REQUESTS),
-        fulfilledDate: meeting.meetingEndDate ? new Date(meeting.meetingEndDate) : undefined,
-        isFulfilled: !!meeting.meetingEndDate,
-        link: editLink.get(meeting.meetingType.code),
-      });
-
-      typeCount.set(meeting.meetingType.code, count + 1);
-    });
-
-    const mappedModifications = this.mapModificationsToEvents(modifications);
-    mappedEvents.push(...mappedModifications);
-
-    mappedEvents.sort((a, b) => b.startDate.getTime() - a.startDate.getTime());
-
-    this.events = mappedEvents;
+    this.isCancelled =
+      statusHistory.filter(
+        (status) => status.effectiveDate && status.statusTypeCode === NOI_SUBMISSION_STATUS.CANCELLED,
+      ).length > 0;
   }
 
-  private mapModificationsToEvents(modifications: NoticeOfIntentModificationDto[]) {
-    const events: TimelineEvent[] = [];
-    for (const [index, modification] of modifications.sort((a, b) => b.submittedDate - a.submittedDate).entries()) {
-      events.push({
-        name: `Modification Requested #${modifications.length - index}`,
-        startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
-        isFulfilled: true,
+  async onCancel() {
+    this.confirmationDialogService
+      .openDialog({
+        body: `Are you sure you want to cancel this Notice of Intent?`,
+        cancelButtonText: 'No',
+        title: 'Cancel Notice of Intent',
+      })
+      .subscribe(async (didConfirm) => {
+        if (didConfirm && this.noticeOfIntent) {
+          await this.noticeOfIntentDetailService.cancel(this.noticeOfIntent.fileNumber);
+          await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+        }
       });
+  }
 
-      if (modification.outcomeNotificationDate) {
-        events.push({
-          name: `Modification Request Reviewed #${modifications.length - index} - ${modification.reviewOutcome.label}`,
-          startDate: new Date(modification.submittedDate + SORTING_ORDER.MODIFICATION_REQUEST),
-          isFulfilled: true,
+  async onUncancel() {
+    if (this.noticeOfIntent) {
+      this.dialog
+        .open(UncancelNoticeOfIntentDialogComponent, {
+          data: {
+            fileNumber: this.noticeOfIntent.fileNumber,
+          },
+        })
+        .beforeClosed()
+        .subscribe(async (didConfirm) => {
+          if (didConfirm && this.noticeOfIntent) {
+            await this.noticeOfIntentDetailService.uncancel(this.noticeOfIntent.fileNumber);
+            await this.loadStatusHistory(this.noticeOfIntent.fileNumber);
+          }
         });
-      }
     }
-    return events;
+  }
+
+  onTogglePortalVisible() {
+    if (this.isHiddenFromPortal) {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'If you continue, this File ID will not return any search results for the L/FNG and the public. Please add a journal note to explain why this file is restricted.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = didConfirm;
+          if (didConfirm && this.noticeOfIntent) {
+            this.noticeOfIntentDetailService.update(this.noticeOfIntent.fileNumber, {
+              hideFromPortal: true,
+            });
+          }
+        });
+    } else {
+      this.confirmationDialogService
+        .openDialog({
+          body: 'Are you sure you want to remove the access restriction for the L/FNG and public? If you continue, this File ID could return search results for the L/FNG and the public. Standard rules for showing/hiding content will apply.',
+        })
+        .subscribe((didConfirm) => {
+          this.isHiddenFromPortal = !didConfirm;
+          if (didConfirm && this.noticeOfIntent) {
+            this.noticeOfIntentDetailService.update(this.noticeOfIntent.fileNumber, {
+              hideFromPortal: false,
+            });
+          }
+        });
+    }
   }
 }

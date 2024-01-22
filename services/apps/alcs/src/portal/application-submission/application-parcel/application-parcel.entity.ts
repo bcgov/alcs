@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   Column,
   Entity,
@@ -10,9 +10,10 @@ import {
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { Base } from '../../../common/entities/base.entity';
+import { ParcelOwnershipType } from '../../../common/entities/parcel-ownership-type/parcel-ownership-type.entity';
+import { ColumnNumericTransformer } from '../../../utils/column-numeric-transform';
 import { ApplicationOwner } from '../application-owner/application-owner.entity';
 import { ApplicationSubmission } from '../application-submission.entity';
-import { ApplicationParcelOwnershipType } from './application-parcel-ownership-type/application-parcel-ownership-type.entity';
 
 @Entity()
 export class ApplicationParcel extends Base {
@@ -93,16 +94,6 @@ export class ApplicationParcel extends Base {
   })
   isConfirmedByApplicant: boolean;
 
-  @AutoMap(() => String)
-  @Column({
-    type: 'varchar',
-    comment:
-      'The Parcels type, "other" means parcels not related to application but related to the owner',
-    nullable: false,
-    default: 'application',
-  })
-  parcelType?: string;
-
   @AutoMap()
   @ManyToOne(() => ApplicationSubmission)
   applicationSubmission: ApplicationSubmission;
@@ -116,8 +107,8 @@ export class ApplicationParcel extends Base {
   ownershipTypeCode?: string | null;
 
   @AutoMap()
-  @ManyToOne(() => ApplicationParcelOwnershipType)
-  ownershipType: ApplicationParcelOwnershipType;
+  @ManyToOne(() => ParcelOwnershipType)
+  ownershipType: ParcelOwnershipType;
 
   @AutoMap(() => Boolean)
   @Column({
@@ -139,4 +130,36 @@ export class ApplicationParcel extends Base {
     onDelete: 'SET NULL',
   })
   certificateOfTitle?: ApplicationDocument;
+
+  @AutoMap(() => String)
+  @Column({ nullable: true })
+  certificateOfTitleUuid: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 15,
+    scale: 5,
+    transformer: new ColumnNumericTransformer(),
+  })
+  alrArea?: number | null;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_subject_properties to alcs.application_parcel.',
+  })
+  oatsSubjectPropertyId: number;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_properties to alcs.application_parcel.',
+  })
+  oatsPropertyId: number;
 }

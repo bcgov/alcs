@@ -8,10 +8,10 @@ import {
   IsString,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
-import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
+import { NoticeOfIntentTypeDto } from '../../notice-of-intent/notice-of-intent-type/notice-of-intent-type.dto';
+import { LocalGovernmentDto } from '../../local-government/local-government.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
-import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
 import { NoticeOfIntentDecisionDto } from '../notice-of-intent-decision.dto';
 
 export class NoticeOfIntentModificationOutcomeCodeDto extends BaseCodeDto {}
@@ -24,6 +24,10 @@ export class NoticeOfIntentModificationCreateDto {
   @IsNotEmpty()
   @IsString()
   applicant: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
   @IsNotEmpty()
   @IsString()
@@ -50,13 +54,9 @@ export class NoticeOfIntentModificationUpdateDto {
   @IsOptional()
   submittedDate?: number;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  reviewDate?: number;
-
-  @IsNumber()
-  @IsOptional()
-  outcomeNotificationDate?: number | null;
+  description: string;
 
   @IsString()
   @IsOptional()
@@ -70,22 +70,21 @@ export class NoticeOfIntentModificationUpdateDto {
 
 export class NoticeOfIntentForModificationDto {
   fileNumber: string;
-  type: ApplicationTypeDto;
+  type: NoticeOfIntentTypeDto;
   statusCode: string;
   applicant: string;
   region: ApplicationRegionDto;
   retroactive: boolean;
-  localGovernment: ApplicationLocalGovernmentDto;
+  localGovernment: LocalGovernmentDto;
 }
 
 export class NoticeOfIntentModificationDto {
   uuid: string;
   noticeOfIntent: NoticeOfIntentForModificationDto;
   card: CardDto;
+  description: string;
   submittedDate: number;
-  reviewDate: number;
   reviewOutcome: NoticeOfIntentModificationOutcomeCodeDto | null;
-  outcomeNotificationDate: number | null;
   modifiesDecisions: NoticeOfIntentDecisionDto[];
   resultingDecision: NoticeOfIntentDecisionDto | null;
 }

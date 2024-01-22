@@ -15,7 +15,8 @@ import { KEYCLOAK_INSTANCE, Public } from 'nest-keycloak-connect';
 import { v4 } from 'uuid';
 import { AuthorizationService } from './authorization.service';
 
-@Controller('/authorize')
+//One for ALCS, One for Portal that triggers maintenance guard
+@Controller(['/authorize', '/portal/authorize'])
 export class AuthorizationController {
   private logger = new Logger(AuthorizationController.name);
 
@@ -34,10 +35,6 @@ export class AuthorizationController {
     @Res() res: FastifyReply,
   ) {
     try {
-      const token = await this.authorizationService.exchangeCodeForToken(
-        authCode,
-      );
-
       const redis = this.redisService.getClient();
       const sessionData = await redis.get(`session_${sessionId}`);
 
@@ -46,6 +43,11 @@ export class AuthorizationController {
         const parsedSession = JSON.parse(sessionData);
         isPortal = parsedSession.source === 'portal';
       }
+
+      const token = await this.authorizationService.exchangeCodeForToken(
+        authCode,
+        isPortal,
+      );
 
       const frontEndUrl = isPortal
         ? this.config.get('PORTAL.FRONTEND_ROOT')

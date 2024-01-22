@@ -23,6 +23,7 @@ import { CreateNoiModificationDialogComponent } from './dialogs/noi-modification
 import { NoiModificationDialogComponent } from './dialogs/noi-modification/noi-modification-dialog.component';
 import { CreateNoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/create/create-notice-of-intent-dialog.component';
 import { NoticeOfIntentDialogComponent } from './dialogs/notice-of-intent/notice-of-intent-dialog.component';
+import { NotificationDialogComponent } from './dialogs/notification/notification-dialog.component';
 import { CreatePlanningReviewDialogComponent } from './dialogs/planning-review/create/create-planning-review-dialog.component';
 import { PlanningReviewDialogComponent } from './dialogs/planning-review/planning-review-dialog.component';
 import { CreateReconsiderationDialogComponent } from './dialogs/reconsiderations/create/create-reconsideration-dialog.component';
@@ -61,6 +62,7 @@ const routes: Routes = [
     CreateNoticeOfIntentDialogComponent,
     CreateNoiModificationDialogComponent,
     NoiModificationDialogComponent,
+    NotificationDialogComponent,
   ],
   imports: [
     CommonModule,

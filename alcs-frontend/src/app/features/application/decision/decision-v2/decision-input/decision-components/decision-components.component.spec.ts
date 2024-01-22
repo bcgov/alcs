@@ -9,6 +9,7 @@ import { ApplicationDto } from '../../../../../../services/application/applicati
 import { ApplicationDecisionDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
 import { ToastService } from '../../../../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 import { DecisionComponentsComponent } from './decision-components.component';
 
@@ -49,6 +50,10 @@ describe('DecisionComponentsComponent', () => {
         {
           provide: ApplicationSubmissionService,
           useValue: mockApplicationSubmissionService,
+        },
+        {
+          provide: ConfirmationDialogService,
+          useValue: {},
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

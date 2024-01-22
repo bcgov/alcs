@@ -1,0 +1,6 @@
+@use '../../../../../styles/colors';
+
+.link:hover {
+  background-color: colors.$grey-light !important;
+  cursor: pointer;
+}

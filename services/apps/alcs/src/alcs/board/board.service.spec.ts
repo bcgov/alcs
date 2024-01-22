@@ -4,8 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationService } from '../application/application.service';
+import { CARD_STATUS } from '../card/card-status/card-status.entity';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
+import { BoardStatus } from './board-status.entity';
 import { Board } from './board.entity';
 import { BoardService } from './board.service';
 
@@ -13,12 +15,14 @@ describe('BoardsService', () => {
   let service: BoardService;
   let applicationService: DeepMocked<ApplicationService>;
   let cardService: DeepMocked<CardService>;
-  let mockRepository: DeepMocked<Repository<Board>>;
+  let mockBoardRepository: DeepMocked<Repository<Board>>;
+  let mockBoardStatusRepository: DeepMocked<Repository<BoardStatus>>;
 
   beforeEach(async () => {
-    applicationService = createMock<ApplicationService>();
-    mockRepository = createMock<Repository<Board>>();
-    cardService = createMock<CardService>();
+    applicationService = createMock();
+    mockBoardRepository = createMock();
+    cardService = createMock();
+    mockBoardStatusRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -33,7 +37,11 @@ describe('BoardsService', () => {
         },
         {
           provide: getRepositoryToken(Board),
-          useValue: mockRepository,
+          useValue: mockBoardRepository,
+        },
+        {
+          provide: getRepositoryToken(BoardStatus),
+          useValue: mockBoardStatusRepository,
         },
       ],
     }).compile();
@@ -46,10 +54,10 @@ describe('BoardsService', () => {
   });
 
   it('should call repo when list is called', async () => {
-    mockRepository.find.mockResolvedValue([]);
+    mockBoardRepository.find.mockResolvedValue([]);
 
     await service.list();
-    expect(mockRepository.find).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.find).toHaveBeenCalledTimes(1);
   });
 
   it('should set the applications status to the 0 rank when changing board', async () => {
@@ -73,12 +81,12 @@ describe('BoardsService', () => {
       board: { uuid: 'fake-board' },
     } as Card);
     cardService.save.mockResolvedValue(new Card());
-    mockRepository.findOne.mockResolvedValue(mockBoard);
+    mockBoardRepository.findOne.mockResolvedValue(mockBoard);
     cardService.update.mockResolvedValue({} as Card);
 
     await service.changeBoard(cardUuid, boardCode);
     expect(cardService.get).toHaveBeenCalledTimes(1);
-    expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.findOne).toHaveBeenCalledTimes(1);
     expect(cardService.save).toHaveBeenCalledTimes(1);
 
     const updatedCard = cardService.save.mock.calls[0][0];
@@ -98,12 +106,69 @@ describe('BoardsService', () => {
 
   it("should throw an exception when trying to set a board that doesn't exist", async () => {
     cardService.get.mockResolvedValue({} as Card);
-    mockRepository.findOne.mockResolvedValue(null);
+    mockBoardRepository.findOne.mockResolvedValue(null);
 
     await expect(
       service.changeBoard('file-number', 'board-code'),
     ).rejects.toMatchObject(
       new ServiceNotFoundException(`Failed to find Board with code board-code`),
     );
+  });
+
+  it('should call through for unlink status', async () => {
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+
+    await service.unlinkStatus('code');
+
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for getOneOrFail', async () => {
+    mockBoardRepository.findOneOrFail.mockResolvedValue({} as any);
+
+    await service.getOneOrFail({});
+
+    expect(mockBoardRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for getBoardsWithStatus', async () => {
+    mockBoardRepository.find.mockResolvedValue([]);
+
+    await service.getBoardsWithStatus(CARD_STATUS.READY_FOR_REVIEW);
+
+    expect(mockBoardRepository.find).toHaveBeenCalledTimes(1);
+  });
+
+  it('should delete the status links then remove the board for delete', async () => {
+    mockBoardRepository.findOneOrFail.mockResolvedValue(new Board());
+    mockBoardRepository.remove.mockResolvedValue({} as any);
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+
+    await service.delete('board-code');
+
+    expect(mockBoardRepository.findOneOrFail).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.remove).toHaveBeenCalledTimes(1);
+  });
+
+  it('should save both the board and updated status when creating or updating', async () => {
+    cardService.getCardTypes.mockResolvedValue([]);
+    mockBoardRepository.save.mockResolvedValue(new Board());
+    mockBoardStatusRepository.delete.mockResolvedValue({} as any);
+    mockBoardStatusRepository.save.mockResolvedValue([] as any);
+
+    await service.create({
+      allowedCardTypes: [],
+      code: '',
+      createCardTypes: [],
+      showOnSchedule: false,
+      statuses: [],
+      title: '',
+    });
+
+    expect(cardService.getCardTypes).toHaveBeenCalledTimes(1);
+    expect(mockBoardRepository.save).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.delete).toHaveBeenCalledTimes(1);
+    expect(mockBoardStatusRepository.save).toHaveBeenCalledTimes(1);
   });
 });

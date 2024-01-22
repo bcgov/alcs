@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ToastService } from '../toast/toast.service';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
 import { ApplicationService } from './application.service';
 
@@ -10,7 +9,7 @@ export class ApplicationDetailService {
 
   private selectedFileNumber: string | undefined;
 
-  constructor(private applicationService: ApplicationService, private toastService: ToastService) {}
+  constructor(private applicationService: ApplicationService) {}
 
   async loadApplication(fileNumber: string) {
     this.clearApplication();
@@ -30,5 +29,15 @@ export class ApplicationDetailService {
       this.$application.next(updatedApp);
     }
     return updatedApp;
+  }
+
+  async cancelApplication(fileNumber: string) {
+    await this.applicationService.cancelApplication(fileNumber);
+    await this.loadApplication(fileNumber);
+  }
+
+  async uncancelApplication(fileNumber: string) {
+    await this.applicationService.uncancelApplication(fileNumber);
+    await this.loadApplication(fileNumber);
   }
 }

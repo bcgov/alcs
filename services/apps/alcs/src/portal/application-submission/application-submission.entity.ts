@@ -1,5 +1,6 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
+  AfterLoad,
   Column,
   Entity,
   JoinColumn,
@@ -8,24 +9,19 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Base } from '../../common/entities/base.entity';
 import { User } from '../../user/user.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
-export class StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
-
 export class ProposedLot {
-  type: 'Lot' | 'Road Dedication';
-  size: number;
+  type: 'Lot' | 'Road Dedication' | null;
+  alrArea?: number | null;
+  size: number | null;
+  planNumbers: string | null;
 }
 
 @Entity()
@@ -83,7 +79,16 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'text',
     comment:
-      'Quantify and describe in detail all agriculture that currently takes place on the parcel(s).',
+      'Used to store comments when an Application is returned to the L/FNG by ALC Staff',
+    nullable: true,
+  })
+  returnedToLfngComment?: string | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Describe all agriculture that currently takes place on the parcel(s).',
     nullable: true,
   })
   parcelsAgricultureDescription?: string | null;
@@ -91,8 +96,7 @@ export class ApplicationSubmission extends Base {
   @AutoMap(() => String)
   @Column({
     type: 'text',
-    comment:
-      'Quantify and describe in detail all agricultural improvements made to the parcel(s).',
+    comment: 'Describe all agricultural improvements made to the parcel(s).',
     nullable: true,
   })
   parcelsAgricultureImprovementDescription?: string | null;
@@ -101,7 +105,7 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'text',
     comment:
-      'Quantify and describe all non-agricultural uses that currently take place on the parcel(s).',
+      'Describe all other uses that currently take place on the parcel(s).',
     nullable: true,
   })
   parcelsNonAgricultureUseDescription?: string | null;
@@ -182,13 +186,6 @@ export class ApplicationSubmission extends Base {
   @ManyToOne(() => User)
   createdBy: User;
 
-  @AutoMap()
-  @ManyToOne(() => ApplicationStatus, { nullable: false, eager: true })
-  status: ApplicationStatus;
-
-  @Column()
-  statusCode: string;
-
   @Column({
     type: 'text',
     nullable: true,
@@ -202,15 +199,7 @@ export class ApplicationSubmission extends Base {
   })
   typeCode: string;
 
-  @AutoMap(() => StatusHistory)
-  @Column({
-    comment: 'JSONB Column containing the status history of the Application',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
-  })
-  statusHistory: StatusHistory[];
-
+  @AutoMap(() => [ApplicationOwner])
   @OneToMany(() => ApplicationOwner, (owner) => owner.applicationSubmission)
   owners: ApplicationOwner[];
 
@@ -223,20 +212,29 @@ export class ApplicationSubmission extends Base {
   })
   hasOtherParcelsInCommunity?: boolean | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Stores the data user entered about other parcels in their community',
+    nullable: true,
+  })
+  otherParcelsDescription?: string;
+
   //NFU Specific Fields
   @AutoMap(() => Number)
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   nfuHectares: number | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  nfuPurpose: string | null;
+  purpose: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -254,11 +252,21 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
+    precision: 15,
+    scale: 5,
+    transformer: new ColumnNumericTransformer(),
+  })
+  nfuTotalFillArea: number | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
     precision: 12,
     scale: 2,
     transformer: new ColumnNumericTransformer(),
   })
-  nfuTotalFillPlacement: number | null;
+  nfuAverageFillDepth: number | null;
 
   @AutoMap(() => Number)
   @Column({
@@ -280,19 +288,9 @@ export class ApplicationSubmission extends Base {
   })
   nfuFillVolume: number | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  nfuProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -303,10 +301,6 @@ export class ApplicationSubmission extends Base {
   nfuFillOriginDescription: string | null;
 
   //TUR Specific Fields
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  turPurpose: string | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   turAgriculturalActivities: string | null;
@@ -323,8 +317,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   turTotalCorridorArea: number | null;
@@ -337,10 +331,6 @@ export class ApplicationSubmission extends Base {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  subdPurpose: string | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   subdSuitability: string | null;
@@ -365,23 +355,11 @@ export class ApplicationSubmission extends Base {
   //Soil & Fill
   @AutoMap(() => Boolean)
   @Column({ type: 'boolean', nullable: true })
-  soilIsNOIFollowUp: boolean | null;
+  soilIsFollowUp: boolean | null;
 
   @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true, name: 'soil_noi_ids' })
-  soilNOIIDs: string | null;
-
-  @AutoMap(() => Boolean)
-  @Column({ type: 'boolean', nullable: true })
-  soilHasPreviousALCAuthorization: boolean | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true, name: 'soil_application_ids' })
-  soilApplicationIDs: string | null;
-
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  soilPurpose: string | null;
+  @Column({ type: 'text', nullable: true, name: 'soil_follow_up_ids' })
+  soilFollowUpIDs: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -405,8 +383,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;
@@ -445,8 +423,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyRemovedArea: number | null;
@@ -485,8 +463,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -525,8 +503,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilAlreadyPlacedArea: number | null;
@@ -551,19 +529,13 @@ export class ApplicationSubmission extends Base {
   })
   soilAlreadyPlacedAverageDepth: number | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  soilProjectDurationAmount: number | null;
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  soilProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  soilProjectDurationUnit: string | null;
+  fillProjectDuration: string | null;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
@@ -584,22 +556,18 @@ export class ApplicationSubmission extends Base {
   //NARU
   @AutoMap(() => NaruSubtype)
   @ManyToOne(() => NaruSubtype)
-  naruSubtype: NaruSubtype | null;
+  naruSubtype: NaruSubtype | null | undefined;
 
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   naruSubtypeCode: string | null;
 
-  @AutoMap(() => String)
-  @Column({ type: 'text', nullable: true })
-  naruPurpose: string | null;
-
   @AutoMap(() => Number)
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   naruFloorArea: number | null;
@@ -632,19 +600,9 @@ export class ApplicationSubmission extends Base {
   @Column({ type: 'text', nullable: true })
   naruFillOrigin: string | null;
 
-  @AutoMap(() => Number)
-  @Column({
-    type: 'decimal',
-    nullable: true,
-    precision: 12,
-    scale: 2,
-    transformer: new ColumnNumericTransformer(),
-  })
-  naruProjectDurationAmount: number | null;
-
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
 
   @AutoMap(() => Number)
   @Column({
@@ -660,8 +618,8 @@ export class ApplicationSubmission extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   naruToPlaceArea: number | null;
@@ -686,6 +644,76 @@ export class ApplicationSubmission extends Base {
   })
   naruToPlaceAverageDepth: number | null;
 
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  naruSleepingUnits: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  naruAgriTourism: string | null;
+
+  //Inclusion / Exclusion Fields
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  prescribedBody: string | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 15,
+    scale: 5,
+    transformer: new ColumnNumericTransformer(),
+  })
+  inclExclHectares: number | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  exclWhyLand: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  inclAgricultureSupport: string | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  inclImprovements: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  exclShareGovernmentBorders: boolean | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  inclGovernmentOwnsAllParcels: boolean | null;
+
+  @AutoMap(() => Number)
+  @Column({
+    type: 'decimal',
+    nullable: true,
+    precision: 12,
+    scale: 2,
+    transformer: new ColumnNumericTransformer(),
+  })
+  coveAreaImpacted: number | null;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  coveHasDraft: boolean | null;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  coveFarmImpact: string | null;
+
+  //END SUBMISSION FIELDS
+
   @AutoMap(() => Application)
   @ManyToOne(() => Application)
   @JoinColumn({
@@ -700,4 +728,43 @@ export class ApplicationSubmission extends Base {
     (appParcel) => appParcel.applicationSubmission,
   )
   parcels: ApplicationParcel[];
+
+  @OneToMany(
+    () => ApplicationSubmissionToSubmissionStatus,
+    (status) => status.submission,
+    {
+      eager: true,
+      persistence: false,
+    },
+  )
+  submissionStatuses: ApplicationSubmissionToSubmissionStatus[] = [];
+
+  private _status: ApplicationSubmissionToSubmissionStatus;
+
+  get status(): ApplicationSubmissionToSubmissionStatus {
+    return this._status;
+  }
+
+  private set status(value: ApplicationSubmissionToSubmissionStatus) {
+    this._status = value;
+  }
+
+  @AfterLoad()
+  populateCurrentStatus() {
+    // using JS date object is intentional for performance reasons
+    const now = Date.now();
+
+    for (const status of this.submissionStatuses) {
+      const effectiveDate = status.effectiveDate?.getTime();
+
+      if (
+        effectiveDate &&
+        effectiveDate <= now &&
+        (!this.status ||
+          status.statusType.weight > this.status.statusType.weight)
+      ) {
+        this.status = status;
+      }
+    }
+  }
 }

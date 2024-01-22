@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="split">
+    <h3>All Boards</h3>
+    <button mat-flat-button color="primary" (click)="onCreate()">Create</button>
+  </div>
+
+  <table mat-table [dataSource]="boards">
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="boards">
+      <th mat-header-cell *matHeaderCellDef>Boards</th>
+      <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="cardTypes">
+      <th mat-header-cell *matHeaderCellDef>Permitted Card Types</th>
+      <td mat-cell *matCellDef="let row">
+        <span *ngFor="let cardType of row.allowedCardTypes">
+          {{ cardTypeMap[cardType] }},
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let row">
+        <button class="edit-btn" mat-flat-button (click)="onEdit(row)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+  </table>
+</div>

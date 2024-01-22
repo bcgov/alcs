@@ -9,11 +9,13 @@
     <div>
       <ng-container
         *ngIf="
+          boardHasCreateApplication ||
+          boardHasCreateNOI ||
+          boardHasCreateReconsideration ||
           boardHasCreatePlanningReview ||
           boardHasCreateAppModification ||
-          boardHasCreateCovenant ||
-          boardHasCreateNOI ||
-          boardHasCreateNOIModification
+          boardHasCreateNOIModification ||
+          boardHasCreateCovenant
         "
       >
         <button mat-flat-button color="primary" [matMenuTriggerFor]="createMenu">+ New Card ▾</button>

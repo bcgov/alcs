@@ -5,6 +5,7 @@
   <div *ngIf="_application" class="first-row">
     <div class="title">
       <h5>{{ _application.fileNumber }} ({{ _application.applicant }})</h5>
+      <app-application-legacy-id [legacyId]="legacyId"></app-application-legacy-id>
       <div class="labels">
         <app-application-type-pill *ngFor="let type of types" [type]="type"></app-application-type-pill>
         <app-application-type-pill *ngIf="showReconLabel" [type]="reconLabel"></app-application-type-pill>
@@ -39,12 +40,23 @@
   </div>
   <div *ngIf="_application" class="sub-heading">
     <div>
-      <div class="subheading2">Local Government:</div>
-      <div class="body-text">{{ _application.localGovernment.name }}</div>
+      <div class="subheading2">Local/First Nation Government:</div>
+      <div class="body-text">
+        {{ _application.localGovernment?.name }}
+        <app-no-data *ngIf="!_application.localGovernment"></app-no-data>
+      </div>
     </div>
-    <div *ngIf="!_application.hasOwnProperty('decisionDate')">
-      <div class="subheading2">{{ days }}:</div>
-      <app-time-tracker [data]="_application" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+    <div>
+      <ng-container *ngIf="timeTrackable && !_application.hasOwnProperty('decisionDate')">
+        <div class="subheading2">{{ days }}:</div>
+        <app-time-tracker [data]="timeTrackable" [maxActiveDays]="isNOI ? 61 : undefined"></app-time-tracker>
+      </ng-container>
+    </div>
+    <div class="status-wrapper">
+      <app-application-submission-status-type-pill
+        *ngIf="currentStatus"
+        [type]="currentStatus"
+      ></app-application-submission-status-type-pill>
     </div>
   </div>
 </div>

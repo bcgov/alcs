@@ -1,4 +1,9 @@
 .env
 out
 tmp
-*.pickle
+logs
+*.log.txt
+__pycache__
+*last_imported_application_file.txt
+last_imported_planning_file.txt
+last_imported_issue_file.txt

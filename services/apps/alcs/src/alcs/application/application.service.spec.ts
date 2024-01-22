@@ -1,17 +1,20 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { initApplicationMockEntity } from '../../../test/mocks/mockEntities';
+import { ApplicationSubmissionStatusService } from './application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from './application-submission-status/submission-status.entity';
 import { FileNumberService } from '../../file-number/file-number.service';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeService } from '../code/code.service';
-import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import {
   ApplicationTimeData,
   ApplicationTimeTrackingService,
@@ -29,9 +32,10 @@ describe('ApplicationService', () => {
   let applicationTypeRepositoryMock: DeepMocked<Repository<ApplicationType>>;
   let applicationMockEntity;
   let mockApplicationTimeService: DeepMocked<ApplicationTimeTrackingService>;
-  let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockCodeService: DeepMocked<CodeService>;
   let mockFileNumberService: DeepMocked<FileNumberService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   const DEFAULT_CARD_RELATIONS: FindOptionsRelations<Card> = {
     status: true,
@@ -56,6 +60,7 @@ describe('ApplicationService', () => {
     applicationTypeRepositoryMock = createMock();
     mockApplicationLocalGovernmentService = createMock();
     mockFileNumberService = createMock();
+    mockApplicationSubmissionStatusService = createMock();
 
     applicationMockEntity = initApplicationMockEntity();
 
@@ -76,7 +81,7 @@ describe('ApplicationService', () => {
           useValue: mockCodeService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockApplicationLocalGovernmentService,
         },
         {
@@ -91,6 +96,10 @@ describe('ApplicationService', () => {
           provide: getRepositoryToken(ApplicationType),
           useValue: applicationTypeRepositoryMock,
         },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
       ],
     }).compile();
 
@@ -101,8 +110,12 @@ describe('ApplicationService', () => {
 
     applicationRepositoryMock.find.mockResolvedValue([applicationMockEntity]);
     applicationRepositoryMock.findOne.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
+      applicationMockEntity,
+    );
     applicationRepositoryMock.save.mockReturnValue(applicationMockEntity);
     applicationRepositoryMock.update.mockReturnValue(applicationMockEntity);
+    applicationRepositoryMock.exist.mockResolvedValue(true);
   });
 
   it('should be defined', () => {
@@ -216,18 +229,25 @@ describe('ApplicationService', () => {
   });
 
   it('should call through for updateByUuid', async () => {
-    applicationRepositoryMock.softRemove.mockResolvedValue({} as any);
-
     await applicationService.updateByUuid(applicationMockEntity.uuid, {
       applicant: 'new-applicant',
     });
 
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
+    expect(applicationRepositoryMock.exist).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.findOneOrFail).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call the repo for get update applicant', async () => {
+    applicationRepositoryMock.update.mockResolvedValue({} as any);
+
+    await applicationService.updateApplicant('file-number', 'applicant');
+
     expect(applicationRepositoryMock.update).toHaveBeenCalledTimes(1);
   });
 
   it('should fail to update if application does not exist', async () => {
-    applicationRepositoryMock.findOne.mockResolvedValue(null);
+    applicationRepositoryMock.exist.mockResolvedValue(false);
 
     const promise = applicationService.updateByUuid(
       applicationMockEntity.uuid,
@@ -242,23 +262,8 @@ describe('ApplicationService', () => {
       ),
     );
 
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+    expect(applicationRepositoryMock.exist).toHaveBeenCalledTimes(1);
     expect(applicationRepositoryMock.save).toHaveBeenCalledTimes(0);
-  });
-
-  it('should generate and return new fileNumber', async () => {
-    applicationRepositoryMock.findOne
-      .mockResolvedValueOnce({} as Application)
-      .mockResolvedValue(null);
-    applicationRepositoryMock.query.mockResolvedValue([
-      { nextval: applicationMockEntity.uuid },
-    ]);
-
-    const result = await applicationService.generateNextFileNumber();
-
-    expect(applicationRepositoryMock.findOne).toHaveBeenCalledTimes(2);
-    expect(applicationRepositoryMock.query).toBeCalledTimes(2);
-    expect(result).toEqual(applicationMockEntity.uuid);
   });
 
   it('should load deleted card', async () => {
@@ -274,10 +279,6 @@ describe('ApplicationService', () => {
 
   it('should get application by uuid', async () => {
     const fakeUuid = 'fake';
-
-    applicationRepositoryMock.findOneOrFail.mockResolvedValue(
-      {} as Application,
-    );
 
     const result = await applicationService.getByUuidOrFail(fakeUuid);
 
@@ -304,5 +305,31 @@ describe('ApplicationService', () => {
       },
       relations: BOARD_RELATIONS,
     });
+  });
+
+  it('should set the cancelled status for cancel', async () => {
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    await applicationService.cancel('');
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED);
+  });
+
+  it('should clear the cancelled status for uncancel', async () => {
+    mockApplicationSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    await applicationService.uncancel('');
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('', SUBMISSION_STATUS.CANCELLED, null);
   });
 });

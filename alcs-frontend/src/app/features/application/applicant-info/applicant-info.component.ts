@@ -1,9 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { DOCUMENT_TYPE } from '../../../services/application/application-document/application-document.service';
 import { ApplicationSubmissionService } from '../../../services/application/application-submission/application-submission.service';
-import { ApplicationDto, ApplicationSubmissionDto } from '../../../services/application/application.dto';
+import {
+  ApplicationDto,
+  ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
+} from '../../../services/application/application.dto';
+import { DOCUMENT_TYPE } from '../../../shared/document/document.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
   selector: 'app-applicant-info',
@@ -17,10 +22,12 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
   DOCUMENT_TYPE = DOCUMENT_TYPE;
   application: ApplicationDto | undefined;
   submission?: ApplicationSubmissionDto = undefined;
+  isSubmittedToAlc = false;
+  wasSubmittedToLfng = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
-    private applicationSubmissionService: ApplicationSubmissionService
+    private applicationSubmissionService: ApplicationSubmissionService,
   ) {}
 
   ngOnInit(): void {
@@ -30,6 +37,18 @@ export class ApplicantInfoComponent implements OnInit, OnDestroy {
         this.fileNumber = application.fileNumber;
 
         this.submission = await this.applicationSubmissionService.fetchSubmission(this.fileNumber);
+        const isApplicantSubmission = application.source === SYSTEM_SOURCE_TYPES.APPLICANT;
+
+        this.isSubmittedToAlc = isApplicantSubmission ? !!application.dateSubmittedToAlc : true;
+
+        this.wasSubmittedToLfng =
+          isApplicantSubmission &&
+          [
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.WRONG_GOV,
+            SUBMISSION_STATUS.INCOMPLETE,
+          ].includes(this.submission?.status?.code);
       }
     });
   }

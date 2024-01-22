@@ -1,15 +1,26 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../../../services/application/application-detail.service';
 import { ApplicationSubmissionService } from '../../../../../../services/application/application-submission/application-submission.service';
 import { ApplicationDto } from '../../../../../../services/application/application.dto';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   DecisionComponentTypeDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../services/toast/toast.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionComponentComponent } from './decision-component/decision-component.component';
 
 export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisabled: boolean; uiCode: string };
@@ -19,18 +30,19 @@ export type DecisionComponentTypeMenuItem = DecisionComponentTypeDto & { isDisab
   templateUrl: './decision-components.component.html',
   styleUrls: ['./decision-components.component.scss'],
 })
-export class DecisionComponentsComponent implements OnInit, OnDestroy {
+export class DecisionComponentsComponent implements OnInit, OnDestroy, AfterViewInit {
   $destroy = new Subject<void>();
 
-  @Input() codes!: DecisionCodesDto;
+  @Input() codes!: ApplicationDecisionCodesDto;
   @Input() fileNumber!: string;
+  @Input() showError = false;
 
-  @Input() components: DecisionComponentDto[] = [];
+  @Input() components: ApplicationDecisionComponentDto[] = [];
   @Output() componentsChange = new EventEmitter<{
-    components: DecisionComponentDto[];
+    components: ApplicationDecisionComponentDto[];
     isValid: boolean;
   }>();
-  @ViewChildren(DecisionComponentComponent) childComponents: DecisionComponentComponent[] = [];
+  @ViewChildren(DecisionComponentComponent) childComponents!: QueryList<DecisionComponentComponent>;
 
   application!: ApplicationDto;
   decisionComponentTypes: DecisionComponentTypeMenuItem[] = [];
@@ -38,7 +50,8 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
   constructor(
     private toastService: ToastService,
     private applicationDetailService: ApplicationDetailService,
-    private submissionService: ApplicationSubmissionService
+    private submissionService: ApplicationSubmissionService,
+    private confirmationDialogService: ConfirmationDialogService,
   ) {}
 
   ngOnInit(): void {
@@ -46,10 +59,20 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
       if (application) {
         this.application = application;
         this.application.submittedApplication = await this.submissionService.fetchSubmission(application.fileNumber);
+        await this.prepareDecisionComponentTypes(this.codes);
       }
     });
 
-    this.prepareDecisionComponentTypes(this.codes);
+    // validate components on load
+    setTimeout(() => this.onChange(), 0);
+  }
+
+  ngAfterViewInit(): void {
+    // subscribes to child components and triggers validation on add/delete. NOTE: this is NOT getting called on first page load
+    this.childComponents.changes.subscribe(() => {
+      // setTimeout is required to ensure that current code is executed after the current change detection cycle completes, avoiding the ExpressionChangedAfterItHasBeenCheckedError
+      setTimeout(() => this.onChange(), 0);
+    });
   }
 
   ngOnDestroy(): void {
@@ -57,7 +80,127 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     this.$destroy.complete();
   }
 
-  private async prepareDecisionComponentTypes(codes: DecisionCodesDto) {
+  onAddNewComponent(uiCode: string, typeCode: string) {
+    switch (uiCode) {
+      case 'COPY':
+        const component: ApplicationDecisionComponentDto = {
+          endDate: this.application.proposalEndDate,
+          endDate2: this.application.proposalEndDate2,
+          applicationDecisionComponentTypeCode: typeCode,
+          alrArea: this.application.alrArea,
+          agCap: this.application.agCap,
+          agCapSource: this.application.agCapSource,
+          agCapMap: this.application.agCapMap,
+          agCapConsultant: this.application.agCapConsultant,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
+          ),
+          lots: this.application.submittedApplication?.subdProposedLots.map((lot, index) => ({
+            ...lot,
+            index: index,
+            uuid: '',
+          })),
+        };
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
+          this.patchNfuFields(component);
+        }
+
+        if (
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP ||
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.COVE
+        ) {
+          this.setExpiryDateFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
+          this.patchPofoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.ROSO) {
+          this.patchRosoFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
+          this.patchPfrsFields(component);
+        }
+
+        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NARU) {
+          this.patchNaruFields(component);
+        }
+
+        if (
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.INCL ||
+          typeCode === APPLICATION_DECISION_COMPONENT_TYPE.EXCL
+        ) {
+          this.patchInclExclFields(component);
+        }
+
+        this.components.unshift(component);
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
+      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
+      case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
+      case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
+      case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+      case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+      case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
+        this.components.unshift({
+          applicationDecisionComponentTypeCode: typeCode,
+          applicationDecisionComponentType: this.decisionComponentTypes.find(
+            (e) => e.code === typeCode && e.uiCode !== 'COPY',
+          ),
+        } as ApplicationDecisionComponentDto);
+        break;
+      default:
+        this.toastService.showErrorToast(`Failed to create component ${typeCode}`);
+    }
+
+    this.updateComponentsMenuItems();
+  }
+
+  onRemove(index: number) {
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to remove this component?',
+      })
+      .subscribe((didConfirm) => {
+        if (didConfirm) {
+          this.components.splice(index, 1);
+          this.updateComponentsMenuItems();
+        }
+      });
+  }
+
+  trackByFn(index: any, item: ApplicationDecisionComponentDto) {
+    return item.applicationDecisionComponentTypeCode;
+  }
+
+  onChange() {
+    const isValid =
+      this.components.length > 0 && (!this.childComponents || this.childComponents?.length < 1)
+        ? false
+        : this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true);
+
+    this.componentsChange.emit({
+      components: this.components,
+      isValid,
+    });
+  }
+
+  onValidate() {
+    this.childComponents.forEach((component) => {
+      component.form.markAllAsTouched();
+      if ('markTouched' in component) {
+        component.markTouched();
+      }
+    });
+  }
+
+  private async prepareDecisionComponentTypes(codes: ApplicationDecisionCodesDto) {
     const decisionComponentTypes: DecisionComponentTypeMenuItem[] = codes.decisionComponentTypes.map((e) => ({
       ...e,
       isDisabled: false,
@@ -81,75 +224,23 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     this.updateComponentsMenuItems();
   }
 
-  onAddNewComponent(uiCode: string, typeCode: string) {
-    switch (uiCode) {
-      case 'COPY':
-        const component: DecisionComponentDto = {
-          applicationDecisionComponentTypeCode: typeCode,
-          alrArea: this.application.alrArea,
-          agCap: this.application.agCap,
-          agCapSource: this.application.agCapSource,
-          agCapMap: this.application.agCapMap,
-          agCapConsultant: this.application.agCapConsultant,
-          applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
-          ),
-        };
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.NFUP) {
-          this.patchNfuFields(component);
-        }
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.TURP) {
-          this.patchTurpFields(component);
-        }
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.POFO) {
-          this.patchPofoFields(component);
-        }
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.ROSO) {
-          this.patchRosoFields(component);
-        }
-
-        if (typeCode === APPLICATION_DECISION_COMPONENT_TYPE.PFRS) {
-          this.patchPofoFields(component);
-          this.patchRosoFields(component);
-        }
-
-        this.components.push(component);
-        break;
-      case APPLICATION_DECISION_COMPONENT_TYPE.NFUP:
-      case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
-      case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
-      case APPLICATION_DECISION_COMPONENT_TYPE.ROSO:
-      case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
-        this.components.push({
-          applicationDecisionComponentTypeCode: typeCode,
-          applicationDecisionComponentType: this.decisionComponentTypes.find(
-            (e) => e.code === typeCode && e.uiCode !== 'COPY'
-          ),
-        } as DecisionComponentDto);
-        break;
-      default:
-        this.toastService.showErrorToast(`Failed to create component ${typeCode}`);
-    }
-
-    this.updateComponentsMenuItems();
-    this.onChange();
-  }
-
-  private patchNfuFields(component: DecisionComponentDto) {
+  private patchNfuFields(component: ApplicationDecisionComponentDto) {
     component.nfuType = this.application.nfuUseType;
     component.nfuSubType = this.application.nfuUseSubType;
     component.endDate = this.application.proposalEndDate;
   }
 
-  private patchTurpFields(component: DecisionComponentDto) {
-    component.endDate = this.application.proposalEndDate;
+  private setExpiryDateFields(component: ApplicationDecisionComponentDto) {
+    component.expiryDate = this.application.proposalExpiryDate;
   }
 
-  private patchPofoFields(component: DecisionComponentDto) {
+  private patchPfrsFields(component: ApplicationDecisionComponentDto) {
+    this.patchPofoFields(component);
+    this.patchRosoFields(component);
+    component.endDate2 = this.application.proposalEndDate2;
+  }
+
+  private patchPofoFields(component: ApplicationDecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
     component.soilFillTypeToPlace = this.application.submittedApplication?.soilFillTypeToPlace;
     component.soilToPlaceVolume = this.application.submittedApplication?.soilToPlaceVolume;
@@ -158,7 +249,7 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     component.soilToPlaceAverageDepth = this.application.submittedApplication?.soilToPlaceAverageDepth;
   }
 
-  private patchRosoFields(component: DecisionComponentDto) {
+  private patchRosoFields(component: ApplicationDecisionComponentDto) {
     component.endDate = this.application.proposalEndDate;
     component.soilTypeRemoved = this.application.submittedApplication?.soilTypeRemoved;
     component.soilToRemoveVolume = this.application.submittedApplication?.soilToRemoveVolume;
@@ -167,27 +258,27 @@ export class DecisionComponentsComponent implements OnInit, OnDestroy {
     component.soilToRemoveAverageDepth = this.application.submittedApplication?.soilToRemoveAverageDepth;
   }
 
+  private patchNaruFields(component: ApplicationDecisionComponentDto) {
+    component.endDate = this.application.proposalEndDate;
+    component.expiryDate = this.application.proposalExpiryDate;
+    component.naruSubtypeCode = this.application.submittedApplication?.naruSubtype?.code;
+  }
+
+  private patchInclExclFields(component: ApplicationDecisionComponentDto) {
+    if (this.application.inclExclApplicantType) {
+      component.inclExclApplicantType = this.application.inclExclApplicantType;
+    } else {
+      component.inclExclApplicantType =
+        this.application.submittedApplication?.inclGovernmentOwnsAllParcels === false
+          ? 'L/FNG Initiated'
+          : 'Land Owner';
+    }
+  }
+
   private updateComponentsMenuItems() {
     this.decisionComponentTypes = this.decisionComponentTypes.map((e) => ({
       ...e,
       isDisabled: this.components.some((c) => c.applicationDecisionComponentTypeCode === e.code),
     }));
-  }
-
-  onRemove(index: number) {
-    this.components.splice(index);
-    this.updateComponentsMenuItems();
-    this.onChange();
-  }
-
-  trackByFn(index: any, item: DecisionComponentDto) {
-    return item.applicationDecisionComponentTypeCode;
-  }
-
-  onChange() {
-    this.componentsChange.emit({
-      components: this.components,
-      isValid: this.childComponents.reduce((isValid, component) => isValid && component.form.valid, true),
-    });
   }
 }

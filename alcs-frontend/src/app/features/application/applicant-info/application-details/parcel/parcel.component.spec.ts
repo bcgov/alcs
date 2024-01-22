@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
+import { Observable } from 'rxjs';
 import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { ParcelComponent } from './parcel.component';
@@ -10,10 +11,13 @@ describe('ParcelComponent', () => {
   let component: ParcelComponent;
   let fixture: ComponentFixture<ParcelComponent>;
 
+  let mockRoute: DeepMocked<ActivatedRoute>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
 
   beforeEach(async () => {
     mockAppDocumentService = createMock();
+    mockRoute = createMock();
+    mockRoute.fragment = new Observable<string | null>();
 
     await TestBed.configureTestingModule({
       declarations: [ParcelComponent],
@@ -21,6 +25,10 @@ describe('ParcelComponent', () => {
         {
           provides: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: mockRoute,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

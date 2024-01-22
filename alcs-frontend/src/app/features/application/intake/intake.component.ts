@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import moment from 'moment';
 import { environment } from '../../../../environments/environment';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDto, UpdateApplicationDto } from '../../../services/application/application.dto';
+import {
+  ApplicationDto,
+  UpdateApplicationDto,
+} from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 
 @Component({
   selector: 'app-overview',
@@ -13,6 +17,7 @@ import { ToastService } from '../../../services/toast/toast.service';
 export class IntakeComponent implements OnInit {
   dateSubmittedToAlc?: string;
   application?: ApplicationDto;
+  APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
 
   constructor(private applicationDetailService: ApplicationDetailService, private toastService: ToastService) {}
 

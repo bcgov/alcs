@@ -20,4 +20,5 @@ export const connectionSource = new DataSource({
   migrations: [join(__dirname, '**', 'migrations/*{.ts,.js}')],
   namingStrategy: new SnakeNamingStrategy(),
   uuidExtension: 'pgcrypto',
+  maxQueryExecutionTime: 500,
 });

@@ -1,10 +1,10 @@
 <div>
   <table class="timeline">
     <thead>
-      <th></th>
-      <th>Date</th>
-      <th>Fulfillment Date</th>
-      <th>Event</th>
+      <th class="timeline-line"></th>
+      <th class="timeline-date">Date</th>
+      <th class="timeline-date">Fulfillment Date</th>
+      <th class="timeline-event">Event</th>
     </thead>
     <tbody>
       <tr class="timeline-row" *ngFor="let event of events">
@@ -18,12 +18,13 @@
         </td>
         <td>{{ event.startDate | momentFormat }}</td>
         <td>
-          <span *ngIf="event.isFulfilled">{{ event.fulfilledDate | momentFormat }}</span>
-          <span *ngIf="!event.isFulfilled">
-            <a [routerLink]="event.link">Add date</a>
+          <span *ngIf="event.fulfilledDate">{{ event.fulfilledDate | momentFormat }}</span>
+          <span *ngIf="!event.fulfilledDate">
+            <a *ngIf="event.link" [routerLink]="event.link">Add date</a>
+            <span *ngIf="!event.link">-</span>
           </span>
         </td>
-        <td>{{ event.name }}</td>
+        <td><span [innerHTML]="event.htmlText"></span></td>
       </tr>
     </tbody>
   </table>

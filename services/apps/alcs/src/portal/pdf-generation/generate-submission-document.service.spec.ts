@@ -1,25 +1,28 @@
 import { CdogsService } from '@app/common/cdogs/cdogs.service';
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { DeepMocked, createMock } from '@golevelup/nestjs-testing';
+import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as dayjs from 'dayjs';
 import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
+import { Document } from '../../document/document.entity';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
 import { GenerateSubmissionDocumentService } from './generate-submission-document.service';
-import { Document } from '../../document/document.entity';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,11 +31,13 @@ describe('GenerateSubmissionDocumentService', () => {
   let service: GenerateSubmissionDocumentService;
   let mockCdogsService: DeepMocked<CdogsService>;
   let mockApplicationSubmissionService: DeepMocked<ApplicationSubmissionService>;
-  let mockApplicationLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockApplicationLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockApplicationParcelService: DeepMocked<ApplicationParcelService>;
   let mockApplicationOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockApplicationDocumentService: DeepMocked<ApplicationDocumentService>;
+
+  let mockSubmissionStatus;
 
   beforeEach(async () => {
     mockCdogsService = createMock();
@@ -43,6 +48,10 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationOwnerService = createMock();
     mockApplicationDocumentService = createMock();
 
+    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(
+      new LocalGovernment(),
+    );
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GenerateSubmissionDocumentService,
@@ -52,7 +61,7 @@ describe('GenerateSubmissionDocumentService', () => {
           useValue: mockApplicationSubmissionService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockApplicationLocalGovernmentService,
         },
         { provide: ApplicationService, useValue: mockApplicationService },
@@ -71,6 +80,11 @@ describe('GenerateSubmissionDocumentService', () => {
       ],
     }).compile();
 
+    mockSubmissionStatus = new ApplicationSubmissionToSubmissionStatus({
+      statusTypeCode: SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+      submissionUuid: 'fake',
+    });
+
     service = module.get<GenerateSubmissionDocumentService>(
       GenerateSubmissionDocumentService,
     );
@@ -87,12 +101,12 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'NFUP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -114,12 +128,12 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'TURP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -141,12 +155,12 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'not a type',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([]);
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
@@ -154,12 +168,9 @@ describe('GenerateSubmissionDocumentService', () => {
       name: user.user.entity,
     });
 
-    await expect(service.generate('fake', userEntity)).rejects.toMatchObject(
-      new ServiceNotFoundException(
-        `Could not find template for application submission type not a type`,
-      ),
-    );
+    const res = await service.generate('fake', userEntity);
 
+    expect(res).toBeUndefined();
     expect(mockCdogsService.generateDocument).toBeCalledTimes(0);
   });
 
@@ -173,6 +184,7 @@ describe('GenerateSubmissionDocumentService', () => {
       fileNumber: 'fake',
       localGovernmentUuid: 'fake-lg',
       typeCode: 'TURP',
+      status: mockSubmissionStatus,
     } as ApplicationSubmission);
     mockApplicationDocumentService.list.mockResolvedValue([
       new ApplicationDocument({
@@ -187,14 +199,15 @@ describe('GenerateSubmissionDocumentService', () => {
     mockApplicationService.getOrFail.mockResolvedValue({
       type: { portalLabel: 'fake-label' },
     } as Application);
-    mockApplicationLocalGovernmentService.getByUuid.mockResolvedValue(null);
     mockApplicationParcelService.fetchByApplicationFileId.mockResolvedValue([]);
     mockApplicationOwnerService.fetchByApplicationFileId.mockResolvedValue([]);
     const user = { user: { entity: 'Bruce' } };
     const userEntity = new User({
       name: user.user.entity,
     });
-    mockApplicationDocumentService.update.mockResolvedValue();
+    mockApplicationDocumentService.update.mockResolvedValue(
+      new ApplicationDocument(),
+    );
     mockApplicationDocumentService.attachDocumentAsBuffer.mockResolvedValue(
       new ApplicationDocument(),
     );

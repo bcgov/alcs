@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,
@@ -12,10 +12,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
 import { VISIBILITY_FLAG } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { PortalAuthGuard } from '../../../common/authorization/portal-auth-guard.service';
+import { OWNER_TYPE } from '../../../common/owner-type/owner-type.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import {
   DOCUMENT_SOURCE,
   DOCUMENT_SYSTEM,
@@ -23,7 +24,6 @@ import {
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmissionService } from '../application-submission.service';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerDto,
   ApplicationOwnerUpdateDto,
@@ -133,7 +133,7 @@ export class ApplicationOwnerController {
     dto: ApplicationOwnerUpdateDto | ApplicationOwnerCreateDto,
   ) {
     if (
-      dto.typeCode === APPLICATION_OWNER.INDIVIDUAL &&
+      dto.typeCode === OWNER_TYPE.INDIVIDUAL &&
       (!dto.firstName || !dto.lastName)
     ) {
       throw new BadRequestException(
@@ -141,10 +141,7 @@ export class ApplicationOwnerController {
       );
     }
 
-    if (
-      dto.typeCode === APPLICATION_OWNER.ORGANIZATION &&
-      !dto.organizationName
-    ) {
+    if (dto.typeCode === OWNER_TYPE.ORGANIZATION && !dto.organizationName) {
       throw new BadRequestException(
         'Organizations must have an organizationName',
       );
@@ -161,40 +158,52 @@ export class ApplicationOwnerController {
 
     //Create Owner
     if (!data.ownerUuid) {
-      const agentOwner = await this.ownerService.create(
-        {
-          email: data.agentEmail,
-          typeCode: APPLICATION_OWNER.AGENT,
-          lastName: data.agentLastName,
-          firstName: data.agentFirstName,
-          phoneNumber: data.agentPhoneNumber,
-          organizationName: data.agentOrganization,
-          applicationSubmissionUuid: data.applicationSubmissionUuid,
-        },
-        applicationSubmission,
-      );
+      await this.ownerService.deleteNonParcelOwners(applicationSubmission.uuid);
+      const newOwner =
+        data.type === OWNER_TYPE.AGENT || data.type == OWNER_TYPE.GOVERNMENT
+          ? await this.ownerService.create(
+              {
+                email: data.email,
+                typeCode: data.type,
+                lastName: data.lastName,
+                firstName: data.firstName,
+                phoneNumber: data.phoneNumber,
+                organizationName: data.organization,
+                applicationSubmissionUuid: data.applicationSubmissionUuid,
+                crownLandOwnerType: data.crownLandOwnerType,
+              },
+              applicationSubmission,
+            )
+          : undefined;
+
       await this.ownerService.setPrimaryContact(
         applicationSubmission.uuid,
-        agentOwner,
+        newOwner,
       );
     } else if (data.ownerUuid) {
       const primaryContactOwner = await this.ownerService.getOwner(
         data.ownerUuid,
       );
 
-      if (primaryContactOwner.type.code === APPLICATION_OWNER.AGENT) {
-        //Update Fields for existing agent
+      if (
+        primaryContactOwner.type.code === OWNER_TYPE.AGENT ||
+        primaryContactOwner.type.code === OWNER_TYPE.GOVERNMENT
+      ) {
+        //Update Fields for non parcel owners
         await this.ownerService.update(primaryContactOwner.uuid, {
-          email: data.agentEmail,
-          typeCode: APPLICATION_OWNER.AGENT,
-          lastName: data.agentLastName,
-          firstName: data.agentFirstName,
-          phoneNumber: data.agentPhoneNumber,
-          organizationName: data.agentOrganization,
+          email: data.email,
+          typeCode: primaryContactOwner.type.code,
+          lastName: data.lastName,
+          firstName: data.firstName,
+          phoneNumber: data.phoneNumber,
+          organizationName: data.organization,
+          crownLandOwnerType: data.crownLandOwnerType,
         });
       } else {
-        //Delete Agents if we aren't using one
-        await this.ownerService.deleteAgents(applicationSubmission);
+        //Delete Non parcel owners if we aren't using one
+        await this.ownerService.deleteNonParcelOwners(
+          applicationSubmission.uuid,
+        );
       }
 
       await this.ownerService.setPrimaryContact(

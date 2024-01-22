@@ -15,9 +15,9 @@ import { User } from '../../../user/user.entity';
 import { UserService } from '../../../user/user.service';
 import { ApplicationService } from '../application.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from './application-document-code.entity';
+} from '../../../document/document-code.entity';
 import { ApplicationDocument } from './application-document.entity';
 import { ApplicationDocumentService } from './application-document.service';
 
@@ -26,7 +26,7 @@ describe('ApplicationDocumentService', () => {
   let mockDocumentService: DeepMocked<DocumentService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockRepository: DeepMocked<Repository<ApplicationDocument>>;
-  let mockTypeRepository: DeepMocked<Repository<ApplicationDocumentCode>>;
+  let mockTypeRepository: DeepMocked<Repository<DocumentCode>>;
 
   let mockApplication;
   const fileNumber = '12345';
@@ -53,7 +53,7 @@ describe('ApplicationDocumentService', () => {
           useValue: mockApplicationService,
         },
         {
-          provide: getRepositoryToken(ApplicationDocumentCode),
+          provide: getRepositoryToken(DocumentCode),
           useValue: mockTypeRepository,
         },
         {

@@ -1,29 +1,37 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CovenantTransferee } from '../../portal/application-submission/covenant-transferee/covenant-transferee.entity';
+import { ApplicationSubmissionStatusModule } from './application-submission-status/application-submission-status.module';
+import { ApplicationSubmissionStatusType } from './application-submission-status/submission-status-type.entity';
+import { ApplicationSubmissionToSubmissionStatus } from './application-submission-status/submission-status.entity';
 import { ApplicationOwnerProfile } from '../../common/automapper/application-owner.automapper.profile';
 import { ApplicationParcelProfile } from '../../common/automapper/application-parcel.automapper.profile';
+import { ApplicationSubmissionProfile } from '../../common/automapper/application-submission.automapper.profile';
 import { ApplicationSubtaskProfile } from '../../common/automapper/application-subtask.automapper.profile';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { DocumentModule } from '../../document/document.module';
 import { FileNumberModule } from '../../file-number/file-number.module';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
+import { ApplicationParcel } from '../../portal/application-submission/application-parcel/application-parcel.entity';
 import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { ApplicationSubmissionModule } from '../../portal/application-submission/application-submission.module';
 import { Board } from '../board/board.entity';
 import { CardModule } from '../card/card.module';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
 import { CodeModule } from '../code/code.module';
-import { NotificationModule } from '../notification/notification.module';
-import { ApplicationLocalGovernmentController } from './application-code/application-local-government/application-local-government.controller';
-import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from './application-code/application-local-government/application-local-government.service';
-import { ApplicationDocumentCode } from './application-document/application-document-code.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { LocalGovernmentModule } from '../local-government/local-government.module';
+import { MessageModule } from '../message/message.module';
+import { LocalGovernmentController } from '../local-government/local-government.controller';
+import { LocalGovernmentService } from '../local-government/local-government.service';
+import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocumentController } from './application-document/application-document.controller';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationDocumentService } from './application-document/application-document.service';
 import { ApplicationMeetingController } from './application-meeting/application-meeting.controller';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from './application-meeting/application-meeting.service';
+import { ApplicationParcelController } from './application-parcel/application-parcel.controller';
 import { ApplicationPaused } from './application-paused.entity';
 import { ApplicationPausedService } from './application-paused/application-paused.service';
 import { ApplicationSubmissionReviewController } from './application-submission-review/application-submission-review.controller';
@@ -43,18 +51,24 @@ import { ApplicationService } from './application.service';
       ApplicationPaused,
       ApplicationMeeting,
       ApplicationDocument,
-      ApplicationDocumentCode,
-      ApplicationLocalGovernment,
+      DocumentCode,
+      ApplicationParcel,
       Board,
       ApplicationSubmission,
       ApplicationSubmissionReview,
-      ApplicationStatus,
+      ApplicationSubmissionStatusType,
+      ApplicationSubmissionToSubmissionStatus,
+      LocalGovernment,
+      CovenantTransferee,
     ]),
-    NotificationModule,
+    MessageModule,
     DocumentModule,
     CardModule,
     CodeModule,
     FileNumberModule,
+    forwardRef(() => ApplicationSubmissionModule),
+    ApplicationSubmissionStatusModule,
+    LocalGovernmentModule,
   ],
   providers: [
     ApplicationService,
@@ -66,17 +80,19 @@ import { ApplicationService } from './application.service';
     ApplicationMeetingService,
     ApplicationPausedService,
     ApplicationDocumentService,
-    ApplicationLocalGovernmentService,
+    LocalGovernmentService,
     ApplicationSubmissionService,
     ApplicationSubmissionReviewService,
+    ApplicationSubmissionProfile,
   ],
   controllers: [
     ApplicationController,
     ApplicationMeetingController,
     ApplicationDocumentController,
-    ApplicationLocalGovernmentController,
+    LocalGovernmentController,
     ApplicationSubmissionController,
     ApplicationSubmissionReviewController,
+    ApplicationParcelController,
   ],
   exports: [
     ApplicationService,
@@ -85,7 +101,7 @@ import { ApplicationService } from './application.service';
     ApplicationSubtaskProfile,
     ApplicationMeetingService,
     ApplicationPausedService,
-    ApplicationLocalGovernmentService,
+    LocalGovernmentService,
     ApplicationDocumentService,
   ],
 })

@@ -17,6 +17,6 @@ import { AuthorizationService } from './authorization.service';
   ],
   providers: [AuthorizationService],
   controllers: [AuthorizationController],
-  exports: [KeycloakConnectModule, UserModule],
+  exports: [KeycloakConnectModule, UserModule, AuthorizationService],
 })
 export class AuthorizationModule {}

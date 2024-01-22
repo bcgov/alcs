@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsBoolean,
   IsNumber,
@@ -111,7 +111,7 @@ export class ApplicationDecisionDto {
   applicationFileNumber;
 
   @AutoMap()
-  date: number;
+  date?: number;
 
   @AutoMap()
   outcome: DecisionOutcomeCodeDto;
@@ -149,6 +149,9 @@ export class ApplicationDecisionDto {
   @AutoMap(() => Boolean)
   isOther?: boolean | null;
 
+  @AutoMap(() => Boolean)
+  isDraft: boolean;
+
   reconsiders?: LinkedResolutionDto;
   modifies?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
@@ -164,15 +167,9 @@ export class DecisionDocumentDto {
   @AutoMap()
   uuid: string;
 
-  @AutoMap()
   fileName: string;
-
-  @AutoMap()
+  fileSize: number;
   mimeType: string;
-
-  @AutoMap()
   uploadedBy: string;
-
-  @AutoMap()
   uploadedAt: number;
 }

@@ -1,8 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -80,6 +80,7 @@ export class ApplicationReconsiderationService {
       reconsidersDecisions: true,
       resultingDecision: true,
       reviewOutcome: true,
+      decisionOutcome: true,
     };
 
   getByBoard(boardUuid: string) {
@@ -130,6 +131,10 @@ export class ApplicationReconsiderationService {
 
     const reconsideration = new ApplicationReconsideration({
       submittedDate: new Date(createDto.submittedDate),
+      description: createDto.description,
+      isIncorrectFalseInfo: createDto.isIncorrectFalseInfo,
+      isNewEvidence: createDto.isNewEvidence,
+      isNewProposal: createDto.isNewProposal,
       type,
     });
 
@@ -197,6 +202,7 @@ export class ApplicationReconsiderationService {
     }
 
     reconsideration.reviewOutcomeCode = updateDto.reviewOutcomeCode;
+    reconsideration.decisionOutcomeCode = updateDto.decisionOutcomeCode;
 
     if (
       reconsideration.type.code === RECONSIDERATION_TYPE.T_33 &&
@@ -217,6 +223,11 @@ export class ApplicationReconsiderationService {
         );
     }
 
+    reconsideration.description = updateDto.description;
+    reconsideration.isIncorrectFalseInfo = updateDto.isIncorrectFalseInfo;
+    reconsideration.isNewEvidence = updateDto.isNewEvidence;
+    reconsideration.isNewProposal = updateDto.isNewProposal;
+
     const recon = await this.reconsiderationRepository.save(reconsideration);
 
     return this.getByUuid(recon.uuid);
@@ -224,7 +235,10 @@ export class ApplicationReconsiderationService {
 
   async delete(uuid: string) {
     const reconToDelete = await this.fetchAndValidateReconsideration(uuid);
-    await this.cardService.archive(reconToDelete.cardUuid);
+    if (reconToDelete.cardUuid) {
+      await this.cardService.archive(reconToDelete.cardUuid);
+    }
+
     return this.reconsiderationRepository.softRemove([reconToDelete]);
   }
 

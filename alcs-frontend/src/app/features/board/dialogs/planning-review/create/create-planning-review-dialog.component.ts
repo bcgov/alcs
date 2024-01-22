@@ -9,7 +9,6 @@ import { ApplicationService } from '../../../../../services/application/applicat
 import { CardService } from '../../../../../services/card/card.service';
 import { CreatePlanningReviewDto } from '../../../../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../../../../services/planning-review/planning-review.service';
-import { ToastService } from '../../../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-create',
@@ -35,13 +34,15 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
   });
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      currentBoardCode: string;
+    },
     private dialogRef: MatDialogRef<CreatePlanningReviewDialogComponent>,
     private planningReviewService: PlanningReviewService,
     private cardService: CardService,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
-    private toastService: ToastService
+    private localGovernmentService: ApplicationLocalGovernmentService
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +66,7 @@ export class CreatePlanningReviewDialogComponent implements OnInit, OnDestroy {
         regionCode: formValues.region!,
         localGovernmentUuid: formValues.localGovernment!,
         type: formValues.type!,
+        boardCode: this.data.currentBoardCode,
       };
 
       const res = await this.planningReviewService.create(planningReview);

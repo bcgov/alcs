@@ -7,17 +7,44 @@
       (save)="updateDate('dateSubmittedToAlc', $event)"
     ></app-inline-datepicker>
   </div>
-</div>
-<div class="payment-section">
-  <div>
-    <h5>Fee Received Date</h5>
-    <app-inline-datepicker
-      [value]="noticeOfIntent?.feePaidDate"
-      (save)="updateDate('feePaidDate', $event)"
-    ></app-inline-datepicker>
+  <h5>Payment</h5>
+  <div class="payment-section">
+    <div>
+      <div class="subheading2">Payment Date</div>
+      <app-inline-datepicker
+        [value]="noticeOfIntent?.feePaidDate"
+        (save)="updateDate('feePaidDate', $event)"
+      ></app-inline-datepicker>
+    </div>
+    <div>
+      <div class="subheading2">Payment Amount</div>
+      <app-inline-number
+        [value]="noticeOfIntent?.feeAmount"
+        (save)="updateNumber('feeAmount', $event)"
+      ></app-inline-number>
+    </div>
+    <div>
+      <div class="subheading2">Split with L/FNG</div>
+      <app-inline-boolean
+        [selectedValue]="noticeOfIntent?.feeSplitWithLg ?? null"
+        (save)="updateBoolean('feeSplitWithLg', $event)"
+      ></app-inline-boolean>
+    </div>
+    <div>
+      <div class="subheading2">Fee Waived</div>
+      <app-inline-boolean
+        [selectedValue]="noticeOfIntent?.feeWaived ?? null"
+        (save)="updateBoolean('feeWaived', $event)"
+      ></app-inline-boolean>
+    </div>
   </div>
   <div>
-    <h5>Acknowledged Incomplete</h5>
+    <div class="label-wrapper">
+      <h5>Acknowledged Incomplete</h5>
+      <mat-icon class="icon" matTooltip='Creates / deletes "Submitted to ALC Incomplete" portal status'
+        >info_outline
+      </mat-icon>
+    </div>
     <div>
       <app-inline-datepicker
         [value]="noticeOfIntent?.dateAcknowledgedIncomplete"
@@ -26,7 +53,14 @@
     </div>
   </div>
   <div>
-    <h5>Received All Items</h5>
+    <div class="label-wrapper">
+      <h5>Received All Items</h5>
+      <mat-icon
+        class="icon"
+        matTooltip='Creates / deletes "Received by ALC" portal status and controls public release. Tracking starts the following calendar day.'
+        >info_outline
+      </mat-icon>
+    </div>
     <div>
       <app-inline-datepicker
         [value]="noticeOfIntent?.dateReceivedAllItems"

@@ -1,9 +1,10 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../alcs/application-decision/application-decision-condition/application-decision-condition-code.entity';
 import {
+  ApplicationDecisionConditionComponentDto,
   ApplicationDecisionConditionDto,
   ApplicationDecisionConditionTypeDto,
 } from '../../alcs/application-decision/application-decision-condition/application-decision-condition.dto';
@@ -12,6 +13,8 @@ import { ApplicationDecisionDocument } from '../../alcs/application-decision/app
 import { ApplicationDecisionMakerCode } from '../../alcs/application-decision/application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from '../../alcs/application-decision/application-decision-outcome-type/application-decision-outcome-type.entity';
 
+import { ApplicationDecisionComponentLotDto } from '../../alcs/application-decision/application-component-lot/application-decision-component-lot.dto';
+import { ApplicationDecisionComponentLot } from '../../alcs/application-decision/application-component-lot/application-decision-component-lot.entity';
 import { ApplicationDecisionMakerCodeDto } from '../../alcs/application-decision/application-decision-maker/decision-maker.dto';
 import { ApplicationDecisionOutcomeCode } from '../../alcs/application-decision/application-decision-outcome.entity';
 import {
@@ -19,7 +22,6 @@ import {
   ApplicationDecisionOutcomeCodeDto,
   ChairReviewOutcomeCodeDto,
   DecisionDocumentDto,
-  LinkedResolutionOutcomeTypeDto,
 } from '../../alcs/application-decision/application-decision-v2/application-decision/application-decision.dto';
 import { CeoCriterionCodeDto } from '../../alcs/application-decision/application-decision-v2/application-decision/ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component-type.entity';
@@ -28,9 +30,13 @@ import {
   ApplicationDecisionComponentTypeDto,
 } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.dto';
 import { ApplicationDecisionComponent } from '../../alcs/application-decision/application-decision-v2/application-decision/component/application-decision-component.entity';
-import { LinkedResolutionOutcomeType } from '../../alcs/application-decision/application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
-import { PortalDecisionDto } from '../../portal/application-decision/application-decision.dto';
+import { ApplicationPortalDecisionDto } from '../../portal/public/application/application-decision.dto';
+import { NaruSubtypeDto } from '../../portal/application-submission/application-submission.dto';
+import { NaruSubtype } from '../../portal/application-submission/naru-subtype/naru-subtype.entity';
+import { ApplicationDecisionConditionToComponentLotDto } from '../../alcs/application-decision/application-condition-to-component-lot/application-condition-to-component-lot.controller.dto';
+import { ApplicationDecisionConditionToComponentLot } from '../../alcs/application-decision/application-condition-to-component-lot/application-decision-condition-to-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../../alcs/application-decision/application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
 
 @Injectable()
 export class ApplicationDecisionProfile extends AutomapperProfile {
@@ -114,7 +120,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.date,
-          mapFrom((a) => a.date.getTime()),
+          mapFrom((a) => a.date?.getTime()),
         ),
         forMember(
           (ad) => ad.auditDate,
@@ -149,6 +155,8 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ApplicationDecisionOutcomeCode,
         ApplicationDecisionOutcomeCodeDto,
       );
+
+      createMap(mapper, NaruSubtype, NaruSubtypeDto);
       createMap(
         mapper,
         ApplicationDecisionComponent,
@@ -158,8 +166,30 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((a) => a.endDate?.getTime()),
         ),
         forMember(
+          (ad) => ad.endDate2,
+          mapFrom((a) => a.endDate2?.getTime()),
+        ),
+        forMember(
           (ad) => ad.expiryDate,
           mapFrom((a) => a.expiryDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.naruSubtype,
+          mapFrom((a) =>
+            this.mapper.map(a.naruSubtype, NaruSubtype, NaruSubtypeDto),
+          ),
+        ),
+        forMember(
+          (ad) => ad.lots,
+          mapFrom((a) =>
+            a.lots
+              ? this.mapper.mapArray(
+                  a.lots,
+                  ApplicationDecisionComponentLot,
+                  ApplicationDecisionComponentLotDto,
+                )
+              : [],
+          ),
         ),
       );
       createMap(
@@ -192,6 +222,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.fileName),
         ),
         forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
+        ),
+        forMember(
           (a) => a.uploadedBy,
           mapFrom((ad) => ad.document.uploadedBy?.name),
         ),
@@ -205,6 +239,26 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionCondition,
         ApplicationDecisionConditionDto,
+        forMember(
+          (ad) => ad.completionDate,
+          mapFrom((a) => a.completionDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.supersededDate,
+          mapFrom((a) => a.supersededDate?.getTime()),
+        ),
+        forMember(
+          (ad) => ad.components,
+          mapFrom((a) =>
+            a.components && a.components.length > 0
+              ? this.mapper.mapArray(
+                  a.components,
+                  ApplicationDecisionComponent,
+                  ApplicationDecisionComponentDto,
+                )
+              : [],
+          ),
+        ),
       );
 
       createMap(
@@ -216,7 +270,11 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
       createMap(
         mapper,
         ApplicationDecision,
-        PortalDecisionDto,
+        ApplicationPortalDecisionDto,
+        forMember(
+          (ad) => ad.date,
+          mapFrom((a) => a.date?.getTime()),
+        ),
         forMember(
           (a) => a.reconsiders,
           mapFrom((dec) =>
@@ -249,8 +307,24 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
 
       createMap(
         mapper,
-        LinkedResolutionOutcomeType,
-        LinkedResolutionOutcomeTypeDto,
+        ApplicationDecisionComponentLot,
+        ApplicationDecisionComponentLotDto,
+        forMember(
+          (a) => a.type,
+          mapFrom((ac) => ac.type),
+        ),
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionToComponentLot,
+        ApplicationDecisionConditionToComponentLotDto,
+      );
+
+      createMap(
+        mapper,
+        ApplicationDecisionConditionComponentPlanNumber,
+        ApplicationDecisionConditionComponentDto,
       );
     };
   }

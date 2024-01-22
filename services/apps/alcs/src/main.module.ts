@@ -1,10 +1,10 @@
 import { ConfigModule } from '@app/common/config/config.module';
 import { RedisModule } from '@app/common/redis/redis.module';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import * as config from 'config';
 import { AuthGuard } from 'nest-keycloak-connect';
 import { ClsModule } from 'nestjs-cls';
@@ -14,27 +14,30 @@ import { AlcsModule } from './alcs/alcs.module';
 import { AuthorizationFilter } from './common/authorization/authorization.filter';
 import { AuthorizationModule } from './common/authorization/authorization.module';
 import { AuditSubscriber } from './common/entities/audit.subscriber';
+import { Configuration } from './common/entities/configuration.entity';
+import { TrackingModule } from './common/tracking/tracking.module';
 import { DocumentModule } from './document/document.module';
+import { FileNumberModule } from './file-number/file-number.module';
 import { HealthCheck } from './healthcheck/healthcheck.entity';
 import { LogoutController } from './logout/logout.controller';
 import { MainController } from './main.controller';
 import { MainService } from './main.service';
+import { MaintenanceGuard } from './portal/guards/maintenance.guard';
+import { NoticeOfIntentSubmissionModule } from './portal/notice-of-intent-submission/notice-of-intent-submission.module';
 import { PortalModule } from './portal/portal.module';
 import { TypeormConfigService } from './providers/typeorm/typeorm.service';
-import { User } from './user/user.entity';
+import { SchedulerModule } from './queues/scheduler/scheduler.module';
 import { UserModule } from './user/user.module';
-import { UserService } from './user/user.service';
-import { FileNumberModule } from './file-number/file-number.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forRootAsync({ useClass: TypeormConfigService }),
-    TypeOrmModule.forFeature([HealthCheck, User]),
+    TypeOrmModule.forFeature([HealthCheck, Configuration]),
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
-    ClsModule.register({
+    ClsModule.forRoot({
       global: true,
       middleware: { mount: true },
     }),
@@ -64,12 +67,18 @@ import { FileNumberModule } from './file-number/file-number.module';
     PortalModule,
     UserModule,
     FileNumberModule,
+    NoticeOfIntentSubmissionModule,
+    TrackingModule,
+    SchedulerModule, // this will init BullMQ
   ],
   controllers: [MainController, LogoutController],
   providers: [
     MainService,
-    UserService,
     AuditSubscriber,
+    {
+      provide: APP_GUARD,
+      useClass: MaintenanceGuard, //Should come before AuthGuard
+    },
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

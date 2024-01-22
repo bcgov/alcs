@@ -1,14 +1,14 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IConfig } from 'config';
 import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardDetailedDto, CardDto, CardUpdateServiceDto } from './card.dto';
@@ -31,10 +31,19 @@ export class CardService {
     private cardTypeRepository: Repository<CardType>,
     @Inject(CONFIG_TOKEN) private config: IConfig,
     private subtaskService: CardSubtaskService,
-    private notificationService: NotificationService,
+    private notificationService: MessageService,
   ) {}
 
   async getCardTypes() {
+    return await this.cardTypeRepository.find({
+      select: {
+        code: true,
+        label: true,
+      },
+    });
+  }
+
+  async getPortalCardTypes() {
     return await this.cardTypeRepository.find({
       select: {
         code: true,
@@ -104,7 +113,7 @@ export class CardService {
 
     if (shouldCreateNotification) {
       const frontEnd = this.config.get('ALCS.FRONTEND_ROOT');
-      this.notificationService.createNotification({
+      this.notificationService.create({
         actor: user,
         receiverUuid: savedCard.assigneeUuid,
         title: "You've been assigned",
@@ -199,5 +208,12 @@ export class CardService {
     card.archived = false;
     await this.cardRepository.save(card);
     await this.cardRepository.recover(card);
+  }
+
+  async getByCardStatus(code: string) {
+    return this.cardRepository.find({
+      where: { statusCode: code },
+      relations: this.DEFAULT_RELATIONS,
+    });
   }
 }

@@ -10,6 +10,7 @@ export interface ApplicationModificationCreateDto {
   applicationTypeCode: string;
   applicant: string;
   regionCode: string;
+  description: string;
   localGovernmentUuid: string;
   submittedDate: number;
   boardCode: string;
@@ -18,8 +19,8 @@ export interface ApplicationModificationCreateDto {
 }
 
 export interface ApplicationModificationUpdateDto {
+  description?: string;
   submittedDate?: number;
-  reviewDate?: number | null;
   reviewOutcomeCode?: string;
   isTimeExtension?: boolean | null;
   modifiesDecisionUuids?: string[];
@@ -39,8 +40,8 @@ export interface ApplicationModificationDto {
   uuid: string;
   application: ApplicationForModificationDto;
   card: CardDto;
+  description: string;
   submittedDate: number;
-  reviewDate: number;
   reviewOutcome: ModificationReviewOutcomeTypeDto;
   isTimeExtension: boolean | null;
   modifiesDecisions: ApplicationDecisionDto[];

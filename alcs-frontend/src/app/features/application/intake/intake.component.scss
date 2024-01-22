@@ -8,6 +8,17 @@ h5 {
   margin-bottom: 4px !important;
 }
 
+.icon {
+  height: 20px;
+  width: 20px;
+  font-size: 20px;
+}
+
+.label-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
 .payment-section {
   display: grid;
   grid-template-columns: 1fr 1fr;

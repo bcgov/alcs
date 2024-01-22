@@ -1,0 +1,14 @@
+@use '../../../../../../styles/functions' as *;
+@use '../../../../../../styles/colors';
+
+section {
+  margin-top: rem(36);
+}
+
+.steps-list {
+  margin: rem(16) 0;
+}
+
+.affected-area {
+  margin-top: rem(36);
+}

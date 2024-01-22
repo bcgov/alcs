@@ -5,6 +5,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { BehaviorSubject } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationDocumentService } from '../../../services/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusService } from '../../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../../services/application/application.dto';
 import { ToastService } from '../../../services/toast/toast.service';
 
@@ -17,6 +18,7 @@ describe('DocumentsComponent', () => {
   let mockAppDetailService: DeepMocked<ApplicationDetailService>;
   let mockDialog: DeepMocked<MatDialog>;
   let mockToastService: DeepMocked<ToastService>;
+  let mockAppSubStatusService: DeepMocked<ApplicationSubmissionStatusService>;
 
   beforeEach(async () => {
     mockAppDocService = createMock();
@@ -43,6 +45,10 @@ describe('DocumentsComponent', () => {
         {
           provide: ToastService,
           useValue: mockToastService,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockAppSubStatusService,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

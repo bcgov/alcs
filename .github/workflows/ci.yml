@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci --legacy-peer-deps
+      - run: npm ci
       - run: npm run build
       - run: npm run test:ci
   test-portal-frontend:
@@ -29,8 +29,8 @@ jobs:
         working-directory: portal-frontend
     strategy:
       matrix:
-        platform: [ ubuntu-latest ]
-        node: [ "18" ]
+        platform: [ubuntu-latest]
+        node: ["18"]
     name: Portal Frontend Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:
@@ -48,7 +48,7 @@ jobs:
     strategy:
       matrix:
         platform: [ubuntu-latest]
-        node: ["18"]
+        node: ["20"]
     name: API Tests - ${{ matrix.node }}/${{ matrix.platform }}
     runs-on: ${{ matrix.platform }}
     steps:

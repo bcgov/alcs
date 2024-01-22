@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../../services/application/application-detail.service';
 import { ApplicationDto } from '../../../../services/application/application.dto';
 import { ApplicationDecisionComponentService } from '../../../../services/application/decision/application-decision-v2/application-decision-component/application-decision-component.service';
 import {
-  ApplicationDecisionDto,
   APPLICATION_DECISION_COMPONENT_TYPE,
+  ApplicationDecisionWithLinkedResolutionDto,
   CeoCriterionDto,
   DecisionMakerDto,
   DecisionOutcomeCodeDto,
@@ -22,13 +22,12 @@ import {
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { formatDateForApi } from '../../../../shared/utils/api-date-formatter';
-import { decisionChildRoutes } from '../decision.module';
 import { RevertToDraftDialogComponent } from './revert-to-draft-dialog/revert-to-draft-dialog.component';
 
-type LoadingDecision = ApplicationDecisionDto & {
-  reconsideredByResolutions: string[];
-  modifiedByResolutions: string[];
+type LoadingDecision = ApplicationDecisionWithLinkedResolutionDto & {
   loading: boolean;
+  hasDuplicateComponents: boolean;
+  disabledMessage: string;
 };
 
 @Component({
@@ -38,7 +37,6 @@ type LoadingDecision = ApplicationDecisionDto & {
 })
 export class DecisionV2Component implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
-  createDecision = decisionChildRoutes.find((e) => e.path === 'create')!;
   isDraftExists = true;
   disabledCreateBtnTooltip = '';
 
@@ -65,7 +63,9 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     private toastService: ToastService,
     private confirmationDialogService: ConfirmationDialogService,
     private applicationDecisionComponentService: ApplicationDecisionComponentService,
-    private router: Router
+    private router: Router,
+    private activatedRouter: ActivatedRoute,
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -87,25 +87,54 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     this.ceoCriterion = codes.ceoCriterion;
     this.decisionService.loadDecisions(fileNumber);
 
+    this.isDraftExists = this.decisions.some((d) => d.isDraft);
+
     this.decisionService.$decisions.pipe(takeUntil(this.$destroy)).subscribe((decisions) => {
-      this.decisions = decisions.map((decision) => ({
-        ...decision,
-        reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
-        modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
-        loading: false,
-      }));
+      this.decisions = decisions.map((decision) => {
+        const componentCodes = decision.components.map((component) => component.applicationDecisionComponentTypeCode);
+        const duplicateComponentCodes = componentCodes.filter((item, index) => componentCodes.indexOf(item) !== index);
+
+        let disabledMessage =
+          'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
+        if (this.isPaused) {
+          disabledMessage = 'This application is currently paused. Only active applications can have decisions.';
+        }
+        if (duplicateComponentCodes.length > 0) {
+          disabledMessage = 'Editing disabled - contact admin';
+        }
+
+        return {
+          ...decision,
+          loading: false,
+          hasDuplicateComponents: duplicateComponentCodes.length > 0,
+          disabledMessage,
+        };
+      });
 
       this.isDraftExists = this.decisions.some((d) => d.isDraft);
+      this.scrollToDecision();
+
       this.disabledCreateBtnTooltip = this.isPaused
         ? 'This application is currently paused. Only active applications can have decisions.'
         : 'An application can only have one decision draft at a time. Please release or delete the existing decision draft to continue.';
     });
   }
 
-  async onCreate() {
+  scrollToDecision() {
+    const decisionUuid = this.activatedRouter.snapshot.queryParamMap.get('uuid');
+
+    setTimeout(() => {
+      if (this.decisions.length > 0 && decisionUuid) {
+        this.scrollToElement(decisionUuid);
+      }
+    });
+  }
+
+  async onCreate(existingUuid?: string) {
     const newDecision = await this.decisionService.create({
+      decisionToCopy: existingUuid,
       resolutionYear: new Date().getFullYear(),
-      chairReviewRequired: false,
+      chairReviewRequired: true,
       isDraft: true,
       date: Date.now(),
       applicationFileNumber: this.fileNumber,
@@ -113,25 +142,36 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       reconsidersUuid: null,
     });
 
-    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit`]);
+    const index = this.decisions.length;
+    await this.router.navigate([
+      `/application/${this.fileNumber}/decision/draft/${newDecision.uuid}/edit/${index + 1}`,
+    ]);
   }
 
-  async onEdit(decision: LoadingDecision) {
-    await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${decision.uuid}/edit`]);
+  async onEdit(selectedDecision: ApplicationDecisionWithLinkedResolutionDto) {
+    const position = this.decisions.findIndex((decision) => decision.uuid === selectedDecision.uuid);
+    const index = this.decisions.length - position;
+    await this.router.navigate([
+      `/application/${this.fileNumber}/decision/draft/${selectedDecision.uuid}/edit/${index}`,
+    ]);
   }
 
   async onRevertToDraft(uuid: string) {
+    const position = this.decisions.findIndex((decision) => decision.uuid === uuid);
+    const index = this.decisions.length - position;
     this.dialog
-      .open(RevertToDraftDialogComponent)
+      .open(RevertToDraftDialogComponent, {
+        data: { fileNumber: this.fileNumber },
+      })
       .beforeClosed()
-      .subscribe(async (result) => {
-        if (result) {
+      .subscribe(async (didConfirm) => {
+        if (didConfirm) {
           await this.decisionService.update(uuid, {
             isDraft: true,
           });
           await this.applicationDetailService.loadApplication(this.fileNumber);
 
-          await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit`]);
+          await this.router.navigate([`/application/${this.fileNumber}/decision/draft/${uuid}/edit/${index}`]);
         }
       });
   }
@@ -156,28 +196,18 @@ export class DecisionV2Component implements OnInit, OnDestroy {
       });
   }
 
-  async attachFile(decisionUuid: string, event: Event) {
-    this.decisions = this.decisions.map((decision) => {
-      return {
-        ...decision,
-        loading: decision.uuid === decisionUuid,
-      };
-    });
-    const element = event.target as HTMLInputElement;
-    const fileList = element.files;
-    if (fileList && fileList.length > 0) {
-      const file: File = fileList[0];
-      const uploadedFile = await this.decisionService.uploadFile(decisionUuid, file);
-      if (uploadedFile) {
-        await this.loadDecisions(this.fileNumber);
-      }
-    }
-  }
-
   async onSaveChairReviewDate(decisionUuid: string, chairReviewDate: number) {
     await this.decisionService.update(decisionUuid, {
       chairReviewDate: formatDateForApi(chairReviewDate),
       chairReviewRequired: true,
+      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
+    });
+    await this.loadDecisions(this.fileNumber);
+  }
+
+  async onSaveChairReviewOutcome(decisionUuid: string, chairReviewOutcomeCode: string) {
+    await this.decisionService.update(decisionUuid, {
+      chairReviewOutcomeCode,
       isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
     });
     await this.loadDecisions(this.fileNumber);
@@ -191,7 +221,7 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  async onSaveAlrArea(decisionUuid: string, componentUuid: string, value?: any) {
+  async onSaveAlrArea(decisionUuid: string, componentUuid: string | undefined, value?: any) {
     const decision = this.decisions.find((e) => e.uuid === decisionUuid);
     const component = decision?.components.find((e) => e.uuid === componentUuid);
     if (componentUuid && component) {
@@ -207,22 +237,22 @@ export class DecisionV2Component implements OnInit, OnDestroy {
     await this.loadDecisions(this.fileNumber);
   }
 
-  async onStatsRequiredUpdate(decisionUuid: string, value: boolean) {
-    await this.decisionService.update(decisionUuid, {
-      isStatsRequired: value,
-      isDraft: this.decisions.find((e) => e.uuid === decisionUuid)?.isDraft,
-    });
-    await this.loadDecisions(this.fileNumber);
-  }
-
-  onNavigateToConditions() {
-    // some other ticket
-    return false;
-  }
-
   ngOnDestroy(): void {
     this.decisionService.clearDecisions();
     this.$destroy.next();
     this.$destroy.complete();
+  }
+
+  scrollToElement(elementId: string) {
+    const id = `#${CSS.escape(elementId)}`;
+    const element = this.elementRef.nativeElement.querySelector(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'start',
+      });
+    }
   }
 }

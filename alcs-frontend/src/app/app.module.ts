@@ -5,7 +5,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgSelectConfig } from '@ng-select/ng-select';
-import { provideNgxMask } from 'ngx-mask';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthorizationComponent } from './features/authorization/authorization.component';
@@ -18,7 +18,6 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { HeaderComponent } from './shared/header/header.component';
 import { NotificationsComponent } from './shared/header/notifications/notifications.component';
 import { SearchBarComponent } from './shared/header/search-bar/search-bar.component';
-import { SearchComponent } from './shared/header/search/search.component';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -32,13 +31,12 @@ import { SharedModule } from './shared/shared.module';
     ConfirmationDialogComponent,
     NotificationsComponent,
     SearchBarComponent,
-    SearchComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule, SharedModule.forRoot(), AppRoutingModule, MomentDateModule],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { panelClass: 'mat-dialog-override' } },
-    provideNgxMask(),
+    provideEnvironmentNgxMask(),
     {
       provide: APP_INITIALIZER,
       useFactory: (service: TokenRefreshService) => () => {

@@ -172,6 +172,19 @@ describe('ApplicationDecisionV2Service', () => {
     expect(toastService.showErrorToast).toHaveBeenCalledTimes(1);
   });
 
+  it('should make an http patch call for update file', async () => {
+    httpClient.patch.mockReturnValue(
+      of([
+        {
+          fileNumber: '1',
+        },
+      ])
+    );
+    await service.updateFile('', '', '');
+
+    expect(httpClient.patch).toHaveBeenCalledTimes(1);
+  });
+
   it('should show a toast warning when uploading a file thats too large', async () => {
     const file = createMock<File>();
     Object.defineProperty(file, 'size', { value: environment.maxFileSize + 1 });

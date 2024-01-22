@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 @Component({
@@ -7,14 +8,17 @@ import { AuthenticationService } from '../../services/authentication/authenticat
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  $destroy = new Subject<void>();
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
-  async ngOnInit() {
-    const hasToken = await this.authenticationService.getToken();
-    if (hasToken) {
-      await this.router.navigateByUrl('');
-    }
+  ngOnInit() {
+    this.authenticationService.getToken(false);
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      if (user) {
+        this.router.navigateByUrl('/home');
+      }
+    });
   }
 
   async onLogin() {
@@ -23,5 +27,14 @@ export class LoginComponent implements OnInit {
       const idpHint = '&kc_idp_hint=bceidboth';
       window.location.href = `${res.loginUrl}${idpHint}`;
     }
+  }
+
+  async navigateToPublicSearch() {
+    await this.router.navigateByUrl('/public');
+  }
+
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
   }
 }

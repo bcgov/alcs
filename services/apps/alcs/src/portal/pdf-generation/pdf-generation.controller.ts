@@ -25,8 +25,10 @@ export class PdfGenerationController {
       user,
     );
 
-    resp.type('application/pdf');
-    resp.send(result.data);
+    if (result) {
+      resp.type('application/pdf');
+      resp.send(result.data);
+    }
   }
 
   @Get(':fileNumber/review')

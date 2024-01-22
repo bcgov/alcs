@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
 import { CardType } from '../card/card-type/card-type.entity';
@@ -23,10 +23,6 @@ export class Board extends Base {
   title: string;
 
   @AutoMap()
-  @Column()
-  decisionMaker: string;
-
-  @AutoMap()
   @OneToMany(() => BoardStatus, (status) => status.board, {
     eager: true,
   })
@@ -38,4 +34,12 @@ export class Board extends Base {
   @ManyToMany(() => CardType)
   @JoinTable()
   allowedCardTypes: CardType[];
+
+  @ManyToMany(() => CardType)
+  @JoinTable()
+  createCardTypes: CardType[];
+
+  @AutoMap()
+  @Column({})
+  showOnSchedule: boolean;
 }

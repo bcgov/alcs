@@ -1,20 +1,21 @@
-import { Process, Processor } from '@nestjs/bull';
+import { OnWorkerEvent, Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import * as dayjs from 'dayjs';
-import { NotificationService } from '../../alcs/notification/notification.service';
+import { MessageService } from '../../alcs/message/message.service';
 import { QUEUES } from './scheduler.service';
 
 const DAYS_TO_RETAIN_READ = 30;
 const DAYS_TO_RETAIN_UNREAD = 365;
 
 @Processor(QUEUES.CLEANUP_NOTIFICATIONS)
-export class CleanUpNotificationsConsumer {
+export class CleanUpNotificationsConsumer extends WorkerHost {
   private logger = new Logger(CleanUpNotificationsConsumer.name);
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: MessageService) {
+    super();
+  }
 
-  @Process()
-  async cleanUpNotifications() {
+  async process() {
     try {
       this.logger.debug('starting notification cleanup');
 
@@ -42,5 +43,10 @@ export class CleanUpNotificationsConsumer {
       this.logger.error(e);
     }
     return;
+  }
+
+  @OnWorkerEvent('completed')
+  onCompleted() {
+    this.logger.debug('Completed CleanUpNotificationsConsumer job.');
   }
 }

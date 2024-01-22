@@ -24,6 +24,7 @@ export interface CardData {
   verticalOutBound?: boolean;
   dueDate?: Date;
   maxActiveDays?: number;
+  legacyId?: string;
 }
 
 export interface CardSelectedEvent {
@@ -39,6 +40,7 @@ export enum CardType {
   COV = 'COV',
   NOI = 'NOI',
   NOI_MODI = 'NOIM',
+  NOTIFICATION = 'NOTI',
 }
 
 const lineHeight = 24;

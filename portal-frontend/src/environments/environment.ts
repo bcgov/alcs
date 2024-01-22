@@ -15,7 +15,7 @@ export const environment = {
   alcsUrl: window.env?.['alcsUrl'] || 'http://localhost:4200',
   dateFormat: 'YYYY-MMM-DD',
   shortTimeFormat: 'MMM D, h:mm a',
-  longTimeFormat: 'YYYY-MMM-DD hh:mm:ss a',
+  longTimeFormat: 'YYYY-MMM-DD h:mm:ss a',
   maxFileSize: 104857600, //should match setting in backend
 };
 

@@ -1,17 +1,7 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
+import { OWNER_TYPE, OwnerTypeDto } from '../../shared/dto/owner.dto';
 import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
-
-export enum APPLICATION_OWNER {
-  INDIVIDUAL = 'INDV',
-  ORGANIZATION = 'ORGZ',
-  AGENT = 'AGEN',
-  CROWN = 'CRWN',
-}
-
-export interface ApplicationOwnerTypeDto extends BaseCodeDto {
-  code: APPLICATION_OWNER;
-}
 
 export interface ApplicationOwnerDto {
   uuid: string;
@@ -22,8 +12,9 @@ export interface ApplicationOwnerDto {
   organizationName: string | null;
   phoneNumber: string | null;
   email: string | null;
-  type: ApplicationOwnerTypeDto;
+  type: OwnerTypeDto;
   corporateSummary?: ApplicationDocumentDto;
+  crownLandOwnerType?: string | null;
 }
 
 export interface ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
@@ -38,6 +29,7 @@ export interface ApplicationOwnerUpdateDto {
   email: string;
   typeCode: string;
   corporateSummaryUuid?: string | null;
+  crownLandOwnerType?: string | null;
 }
 
 export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
@@ -45,11 +37,12 @@ export interface ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
 }
 
 export interface SetPrimaryContactDto {
-  agentFirstName?: string;
-  agentLastName?: string;
-  agentOrganization?: string;
-  agentPhoneNumber?: string;
-  agentEmail?: string;
+  firstName?: string;
+  lastName?: string;
+  organization?: string;
+  phoneNumber?: string;
+  email?: string;
+  type?: OWNER_TYPE;
   ownerUuid?: string;
   applicationSubmissionUuid: string;
 }

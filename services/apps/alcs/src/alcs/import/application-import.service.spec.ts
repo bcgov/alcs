@@ -5,8 +5,8 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import { Volume, fs } from 'memfs';
 import * as path from 'path';
-import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { LocalGovernmentService } from '../local-government/local-government.service';
 import { ApplicationMeeting } from '../application/application-meeting/application-meeting.entity';
 import { ApplicationMeetingService } from '../application/application-meeting/application-meeting.service';
 import { ApplicationPaused } from '../application/application-paused.entity';
@@ -33,7 +33,7 @@ describe('ImportService', () => {
   let mockApplicationservice: DeepMocked<ApplicationService>;
   let mockApplicationMeetingService: DeepMocked<ApplicationMeetingService>;
   let mockPausedService: DeepMocked<ApplicationPausedService>;
-  let mockLocalGovernmentService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLocalGovernmentService: DeepMocked<LocalGovernmentService>;
   let mockBoardService: DeepMocked<BoardService>;
 
   let mockDataRow;
@@ -45,8 +45,7 @@ describe('ImportService', () => {
     mockApplicationservice = createMock<ApplicationService>();
     mockApplicationMeetingService = createMock<ApplicationMeetingService>();
     mockPausedService = createMock<ApplicationPausedService>();
-    mockLocalGovernmentService =
-      createMock<ApplicationLocalGovernmentService>();
+    mockLocalGovernmentService = createMock<LocalGovernmentService>();
     mockBoardService = createMock<BoardService>();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -65,7 +64,7 @@ describe('ImportService', () => {
           useValue: mockPausedService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLocalGovernmentService,
         },
         {
@@ -92,7 +91,7 @@ describe('ImportService', () => {
 
     mockLocalGovernmentService.getByName.mockResolvedValue({
       uuid: 'government-uuid',
-    } as ApplicationLocalGovernment);
+    } as LocalGovernment);
   });
 
   it('should be defined', () => {
@@ -168,7 +167,7 @@ describe('ImportService', () => {
   it('should should do a fallback search for local government', async () => {
     mockLocalGovernmentService.getByName.mockResolvedValueOnce(null);
     mockLocalGovernmentService.getByName.mockResolvedValueOnce(
-      {} as ApplicationLocalGovernment,
+      {} as LocalGovernment,
     );
     await service.parseRow(
       mockDataRow,

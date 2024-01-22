@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   Column,
   CreateDateColumn,
@@ -21,7 +21,6 @@ import { ApplicationDecisionDocument } from './application-decision-document/app
 import { ApplicationDecisionMakerCode } from './application-decision-maker/application-decision-maker.entity';
 import { ApplicationDecisionChairReviewOutcomeType } from './application-decision-outcome-type/application-decision-outcome-type.entity';
 import { ApplicationDecisionComponent } from './application-decision-v2/application-decision/component/application-decision-component.entity';
-import { LinkedResolutionOutcomeType } from './application-decision-v2/application-decision/linked-resolution-outcome-type.entity';
 
 @Entity()
 @Index(['resolutionNumber', 'resolutionYear'], {
@@ -37,8 +36,8 @@ export class ApplicationDecision extends Base {
   }
 
   @AutoMap()
-  @Column({ type: 'timestamptz' })
-  date: Date;
+  @Column({ type: 'timestamptz', nullable: true })
+  date: Date | null;
 
   @AutoMap()
   @Column({ type: 'timestamptz', nullable: true })
@@ -65,10 +64,6 @@ export class ApplicationDecision extends Base {
   @AutoMap()
   @Column()
   outcomeCode: string;
-
-  @AutoMap()
-  @ManyToOne(() => Application)
-  application: Application;
 
   @AutoMap()
   @Column({ type: 'int4', nullable: true })
@@ -125,23 +120,6 @@ export class ApplicationDecision extends Base {
   })
   decisionDescription?: string | null;
 
-  @AutoMap(() => Boolean)
-  @Column({
-    comment: 'Indicates whether the stats are required for the decision',
-    nullable: true,
-    type: 'boolean',
-  })
-  isStatsRequired?: boolean | null;
-
-  @AutoMap(() => Number)
-  @Column({
-    comment:
-      'Indicates how long the decision should stay hidden from public in days from decision date',
-    nullable: true,
-    type: 'integer',
-  })
-  daysHideFromPublic?: number | null;
-
   @AutoMap(() => Date)
   @Column({
     type: 'timestamptz',
@@ -177,15 +155,13 @@ export class ApplicationDecision extends Base {
   @Column({ nullable: true, type: 'text' })
   chairReviewOutcomeCode: string | null;
 
-  @AutoMap(() => LinkedResolutionOutcomeType)
-  @ManyToOne(() => LinkedResolutionOutcomeType, {
-    nullable: true,
-  })
-  linkedResolutionOutcome: LinkedResolutionOutcomeType | null;
-
   @AutoMap()
   @Column({ nullable: true, type: 'text' })
   linkedResolutionOutcomeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => Application)
+  application: Application;
 
   @AutoMap()
   @Column({ type: 'uuid' })
@@ -240,4 +216,13 @@ export class ApplicationDecision extends Base {
     { cascade: ['insert', 'update'] },
   )
   conditions: ApplicationDecisionCondition[];
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_decisions to alcs.application_decisions.',
+  })
+  oatsAlrApplDecisionId: number;
 }

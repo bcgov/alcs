@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -11,6 +11,7 @@ import {
 import { mockKeyCloakProviders } from '../../../../../test/mocks/mockTypes';
 import { ApplicationDecisionProfile } from '../../../../common/automapper/application-decision-v1.automapper.profile';
 import { UserProfile } from '../../../../common/automapper/user.automapper.profile';
+import { EmailService } from '../../../../providers/email/email.service';
 import { ApplicationService } from '../../../application/application.service';
 import { Board } from '../../../board/board.entity';
 import { ApplicationReconsiderationService } from '../../application-reconsideration/application-reconsideration.service';
@@ -26,7 +27,7 @@ describe('ApplicationDecisionMeetingController', () => {
   let mockMeetingService: DeepMocked<ApplicationDecisionMeetingService>;
   let mockApplicationService: DeepMocked<ApplicationService>;
   let mockReconsiderationService: DeepMocked<ApplicationReconsiderationService>;
-
+  let mockEmailService: DeepMocked<EmailService>;
   let mockApplication;
   let mockMeeting;
 
@@ -34,6 +35,7 @@ describe('ApplicationDecisionMeetingController', () => {
     mockMeetingService = createMock();
     mockApplicationService = createMock();
     mockReconsiderationService = createMock();
+    mockEmailService = createMock<EmailService>();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -56,6 +58,10 @@ describe('ApplicationDecisionMeetingController', () => {
         {
           provide: ApplicationReconsiderationService,
           useValue: mockReconsiderationService,
+        },
+        {
+          provide: EmailService,
+          useValue: mockEmailService,
         },
         {
           provide: ClsService,
@@ -107,6 +113,7 @@ describe('ApplicationDecisionMeetingController', () => {
 
   it('should create meeting', async () => {
     mockApplicationService.getOrFail.mockResolvedValue(mockApplication);
+    mockMeetingService.getByAppFileNumber.mockResolvedValue([]);
 
     const meetingToUpdate = {
       date: new Date(2022, 2, 2, 2, 2, 2, 2).valueOf(),

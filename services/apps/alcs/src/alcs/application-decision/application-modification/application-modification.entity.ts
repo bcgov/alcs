@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import {
   Column,
@@ -42,9 +42,13 @@ export class ApplicationModification extends Base {
   @Column()
   isTimeExtension: boolean;
 
-  @AutoMap()
-  @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date | null;
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Modification description provided by ALCS staff',
+  })
+  description?: string;
 
   @AutoMap()
   @ManyToOne(() => Application, { cascade: ['insert'] })
@@ -61,8 +65,8 @@ export class ApplicationModification extends Base {
   card: Card | null;
 
   @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string | null;
 
   @ManyToMany(() => ApplicationDecision, (decision) => decision.modifiedBy)
   @JoinTable({
@@ -72,4 +76,13 @@ export class ApplicationModification extends Base {
 
   @OneToOne(() => ApplicationDecision, (dec) => dec.modifies)
   resultingDecision?: ApplicationDecision;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_reconsideration_requests to alcs.application_modification.',
+  })
+  oatsReconsiderationRequestId: number;
 }

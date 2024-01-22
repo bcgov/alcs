@@ -1,4 +1,5 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
+import { IsArray, IsBoolean, IsString } from 'class-validator';
 
 export enum BOARD_CODES {
   CEO = 'ceo',
@@ -6,31 +7,38 @@ export enum BOARD_CODES {
   EXECUTIVE_COMMITTEE = 'exec',
 }
 
-export class BoardDto {
+export class MinimalBoardDto {
   @AutoMap()
+  @IsString()
   code: string;
 
   @AutoMap()
+  @IsString()
   title: string;
 
   @AutoMap()
-  decisionMaker: string;
+  @IsBoolean()
+  showOnSchedule: boolean;
 
-  @AutoMap()
-  statuses: BoardStatusDto[];
-
+  @IsArray()
   allowedCardTypes: string[];
 }
 
-export class BoardSmallDto {
+export class BoardDto extends MinimalBoardDto {
   @AutoMap()
+  @IsString()
   code: string;
 
   @AutoMap()
+  @IsString()
   title: string;
 
   @AutoMap()
-  decisionMaker: string;
+  @IsArray()
+  statuses: BoardStatusDto[];
+
+  @IsArray()
+  createCardTypes: string[];
 }
 
 export class BoardStatusDto {

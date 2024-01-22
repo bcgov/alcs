@@ -1,10 +1,8 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationDecisionDto } from '../../alcs/application-decision/application-decision-v1/application-decision/application-decision.dto';
-import { ApplicationDecision } from '../../alcs/application-decision/application-decision.entity';
 import {
   ApplicationForReconsiderationDto,
   ApplicationReconsiderationCreateDto,
@@ -17,8 +15,6 @@ import { ApplicationReconsideration } from '../../alcs/application-decision/appl
 import { ApplicationReconsiderationOutcomeType } from '../../alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
 import { ApplicationReconsiderationType } from '../../alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { Application } from '../../alcs/application/application.entity';
-import { CardDto } from '../../alcs/card/card.dto';
-import { Card } from '../../alcs/card/card.entity';
 
 @Injectable()
 export class ReconsiderationProfile extends AutomapperProfile {
@@ -83,44 +79,6 @@ export class ReconsiderationProfile extends AutomapperProfile {
         forMember(
           (a) => a.reviewDate,
           mapFrom((rd) => rd.reviewDate?.getTime()),
-        ),
-        forMember(
-          (a) => a.card,
-          mapFrom((rd) => this.mapper.map(rd.card, Card, CardDto)),
-        ),
-        forMember(
-          (a) => a.reconsideredDecisions,
-          mapFrom((rd) =>
-            this.mapper.mapArray(
-              rd.reconsidersDecisions ?? [],
-              ApplicationDecision,
-              ApplicationDecisionDto,
-            ),
-          ),
-        ),
-        forMember(
-          (a) => a.resultingDecision,
-          mapFrom((rd) =>
-            rd.resultingDecision
-              ? this.mapper.map(
-                  rd.resultingDecision,
-                  ApplicationDecision,
-                  ApplicationDecisionDto,
-                )
-              : undefined,
-          ),
-        ),
-        forMember(
-          (a) => a.reviewOutcome,
-          mapFrom((rd) =>
-            rd.reviewOutcome
-              ? this.mapper.map(
-                  rd.reviewOutcome,
-                  ApplicationReconsiderationOutcomeType,
-                  ApplicationReconsiderationOutcomeCodeDto,
-                )
-              : null,
-          ),
         ),
       );
 

@@ -13,6 +13,7 @@ import { ApplicationReconsiderationDto } from '../../services/application/applic
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { ApplicationService } from '../../services/application/application.service';
+import { BoardDto } from '../../services/board/board.dto';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
 import { CardDto } from '../../services/card/card.dto';
 import { CardService } from '../../services/card/card.service';
@@ -20,6 +21,8 @@ import { CovenantDto } from '../../services/covenant/covenant.dto';
 import { CovenantService } from '../../services/covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../services/notice-of-intent/notice-of-intent.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
+import { NotificationService } from '../../services/notification/notification.service';
 import { PlanningReviewDto } from '../../services/planning-review/planning-review.dto';
 import { PlanningReviewService } from '../../services/planning-review/planning-review.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -43,6 +46,7 @@ describe('BoardComponent', () => {
   let titleService: DeepMocked<Title>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noticeOfIntentModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let notificationService: DeepMocked<NotificationService>;
 
   let boardEmitter = new BehaviorSubject<BoardWithFavourite[]>([]);
 
@@ -69,11 +73,26 @@ describe('BoardComponent', () => {
 
   let queryParamMapEmitter: BehaviorSubject<Map<string, any>>;
 
+  const mockBoard: BoardWithFavourite = {
+    code: 'boardCode',
+    title: 'boardTitle',
+    isFavourite: false,
+    allowedCardTypes: [],
+    showOnSchedule: true,
+  };
+
+  const mockDetailBoard: BoardDto = {
+    ...mockBoard,
+    statuses: [],
+    createCardTypes: [],
+  };
+
   beforeEach(async () => {
     applicationService = createMock();
     boardService = createMock();
     boardService.$boards = boardEmitter;
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [],
       covenants: [],
       modifications: [],
@@ -81,6 +100,7 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
     dialog = createMock();
@@ -95,10 +115,12 @@ describe('BoardComponent', () => {
     titleService = createMock();
     noticeOfIntentService = createMock();
     noticeOfIntentModificationService = createMock();
+    notificationService = createMock();
 
     const params = {
       boardCode: 'boardCode',
     };
+
     queryParamMapEmitter = new BehaviorSubject(new Map());
 
     await TestBed.configureTestingModule({
@@ -160,6 +182,10 @@ describe('BoardComponent', () => {
           useValue: noticeOfIntentModificationService,
         },
         {
+          provide: NotificationService,
+          useValue: notificationService,
+        },
+        {
           provide: Title,
           useValue: titleService,
         },
@@ -182,16 +208,7 @@ describe('BoardComponent', () => {
   });
 
   it('should set the title when provided a board code', async () => {
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await fixture.whenStable();
 
@@ -200,23 +217,9 @@ describe('BoardComponent', () => {
     expect(component.currentBoardCode).toEqual('boardCode');
   });
 
-  it('should enable covenants when not the vetting board', () => {
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
-
-    expect(component.boardHasCreateCovenant).toBeTruthy();
-  });
-
   it('should map an application into a card', async () => {
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [mockApplication],
       covenants: [],
       modifications: [],
@@ -224,18 +227,10 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
@@ -244,7 +239,8 @@ describe('BoardComponent', () => {
   });
 
   it('should map a reconsideration into a card', async () => {
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [],
       covenants: [],
       modifications: [],
@@ -252,18 +248,10 @@ describe('BoardComponent', () => {
       reconsiderations: [mockRecon],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
@@ -294,7 +282,8 @@ describe('BoardComponent', () => {
         },
       },
     } as ApplicationDto;
-    boardService.fetchCards.mockResolvedValue({
+    boardService.fetchBoardWithCards.mockResolvedValue({
+      board: mockDetailBoard,
       applications: [mockApplication, highPriorityApplication, highActiveDays],
       covenants: [],
       modifications: [],
@@ -302,18 +291,10 @@ describe('BoardComponent', () => {
       reconsiderations: [],
       noticeOfIntents: [],
       noiModifications: [],
+      notifications: [],
     });
 
-    boardEmitter.next([
-      {
-        code: 'boardCode',
-        title: 'boardTitle',
-        isFavourite: false,
-        decisionMaker: '',
-        statuses: [],
-        allowedCardTypes: [],
-      },
-    ]);
+    boardEmitter.next([mockBoard]);
 
     await sleep(1);
 
@@ -384,6 +365,22 @@ describe('BoardComponent', () => {
     await sleep(1);
 
     expect(covenantService.fetchByCardUuid).toHaveBeenCalledTimes(1);
+    expect(dialog.open).toHaveBeenCalledTimes(1);
+  });
+
+  it('should load notification and open dialog when url is set', async () => {
+    notificationService.fetchByCardUuid.mockResolvedValue({} as NotificationDto);
+
+    queryParamMapEmitter.next(
+      new Map([
+        ['card', 'app-id'],
+        ['type', CardType.NOTIFICATION],
+      ])
+    );
+
+    await sleep(1);
+
+    expect(notificationService.fetchByCardUuid).toHaveBeenCalledTimes(1);
     expect(dialog.open).toHaveBeenCalledTimes(1);
   });
 

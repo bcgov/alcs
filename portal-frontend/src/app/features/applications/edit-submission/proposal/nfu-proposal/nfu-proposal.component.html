@@ -1,0 +1,238 @@
+<div class="step-description">
+  <h2>Proposal</h2>
+  <p>*All fields are required unless stated optional or disabled.</p>
+  <app-commission-purposes-panel></app-commission-purposes-panel>
+</div>
+<app-warning-banner>
+  In order to complete this step, please consult the following pages on the ALC website:
+  <ul class="steps-list">
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/what-the-commission-considers/"
+        target="_blank"
+      >
+        What the Commission Considers
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://www.alc.gov.bc.ca/application-and-notice-process/applications/required-documents/#nfu"
+        target="_blank"
+      >
+        Non-Farm Uses within the ALR
+      </a>
+    </li>
+  </ul>
+</app-warning-banner>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="full-row">
+      <label for="hectares">How many hectares are proposed for non-farm use?</label>
+      <mat-form-field appearance="outline">
+        <input
+          id="hectares"
+          mask="separator.5"
+          thousandSeparator=","
+          separatorLimit="9999999999"
+          min="0.01"
+          matInput
+          formControlName="hectares"
+          placeholder="Type size in hectares"
+        />
+        <span matTextSuffix>ha</span>
+      </mat-form-field>
+      <div *ngIf="hectares.invalid && (hectares.dirty || hectares.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="hectares.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+    <div class="full-row">
+      <label for="purpose">What is the purpose of the proposal?</label>
+      <div class="subtext">
+        Include why you are applying for non-farm use, what the proposal will achieve, and any benefits to agriculture
+        that the proposal provides.
+      </div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="purpose"
+          #purposeText
+          maxlength="4000"
+          id="purpose"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="purpose.invalid && (purpose.dirty || purpose.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="purpose.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - purposeText.textLength }}</div>
+    </div>
+    <div class="full-row">
+      <label for="outside-lands"> Could this proposal be accommodated on lands outside of the ALR? </label>
+      <div class="subtext">Please justify why the proposal cannot be carried out on lands outside the ALR.</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="outsideLands"
+          #outsideLandsText
+          maxlength="4000"
+          id="outside-lands"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div *ngIf="outsideLands.invalid && (outsideLands.dirty || outsideLands.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="outsideLands.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - outsideLandsText.textLength }}</div>
+    </div>
+    <div class="full-row">
+      <label for="agriculture-support"> Does the proposal support agriculture in the short or long term? </label>
+      <div class="subtext">Please explain</div>
+      <mat-form-field appearance="outline">
+        <textarea
+          formControlName="agricultureSupport"
+          #agricultureSupportText
+          maxlength="4000"
+          id="agriculture-support"
+          matInput
+          placeholder="Type comment"
+        ></textarea>
+      </mat-form-field>
+      <div
+        *ngIf="agricultureSupport.invalid && (agricultureSupport.dirty || agricultureSupport.touched)"
+        class="field-error"
+      >
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="agricultureSupport.errors?.['required']">This field is required</div>
+      </div>
+      <div class="subtext">Characters left: {{ 4000 - agricultureSupportText.textLength }}</div>
+    </div>
+    <div class="full-row">
+      <mat-label class="subheading2" for="proposal-map">Proposal Map / Site Plan</mat-label>
+      <div class="subtext">A visual representation of your proposal.</div>
+      <app-file-drag-drop
+        id="proposal-map"
+        [uploadedFiles]="proposalMap"
+        (uploadFiles)="attachProposalMap($event)"
+        (deleteFile)="onDeleteFile($event)"
+        (openFile)="openFile($event)"
+        [showErrors]="showErrors"
+        [isRequired]="true"
+        [showVirusError]="showProposalMapVirus"
+      ></app-file-drag-drop>
+    </div>
+    <div class="full-row">
+      <mat-label for="will-import-fill">
+        Do you need to import any fill to construct or conduct the proposed Non-farm use?
+      </mat-label>
+      <div class="subtext">Fill is any material brought onto the property, including gravel for construction.</div>
+      <mat-button-toggle-group
+        (change)="onChangeFill($event.value)"
+        class="input"
+        id="will-import-fill"
+        formControlName="willImportFill"
+      >
+        <mat-button-toggle
+          value="true"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >Yes</mat-button-toggle
+        >
+        <mat-button-toggle
+          value="false"
+          [ngClass]="{ 'error-outline': willImportFill.invalid && (willImportFill.dirty || willImportFill.touched) }"
+          >No</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+      <div *ngIf="willImportFill.invalid && (willImportFill.dirty || willImportFill.touched)" class="field-error">
+        <mat-icon>warning</mat-icon>
+        <div *ngIf="willImportFill.errors?.['required']">This field is required</div>
+      </div>
+    </div>
+  </div>
+  <section>
+    <h3>Soil & Fill Components</h3>
+    <div class="form-row">
+      <div class="full-row">
+        <label for="fillType">Describe the type and amount of fill proposed to be placed.</label>
+        <div class="subtext">The Commission must approve any proposed fill. List all proposed types of fill.</div>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="fillTypeDescription"
+            #fillTypeToPlaceText
+            maxlength="4000"
+            id="fillType"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="fillTypeDescription.invalid && (fillTypeDescription.dirty || fillTypeDescription.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillTypeDescription.errors?.['required']">This field is required</div>
+        </div>
+        <mat-hint class="subtext">Example: Aggregate, topsoil, structural fill, sand, gravel, etc</mat-hint>
+        <div class="subtext">Characters left: {{ 4000 - fillTypeToPlaceText.textLength }}</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="full-row">
+        <label for="fillOrigin">Briefly describe the origin and quality of fill.</label>
+        <mat-form-field appearance="outline">
+          <textarea
+            formControlName="fillOriginDescription"
+            #fillOriginToPlaceText
+            maxlength="4000"
+            id="fillOrigin"
+            matInput
+          ></textarea>
+        </mat-form-field>
+        <div
+          *ngIf="fillOriginDescription.invalid && (fillOriginDescription.dirty || fillOriginDescription.touched)"
+          class="field-error"
+        >
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="fillOriginDescription.errors?.['required']">This field is required</div>
+        </div>
+        <div class="subtext">Characters left: {{ 4000 - fillOriginToPlaceText.textLength }}</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="full-row">
+        <label for="projectDuration">Placement of Fill Project Duration</label>
+        <div class="subtext">Length of time you anticipate it would take to complete the project</div>
+        <mat-form-field appearance="outline">
+          <input id="projectDuration" matInput formControlName="projectDuration" placeholder="Type project duration" />
+        </mat-form-field>
+        <div *ngIf="projectDuration.invalid && (projectDuration.dirty || projectDuration.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="projectDuration.errors?.['required']">This field is required</div>
+        </div>
+        <mat-hint class="subtext">Example: 30 years; or 3 months; or 5 days</mat-hint>
+      </div>
+    </div>
+
+    <app-soil-table
+      [disabled]="willImportFill.value !== 'true'"
+      tableHeader="Fill to be Placed"
+      [(data)]="fillTableData"
+      (dataChange)="markDirty()"
+    ></app-soil-table>
+  </section>
+</form>
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

@@ -12,7 +12,7 @@ export class TokenRefreshService {
   constructor(private authenticationService: AuthenticationService) {}
 
   init() {
-    this.authenticationService.$currentUser.subscribe((user) => {
+    this.authenticationService.$currentTokenUser.subscribe((user) => {
       if (user) {
         if (this.interval) {
           clearInterval(this.interval);

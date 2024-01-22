@@ -11,20 +11,18 @@
       <div class="grid-2">
         {{ lot.type }}
       </div>
-      <div class="grid-3">
-        {{ lot.size }}
-      </div>
+      <div class="grid-3">{{ lot.size }} <span *ngIf="lot.size !== null">ha</span></div>
     </ng-container>
   </div>
   <div class="subheading2 grid-1">What is the purpose of the proposal?</div>
   <div class="grid-double">
-    {{ _applicationSubmission.subdPurpose }}
+    {{ _applicationSubmission.purpose }}
   </div>
   <div class="subheading2 grid-1">Why do you believe this parcel is suitable for subdivision?</div>
   <div class="grid-double">
     {{ _applicationSubmission.subdSuitability }}
   </div>
-  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term? Please explain.</div>
+  <div class="subheading2 grid-1">Does the proposal support agriculture in the short or long term?</div>
   <div class="grid-double">
     {{ _applicationSubmission.subdAgricultureSupport }}
   </div>

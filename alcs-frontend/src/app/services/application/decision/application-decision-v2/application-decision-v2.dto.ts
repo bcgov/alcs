@@ -23,17 +23,15 @@ export interface UpdateApplicationDecisionDto {
   reconsidersUuid?: string | null;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
-  daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   conditions?: UpdateApplicationDecisionConditionDto[];
-  linkedResolutionOutcomeCode?: string | null;
   isDraft?: boolean;
 }
 
 export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
   date: number;
+  decisionToCopy?: string;
   outcomeCode?: string;
   resolutionNumber?: number | null;
   resolutionYear: number;
@@ -42,7 +40,7 @@ export interface CreateApplicationDecisionDto extends UpdateApplicationDecisionD
   modifiesUuid: string | null;
   reconsidersUuid: string | null;
   isDraft: boolean;
-  decisionComponents?: DecisionComponentDto[];
+  decisionComponents?: ApplicationDecisionComponentDto[];
 }
 
 export interface ApplicationDecisionDto {
@@ -58,25 +56,22 @@ export interface ApplicationDecisionDto {
   ceoCriterion?: CeoCriterionDto;
   chairReviewRequired: boolean;
   chairReviewOutcome: ChairReviewOutcomeCodeDto | null;
-  linkedResolutionOutcome: LinkedResolutionOutcomeTypeDto | null;
   applicationFileNumber: string;
-  documents: DecisionDocumentDto[];
+  documents: ApplicationDecisionDocumentDto[];
   isTimeExtension?: boolean | null;
   isOther?: boolean | null;
   isDraft: boolean;
-  wasReleased: boolean;
   isSubjectToConditions?: boolean | null;
   decisionDescription?: string | null;
-  isStatsRequired?: boolean | null;
-  daysHideFromPublic?: number | null;
   rescindedDate?: number | null;
   rescindedComment?: string | null;
   modifies?: LinkedResolutionDto;
   reconsiders?: LinkedResolutionDto;
   reconsideredBy?: LinkedResolutionDto[];
   modifiedBy?: LinkedResolutionDto[];
-  components: DecisionComponentDto[];
+  components: ApplicationDecisionComponentDto[];
   conditions: ApplicationDecisionConditionDto[];
+  wasReleased: boolean;
 }
 
 export interface LinkedResolutionDto {
@@ -84,7 +79,13 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
-export interface DecisionDocumentDto {
+export interface ApplicationDecisionWithLinkedResolutionDto extends ApplicationDecisionDto {
+  reconsideredByResolutions?: string[];
+  modifiedByResolutions?: string[];
+  index: number;
+}
+
+export interface ApplicationDecisionDocumentDto {
   uuid: string;
   fileName: string;
   mimeType: string;
@@ -106,14 +107,41 @@ export interface DecisionOutcomeCodeDto extends BaseCodeDto {
 
 export interface ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
+export interface UpdateProposedDecisionLotDto {
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
+}
+
+export interface ProposedDecisionLotDto {
+  uuid: string;
+  planNumbers: string | null;
+  index: number;
+  componentUuid: string;
+  type: 'Lot' | 'Road Dedication' | null;
+  size: number | null;
+  alrArea?: number | null;
+}
+
 export interface NfuDecisionComponentDto {
   nfuType?: string | null;
   nfuSubType?: string | null;
   endDate?: number | null;
 }
 
-export interface TurpDecisionComponentDto {
+export interface ExpiryDateDecisionComponentDto {
   expiryDate?: number | null;
+}
+
+export interface NaruDecisionComponentDto {
+  expiryDate?: number | null;
+  endDate?: number | null;
+  naruSubtypeCode?: string | null;
+  naruSubtype?: NaruSubtypesDto | null;
+}
+
+export interface PfrsDecisionComponentDto extends PofoDecisionComponentDto, RosoDecisionComponentDto {
+  endDate2?: number | null;
 }
 
 export interface PofoDecisionComponentDto {
@@ -134,11 +162,24 @@ export interface RosoDecisionComponentDto {
   soilToRemoveAverageDepth?: number | null;
 }
 
-export interface DecisionComponentDto
+export interface SubdDecisionComponentDto {
+  // subdApprovedLots?: ProposedDecisionLotDto[];
+  lots?: ProposedDecisionLotDto[];
+}
+
+export interface InclExclDecisionComponentDto {
+  inclExclApplicantType?: string | null;
+}
+
+export interface ApplicationDecisionComponentDto
   extends NfuDecisionComponentDto,
-    TurpDecisionComponentDto,
+    ExpiryDateDecisionComponentDto,
     PofoDecisionComponentDto,
-    RosoDecisionComponentDto {
+    RosoDecisionComponentDto,
+    NaruDecisionComponentDto,
+    SubdDecisionComponentDto,
+    InclExclDecisionComponentDto,
+    PfrsDecisionComponentDto {
   uuid?: string;
   alrArea?: number | null;
   agCap?: string | null;
@@ -148,15 +189,16 @@ export interface DecisionComponentDto
   applicationDecisionComponentTypeCode: string;
   applicationDecisionComponentType?: DecisionComponentTypeDto;
   applicationDecisionUuid?: string;
+  conditionComponentsLabels?: string;
 }
 
-export interface DecisionCodesDto {
+export interface ApplicationDecisionCodesDto {
   outcomes: DecisionOutcomeCodeDto[];
   decisionMakers: DecisionMakerDto[];
   ceoCriterion: CeoCriterionDto[];
   decisionComponentTypes: DecisionComponentTypeDto[];
   decisionConditionTypes: ApplicationDecisionConditionTypeDto[];
-  linkedResolutionOutcomeTypes: LinkedResolutionOutcomeTypeDto[];
+  naruSubtypes: NaruSubtypesDto[];
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -165,10 +207,15 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+  NARU = 'NARU',
+  SUBD = 'SUBD',
+  INCL = 'INCL',
+  EXCL = 'EXCL',
+  COVE = 'COVE',
 }
 
 export interface ApplicationDecisionConditionTypeDto extends BaseCodeDto {}
-export interface LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
+export interface NaruSubtypesDto extends BaseCodeDto {}
 
 export interface ApplicationDecisionConditionDto {
   uuid: string;
@@ -177,16 +224,37 @@ export interface ApplicationDecisionConditionDto {
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+  components?: ApplicationDecisionComponentDto[] | null;
 }
 
-export interface UpdateApplicationDecisionConditionDto {
-  uuid?: string;
+export interface ComponentToCondition {
   componentDecisionUuid?: string;
   componentToConditionType?: string;
+  tempId: string;
+}
+export interface UpdateApplicationDecisionConditionDto {
+  uuid?: string;
+  componentsToCondition?: ComponentToCondition[] | null;
   approvalDependant?: boolean | null;
   securityAmount?: number | null;
   administrativeFee?: number | null;
   description?: string | null;
+  completionDate?: number | null;
+  supersededDate?: number | null;
   type?: ApplicationDecisionConditionTypeDto | null;
+}
+
+export interface ApplicationDecisionComponentToConditionLotDto {
+  componentLotUuid: string;
+  conditionUuid: string;
+  planNumbers: string | null;
+}
+
+export interface ApplicationDecisionConditionToComponentPlanNumberDto {
+  applicationDecisionComponentUuid: string;
+  applicationDecisionConditionUuid: string;
+  planNumbers: string | null;
 }

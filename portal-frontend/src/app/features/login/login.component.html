@@ -1,5 +1,17 @@
 <div class="login-wrapper">
-  <h3>Welcome to the ALCS Application Portal</h3>
-  <br />
-  <button (click)='onLogin()' mat-flat-button color='primary'>Login with BCeID</button>
+  <h3>Welcome to the ALC Portal</h3>
+  <section>
+    <div class="subheading2">Log in with BCeID to create or view your ALC submissions</div>
+    <button (click)="onLogin()" class="login" mat-flat-button color="primary">Portal Login</button>
+    <div class="left">
+      Don't have a BCeID?&nbsp;
+      <a class="left" target="_blank" href="https://www.bceid.ca/register/basic/account_details.aspx?type=regular"
+        >Register <mat-icon class="icon">open_in_new</mat-icon></a
+      >
+    </div>
+  </section>
+  <section>
+    <div class="subheading2">Search publicly available information</div>
+    <button (click)="navigateToPublicSearch()" mat-flat-button color="accent">Public Search</button>
+  </section>
 </div>

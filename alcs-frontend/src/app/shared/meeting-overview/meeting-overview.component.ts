@@ -26,8 +26,6 @@ type BoardWithDecisionMeetings = {
   isExpanded: boolean;
 };
 
-const BOARD_CODES_TO_HIDE = [BOARD_TYPE_CODES.CEO, BOARD_TYPE_CODES.VETT];
-
 @Component({
   selector: 'app-meeting-overview',
   templateUrl: './meeting-overview.component.html',
@@ -83,7 +81,7 @@ export class MeetingOverviewComponent implements OnInit, OnDestroy {
   private populateViewData() {
     if (this.meetings && this.boards.length > 0) {
       this.viewData = this.boards
-        .filter((board) => !BOARD_CODES_TO_HIDE.includes(board.code))
+        .filter((board) => board.showOnSchedule)
         .map((board): BoardWithDecisionMeetings => {
           let upcomingMeetings: MeetingWithApplications[] = [];
           let pastMeetings: MeetingWithApplications[] = [];

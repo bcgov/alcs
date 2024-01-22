@@ -1,0 +1,35 @@
+<div class="inline-number-wrapper">
+  <span class="left" *ngIf="!isEditing">
+    <a (click)="startEdit()" class="add" *ngIf="!value"> Add text </a>
+    <span *ngIf="value">
+      {{ value }}
+    </span>
+    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
+    </button>
+  </span>
+  <div
+    class="editing"
+    [ngClass]="{
+      hidden: !isEditing
+    }"
+  >
+    <textarea
+      matInput
+      class="editable"
+      type="text"
+      name="value"
+      maxlength="400"
+      [placeholder]="placeholder"
+      #editInput
+      [(ngModel)]="pendingValue"
+      (keydown.enter)="confirmEdit()"
+      (keydown.escape)="cancelEdit()"
+    ></textarea>
+
+    <div class="button-container">
+      <button mat-button (click)="cancelEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="confirmEdit()">SAVE</button>
+    </div>
+  </div>
+</div>

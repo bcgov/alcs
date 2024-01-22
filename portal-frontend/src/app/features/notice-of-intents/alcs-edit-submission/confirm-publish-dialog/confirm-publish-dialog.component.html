@@ -1,0 +1,15 @@
+<div mat-dialog-title>
+  <h4>Confirm Submission Update</h4>
+</div>
+<div mat-dialog-content>
+  <p>Once confirmed, any updates made to the applicant's submission will be immediately visible in the Portal.</p>
+  <p>
+    In ALCS, an updated version of the submission PDF will be added to the Documents table and made visible to the
+    applicant and Commissioners. The original submission PDF and any existing updated submission PDFs will no longer be
+    visible but will remain in the Documents table for internal reference.
+  </p>
+</div>
+<div mat-dialog-actions class="button-container">
+  <button mat-stroked-button color="primary" [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="true">Update Submission</button>
+</div>

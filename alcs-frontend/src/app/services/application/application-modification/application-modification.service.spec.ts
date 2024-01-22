@@ -146,6 +146,7 @@ describe('ApplicationReconsiderationService', () => {
     const res = await service.create({
       applicationFileNumber: '',
       applicationTypeCode: '',
+      description: '',
       boardCode: '',
       isTimeExtension: false,
       localGovernmentUuid: '',
@@ -170,6 +171,7 @@ describe('ApplicationReconsiderationService', () => {
     const res = await service.create({
       applicationFileNumber: '',
       applicationTypeCode: '',
+      description: '',
       boardCode: '',
       isTimeExtension: false,
       localGovernmentUuid: '',

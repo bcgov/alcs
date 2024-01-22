@@ -45,6 +45,7 @@ describe('PlanningReviewService', () => {
       localGovernmentUuid: '',
       regionCode: '',
       type: '',
+      boardCode: '',
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
@@ -62,6 +63,7 @@ describe('PlanningReviewService', () => {
       localGovernmentUuid: '',
       regionCode: '',
       type: '',
+      boardCode: '',
     });
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);

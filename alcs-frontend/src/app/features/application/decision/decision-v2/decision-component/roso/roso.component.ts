@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
-  selector: 'app-roso',
+  selector: 'app-app-roso',
   templateUrl: './roso.component.html',
-  styleUrls: ['./roso.component.scss']
+  styleUrls: ['./roso.component.scss'],
 })
 export class RosoComponent {
-  @Input() component!: DecisionComponentDto;
+  @Input() component!: ApplicationDecisionComponentDto;
 }

@@ -2,16 +2,17 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import {
   ApplicationSubmissionReviewDto,
@@ -34,12 +35,16 @@ export class ApplicationSubmissionReviewService {
       where: {
         applicationFileNumber: fileNumber,
       },
+      relations: {
+        createdBy: true,
+      },
     });
   }
 
-  async startReview(application: ApplicationSubmission) {
+  async startReview(submission: ApplicationSubmission, createdBy: User) {
     const applicationReview = new ApplicationSubmissionReview({
-      applicationFileNumber: application.fileNumber,
+      applicationFileNumber: submission.fileNumber,
+      createdBy,
     });
     return await this.applicationSubmissionReviewRepository.save(
       applicationReview,
@@ -48,7 +53,6 @@ export class ApplicationSubmissionReviewService {
 
   async update(
     fileNumber: string,
-    localGovernment: ApplicationLocalGovernment,
     updateDto: UpdateApplicationSubmissionReviewDto,
   ) {
     const applicationReview = await this.getByFileNumber(fileNumber);
@@ -239,7 +243,7 @@ export class ApplicationSubmissionReviewService {
 
   async mapToDto(
     review: ApplicationSubmissionReview,
-    localGovernment: ApplicationLocalGovernment,
+    localGovernment: LocalGovernment,
   ): Promise<ApplicationSubmissionReviewDto> {
     const mappedReview = await this.mapper.mapAsync(
       review,
@@ -249,7 +253,16 @@ export class ApplicationSubmissionReviewService {
     return {
       ...mappedReview,
       isFirstNationGovernment: localGovernment.isFirstNation,
+      governmentName: localGovernment.name,
     };
+  }
+
+  getForPublicReview(fileNumber: string) {
+    return this.applicationSubmissionReviewRepository.findOne({
+      where: {
+        applicationFileNumber: fileNumber,
+      },
+    });
   }
 
   async delete(applicationReview: ApplicationSubmissionReview) {

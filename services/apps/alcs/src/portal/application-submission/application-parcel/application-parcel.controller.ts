@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -11,7 +11,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../../document/document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import {
   ApplicationDocument,
@@ -51,9 +51,8 @@ export class ApplicationParcelController {
   async fetchByFileId(
     @Param('submissionUuid') submissionUuid: string,
   ): Promise<ApplicationParcelDto[] | undefined> {
-    const parcels = await this.parcelService.fetchByApplicationSubmissionUuid(
-      submissionUuid,
-    );
+    const parcels =
+      await this.parcelService.fetchByApplicationSubmissionUuid(submissionUuid);
     return this.mapper.mapArrayAsync(
       parcels,
       ApplicationParcel,
@@ -68,10 +67,7 @@ export class ApplicationParcelController {
     const application = await this.applicationSubmissionService.getOrFailByUuid(
       createDto.applicationSubmissionUuid,
     );
-    const parcel = await this.parcelService.create(
-      application.uuid,
-      createDto.parcelType,
-    );
+    const parcel = await this.parcelService.create(application.uuid);
 
     try {
       if (createDto.ownerUuid) {

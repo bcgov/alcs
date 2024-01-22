@@ -12,7 +12,7 @@ import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/c
 import { InfoRequestDialogComponent, REASON_TYPE } from './info-request-dialog/info-request-dialog.component';
 
 @Component({
-  selector: 'app-info-requests',
+  selector: 'app-noi-info-requests',
   templateUrl: './info-requests.component.html',
   styleUrls: ['./info-requests.component.scss'],
 })
@@ -36,7 +36,7 @@ export class InfoRequestsComponent implements OnInit, OnDestroy {
       if (noi) {
         this.fileNumber = noi.fileNumber;
         this.uuid = noi.uuid;
-        this.meetingService.fetch(noi.uuid);
+        this.meetingService.fetch(noi.fileNumber);
       }
     });
 

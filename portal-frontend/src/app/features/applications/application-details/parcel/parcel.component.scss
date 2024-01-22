@@ -1,0 +1,50 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+.parcel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: rem(12);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-wrap: wrap;
+    column-gap: rem(12);
+    row-gap: rem(12);
+    margin-bottom: unset;
+  }
+}
+
+.owner-information {
+  display: grid;
+  grid-template-columns: max-content max-content max-content max-content max-content;
+  overflow-x: auto;
+  grid-column-gap: rem(36);
+  grid-row-gap: rem(12);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
+
+  .full-width {
+    grid-column: 1/3;
+  }
+}
+
+.crown-owner-information {
+  grid-template-columns: max-content max-content max-content max-content;
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+.crown-land {
+  text-transform: capitalize;
+}
+
+.no-data-text {
+  color: colors.$grey-dark;
+  text-align: left;
+  padding-top: 0;
+}

@@ -19,10 +19,32 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>Decisions to be Modified</mat-label>
+        <mat-label>Resolutions to be Modified</mat-label>
         <mat-select formControlName="modifiesDecisions" multiple>
           <mat-option *ngFor="let decision of decisions" [value]="decision.uuid">{{ decision.resolution }}</mat-option>
         </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="full-grid-line" appearance="outline">
+        <mat-label>Request Description</mat-label>
+        <input
+          matInput
+          id="description"
+          formControlName="description"
+          type="text"
+          [class.valid]="
+            form.get('description')!.valid && (form.get('description')!.dirty || form.get('description')!.touched)
+          "
+          [class.invalid]="
+            form.get('description')!.invalid && (form.get('description')!.dirty || form.get('description')!.touched)
+          "
+        />
+        <mat-error
+          class="text-danger"
+          *ngIf="form.get('description')!.touched && form.get('description')!.hasError('description')"
+        >
+          This field is required.
+        </mat-error>
       </mat-form-field>
 
       <div class="full-grid-line toggle-group">
@@ -33,19 +55,6 @@
           <mat-button-toggle value="REF">Refuse to Modify</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-
-      <mat-form-field appearance="outline" class="date-picker">
-        <mat-label>Outcome Notification Date</mat-label>
-        <input
-          matInput
-          (click)="outcomeDatePicker.open()"
-          [matDatepicker]="outcomeDatePicker"
-          formControlName="outcomeNotificationDate"
-          name="outcomeNotificationDate"
-        />
-        <mat-datepicker-toggle matSuffix [for]="outcomeDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #outcomeDatePicker type="date"></mat-datepicker>
-      </mat-form-field>
     </div>
   </mat-dialog-content>
   <mat-dialog-actions align="end">

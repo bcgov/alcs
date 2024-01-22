@@ -1,0 +1,156 @@
+<div *ngIf="applicationSubmission">
+  <div class="header">
+    <h2>Local/First Nation Gov Review</h2>
+  </div>
+  <div *ngIf="!applicationReview" class="warning">
+    <mat-icon>info</mat-icon>Application not subject to Local/First Nation Government review.
+  </div>
+  <div *ngIf="applicationReview">
+    <section>
+      <h4>Contact Information</h4>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Local Government File Number</div>
+          <div>
+            {{ applicationReview.localGovernmentFileNumber }}
+            <app-no-data *ngIf="!applicationReview.localGovernmentFileNumber"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">First Name</div>
+          <div>
+            {{ applicationReview.firstName }}
+            <app-no-data *ngIf="!applicationReview.firstName"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Last Name</div>
+          <div>
+            {{ applicationReview.lastName }}
+            <app-no-data *ngIf="!applicationReview.lastName"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Position</div>
+          <div>
+            {{ applicationReview.position }}
+            <app-no-data *ngIf="!applicationReview.position"></app-no-data>
+          </div>
+        </div>
+        <div>
+          <div class="subheading2">Department</div>
+          <div>
+            {{ applicationReview.department }}
+            <app-no-data *ngIf="!applicationReview.department"></app-no-data>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section *ngIf="applicationReview.isOCPDesignation !== null">
+      <h4>Plans & Bylaws: OCP</h4>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">
+            Is the applicationSubmission parcel(s) subject to a Local Government OCP designation?
+          </div>
+          <div>
+            {{ applicationReview.isOCPDesignation ? 'Yes' : 'No' }}
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Bylaw Name</div>
+          <div>
+            {{ applicationReview.OCPBylawName }}
+            <app-no-data *ngIf="!applicationReview.OCPBylawName"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isOCPDesignation">
+          <div class="subheading2">OCP Designation</div>
+          <div>
+            {{ applicationReview.OCPDesignation }}
+            <app-no-data *ngIf="!applicationReview.OCPDesignation"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isOCPDesignation">
+          <div class="subheading2">Is this proposal consistent with the current OCP designation?</div>
+          <div>
+            <span *ngIf="applicationReview.OCPConsistent !== null">{{
+              applicationReview.OCPConsistent ? 'Yes' : 'No'
+            }}</span>
+            <app-no-data *ngIf="applicationReview.OCPConsistent === null"></app-no-data>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section *ngIf="applicationReview.isSubjectToZoning !== null">
+      <h4>Plans & Bylaws: Zoning</h4>
+      <div class="review-table">
+        <div class="full-width">
+          <div class="subheading2">
+            Is the applicationSubmission parcel(s) subject to a Local Government zoning designation?
+          </div>
+          <div>
+            {{ applicationReview.isSubjectToZoning ? 'Yes' : 'No' }}
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isSubjectToZoning">
+          <div class="subheading2">Zoning Bylaw Name</div>
+          <div>
+            {{ applicationReview.zoningBylawName }}
+            <app-no-data *ngIf="!applicationReview.zoningBylawName"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isSubjectToZoning">
+          <div class="subheading2">Zoning Designation</div>
+          <div>
+            {{ applicationReview.zoningDesignation }}
+            <app-no-data *ngIf="!applicationReview.zoningDesignation"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isSubjectToZoning">
+          <div class="subheading2">Minimum Lot Size (hectares)</div>
+          <div>
+            {{ applicationReview.zoningMinimumLotSize }}<span *ngIf="applicationReview.zoningMinimumLotSize"> ha</span>
+            <app-no-data *ngIf="!applicationReview.zoningMinimumLotSize"></app-no-data>
+          </div>
+        </div>
+        <div *ngIf="applicationReview.isSubjectToZoning">
+          <div class="subheading2">Is this proposal consistent with the current zoning designation?</div>
+          <div>
+            <span *ngIf="applicationReview.isZoningConsistent !== null">{{
+              applicationReview.isZoningConsistent ? 'Yes' : 'No'
+            }}</span>
+            <app-no-data *ngIf="applicationReview.isZoningConsistent === null"></app-no-data>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h4>Resolution</h4>
+      <div class="review-table">
+        <div class="full-width" *ngIf="applicationReview.isAuthorized === null">
+          Parcels not subject to OCP or Zoning do not require local government authorization
+        </div>
+        <div *ngIf="applicationReview.isAuthorized !== null" class="full-width">
+          <div class="subheading2">What is the outcome of the Board/Council resolution?</div>
+          <div>
+            <span>{{ applicationReview.isAuthorized ? 'Forward for ALC decision' : 'Refuse to forward to ALC' }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section *ngIf="resolutionDocument.length > 0">
+      <h4>Attachments</h4>
+      <div class="review-table">
+        <div>
+          <div class="subheading2">Resolution Document</div>
+          <div>
+            <a class="link" (click)="openFile(document.uuid)" *ngFor="let document of resolutionDocument">{{
+              document.fileName
+            }}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

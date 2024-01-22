@@ -3,12 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernmentService } from '../../application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernmentService } from '../../local-government/local-government.service';
 import { LocalGovernmentController } from './local-government.controller';
 
 describe('LocalGovernmentController', () => {
   let controller: LocalGovernmentController;
-  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
 
   beforeEach(async () => {
     mockLgService = createMock();
@@ -17,7 +17,7 @@ describe('LocalGovernmentController', () => {
       controllers: [LocalGovernmentController],
       providers: [
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLgService,
         },
         {

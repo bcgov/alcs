@@ -36,15 +36,14 @@ describe('PlanningReviewDialogComponent', () => {
       name: 'local-gov',
       uuid: 'uuid',
       preferredRegionCode: 'CODE',
+      isFirstNation: false,
     },
     fileNumber: 'file-number',
     card: {
       status: {
         code: 'FAKE_STATUS',
       },
-      board: {
-        code: 'FAKE_BOARD',
-      },
+      boardCode: 'FAKE_BOARD',
     } as CardDto,
   };
 

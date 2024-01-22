@@ -2,13 +2,16 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Any, Repository } from 'typeorm';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
-import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
+import { ApplicationService } from '../../../alcs/application/application.service';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../../common/owner-type/owner-type.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../../utils/owner.constants';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import {
-  APPLICATION_OWNER,
   ApplicationOwnerCreateDto,
   ApplicationOwnerUpdateDto,
 } from './application-owner.dto';
@@ -19,30 +22,15 @@ export class ApplicationOwnerService {
   constructor(
     @InjectRepository(ApplicationOwner)
     private repository: Repository<ApplicationOwner>,
-    @InjectRepository(ApplicationOwnerType)
-    private typeRepository: Repository<ApplicationOwnerType>,
+    @InjectRepository(OwnerType)
+    private typeRepository: Repository<OwnerType>,
     @Inject(forwardRef(() => ApplicationParcelService))
     private applicationParcelService: ApplicationParcelService,
     @Inject(forwardRef(() => ApplicationSubmissionService))
     private applicationSubmissionService: ApplicationSubmissionService,
     private applicationDocumentService: ApplicationDocumentService,
+    private applicationService: ApplicationService,
   ) {}
-
-  async fetchBySubmissionUuid(uuid: string) {
-    return this.repository.find({
-      where: {
-        applicationSubmission: {
-          uuid,
-        },
-      },
-      relations: {
-        type: true,
-        corporateSummary: {
-          document: true,
-        },
-      },
-    });
-  }
 
   async fetchByApplicationFileId(fileId: string) {
     return this.repository.find({
@@ -78,6 +66,7 @@ export class ApplicationOwnerService {
       phoneNumber: createDto.phoneNumber,
       corporateSummaryUuid: createDto.corporateSummaryUuid,
       applicationSubmission: applicationSubmission,
+      crownLandOwnerType: createDto.crownLandOwnerType,
       type,
     });
 
@@ -97,11 +86,15 @@ export class ApplicationOwnerService {
     const parcel = await this.applicationParcelService.getOneOrFail(parcelUuid);
     existingOwner.parcels.push(parcel);
 
+    await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
+  }
 
-    await this.repository.save(existingOwner);
+  async save(owner: ApplicationOwner) {
+    await this.repository.save(owner);
   }
 
   async removeFromParcel(uuid: string, parcelUuid: string) {
@@ -118,11 +111,11 @@ export class ApplicationOwnerService {
       (parcel) => parcel.uuid !== parcelUuid,
     );
 
+    await this.repository.save(existingOwner);
+
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
-
-    await this.repository.save(existingOwner);
   }
 
   async update(uuid: string, updateDto: ApplicationOwnerUpdateDto) {
@@ -184,11 +177,19 @@ export class ApplicationOwnerService {
     existingOwner.email =
       updateDto.email !== undefined ? updateDto.email : existingOwner.email;
 
+    existingOwner.crownLandOwnerType =
+      updateDto.crownLandOwnerType !== undefined
+        ? updateDto.crownLandOwnerType
+        : existingOwner.crownLandOwnerType;
+
+    const result = await this.repository.save(existingOwner);
+
+    //Save owner before updating
     await this.updateSubmissionApplicant(
       existingOwner.applicationSubmissionUuid,
     );
 
-    return await this.repository.save(existingOwner);
+    return result;
   }
 
   async delete(owner: ApplicationOwner) {
@@ -197,10 +198,13 @@ export class ApplicationOwnerService {
     return res;
   }
 
-  async setPrimaryContact(submissionUuid: string, owner: ApplicationOwner) {
+  async setPrimaryContact(
+    submissionUuid: string,
+    owner: ApplicationOwner | undefined,
+  ) {
     await this.applicationSubmissionService.setPrimaryContact(
       submissionUuid,
-      owner.uuid,
+      owner?.uuid ?? null,
     );
   }
 
@@ -226,16 +230,26 @@ export class ApplicationOwnerService {
     });
   }
 
-  async deleteAgents(application: ApplicationSubmission) {
+  async deleteNonParcelOwners(submissionUuid: string) {
     const agentOwners = await this.repository.find({
-      where: {
-        applicationSubmission: {
-          fileNumber: application.fileNumber,
+      where: [
+        {
+          applicationSubmission: {
+            uuid: submissionUuid,
+          },
+          type: {
+            code: OWNER_TYPE.AGENT,
+          },
         },
-        type: {
-          code: APPLICATION_OWNER.AGENT,
+        {
+          applicationSubmission: {
+            uuid: submissionUuid,
+          },
+          type: {
+            code: OWNER_TYPE.GOVERNMENT,
+          },
         },
-      },
+      ],
     });
     return await this.repository.remove(agentOwners);
   }
@@ -246,16 +260,12 @@ export class ApplicationOwnerService {
         submissionUuid,
       );
 
-    const applicationParcels = parcels.filter(
-      (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
-    );
+    if (parcels.length > 0) {
+      const firstParcel = parcels.reduce((a, b) =>
+        a.auditCreatedAt < b.auditCreatedAt ? a : b,
+      );
 
-    if (applicationParcels.length > 0) {
-      const firstParcel = parcels
-        .filter((parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION)
-        .reduce((a, b) => (a.auditCreatedAt > b.auditCreatedAt ? a : b));
-
-      const ownerCount = applicationParcels.reduce((count, parcel) => {
+      const ownerCount = parcels.reduce((count, parcel) => {
         return count + parcel.owners.length;
       }, 0);
 
@@ -290,6 +300,17 @@ export class ApplicationOwnerService {
           await this.applicationSubmissionService.update(submissionUuid, {
             applicant: applicantName || '',
           });
+
+          const fileNumber =
+            await this.applicationSubmissionService.getFileNumber(
+              submissionUuid,
+            );
+          if (fileNumber) {
+            await this.applicationService.updateApplicant(
+              fileNumber,
+              applicantName || FALLBACK_APPLICANT_NAME,
+            );
+          }
         }
       }
     }

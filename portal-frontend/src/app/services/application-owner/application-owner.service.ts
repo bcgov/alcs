@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../application-document/application-document.dto';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../shared/dto/document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
 import {
@@ -53,7 +53,7 @@ export class ApplicationOwnerService {
       const res = await firstValueFrom(
         this.httpClient.patch<ApplicationOwnerDto>(`${this.serviceUrl}/${uuid}`, updateDto)
       );
-      this.toastService.showSuccessToast('Owner updated');
+      this.toastService.showSuccessToast('Owner saved');
       return res;
     } catch (e) {
       console.error(e);
@@ -67,11 +67,11 @@ export class ApplicationOwnerService {
       const res = await firstValueFrom(
         this.httpClient.post<ApplicationOwnerDto>(`${this.serviceUrl}/setPrimaryContact`, updateDto)
       );
-      this.toastService.showSuccessToast('Primary Contact Updated');
+      this.toastService.showSuccessToast('Application saved');
       return res;
     } catch (e) {
       console.error(e);
-      this.toastService.showErrorToast('Failed to update Primary Contact, please try again later');
+      this.toastService.showErrorToast('Failed to update Application, please try again later');
       return undefined;
     }
   }
@@ -116,16 +116,6 @@ export class ApplicationOwnerService {
     return undefined;
   }
 
-  sortOwners(a: ApplicationOwnerDto, b: ApplicationOwnerDto) {
-    if (a.displayName < b.displayName) {
-      return -1;
-    }
-    if (a.displayName > b.displayName) {
-      return 1;
-    }
-    return 0;
-  }
-
   async uploadCorporateSummary(applicationFileId: string, file: File) {
     try {
       return await this.documentService.uploadFile<{ uuid: string }>(
@@ -136,6 +126,9 @@ export class ApplicationOwnerService {
         `${this.serviceUrl}/attachCorporateSummary`
       );
     } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 403) {
+        throw e;
+      }
       console.error(e);
       this.toastService.showErrorToast('Failed to attach document to Owner, please try again');
     }

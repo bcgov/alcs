@@ -1,8 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -10,11 +10,12 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { filterUndefined } from '../../../utils/undefined';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
 import { CardService } from '../../card/card.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
-import { NoticeOfIntentDecisionService } from '../notice-of-intent-decision.service';
+import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
 import {
   NoticeOfIntentModificationCreateDto,
   NoticeOfIntentModificationDto,
@@ -29,7 +30,7 @@ export class NoticeOfIntentModificationService {
     private modificationRepository: Repository<NoticeOfIntentModification>,
     @InjectMapper() private mapper: Mapper,
     private noticeOfIntentService: NoticeOfIntentService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV1Service,
     private cardService: CardService,
   ) {}
 
@@ -110,6 +111,7 @@ export class NoticeOfIntentModificationService {
   async create(createDto: NoticeOfIntentModificationCreateDto, board: Board) {
     const modification = new NoticeOfIntentModification({
       submittedDate: new Date(createDto.submittedDate),
+      description: createDto.description,
     });
 
     modification.card = await this.cardService.create(
@@ -124,9 +126,8 @@ export class NoticeOfIntentModificationService {
         createDto.modifiesDecisionUuids,
       );
 
-    const mockModifications = await this.modificationRepository.save(
-      modification,
-    );
+    const mockModifications =
+      await this.modificationRepository.save(modification);
     return this.getByUuid(mockModifications.uuid);
   }
 
@@ -136,21 +137,15 @@ export class NoticeOfIntentModificationService {
     if (updateDto.submittedDate) {
       modification.submittedDate = new Date(updateDto.submittedDate);
     }
-    if (updateDto.reviewDate !== undefined) {
-      modification.reviewDate = updateDto.reviewDate
-        ? new Date(updateDto.reviewDate)
-        : null;
-    }
-
-    if (updateDto.outcomeNotificationDate !== undefined) {
-      modification.outcomeNotificationDate = updateDto.outcomeNotificationDate
-        ? new Date(updateDto.outcomeNotificationDate)
-        : null;
-    }
 
     if (updateDto.reviewOutcomeCode) {
       modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
     }
+
+    modification.description = filterUndefined(
+      updateDto.description,
+      modification.description,
+    );
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =
@@ -165,7 +160,10 @@ export class NoticeOfIntentModificationService {
 
   async delete(uuid: string) {
     const modification = await this.getByUuidOrFail(uuid);
-    await this.cardService.archive(modification.cardUuid);
+    if (modification.cardUuid) {
+      await this.cardService.archive(modification.cardUuid);
+    }
+
     return this.modificationRepository.softRemove([modification]);
   }
 

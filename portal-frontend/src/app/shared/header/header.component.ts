@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { UserDto } from '../../services/authentication/authentication.dto';
+import { AuthenticationService, ICurrentUser } from '../../services/authentication/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -12,14 +13,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private $destroy = new Subject<void>();
   isAuthenticated = false;
   isMenuOpen = false;
+  isOnPublicPage = false;
+  isUserMenuOpen = false;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {}
+  title = 'Provincial Agricultural Land Commission Portal';
+  user: UserDto | undefined;
+
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.authenticationService.$currentUser.pipe(takeUntil(this.$destroy)).subscribe((user) => {
-      if (user) {
-        this.isAuthenticated = true;
-      }
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((user) => {
+      this.isAuthenticated = !!user;
+      this.user = user;
+      this.changeDetectorRef.detectChanges();
+    });
+
+    this.router.events.pipe(takeUntil(this.$destroy)).subscribe(() => {
+      const url = window.location.href;
+      this.isOnPublicPage = url.includes('public');
     });
   }
 
@@ -45,9 +60,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     footer?.classList.toggle(hidden);
   }
 
-  onMenuClicked(url: string) {
+  async onUserMenuToggle() {
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  async onMenuClicked(url: string) {
     this.isMenuOpen = false;
-    this.router.navigate([url]);
+    await this.router.navigate([url]);
     this.toggleContent();
+  }
+
+  async onClickLogo() {
+    let targetUrl = '/home';
+
+    const isOnLogin = window.location.href.endsWith('/login');
+    if (isOnLogin) {
+      targetUrl = '/login';
+    }
+    if (this.isOnPublicPage) {
+      targetUrl = '/public';
+    }
+
+    await this.router.navigateByUrl(targetUrl);
   }
 }

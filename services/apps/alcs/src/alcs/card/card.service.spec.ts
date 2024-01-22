@@ -1,7 +1,7 @@
 import { CONFIG_TOKEN } from '@app/common/config/config.module';
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -13,7 +13,8 @@ import {
 } from '../../../test/mocks/mockEntities';
 import { User } from '../../user/user.entity';
 import { Board } from '../board/board.entity';
-import { NotificationService } from '../notification/notification.service';
+import { MessageService } from '../message/message.service';
+import { CardSubtask } from './card-subtask/card-subtask.entity';
 import { CardSubtaskService } from './card-subtask/card-subtask.service';
 import { CARD_TYPE, CardType } from './card-type/card-type.entity';
 import { CardUpdateServiceDto } from './card.dto';
@@ -26,7 +27,7 @@ describe('CardService', () => {
   let cardTypeRepositoryMock: DeepMocked<Repository<CardType>>;
   let mockCardEntity;
   let mockSubtaskService: DeepMocked<CardSubtaskService>;
-  let mockNotificationService: DeepMocked<NotificationService>;
+  let mockNotificationService: DeepMocked<MessageService>;
 
   beforeEach(async () => {
     cardRepositoryMock = createMock<Repository<Card>>();
@@ -60,7 +61,7 @@ describe('CardService', () => {
           useValue: mockSubtaskService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: mockNotificationService,
         },
       ],
@@ -161,12 +162,47 @@ describe('CardService', () => {
     expect(cardTypeRepositoryMock.find).toBeCalledTimes(1);
   });
 
+  it('should call the repo for listing portal card types', async () => {
+    cardTypeRepositoryMock.find.mockResolvedValue([new CardType({})]);
+
+    const types = await service.getPortalCardTypes();
+    expect(types.length).toEqual(1);
+
+    expect(cardTypeRepositoryMock.find).toBeCalledTimes(1);
+  });
+
   it('should call the repo for getWithBoard', async () => {
     cardRepositoryMock.findOne.mockResolvedValue(new Card());
 
     const card = await service.getWithBoard('');
     expect(card).toBeDefined();
     expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+  });
+
+  it('should call the repo for getByBoard', async () => {
+    cardRepositoryMock.find.mockResolvedValue([new Card()]);
+
+    const card = await service.getByBoard('');
+    expect(card).toBeDefined();
+    expect(cardRepositoryMock.find).toBeCalledTimes(1);
+  });
+
+  it('should call the repo for getByCardStatus', async () => {
+    cardRepositoryMock.find.mockResolvedValue([new Card()]);
+
+    const card = await service.getByCardStatus('');
+    expect(card).toBeDefined();
+    expect(cardRepositoryMock.find).toBeCalledTimes(1);
+  });
+
+  it('should call the repo for save', async () => {
+    cardRepositoryMock.findOne.mockResolvedValue(new Card());
+    cardRepositoryMock.save.mockResolvedValue(new Card());
+
+    const card = await service.save(new Card());
+    expect(card).toBeDefined();
+    expect(cardRepositoryMock.findOne).toBeCalledTimes(1);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 
   it('should call notification service when assignee is changed', async () => {
@@ -181,10 +217,10 @@ describe('CardService', () => {
 
     await service.update(fakeAuthor, 'fake', mockUpdate, 'Notification Text');
 
-    expect(mockNotificationService.createNotification).toHaveBeenCalledTimes(1);
+    expect(mockNotificationService.create).toHaveBeenCalledTimes(1);
 
     const createNotificationServiceDto =
-      mockNotificationService.createNotification.mock.calls[0][0];
+      mockNotificationService.create.mock.calls[0][0];
     expect(createNotificationServiceDto.actor).toStrictEqual(fakeAuthor);
     expect(createNotificationServiceDto.receiverUuid).toStrictEqual(
       mockUserUuid,
@@ -193,5 +229,47 @@ describe('CardService', () => {
       "You've been assigned",
     );
     expect(createNotificationServiceDto.targetType).toStrictEqual('card');
+  });
+
+  it('should delete the subtasks then call softRemove for Archive', async () => {
+    cardRepositoryMock.findOneOrFail.mockResolvedValue(
+      new Card({
+        subtasks: [
+          new CardSubtask({
+            uuid: 'subtask-uuid',
+          }),
+        ],
+      }),
+    );
+    cardRepositoryMock.save.mockResolvedValue(new Card());
+    cardRepositoryMock.softRemove.mockResolvedValue({} as any);
+    mockSubtaskService.deleteMany.mockResolvedValue();
+
+    await service.archive('uuid');
+    expect(cardRepositoryMock.findOneOrFail).toBeCalledTimes(1);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(cardRepositoryMock.softRemove).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskService.deleteMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('should recover the subtasks then call recover for recover', async () => {
+    cardRepositoryMock.findOneOrFail.mockResolvedValue(
+      new Card({
+        subtasks: [
+          new CardSubtask({
+            uuid: 'subtask-uuid',
+          }),
+        ],
+      }),
+    );
+    cardRepositoryMock.save.mockResolvedValue(new Card());
+    cardRepositoryMock.recover.mockResolvedValue({} as any);
+    mockSubtaskService.recoverMany.mockResolvedValue();
+
+    await service.recover('uuid');
+    expect(cardRepositoryMock.findOneOrFail).toBeCalledTimes(1);
+    expect(cardRepositoryMock.save).toHaveBeenCalledTimes(1);
+    expect(cardRepositoryMock.recover).toHaveBeenCalledTimes(1);
+    expect(mockSubtaskService.recoverMany).toHaveBeenCalledTimes(1);
   });
 });

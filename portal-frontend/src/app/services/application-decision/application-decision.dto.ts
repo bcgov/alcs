@@ -6,10 +6,11 @@ export interface LinkedResolutionDto {
   linkedResolutions: string[];
 }
 
-export interface PortalDecisionDto {
+export interface ApplicationPortalDecisionDto {
   uuid: string;
   date: number;
   outcome: BaseCodeDto;
+  decisionDescription: string;
   resolutionNumber: number;
   resolutionYear: number;
   documents: ApplicationDocumentDto[];

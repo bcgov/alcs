@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import { IsDefined } from 'class-validator';
 
@@ -38,6 +38,13 @@ export class UserDto extends UpdateUserDto {
 
   @AutoMap()
   prettyName?: string | null;
+
+  @AutoMap(() => String)
+  businessName?: string | null;
+
+  government?: string;
+  isLocalGovernment: boolean;
+  isFirstNationGovernment: boolean;
 }
 
 export class CreateUserDto {
@@ -53,7 +60,8 @@ export class CreateUserDto {
   bceidUserName?: string;
   idirUserGuid?: string;
   bceidGuid?: string;
-  bceidBusinessGuid?: string;
+  bceidBusinessGuid?: string | null;
+  businessName?: string | null;
 }
 
 export class AssigneeDto {

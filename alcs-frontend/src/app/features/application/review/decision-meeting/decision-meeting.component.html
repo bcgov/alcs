@@ -2,7 +2,12 @@
 
 <div class="flex-container">
   <div class="col-40">
-    <h4>Discussion Schedule</h4>
+    <div class="label-wrapper">
+      <h4>Discussion Schedule</h4>
+      <mat-icon class="icon" matTooltip='Date of first discussion creates / deletes "Under review by ALC" portal status'
+        >info_outline
+      </mat-icon>
+    </div>
   </div>
   <div class="pull-right">
     <button mat-flat-button color="primary" class="pull-right" (click)="onCreate()">+ New Discussion</button>

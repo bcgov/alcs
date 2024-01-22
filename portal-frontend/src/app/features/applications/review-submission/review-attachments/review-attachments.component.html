@@ -1,0 +1,50 @@
+<h2>Attachments</h2>
+<div>
+  <div class="description">
+    <div>Provide mandatory and optional attachments</div>
+  </div>
+  <div *ngIf="!hasCompletedPreviousSteps">
+    Please complete Step 2 Plans & Bylaws: OCP, Step 3 Plans & Bylaws: Zoning and Step 4 Resolution to continue with
+    this step.
+  </div>
+  <div *ngIf="hasCompletedPreviousSteps">
+    <section *ngIf="showMandatoryUploads">
+      <label class="subheading2" for="resolution-document">Resolution Document</label>
+      <app-file-drag-drop
+        id="resolution-document"
+        [uploadedFiles]="resolutionDocument"
+        (uploadFiles)="attachResolutionDocument($event)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [isRequired]="true"
+        [showErrors]="showErrors"
+        [showVirusError]="showResolutionVirusError"
+      ></app-file-drag-drop>
+    </section>
+    <section *ngIf="!isFirstNationGovernment && showMandatoryUploads">
+      <label class="subheading2" for="staff-report">Staff Report <span *ngIf="!isAuthorized">(optional)</span></label>
+      <app-file-drag-drop
+        id="staff-report"
+        [uploadedFiles]="staffReport"
+        (uploadFiles)="attachStaffReport($event)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [isRequired]="true"
+        [showErrors]="showErrors"
+        [showVirusError]="showStaffReportVirusError"
+      ></app-file-drag-drop>
+    </section>
+    <section>
+      <label class="subheading2" for="other-document">Other Attachments (optional)</label>
+      <app-file-drag-drop
+        id="other-document"
+        [uploadedFiles]="otherAttachments"
+        (uploadFiles)="attachOtherDocument($event)"
+        (deleteFile)="deleteFile($event)"
+        (openFile)="openFile($event)"
+        [allowMultiple]="true"
+        [showVirusError]="showOtherVirusError"
+      ></app-file-drag-drop>
+    </section>
+  </div>
+</div>

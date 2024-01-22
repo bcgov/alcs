@@ -1,0 +1,73 @@
+<div class="header">
+  <h4 *ngIf="condition.type">{{ condition.type.label }}</h4>
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.INCOMPLETE">
+    <app-application-type-pill [type]="incompleteLabel"></app-application-type-pill>
+  </ng-container>
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.COMPLETE">
+    <app-application-type-pill [type]="completeLabel"></app-application-type-pill>
+  </ng-container>
+  <ng-container *ngIf="conditionStatus === CONDITION_STATUS.SUPERSEDED">
+    <app-application-type-pill [type]="supersededLabel"></app-application-type-pill>
+  </ng-container>
+</div>
+<div class="grid-3">
+  <div>
+    <div class="subheading2">Component to Condition</div>
+    <span class="component-labels">{{ condition.componentLabelsStr }}</span>
+    <app-no-data *ngIf="!condition.componentLabelsStr"></app-no-data>
+  </div>
+
+  <div>
+    <div class="subheading2">Approval Dependent</div>
+    {{ condition.approvalDependant | booleanToString }}
+    <app-no-data
+      *ngIf="condition.approvalDependant === null || condition.approvalDependant === undefined"
+    ></app-no-data>
+  </div>
+
+  <div>
+    <div class="subheading2">Security Amount</div>
+    {{ condition.securityAmount }}
+    <app-no-data *ngIf="condition.securityAmount === null || condition.securityAmount === undefined"></app-no-data>
+  </div>
+
+  <div>
+    <div class="subheading2">Admin Fee</div>
+    {{ condition.administrativeFee }}
+    <app-no-data
+      *ngIf="condition.administrativeFee === null || condition.administrativeFee === undefined"
+    ></app-no-data>
+  </div>
+
+  <div>
+    <div class="subheading2">Completion Date</div>
+    <app-inline-datepicker
+      [value]="condition.completionDate ?? undefined"
+      (save)="onUpdateCondition('completionDate', $event)"
+    ></app-inline-datepicker>
+  </div>
+
+  <div>
+    <div class="subheading2">Superseded Date</div>
+    <app-inline-datepicker
+      [value]="condition.supersededDate ?? undefined"
+      (save)="onUpdateCondition('supersededDate', $event)"
+    ></app-inline-datepicker>
+  </div>
+
+  <div class="full-width">
+    <div class="subheading2">Description</div>
+    <span [id]="condition.uuid + 'Description'" [ngClass]="{ 'ellipsis-3': !isReadMoreClicked }">{{
+      condition.description
+    }}</span>
+    <app-no-data *ngIf="condition.description === null || condition.description === undefined"></app-no-data>
+    <div class="read-more">
+      <a
+        (click)="onToggleReadMore()"
+        (keypress)="onToggleReadMore()"
+        [ngClass]="{ 'display-none': !isReadMoreVisible || !condition.description }"
+        >{{ isReadMoreClicked ? 'Read Less' : 'Read More' }}</a
+      >
+    </div>
+  </div>
+</div>

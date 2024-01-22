@@ -2,9 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApplicationDocumentTypeDto } from '../application-document/application-document.dto';
+import { DocumentTypeDto } from '../../shared/dto/document.dto';
 import { NaruSubtypeDto } from '../application-submission/application-submission.dto';
-import { ApplicationTypeDto, LocalGovernmentDto, SubmissionTypeDto } from './code.dto';
+import {
+  ApplicationRegionDto,
+  ApplicationTypeDto,
+  DecisionMakerDto,
+  LocalGovernmentDto,
+  NoticeOfIntentTypeDto,
+  SubmissionTypeDto,
+} from './code.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -19,9 +26,12 @@ export class CodeService {
       this.httpClient.get<{
         localGovernments: LocalGovernmentDto[];
         applicationTypes: ApplicationTypeDto[];
-        applicationDocumentTypes: ApplicationDocumentTypeDto[];
+        noticeOfIntentTypes: NoticeOfIntentTypeDto[];
+        documentTypes: DocumentTypeDto[];
         submissionTypes: SubmissionTypeDto[];
         naruSubtypes: NaruSubtypeDto[];
+        regions: ApplicationRegionDto[];
+        decisionMakers: DecisionMakerDto[];
       }>(`${this.baseUrl}`)
     );
   }

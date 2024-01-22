@@ -1,16 +1,23 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
+  DecisionComponentTypeDto,
+  NaruDecisionComponentDto,
   NfuDecisionComponentDto,
   PofoDecisionComponentDto,
+  ProposedDecisionLotDto,
   RosoDecisionComponentDto,
-  TurpDecisionComponentDto,
+  SubdDecisionComponentDto,
+  ExpiryDateDecisionComponentDto,
+  PfrsDecisionComponentDto,
 } from '../../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ToastService } from '../../../../../../../services/toast/toast.service';
+import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../../../shared/dto/ag-cap.types.dto';
 import { formatDateForApi } from '../../../../../../../shared/utils/api-date-formatter';
-import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/proposal.component';
+import { SubdInputComponent } from './subd-input/subd-input.component';
 
 @Component({
   selector: 'app-decision-component',
@@ -18,8 +25,12 @@ import { AG_CAP_OPTIONS, AG_CAP_SOURCE_OPTIONS } from '../../../../../proposal/p
   styleUrls: ['./decision-component.component.scss'],
 })
 export class DecisionComponentComponent implements OnInit {
-  @Input() data!: DecisionComponentDto;
-  @Output() dataChange = new EventEmitter<DecisionComponentDto>();
+  @Input() data!: ApplicationDecisionComponentDto;
+  @Input() codes!: ApplicationDecisionCodesDto;
+  @Output() dataChange = new EventEmitter<ApplicationDecisionComponentDto>();
+  @Output() remove = new EventEmitter<void>();
+
+  @ViewChild(SubdInputComponent) subdInputComponent?: SubdInputComponent;
 
   COMPONENT_TYPE = APPLICATION_DECISION_COMPONENT_TYPE;
 
@@ -29,9 +40,9 @@ export class DecisionComponentComponent implements OnInit {
   // nfu
   nfuType = new FormControl<string | null>(null, [Validators.required]);
   nfuSubType = new FormControl<string | null>(null, [Validators.required]);
-  endDate = new FormControl<Date | null>(null, [Validators.required]);
+  endDate = new FormControl<Date | null>(null);
 
-  // turp
+  // turp & cove
   expiryDate = new FormControl<Date | null>(null);
 
   // pofo, pfrs
@@ -41,12 +52,25 @@ export class DecisionComponentComponent implements OnInit {
   maximumDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
   averageDepthToPlace = new FormControl<number | null>(null, [Validators.required]);
 
+  //pfrs
+  endDate2 = new FormControl<Date | null>(null);
+
   // roso, pfrs
   soilTypeRemoved = new FormControl<string | null>(null, [Validators.required]);
   volumeToRemove = new FormControl<number | null>(null, [Validators.required]);
   areaToRemove = new FormControl<number | null>(null, [Validators.required]);
   maximumDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
   averageDepthToRemove = new FormControl<number | null>(null, [Validators.required]);
+
+  // naru
+  naruSubtypeCode = new FormControl<string | null>(null, [Validators.required]);
+  naruEndDate = new FormControl<Date | null>(null);
+
+  //subd
+  subdApprovedLots = new FormControl<ProposedDecisionLotDto[]>([], [Validators.required]);
+
+  //incl/excl
+  applicantType = new FormControl<string | null>(null, [Validators.required]);
 
   // general
   alrArea = new FormControl<number | null>(null, [Validators.required]);
@@ -78,7 +102,8 @@ export class DecisionComponentComponent implements OnInit {
           this.patchNfuFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
-          this.patchTurpFields();
+        case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
+          this.addExpiryDateField();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
           this.patchPofoFields();
@@ -87,8 +112,17 @@ export class DecisionComponentComponent implements OnInit {
           this.patchRosoFields();
           break;
         case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
-          this.patchPofoFields();
-          this.patchRosoFields();
+          this.patchPfrsFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+          this.patchNaruFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+          this.patchSubdFields();
+          break;
+        case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+        case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+          this.patchInclExclFields();
           break;
         default:
           this.toastService.showErrorToast('Wrong decision component type');
@@ -97,6 +131,14 @@ export class DecisionComponentComponent implements OnInit {
     }
 
     this.onFormValueChanges();
+  }
+
+  markTouched() {
+    this.subdInputComponent?.markAllAsTouched();
+  }
+
+  onRemove() {
+    this.remove.emit();
   }
 
   private onFormValueChanges() {
@@ -108,6 +150,9 @@ export class DecisionComponentComponent implements OnInit {
         agCapMap: this.agCapMap.value ? this.agCapMap.value : null,
         agCapConsultant: this.agCapConsultant.value ? this.agCapConsultant.value : null,
         applicationDecisionComponentTypeCode: this.data.applicationDecisionComponentTypeCode,
+        applicationDecisionComponentType: this.codes.decisionComponentTypes.find(
+          (e) => e.code === this.data.applicationDecisionComponentTypeCode,
+        )!,
         applicationDecisionUuid: this.data.uuid,
         uuid: this.data.uuid,
       };
@@ -125,6 +170,7 @@ export class DecisionComponentComponent implements OnInit {
     agCapMap: string | null;
     agCapConsultant: string | null;
     applicationDecisionComponentTypeCode: string;
+    applicationDecisionComponentType: DecisionComponentTypeDto;
     applicationDecisionUuid: string | undefined;
     uuid: string | undefined;
   }) {
@@ -133,7 +179,8 @@ export class DecisionComponentComponent implements OnInit {
         dataChange = { ...dataChange, ...this.getNfuDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.TURP:
-        dataChange = { ...dataChange, ...this.getTurpDataChange() };
+      case APPLICATION_DECISION_COMPONENT_TYPE.COVE:
+        dataChange = { ...dataChange, ...this.getExpiryDateDataChange() };
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.POFO:
         dataChange = { ...dataChange, ...this.getPofoDataChange() };
@@ -143,6 +190,16 @@ export class DecisionComponentComponent implements OnInit {
         break;
       case APPLICATION_DECISION_COMPONENT_TYPE.PFRS:
         dataChange = { ...dataChange, ...this.getPfrsDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.NARU:
+        dataChange = { ...dataChange, ...this.getNaruDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.SUBD:
+        dataChange = { ...dataChange, ...this.getSubdDataChange() };
+        break;
+      case APPLICATION_DECISION_COMPONENT_TYPE.INCL:
+      case APPLICATION_DECISION_COMPONENT_TYPE.EXCL:
+        dataChange = { ...dataChange, ...this.getInclExclDataChange() };
         break;
       default:
         this.toastService.showErrorToast('Wrong decision component type');
@@ -161,10 +218,17 @@ export class DecisionComponentComponent implements OnInit {
     this.endDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
   }
 
-  private patchTurpFields() {
+  private addExpiryDateField() {
     this.form.addControl('expiryDate', this.expiryDate);
 
     this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+  }
+
+  private patchPfrsFields() {
+    this.patchPofoFields();
+    this.patchRosoFields();
+    this.form.addControl('endDate2', this.endDate2);
+    this.endDate2.setValue(this.data.endDate2 ? new Date(this.data.endDate2) : null);
   }
 
   private patchPofoFields() {
@@ -199,6 +263,30 @@ export class DecisionComponentComponent implements OnInit {
     this.averageDepthToRemove.setValue(this.data.soilToRemoveAverageDepth ?? null);
   }
 
+  private patchNaruFields() {
+    this.form.addControl('naruSubtypeCode', this.naruSubtypeCode);
+    this.form.addControl('naruEndDate', this.naruEndDate);
+    this.form.addControl('expiryDate', this.expiryDate);
+
+    this.naruEndDate.setValue(this.data.endDate ? new Date(this.data.endDate) : null);
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+    this.naruSubtypeCode.setValue(this.data.naruSubtypeCode ?? null);
+  }
+
+  private patchSubdFields() {
+    this.form.addControl('subdApprovedLots', this.subdApprovedLots);
+    const lots = this.data.lots?.sort((a, b) => a.index - b.index) ?? null;
+    this.subdApprovedLots.setValue(lots);
+  }
+
+  private patchInclExclFields() {
+    this.form.addControl('applicantType', this.applicantType);
+    this.form.addControl('expiryDate', this.expiryDate);
+
+    this.applicantType.setValue(this.data.inclExclApplicantType ?? null);
+    this.expiryDate.setValue(this.data.expiryDate ? new Date(this.data.expiryDate) : null);
+  }
+
   private getNfuDataChange(): NfuDecisionComponentDto {
     return {
       nfuType: this.nfuType.value ? this.nfuType.value : null,
@@ -207,7 +295,7 @@ export class DecisionComponentComponent implements OnInit {
     };
   }
 
-  private getTurpDataChange(): TurpDecisionComponentDto {
+  private getExpiryDateDataChange(): ExpiryDateDecisionComponentDto {
     return {
       expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
@@ -234,9 +322,11 @@ export class DecisionComponentComponent implements OnInit {
       soilToRemoveAverageDepth: this.averageDepthToRemove.value ?? null,
     };
   }
-  private getPfrsDataChange(): RosoDecisionComponentDto & PofoDecisionComponentDto {
+
+  private getPfrsDataChange(): PfrsDecisionComponentDto {
     return {
       endDate: this.endDate.value ? formatDateForApi(this.endDate.value) : null,
+      endDate2: this.endDate2.value ? formatDateForApi(this.endDate2.value) : null,
       soilTypeRemoved: this.soilTypeRemoved.value ?? null,
       soilToRemoveArea: this.areaToRemove.value ?? null,
       soilToRemoveVolume: this.volumeToRemove.value ?? null,
@@ -247,6 +337,28 @@ export class DecisionComponentComponent implements OnInit {
       soilToPlaceVolume: this.volumeToPlace.value ?? null,
       soilToPlaceMaximumDepth: this.maximumDepthToPlace.value ?? null,
       soilToPlaceAverageDepth: this.averageDepthToPlace.value ?? null,
+    };
+  }
+
+  private getNaruDataChange(): NaruDecisionComponentDto {
+    return {
+      endDate: this.naruEndDate.value ? formatDateForApi(this.naruEndDate.value) : null,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
+      naruSubtypeCode: this.naruSubtypeCode.value ?? null,
+    };
+  }
+
+  private getSubdDataChange(): SubdDecisionComponentDto {
+    const update = this.subdApprovedLots.value?.map((e) => ({ ...e }) as ProposedDecisionLotDto);
+    return {
+      lots: update ?? undefined,
+    };
+  }
+
+  private getInclExclDataChange() {
+    return {
+      inclExclApplicantType: this.applicantType.value ?? undefined,
+      expiryDate: this.expiryDate.value ? formatDateForApi(this.expiryDate.value) : null,
     };
   }
 }

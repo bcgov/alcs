@@ -8,7 +8,13 @@ import { ApplicationModificationDto } from '../../services/application/applicati
 import { ApplicationModificationService } from '../../services/application/application-modification/application-modification.service';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
 import { ApplicationReconsiderationService } from '../../services/application/application-reconsideration/application-reconsideration.service';
-import { ApplicationDto } from '../../services/application/application.dto';
+import { ApplicationSubmissionService } from '../../services/application/application-submission/application-submission.service';
+import {
+  ApplicationDto,
+  ApplicationSubmissionDto,
+  SUBMISSION_STATUS,
+} from '../../services/application/application.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ApplicantInfoComponent } from './applicant-info/applicant-info.component';
 import { ApplicationMeetingComponent } from './application-meeting/application-meeting.component';
 import { decisionChildRoutes, DecisionModule } from './decision/decision.module';
@@ -20,6 +26,55 @@ import { OverviewComponent } from './overview/overview.component';
 import { PostDecisionComponent } from './post-decision/post-decision.component';
 import { ProposalComponent } from './proposal/proposal.component';
 import { ReviewComponent } from './review/review.component';
+import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
+
+export const unsubmittedRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'App Preview',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+];
+
+export const submittedLfngRoutes = [
+  {
+    path: '',
+    menuTitle: 'Overview',
+    icon: 'summarize',
+    component: OverviewComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'applicant-info',
+    menuTitle: 'Applicant Info',
+    icon: 'persons',
+    component: ApplicantInfoComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'lfng-info',
+    menuTitle: 'L/FNG Info',
+    icon: 'account_balance',
+    component: LfngInfoComponent,
+    portalOnly: true,
+  },
+  {
+    path: 'documents',
+    menuTitle: 'Documents',
+    icon: 'description',
+    component: DocumentsComponent,
+    portalOnly: false,
+  },
+];
 
 export const appChildRoutes = [
   {
@@ -80,7 +135,7 @@ export const appChildRoutes = [
   },
   {
     path: 'decision',
-    menuTitle: 'Decision',
+    menuTitle: 'Decisions',
     icon: 'gavel',
     module: DecisionModule,
     portalOnly: false,
@@ -110,20 +165,27 @@ export const appChildRoutes = [
 export class ApplicationComponent implements OnInit, OnDestroy {
   destroy = new Subject<void>();
   childRoutes = appChildRoutes;
+  unsubmittedRoutes = unsubmittedRoutes;
+  submittedLfngRoutes = submittedLfngRoutes;
 
   fileNumber?: string;
   application: ApplicationDto | undefined;
   reconsiderations: ApplicationReconsiderationDto[] = [];
   modifications: ApplicationModificationDto[] = [];
+  submission?: ApplicationSubmissionDto;
 
   isApplicantSubmission = false;
+  showSubmittedToAlcMenuItems = false;
+  showSubmittedToLfngMenuItems = false;
 
   constructor(
     private applicationDetailService: ApplicationDetailService,
+    private applicationSubmissionService: ApplicationSubmissionService,
     private reconsiderationService: ApplicationReconsiderationService,
     private modificationService: ApplicationModificationService,
     private route: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    public applicationStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   ngOnInit(): void {
@@ -133,13 +195,37 @@ export class ApplicationComponent implements OnInit, OnDestroy {
       this.loadApplication();
     });
 
-    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe((application) => {
+    this.applicationDetailService.$application.pipe(takeUntil(this.destroy)).subscribe(async (application) => {
       if (application) {
         this.titleService.setTitle(`${environment.siteName} | ${application.fileNumber} (${application.applicant})`);
         this.application = application;
         this.reconsiderationService.fetchByApplication(application.fileNumber);
         this.modificationService.fetchByApplication(application.fileNumber);
-        this.isApplicantSubmission = application.source === 'APPLICANT';
+
+        this.isApplicantSubmission = application.source !== SYSTEM_SOURCE_TYPES.ALCS;
+        let wasSubmittedToLfng = false;
+
+        if (this.isApplicantSubmission) {
+          this.submission = await this.applicationSubmissionService.fetchSubmission(application.fileNumber);
+
+          wasSubmittedToLfng =
+            this.isApplicantSubmission &&
+            [
+              SUBMISSION_STATUS.SUBMITTED_TO_LG,
+              SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+              SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+              SUBMISSION_STATUS.RETURNED_TO_LG,
+              SUBMISSION_STATUS.WRONG_GOV,
+              SUBMISSION_STATUS.INCOMPLETE,
+            ].includes(this.submission?.status?.code);
+        }
+
+        const submittedToAlcsStatus = this.submission?.submissionStatuses.find(
+          (s) => s.statusTypeCode === SUBMISSION_STATUS.SUBMITTED_TO_ALC && !!s.effectiveDate,
+        );
+        this.showSubmittedToLfngMenuItems = wasSubmittedToLfng && !submittedToAlcsStatus;
+
+        this.showSubmittedToAlcMenuItems = this.isApplicantSubmission ? !!submittedToAlcsStatus : true;
       }
     });
 

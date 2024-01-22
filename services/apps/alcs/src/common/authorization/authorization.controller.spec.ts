@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as config from 'config';
 import { FastifyReply } from 'fastify';
 import { ClsService } from 'nestjs-cls';
-import { RedisClientType } from 'redis';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { AuthorizationController } from './authorization.controller';
 import { AuthorizationService } from './authorization.service';

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ApplicationDocumentService } from '../../../../../services/application/application-document/application-document.service';
 
 import { NfuDetailsComponent } from './nfu-details.component';
 
@@ -8,9 +9,14 @@ describe('NfuDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NfuDetailsComponent ]
-    })
-    .compileComponents();
+      providers: [
+        {
+          provide: ApplicationDocumentService,
+          useValue: {},
+        },
+      ],
+      declarations: [NfuDetailsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NfuDetailsComponent);
     component = fixture.componentInstance;

@@ -16,6 +16,7 @@ import { ApplicationService } from '../../../../../services/application/applicat
 import { ApplicationDecisionService } from '../../../../../services/application/decision/application-decision-v1/application-decision.service';
 import { CardService } from '../../../../../services/card/card.service';
 import { ToastService } from '../../../../../services/toast/toast.service';
+import { parseStringToBoolean } from '../../../../../shared/utils/boolean-helper';
 
 @Component({
   selector: 'app-create',
@@ -43,8 +44,12 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   reconTypeControl = new FormControl<string | null>(null, [Validators.required]);
   localGovernmentControl = new FormControl<string | null>(null, [Validators.required]);
   reconsidersDecisions = new FormControl<string[]>([], [Validators.required]);
+  descriptionControl = new FormControl<string | null>('', [Validators.required]);
+  isNewProposalControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isIncorrectFalseInfoControl = new FormControl<string | undefined>(undefined, [Validators.required]);
+  isNewEvidenceControl = new FormControl<string | undefined>(undefined, [Validators.required]);
 
-  createForm = new FormGroup({
+  createForm: FormGroup = new FormGroup({
     applicationType: this.applicationTypeControl,
     fileNumber: this.fileNumberControl,
     applicant: this.applicantControl,
@@ -53,6 +58,10 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     submittedDate: this.submittedDateControl,
     reconType: this.reconTypeControl,
     reconsidersDecisions: this.reconsidersDecisions,
+    description: this.descriptionControl,
+    isNewProposal: this.isNewProposalControl,
+    isIncorrectFalseInfo: this.isIncorrectFalseInfoControl,
+    isNewEvidence: this.isNewEvidenceControl,
   });
 
   constructor(
@@ -123,9 +132,9 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
 
     this.createForm.patchValue({
       applicant: application.applicant,
-      region: application.region.code,
+      region: application.region?.code,
       applicationType: application.type.code,
-      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment.uuid)?.uuid ?? null,
+      localGovernment: this.localGovernments.find((g) => g.uuid === application.localGovernment?.uuid)?.uuid ?? null,
     });
 
     if (!application.decisionDate) {
@@ -150,6 +159,10 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
         // card details
         boardCode: this.currentBoardCode,
         reconsideredDecisionUuids: formValues.reconsidersDecisions!,
+        description: formValues.description,
+        isNewProposal: parseStringToBoolean(formValues.isNewProposal),
+        isIncorrectFalseInfo: parseStringToBoolean(formValues.isIncorrectFalseInfo),
+        isNewEvidence: parseStringToBoolean(formValues.isNewEvidence),
       };
 
       if (!recon.boardCode) {
@@ -173,6 +186,10 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
     this.submittedDateControl.reset();
     this.reconTypeControl.reset();
     this.reconsidersDecisions.reset();
+    this.descriptionControl.reset();
+    this.isIncorrectFalseInfoControl.reset();
+    this.isNewEvidenceControl.reset();
+    this.isNewProposalControl.reset();
 
     this.fileNumberControl.enable();
     this.applicantControl.enable();
@@ -194,10 +211,12 @@ export class CreateReconsiderationDialogComponent implements OnInit, OnDestroy {
   async loadDecisions(fileNumber: string) {
     const decisions = await this.decisionService.fetchByApplication(fileNumber);
     if (decisions.length > 0) {
-      this.decisions = decisions.map((decision) => ({
-        uuid: decision.uuid,
-        resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
-      }));
+      this.decisions = decisions
+        .filter((e) => !e.isDraft)
+        .map((decision) => ({
+          uuid: decision.uuid,
+          resolution: `#${decision.resolutionNumber}/${decision.resolutionYear}`,
+        }));
       this.reconsidersDecisions.enable();
     }
   }

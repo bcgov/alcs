@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsNumber,
   IsOptional,
@@ -6,20 +6,14 @@ import {
   IsUUID,
   Matches,
 } from 'class-validator';
-import { DOCUMENT_TYPE } from '../../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocumentDto } from '../../../alcs/application/application-document/application-document.dto';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
+import {
+  OWNER_TYPE,
+  OwnerTypeDto,
+} from '../../../common/owner-type/owner-type.entity';
 import { emailRegex } from '../../../utils/email.helper';
 import { ApplicationParcelDto } from '../application-parcel/application-parcel.dto';
-
-export enum APPLICATION_OWNER {
-  INDIVIDUAL = 'INDV',
-  ORGANIZATION = 'ORGZ',
-  AGENT = 'AGEN',
-  CROWN = 'CRWN',
-}
-
-export class ApplicationOwnerTypeDto extends BaseCodeDto {}
 
 export class ApplicationOwnerDto {
   @AutoMap()
@@ -27,6 +21,9 @@ export class ApplicationOwnerDto {
 
   @AutoMap()
   applicationSubmissionUuid: string;
+
+  @AutoMap(() => String)
+  corporateSummaryUuid?: string;
 
   displayName: string;
 
@@ -46,10 +43,13 @@ export class ApplicationOwnerDto {
   email?: string | null;
 
   @AutoMap()
-  type: ApplicationOwnerTypeDto;
+  type: OwnerTypeDto;
 
   @AutoMap(() => ApplicationDocumentDto)
   corporateSummary?: ApplicationDocumentDto;
+
+  @AutoMap(() => String)
+  crownLandOwnerType?: string | null;
 }
 
 export class ApplicationOwnerDetailedDto extends ApplicationOwnerDto {
@@ -78,7 +78,12 @@ export class ApplicationOwnerUpdateDto {
   email?: string;
 
   @IsString()
-  typeCode: string;
+  @IsOptional()
+  crownLandOwnerType?: string;
+
+  @IsString()
+  @IsOptional()
+  typeCode?: string;
 
   @IsUUID()
   @IsOptional()
@@ -93,23 +98,27 @@ export class ApplicationOwnerCreateDto extends ApplicationOwnerUpdateDto {
 export class SetPrimaryContactDto {
   @IsString()
   @IsOptional()
-  agentFirstName?: string;
+  firstName?: string;
 
   @IsString()
   @IsOptional()
-  agentLastName?: string;
+  lastName?: string;
 
   @IsString()
   @IsOptional()
-  agentOrganization?: string;
+  organization?: string;
 
   @IsString()
   @IsOptional()
-  agentPhoneNumber?: string;
+  phoneNumber?: string;
 
   @IsString()
   @IsOptional()
-  agentEmail?: string;
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  type?: OWNER_TYPE;
 
   @IsUUID()
   @IsOptional()
@@ -117,6 +126,10 @@ export class SetPrimaryContactDto {
 
   @IsString()
   applicationSubmissionUuid: string;
+
+  @IsString()
+  @IsOptional()
+  crownLandOwnerType?: string;
 }
 
 export class AttachCorporateSummaryDto {

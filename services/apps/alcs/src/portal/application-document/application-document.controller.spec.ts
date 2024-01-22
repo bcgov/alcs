@@ -1,14 +1,20 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
-import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
+import {
+  ApplicationDocument,
+  VISIBILITY_FLAG,
+} from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import {
+  DOCUMENT_TYPE,
+  DocumentCode,
+} from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE, DOCUMENT_SYSTEM } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
 import { DocumentService } from '../../document/document.service';
@@ -88,6 +94,7 @@ describe('ApplicationDocumentController', () => {
   it('should call through to delete documents', async () => {
     appDocumentService.delete.mockResolvedValue(mockDocument);
     appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canDeleteDocument.mockResolvedValue(true);
 
     await controller.delete('fake-uuid', {
       user: {
@@ -117,12 +124,28 @@ describe('ApplicationDocumentController', () => {
     );
   });
 
-  it('should call through for download', async () => {
+  it('should call through for open', async () => {
     const fakeUrl = 'fake-url';
     appDocumentService.getInlineUrl.mockResolvedValue(fakeUrl);
     appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canAccessDocument.mockResolvedValue(true);
 
     const res = await controller.open('fake-uuid', {
+      user: {
+        entity: {},
+      },
+    });
+
+    expect(res.url).toEqual(fakeUrl);
+  });
+
+  it('should call through for download', async () => {
+    const fakeUrl = 'fake-url';
+    appDocumentService.getDownloadUrl.mockResolvedValue(fakeUrl);
+    appDocumentService.get.mockResolvedValue(mockDocument);
+    mockApplicationSubmissionService.canAccessDocument.mockResolvedValue(true);
+
+    const res = await controller.download('fake-uuid', {
       user: {
         entity: {},
       },
@@ -152,7 +175,7 @@ describe('ApplicationDocumentController', () => {
     appDocumentService.attachExternalDocument.mockResolvedValue(
       new ApplicationDocument({
         application: undefined,
-        type: new ApplicationDocumentCode(),
+        type: new DocumentCode(),
         uuid: fakeUuid,
         document: new Document({
           uploadedAt: new Date(),
@@ -169,6 +192,77 @@ describe('ApplicationDocumentController', () => {
 
     expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
     expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toBeCalledWith(
+      undefined,
+      {
+        documentUuid: 'fake-uuid',
+      },
+      [
+        VISIBILITY_FLAG.APPLICANT,
+        VISIBILITY_FLAG.GOVERNMENT,
+        VISIBILITY_FLAG.COMMISSIONER,
+      ],
+    );
+    expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
+      ...docDto,
+      system: DOCUMENT_SYSTEM.PORTAL,
+    });
+    expect(res.uploadedBy).toEqual(user.user.entity);
+    expect(res.uuid).toEqual(fakeUuid);
+  });
+
+  it('should should add the public flag when document is a proposal map', async () => {
+    const user = { user: { entity: 'Bruce' } };
+    const fakeUuid = 'fakeUuid';
+    const docObj = new Document({ uuid: 'fake-uuid' });
+    const userEntity = new User({
+      name: user.user.entity,
+    });
+
+    const docDto: AttachExternalDocumentDto = {
+      fileSize: 0,
+      mimeType: 'mimeType',
+      fileName: 'fileName',
+      fileKey: 'fileKey',
+      source: DOCUMENT_SOURCE.APPLICANT,
+      documentType: DOCUMENT_TYPE.PROPOSAL_MAP,
+    };
+
+    mockDocumentService.createDocumentRecord.mockResolvedValue(docObj);
+
+    appDocumentService.attachExternalDocument.mockResolvedValue(
+      new ApplicationDocument({
+        application: undefined,
+        type: new DocumentCode(),
+        uuid: fakeUuid,
+        document: new Document({
+          uploadedAt: new Date(),
+          uploadedBy: userEntity,
+        }),
+      }),
+    );
+
+    const res = await controller.attachExternalDocument(
+      'fake-number',
+      docDto,
+      user,
+    );
+
+    expect(mockDocumentService.createDocumentRecord).toBeCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toBeCalledTimes(1);
+    expect(appDocumentService.attachExternalDocument).toBeCalledWith(
+      undefined,
+      {
+        documentUuid: 'fake-uuid',
+        type: DOCUMENT_TYPE.PROPOSAL_MAP,
+      },
+      [
+        VISIBILITY_FLAG.APPLICANT,
+        VISIBILITY_FLAG.GOVERNMENT,
+        VISIBILITY_FLAG.COMMISSIONER,
+        VISIBILITY_FLAG.PUBLIC,
+      ],
+    );
     expect(mockDocumentService.createDocumentRecord).toBeCalledWith({
       ...docDto,
       system: DOCUMENT_SYSTEM.PORTAL,

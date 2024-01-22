@@ -21,6 +21,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -34,22 +35,34 @@ import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { ApplicationDocumentComponent } from './application-document/application-document.component';
+import { ApplicationLegacyIdComponent } from './application-legacy-id/application-legacy-id.component';
+import { ApplicationSubmissionStatusTypePillComponent } from './application-submission-status-type-pill/application-submission-status-type-pill.component';
 import { ApplicationTypePillComponent } from './application-type-pill/application-type-pill.component';
 import { AvatarCircleComponent } from './avatar-circle/avatar-circle.component';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 import { FavoriteButtonComponent } from './favorite-button/favorite-button.component';
-import { InlineBooleanComponent } from './inline-boolean/inline-boolean.component';
-import { InlineDatepickerComponent } from './inline-datepicker/inline-datepicker.component';
-import { InlineDropdownComponent } from './inline-dropdown/inline-dropdown.component';
-import { InlineNumberComponent } from './inline-number/inline-number.component';
-import { InlineReviewOutcomeComponent } from './inline-review-outcome/inline-review-outcome.component';
-import { InlineTextComponent } from './inline-text/inline-text.component';
-import { InlineTextareaComponent } from './inline-textarea/inline-textarea.component';
+import { InlineApplicantTypeComponent } from './inline-applicant-type/inline-applicant-type.component';
+import { InlineBooleanComponent } from './inline-editors/inline-boolean/inline-boolean.component';
+import { InlineChairReviewOutcomeComponent } from './inline-editors/inline-chair-review-outcome/inline-chair-review-outcome.component';
+import { InlineDatepickerComponent } from './inline-editors/inline-datepicker/inline-datepicker.component';
+import { InlineDropdownComponent } from './inline-editors/inline-dropdown/inline-dropdown.component';
+import { InlineNgSelectComponent } from './inline-editors/inline-ng-select/inline-ng-select.component';
+import { InlineNumberComponent } from './inline-editors/inline-number/inline-number.component';
+import { InlineDecisionOutcomeComponent } from './inline-editors/inline-review-decision-outcome/inline-decision-outcome.component';
+import { InlineReviewOutcomeComponent } from './inline-editors/inline-review-outcome/inline-review-outcome.component';
+import { InlineTextComponent } from './inline-editors/inline-text/inline-text.component';
+import { InlineTextareaEditComponent } from './inline-editors/inline-textarea-edit/inline-textarea-edit.component';
+import { InlineTextareaComponent } from './inline-editors/inline-textarea/inline-textarea.component';
+import { LotsTableFormComponent } from './lots-table/lots-table-form.component';
 import { MeetingOverviewComponent } from './meeting-overview/meeting-overview.component';
+import { NoDataComponent } from './no-data/no-data.component';
+import { BooleanToStringPipe } from './pipes/boolean-to-string.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { SafePipe } from './pipes/safe.pipe';
 import { StartOfDayPipe } from './pipes/startOfDay.pipe';
+import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
 import { StaffJournalNoteInputComponent } from './staff-journal/staff-journal-note-input/staff-journal-note-input.component';
 import { StaffJournalNoteComponent } from './staff-journal/staff-journal-note/staff-journal-note.component';
 import { StaffJournalComponent } from './staff-journal/staff-journal.component';
@@ -57,6 +70,7 @@ import { TimeTrackerComponent } from './time-tracker/time-tracker.component';
 import { TimelineComponent } from './timeline/timeline.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-formatter';
+import { WarningBannerComponent } from './warning-banner/warning-banner.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +79,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MomentPipe,
     StartOfDayPipe,
     MeetingOverviewComponent,
+    InlineApplicantTypeComponent,
+    InlineTextareaEditComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
@@ -82,6 +98,17 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    InlineDecisionOutcomeComponent,
+    BooleanToStringPipe,
+    NoDataComponent,
+    ApplicationSubmissionStatusTypePillComponent,
+    WarningBannerComponent,
+    ErrorMessageComponent,
+    LotsTableFormComponent,
+    InlineNgSelectComponent,
+    ApplicationLegacyIdComponent,
+    TableColumnNoDataPipe,
+    InlineChairReviewOutcomeComponent,
   ],
   imports: [
     CommonModule,
@@ -105,6 +132,8 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     RouterModule,
     MatDatepickerModule,
     MatDialogModule,
+    NgSelectModule,
+    MatSlideToggleModule,
   ],
   exports: [
     CommonModule,
@@ -133,11 +162,14 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     MtxButtonModule,
     StartOfDayPipe,
     MatTooltipModule,
+    InlineApplicantTypeComponent,
+    InlineTextareaEditComponent,
     InlineTextareaComponent,
     InlineBooleanComponent,
     InlineNumberComponent,
     InlineTextComponent,
     InlineDropdownComponent,
+    InlineNgSelectComponent,
     MatAutocompleteModule,
     MatButtonToggleModule,
     DetailsHeaderComponent,
@@ -162,6 +194,17 @@ import { ExtensionsDatepickerFormatter } from './utils/extensions-datepicker-for
     StaffJournalNoteComponent,
     StaffJournalNoteInputComponent,
     InlineReviewOutcomeComponent,
+    InlineDecisionOutcomeComponent,
+    BooleanToStringPipe,
+    NoDataComponent,
+    ApplicationSubmissionStatusTypePillComponent,
+    WarningBannerComponent,
+    ErrorMessageComponent,
+    LotsTableFormComponent,
+    ApplicationLegacyIdComponent,
+    TableColumnNoDataPipe,
+    InlineChairReviewOutcomeComponent,
+    MatSlideToggleModule,
   ],
 })
 export class SharedModule {

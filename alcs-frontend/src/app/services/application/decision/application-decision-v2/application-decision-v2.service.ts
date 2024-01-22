@@ -7,8 +7,9 @@ import { verifyFileSize } from '../../../../shared/utils/file-size-checker';
 import { ToastService } from '../../../toast/toast.service';
 import {
   ApplicationDecisionDto,
+  ApplicationDecisionWithLinkedResolutionDto,
   CreateApplicationDecisionDto,
-  DecisionCodesDto,
+  ApplicationDecisionCodesDto,
   UpdateApplicationDecisionDto,
 } from './application-decision-v2.dto';
 
@@ -18,9 +19,9 @@ import {
 export class ApplicationDecisionV2Service {
   private url = `${environment.apiUrl}/v2/application-decision`;
   private decision: ApplicationDecisionDto | undefined;
-  private decisions: ApplicationDecisionDto[] = [];
+  private decisions: ApplicationDecisionWithLinkedResolutionDto[] = [];
   $decision = new BehaviorSubject<ApplicationDecisionDto | undefined>(undefined);
-  $decisions = new BehaviorSubject<ApplicationDecisionDto[] | []>([]);
+  $decisions = new BehaviorSubject<ApplicationDecisionWithLinkedResolutionDto[]>([]);
 
   constructor(private http: HttpClient, private toastService: ToastService) {}
 
@@ -36,9 +37,9 @@ export class ApplicationDecisionV2Service {
     return decisions;
   }
 
-  async fetchCodes(): Promise<DecisionCodesDto> {
+  async fetchCodes(): Promise<ApplicationDecisionCodesDto> {
     try {
-      return await firstValueFrom(this.http.get<DecisionCodesDto>(`${this.url}/codes`));
+      return await firstValueFrom(this.http.get<ApplicationDecisionCodesDto>(`${this.url}/codes`));
     } catch (err) {
       this.toastService.showErrorToast('Failed to fetch decisions');
     }
@@ -48,7 +49,7 @@ export class ApplicationDecisionV2Service {
       ceoCriterion: [],
       decisionComponentTypes: [],
       decisionConditionTypes: [],
-      linkedResolutionOutcomeTypes: [],
+      naruSubtypes: [],
     };
   }
 
@@ -100,7 +101,7 @@ export class ApplicationDecisionV2Service {
     let formData: FormData = new FormData();
     formData.append('file', file, file.name);
     const res = await firstValueFrom(this.http.post(`${this.url}/${decisionUuid}/file`, formData));
-    this.toastService.showSuccessToast('Review document uploaded');
+    this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
@@ -112,6 +113,19 @@ export class ApplicationDecisionV2Service {
       openFileInline(data.url, fileName);
     } else {
       downloadFileFromUrl(data.url, fileName);
+    }
+  }
+
+  async updateFile(decisionUuid: string, documentUuid: string, fileName: string) {
+    try {
+      await firstValueFrom(
+        this.http.patch(`${this.url}/${decisionUuid}/file/${documentUuid}`, {
+          fileName,
+        })
+      );
+      this.toastService.showSuccessToast('File updated');
+    } catch (err) {
+      this.toastService.showErrorToast('Failed to update file');
     }
   }
 
@@ -131,14 +145,23 @@ export class ApplicationDecisionV2Service {
   }
 
   async loadDecision(uuid: string) {
-    this.clearDecision()
+    this.clearDecision();
     this.decision = await this.getByUuid(uuid);
     this.$decision.next(this.decision);
   }
 
   async loadDecisions(fileNumber: string) {
-    this.clearDecisions()
-    this.decisions = await this.fetchByApplication(fileNumber);
+    this.clearDecisions();
+    const decisions = await this.fetchByApplication(fileNumber);
+    const decisionsLength = decisions.length;
+
+    this.decisions = decisions.map((decision, ind) => ({
+      ...decision,
+      reconsideredByResolutions: decision.reconsideredBy?.flatMap((r) => r.linkedResolutions) || [],
+      modifiedByResolutions: decision.modifiedBy?.flatMap((r) => r.linkedResolutions) || [],
+      index: decisionsLength - ind,
+    }));
+
     this.$decisions.next(this.decisions);
   }
 

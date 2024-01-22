@@ -6,13 +6,13 @@
     (save)="updateApplicationValue('nfuUseType', $event)"
   ></app-inline-dropdown>
 </div>
-<div>
+<div class="nfu-subtype-wrapper">
   <div class="subheading2">Non-Farm Use Sub-Type</div>
-  <app-inline-dropdown
+  <app-inline-ng-select
     [value]="application?.nfuUseSubType"
     [options]="nfuSubTypes"
     (save)="updateApplicationValue('nfuUseSubType', $event)"
-  ></app-inline-dropdown>
+  ></app-inline-ng-select>
 </div>
 <div>
   <div class="subheading2">Use End Date</div>

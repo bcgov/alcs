@@ -1,0 +1,14 @@
+<div mat-dialog-title>
+  <h4>Are you removing soil in order to build a structure?</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <app-warning-banner>
+    <b>Warning:</b> Changing your answer will remove all the saved progress on this step. Do you want to
+    continue?</app-warning-banner
+  >
+  <div class="controls">
+    <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="true">confirm</button>
+  </div>
+</div>

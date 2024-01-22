@@ -15,8 +15,10 @@ describe('CommentsComponent', () => {
   let component: CommentsComponent;
   let fixture: ComponentFixture<CommentsComponent>;
   let mockUserService: DeepMocked<UserService>;
+  let mockCommentService: DeepMocked<CommentService>;
 
   beforeEach(async () => {
+    mockCommentService = createMock();
     mockUserService = createMock();
     mockUserService.$assignableUsers = new BehaviorSubject<AssigneeDto[]>([]);
 
@@ -24,7 +26,7 @@ describe('CommentsComponent', () => {
       providers: [
         {
           provide: CommentService,
-          useValue: {},
+          useValue: mockCommentService,
         },
         {
           provide: UserService,
@@ -55,6 +57,8 @@ describe('CommentsComponent', () => {
       createdAt: Date.now(),
       mentions: [],
     };
+
+    mockCommentService.fetchComments.mockResolvedValue([]);
 
     fixture.detectChanges();
   });

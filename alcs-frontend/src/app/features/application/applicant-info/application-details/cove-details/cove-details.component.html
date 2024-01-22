@@ -1,0 +1,72 @@
+<div *ngIf="_applicationSubmission" class="review-table">
+  <div class="subheading2 full-width">Provide the name and contact information for all transferees</div>
+  <div class="full-width transferee-table">
+    <div class="subheading2">Type</div>
+    <div class="subheading2">Full Name</div>
+    <div class="subheading2">Organization Name</div>
+    <div class="subheading2">Phone</div>
+    <div class="subheading2">Email</div>
+    <ng-container *ngFor="let transferee of transferees">
+      <div>{{ transferee.type.code === 'INDV' ? 'Individual' : 'Organization' }}</div>
+      <div>{{ transferee.displayName }}</div>
+      <div>
+        {{ transferee.organizationName }}
+        <app-no-data [showRequired]="false" *ngIf="!transferee.organizationName"></app-no-data>
+      </div>
+      <div>
+        <span *ngIf="transferee.phoneNumber">{{ transferee.phoneNumber | mask : '(000) 000-0000' }}</span>
+      </div>
+      <div>{{ transferee.email }}</div>
+    </ng-container>
+  </div>
+  <app-no-data class="full-width" [showRequired]="showErrors" *ngIf="transferees.length === 0"></app-no-data>
+
+  <div class="subheading2 grid-1">How many hectares will the covenant impact?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.coveAreaImpacted }}<span *ngIf="_applicationSubmission.coveAreaImpacted"> ha</span>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.coveAreaImpacted"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">What is the purpose of this covenant?</div>
+  <div class="grid-double">
+    {{ _applicationSubmission.purpose }}
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.purpose"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Explain how the covenant impacts the use of agricultural land for farm purposes.</div>
+  <div class="grid-double">
+    <span *ngIf="_applicationSubmission.coveFarmImpact !== null">
+      {{ _applicationSubmission.coveFarmImpact }}
+    </span>
+    <app-no-data [showRequired]="showErrors" *ngIf="!_applicationSubmission.coveFarmImpact"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Proposal Map / Site Plan</div>
+  <div class="grid-double">
+    <a *ngFor="let map of proposalMap" (click)="openFile(map)">
+      {{ map.fileName }}
+    </a>
+    <app-no-data [showRequired]="showErrors" *ngIf="proposalMap.length === 0"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Do you have a draft copy of the covenant?</div>
+  <div class="grid-double">
+    <span *ngIf="_applicationSubmission.coveHasDraft !== null">
+      {{ _applicationSubmission.coveHasDraft ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data [showRequired]="showErrors" *ngIf="_applicationSubmission.coveHasDraft === null"></app-no-data>
+  </div>
+
+  <div class="subheading2 grid-1">Draft Covenant</div>
+  <div class="grid-double">
+    <div *ngFor="let file of srwTerms">
+      <a (click)="openFile(file)">
+        {{ file.fileName }}
+      </a>
+    </div>
+    <app-no-data
+      [showRequired]="showErrors && !!_applicationSubmission.coveHasDraft"
+      *ngIf="srwTerms.length === 0"
+    ></app-no-data>
+  </div>
+</div>

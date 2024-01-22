@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class ApplicationSubmissionReviewDto {
@@ -57,6 +57,7 @@ export class ApplicationSubmissionReviewDto {
   isAuthorized: boolean | null;
 
   isFirstNationGovernment: boolean;
+  governmentName: string;
 }
 
 export class UpdateApplicationSubmissionReviewDto {

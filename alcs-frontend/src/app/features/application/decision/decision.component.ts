@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
-import { ApplicationDto, APPLICATION_SYSTEM_SOURCE_TYPES } from '../../../services/application/application.dto';
+import { ApplicationDto } from '../../../services/application/application.dto';
+import { SYSTEM_SOURCE_TYPES } from '../../../shared/dto/system-source.types.dto';
 import { decisionChildRoutes } from './decision.module';
 
 @Component({
-  selector: 'app-decision',
+  selector: 'app-app-decision',
   templateUrl: './decision.component.html',
   styleUrls: ['./decision.component.scss'],
 })
@@ -13,7 +14,7 @@ export class DecisionComponent implements OnInit, OnDestroy {
   $destroy = new Subject<void>();
   childRoutes = decisionChildRoutes;
 
-  APPLICATION_SYSTEM_SOURCE_TYPES = APPLICATION_SYSTEM_SOURCE_TYPES;
+  APPLICATION_SYSTEM_SOURCE_TYPES = SYSTEM_SOURCE_TYPES;
   application: ApplicationDto | undefined;
 
   constructor(private applicationDetailService: ApplicationDetailService) {}

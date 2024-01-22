@@ -13,7 +13,6 @@ import { Logger } from 'nestjs-pino';
 import { install } from 'source-map-support';
 import { generateModuleGraph } from './commands/graph';
 import { importNOIs } from './commands/import';
-import { applyDefaultDocumentTags } from './commands/tag';
 import { MainModule } from './main.module';
 
 const registerSwagger = (app: NestFastifyApplication) => {
@@ -61,6 +60,7 @@ const registerGlobalFilters = (app: NestFastifyApplication) => {
 
 const registerCors = (app: NestFastifyApplication) => {
   app.enableCors({
+    maxAge: 3600,
     origin: [
       config.get<string>('ALCS.BASE_URL'),
       config.get<string>('KEYCLOAK.AUTH_SERVER'),
@@ -109,9 +109,6 @@ async function bootstrap() {
   }
   if (extraArg == 'import') {
     await importNOIs();
-  }
-  if (extraArg == 'tagDocuments') {
-    await applyDefaultDocumentTags();
   }
 
   // config variables

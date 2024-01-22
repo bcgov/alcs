@@ -1,0 +1,23 @@
+<div class="inline-applicant-type-wrapper">
+  <span class="left" *ngIf="!isEditing">
+    <a (click)="toggleEdit()" class="add-date" *ngIf="!value"> Select an option </a>
+    <span *ngIf="value">
+      {{ value }}
+    </span>
+    <button *ngIf="value" class="edit-button" mat-icon-button (click)="toggleEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
+    </button>
+  </span>
+  <div class="editing" [ngClass]="{ hidden: !isEditing }">
+    <form [formGroup]="form">
+      <mat-button-toggle-group id="applicantType" formControlName="applicantType" name="applicantType">
+        <mat-button-toggle value="Land Owner"> Land Owner </mat-button-toggle>
+        <mat-button-toggle value="L/FNG Initiated"> L/FNG Initiated </mat-button-toggle>
+      </mat-button-toggle-group>
+    </form>
+    <div class="button-container">
+      <button mat-button (click)="toggleEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="onSave()">SAVE</button>
+    </div>
+  </div>
+</div>

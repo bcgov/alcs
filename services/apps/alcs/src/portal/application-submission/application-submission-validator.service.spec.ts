@@ -1,24 +1,27 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 import { Document } from '../../document/document.entity';
-import { ApplicationOwnerType } from './application-owner/application-owner-type/application-owner-type.entity';
-import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../common/owner-type/owner-type.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmissionValidatorService } from './application-submission-validator.service';
 import { ApplicationSubmission } from './application-submission.entity';
+import { CovenantTransferee } from './covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from './covenant-transferee/covenant-transferee.service';
 
 function includesError(errors: Error[], target: Error) {
   return errors.some((error) => error.message === target.message);
@@ -26,20 +29,22 @@ function includesError(errors: Error[], target: Error) {
 
 describe('ApplicationSubmissionValidatorService', () => {
   let service: ApplicationSubmissionValidatorService;
-  let mockLGService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLGService: DeepMocked<LocalGovernmentService>;
   let mockAppParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
+  let mockCovenantTransfereeService: DeepMocked<CovenantTransfereeService>;
 
   beforeEach(async () => {
     mockLGService = createMock();
     mockAppParcelService = createMock();
     mockAppDocumentService = createMock();
+    mockCovenantTransfereeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ApplicationSubmissionValidatorService,
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLGService,
         },
         {
@@ -49,6 +54,10 @@ describe('ApplicationSubmissionValidatorService', () => {
         {
           provide: ApplicationDocumentService,
           useValue: mockAppDocumentService,
+        },
+        {
+          provide: CovenantTransfereeService,
+          useValue: mockCovenantTransfereeService,
         },
       ],
     }).compile();
@@ -78,6 +87,16 @@ describe('ApplicationSubmissionValidatorService', () => {
     );
   });
 
+  it('should return an error for missing purpose', async () => {
+    const applicationSubmission = new ApplicationSubmission({
+      owners: [],
+    });
+
+    const res = await service.validateSubmission(applicationSubmission);
+
+    expect(includesError(res.errors, new Error('Missing purpose'))).toBe(true);
+  });
+
   it('should return an error for no parcels', async () => {
     const applicationSubmission = new ApplicationSubmission({
       owners: [],
@@ -97,7 +116,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
     });
 
@@ -143,7 +161,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'SMPL',
       pid: '1251251',
     });
@@ -164,8 +181,8 @@ describe('ApplicationSubmissionValidatorService', () => {
     const applicationSubmission = new ApplicationSubmission({
       owners: [
         new ApplicationOwner({
-          type: new ApplicationOwnerType({
-            code: APPLICATION_OWNER.CROWN,
+          type: new OwnerType({
+            code: OWNER_TYPE.CROWN,
           }),
         }),
       ],
@@ -173,7 +190,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     const parcel = new ApplicationParcel({
       uuid: 'parcel-1',
       owners: [],
-      parcelType: PARCEL_TYPE.APPLICATION,
       ownershipTypeCode: 'CRWN',
       pid: '12512',
     });
@@ -185,46 +201,9 @@ describe('ApplicationSubmissionValidatorService', () => {
     expect(
       includesError(
         res.errors,
-        new Error(`Crown Parcel ${parcel.uuid} has no ownership type`),
-      ),
-    ).toBe(true);
-    expect(
-      includesError(
-        res.errors,
         new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
       ),
     ).toBe(true);
-  });
-
-  it('should not require certificate of title for other parcels', async () => {
-    const applicationSubmission = new ApplicationSubmission({
-      owners: [],
-    });
-    const parcel = new ApplicationParcel({
-      uuid: 'parcel-1',
-      owners: [],
-      parcelType: PARCEL_TYPE.OTHER,
-    });
-
-    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([parcel]);
-
-    const res = await service.validateSubmission(applicationSubmission);
-
-    expect(
-      includesError(res.errors, new Error(`Invalid Parcel ${parcel.uuid}`)),
-    ).toBe(false);
-    expect(
-      includesError(
-        res.errors,
-        new Error(`Parcel has no Owners ${parcel.uuid}`),
-      ),
-    ).toBe(true);
-    expect(
-      includesError(
-        res.errors,
-        new Error(`Parcel is missing certificate of title ${parcel.uuid}`),
-      ),
-    ).toBe(false);
   });
 
   it('should return an error for no primary contact', async () => {
@@ -245,8 +224,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should return errors for an invalid third party agent', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.AGENT,
+      type: new OwnerType({
+        code: OWNER_TYPE.AGENT,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -269,8 +248,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should require an authorization letter for more than one owner', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.AGENT,
+      type: new OwnerType({
+        code: OWNER_TYPE.AGENT,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -293,8 +272,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not require an authorization letter for a single owner', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.INDIVIDUAL,
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -302,6 +281,45 @@ describe('ApplicationSubmissionValidatorService', () => {
     const applicationSubmission = new ApplicationSubmission({
       owners: [mockOwner],
       primaryContactOwnerUuid: mockOwner.uuid,
+    });
+    mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+      new ApplicationParcel({
+        owners: [mockOwner],
+      }),
+    ]);
+
+    const res = await service.validateSubmission(applicationSubmission);
+
+    expect(
+      includesError(
+        res.errors,
+        new Error(`Application has no authorization letters`),
+      ),
+    ).toBe(false);
+  });
+
+  it('should not require an authorization letter when contact is goverment', async () => {
+    const mockOwner = new ApplicationOwner({
+      uuid: 'owner-uuid',
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
+      }),
+      firstName: 'Bruce',
+      lastName: 'Wayne',
+    });
+
+    const governmentOwner = new ApplicationOwner({
+      uuid: 'government-owner-uuid',
+      type: new OwnerType({
+        code: OWNER_TYPE.GOVERNMENT,
+      }),
+      firstName: 'Govern',
+      lastName: 'Ment',
+    });
+
+    const applicationSubmission = new ApplicationSubmission({
+      owners: [mockOwner, governmentOwner],
+      primaryContactOwnerUuid: governmentOwner.uuid,
     });
 
     const res = await service.validateSubmission(applicationSubmission);
@@ -317,8 +335,8 @@ describe('ApplicationSubmissionValidatorService', () => {
   it('should not have an authorization letter error when one is provided', async () => {
     const mockOwner = new ApplicationOwner({
       uuid: 'owner-uuid',
-      type: new ApplicationOwnerType({
-        code: APPLICATION_OWNER.INDIVIDUAL,
+      type: new OwnerType({
+        code: OWNER_TYPE.INDIVIDUAL,
       }),
       firstName: 'Bruce',
       lastName: 'Wayne',
@@ -330,7 +348,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.AUTHORIZATION_LETTER,
         }),
       }),
@@ -363,7 +381,7 @@ describe('ApplicationSubmissionValidatorService', () => {
   });
 
   it('should accept local government when its valid', async () => {
-    const mockLg = new ApplicationLocalGovernment({
+    const mockLg = new LocalGovernment({
       uuid: 'lg-uuid',
       name: 'lg',
       bceidBusinessGuid: 'CATS',
@@ -467,7 +485,7 @@ describe('ApplicationSubmissionValidatorService', () => {
 
   it('should report error for other document missing description', async () => {
     const incompleteDocument = new ApplicationDocument({
-      type: new ApplicationDocumentCode({
+      type: new DocumentCode({
         code: DOCUMENT_TYPE.OTHER,
       }),
       document: new Document({
@@ -497,17 +515,17 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: 1.5125,
-        nfuPurpose: 'VALID',
+        purpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
         nfuFillTypeDescription: 'VALID',
         nfuFillOriginDescription: 'VALID',
-        nfuTotalFillPlacement: 0.0,
+        nfuTotalFillArea: 0.0,
         nfuMaxFillDepth: 1.5125,
+        nfuAverageFillDepth: 1261.21,
         nfuFillVolume: 742.1,
-        nfuProjectDurationAmount: 12,
-        nfuProjectDurationUnit: 'VALID',
+        nfuProjectDuration: '1 day',
       });
 
       const res = await service.validateSubmission(application);
@@ -525,7 +543,7 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: 1.5125,
-        nfuPurpose: 'VALID',
+        purpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: false,
@@ -546,17 +564,16 @@ describe('ApplicationSubmissionValidatorService', () => {
       const application = new ApplicationSubmission({
         owners: [],
         nfuHectares: null,
-        nfuPurpose: 'VALID',
         nfuOutsideLands: 'VALID',
         nfuAgricultureSupport: 'VALID',
         nfuWillImportFill: true,
         nfuFillTypeDescription: 'VALID',
         nfuFillOriginDescription: null,
-        nfuTotalFillPlacement: 0.0,
+        nfuTotalFillArea: 0.0,
         nfuMaxFillDepth: 1.5125,
+        nfuAverageFillDepth: 121,
         nfuFillVolume: 742.1,
-        nfuProjectDurationAmount: 12,
-        nfuProjectDurationUnit: 'VALID',
+        nfuProjectDuration: '1 day',
         typeCode: 'NFUP',
       });
 
@@ -593,10 +610,8 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have an error when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyRemovedVolume: 5,
         soilAlreadyRemovedMaximumDepth: 5,
         soilToRemoveMaximumDepth: 5,
@@ -619,7 +634,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: null,
         soilToRemoveVolume: null,
         typeCode: 'ROSO',
@@ -636,24 +650,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOIDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'ROSO',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`ROSO Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`ROSO Proposal missing Application IDs`),
+          new Error(`ROSO Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -661,8 +670,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'ROSO',
       });
 
@@ -695,10 +703,8 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have errors when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyPlacedVolume: 5,
         soilAlreadyPlacedMaximumDepth: 5,
         soilToPlaceMaximumDepth: 5,
@@ -726,7 +732,6 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
         soilFillTypeToPlace: null,
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilToPlaceArea: null,
@@ -744,24 +749,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOI IDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'POFO',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`POFO Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`POFO Proposal missing Application IDs`),
+          new Error(`POFO Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -769,8 +769,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'POFO',
       });
 
@@ -803,10 +802,9 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should not have errors when base information is filled correctly', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
+        purpose: 'purpose',
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
-        soilHasPreviousALCAuthorization: false,
-        soilIsNOIFollowUp: false,
+        soilIsFollowUp: false,
         soilAlreadyPlacedVolume: 5,
         soilAlreadyPlacedMaximumDepth: 5,
         soilToPlaceMaximumDepth: 5,
@@ -834,7 +832,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should report errors when information is missing', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilPurpose: 'soilPurpose',
+        purpose: 'purpose',
         soilFillTypeToPlace: null,
         soilReduceNegativeImpacts: 'soilReduceNegativeImpacts',
         soilToPlaceArea: null,
@@ -852,24 +850,19 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
 
-    it('should require NOIDs and ApplicationIDs', async () => {
+    it('should require NOI IDs or ApplicationIDs', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'PFRS',
       });
 
       const res = await service.validateSubmission(application);
 
       expect(
-        includesError(res.errors, new Error(`PFRS Proposal missing NOI IDs`)),
-      ).toBe(true);
-
-      expect(
         includesError(
           res.errors,
-          new Error(`PFRS Proposal missing Application IDs`),
+          new Error(`PFRS Proposal missing Application or NOI IDs`),
         ),
       ).toBe(true);
     });
@@ -877,8 +870,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should complain about missing files', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         typeCode: 'PFRS',
       });
 
@@ -909,8 +901,7 @@ describe('ApplicationSubmissionValidatorService', () => {
     it('should require a notice of work for both mining and notice true', async () => {
       const application = new ApplicationSubmission({
         owners: [],
-        soilHasPreviousALCAuthorization: true,
-        soilIsNOIFollowUp: true,
+        soilIsFollowUp: true,
         soilIsExtractionOrMining: true,
         soilHasSubmittedNotice: true,
         typeCode: 'PFRS',
@@ -928,4 +919,497 @@ describe('ApplicationSubmissionValidatorService', () => {
       ).toBe(true);
     });
   });
+
+  describe('INCL Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'INCL',
+        inclImprovements: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal missing inclusion fields`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if submission is complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        applicant: 'applicant',
+        purpose: 'purpose',
+        typeCode: 'INCL',
+        inclImprovements: 'inclImprovements',
+        inclAgricultureSupport: 'inclAgricultureSupport',
+        inclExclHectares: 2,
+        inclGovernmentOwnsAllParcels: true,
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
+          type: new DocumentCode({
+            code: DOCUMENT_TYPE.PROPOSAL_MAP,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal missing inclusion fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proposal map / site plan`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require documents when government does not own all parcels', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: false,
+        typeCode: 'INCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of signage`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should note require documents when government owns all parcels', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: true,
+        typeCode: 'INCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing proof of signage`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`INCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(false);
+    });
+  });
+
+  describe('EXCL Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'EXCL',
+        prescribedBody: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal missing exclusion fields`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        applicant: 'applicant',
+        purpose: 'purpose',
+        typeCode: 'EXCL',
+        prescribedBody: 'inclImprovements',
+        exclShareGovernmentBorders: false,
+        inclExclHectares: 2,
+        exclWhyLand: 'exclWhyLand',
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROPOSAL_MAP,
+          type: new DocumentCode({
+            code: DOCUMENT_TYPE.PROPOSAL_MAP,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal missing inclusion fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proposal map / site plan`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require all documents', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'EXCL',
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of signage`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if all documents are provided', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        inclGovernmentOwnsAllParcels: true,
+        typeCode: 'EXCL',
+      });
+
+      const documents = [
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+          type: new DocumentCode({
+            code: DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+          }),
+        }),
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+          type: new DocumentCode({
+            code: DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+          }),
+        }),
+        new ApplicationDocument({
+          typeCode: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+          type: new DocumentCode({
+            code: DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+          }),
+        }),
+      ];
+      mockAppDocumentService.getApplicantDocuments.mockResolvedValue(documents);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of advertising`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing proof of signage`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`EXCL proposal is missing report of public hearing`),
+        ),
+      ).toBe(false);
+    });
+  });
+
+  describe('SUBD Applications', () => {
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: null,
+        subdAgricultureSupport: null,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdSuitability: 'subdSuitability',
+        subdAgricultureSupport: 'subdAgricultureSupport',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 0,
+            alrArea: null,
+            planNumbers: null,
+          },
+        ],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application is not complete`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD application has no proposed lots`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require homesite severance when set to true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdIsHomeSiteSeverance: true,
+        subdProposedLots: [],
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(
+            `SUBD declared homesite severance but does not have required document`,
+          ),
+        ),
+      ).toBe(true);
+    });
+
+    it('should accept matching parcel sizes', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should reject mismatched parcel sizes', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'SUBD',
+        subdProposedLots: [
+          {
+            type: 'Lot',
+            size: 4,
+            planNumbers: null,
+            alrArea: null,
+          },
+          {
+            type: 'Lot',
+            size: 6,
+            planNumbers: null,
+            alrArea: null,
+          },
+        ],
+      });
+
+      mockAppParcelService.fetchByApplicationFileId.mockResolvedValue([
+        new ApplicationParcel({
+          mapAreaHectares: 12,
+          owners: [],
+        }),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`SUBD parcels area is different from proposed lot area`),
+        ),
+      ).toBe(true);
+    });
+  });
+
+  describe('COVE Applications', () => {
+    beforeEach(() => {
+      mockCovenantTransfereeService.fetchBySubmissionUuid.mockResolvedValue([]);
+    });
+
+    it('should require basic fields to be complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveAreaImpacted: null,
+        coveFarmImpact: null,
+      });
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal missing covenant fields`),
+        ),
+      ).toBe(true);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is is missing covenant transferees`),
+        ),
+      ).toBe(true);
+    });
+
+    it('should be happy if basic fields are complete', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveAreaImpacted: 1.512,
+        coveFarmImpact: 'Farming impact',
+        coveHasDraft: false,
+      });
+      mockCovenantTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
+        new CovenantTransferee(),
+      ]);
+
+      const res = await service.validateSubmission(application);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal missing covenant fields`),
+        ),
+      ).toBe(false);
+
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is is missing covenant transferees`),
+        ),
+      ).toBe(false);
+    });
+
+    it('should require draft proposal when draft is true', async () => {
+      const application = new ApplicationSubmission({
+        owners: [],
+        typeCode: 'COVE',
+        coveHasDraft: true,
+      });
+
+      const res = await service.validateSubmission(application);
+      expect(
+        includesError(
+          res.errors,
+          new Error(`COVE proposal is missing draft proposal but has it true`),
+        ),
+      ).toBe(true);
+    });
+  });
 });
+``;

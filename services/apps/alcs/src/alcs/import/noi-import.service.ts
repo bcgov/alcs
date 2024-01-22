@@ -5,10 +5,11 @@ import * as timezone from 'dayjs/plugin/timezone';
 import * as utc from 'dayjs/plugin/utc';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ApplicationLocalGovernmentService } from '../application/application-code/application-local-government/application-local-government.service';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { BoardService } from '../board/board.service';
 import { CardService } from '../card/card.service';
-import { NoticeOfIntentDecisionService } from '../notice-of-intent-decision/notice-of-intent-decision.service';
+import { LocalGovernmentService } from '../local-government/local-government.service';
+import { NoticeOfIntentDecisionV1Service } from '../notice-of-intent-decision/notice-of-intent-decision-v1/notice-of-intent-decision-v1.service';
 import { NoticeOfIntentMeetingService } from '../notice-of-intent/notice-of-intent-meeting/notice-of-intent-meeting.service';
 import { NoticeOfIntentSubtype } from '../notice-of-intent/notice-of-intent-subtype.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
@@ -79,9 +80,9 @@ export class NoticeOfIntentImportService {
     private noticeOfIntentService: NoticeOfIntentService,
     private meetingService: NoticeOfIntentMeetingService,
     private boardService: BoardService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private cardService: CardService,
-    private noticeOfIntentDecisionService: NoticeOfIntentDecisionService,
+    private noticeOfIntentDecisionService: NoticeOfIntentDecisionV1Service,
   ) {}
 
   importNoiCsv() {
@@ -164,12 +165,12 @@ export class NoticeOfIntentImportService {
 
       const noticeOfIntent = await this.noticeOfIntentService.create(
         {
+          typeCode: '',
           fileNumber: mappedRow.fileNumber,
-          applicant: mappedRow.applicant || 'Unknown',
-          dateSubmittedToAlc: mappedRow.submittedToAlc.getTime(),
+          applicant: mappedRow.applicant || FALLBACK_APPLICANT_NAME,
+          dateSubmittedToAlc: mappedRow.submittedToAlc,
           localGovernmentUuid: localGovernment.uuid,
           regionCode: regionCode,
-          boardCode: 'noi',
         },
         vettingBoard,
       );
@@ -362,11 +363,12 @@ export class NoticeOfIntentImportService {
         {
           date: mappedRow.decisionReleased.getTime(),
           decisionMaker: 'CEO Delegate',
-          applicationFileNumber: mappedRow.fileNumber,
+          fileNumber: mappedRow.fileNumber,
           outcomeCode: mappedRow.outcome === 'Approved' ? 'APPR' : 'ONTP',
           resolutionNumber: resolutionNumber,
           resolutionYear: resolutionYear,
           auditDate: mappedRow.auditDate?.getTime(),
+          isDraft: false,
         },
         updatedApp,
         undefined,

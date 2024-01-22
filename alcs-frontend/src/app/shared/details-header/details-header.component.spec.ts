@@ -11,6 +11,7 @@ describe('DetailsHeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [DetailsHeaderComponent],
+      providers: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailsHeaderComponent);

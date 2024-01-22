@@ -9,15 +9,14 @@
     <div class="left">
       <h3 class="card-title">
         <span class="margin-right">{{ cardTitle }}</span>
+        <app-application-legacy-id [legacyId]="application.legacyId"></app-application-legacy-id>
         <app-application-type-pill [type]="application.type"></app-application-type-pill>
       </h3>
     </div>
     <div class="center">
       <button color="accent" [matMenuTriggerFor]="moreActions" mat-flat-button>More Actions ▾</button>
       <mat-menu xPosition="before" #moreActions="matMenu">
-        <button [mat-dialog-close]="isDirty" [routerLink]="['application', application.fileNumber]" mat-menu-item>
-          View Detail
-        </button>
+        <button [mat-dialog-close]="isDirty" (click)="goToDetailpage()" mat-menu-item>View Detail</button>
         <button
           [mat-dialog-close]="isDirty"
           [routerLink]="['application', application.fileNumber, 'info-request']"
@@ -36,11 +35,15 @@
     </div>
   </div>
   <div>
-    <span class="region">{{ application.localGovernment.name }} - {{ application.region.label }} Region</span>
+    <span class="region">{{ application.localGovernment?.name }} - {{ application.region?.label }} Region</span>
   </div>
   <div class="header-row">
     <div class="left">
       <app-time-tracker [data]="application"></app-time-tracker>
+      <app-application-submission-status-type-pill
+        *ngIf="status"
+        [type]="status"
+      ></app-application-submission-status-type-pill>
     </div>
     <div class="right">
       <button matTooltip="Move Board" [matMenuTriggerFor]="moveMenu" mat-icon-button>
@@ -53,7 +56,7 @@
               ><mat-icon *ngIf="board.isFavourite" class="favourite-board-icon">star</mat-icon>
             </span>
             <span>{{ board.title }}</span>
-            <span *ngIf="card && card!.board.code === board.code"
+            <span *ngIf="card && card!.boardCode === board.code"
               ><mat-icon class="selected-board-icon">check</mat-icon></span
             >
           </div>

@@ -1,40 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject, takeUntil } from 'rxjs';
+import { UserDto } from '../../services/authentication/authentication.dto';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import { CreateApplicationDialogComponent } from '../create-application-dialog/create-application-dialog.component';
+import { MOBILE_BREAKPOINT } from '../../shared/utils/breakpoints';
+import { CreateSubmissionDialogComponent } from '../create-submission-dialog/create-submission-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  public name = '';
-  public isLearnMoreOpen = false;
+export class HomeComponent implements OnInit, OnDestroy {
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
+  currentTabName: string = '';
+
+  $destroy = new Subject<void>();
+  isMobile = false;
+  profile: UserDto | undefined;
 
   constructor(
     private authenticationService: AuthenticationService,
     private dialog: MatDialog,
-    private spinnerService: OverlaySpinnerService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    const user = this.authenticationService.currentUser;
-    if (user) {
-      this.name = user.name;
-    }
+    this.route.params.subscribe((params) => {
+      this.currentTabName = params['submissionType'];
+    });
+
+    this.authenticationService.$currentProfile.pipe(takeUntil(this.$destroy)).subscribe((profile) => {
+      this.profile = profile;
+    });
+    this.isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
-  async onCreateApplication() {
-    this.dialog.open(CreateApplicationDialogComponent, {
+  ngOnDestroy(): void {
+    this.$destroy.next();
+    this.$destroy.complete();
+  }
+
+  async onCreateSubmission() {
+    this.dialog.open(CreateSubmissionDialogComponent, {
       panelClass: 'no-padding',
       disableClose: true,
       autoFocus: false,
     });
-  }
-
-  onLearnMoreClick() {
-    this.isLearnMoreOpen = !this.isLearnMoreOpen;
   }
 }

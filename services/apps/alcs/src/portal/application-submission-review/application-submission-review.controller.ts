@@ -6,27 +6,32 @@ import {
   Body,
   Controller,
   Get,
-  Logger,
   NotFoundException,
   Param,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { generateStatusHtml } from '../../../../../templates/emails/submission-status.template';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
+import { generateRFFGHtml } from '../../../../../templates/emails/refused-to-forward.template';
+import { generateINCMHtml } from '../../../../../templates/emails/returned-as-incomplete.template';
+import { generateSUBMApplicationHtml } from '../../../../../templates/emails/submitted-to-alc';
+import { generateREVGHtml } from '../../../../../templates/emails/under-review-by-lfng.template';
+import { generateWRNGHtml } from '../../../../../templates/emails/wrong-lfng.template';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { PARENT_TYPE } from '../../alcs/card/card-subtask/card-subtask.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
-import { EmailService } from '../../providers/email/email.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
-import { ApplicationOwner } from '../application-submission/application-owner/application-owner.entity';
-import { APPLICATION_STATUS } from '../application-submission/application-status/application-status.dto';
 import { ApplicationSubmissionValidatorService } from '../application-submission/application-submission-validator.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { APPLICATION_SUBMISSION_TYPES } from '../pdf-generation/generate-submission-document.service';
 import {
   ReturnApplicationSubmissionDto,
   UpdateApplicationSubmissionReviewDto,
@@ -36,18 +41,14 @@ import { ApplicationSubmissionReviewService } from './application-submission-rev
 @Controller('application-review')
 @UseGuards(PortalAuthGuard)
 export class ApplicationSubmissionReviewController {
-  private logger: Logger = new Logger(
-    ApplicationSubmissionReviewController.name,
-  );
-
   constructor(
     private applicationSubmissionService: ApplicationSubmissionService,
-    private applicationReviewService: ApplicationSubmissionReviewService,
+    private applicationSubmissionReviewService: ApplicationSubmissionReviewService,
     private applicationDocumentService: ApplicationDocumentService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationValidatorService: ApplicationSubmissionValidatorService,
-    private applicationService: ApplicationService,
-    private emailService: EmailService,
+    private statusEmailService: StatusEmailService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
   ) {}
 
   @Get('/:fileNumber')
@@ -67,18 +68,34 @@ export class ApplicationSubmissionReviewController {
       }
 
       const applicationReview =
-        await this.applicationReviewService.getByFileNumber(fileNumber);
-
-      if (applicationReview) {
-        return this.applicationReviewService.mapToDto(
-          applicationReview,
-          userLocalGovernment,
+        await this.applicationSubmissionReviewService.getByFileNumber(
+          fileNumber,
         );
+
+      if (
+        applicationReview.createdBy &&
+        applicationReview.createdBy.bceidBusinessGuid
+      ) {
+        const reviewGovernment = await this.localGovernmentService.getByGuid(
+          applicationReview.createdBy.bceidBusinessGuid,
+        );
+
+        if (reviewGovernment) {
+          return this.applicationSubmissionReviewService.mapToDto(
+            applicationReview,
+            reviewGovernment,
+          );
+        }
       }
+
+      return this.applicationSubmissionReviewService.mapToDto(
+        applicationReview,
+        userLocalGovernment,
+      );
     }
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(fileNumber);
+      await this.applicationSubmissionReviewService.getByFileNumber(fileNumber);
 
     const applicationSubmission =
       await this.applicationSubmissionService.getByFileNumber(
@@ -92,13 +109,8 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    if (
-      ![
-        APPLICATION_STATUS.SUBMITTED_TO_ALC,
-        APPLICATION_STATUS.REFUSED_TO_FORWARD,
-      ].includes(applicationSubmission.statusCode as APPLICATION_STATUS)
-    ) {
-      throw new NotFoundException('Failed to load review');
+    if (applicationSubmission.typeCode === APPLICATION_SUBMISSION_TYPES.TURP) {
+      throw new NotFoundException('Not subject to review');
     }
 
     const localGovernments = await this.localGovernmentService.list();
@@ -109,7 +121,7 @@ export class ApplicationSubmissionReviewController {
       throw new BaseServiceException('Failed to load Local Government');
     }
 
-    return this.applicationReviewService.mapToDto(
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       matchingGovernment,
     );
@@ -138,13 +150,13 @@ export class ApplicationSubmissionReviewController {
       );
     }
 
-    const applicationReview = await this.applicationReviewService.update(
-      fileNumber,
-      userLocalGovernment,
-      updateDto,
-    );
+    const applicationReview =
+      await this.applicationSubmissionReviewService.update(
+        fileNumber,
+        updateDto,
+      );
 
-    return this.applicationReviewService.mapToDto(
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       userLocalGovernment,
     );
@@ -162,71 +174,59 @@ export class ApplicationSubmissionReviewController {
         userLocalGovernment,
       );
 
-    const applicationReview = await this.applicationReviewService.startReview(
-      applicationSubmission,
-    );
+    const applicationReview =
+      await this.applicationSubmissionReviewService.startReview(
+        applicationSubmission,
+        req.user.entity,
+      );
 
     await this.applicationSubmissionService.updateStatus(
       applicationSubmission,
-      APPLICATION_STATUS.IN_REVIEW,
+      SUBMISSION_STATUS.IN_REVIEW_BY_LG,
     );
 
-    const primaryContact = applicationSubmission.owners.find(
+    const primaryContact = applicationSubmission.owners?.find(
       (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
     );
 
-    if (primaryContact && primaryContact.email) {
-      await this.sendStatusEmail(
+    if (primaryContact) {
+      await this.statusEmailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateREVGHtml,
+        status: SUBMISSION_STATUS.IN_REVIEW_BY_LG,
         applicationSubmission,
-        fileNumber,
-        userLocalGovernment,
+        government: userLocalGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
         primaryContact,
+      });
+    }
+
+    const creatingGuid = applicationSubmission.createdBy.bceidBusinessGuid;
+    const creatingGovernment = await this.localGovernmentService.getByGuid(
+      creatingGuid!,
+    );
+
+    if (
+      creatingGovernment?.uuid === applicationSubmission.localGovernmentUuid &&
+      primaryContact &&
+      primaryContact.type.code === OWNER_TYPE.GOVERNMENT
+    ) {
+      //Copy contact details over to government form when applying to self
+      await this.applicationSubmissionReviewService.update(
+        applicationSubmission.fileNumber,
+        {
+          firstName: primaryContact.firstName,
+          lastName: primaryContact.lastName,
+          email: primaryContact.email,
+          department: primaryContact.organizationName,
+          phoneNumber: primaryContact.phoneNumber,
+        },
       );
     }
 
-    return this.applicationReviewService.mapToDto(
+    return this.applicationSubmissionReviewService.mapToDto(
       applicationReview,
       userLocalGovernment,
     );
-  }
-
-  private async sendStatusEmail(
-    applicationSubmission: ApplicationSubmission,
-    fileNumber: string,
-    userLocalGovernment: ApplicationLocalGovernment,
-    primaryContact: ApplicationOwner,
-  ) {
-    if (primaryContact.email) {
-      const status = await this.applicationSubmissionService.getStatus(
-        APPLICATION_STATUS.IN_REVIEW,
-      );
-
-      const types = await this.applicationService.fetchApplicationTypes();
-      const matchingType = types.find(
-        (type) => type.code === applicationSubmission.typeCode,
-      );
-
-      const emailTemplate = generateStatusHtml({
-        fileNumber,
-        applicantName: applicationSubmission.applicant || 'Unknown',
-        applicationType:
-          matchingType?.portalLabel ?? matchingType?.label ?? 'Unknown',
-        governmentName: userLocalGovernment.name,
-        status: status.label,
-      });
-
-      this.emailService.sendEmail({
-        body: emailTemplate.html,
-        subject: `Agricultural Land Commission Application ID: ${fileNumber} (${
-          applicationSubmission.applicant || 'Unknown'
-        })`,
-        to: [primaryContact.email],
-      });
-    } else {
-      this.logger.warn(
-        'Cannot send status email, primary contact has no email',
-      );
-    }
   }
 
   @Post('/:fileNumber/finish')
@@ -242,7 +242,7 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(
+      await this.applicationSubmissionReviewService.getByFileNumber(
         application.fileNumber,
       );
 
@@ -254,37 +254,72 @@ export class ApplicationSubmissionReviewController {
       applicationReview.applicationFileNumber,
     );
 
-    const completedReview = this.applicationReviewService.verifyComplete(
-      applicationReview,
-      applicationDocuments,
-      userLocalGovernment.isFirstNation,
-    );
+    const completedReview =
+      this.applicationSubmissionReviewService.verifyComplete(
+        applicationReview,
+        applicationDocuments,
+        userLocalGovernment.isFirstNation,
+      );
 
     const validationResult =
       await this.applicationValidatorService.validateSubmission(application);
 
-    if (!validationResult.application) {
+    if (!validationResult.submission) {
       throw new BaseServiceException(
-        `Invalid application found during LG Submission ${application.fileNumber}`,
+        `Invalid application found during LG Submission ${
+          application.fileNumber
+        } ${validationResult.errors.toString()}`,
       );
     }
 
-    if (application.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    if (
+      application.status.statusTypeCode === SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      application.status.statusTypeCode === SUBMISSION_STATUS.RETURNED_TO_LG
+    ) {
       await this.applicationSubmissionService.submitToAlcs(
-        validationResult.application,
+        validationResult.submission,
         req.user.entity,
         completedReview,
       );
+
+      const primaryContact = application.owners?.find(
+        (owner) => owner.uuid === application.primaryContactOwnerUuid,
+      );
+
       if (completedReview.isAuthorized !== false) {
         await this.applicationSubmissionService.updateStatus(
           application,
-          APPLICATION_STATUS.SUBMITTED_TO_ALC,
+          SUBMISSION_STATUS.SUBMITTED_TO_ALC,
         );
+
+        if (primaryContact) {
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateSUBMApplicationHtml,
+            status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       } else {
         await this.applicationSubmissionService.updateStatus(
           application,
-          APPLICATION_STATUS.REFUSED_TO_FORWARD,
+          SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
         );
+
+        if (primaryContact) {
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateRFFGHtml,
+            status: SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+            applicationSubmission: application,
+            government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       }
     } else {
       throw new BaseServiceException('Application not in correct status');
@@ -308,7 +343,7 @@ export class ApplicationSubmissionReviewController {
       );
 
     const applicationReview =
-      await this.applicationReviewService.getByFileNumber(
+      await this.applicationSubmissionReviewService.getByFileNumber(
         applicationSubmission.fileNumber,
       );
 
@@ -316,7 +351,12 @@ export class ApplicationSubmissionReviewController {
       throw new ServiceNotFoundException('Failed to load application review');
     }
 
-    if (applicationSubmission.statusCode === APPLICATION_STATUS.IN_REVIEW) {
+    if (
+      applicationSubmission.status.statusTypeCode ===
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG ||
+      applicationSubmission.status.statusTypeCode ===
+        SUBMISSION_STATUS.RETURNED_TO_LG
+    ) {
       const documents = await this.applicationDocumentService.list(
         applicationSubmission.fileNumber,
       );
@@ -327,7 +367,7 @@ export class ApplicationSubmissionReviewController {
         await this.applicationDocumentService.delete(document);
       }
 
-      await this.applicationReviewService.delete(applicationReview);
+      await this.applicationSubmissionReviewService.delete(applicationReview);
 
       if (returnDto.applicantComment) {
         await this.applicationSubmissionService.update(
@@ -338,19 +378,77 @@ export class ApplicationSubmissionReviewController {
         );
       }
 
-      if (returnDto.reasonForReturn === 'incomplete') {
-        await this.applicationSubmissionService.updateStatus(
-          applicationSubmission,
-          APPLICATION_STATUS.INCOMPLETE,
+      // Clear future statuses
+      for (const status of [
+        SUBMISSION_STATUS.RETURNED_TO_LG,
+        SUBMISSION_STATUS.SUBMITTED_TO_LG,
+        SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+      ]) {
+        await this.applicationSubmissionStatusService.setStatusDate(
+          applicationSubmission.uuid,
+          status,
+          null,
         );
-      } else {
-        await this.applicationSubmissionService.updateStatus(
-          applicationSubmission,
-          APPLICATION_STATUS.WRONG_GOV,
-        );
+      }
+      await this.setReturnedStatus(returnDto, applicationSubmission);
+
+      const primaryContact = applicationSubmission.owners?.find(
+        (owner) => owner.uuid === applicationSubmission.primaryContactOwnerUuid,
+      );
+
+      if (primaryContact) {
+        if (returnDto.reasonForReturn === 'wrongGovernment') {
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateWRNGHtml,
+            status: SUBMISSION_STATUS.WRONG_GOV,
+            applicationSubmission,
+            government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+            primaryContact,
+          });
+        }
+
+        if (returnDto.reasonForReturn === 'incomplete') {
+          await this.statusEmailService.sendApplicationStatusEmail({
+            generateStatusHtml: generateINCMHtml,
+            status: SUBMISSION_STATUS.INCOMPLETE,
+            applicationSubmission,
+            government: userLocalGovernment,
+            parentType: PARENT_TYPE.APPLICATION,
+            primaryContact,
+            ccGovernment: true,
+          });
+        }
       }
     } else {
       throw new BaseServiceException('Application not in correct status');
+    }
+  }
+
+  private async setReturnedStatus(
+    returnDto: ReturnApplicationSubmissionDto,
+    applicationSubmission: ApplicationSubmission,
+  ) {
+    if (returnDto.reasonForReturn === 'incomplete') {
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.WRONG_GOV,
+        null,
+      );
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.INCOMPLETE,
+      );
+    } else {
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.INCOMPLETE,
+        null,
+      );
+      await this.applicationSubmissionService.updateStatus(
+        applicationSubmission,
+        SUBMISSION_STATUS.WRONG_GOV,
+      );
     }
   }
 

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ServiceValidationException } from '../../../../../../../../libs/common/src/exceptions/base.exception';
+import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionComponentLotService } from '../../../application-component-lot/application-decision-component-lot.service';
 import {
   APPLICATION_DECISION_COMPONENT_TYPE,
   CreateApplicationDecisionComponentDto,
@@ -13,11 +15,15 @@ export class ApplicationDecisionComponentService {
   constructor(
     @InjectRepository(ApplicationDecisionComponent)
     private componentRepository: Repository<ApplicationDecisionComponent>,
+    private componentLotService: ApplicationDecisionComponentLotService,
   ) {}
 
   async getOneOrFail(uuid: string) {
     return this.componentRepository.findOneOrFail({
       where: { uuid },
+      relations: {
+        lots: true,
+      },
     });
   }
 
@@ -43,11 +49,26 @@ export class ApplicationDecisionComponentService {
       component.agCapSource = updateDto.agCapSource;
       component.agCapMap = updateDto.agCapMap;
       component.agCapConsultant = updateDto.agCapConsultant;
+      component.endDate2 = updateDto.endDate2
+        ? new Date(updateDto.endDate2)
+        : null;
 
       this.patchNfuFields(component, updateDto);
       this.patchTurpFields(component, updateDto);
       this.patchPofoFields(component, updateDto);
       this.patchRosoFields(component, updateDto);
+      this.patchNaruFields(component, updateDto);
+
+      //SUBD
+      this.updateComponentLots(component, updateDto);
+
+      //INCL / EXCL
+      if (updateDto.inclExclApplicantType !== undefined) {
+        component.inclExclApplicantType = updateDto.inclExclApplicantType;
+        component.expiryDate = updateDto.expiryDate
+          ? new Date(updateDto.expiryDate)
+          : null;
+      }
 
       updatedComponents.push(component);
     }
@@ -57,6 +78,60 @@ export class ApplicationDecisionComponentService {
     }
 
     return updatedComponents;
+  }
+
+  private async updateComponentLots(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    if (updateDto.lots) {
+      if (updateDto.uuid) {
+        const lotsToRemove = component.lots
+          .filter((l1) => !updateDto.lots?.some((l2) => l1.uuid === l2.uuid))
+          .map((l) => l.uuid);
+
+        component.lots = component.lots.filter(
+          (l) => !lotsToRemove.includes(l.uuid),
+        );
+
+        updateDto.lots?.forEach((lot, index) => {
+          if (lot.uuid) {
+            const lotToUpdate = component.lots.find((e) => e.uuid === lot.uuid);
+            if (lotToUpdate) {
+              lotToUpdate.alrArea = lot.alrArea;
+              lotToUpdate.type = lot.type;
+              lotToUpdate.size = lot.size;
+            }
+          } else {
+            component.lots.push(
+              new ApplicationDecisionComponentLot({
+                componentUuid: updateDto.uuid,
+                alrArea: lot.alrArea,
+                size: lot.size,
+                type: lot.type,
+                index: index + 1,
+              }),
+            );
+          }
+        });
+
+        if (lotsToRemove.length > 0) {
+          await this.componentLotService.softRemove(lotsToRemove);
+        }
+      } else {
+        // this is a new component so it does not have lots and the lot is simply created
+        component.lots = updateDto.lots.map(
+          (e, index) =>
+            new ApplicationDecisionComponentLot({
+              componentUuid: updateDto.uuid,
+              alrArea: e.alrArea,
+              size: e.size,
+              type: e.type,
+              index: index + 1,
+            }),
+        );
+      }
+    }
   }
 
   private patchNfuFields(
@@ -105,6 +180,17 @@ export class ApplicationDecisionComponentService {
       updateDto.soilToRemoveAverageDepth ?? null;
   }
 
+  private patchNaruFields(
+    component: ApplicationDecisionComponent,
+    updateDto: CreateApplicationDecisionComponentDto,
+  ) {
+    component.endDate = updateDto.endDate ? new Date(updateDto.endDate) : null;
+    component.expiryDate = updateDto.expiryDate
+      ? new Date(updateDto.expiryDate)
+      : null;
+    component.naruSubtypeCode = updateDto.naruSubtypeCode;
+  }
+
   validate(
     componentsDto: CreateApplicationDecisionComponentDto[],
     isDraftDecision = false,
@@ -141,6 +227,9 @@ export class ApplicationDecisionComponentService {
 
   async softRemove(components: ApplicationDecisionComponent[]) {
     await this.componentRepository.softRemove(components);
+    components.forEach(
+      async (e) => await this.componentLotService.softRemoveBy(e.uuid),
+    );
   }
 
   async getAllByApplicationUuid(applicationUuid: string) {
@@ -199,6 +288,13 @@ export class ApplicationDecisionComponentService {
       ) {
         this.validatePofoDecisionComponentFields(component, errors);
         this.validateRosoDecisionComponentFields(component, errors);
+      }
+
+      if (
+        component.applicationDecisionComponentTypeCode ===
+        APPLICATION_DECISION_COMPONENT_TYPE.NARU
+      ) {
+        this.validateNaruDecisionComponentFields(component, errors);
       }
     }
 
@@ -260,6 +356,15 @@ export class ApplicationDecisionComponentService {
     }
     if (!component.soilToRemoveAverageDepth) {
       errors.push('Average Depth To Remove is required');
+    }
+  }
+
+  private validateNaruDecisionComponentFields(
+    component: CreateApplicationDecisionComponentDto,
+    errors: string[],
+  ) {
+    if (!component.naruSubtypeCode) {
+      errors.push('Residential Use Type is required');
     }
   }
 }

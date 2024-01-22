@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import {
   Column,
@@ -31,6 +31,33 @@ export class ApplicationReconsideration extends Base {
   submittedDate: Date;
 
   @AutoMap()
+  @Column({ type: 'timestamptz', nullable: true })
+  reviewDate: Date | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    nullable: true,
+    comment: 'Reconsideration description provided by ALCS staff',
+  })
+  description?: string;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  isNewProposal?: boolean;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  isIncorrectFalseInfo?: boolean;
+
+  @AutoMap(() => Boolean)
+  @Column({ type: 'boolean', nullable: true })
+  isNewEvidence?: boolean;
+
+  @AutoMap(() => ApplicationReconsiderationType)
   @ManyToOne(() => ApplicationReconsiderationType, {
     nullable: false,
   })
@@ -40,40 +67,57 @@ export class ApplicationReconsideration extends Base {
   @Column({ nullable: true, type: 'text' })
   reviewOutcomeCode?: string | null;
 
-  @AutoMap()
+  @AutoMap(() => ApplicationReconsiderationOutcomeType)
   @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
     nullable: true,
   })
   reviewOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
-  @Column({ type: 'timestamptz', nullable: true })
-  reviewDate: Date | null;
+  @Column({ nullable: true, type: 'text' })
+  decisionOutcomeCode?: string | null;
 
-  @AutoMap()
-  @ManyToOne(() => Application, { cascade: ['insert'] })
-  application: Application;
+  @AutoMap(() => ApplicationReconsiderationOutcomeType)
+  @ManyToOne(() => ApplicationReconsiderationOutcomeType, {
+    nullable: true,
+  })
+  decisionOutcome: ApplicationReconsiderationOutcomeType | null;
 
   @AutoMap()
   @Column({ type: 'uuid' })
   applicationUuid: string;
 
+  @AutoMap(() => Application)
+  @ManyToOne(() => Application, { cascade: ['insert'] })
+  application: Application;
+
   @AutoMap()
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string | null;
+
+  @AutoMap(() => Card)
   @OneToOne(() => Card, { cascade: true })
   @JoinColumn()
   @Type(() => Card)
   card: Card | null;
 
-  @AutoMap()
-  @Column({ type: 'uuid' })
-  cardUuid: string;
-
+  @AutoMap(() => [ApplicationDecision])
   @ManyToMany(() => ApplicationDecision, (decision) => decision.reconsideredBy)
   @JoinTable({
     name: 'application_reconsidered_decisions',
   })
   reconsidersDecisions: ApplicationDecision[];
 
+  @AutoMap(() => ApplicationDecision)
   @OneToOne(() => ApplicationDecision, (dec) => dec.reconsiders)
   resultingDecision?: ApplicationDecision;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_reconsideration_requests to alcs.application_reconsideration.',
+  })
+  oatsReconsiderationRequestId: number;
 }

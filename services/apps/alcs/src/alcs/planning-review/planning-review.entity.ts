@@ -8,9 +8,9 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
-import { ApplicationLocalGovernment } from '../application/application-code/application-local-government/application-local-government.entity';
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
 
 @Entity()
 export class PlanningReview extends Base {
@@ -36,8 +36,8 @@ export class PlanningReview extends Base {
   @Type(() => Card)
   card: Card;
 
-  @ManyToOne(() => ApplicationLocalGovernment)
-  localGovernment: ApplicationLocalGovernment;
+  @ManyToOne(() => LocalGovernment)
+  localGovernment: LocalGovernment;
 
   @Index()
   @Column({

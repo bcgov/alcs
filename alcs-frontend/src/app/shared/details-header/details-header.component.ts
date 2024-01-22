@@ -4,16 +4,23 @@ import { Subject } from 'rxjs';
 import { ApplicationTypeDto } from '../../services/application/application-code.dto';
 import { ApplicationModificationDto } from '../../services/application/application-modification/application-modification.dto';
 import { ApplicationReconsiderationDto } from '../../services/application/application-reconsideration/application-reconsideration.dto';
+import { DEFAULT_NO_STATUS } from '../../services/application/application-submission-status/application-submission-status.dto';
+import { ApplicationSubmissionStatusService } from '../../services/application/application-submission-status/application-submission-status.service';
 import { ApplicationDto } from '../../services/application/application.dto';
 import { CardDto } from '../../services/card/card.dto';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { NoticeOfIntentModificationDto } from '../../services/notice-of-intent/notice-of-intent-modification/notice-of-intent-modification.dto';
-import { NoticeOfIntentDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../services/notice-of-intent/notice-of-intent.dto';
+import { NotificationSubmissionStatusService } from '../../services/notification/notification-submission-status/notification-submission-status.service';
+import { NotificationDto } from '../../services/notification/notification.dto';
+import { ApplicationSubmissionStatusPill } from '../application-submission-status-type-pill/application-submission-status-type-pill.component';
 import {
   MODIFICATION_TYPE_LABEL,
   RECON_TYPE_LABEL,
   RETROACTIVE_TYPE_LABEL,
 } from '../application-type-pill/application-type-pill.constants';
+import { NoticeOfIntentSubmissionStatusService } from '../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { TimeTrackable } from '../time-tracker/time-tracker.component';
 
 @Component({
   selector: 'app-details-header[application]',
@@ -24,17 +31,31 @@ export class DetailsHeaderComponent {
   destroy = new Subject<void>();
 
   @Input() heading = 'Title Here';
-  @Input() types: ApplicationTypeDto[] = [];
   @Input() days = 'Calendar Days';
+  @Input() showStatus = false;
+  @Input() submissionStatusService?:
+    | ApplicationSubmissionStatusService
+    | NoticeOfIntentSubmissionStatusService
+    | NotificationSubmissionStatusService;
 
-  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined;
+  legacyId?: string;
 
-  @Input() set application(application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | undefined) {
+  _application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined;
+  types: ApplicationTypeDto[] | NoticeOfIntentTypeDto[] = [];
+  timeTrackable?: TimeTrackable;
+
+  @Input() set application(
+    application: ApplicationDto | CommissionerApplicationDto | NoticeOfIntentDto | NotificationDto | undefined
+  ) {
     if (application) {
       this._application = application;
 
       if ('retroactive' in application) {
         this.isNOI = true;
+      }
+
+      if ('pausedDays' in application) {
+        this.timeTrackable = application;
       }
 
       if ('type' in application) {
@@ -49,6 +70,26 @@ export class DetailsHeaderComponent {
       }
       if ('retroactive' in application) {
         this.showRetroLabel = !!application.retroactive;
+      }
+
+      if ('legacyId' in application) {
+        this.legacyId = application.legacyId;
+      }
+
+      if (this.showStatus && this.submissionStatusService) {
+        this.submissionStatusService
+          .fetchCurrentStatusByFileNumber(application.fileNumber, false)
+          .then((res) => {
+            this.currentStatus = {
+              label: res.status.label,
+              backgroundColor: res.status.alcsBackgroundColor,
+              textColor: res.status.alcsColor,
+            };
+          })
+          .catch((e) => {
+            console.warn(`No statuses for ${application.fileNumber}. Is it a manually created submission?`);
+            this.currentStatus = DEFAULT_NO_STATUS;
+          });
       }
     }
   }
@@ -77,11 +118,12 @@ export class DetailsHeaderComponent {
   showRetroLabel = false;
   linkedCards: (CardDto & { displayName: string })[] = [];
   isNOI = false;
+  currentStatus?: ApplicationSubmissionStatusPill;
 
   constructor(private router: Router) {}
 
   async onGoToCard(card: CardDto) {
-    const boardCode = card.board.code;
+    const boardCode = card.boardCode;
     const cardUuid = card.uuid;
     const cardTypeCode = card.type;
     await this.router.navigateByUrl(`/board/${boardCode}?card=${cardUuid}&type=${cardTypeCode}`);

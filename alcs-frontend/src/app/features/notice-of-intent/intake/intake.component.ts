@@ -41,7 +41,7 @@ export class IntakeComponent implements OnInit {
     const application = this.noticeOfIntent;
     if (application) {
       const update = await this.noticeOfIntentDetailService.update(application.fileNumber, {
-        [field]: value,
+        [field]: value ? parseFloat(value) : null,
       });
       if (update) {
         this.toastService.showSuccessToast('Notice of Intent updated');

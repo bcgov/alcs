@@ -16,12 +16,11 @@ export interface ReconsiderationTypeDto extends BaseCodeDto {
 
 export interface ReconsiderationReviewOutcomeTypeDto extends BaseCodeDto {}
 
-export interface ApplicationStatusTypeDto extends BaseCodeDto {}
-
 export interface ApplicationForReconsiderationDto {
   fileNumber: string;
   type: ApplicationTypeDto;
   applicant: string;
+  source: string;
   region: ApplicationRegionDto;
   localGovernment: ApplicationLocalGovernmentDto;
   decisionMeetings: ApplicationDecisionMeetingDto[];
@@ -42,8 +41,13 @@ export interface ApplicationReconsiderationDto {
   board: BoardSmallDto;
   reviewDate?: number;
   reviewOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
-  reconsideredDecisions: ApplicationDecisionDto[];
+  decisionOutcome?: ReconsiderationReviewOutcomeTypeDto | null;
+  reconsidersDecisions: ApplicationDecisionDto[];
   resultingDecision: ApplicationDecisionDto | null;
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }
 
 export interface ApplicationReconsiderationDetailedDto extends ApplicationReconsiderationDto {}
@@ -58,6 +62,10 @@ export interface CreateApplicationReconsiderationDto {
   reconTypeCode: string;
   boardCode: string;
   reconsideredDecisionUuids: string[];
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }
 
 export interface UpdateApplicationReconsiderationDto {
@@ -65,5 +73,10 @@ export interface UpdateApplicationReconsiderationDto {
   typeCode?: string | undefined;
   reviewDate?: number | null;
   reviewOutcomeCode?: string | null;
+  decisionOutcomeCode?: string | null;
   reconsideredDecisionUuids?: string[];
+  description?: string;
+  isNewProposal?: boolean | null;
+  isIncorrectFalseInfo?: boolean | null;
+  isNewEvidence?: boolean | null;
 }

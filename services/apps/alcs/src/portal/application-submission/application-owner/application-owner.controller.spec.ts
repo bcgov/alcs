@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -7,12 +7,14 @@ import { ClsService } from 'nestjs-cls';
 import { mockKeyCloakProviders } from '../../../../test/mocks/mockTypes';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
 import { ApplicationOwnerProfile } from '../../../common/automapper/application-owner.automapper.profile';
+import {
+  OWNER_TYPE,
+  OwnerType,
+} from '../../../common/owner-type/owner-type.entity';
 import { DocumentService } from '../../../document/document.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwnerController } from './application-owner.controller';
-import { APPLICATION_OWNER } from './application-owner.dto';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
@@ -255,6 +257,7 @@ describe('ApplicationOwnerController', () => {
   });
 
   it('should create a new owner when setting primary contact to third party agent that doesnt exist', async () => {
+    mockAppOwnerService.deleteNonParcelOwners.mockResolvedValue([]);
     mockAppOwnerService.create.mockResolvedValue(new ApplicationOwner());
     mockAppOwnerService.setPrimaryContact.mockResolvedValue();
     mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
@@ -262,7 +265,10 @@ describe('ApplicationOwnerController', () => {
     );
 
     await controller.setPrimaryContact(
-      { applicationSubmissionUuid: '' },
+      {
+        applicationSubmissionUuid: '',
+        type: OWNER_TYPE.AGENT,
+      },
       {
         user: {
           entity: {},
@@ -270,6 +276,7 @@ describe('ApplicationOwnerController', () => {
       },
     );
 
+    expect(mockAppOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.create).toHaveBeenCalledTimes(1);
     expect(mockAppOwnerService.setPrimaryContact).toHaveBeenCalledTimes(1);
     expect(
@@ -280,13 +287,13 @@ describe('ApplicationOwnerController', () => {
   it('should set the owner and delete agents when using a non-agent owner', async () => {
     mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
-        type: new ApplicationOwnerType({
-          code: APPLICATION_OWNER.INDIVIDUAL,
+        type: new OwnerType({
+          code: OWNER_TYPE.INDIVIDUAL,
         }),
       }),
     );
     mockAppOwnerService.setPrimaryContact.mockResolvedValue();
-    mockAppOwnerService.deleteAgents.mockResolvedValue({} as any);
+    mockAppOwnerService.deleteNonParcelOwners.mockResolvedValue({} as any);
     mockApplicationSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
@@ -304,14 +311,14 @@ describe('ApplicationOwnerController', () => {
     expect(
       mockApplicationSubmissionService.verifyAccessByUuid,
     ).toHaveBeenCalledTimes(1);
-    expect(mockAppOwnerService.deleteAgents).toHaveBeenCalledTimes(1);
+    expect(mockAppOwnerService.deleteNonParcelOwners).toHaveBeenCalledTimes(1);
   });
 
   it('should update the agent owner when calling set primary contact', async () => {
     mockAppOwnerService.getOwner.mockResolvedValue(
       new ApplicationOwner({
-        type: new ApplicationOwnerType({
-          code: APPLICATION_OWNER.AGENT,
+        type: new OwnerType({
+          code: OWNER_TYPE.AGENT,
         }),
       }),
     );

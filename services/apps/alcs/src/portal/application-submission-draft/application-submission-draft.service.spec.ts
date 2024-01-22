@@ -1,14 +1,17 @@
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { create } from 'handlebars';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
+import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
-import { ApplicationSubmissionDraftModule } from './application-submission-draft.module';
 import { ApplicationSubmissionDraftService } from './application-submission-draft.service';
 
 describe('ApplicationSubmissionDraftService', () => {
@@ -18,6 +21,8 @@ describe('ApplicationSubmissionDraftService', () => {
   let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockAppOwnerService: DeepMocked<ApplicationOwnerService>;
   let mockGenerateSubmissionDocumentService: DeepMocked<GenerateSubmissionDocumentService>;
+  let mockApplicationSubmissionStatusService: DeepMocked<ApplicationSubmissionStatusService>;
+  let mockTransfereeService: DeepMocked<CovenantTransfereeService>;
 
   beforeEach(async () => {
     mockSubmissionRepo = createMock();
@@ -25,6 +30,8 @@ describe('ApplicationSubmissionDraftService', () => {
     mockParcelService = createMock();
     mockAppOwnerService = createMock();
     mockGenerateSubmissionDocumentService = createMock();
+    mockApplicationSubmissionStatusService = createMock();
+    mockTransfereeService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -48,6 +55,14 @@ describe('ApplicationSubmissionDraftService', () => {
         {
           provide: GenerateSubmissionDocumentService,
           useValue: mockGenerateSubmissionDocumentService,
+        },
+        {
+          provide: ApplicationSubmissionStatusService,
+          useValue: mockApplicationSubmissionStatusService,
+        },
+        {
+          provide: CovenantTransfereeService,
+          useValue: mockTransfereeService,
         },
       ],
     }).compile();
@@ -83,15 +98,23 @@ describe('ApplicationSubmissionDraftService', () => {
 
     mockSubmissionRepo.save.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.update.mockResolvedValue([]);
+    const mockTransaction = jest.fn();
+    mockSubmissionRepo.manager.transaction = mockTransaction;
+    mockApplicationSubmissionStatusService.getCopiedStatuses.mockResolvedValue(
+      [],
+    );
 
     const draft = await service.getOrCreateDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(3);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.getCopiedStatuses,
+    ).toHaveBeenCalledTimes(1);
     expect(draft).toBeDefined();
   });
 
-  it('should delete a draft, attached parcels and owners', async () => {
+  it('should delete a draft, attached parcels, statuses, transferees and owners', async () => {
     mockSubmissionRepo.findOne.mockResolvedValue(
       new ApplicationSubmission({
         owners: [],
@@ -101,33 +124,63 @@ describe('ApplicationSubmissionDraftService', () => {
 
     mockSubmissionRepo.remove.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
+    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue(
+      {} as any,
+    );
+    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
+      new CovenantTransferee(),
+    ]);
+    mockTransfereeService.delete.mockResolvedValue({} as any);
 
     await service.deleteDraft('fileNumber');
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.remove).toHaveBeenCalledTimes(1);
+    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockTransfereeService.delete).toHaveBeenCalledTimes(1);
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.removeStatuses,
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('should load two submissions and save one as not draft when publishing', async () => {
     mockSubmissionRepo.findOne.mockResolvedValue(
       new ApplicationSubmission({
+        uuid: 'fake',
         owners: [],
         parcels: [],
       }),
     );
 
-    mockSubmissionRepo.remove.mockResolvedValue(new ApplicationSubmission());
+    mockSubmissionRepo.delete.mockResolvedValue({} as any);
     mockSubmissionRepo.save.mockResolvedValue(new ApplicationSubmission());
     mockParcelService.deleteMany.mockResolvedValueOnce([]);
     mockGenerateSubmissionDocumentService.generateUpdate.mockResolvedValue();
+    mockApplicationSubmissionStatusService.removeStatuses.mockResolvedValue(
+      {} as any,
+    );
+    mockTransfereeService.fetchBySubmissionUuid.mockResolvedValue([
+      new CovenantTransferee(),
+    ]);
+    mockTransfereeService.delete.mockResolvedValue({} as any);
 
     await service.publish('fileNumber', new User());
 
     expect(mockSubmissionRepo.findOne).toHaveBeenCalledTimes(2);
-    expect(mockSubmissionRepo.remove).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionRepo.delete).toHaveBeenCalledTimes(1);
+    expect(mockSubmissionRepo.delete).toBeCalledWith({ uuid: 'fake' });
+    expect(mockTransfereeService.fetchBySubmissionUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockTransfereeService.delete).toHaveBeenCalledTimes(1);
     expect(mockParcelService.deleteMany).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.save).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionStatusService.removeStatuses,
+    ).toHaveBeenCalledTimes(1);
     expect(mockSubmissionRepo.save.mock.calls[0][0].isDraft).toEqual(false);
     expect(
       mockGenerateSubmissionDocumentService.generateUpdate,

@@ -2,8 +2,8 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { Public, RoleGuard } from 'nest-keycloak-connect';
-import { MainService } from './main.service';
 import { HealthCheckDto } from './healthcheck/healthcheck.dto';
+import { MainService } from './main.service';
 
 @Controller()
 export class MainController {
@@ -15,9 +15,10 @@ export class MainController {
     return await this.appService.getHealthStatus();
   }
 
-  @Get('token')
+  // Portal/token is used by Portal and triggers maintenance mode, /token does not
+  @Get(['token', '/portal/token'])
   @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
-  //One place this should be RoleGuard as this is used by users without any roles
+  // The one place RoleGuard is used to handle users without roles
   @UseGuards(RoleGuard)
   adminRoute(): string {
     return 'Admin!';

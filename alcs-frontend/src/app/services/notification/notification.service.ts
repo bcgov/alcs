@@ -2,23 +2,81 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { NotificationDto } from './notification.dto';
+import { ToastService } from '../toast/toast.service';
+import { NotificationDto, UpdateNotificationDto } from './notification.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private http: HttpClient) {}
+  private url = `${environment.apiUrl}/notification`;
 
-  fetchMyNotifications() {
-    return firstValueFrom(this.http.get<NotificationDto[]>(`${environment.apiUrl}/notification`));
+  constructor(private http: HttpClient, private toastService: ToastService) {}
+
+  async fetchByCardUuid(id: string) {
+    try {
+      return await firstValueFrom(this.http.get<NotificationDto>(`${this.url}/card/${id}`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to fetch Notification');
+    }
+    return;
   }
 
-  markRead(uuid: string) {
-    return firstValueFrom(this.http.post<void>(`${environment.apiUrl}/notification/${uuid}`, {}));
+  async fetchByFileNumber(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.get<NotificationDto>(`${this.url}/${fileNumber}`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to fetch Notification');
+    }
+    return;
   }
 
-  markAllRead() {
-    return firstValueFrom(this.http.post<void>(`${environment.apiUrl}/notification`, {}));
+  async update(fileNumber: string, updateDto: UpdateNotificationDto) {
+    try {
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}`, updateDto));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to update Notification');
+      return undefined;
+    }
+  }
+
+  async searchByFileNumber(searchText: string) {
+    try {
+      return await firstValueFrom(this.http.get<NotificationDto[]>(`${this.url}/search/${searchText}`));
+    } catch (e) {
+      console.error(e);
+      this.toastService.showErrorToast('Failed to search Notifications');
+    }
+    return [];
+  }
+
+  async cancel(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/cancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to cancel Notification');
+    }
+    return;
+  }
+
+  async uncancel(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/uncancel`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to uncancel Notification');
+    }
+    return;
+  }
+
+  async resendResponse(fileNumber: string) {
+    try {
+      return await firstValueFrom(this.http.post<NotificationDto>(`${this.url}/${fileNumber}/resend`, {}));
+    } catch (e) {
+      this.toastService.showErrorToast('Failed to resend response for Notification');
+    }
+    return;
   }
 }

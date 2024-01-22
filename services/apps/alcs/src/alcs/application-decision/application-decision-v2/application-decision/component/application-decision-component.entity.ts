@@ -1,15 +1,15 @@
-import { AutoMap } from '@automapper/classes';
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { AutoMap } from 'automapper-classes';
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Base } from '../../../../../common/entities/base.entity';
+import { NaruSubtype } from '../../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ColumnNumericTransformer } from '../../../../../utils/column-numeric-transform';
+import { ApplicationDecisionComponentLot } from '../../../application-component-lot/application-decision-component-lot.entity';
+import { ApplicationDecisionConditionComponentPlanNumber } from '../../../application-decision-component-to-condition/application-decision-component-to-condition-plan-number.entity';
+import { ApplicationDecisionCondition } from '../../../application-decision-condition/application-decision-condition.entity';
 import { ApplicationDecision } from '../../../application-decision.entity';
 import { ApplicationDecisionComponentType } from './application-decision-component-type.entity';
 
 @Entity()
-@Index(['applicationDecisionComponentTypeCode', 'applicationDecisionUuid'], {
-  unique: true,
-  where: '"audit_deleted_date_at" is null',
-})
 export class ApplicationDecisionComponent extends Base {
   constructor(data?: Partial<ApplicationDecisionComponent>) {
     super();
@@ -22,8 +22,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the decision component',
   })
@@ -79,14 +79,21 @@ export class ApplicationDecisionComponent extends Base {
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` end date',
+    comment: 'Components end date',
     nullable: true,
   })
   endDate?: Date | null;
 
   @Column({
     type: 'timestamptz',
-    comment: 'Components` expiry date',
+    comment: 'Components second end date (PFRS only)',
+    nullable: true,
+  })
+  endDate2?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'Components expiry date',
     nullable: true,
   })
   expiryDate?: Date | null;
@@ -109,8 +116,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToPlaceArea: number | null;
@@ -153,8 +160,8 @@ export class ApplicationDecisionComponent extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
   })
   soilToRemoveArea: number | null;
@@ -179,6 +186,22 @@ export class ApplicationDecisionComponent extends Base {
   })
   soilToRemoveAverageDepth: number | null;
 
+  @AutoMap(() => String)
+  @Column({ nullable: true })
+  naruSubtypeCode: string | null;
+
+  @AutoMap()
+  @ManyToOne(() => NaruSubtype)
+  naruSubtype: NaruSubtype;
+
+  @AutoMap(() => String)
+  @Column({
+    nullable: true,
+    type: 'text',
+    comment: 'Stores the applicant type for inclusion and exclusion components',
+  })
+  inclExclApplicantType: string | null;
+
   @AutoMap()
   @Column({ nullable: false })
   applicationDecisionComponentTypeCode: string;
@@ -193,4 +216,36 @@ export class ApplicationDecisionComponent extends Base {
   @AutoMap()
   @ManyToOne(() => ApplicationDecision, { nullable: false })
   applicationDecision: ApplicationDecision;
+
+  @ManyToMany(
+    () => ApplicationDecisionCondition,
+    (condition) => condition.components,
+  )
+  conditions: ApplicationDecisionCondition[];
+
+  @AutoMap(() => [ApplicationDecisionComponentLot])
+  @OneToMany(() => ApplicationDecisionComponentLot, (lot) => lot.component, {
+    cascade: ['soft-remove', 'insert', 'update'],
+  })
+  lots: ApplicationDecisionComponentLot[];
+
+  @OneToMany(
+    () => ApplicationDecisionConditionComponentPlanNumber,
+    (c) => c.component,
+    {
+      cascade: ['insert', 'update'],
+    },
+  )
+  componentToConditions:
+    | ApplicationDecisionConditionComponentPlanNumber[]
+    | null;
+
+  @Column({
+    select: false,
+    nullable: true,
+    type: 'int8',
+    comment:
+      'This column is NOT related to any functionality in ALCS. It is only used for ETL and backtracking of imported data from OATS. It links oats.oats_alr_appl_components to alcs.application_decision_component.',
+  })
+  oatsAlrApplComponentId: number;
 }

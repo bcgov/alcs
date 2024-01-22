@@ -1,0 +1,10 @@
+<div class="applicant-info">
+  <div *ngIf="notification && submission">
+    <app-notification-details
+      [submission]="submission"
+      [fileNumber]="fileNumber"
+      [isSubmittedToAlc]="isSubmittedToAlc"
+      [showEdit]="true"
+    ></app-notification-details>
+  </div>
+</div>

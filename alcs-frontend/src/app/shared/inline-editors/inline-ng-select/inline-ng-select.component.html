@@ -1,0 +1,36 @@
+<div class="inline-number-wrapper">
+  <span class="left" *ngIf="!isEditing">
+    <a (click)="startEdit()" class="add" *ngIf="!value"> Select an option </a>
+    <a (click)="startEdit()" class="add" *ngIf="multiple && coerceArray(value)?.length === 0"> Select option(s) </a>
+    <span *ngIf="!multiple">
+      {{ value }}
+    </span>
+    <span *ngIf="multiple">
+      {{ coerceArray(value)?.join(', ') }}
+    </span>
+    <button *ngIf="value" class="edit-button" mat-icon-button (click)="startEdit()">
+      <mat-icon class="edit-icon">edit</mat-icon>
+    </button>
+  </span>
+  <div
+    class="editing"
+    [ngClass]="{
+      hidden: !isEditing
+    }"
+  >
+    <div appearance="outline">
+      <ng-select
+        appearance="outline"
+        [items]="options"
+        bindLabel="label"
+        bindValue="value"
+        placeholder="Select a value"
+        [(ngModel)]="pendingValue"
+      ></ng-select>
+    </div>
+    <div class="button-container">
+      <button mat-button (click)="cancelEdit()">CANCEL</button>
+      <button mat-button class="save" (click)="confirmEdit()">SAVE</button>
+    </div>
+  </div>
+</div>

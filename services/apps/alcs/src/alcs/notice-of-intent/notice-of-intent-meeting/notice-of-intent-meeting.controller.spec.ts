@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -80,14 +80,12 @@ describe('NoticeOfIntentMeetingController', () => {
   });
 
   it('should get all for notice of intent', async () => {
-    mockNoticeOfIntentMeetingService.getByAppFileNumber.mockResolvedValue([
+    mockNoticeOfIntentMeetingService.getByFileNumber.mockResolvedValue([
       mockMeeting,
     ]);
     const result = await controller.getAllForApplication('fake-number');
 
-    expect(mockNoticeOfIntentMeetingService.getByAppFileNumber).toBeCalledTimes(
-      1,
-    );
+    expect(mockNoticeOfIntentMeetingService.getByFileNumber).toBeCalledTimes(1);
     expect(result[0].uuid).toStrictEqual(mockMeeting.uuid);
   });
 
@@ -102,7 +100,7 @@ describe('NoticeOfIntentMeetingController', () => {
   });
 
   it('should create meeting if notice of intent exists', async () => {
-    mockNoticeOfIntentService.getOrFail.mockResolvedValue(mockNoi);
+    mockNoticeOfIntentService.getOrFailByUuid.mockResolvedValue(mockNoi);
     mockNoticeOfIntentMeetingService.create.mockResolvedValue(mockMeeting);
 
     const meetingToUpdate: CreateNoticeOfIntentMeetingDto = {

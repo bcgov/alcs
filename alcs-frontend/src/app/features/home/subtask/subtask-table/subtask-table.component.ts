@@ -6,6 +6,7 @@ import { AssigneeDto, UserDto } from '../../../../services/user/user.dto';
 import {
   COVENANT_TYPE_LABEL,
   MODIFICATION_TYPE_LABEL,
+  NOTIFICATION_LABEL,
   PLANNING_TYPE_LABEL,
   RECON_TYPE_LABEL,
 } from '../../../../shared/application-type-pill/application-type-pill.constants';
@@ -25,6 +26,7 @@ export class SubtaskTableComponent {
   PLANNING_TYPE_LABEL = PLANNING_TYPE_LABEL;
   COVENANT_TYPE_LABEL = COVENANT_TYPE_LABEL;
   RECON_TYPE_LABEL = RECON_TYPE_LABEL;
+  NOTIFICATION_LABEL = NOTIFICATION_LABEL;
 
   constructor(private router: Router, private cardSubtaskService: CardSubtaskService) {}
 
@@ -38,7 +40,7 @@ export class SubtaskTableComponent {
 
   async openCard(subtask: HomepageSubtaskDto) {
     await this.router.navigateByUrl(
-      `/board/${subtask.card.board.code}?card=${subtask.card.uuid}&type=${subtask.card.type}`
+      `/board/${subtask.card.boardCode}?card=${subtask.card.uuid}&type=${subtask.card.type}`
     );
   }
 

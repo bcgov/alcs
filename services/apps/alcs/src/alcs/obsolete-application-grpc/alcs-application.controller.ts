@@ -1,6 +1,6 @@
 import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
-import { ApplicationService } from '../application/application.service';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { ApplicationFileNumberGenerateGrpcResponse } from './alcs-application.message.interface';
 import {
   AlcsApplicationService,
@@ -11,7 +11,7 @@ import {
 export class ApplicationGrpcController implements AlcsApplicationService {
   private logger = new Logger(ApplicationGrpcController.name);
 
-  constructor(private applicationService: ApplicationService) {}
+  constructor(private fileNumberService: FileNumberService) {}
 
   @GrpcMethod(GRPC_APPLICATION_SERVICE_NAME, 'generateFileNumber')
   async generateFileNumber(
@@ -19,7 +19,7 @@ export class ApplicationGrpcController implements AlcsApplicationService {
     ApplicationFileNumberGenerateGrpcRequest: any,
   ): Promise<ApplicationFileNumberGenerateGrpcResponse> {
     return {
-      fileNumber: await this.applicationService.generateNextFileNumber(),
+      fileNumber: await this.fileNumberService.generateNextFileNumber(),
     };
   }
 }

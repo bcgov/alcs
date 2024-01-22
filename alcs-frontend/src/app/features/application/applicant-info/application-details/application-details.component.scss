@@ -1,6 +1,12 @@
 @use '../../../../../styles/colors';
 
 :host::ng-deep {
+  .multiple-documents {
+    a {
+      display: block;
+    }
+  }
+
   .view-grid-item {
     display: grid;
     grid-template-columns: minmax(100px, 0.5fr) 1fr;
@@ -52,8 +58,7 @@
 
   .other-attachments {
     display: grid;
-    grid-template-columns: max-content max-content max-content;
-    overflow-x: auto;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 36px;
     grid-row-gap: 12px;
 
@@ -64,7 +69,7 @@
 
   .adjacent-parcels {
     display: grid;
-    grid-template-columns: max-content max-content max-content;
+    grid-template-columns: 1fr 1fr 2fr;
     overflow-x: auto;
     grid-column-gap: 36px;
     grid-row-gap: 12px;

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity } from 'typeorm';
 import { BaseCodeEntity } from '../../../common/entities/base.code.entity';
 
@@ -10,6 +10,7 @@ export enum CARD_TYPE {
   COV = 'COV',
   NOI = 'NOI',
   NOI_MODI = 'NOIM',
+  NOTIFICATION = 'NOTI',
 }
 
 @Entity()

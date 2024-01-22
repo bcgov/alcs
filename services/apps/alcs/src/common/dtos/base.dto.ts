@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export abstract class BaseCodeDto {

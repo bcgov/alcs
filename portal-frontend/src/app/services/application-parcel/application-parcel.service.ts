@@ -1,16 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DOCUMENT_SOURCE, DOCUMENT_TYPE } from '../../shared/dto/document.dto';
 import { OverlaySpinnerService } from '../../shared/overlay-spinner/overlay-spinner.service';
-import {
-  ApplicationDocumentDto,
-  DOCUMENT_SOURCE,
-  DOCUMENT_TYPE,
-} from '../application-document/application-document.dto';
+import { ApplicationDocumentDto } from '../application-document/application-document.dto';
 import { DocumentService } from '../document/document.service';
 import { ToastService } from '../toast/toast.service';
-import { ApplicationParcelDto, ApplicationParcelUpdateDto, PARCEL_TYPE } from './application-parcel.dto';
+import { ApplicationParcelDto, ApplicationParcelUpdateDto } from './application-parcel.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -37,12 +34,11 @@ export class ApplicationParcelService {
     return undefined;
   }
 
-  async create(applicationSubmissionUuid: string, parcelType?: PARCEL_TYPE, ownerUuid?: string) {
+  async create(applicationSubmissionUuid: string, ownerUuid?: string) {
     try {
       return await firstValueFrom(
         this.httpClient.post<ApplicationParcelDto>(`${this.serviceUrl}`, {
           applicationSubmissionUuid,
-          parcelType,
           ownerUuid,
         })
       );
@@ -88,6 +84,9 @@ export class ApplicationParcelService {
       this.toastService.showSuccessToast('Document uploaded');
       return document;
     } catch (e) {
+      if (e instanceof HttpErrorResponse && e.status === 403) {
+        throw e;
+      }
       console.error(e);
       this.toastService.showErrorToast('Failed to attach document to Parcel, please try again');
     }

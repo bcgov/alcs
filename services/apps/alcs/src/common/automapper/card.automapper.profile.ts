@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import {
   CardStatusDto,
@@ -36,6 +36,10 @@ export class CardProfile extends AutomapperProfile {
         forMember(
           (cd) => cd.createdAt,
           mapFrom((c) => c.createdAt.getTime()),
+        ),
+        forMember(
+          (cd) => cd.boardCode,
+          mapFrom((c) => c.board?.code),
         ),
         forMember(
           (ad) => ad.assignee,

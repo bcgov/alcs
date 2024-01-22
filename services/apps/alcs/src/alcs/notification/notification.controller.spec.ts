@@ -1,20 +1,33 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
-import { NotificationProfile } from '../../common/automapper/notification.automapper.profile';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { NotificationSubmissionService } from '../../portal/notification-submission/notification-submission.service';
+import { User } from '../../user/user.entity';
+import { NotificationDocumentService } from './notification-document/notification-document.service';
+import { NOTIFICATION_STATUS } from './notification-submission-status/notification-status.dto';
+import { NotificationSubmissionStatusService } from './notification-submission-status/notification-submission-status.service';
 import { NotificationController } from './notification.controller';
-import { NotificationService } from './notification.service';
 import { Notification } from './notification.entity';
+import { NotificationService } from './notification.service';
 
 describe('NotificationController', () => {
   let controller: NotificationController;
-  let notificationService: DeepMocked<NotificationService>;
+  let mockService: DeepMocked<NotificationService>;
+  let mockSubmissionStatusService: DeepMocked<NotificationSubmissionStatusService>;
+  let mockSubmissionService: DeepMocked<NotificationSubmissionService>;
+  let mockDocumentService: DeepMocked<NotificationDocumentService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   beforeEach(async () => {
-    notificationService = createMock<NotificationService>();
+    mockService = createMock();
+    mockSubmissionStatusService = createMock();
+    mockSubmissionService = createMock();
+    mockDocumentService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -24,14 +37,29 @@ describe('NotificationController', () => {
       ],
       controllers: [NotificationController],
       providers: [
-        NotificationProfile,
+        {
+          provide: NotificationService,
+          useValue: mockService,
+        },
+        {
+          provide: NotificationSubmissionStatusService,
+          useValue: mockSubmissionStatusService,
+        },
+        {
+          provide: NotificationDocumentService,
+          useValue: mockDocumentService,
+        },
+        {
+          provide: NotificationSubmissionService,
+          useValue: mockSubmissionService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
+        },
         {
           provide: ClsService,
           useValue: {},
-        },
-        {
-          provide: NotificationService,
-          useValue: notificationService,
         },
         ...mockKeyCloakProviders,
       ],
@@ -44,94 +72,83 @@ describe('NotificationController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should map createdAt to number for getAll', async () => {
-    const date = new Date();
-    notificationService.list.mockResolvedValue([
-      {
-        createdAt: date,
-      } as Notification,
-    ]);
+  it('should call through to service for get', async () => {
+    mockService.getByFileNumber.mockResolvedValue(new Notification());
+    mockService.mapToDtos.mockResolvedValue([]);
+    mockTrackingService.trackView.mockResolvedValue();
 
-    const res = await controller.getMyNotifications({
+    await controller.get('fileNumber', {
       user: {
-        entity: {
-          uuid: 'fake-user',
-        },
+        entity: new User(),
       },
     });
 
-    expect(res.length).toEqual(1);
-    expect(res[0].createdAt).toEqual(date.getTime());
-    expect(notificationService.list).toHaveBeenCalledTimes(1);
-    expect(notificationService.list.mock.calls[0][0]).toEqual('fake-user');
+    expect(mockService.getByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
-  it('should default list to empty array when no user', async () => {
-    notificationService.list.mockResolvedValue([]);
+  it('should call through to service for search', async () => {
+    mockService.searchByFileNumber.mockResolvedValue([new Notification()]);
+    mockService.mapToDtos.mockResolvedValue([]);
 
-    const res = await controller.getMyNotifications({
-      user: { entity: {} },
-    });
+    await controller.search('fileNumber');
 
-    expect(res).toEqual([]);
-    expect(notificationService.list).not.toHaveBeenCalled();
+    expect(mockService.searchByFileNumber).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call into service for markReadAll', async () => {
-    notificationService.markAllRead.mockResolvedValue({} as any);
+  it('should call through to service for update', async () => {
+    mockService.update.mockResolvedValue(new Notification());
+    mockService.mapToDtos.mockResolvedValue([]);
 
-    await controller.markAllRead({
+    await controller.update({}, 'fileNumber', {
       user: {
-        entity: {
-          uuid: 'fake-user',
-        },
+        entity: new User(),
       },
     });
 
-    expect(notificationService.markAllRead).toHaveBeenCalledTimes(1);
-    expect(notificationService.markAllRead.mock.calls[0][0]).toEqual(
-      'fake-user',
-    );
+    expect(mockService.update).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should call into service for markRead', async () => {
-    notificationService.get.mockResolvedValue({} as Notification);
-    notificationService.markRead.mockResolvedValue({} as any);
+  it('should call through to service for get card', async () => {
+    mockService.getByCardUuid.mockResolvedValue(new Notification());
+    mockService.mapToDtos.mockResolvedValue([]);
 
-    await controller.markRead(
-      {
-        user: {
-          entity: {
-            uuid: 'fake-user',
-          },
-        },
-      },
-      'fake-notification',
-    );
+    await controller.getByCard('uuid');
 
-    expect(notificationService.markRead).toHaveBeenCalledTimes(1);
-    expect(notificationService.markRead.mock.calls[0][0]).toEqual(
-      'fake-notification',
-    );
+    expect(mockService.getByCardUuid).toHaveBeenCalledTimes(1);
+    expect(mockService.mapToDtos).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw an exception when notification is not found', async () => {
-    notificationService.get.mockResolvedValue(null);
-    notificationService.markRead.mockResolvedValue({} as any);
+  it('should call through to submission service for cancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
 
-    await expect(
-      controller.markRead(
-        {
-          user: {
-            entity: {
-              uuid: 'fake-user',
-            },
-          },
-        },
-        'fake-notification',
-      ),
-    ).rejects.toMatchObject(new Error(`Failed to find notification`));
+    await controller.cancel('file-number');
 
-    expect(notificationService.markRead).not.toHaveBeenCalled();
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOTIFICATION_STATUS.CANCELLED);
+  });
+
+  it('should call through to submission service for uncancel', async () => {
+    mockSubmissionStatusService.setStatusDateByFileNumber.mockResolvedValue(
+      {} as any,
+    );
+
+    await controller.uncancel('file-number');
+
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockSubmissionStatusService.setStatusDateByFileNumber,
+    ).toHaveBeenCalledWith('file-number', NOTIFICATION_STATUS.CANCELLED, null);
   });
 });

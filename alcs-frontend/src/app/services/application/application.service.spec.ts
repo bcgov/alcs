@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of, throwError } from 'rxjs';
+import { SYSTEM_SOURCE_TYPES } from '../../shared/dto/system-source.types.dto';
 import { ToastService } from '../toast/toast.service';
 import { ApplicationDto } from './application.dto';
 
@@ -14,6 +15,7 @@ describe('ApplicationService', () => {
 
   const mockApplication: ApplicationDto = {
     uuid: '',
+    hideFromPortal: false,
     activeDays: 0,
     applicant: '',
     dateSubmittedToAlc: 0,
@@ -23,6 +25,7 @@ describe('ApplicationService', () => {
       uuid: '',
       name: '',
       preferredRegionCode: '',
+      isFirstNation: false,
     },
     paused: false,
     pausedDays: 0,
@@ -38,9 +41,9 @@ describe('ApplicationService', () => {
       shortLabel: '',
       backgroundColor: '',
       textColor: '',
+      requiresGovernmentReview: false,
     },
-    statusHistory: [],
-    source: 'ALCS',
+    source: SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(() => {
@@ -78,7 +81,7 @@ describe('ApplicationService', () => {
             code: 'region',
           },
         ],
-      })
+      }),
     );
   });
 
@@ -134,7 +137,7 @@ describe('ApplicationService', () => {
     httpClient.post.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -166,7 +169,7 @@ describe('ApplicationService', () => {
     httpClient.patch.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     try {
@@ -193,7 +196,7 @@ describe('ApplicationService', () => {
     httpClient.patch.mockReturnValueOnce(
       throwError(() => {
         new Error('');
-      })
+      }),
     );
 
     const res = await service.updateApplicationCard('1', {});

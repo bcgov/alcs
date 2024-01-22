@@ -1,5 +1,5 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   BadRequestException,
   Body,
@@ -17,6 +17,8 @@ import * as config from 'config';
 import { ANY_AUTH_ROLE } from '../../../../common/authorization/roles';
 import { RolesGuard } from '../../../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../../../common/authorization/roles.decorator';
+import { NaruSubtypeDto } from '../../../../portal/application-submission/application-submission.dto';
+import { NaruSubtype } from '../../../../portal/application-submission/naru-subtype/naru-subtype.entity';
 import { ApplicationService } from '../../../application/application.service';
 import { ApplicationCeoCriterionCode } from '../../application-ceo-criterion/application-ceo-criterion.entity';
 import { ApplicationDecisionConditionType } from '../../application-decision-condition/application-decision-condition-code.entity';
@@ -32,13 +34,11 @@ import {
   ApplicationDecisionDto,
   ApplicationDecisionOutcomeCodeDto,
   CreateApplicationDecisionDto,
-  LinkedResolutionOutcomeTypeDto,
   UpdateApplicationDecisionDto,
 } from './application-decision.dto';
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import { ApplicationDecisionComponentType } from './component/application-decision-component-type.entity';
 import { ApplicationDecisionComponentTypeDto } from './component/application-decision-component.dto';
-import { LinkedResolutionOutcomeType } from './linked-resolution-outcome-type.entity';
 
 @ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('application-decision')
@@ -57,9 +57,8 @@ export class ApplicationDecisionV2Controller {
   async getByFileNumber(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationDecisionDto[]> {
-    const decisions = await this.appDecisionService.getByAppFileNumber(
-      fileNumber,
-    );
+    const decisions =
+      await this.appDecisionService.getByAppFileNumber(fileNumber);
 
     return await this.mapper.mapArrayAsync(
       decisions,
@@ -98,10 +97,10 @@ export class ApplicationDecisionV2Controller {
         ApplicationDecisionConditionType,
         ApplicationDecisionConditionTypeDto,
       ),
-      linkedResolutionOutcomeTypes: await this.mapper.mapArrayAsync(
-        codes.linkedResolutionOutcomeType,
-        LinkedResolutionOutcomeType,
-        LinkedResolutionOutcomeTypeDto,
+      naruSubtypes: await this.mapper.mapArrayAsync(
+        codes.naruSubtypes,
+        NaruSubtype,
+        NaruSubtypeDto,
       ),
     };
   }
@@ -146,6 +145,7 @@ export class ApplicationDecisionV2Controller {
       application,
       modification,
       reconsiders,
+      createDto.decisionToCopy,
     );
 
     return this.mapper.mapAsync(
@@ -191,6 +191,7 @@ export class ApplicationDecisionV2Controller {
       modifies,
       reconsiders,
     );
+
     return this.mapper.mapAsync(
       updatedDecision,
       ApplicationDecision,
@@ -222,15 +223,27 @@ export class ApplicationDecisionV2Controller {
     };
   }
 
+  @Patch('/:uuid/file/:documentUuid')
+  @UserRoles(...ANY_AUTH_ROLE)
+  async updateDocument(
+    @Param('uuid') decisionUuid: string,
+    @Param('documentUuid') documentUuid: string,
+    @Body() body: { fileName: string },
+  ) {
+    await this.appDecisionService.updateDocument(documentUuid, body.fileName);
+    return {
+      uploaded: true,
+    };
+  }
+
   @Get('/:uuid/file/:fileUuid/download')
   @UserRoles(...ANY_AUTH_ROLE)
   async getDownloadUrl(
     @Param('uuid') decisionUuid: string,
     @Param('fileUuid') documentUuid: string,
   ) {
-    const downloadUrl = await this.appDecisionService.getDownloadUrl(
-      documentUuid,
-    );
+    const downloadUrl =
+      await this.appDecisionService.getDownloadUrl(documentUuid);
     return {
       url: downloadUrl,
     };

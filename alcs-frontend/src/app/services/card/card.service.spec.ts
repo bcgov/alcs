@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { firstValueFrom, of, throwError } from 'rxjs';
+import { CardType } from '../../shared/card/card.component';
 import { ToastService } from '../toast/toast.service';
 import { CardService } from './card.service';
 
@@ -47,7 +48,7 @@ describe('CardService', () => {
       boardCode: '',
       highPriority: false,
       statusCode: '',
-      typeCode: '',
+      typeCode: CardType.APP,
       uuid: '',
     });
 
@@ -66,7 +67,7 @@ describe('CardService', () => {
       boardCode: '',
       highPriority: false,
       statusCode: '',
-      typeCode: '',
+      typeCode: CardType.NOI_MODI,
       uuid: '',
     });
 

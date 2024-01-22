@@ -1,0 +1,16 @@
+<h2 class="heading">Notification ID: {{ fileId }} Submitted!</h2>
+<p>
+  <span class="subheading1">
+    You have submitted a <strong>Notification of {{ appLabel }}</strong> to the <strong>Agricultural Land Commission</strong> for their
+    review and response.</span
+  >
+  <br /><br /><br />
+  The Primary Contact will receive an automated email shortly containing an attached PDF response which must be appended
+  as an additional document to the LTSA SRW application package.<br /><br />
+  If the email is not received within an hour, please email your SRW ID to
+  <a href="mailto:ALC.Portal@gov.bc.ca">ALC.Portal@gov.bc.ca</a> request assistance.
+</p>
+<div class="buttons">
+  <button [routerLink]="'/notification/' + fileId" mat-flat-button color="primary">View Submission</button>
+  <button routerLink="/home" mat-stroked-button color="primary">Return to inbox</button>
+</div>

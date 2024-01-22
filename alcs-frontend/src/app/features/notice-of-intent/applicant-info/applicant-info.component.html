@@ -1,0 +1,11 @@
+<div class="applicant-info">
+  <div *ngIf="noticeOfIntent && submission">
+    <app-noi-details
+      [submission]="submission"
+      [fileNumber]="fileNumber"
+      [noiType]="noticeOfIntent.type.code"
+      [isSubmittedToAlc]="isSubmittedToAlc"
+      [showEdit]="true"
+    ></app-noi-details>
+  </div>
+</div>

@@ -2,13 +2,19 @@ import { BaseServiceException } from '@app/common/exceptions/base.exception';
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
 import { User } from '../../user/user.entity';
 import { ApplicationOwnerService } from '../application-submission/application-owner/application-owner.service';
 import { ApplicationParcelUpdateDto } from '../application-submission/application-parcel/application-parcel.dto';
 import { ApplicationParcelService } from '../application-submission/application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission/application-submission.service';
-import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
+import { CovenantTransferee } from '../application-submission/covenant-transferee/covenant-transferee.entity';
+import { CovenantTransfereeService } from '../application-submission/covenant-transferee/covenant-transferee.service';
+import {
+  APPLICATION_SUBMISSION_TYPES,
+  GenerateSubmissionDocumentService,
+} from '../pdf-generation/generate-submission-document.service';
 
 @Injectable()
 export class ApplicationSubmissionDraftService {
@@ -21,6 +27,8 @@ export class ApplicationSubmissionDraftService {
     private applicationParcelService: ApplicationParcelService,
     private applicationOwnerService: ApplicationOwnerService,
     private generateSubmissionDocumentService: GenerateSubmissionDocumentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
+    private covenantTransfereeService: CovenantTransfereeService,
   ) {}
 
   async getOrCreateDraft(fileNumber: string) {
@@ -40,6 +48,7 @@ export class ApplicationSubmissionDraftService {
         isDraft: true,
       },
       relations: {
+        naruSubtype: true,
         owners: {
           type: true,
           corporateSummary: {
@@ -61,7 +70,7 @@ export class ApplicationSubmissionDraftService {
           isDraft: false,
         },
         relations: {
-          status: true,
+          naruSubtype: true,
           owners: {
             type: true,
           },
@@ -78,7 +87,7 @@ export class ApplicationSubmissionDraftService {
       );
     }
 
-    const newReview = new ApplicationSubmission({
+    const newSubmission = new ApplicationSubmission({
       ...originalSubmission,
       uuid: undefined,
       auditCreatedAt: undefined,
@@ -87,8 +96,20 @@ export class ApplicationSubmissionDraftService {
       parcels: [],
       owners: [],
     });
-    const savedSubmission = await this.applicationSubmissionRepository.save(
-      newReview,
+    const savedSubmission =
+      await this.applicationSubmissionRepository.save(newSubmission);
+    const statuses =
+      await this.applicationSubmissionStatusService.getCopiedStatuses(
+        originalSubmission.uuid,
+        newSubmission.uuid,
+      );
+
+    await this.applicationSubmissionRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        await transactionalEntityManager.save(newSubmission);
+
+        await transactionalEntityManager.save(statuses);
+      },
     );
 
     const ownerUuidMap = new Map<string, string>();
@@ -113,7 +134,6 @@ export class ApplicationSubmissionDraftService {
     for (const parcel of originalSubmission.parcels) {
       const savedParcel = await this.applicationParcelService.create(
         savedSubmission.uuid,
-        parcel.parcelType,
       );
       updateDtos.push({
         ...parcel,
@@ -150,6 +170,10 @@ export class ApplicationSubmissionDraftService {
       );
     }
 
+    if (originalSubmission.typeCode === APPLICATION_SUBMISSION_TYPES.COVE) {
+      await this.copyTransferees(originalSubmission, newSubmission);
+    }
+
     this.logger.debug(`Draft Created for File Number ${fileNumber}`);
 
     const submission = await this.getDraft(fileNumber);
@@ -175,6 +199,7 @@ export class ApplicationSubmissionDraftService {
       relations: {
         owners: true,
         parcels: true,
+        createdBy: true,
       },
     });
 
@@ -188,10 +213,19 @@ export class ApplicationSubmissionDraftService {
     for (const owner of original.owners) {
       await this.applicationOwnerService.delete(owner);
     }
+
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(original.uuid);
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.delete(transferee);
+    }
+
     const parcelUuids = original.parcels.map((parcel) => parcel.uuid);
     await this.applicationParcelService.deleteMany(parcelUuids);
-    await this.applicationSubmissionRepository.remove(original);
+    await this.applicationSubmissionStatusService.removeStatuses(original.uuid);
+    await this.applicationSubmissionRepository.delete({ uuid: original.uuid });
 
+    draft.createdBy = original.createdBy;
     draft.isDraft = false;
     await this.applicationSubmissionRepository.save(draft);
 
@@ -229,6 +263,18 @@ export class ApplicationSubmissionDraftService {
       await this.applicationOwnerService.delete(owner);
     }
 
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        draftSubmission.uuid,
+      );
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.delete(transferee);
+    }
+
+    await this.applicationSubmissionStatusService.removeStatuses(
+      draftSubmission.uuid,
+    );
+
     const parcelUuids = draftSubmission.parcels.map((parcel) => parcel.uuid);
     await this.applicationParcelService.deleteMany(parcelUuids);
 
@@ -246,5 +292,30 @@ export class ApplicationSubmissionDraftService {
       canReview: true,
       canView: true,
     };
+  }
+
+  private async copyTransferees(
+    originalSubmission: ApplicationSubmission,
+    newSubmission: ApplicationSubmission,
+  ) {
+    const transferees =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        originalSubmission.uuid,
+      );
+
+    for (const transferee of transferees) {
+      await this.covenantTransfereeService.create(
+        {
+          firstName: transferee.firstName ?? undefined,
+          lastName: transferee.lastName ?? undefined,
+          organizationName: transferee.organizationName ?? undefined,
+          email: transferee.email ?? undefined,
+          phoneNumber: transferee.phoneNumber ?? undefined,
+          typeCode: transferee.type.code,
+          applicationSubmissionUuid: newSubmission.uuid,
+        },
+        newSubmission,
+      );
+    }
   }
 }

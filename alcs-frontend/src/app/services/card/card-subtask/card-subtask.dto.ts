@@ -28,7 +28,7 @@ export interface HomepageSubtaskDto extends CardSubtaskDto {
   activeDays?: number;
   paused: boolean;
   appType?: ApplicationTypeDto;
-  parentType: 'application' | 'reconsideration' | 'covenant' | 'modification' | 'planning-review';
+  parentType: 'application' | 'reconsideration' | 'covenant' | 'modification' | 'planning-review' | 'notification';
 }
 
 export enum CARD_SUBTASK_TYPE {

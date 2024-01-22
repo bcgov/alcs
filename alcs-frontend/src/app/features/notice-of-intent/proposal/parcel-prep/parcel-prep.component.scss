@@ -1,0 +1,17 @@
+@use '../../../../../styles/colors';
+
+.link-button {
+  color: colors.$link-color;
+}
+
+:host::ng-deep {
+  th {
+    font-weight: 700;
+  }
+}
+
+.civic-address {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}

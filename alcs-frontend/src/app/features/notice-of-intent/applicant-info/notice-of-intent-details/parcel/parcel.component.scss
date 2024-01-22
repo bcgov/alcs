@@ -1,0 +1,20 @@
+.owner-information {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  overflow-x: auto;
+  overflow-y: hidden;
+  grid-column-gap: 36px;
+  grid-row-gap: 12px;
+
+  .full-width {
+    grid-column: 1/3;
+  }
+}
+
+.crown-owner-information {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.crown-land {
+  text-transform: capitalize;
+}

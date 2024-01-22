@@ -1,0 +1,29 @@
+<form [formGroup]="form">
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <mat-label>ALR Area Impacted (ha)</mat-label>
+      <input
+        matInput
+        min="0.01"
+        mask="separator.2"
+        thousandSeparator=","
+        separatorLimit="9999999999"
+        formControlName="alrArea"
+        required
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="date-picker">
+      <mat-label>Expiry Date</mat-label>
+      <input
+        matInput
+        (click)="expiryDatePicker.open()"
+        [matDatepicker]="expiryDatePicker"
+        formControlName="expiryDate"
+        name="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="expiryDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #expiryDatePicker type="date"></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

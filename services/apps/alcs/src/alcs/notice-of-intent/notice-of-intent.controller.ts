@@ -1,12 +1,27 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiOAuth2 } from '@nestjs/swagger';
+import * as config from 'config';
 import {
   ROLES_ALLOWED_APPLICATIONS,
   ROLES_ALLOWED_BOARDS,
 } from '../../common/authorization/roles';
+import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { formatIncomingDate } from '../../utils/incoming-date.formatter';
 import { BoardService } from '../board/board.service';
+import { NOI_SUBMISSION_STATUS } from './notice-of-intent-submission-status/notice-of-intent-status.dto';
+import { NoticeOfIntentSubmissionStatusService } from './notice-of-intent-submission-status/notice-of-intent-submission-status.service';
 import { NoticeOfIntentSubtype } from './notice-of-intent-subtype.entity';
 import {
   CreateNoticeOfIntentDto,
@@ -15,21 +30,25 @@ import {
 } from './notice-of-intent.dto';
 import { NoticeOfIntentService } from './notice-of-intent.service';
 
+@ApiOAuth2(config.get<string[]>('KEYCLOAK.SCOPES'))
 @Controller('notice-of-intent')
+@UseGuards(RolesGuard)
 export class NoticeOfIntentController {
   constructor(
     private noticeOfIntentService: NoticeOfIntentService,
+    private noticeOfIntentSubmissionStatusService: NoticeOfIntentSubmissionStatusService,
     private boardService: BoardService,
+    private trackingService: TrackingService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_BOARDS)
-  async get(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntent = await this.noticeOfIntentService.getByFileNumber(
-      fileNumber,
-    );
+  async get(@Param('fileNumber') fileNumber: string, @Req() req) {
+    const noticeOfIntent =
+      await this.noticeOfIntentService.getByFileNumber(fileNumber);
     const mapped = await this.noticeOfIntentService.mapToDtos([noticeOfIntent]);
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return mapped[0];
   }
 
@@ -52,7 +71,10 @@ export class NoticeOfIntentController {
     });
 
     const createdNoi = await this.noticeOfIntentService.create(
-      createDto,
+      {
+        ...createDto,
+        dateSubmittedToAlc: formatIncomingDate(createDto.dateSubmittedToAlc),
+      },
       board,
     );
 
@@ -82,12 +104,30 @@ export class NoticeOfIntentController {
     return mapped[0];
   }
 
+  @Post('/:fileNumber/cancel')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async cancel(@Param('fileNumber') fileNumber: string) {
+    await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      NOI_SUBMISSION_STATUS.CANCELLED,
+    );
+  }
+
+  @Post('/:fileNumber/uncancel')
+  @UserRoles(...ROLES_ALLOWED_BOARDS)
+  async uncancel(@Param('fileNumber') fileNumber: string) {
+    await this.noticeOfIntentSubmissionStatusService.setStatusDateByFileNumber(
+      fileNumber,
+      NOI_SUBMISSION_STATUS.CANCELLED,
+      null,
+    );
+  }
+
   @Get('/search/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async searchApplications(@Param('fileNumber') fileNumber: string) {
-    const noticeOfIntents = await this.noticeOfIntentService.searchByFileNumber(
-      fileNumber,
-    );
+  async search(@Param('fileNumber') fileNumber: string) {
+    const noticeOfIntents =
+      await this.noticeOfIntentService.searchByFileNumber(fileNumber);
     return this.noticeOfIntentService.mapToDtos(noticeOfIntents);
   }
 }

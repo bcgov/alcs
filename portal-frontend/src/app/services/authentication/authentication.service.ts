@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { UserDto } from './authentication.dto';
 
 const JWT_TOKEN_KEY = 'jwt_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
@@ -23,7 +24,8 @@ export class AuthenticationService {
   private refreshExpires: number | undefined;
 
   isInitialized = false;
-  $currentUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  $currentTokenUser = new BehaviorSubject<ICurrentUser | undefined>(undefined);
+  $currentProfile = new BehaviorSubject<UserDto | undefined>(undefined);
   currentUser: ICurrentUser | undefined;
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -41,7 +43,13 @@ export class AuthenticationService {
     this.refreshExpires = decodedRefreshToken.exp! * 1000;
     this.expires = decodedToken.exp! * 1000;
     this.currentUser = decodedToken as ICurrentUser;
-    this.$currentUser.next(this.currentUser);
+    this.$currentTokenUser.next(this.currentUser);
+
+    console.debug(
+      `Token Successfully Refreshed, Expires at: ${new Date(this.expires)} Refresh at: ${new Date(this.refreshExpires)}`
+    );
+
+    this.loadUser();
   }
 
   clearTokens() {
@@ -52,7 +60,7 @@ export class AuthenticationService {
   }
 
   async getLoginUrl() {
-    return firstValueFrom(this.http.get<{ loginUrl: string }>(`${environment.authUrl}/authorize/login`));
+    return firstValueFrom(this.http.get<{ loginUrl: string }>(`${environment.apiUrl}/authorize/login`));
   }
 
   async getToken(redirect = true) {
@@ -71,7 +79,7 @@ export class AuthenticationService {
 
   async refreshTokens(redirect = true) {
     if (this.refreshToken) {
-      if (this.refreshExpires && this.refreshExpires < Date.now()) {
+      if (this.expires && this.expires < Date.now()) {
         if (redirect) {
           await this.router.navigateByUrl('/login');
         }
@@ -108,7 +116,7 @@ export class AuthenticationService {
   private async isTokenValid(token: string) {
     try {
       await firstValueFrom(
-        this.http.get(`${environment.authUrl}/token`, {
+        this.http.get(`${environment.apiUrl}/token`, {
           responseType: 'text',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -125,16 +133,20 @@ export class AuthenticationService {
   }
 
   private async getNewTokens(refreshToken: string) {
-    const res = await firstValueFrom(
+    return await firstValueFrom(
       this.http.get<{
         refresh_token: string;
         token: string;
-      }>(`${environment.authUrl}/authorize/refresh?r=${refreshToken}`)
+      }>(`${environment.apiUrl}/authorize/refresh?r=${refreshToken}`)
     );
-    return res;
   }
 
   private async getLogoutUrl() {
     return firstValueFrom(this.http.get<{ url: string }>(`${environment.authUrl}/logout/portal`));
+  }
+
+  private async loadUser() {
+    const user = await firstValueFrom(this.http.get<UserDto>(`${environment.authUrl}/user/profile`));
+    this.$currentProfile.next(user);
   }
 }

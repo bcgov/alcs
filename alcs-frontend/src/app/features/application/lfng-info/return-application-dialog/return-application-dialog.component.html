@@ -1,0 +1,39 @@
+<div mat-dialog-title>
+  <h4>Reason for Return</h4>
+</div>
+<div mat-dialog-content class="return-application-modal">
+  <div *ngIf="stepIdx === commentStep">
+    <div class="step-body">
+      <label class="subheading2" for="comment">Comment for L/FNG</label>
+      <div>
+        <textarea
+          [(ngModel)]="commentForLfng"
+          #comment
+          maxlength="4000"
+          id="comment"
+          matInput
+          class="comment-input"
+          placeholder="Type comment"
+        ></textarea>
+      </div>
+      <span class="subtext">Characters left: {{ 4000 - comment.textLength }}</span>
+    </div>
+
+    <div class="step-controls">
+      <button mat-stroked-button color="primary" [mat-dialog-close]="false">cancel</button>
+      <button mat-flat-button color="primary" [disabled]="!commentForLfng" (click)="next()">next</button>
+    </div>
+  </div>
+
+  <div *ngIf="stepIdx === confirmationStep">
+    <div class="step-body">
+      Once returned, ALCS will have limited functionality while this application is with the local/first nation
+      government. Auto-emails will be sent to the applicant and local/first nation government.
+    </div>
+
+    <div class="step-controls">
+      <button mat-stroked-button color="primary" (click)="back()">back</button>
+      <button mat-flat-button color="primary" (click)="onSubmit()">confirm</button>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNumber, IsString } from 'class-validator';
 import { UserDto } from '../../../../user/user.dto';
 

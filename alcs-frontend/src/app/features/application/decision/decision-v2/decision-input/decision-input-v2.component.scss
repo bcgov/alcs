@@ -1,10 +1,30 @@
 @use '../../../../../../styles/colors.scss';
 
+.bottom-scroller {
+  margin-top: 36px;
+  position: absolute;
+  bottom: 0;
+  left: 212px;
+  right: 0;
+  background-color: #fff;
+  padding: 16px 94px 16px 48px;
+  z-index: 2;
+  border-top: 1px solid colors.$grey-light;
+
+  button:not(:last-child) {
+    margin-right: 16px !important;
+  }
+}
+
+form {
+  padding-bottom: 120px;
+}
+
 :host::ng-deep {
   .grid,
-  .grid-3 {
+  .grid-2 {
     display: grid;
-    grid-template-columns: calc(50% - 10px) calc(50%);
+    grid-template-columns: calc(50% - 12px) calc(50% - 12px);
     grid-column-gap: 24px;
     grid-row-gap: 32px;
 
@@ -13,19 +33,17 @@
     }
   }
 
-  .grid-3 {
-    grid-template-columns: calc(33% - 8px) calc(33% - 8px) calc(33% - 8px);
-    grid-column-gap: 24px;
-    grid-row-gap: 32px;
-
-    .full-width {
-      grid-column: 1/4;
-    }
+  h3 {
+    margin-top: 36px !important;
+    margin-bottom: 12px !important;
   }
 
   .resolution-number-wrapper {
     display: grid;
     grid-template-columns: 1fr 16px 0.7fr;
+    .resolution-number-btn-wrapper {
+      width: 100%;
+    }
   }
 
   .row-no-flex,
@@ -44,7 +62,6 @@
     .column {
       display: flex;
       flex-direction: column;
-      flex-basis: 100%;
       flex: 1;
     }
 
@@ -53,27 +70,9 @@
     }
   }
 
-  .container,
-  .container-wide {
+  .container {
     border: 1px solid colors.$grey-dark;
     max-width: 438px;
-
-    .soil-table {
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 39% 59%;
-      grid-row-gap: 28px;
-      padding: 10px;
-
-      &.double-table {
-        grid-template-columns: 22% 37% 37%;
-        column-gap: 10px;
-      }
-
-      .full-width {
-        width: 100%;
-      }
-    }
 
     .label {
       display: flex;
@@ -90,18 +89,6 @@
       text-align: right;
       padding-right: 8px;
     }
-  }
-
-  .container-wide {
-    max-width: 700px;
-  }
-  .btn-row {
-    justify-content: space-between;
-  }
-
-  .flex-right {
-    display: flex;
-    justify-content: right;
   }
 
   .resolution-number-wrapper {
@@ -125,7 +112,6 @@
   }
 
   .decision-component-form {
-    .grid-3,
     .grid {
       margin-bottom: 24px;
     }
@@ -135,12 +121,23 @@
     height: 100px !important;
   }
 
-  .subheading1 {
-    font-family: 'BCSans', 'Noto Sans', Verdana, Arial, sans-serif !important;
-    font-size: 19px !important;
-    font-weight: 400 !important;
-    line-height: 24px;
-    color: #565656 !important;
-    margin: 24px 0 !important;
+  .error-field-outlined.ng-invalid {
+    border: 1px solid colors.$error-color !important;
+
+    .mat-button-toggle {
+      border-color: colors.$error-color;
+      color: colors.$error-color !important;
+    }
+
+    &.upload-button {
+      border: 2px solid colors.$error-color;
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .toggle-label {
+    color: colors.$grey-dark;
+    display: block;
+    margin-bottom: 3px;
   }
 }

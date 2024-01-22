@@ -1,0 +1,76 @@
+<div *ngIf="noiSubmission" class="review-table">
+  <div class="subheading2 grid-1">
+    {{ firstQuestion }}
+  </div>
+  <div class="grid-double">
+    <span *ngIf="noiSubmission.soilIsRemovingSoilForNewStructure !== null">
+      {{ noiSubmission.soilIsRemovingSoilForNewStructure ? 'Yes' : 'No' }}
+    </span>
+    <app-no-data *ngIf="noiSubmission.soilIsRemovingSoilForNewStructure === null"></app-no-data>
+  </div>
+
+  <ng-container *ngIf="noiSubmission.soilIsRemovingSoilForNewStructure">
+    <div class="full-width subheading2">The total floor area (m<sup>2</sup>) of the proposed structure(s)</div>
+    <div class="full-width soil-table">
+      <div class="grid-1 subheading2">#</div>
+      <div class="grid-2 subheading2">Type</div>
+      <div class="grid-3 subheading2">Area</div>
+      <ng-container *ngFor="let structure of noiSubmission.soilProposedStructures; let i = index">
+        <div class="grid-1">
+          {{ i + 1 }}
+        </div>
+        <div class="grid-2">
+          {{ structure.type }}
+          <app-no-data *ngIf="!structure.type"></app-no-data>
+        </div>
+        <div class="grid-3">
+          {{ structure.area }}
+          <app-no-data *ngIf="!structure.area"></app-no-data>
+        </div>
+      </ng-container>
+      <div *ngIf="noiSubmission.soilProposedStructures.length === 0" class="full-width">
+        <app-no-data></app-no-data>
+      </div>
+    </div>
+
+    <ng-container *ngIf="isSoilStructureFarmUseReasonVisible">
+      <div class="subheading2 grid-1">Describe how the structure is necessary for farm use</div>
+      <div class="grid-double">
+        {{ noiSubmission.soilStructureFarmUseReason }}
+        <app-no-data *ngIf="!noiSubmission.soilStructureFarmUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilStructureResidentialUseReasonVisible">
+      <div class="subheading2 grid-1">Describe how the structure is necessary for residential use</div>
+      <div class="grid-double">
+        {{ noiSubmission.soilStructureResidentialUseReason }}
+        <app-no-data *ngIf="!noiSubmission.soilStructureResidentialUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilAgriParcelActivityVisible">
+      <div class="subheading2 grid-1">Describe the current agricultural activity on the parcel(s)</div>
+      <div class="grid-double">
+        {{ noiSubmission.soilAgriParcelActivity }}
+        <app-no-data *ngIf="!noiSubmission.soilAgriParcelActivity"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilStructureResidentialAccessoryUseReasonVisible">
+      <div class="subheading2 grid-1">Describe the intended use of the residential accessory structure</div>
+      <div class="grid-double">
+        {{ noiSubmission.soilStructureResidentialAccessoryUseReason }}
+        <app-no-data *ngIf="!noiSubmission.soilStructureResidentialAccessoryUseReason"></app-no-data>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isSoilOtherStructureVisible">
+      <div class="subheading2 grid-1">Describe the intended use of the 'Other' structure</div>
+      <div class="grid-double">
+        {{ noiSubmission.soilStructureOtherUseReason }}
+        <app-no-data *ngIf="!noiSubmission.soilStructureOtherUseReason"></app-no-data>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

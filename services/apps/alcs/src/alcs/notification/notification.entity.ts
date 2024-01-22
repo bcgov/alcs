@@ -1,56 +1,88 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
+import { Type } from 'class-transformer';
 import {
   Column,
-  CreateDateColumn,
   Entity,
+  Index,
+  JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
 } from 'typeorm';
-import { User } from '../../user/user.entity';
+import { Base } from '../../common/entities/base.entity';
+import { Card } from '../card/card.entity';
+import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { NotificationDocument } from './notification-document/notification-document.entity';
+import { NotificationType } from './notification-type/notification-type.entity';
 
 @Entity()
-export class Notification {
+export class Notification extends Base {
   constructor(data?: Partial<Notification>) {
+    super();
     if (data) {
       Object.assign(this, data);
     }
   }
 
-  @AutoMap()
-  @PrimaryGeneratedColumn('uuid')
-  uuid: string;
-
-  @CreateDateColumn({ type: 'timestamptz' })
-  createdAt: Date;
-
-  @AutoMap()
-  @ManyToOne(() => User)
-  actor: User;
-
-  @AutoMap()
-  @ManyToOne(() => User)
-  receiver: User;
+  @Index()
+  @Column({ unique: true })
+  fileNumber: string;
 
   @Column()
-  receiverUuid: string;
+  applicant: string;
 
-  @AutoMap()
+  @Column({ type: 'uuid', nullable: true })
+  cardUuid: string;
+
+  @OneToOne(() => Card, { cascade: true })
+  @JoinColumn()
+  @Type(() => Card)
+  card: Card | null;
+
+  @ManyToOne(() => LocalGovernment, { nullable: true })
+  localGovernment?: LocalGovernment;
+
+  @Index()
+  @Column({
+    type: 'uuid',
+    nullable: true,
+  })
+  localGovernmentUuid?: string;
+
+  @ManyToOne(() => ApplicationRegion, { nullable: true })
+  region?: ApplicationRegion;
+
+  @Column({ nullable: true })
+  regionCode?: string;
+
+  @AutoMap(() => String)
+  @Column({ type: 'text', nullable: true })
+  summary: string | null;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  dateSubmittedToAlc?: Date | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'ALC Staff Observations and Comments',
+    nullable: true,
+  })
+  staffObservations?: string | null;
+
+  @ManyToOne(() => NotificationType, {
+    nullable: false,
+  })
+  type: NotificationType;
+
   @Column()
-  title: string;
+  typeCode: string;
 
   @AutoMap()
-  @Column()
-  body: string;
-
-  @AutoMap()
-  @Column({ default: false })
-  read: boolean;
-
-  @AutoMap()
-  @Column()
-  targetType: string;
-
-  @AutoMap()
-  @Column()
-  link: string;
+  @OneToMany(() => NotificationDocument, (document) => document.notification)
+  documents: NotificationDocument[];
 }

@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
@@ -12,8 +12,8 @@ import {
   ApplicationModificationOutcomeCodeDto,
 } from '../../alcs/application-decision/application-modification/application-modification.dto';
 import { ApplicationModification } from '../../alcs/application-decision/application-modification/application-modification.entity';
-import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
@@ -41,8 +41,8 @@ export class ModificationProfile extends AutomapperProfile {
           mapFrom((a) =>
             this.mapper.map(
               a.localGovernment,
-              ApplicationLocalGovernment,
-              ApplicationLocalGovernmentDto,
+              LocalGovernment,
+              LocalGovernmentDto,
             ),
           ),
         ),
@@ -75,10 +75,6 @@ export class ModificationProfile extends AutomapperProfile {
         forMember(
           (a) => a.submittedDate,
           mapFrom((rd) => rd.submittedDate.getTime()),
-        ),
-        forMember(
-          (a) => a.reviewDate,
-          mapFrom((rd) => rd.reviewDate?.getTime()),
         ),
         forMember(
           (a) => a.reviewOutcome,

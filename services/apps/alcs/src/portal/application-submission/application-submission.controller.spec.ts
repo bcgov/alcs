@@ -1,18 +1,34 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
+import { ServiceValidationException } from '../../../../../libs/common/src/exceptions/base.exception';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
+import {
+  generateSUBGNoReviewGovernmentTemplateEmail,
+  generateSUBGTurApplicantHtml,
+} from '../../../../../templates/emails/submitted-to-alc';
+import {
+  generateSUBGApplicantHtml,
+  generateSUBGGovernmentHtml,
+} from '../../../../../templates/emails/submitted-to-lfng';
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
+import { ApplicationService } from '../../alcs/application/application.service';
+import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { User } from '../../user/user.entity';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
+import { ApplicationOwner } from './application-owner/application-owner.entity';
 import {
   ApplicationSubmissionValidatorService,
   ValidatedApplicationSubmission,
@@ -27,20 +43,27 @@ import { ApplicationSubmissionService } from './application-submission.service';
 
 describe('ApplicationSubmissionController', () => {
   let controller: ApplicationSubmissionController;
-  let mockAppService: DeepMocked<ApplicationSubmissionService>;
+  let mockAppSubmissionService: DeepMocked<ApplicationSubmissionService>;
   let mockDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockLgService: DeepMocked<ApplicationLocalGovernmentService>;
+  let mockLgService: DeepMocked<LocalGovernmentService>;
   let mockAppValidationService: DeepMocked<ApplicationSubmissionValidatorService>;
+  let mockStatusEmailService: DeepMocked<StatusEmailService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
 
   const localGovernmentUuid = 'local-government';
+  const primaryContactOwnerUuid = 'primary-contact';
   const applicant = 'fake-applicant';
   const bceidBusinessGuid = 'business-guid';
 
   beforeEach(async () => {
-    mockAppService = createMock();
+    mockAppSubmissionService = createMock();
     mockDocumentService = createMock();
     mockLgService = createMock();
     mockAppValidationService = createMock();
+    mockStatusEmailService = createMock();
+    mockApplicationService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationSubmissionController],
@@ -48,19 +71,31 @@ describe('ApplicationSubmissionController', () => {
         ApplicationProfile,
         {
           provide: ApplicationSubmissionService,
-          useValue: mockAppService,
+          useValue: mockAppSubmissionService,
         },
         {
           provide: ApplicationDocumentService,
           useValue: mockDocumentService,
         },
         {
-          provide: ApplicationLocalGovernmentService,
+          provide: LocalGovernmentService,
           useValue: mockLgService,
         },
         {
           provide: ApplicationSubmissionValidatorService,
           useValue: mockAppValidationService,
+        },
+        {
+          provide: StatusEmailService,
+          useValue: mockStatusEmailService,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,
@@ -79,27 +114,37 @@ describe('ApplicationSubmissionController', () => {
       ApplicationSubmissionController,
     );
 
-    mockAppService.update.mockResolvedValue(
+    mockAppSubmissionService.update.mockResolvedValue(
       new ApplicationSubmission({
-        applicant: applicant,
+        applicant,
         localGovernmentUuid,
       }),
     );
 
-    mockAppService.create.mockResolvedValue('2');
-    mockAppService.getIfCreatorByFileNumber.mockResolvedValue(
+    mockAppSubmissionService.create.mockResolvedValue('2');
+    mockAppSubmissionService.getIfCreatorByFileNumber.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockAppService.verifyAccessByFileId.mockResolvedValue(
+    mockAppSubmissionService.verifyAccessByFileId.mockResolvedValue(
       new ApplicationSubmission(),
     );
-    mockAppService.verifyAccessByUuid.mockResolvedValue(
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission(),
     );
+    mockApplicationService.fetchApplicationTypes.mockResolvedValue([
+      new ApplicationType({
+        code: 'TURP',
+        requiresGovernmentReview: false,
+      }),
+      new ApplicationType({
+        code: 'NOT-TURP',
+        requiresGovernmentReview: true,
+      }),
+    ]);
 
-    mockAppService.mapToDTOs.mockResolvedValue([]);
+    mockAppSubmissionService.mapToDTOs.mockResolvedValue([]);
     mockLgService.list.mockResolvedValue([
-      new ApplicationLocalGovernment({
+      new LocalGovernment({
         uuid: localGovernmentUuid,
         bceidBusinessGuid,
         name: 'fake-name',
@@ -113,22 +158,22 @@ describe('ApplicationSubmissionController', () => {
   });
 
   it('should call out to service when fetching applications', async () => {
-    mockAppService.getByUser.mockResolvedValue([]);
+    mockAppSubmissionService.getByUser.mockResolvedValue([]);
 
-    const applications = await controller.getApplications({
+    const applications = await controller.list({
       user: {
         entity: new User(),
       },
     });
 
     expect(applications).toBeDefined();
-    expect(mockAppService.getByUser).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.getByUser).toHaveBeenCalledTimes(1);
   });
 
   it('should fetch by bceid if user has same guid as a local government', async () => {
-    mockAppService.getForGovernment.mockResolvedValue([]);
+    mockAppSubmissionService.getForGovernment.mockResolvedValue([]);
 
-    const applications = await controller.getApplications({
+    const applications = await controller.list({
       user: {
         entity: new User({
           bceidBusinessGuid,
@@ -137,21 +182,38 @@ describe('ApplicationSubmissionController', () => {
     });
 
     expect(applications).toBeDefined();
-    expect(mockAppService.getForGovernment).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.getForGovernment).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service when cancelling an application', async () => {
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
     const mockApplication = new ApplicationSubmission({
-      status: new ApplicationStatus({
-        code: APPLICATION_STATUS.IN_PROGRESS,
+      status: new ApplicationSubmissionToSubmissionStatus({
+        statusTypeCode: SUBMISSION_STATUS.IN_PROGRESS,
+        submissionUuid: 'fake',
+        effectiveDate: new Date(),
       }),
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
     });
 
-    mockAppService.mapToDTOs.mockResolvedValue([
+    mockAppSubmissionService.mapToDTOs.mockResolvedValue([
       {} as ApplicationSubmissionDto,
     ]);
-    mockAppService.verifyAccessByUuid.mockResolvedValue(mockApplication);
-    mockAppService.cancel.mockResolvedValue();
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplication,
+    );
+    mockAppSubmissionService.cancel.mockResolvedValue();
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplication,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     const application = await controller.cancel('file-id', {
       user: {
@@ -160,22 +222,38 @@ describe('ApplicationSubmissionController', () => {
     });
 
     expect(application).toBeDefined();
-    expect(mockAppService.cancel).toHaveBeenCalledTimes(1);
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledWith(
+    expect(mockAppSubmissionService.cancel).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledWith(
       'file-id',
       new User(),
     );
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
+      generateStatusHtml: generateCANCApplicationHtml,
+      status: SUBMISSION_STATUS.CANCELLED,
+      applicationSubmission: mockApplication,
+      government: mockGovernment,
+      parentType: 'application',
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
   });
 
   it('should throw an exception when trying to cancel an application that is not in progress', async () => {
-    mockAppService.verifyAccessByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        status: new ApplicationStatus({
-          code: APPLICATION_STATUS.CANCELLED,
-        }),
+    const mockApp = new ApplicationSubmission();
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue({
+      ...mockApp,
+      status: new ApplicationSubmissionStatusType({
+        code: SUBMISSION_STATUS.CANCELLED,
       }),
-    );
+    } as any);
 
     const promise = controller.cancel('file-id', {
       user: {
@@ -186,20 +264,22 @@ describe('ApplicationSubmissionController', () => {
     await expect(promise).rejects.toMatchObject(
       new BadRequestException('Can only cancel in progress Applications'),
     );
-    expect(mockAppService.cancel).toHaveBeenCalledTimes(0);
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledWith(
+    expect(mockAppSubmissionService.cancel).toHaveBeenCalledTimes(0);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledWith(
       'file-id',
       new User(),
     );
   });
 
   it('should call out to service when fetching an application', async () => {
-    mockAppService.mapToDetailedDTO.mockResolvedValue(
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationSubmissionDetailedDto,
     );
 
-    const application = controller.getSubmission(
+    const application = await controller.getSubmission(
       {
         user: {
           entity: new User(),
@@ -209,20 +289,50 @@ describe('ApplicationSubmissionController', () => {
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call out to service and track view when fetching a submission by file id', async () => {
+    mockTrackingService.trackView.mockResolvedValue();
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationSubmissionDetailedDto,
+    );
+    mockLgService.getByGuid.mockResolvedValue(new LocalGovernment());
+
+    const application = await controller.getSubmissionByFileId(
+      {
+        user: {
+          entity: new User({
+            bceidBusinessGuid: 'cats',
+          }),
+        },
+      },
+      '',
+    );
+
+    expect(application).toBeDefined();
+    expect(mockAppSubmissionService.verifyAccessByFileId).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
   });
 
   it('should fetch application by bceid if user has same guid as a local government', async () => {
-    mockAppService.mapToDetailedDTO.mockResolvedValue(
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationSubmissionDetailedDto,
     );
-    mockAppService.verifyAccessByUuid.mockResolvedValue(
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
       new ApplicationSubmission({
         localGovernmentUuid: '',
       }),
     );
+    mockLgService.getByGuid.mockResolvedValue(new LocalGovernment());
 
-    const application = controller.getSubmission(
+    const application = await controller.getSubmission(
       {
         user: {
           entity: new User({
@@ -234,12 +344,14 @@ describe('ApplicationSubmissionController', () => {
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call out to service when creating an application', async () => {
-    mockAppService.create.mockResolvedValue('');
-    mockAppService.mapToDTOs.mockResolvedValue([
+    mockAppSubmissionService.create.mockResolvedValue('');
+    mockAppSubmissionService.mapToDTOs.mockResolvedValue([
       {} as ApplicationSubmissionDto,
     ]);
 
@@ -255,12 +367,20 @@ describe('ApplicationSubmissionController', () => {
     );
 
     expect(application).toBeDefined();
-    expect(mockAppService.create).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.create).toHaveBeenCalledTimes(1);
   });
 
   it('should call out to service for update and map', async () => {
-    mockAppService.mapToDetailedDTO.mockResolvedValue(
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
       {} as ApplicationSubmissionDetailedDto,
+    );
+
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      new ApplicationSubmission({
+        status: new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.INCOMPLETE,
+        }),
+      }),
     );
 
     await controller.update(
@@ -276,25 +396,69 @@ describe('ApplicationSubmissionController', () => {
       },
     );
 
-    expect(mockAppService.verifyAccessByUuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.mapToDetailedDTO).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw exception on update if submission is not it in "In Progress" status ', async () => {
+    mockAppSubmissionService.mapToDetailedDTO.mockResolvedValue(
+      {} as ApplicationSubmissionDetailedDto,
+    );
+
+    const promise = controller.update(
+      'file-id',
+      {
+        localGovernmentUuid,
+        applicant,
+      },
+      {
+        user: {
+          entity: new User(),
+        },
+      },
+    );
+
+    await expect(promise).rejects.toMatchObject(
+      new ServiceValidationException('Not allowed to update submission'),
+    );
+
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
   });
 
   it('should call out to service on submitAlcs if application type is TURP', async () => {
     const mockFileId = 'file-id';
-    mockAppService.submitToAlcs.mockResolvedValue(new Application());
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        typeCode: 'TURP',
-      }),
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      fileNumber: mockFileId,
+      typeCode: 'TURP',
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+    mockAppSubmissionService.submitToAlcs.mockResolvedValue(new Application());
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplicationSubmission,
     );
-    mockAppService.updateStatus.mockResolvedValue();
+    mockAppSubmissionService.updateStatus.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application: new ApplicationSubmission({
-        typeCode: 'TURP',
-      }) as ValidatedApplicationSubmission,
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
       errors: [],
     });
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
 
     await controller.submitAsApplicant(mockFileId, {
       user: {
@@ -302,24 +466,61 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToAlcs).toHaveBeenCalledTimes(1);
-    expect(mockAppService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.submitToAlcs).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.updateStatus).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(2);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
+      generateStatusHtml: generateSUBGTurApplicantHtml,
+      status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      parentType: 'application',
+      primaryContact: mockOwner,
+    });
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
+      generateStatusHtml: generateSUBGNoReviewGovernmentTemplateEmail,
+      status: SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      parentType: 'application',
+    });
   });
 
   it('should submit to LG if application type is NOT-TURP', async () => {
     const mockFileId = 'file-id';
-    mockAppService.submitToLg.mockResolvedValue();
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        typeCode: 'NOT-TURP',
-        localGovernmentUuid,
-      }),
+    mockAppSubmissionService.submitToLg.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      typeCode: 'NOT-TURP',
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplicationSubmission,
     );
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application:
-        new ApplicationSubmission() as ValidatedApplicationSubmission,
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
       errors: [],
+    });
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
     });
 
     await controller.submitAsApplicant(mockFileId, {
@@ -328,19 +529,100 @@ describe('ApplicationSubmissionController', () => {
       },
     });
 
-    expect(mockAppService.getIfCreatorByUuid).toHaveBeenCalledTimes(1);
-    expect(mockAppService.submitToLg).toHaveBeenCalledTimes(1);
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.submitToLg).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(2);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
+      generateStatusHtml: generateSUBGApplicantHtml,
+      status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      parentType: 'application',
+      primaryContact: mockOwner,
+    });
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledWith({
+      generateStatusHtml: generateSUBGGovernmentHtml,
+      status: SUBMISSION_STATUS.SUBMITTED_TO_LG,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      parentType: 'application',
+    });
+  });
+
+  it('should only send status email for first time non-TUR applications', async () => {
+    const mockFileId = 'file-id';
+    mockAppSubmissionService.submitToLg.mockResolvedValue(
+      new ApplicationSubmissionToSubmissionStatus(),
+    );
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      typeCode: 'NOT-TURP',
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+      submissionStatuses: [
+        new ApplicationSubmissionToSubmissionStatus({
+          statusTypeCode: SUBMISSION_STATUS.INCOMPLETE,
+          submissionUuid: 'fake',
+          effectiveDate: new Date(),
+        }),
+      ],
+    });
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplicationSubmission,
+    );
+    mockAppValidationService.validateSubmission.mockResolvedValue({
+      submission: mockApplicationSubmission as ValidatedApplicationSubmission,
+      errors: [],
+    });
+    mockStatusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+
+    await controller.submitAsApplicant(mockFileId, {
+      user: {
+        entity: new User(),
+      },
+    });
+
+    expect(mockAppSubmissionService.verifyAccessByUuid).toHaveBeenCalledTimes(
+      1,
+    );
+    expect(mockAppSubmissionService.submitToLg).toHaveBeenCalledTimes(1);
+    expect(
+      mockStatusEmailService.sendApplicationStatusEmail,
+    ).toHaveBeenCalledTimes(0);
   });
 
   it('should throw an exception if application fails validation', async () => {
     const mockFileId = 'file-id';
-    mockAppService.getIfCreatorByUuid.mockResolvedValue(
-      new ApplicationSubmission({
-        typeCode: 'NOT-TURP',
-      }),
+    const mockApplicationSubmission = new ApplicationSubmission({
+      typeCode: 'NOT-TURP',
+      owners: [],
+    });
+    mockAppSubmissionService.verifyAccessByUuid.mockResolvedValue(
+      mockApplicationSubmission,
     );
+    mockStatusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: new ApplicationOwner(),
+      submissionGovernment: new LocalGovernment(),
+    });
     mockAppValidationService.validateSubmission.mockResolvedValue({
-      application: undefined,
+      submission: undefined,
       errors: [new Error('Failed to validate')],
     });
 

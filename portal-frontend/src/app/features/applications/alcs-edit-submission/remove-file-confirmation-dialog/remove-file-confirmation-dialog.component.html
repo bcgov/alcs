@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+  <h4>Remove Submission Document</h4>
+</div>
+
+<div mat-dialog-content class="content">
+  <app-warning-banner>
+    <div>
+      <b>Warning:</b> This document will be immediately deleted from ALCS and the Portal and cannot be undone. To retain
+      the document, first download a copy from the Documents tab in ALCS then return to complete this action.
+    </div>
+    <br />
+    <div>
+      To replace the document on the Submission: delete current, upload new, then update the submission (via Review &
+      Submit).
+    </div>
+  </app-warning-banner>
+
+  <div class="step-controls">
+    <button mat-stroked-button color="primary" (click)="onCancel()">cancel</button>
+    <button mat-flat-button color="primary" (click)="onDelete()">confirm</button>
+  </div>
+</div>

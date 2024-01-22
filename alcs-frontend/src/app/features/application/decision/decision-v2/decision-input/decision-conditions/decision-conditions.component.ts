@@ -11,27 +11,31 @@ import {
 } from '@angular/core';
 import { combineLatestWith, Subject, takeUntil } from 'rxjs';
 import {
+  ApplicationDecisionConditionDto,
   ApplicationDecisionDto,
-  DecisionCodesDto,
-  DecisionComponentDto,
+  ApplicationDecisionCodesDto,
+  ApplicationDecisionComponentDto,
   UpdateApplicationDecisionConditionDto,
 } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 import { ApplicationDecisionV2Service } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.service';
+import { ConfirmationDialogService } from '../../../../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { DecisionConditionComponent } from './decision-condition/decision-condition.component';
 
 export type TempApplicationDecisionConditionDto = UpdateApplicationDecisionConditionDto & { tempUuid?: string };
 export type SelectableComponent = { uuid?: string; tempId: string; decisionUuid: string; code: string; label: string };
 
 @Component({
-  selector: 'app-decision-conditions',
+  selector: 'app-app-decision-conditions',
   templateUrl: './decision-conditions.component.html',
   styleUrls: ['./decision-conditions.component.scss'],
 })
 export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy {
   $destroy = new Subject<void>();
 
-  @Input() codes!: DecisionCodesDto;
-  @Input() components: DecisionComponentDto[] = [];
+  @Input() codes!: ApplicationDecisionCodesDto;
+  @Input() components: ApplicationDecisionComponentDto[] = [];
+  @Input() conditions: ApplicationDecisionConditionDto[] = [];
+  @Input() showError = false;
   @ViewChildren(DecisionConditionComponent) conditionComponents: DecisionConditionComponent[] = [];
 
   @Output() conditionsChange = new EventEmitter<{
@@ -43,7 +47,10 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   mappedConditions: TempApplicationDecisionConditionDto[] = [];
   decision: ApplicationDecisionDto | undefined;
 
-  constructor(private decisionService: ApplicationDecisionV2Service) {}
+  constructor(
+    private decisionService: ApplicationDecisionV2Service,
+    private confirmationDialogService: ConfirmationDialogService
+  ) {}
 
   ngOnInit(): void {
     this.decisionService.$decision
@@ -69,31 +76,24 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         if (selectedDecision) {
           const updatedComponents = this.mapComponents(
             selectedDecision.uuid,
-            selectedDecision.components,
+            this.components,
             selectedDecision.resolutionNumber,
             selectedDecision.resolutionYear
           );
           this.selectableComponents = [...this.allComponents, ...updatedComponents];
 
           this.decision = selectedDecision;
-          this.mappedConditions = selectedDecision.conditions.map((condition) => {
-            const selectedComponent = this.selectableComponents.find(
-              (component) => component.uuid === condition.componentUuid
-            );
 
-            return {
-              ...condition,
-              componentToConditionType: selectedComponent?.code,
-              componentDecisionUuid: selectedComponent?.decisionUuid,
-            };
-          });
+          this.populateConditions(selectedDecision.conditions);
           this.onChanges();
         }
       });
   }
 
-  onAddNewCondition() {
-    this.mappedConditions.push({
+  onAddNewCondition(typeCode: string) {
+    const matchingType = this.codes.decisionConditionTypes.find((code) => code.code === typeCode);
+    this.mappedConditions.unshift({
+      type: matchingType,
       tempUuid: (Math.random() * 10000).toFixed(0),
     });
     this.conditionsChange.emit({
@@ -110,12 +110,20 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onRemoveCondition(index: number) {
-    this.mappedConditions.splice(index, 1);
-    this.onChanges();
+    this.confirmationDialogService
+      .openDialog({
+        body: 'Are you sure you want to remove this condition?',
+      })
+      .subscribe((didConfirm) => {
+        if (didConfirm) {
+          this.mappedConditions.splice(index, 1);
+          this.onChanges();
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.decision) {
+    if (this.decision && changes['components']) {
       const updatedComponents = this.mapComponents(
         this.decision.uuid,
         this.components,
@@ -123,12 +131,48 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
         this.decision.resolutionYear
       );
       this.selectableComponents = [...this.allComponents, ...updatedComponents];
+      const validComponentIds = this.selectableComponents.map((component) => component.tempId);
+
+      this.mappedConditions = this.mappedConditions.map((condition) => {
+        if (condition.componentsToCondition) {
+          condition.componentsToCondition = condition.componentsToCondition.filter((component) =>
+            validComponentIds.includes(component.tempId)
+          );
+        }
+        return condition;
+      });
+      this.onChanges();
     }
+
+    if (changes['conditions']) {
+      this.populateConditions(this.conditions);
+      this.onChanges();
+    }
+  }
+
+  private populateConditions(conditions: ApplicationDecisionConditionDto[]) {
+    this.mappedConditions = conditions.map((condition) => {
+      const selectedComponents = this.selectableComponents
+        .filter((component) =>
+          condition.components?.map((conditionComponent) => conditionComponent.uuid).includes(component.uuid)
+        )
+        .map((e) => ({
+          componentDecisionUuid: e.decisionUuid,
+          componentToConditionType: e.code,
+          tempId: e.tempId,
+          uuid: e.uuid,
+        }));
+
+      return {
+        ...condition,
+        componentsToCondition: selectedComponents,
+      };
+    });
   }
 
   mapComponents(
     decisionUuid: string,
-    components: DecisionComponentDto[],
+    components: ApplicationDecisionComponentDto[],
     decisionNumber: number | null,
     decisionYear: number | null
   ) {
@@ -159,5 +203,9 @@ export class DecisionConditionsComponent implements OnInit, OnChanges, OnDestroy
       conditions: this.mappedConditions,
       isValid: this.conditionComponents.reduce((isValid, component) => isValid && component.form.valid, true),
     });
+  }
+
+  onValidate() {
+    this.conditionComponents.forEach((component) => component.form.markAllAsTouched());
   }
 }

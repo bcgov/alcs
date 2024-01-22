@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class StaffJournalDto {
@@ -34,6 +34,16 @@ export class CreateNoticeOfIntentStaffJournalDto {
   @IsString()
   @IsNotEmpty()
   noticeOfIntentUuid: string;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class CreateNotificationStaffJournalDto {
+  @IsString()
+  @IsNotEmpty()
+  notificationUuid: string;
 
   @IsString()
   @IsNotEmpty()

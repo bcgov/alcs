@@ -1,0 +1,28 @@
+<div class="split">
+  <h3>Overview</h3>
+  <div>
+    <button *ngIf="!isCancelled" type="button" mat-stroked-button color="warn" (click)="onCancel()">
+      Cancel Notification
+    </button>
+    <button *ngIf="isCancelled" type="button" mat-stroked-button color="primary" (click)="onUncancel()">
+      Uncancel Notification
+    </button>
+  </div>
+</div>
+<section>
+  <h5>Proposal Summary</h5>
+  <app-inline-edit
+    [value]="summary"
+    placeholder="Add Proposal Summary"
+    (save)="onSaveSummary($event)"
+  ></app-inline-edit>
+</section>
+<section>
+  <section>
+    <app-staff-journal *ngIf="notification" parentType="Notification" [parentUuid]="notification.uuid" />
+  </section>
+</section>
+<section>
+  <h5>Notification Event Timeline</h5>
+  <app-timeline [events]="events"></app-timeline>
+</section>

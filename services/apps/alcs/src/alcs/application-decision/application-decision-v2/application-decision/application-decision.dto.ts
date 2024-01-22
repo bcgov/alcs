@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
@@ -16,7 +16,7 @@ import { ApplicationDecisionMakerCodeDto } from '../../application-decision-make
 import { CeoCriterionCodeDto } from './ceo-criterion/ceo-criterion.dto';
 import {
   ApplicationDecisionComponentDto,
-  CreateApplicationDecisionComponentDto,
+  UpdateApplicationDecisionComponentDto,
 } from './component/application-decision-component.dto';
 
 export class UpdateApplicationDecisionDto {
@@ -88,14 +88,6 @@ export class UpdateApplicationDecisionDto {
   @IsOptional()
   decisionDescription?: string | null;
 
-  @IsBoolean()
-  @IsOptional()
-  isStatsRequired?: boolean | null;
-
-  @IsNumber()
-  @IsOptional()
-  daysHideFromPublic?: number | null;
-
   @IsNumber()
   @IsOptional()
   rescindedDate?: number | null;
@@ -108,7 +100,7 @@ export class UpdateApplicationDecisionDto {
   isDraft: boolean;
 
   @IsOptional()
-  decisionComponents?: CreateApplicationDecisionComponentDto[];
+  decisionComponents?: UpdateApplicationDecisionComponentDto[];
 
   @IsOptional()
   @IsArray()
@@ -121,6 +113,10 @@ export class CreateApplicationDecisionDto extends UpdateApplicationDecisionDto {
 
   @IsNumber()
   date: number;
+
+  @IsString()
+  @IsOptional()
+  decisionToCopy?: string;
 
   @IsString()
   outcomeCode: string;
@@ -149,8 +145,6 @@ export class ApplicationDecisionOutcomeCodeDto extends BaseCodeDto {
 
 export class ChairReviewOutcomeCodeDto extends BaseCodeDto {}
 
-export class LinkedResolutionOutcomeTypeDto extends BaseCodeDto {}
-
 export class ApplicationDecisionDto {
   @AutoMap()
   uuid: string;
@@ -159,7 +153,7 @@ export class ApplicationDecisionDto {
   applicationFileNumber;
 
   @AutoMap()
-  date: number;
+  date?: number;
 
   @AutoMap(() => ApplicationDecisionOutcomeCodeDto)
   outcome: ApplicationDecisionOutcomeCodeDto;
@@ -185,9 +179,6 @@ export class ApplicationDecisionDto {
   @AutoMap(() => ChairReviewOutcomeCodeDto)
   chairReviewOutcome?: ChairReviewOutcomeCodeDto | null;
 
-  @AutoMap(() => LinkedResolutionOutcomeTypeDto)
-  linkedResolutionOutcome?: LinkedResolutionOutcomeTypeDto | null;
-
   @AutoMap(() => [DecisionDocumentDto])
   documents: DecisionDocumentDto[];
 
@@ -208,12 +199,6 @@ export class ApplicationDecisionDto {
 
   @AutoMap(() => String)
   decisionDescription?: string | null;
-
-  @AutoMap(() => Boolean)
-  isStatsRequired?: boolean | null;
-
-  @AutoMap(() => Number)
-  daysHideFromPublic?: number | null;
 
   @AutoMap(() => Number)
   rescindedDate?: number | null;
@@ -248,6 +233,9 @@ export class DecisionDocumentDto {
 
   @AutoMap()
   fileName: string;
+
+  @AutoMap()
+  fileSize: number;
 
   @AutoMap()
   mimeType: string;

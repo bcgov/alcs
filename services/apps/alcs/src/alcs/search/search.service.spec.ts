@@ -4,8 +4,11 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Application } from '../application/application.entity';
 import { Covenant } from '../covenant/covenant.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { NoticeOfIntent } from '../notice-of-intent/notice-of-intent.entity';
+import { Notification } from '../notification/notification.entity';
 import { PlanningReview } from '../planning-review/planning-review.entity';
+import { ApplicationSubmissionSearchView } from './application/application-search-view.entity';
 import { SearchService } from './search.service';
 
 describe('SearchService', () => {
@@ -14,6 +17,11 @@ describe('SearchService', () => {
   let mockNoiRepository: DeepMocked<Repository<NoticeOfIntent>>;
   let mockPlanningReviewRepository: DeepMocked<Repository<PlanningReview>>;
   let mockCovenantRepository: DeepMocked<Repository<Covenant>>;
+  let mockApplicationSubmissionSearchView: DeepMocked<
+    Repository<ApplicationSubmissionSearchView>
+  >;
+  let mockLocalGovernment: DeepMocked<Repository<LocalGovernment>>;
+  let mockNotificationRepository: DeepMocked<Repository<Notification>>;
 
   const fakeFileNumber = 'fake';
 
@@ -22,6 +30,9 @@ describe('SearchService', () => {
     mockNoiRepository = createMock();
     mockPlanningReviewRepository = createMock();
     mockCovenantRepository = createMock();
+    mockApplicationSubmissionSearchView = createMock();
+    mockLocalGovernment = createMock();
+    mockNotificationRepository = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -41,6 +52,18 @@ describe('SearchService', () => {
         {
           provide: getRepositoryToken(Covenant),
           useValue: mockCovenantRepository,
+        },
+        {
+          provide: getRepositoryToken(Notification),
+          useValue: mockNotificationRepository,
+        },
+        {
+          provide: getRepositoryToken(ApplicationSubmissionSearchView),
+          useValue: mockApplicationSubmissionSearchView,
+        },
+        {
+          provide: getRepositoryToken(LocalGovernment),
+          useValue: mockLocalGovernment,
         },
       ],
     }).compile();
@@ -122,6 +145,26 @@ describe('SearchService', () => {
       where: {
         fileNumber: fakeFileNumber,
         card: { archived: false },
+      },
+      relations: {
+        card: {
+          board: true,
+        },
+        localGovernment: true,
+      },
+    });
+    expect(result).toBeDefined();
+  });
+
+  it('should call repository to get notification', async () => {
+    mockNotificationRepository.findOne.mockResolvedValue(new Notification());
+
+    const result = await service.getNotification('fake');
+
+    expect(mockNotificationRepository.findOne).toBeCalledTimes(1);
+    expect(mockNotificationRepository.findOne).toBeCalledWith({
+      where: {
+        fileNumber: fakeFileNumber,
       },
       relations: {
         card: {

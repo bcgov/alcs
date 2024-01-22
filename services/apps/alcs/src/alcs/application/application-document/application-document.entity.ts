@@ -1,17 +1,18 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+import { DocumentCode } from '../../../document/document-code.entity';
 import { Document } from '../../../document/document.entity';
 import { Application } from '../application.entity';
-import { ApplicationDocumentCode } from './application-document-code.entity';
 
 export enum VISIBILITY_FLAG {
   APPLICANT = 'A',
@@ -34,8 +35,8 @@ export class ApplicationDocument extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @ManyToOne(() => ApplicationDocumentCode)
-  type?: ApplicationDocumentCode;
+  @ManyToOne(() => DocumentCode)
+  type?: DocumentCode;
 
   @Column({ nullable: true })
   typeCode?: string | null;
@@ -47,6 +48,7 @@ export class ApplicationDocument extends BaseEntity {
   application: Application;
 
   @Column()
+  @Index()
   applicationUuid: string;
 
   @Column({ nullable: true, type: 'uuid' })

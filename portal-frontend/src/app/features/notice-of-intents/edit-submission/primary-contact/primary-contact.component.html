@@ -1,0 +1,235 @@
+<section>
+  <div class="step-description">
+    <h2>Primary Contact</h2>
+    <p>
+      The primary contact becomes the single point of contact and must ensure that landowners are notified of all
+      information exchanged between the primary contact, local or First Nation government, and the ALC.
+    </p>
+    <p>*All fields are required unless stated optional or disabled.</p>
+  </div>
+</section>
+
+<section>
+  <div class="agent-form">
+    <form [formGroup]="form">
+      <div class="form-row">
+        <div class="full-row">
+          <p *ngIf="isGovernmentUser">
+            <strong
+              >Will {{ governmentName ?? 'Local / First Nation Government' }} staff be the primary contact?</strong
+            >
+          </p>
+          <p *ngIf="!isGovernmentUser">
+            <strong
+              >Will one of the landowners
+              <ng-container *ngIf="hasCrownParcels">or government contacts</ng-container> added previously be the
+              primary contact?</strong
+            >
+          </p>
+
+          <mat-button-toggle-group
+            class="input"
+            [value]="!selectedThirdPartyAgent"
+            (change)="onSelectPrimaryContactType($event)"
+          >
+            <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+            <mat-button-toggle [value]="false">No</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+      </div>
+
+      <!-- Existing owner -->
+      <div class="form-row" *ngIf="!selectedThirdPartyAgent && !selectedLocalGovernment">
+        <div class="full-row">
+          <ng-container *ngIf="parcelOwners.length > 0">
+            <label
+              >Select a Primary Contact from the listed land owners
+              <ng-container *ngIf="hasCrownParcels">and government contacts</ng-container></label
+            >
+
+            <mat-radio-group
+              [formControl]="ownersList"
+              color="primary"
+              (change)="onSelectOwner($event.value)"
+              required
+              [ngClass]="{ error: ownersList.invalid && (ownersList.dirty || ownersList.touched) }"
+            >
+              <mat-radio-button *ngFor="let owner of parcelOwners" [value]="owner.uuid" class="radio-option" required>
+                {{ owner.firstName }} {{ owner.lastName }}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="ownersList.invalid && (ownersList.dirty || ownersList.touched)" class="field-error">
+              <mat-icon>warning</mat-icon>
+              <div *ngIf="ownersList.errors?.['required']">This field is required</div>
+            </div>
+
+            <div
+              id="owner-info"
+              class="warning-banner"
+              *ngIf="selectedOwnerUuid && selectedOwnerUuid !== 'agent' && !selectedLocalGovernment"
+            >
+              <div class="owner-details">
+                <div class="row">
+                  <div class="key"><strong>First Name:</strong></div>
+                  <div class="value">{{ firstName.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Last Name:</strong></div>
+                  <div class="value">{{ lastName.value }}</div>
+                </div>
+                <div *ngIf="organizationName.value" class="row">
+                  <div *ngIf="!isCrownOwner && !isGovernmentUser" class="key"><strong>Organization:</strong></div>
+                  <div *ngIf="isCrownOwner" class="key"><strong>Ministry/Department:</strong></div>
+                  <div class="value">{{ organizationName.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Phone Number:</strong></div>
+                  <div class="value">{{ phoneNumber.value }}</div>
+                </div>
+                <div class="row">
+                  <div class="key"><strong>Email:</strong></div>
+                  <div class="value">{{ email.value }}</div>
+                </div>
+                <div class="row">
+                  <button mat-flat-button (click)="onEdit(selectedOwnerUuid)">Edit information</button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <app-warning-banner *ngIf="parcelOwners.length === 0 && !isGovernmentUser && !selectedThirdPartyAgent">
+            No landowners or government contacts are added. Please go back to Step 1 to add information.
+          </app-warning-banner>
+        </div>
+      </div>
+      <!-- /Existing owner -->
+
+      <!-- Third-Part Agent/Government -->
+      <div class="form-row" *ngIf="selectedThirdPartyAgent || selectedLocalGovernment">
+        <div class="full-row">
+          <h3 *ngIf="selectedThirdPartyAgent">Agent Contact Information</h3>
+          <h3 *ngIf="selectedLocalGovernment">
+            {{ governmentName ?? 'Local / First Nation Government' }} Staff Contact Information
+          </h3>
+        </div>
+        <div>
+          <label for="firstName">First Name</label>
+          <mat-form-field appearance="outline">
+            <input id="firstName" matInput placeholder="Enter First Name" formControlName="firstName" />
+          </mat-form-field>
+          <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="firstName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="lastName">Last Name</label>
+          <mat-form-field appearance="outline">
+            <input id="lastName" matInput placeholder="Enter Last Name" formControlName="lastName" />
+          </mat-form-field>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="lastName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div class="full-row">
+          <label *ngIf="!selectedLocalGovernment" for="orgName">Organization Name (optional)</label>
+          <label *ngIf="selectedLocalGovernment" for="orgName">Department</label>
+          <mat-form-field appearance="outline">
+            <input
+              *ngIf="!selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Organization Name"
+              formControlName="organizationName"
+            />
+            <input
+              *ngIf="selectedLocalGovernment"
+              id="orgName"
+              matInput
+              placeholder="Enter Department Name"
+              formControlName="organizationName"
+            />
+          </mat-form-field>
+          <div
+            *ngIf="organizationName.invalid && (organizationName.dirty || organizationName.touched)"
+            class="field-error"
+          >
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="organizationName.errors?.['required']">This field is required</div>
+          </div>
+        </div>
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <mat-form-field appearance="outline">
+            <input
+              id="phoneNumber"
+              mask="(000) 000-0000"
+              matInput
+              maxlength="14"
+              placeholder="(555) 555-5555"
+              formControlName="phoneNumber"
+            />
+          </mat-form-field>
+          <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="phoneNumber.errors?.['required']">This field is required</div>
+            <div *ngIf="phoneNumber.errors?.['mask']">Invalid format</div>
+          </div>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <mat-form-field appearance="outline">
+            <input id="email" type="email" matInput placeholder="Enter Email" formControlName="email" />
+          </mat-form-field>
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="email.errors?.['required']">This field is required</div>
+            <div *ngIf="email.errors?.['email']">Invalid format</div>
+          </div>
+        </div>
+      </div>
+      <!-- /Third-Part Agent/Government -->
+
+      <div class="form-row" *ngIf="needsAuthorizationLetter || hasCrownParcels || files.length > 0">
+        <div class="full-row">
+          <label for="authorization-letter" class="subheading2">Authorization Letters</label>
+          <p class="subtext">
+            For privately owned Fee Simple parcels, the letter must be signed by all individual landowners and the
+            majority of directors within the organization.For Crown parcels or Fee Simple parcels owned by a government,
+            the letter must be signed by senior level staff.
+          </p>
+          <app-info-banner>
+            Visit the <a href="https://www.alc.gov.bc.ca/" target="_blank">ALC website</a> for a template.
+          </app-info-banner>
+          <div class="uploader">
+            <app-file-drag-drop
+              id="authorization-letter"
+              [allowMultiple]="true"
+              [uploadedFiles]="files"
+              (uploadFiles)="attachAuthorizationLetter($event)"
+              (deleteFile)="onDeleteFile($event)"
+              (openFile)="openFile($event)"
+              [showErrors]="showErrors"
+              [isRequired]="needsAuthorizationLetter"
+              [showVirusError]="showVirusError"
+            ></app-file-drag-drop>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div class="button-container">
+  <button *ngIf="!draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Save and Exit</button>
+  <button *ngIf="draftMode" (click)="onSaveExit()" mat-stroked-button color="accent">Discard all Changes</button>
+  <div>
+    <button mat-stroked-button color="primary" (click)="onNavigateToStep(currentStep - 1)">
+      Previous<span class="mobile-hidden"> Step</span>
+    </button>
+    <button mat-flat-button color="primary" (click)="onNavigateToStep(currentStep + 1)">
+      Next<span class="mobile-hidden"> Step</span>
+    </button>
+  </div>
+</div>

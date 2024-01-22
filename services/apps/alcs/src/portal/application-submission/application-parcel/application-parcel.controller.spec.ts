@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -123,7 +123,6 @@ describe('ApplicationParcelController', () => {
       controller.create({
         applicationSubmissionUuid: 'fake',
         ownerUuid: 'fake_uuid',
-        parcelType: 'other',
       }),
     ).rejects.toMatchObject(mockError);
 

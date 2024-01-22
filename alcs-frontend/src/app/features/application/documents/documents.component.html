@@ -26,9 +26,13 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by visibility">Visibility</th>
     <td mat-cell *matCellDef="let element">
       <span *ngIf="element.visibilityFlags.includes('A')" matTooltip="Applicant">A, </span>
-      <span *ngIf="element.visibilityFlags.includes('C')" matTooltip="Commissioner">C, </span>
+      <span *ngIf="element.visibilityFlags.includes('C')" matTooltip="Commissioner"
+        >C<span *ngIf="!hasBeenSetForDiscussion">*</span>,
+      </span>
       <span *ngIf="element.visibilityFlags.includes('G')" matTooltip="L/FNG">G, </span>
-      <span *ngIf="element.visibilityFlags.includes('P')" matTooltip="Public">P</span>
+      <span *ngIf="element.visibilityFlags.includes('P')" matTooltip="Public"
+        >P<span *ngIf="!hasBeenReceived">*</span></span
+      >
     </td>
   </ng-container>
 

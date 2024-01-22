@@ -1,0 +1,19 @@
+@use '../../../../../styles/functions' as *;
+
+.parcel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: rem(12);
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    flex-wrap: wrap;
+    column-gap: rem(12);
+    row-gap: rem(12);
+    margin-bottom: unset;
+  }
+}
+
+.crown-land {
+  text-transform: capitalize;
+}

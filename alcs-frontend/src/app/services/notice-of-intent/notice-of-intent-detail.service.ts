@@ -15,7 +15,7 @@ export class NoticeOfIntentDetailService {
     this.$noticeOfIntent.next(noticeOfIntent);
   }
 
-  async clear() {
+  clear() {
     this.$noticeOfIntent.next(undefined);
   }
 
@@ -25,5 +25,15 @@ export class NoticeOfIntentDetailService {
       this.$noticeOfIntent.next(updatedNoticeOfIntent);
     }
     return updatedNoticeOfIntent;
+  }
+
+  async cancel(fileNumber: string) {
+    await this.noticeOfIntentService.cancel(fileNumber);
+    await this.load(fileNumber);
+  }
+
+  async uncancel(fileNumber: string) {
+    await this.noticeOfIntentService.uncancel(fileNumber);
+    await this.load(fileNumber);
   }
 }

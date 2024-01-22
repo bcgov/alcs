@@ -1,9 +1,10 @@
 import { ConfigModule } from '@app/common/config/config.module';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { ClsService } from 'nestjs-cls';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import {
   initApplicationMockEntity,
   initMockAssigneeDto,
@@ -11,12 +12,18 @@ import {
 import { mockKeyCloakProviders } from '../../../test/mocks/mockTypes';
 import { ApplicationProfile } from '../../common/automapper/application.automapper.profile';
 import { UserProfile } from '../../common/automapper/user.automapper.profile';
-import { BoardSmallDto } from '../board/board.dto';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { ApplicationOwner } from '../../portal/application-submission/application-owner/application-owner.entity';
+import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { StatusEmailService } from '../../providers/email/status-email.service';
+import { User } from '../../user/user.entity';
 import { CardStatusDto } from '../card/card-status/card-status.dto';
 import { CardDto } from '../card/card.dto';
 import { Card } from '../card/card.entity';
 import { CardService } from '../card/card.service';
-import { NotificationService } from '../notification/notification.service';
+import { LocalGovernment } from '../local-government/local-government.entity';
+import { MessageService } from '../message/message.service';
+import { SUBMISSION_STATUS } from './application-submission-status/submission-status.dto';
 import { ApplicationTimeData } from './application-time-tracking.service';
 import { ApplicationController } from './application.controller';
 import { ApplicationDto, UpdateApplicationDto } from './application.dto';
@@ -26,13 +33,17 @@ import { ApplicationService } from './application.service';
 describe('ApplicationController', () => {
   let controller: ApplicationController;
   let applicationService: DeepMocked<ApplicationService>;
-  let notificationService: DeepMocked<NotificationService>;
+  let notificationService: DeepMocked<MessageService>;
   let cardService: DeepMocked<CardService>;
+  let statusEmailService: DeepMocked<StatusEmailService>;
+  let mockTrackingService: DeepMocked<TrackingService>;
+
   const mockApplicationEntity = initApplicationMockEntity();
 
   const mockApplicationDto: ApplicationDto = {
     uuid: 'fake',
     summary: 'summary',
+    hideFromPortal: false,
     fileNumber: mockApplicationEntity.fileNumber,
     applicant: mockApplicationEntity.applicant,
     type: mockApplicationEntity.type,
@@ -58,15 +69,17 @@ describe('ApplicationController', () => {
       type: 'fake',
       uuid: 'fake',
       highPriority: false,
-      board: {} as BoardSmallDto,
+      boardCode: 'boardCode',
     } as CardDto,
     source: 'ALCS',
   };
 
   beforeEach(async () => {
-    applicationService = createMock<ApplicationService>();
-    notificationService = createMock<NotificationService>();
-    cardService = createMock<CardService>();
+    applicationService = createMock();
+    notificationService = createMock();
+    cardService = createMock();
+    statusEmailService = createMock();
+    mockTrackingService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ApplicationController],
@@ -78,12 +91,20 @@ describe('ApplicationController', () => {
           useValue: applicationService,
         },
         {
-          provide: NotificationService,
+          provide: MessageService,
           useValue: notificationService,
         },
         {
           provide: CardService,
           useValue: cardService,
+        },
+        {
+          provide: StatusEmailService,
+          useValue: statusEmailService,
+        },
+        {
+          provide: TrackingService,
+          useValue: mockTrackingService,
         },
         {
           provide: ClsService,
@@ -107,7 +128,7 @@ describe('ApplicationController', () => {
     });
 
     applicationService.mapToDtos.mockResolvedValue([mockApplicationDto]);
-    notificationService.createNotification.mockResolvedValue();
+    notificationService.create.mockResolvedValue();
   });
 
   it('should be defined', () => {
@@ -162,7 +183,7 @@ describe('ApplicationController', () => {
 
     expect(res.applicant).toEqual(mockUpdate.applicant);
     expect(applicationService.update).toHaveBeenCalledTimes(1);
-    expect(notificationService.createNotification).not.toHaveBeenCalled();
+    expect(notificationService.create).not.toHaveBeenCalled();
     expect(applicationService.update).toHaveBeenCalledWith(
       mockApplicationEntity,
       mockUpdate,
@@ -361,10 +382,57 @@ describe('ApplicationController', () => {
   });
 
   it('should call through for get', async () => {
+    mockTrackingService.trackView.mockResolvedValue();
     applicationService.getOrFail.mockResolvedValue(mockApplicationEntity);
-    await controller.get(mockApplicationEntity.uuid);
+    await controller.get(mockApplicationEntity.uuid, {
+      user: {
+        entity: new User(),
+      },
+    });
 
     expect(applicationService.getOrFail).toBeCalledTimes(1);
     expect(applicationService.mapToDtos).toBeCalledTimes(1);
+    expect(mockTrackingService.trackView).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call through for cancel', async () => {
+    const primaryContactOwnerUuid = 'primary-contact';
+    const localGovernmentUuid = 'local-government';
+    const mockGovernment = new LocalGovernment({ uuid: localGovernmentUuid });
+    const mockOwner = new ApplicationOwner({ uuid: primaryContactOwnerUuid });
+    const mockApplicationSubmission = new ApplicationSubmission({
+      owners: [mockOwner],
+      primaryContactOwnerUuid,
+      localGovernmentUuid,
+    });
+
+    statusEmailService.getApplicationEmailData.mockResolvedValue({
+      applicationSubmission: mockApplicationSubmission,
+      primaryContact: mockOwner,
+      submissionGovernment: mockGovernment,
+    });
+    statusEmailService.sendApplicationStatusEmail.mockResolvedValue();
+    applicationService.cancel.mockResolvedValue();
+
+    await controller.cancel(mockApplicationEntity.uuid);
+
+    expect(applicationService.cancel).toBeCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledTimes(1);
+    expect(statusEmailService.sendApplicationStatusEmail).toBeCalledWith({
+      generateStatusHtml: generateCANCApplicationHtml,
+      status: SUBMISSION_STATUS.CANCELLED,
+      applicationSubmission: mockApplicationSubmission,
+      government: mockGovernment,
+      parentType: 'application',
+      primaryContact: mockOwner,
+      ccGovernment: true,
+    });
+  });
+
+  it('should call through for uncancel', async () => {
+    applicationService.uncancel.mockResolvedValue();
+    await controller.uncancel(mockApplicationEntity.uuid);
+
+    expect(applicationService.uncancel).toBeCalledTimes(1);
   });
 });

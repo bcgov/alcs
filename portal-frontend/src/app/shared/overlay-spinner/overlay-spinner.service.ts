@@ -1,7 +1,8 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { ComponentPortal } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
+import { Component, Injectable } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FileOverlaySpinnerComponent } from './file-overlay-spinner/file-overlay-spinner.component';
 
 @Injectable({
   providedIn: 'root',
@@ -12,10 +13,14 @@ export class OverlaySpinnerService {
 
   constructor(private overlay: Overlay) {}
 
-  showSpinner() {
+  showFileSpinner() {
+    this.showSpinner(FileOverlaySpinnerComponent);
+  }
+
+  showSpinner(component: ComponentType<any> = MatProgressSpinner) {
     if (!this.spinnerIsVisible) {
       this.spinnerIsVisible = true;
-      const portal = new ComponentPortal(MatProgressSpinner);
+      const portal = new ComponentPortal(component);
       const spinner = this.spinnerRef.attach(portal);
       spinner.instance.mode = 'indeterminate';
       //Steal focus to prevent spamming the button

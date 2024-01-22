@@ -25,20 +25,29 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTreeModule } from '@angular/material/tree';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { FileTypeFilterDropDownComponent } from '../features/public/search/file-type-filter-drop-down/file-type-filter-drop-down.component';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import { DragDropDirective } from './file-drag-drop/drag-drop.directive';
 import { FileDragDropComponent } from './file-drag-drop/file-drag-drop.component';
 import { InfoBannerComponent } from './info-banner/info-banner.component';
 import { NoDataComponent } from './no-data/no-data.component';
+import { FileOverlaySpinnerComponent } from './overlay-spinner/file-overlay-spinner/file-overlay-spinner.component';
+import { CrownOwnerDialogComponent } from './owner-dialogs/crown-owner-dialog/crown-owner-dialog.component';
+import { OwnerDialogComponent } from './owner-dialogs/owner-dialog/owner-dialog.component';
+import { ParcelOwnersComponent } from './owner-dialogs/parcel-owners/parcel-owners.component';
 import { EmailValidPipe } from './pipes/emailValid.pipe';
 import { FileSizePipe } from './pipes/fileSize.pipe';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PhoneValidPipe } from './pipes/phoneValid.pipe';
-import { UpdatedBannerComponent } from './updated-banner/updated-banner.component';
+import { TableColumnNoDataPipe } from './pipes/table-column-no-data.pipe';
+import { PrescribedBodyComponent } from './prescribed-body/prescribed-body.component';
+import { SoilTableComponent } from './soil-table/soil-table.component';
 import { DATE_FORMATS } from './utils/date-format';
 import { ValidationErrorComponent } from './validation-error/validation-error.component';
 import { WarningBannerComponent } from './warning-banner/warning-banner.component';
+import { CommissionPurposesPanelComponent } from './commission-purposes-panel/commission-purposes-panel.component';
 
 @NgModule({
   providers: [
@@ -57,6 +66,42 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     CdkStepperModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    MatRadioModule,
+    MatDialogModule,
+    MatTableModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonToggleModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatTreeModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+  ],
+  declarations: [
+    FileDragDropComponent,
+    FileSizePipe,
+    EmailValidPipe,
+    PhoneValidPipe,
+    DragDropDirective,
+    WarningBannerComponent,
+    InfoBannerComponent,
+    NoDataComponent,
+    ValidationErrorComponent,
+    CustomStepperComponent,
+    MomentPipe,
+    PrescribedBodyComponent,
+    OwnerDialogComponent,
+    CrownOwnerDialogComponent,
+    ParcelOwnersComponent,
+    SoilTableComponent,
+    TableColumnNoDataPipe,
+    FileTypeFilterDropDownComponent,
+    FileOverlaySpinnerComponent,
+    CommissionPurposesPanelComponent,
   ],
   exports: [
     CommonModule,
@@ -85,7 +130,6 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     PhoneValidPipe,
     WarningBannerComponent,
     InfoBannerComponent,
-    UpdatedBannerComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
@@ -98,20 +142,14 @@ import { WarningBannerComponent } from './warning-banner/warning-banner.componen
     NgxMaskDirective,
     NgxMaskPipe,
     MomentPipe,
-  ],
-  declarations: [
-    FileDragDropComponent,
-    FileSizePipe,
-    EmailValidPipe,
-    PhoneValidPipe,
-    DragDropDirective,
-    WarningBannerComponent,
-    InfoBannerComponent,
-    NoDataComponent,
-    UpdatedBannerComponent,
-    ValidationErrorComponent,
-    CustomStepperComponent,
-    MomentPipe,
+    PrescribedBodyComponent,
+    OwnerDialogComponent,
+    CrownOwnerDialogComponent,
+    ParcelOwnersComponent,
+    SoilTableComponent,
+    TableColumnNoDataPipe,
+    FileTypeFilterDropDownComponent,
+    CommissionPurposesPanelComponent,
   ],
 })
 export class SharedModule {

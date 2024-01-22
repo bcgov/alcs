@@ -1,6 +1,8 @@
-import { AutoMap } from '@automapper/classes';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { AutoMap } from 'automapper-classes';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseCodeDto } from '../../../../../common/dtos/base.dto';
+import { NaruSubtypeDto } from '../../../../../portal/application-submission/application-submission.dto';
+import { ApplicationDecisionComponentLotDto } from '../../../application-component-lot/application-decision-component-lot.dto';
 
 export class ApplicationDecisionComponentTypeDto extends BaseCodeDto {}
 
@@ -45,6 +47,10 @@ export class UpdateApplicationDecisionComponentDto {
 
   @IsOptional()
   @IsNumber()
+  endDate2?: number;
+
+  @IsOptional()
+  @IsNumber()
   expiryDate?: number;
 
   @IsOptional()
@@ -86,6 +92,18 @@ export class UpdateApplicationDecisionComponentDto {
   @IsNumber()
   @IsOptional()
   soilToRemoveAverageDepth?: number | null;
+
+  @IsString()
+  @IsOptional()
+  naruSubtypeCode: string;
+
+  @IsArray()
+  @IsOptional()
+  lots?: ApplicationDecisionComponentLotDto[];
+
+  @IsString()
+  @IsOptional()
+  inclExclApplicantType?: string | null;
 }
 
 export class CreateApplicationDecisionComponentDto extends UpdateApplicationDecisionComponentDto {
@@ -119,10 +137,8 @@ export class ApplicationDecisionComponentDto {
   @AutoMap()
   nfuSubType?: string;
 
-  @AutoMap()
   endDate?: number;
-
-  @AutoMap()
+  endDate2?: number;
   expiryDate?: number;
 
   @AutoMap()
@@ -163,6 +179,18 @@ export class ApplicationDecisionComponentDto {
 
   @AutoMap(() => ApplicationDecisionComponentTypeDto)
   applicationDecisionComponentType: ApplicationDecisionComponentTypeDto;
+
+  @AutoMap()
+  naruSubtypeCode: string;
+
+  @AutoMap(() => NaruSubtypeDto)
+  naruSubtype: NaruSubtypeDto;
+
+  @AutoMap(() => [ApplicationDecisionComponentLotDto])
+  lots?: ApplicationDecisionComponentLotDto[];
+
+  @AutoMap(() => String)
+  inclExclApplicantType?: string;
 }
 
 export enum APPLICATION_DECISION_COMPONENT_TYPE {
@@ -171,4 +199,5 @@ export enum APPLICATION_DECISION_COMPONENT_TYPE {
   POFO = 'POFO',
   ROSO = 'ROSO',
   PFRS = 'PFRS',
+  NARU = 'NARU',
 }

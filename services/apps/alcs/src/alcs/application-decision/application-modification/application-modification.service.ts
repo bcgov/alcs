@@ -1,8 +1,8 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   FindOptionsRelations,
   FindOptionsWhere,
@@ -10,6 +10,7 @@ import {
   Not,
   Repository,
 } from 'typeorm';
+import { filterUndefined } from '../../../utils/undefined';
 import { ApplicationService } from '../../application/application.service';
 import { Board } from '../../board/board.entity';
 import { CARD_TYPE } from '../../card/card-type/card-type.entity';
@@ -120,6 +121,7 @@ export class ApplicationModificationService {
     const modification = new ApplicationModification({
       submittedDate: new Date(createDto.submittedDate),
       isTimeExtension: createDto.isTimeExtension,
+      description: createDto.description,
     });
 
     modification.card = await this.cardService.create(
@@ -133,9 +135,8 @@ export class ApplicationModificationService {
         createDto.modifiesDecisionUuids,
       );
 
-    const mockModifications = await this.modificationRepository.save(
-      modification,
-    );
+    const mockModifications =
+      await this.modificationRepository.save(modification);
     return this.getByUuid(mockModifications.uuid);
   }
 
@@ -168,11 +169,6 @@ export class ApplicationModificationService {
     if (updateDto.submittedDate) {
       modification.submittedDate = new Date(updateDto.submittedDate);
     }
-    if (updateDto.reviewDate !== undefined) {
-      modification.reviewDate = updateDto.reviewDate
-        ? new Date(updateDto.reviewDate)
-        : null;
-    }
 
     if (updateDto.reviewOutcomeCode) {
       modification.reviewOutcomeCode = updateDto.reviewOutcomeCode;
@@ -181,6 +177,11 @@ export class ApplicationModificationService {
     if (updateDto.isTimeExtension !== undefined) {
       modification.isTimeExtension = updateDto.isTimeExtension;
     }
+
+    modification.description = filterUndefined(
+      updateDto.description,
+      modification.description,
+    );
 
     if (updateDto.modifiesDecisionUuids) {
       modification.modifiesDecisions =
@@ -195,7 +196,10 @@ export class ApplicationModificationService {
 
   async delete(uuid: string) {
     const modification = await this.getByUuidOrFail(uuid);
-    await this.cardService.archive(modification.cardUuid);
+    if (modification.cardUuid) {
+      await this.cardService.archive(modification.cardUuid);
+    }
+
     return this.modificationRepository.softRemove([modification]);
   }
 

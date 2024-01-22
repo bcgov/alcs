@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, combineLatestWith, takeUntil, tap } from 'rxjs';
+import { combineLatestWith, Subject, takeUntil, tap } from 'rxjs';
 import { ApplicationDetailService } from '../../../services/application/application-detail.service';
 import { ApplicationModificationDto } from '../../../services/application/application-modification/application-modification.dto';
 import { ApplicationModificationService } from '../../../services/application/application-modification/application-modification.service';
@@ -62,7 +62,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
           this.reconsiderations =
             reconsiderations?.map((r) => ({
               ...r,
-              reconsidersDecisionsNumbers: r.reconsideredDecisions.flatMap(
+              reconsidersDecisionsNumbers: r.reconsidersDecisions.flatMap(
                 (d) => `#${d.resolutionNumber}/${d.resolutionYear}`
               ),
             })) ?? [];
@@ -88,7 +88,7 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
         autoFocus: false,
         data: {
           fileNumber: this.fileNumber,
-          existingDecision: reconsideration,
+          existingRecon: reconsideration,
           codes: this.reconCodes,
         },
       })
@@ -162,11 +162,11 @@ export class PostDecisionComponent implements OnInit, OnDestroy {
     await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
 
-  async onSaveModificationReviewDate(uuid: string, reviewDate: number) {
-    await this.modificationService.update(uuid, {
-      reviewDate: formatDateForApi(reviewDate),
+  async onSaveReconsiderationDecisionOutcome(reconsiderationUuid: string, decisionOutcomeCode: string) {
+    await this.applicationReconsiderationService.update(reconsiderationUuid, {
+      decisionOutcomeCode,
     });
-    await this.modificationService.fetchByApplication(this.fileNumber);
+    await this.applicationReconsiderationService.fetchByApplication(this.fileNumber);
   }
 
   async onSaveModificationOutcome(uuid: string, reviewOutcomeCode: string) {

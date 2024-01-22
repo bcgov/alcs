@@ -7,7 +7,6 @@ import { ProvisionComponent } from './features/provision/provision.component';
 import { AuthGuard } from './services/authentication/auth.guard';
 import { ALL_ROLES, ROLES } from './services/authentication/authentication.service';
 import { HasRolesGuard } from './services/authentication/hasRoles.guard';
-import { SearchComponent } from './shared/header/search/search.component';
 
 export const ROLES_ALLOWED_APPLICATIONS = [ROLES.ADMIN, ROLES.LUP, ROLES.APP_SPECIALIST, ROLES.GIS, ROLES.SOIL_OFFICER];
 export const ROLES_ALLOWED_BOARDS = ROLES_ALLOWED_APPLICATIONS;
@@ -47,6 +46,14 @@ const routes: Routes = [
       import('./features/notice-of-intent/notice-of-intent.module').then((m) => m.NoticeOfIntentModule),
   },
   {
+    path: 'notification',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ROLES_ALLOWED_APPLICATIONS,
+    },
+    loadChildren: () => import('./features/notification/notification.module').then((m) => m.NotificationModule),
+  },
+  {
     path: 'schedule',
     canActivate: [HasRolesGuard],
     data: {
@@ -71,6 +78,14 @@ const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.module').then((m) => m.AdminModule),
   },
   {
+    path: 'search',
+    canActivate: [HasRolesGuard],
+    data: {
+      roles: ALL_ROLES,
+    },
+    loadChildren: () => import('./features/search/search.module').then((m) => m.SearchModule),
+  },
+  {
     path: 'login',
     component: LoginComponent,
   },
@@ -81,11 +96,6 @@ const routes: Routes = [
   {
     path: 'provision',
     component: ProvisionComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'search',
-    component: SearchComponent,
     canActivate: [AuthGuard],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

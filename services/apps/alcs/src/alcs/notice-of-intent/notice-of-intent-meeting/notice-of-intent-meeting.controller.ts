@@ -1,17 +1,17 @@
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Logger,
   NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
-import { Logger, UseGuards } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
 import { ServiceNotFoundException } from '../../../../../../libs/common/src/exceptions/base.exception';
@@ -44,9 +44,7 @@ export class NoticeOfIntentMeetingController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<NoticeOfIntentMeetingDto[]> {
-    const meetings = await this.noiMeetingService.getByAppFileNumber(
-      fileNumber,
-    );
+    const meetings = await this.noiMeetingService.getByFileNumber(fileNumber);
 
     return this.mapper.mapArrayAsync(
       meetings,
@@ -80,10 +78,10 @@ export class NoticeOfIntentMeetingController {
   }
 
   private async validateAndPrepareCreateData(
-    fileNumber: string,
+    uuid: string,
     meeting: CreateNoticeOfIntentMeetingDto,
   ) {
-    const noi = await this.noiService.getOrFail(fileNumber);
+    const noi = await this.noiService.getOrFailByUuid(uuid);
     const meetingType = (
       await this.noiMeetingService.fetNoticeOfIntentMeetingTypes()
     ).find((e) => e.code === meeting.meetingTypeCode);

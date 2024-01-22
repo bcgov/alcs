@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { DOCUMENT_TYPE } from '../../shared/document/document.dto';
 import { environment } from '../../../environments/environment';
-import { DOCUMENT_TYPE } from '../../services/application/application-document/application-document.service';
 import { CommissionerApplicationDto } from '../../services/commissioner/commissioner.dto';
 import { CommissionerService } from '../../services/commissioner/commissioner.service';
 

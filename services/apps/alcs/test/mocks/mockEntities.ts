@@ -1,3 +1,11 @@
+import { ApplicationDecisionOutcomeCode } from '../../src/alcs/application-decision/application-decision-outcome.entity';
+import { ApplicationDecisionMeeting } from '../../src/alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
+import { ApplicationDecision } from '../../src/alcs/application-decision/application-decision.entity';
+import { ApplicationModificationOutcomeType } from '../../src/alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
+import { ApplicationModification } from '../../src/alcs/application-decision/application-modification/application-modification.entity';
+import { ApplicationReconsideration } from '../../src/alcs/application-decision/application-reconsideration/application-reconsideration.entity';
+import { ApplicationReconsiderationOutcomeType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
+import { ApplicationReconsiderationType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
 import { ApplicationMeeting } from '../../src/alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../src/alcs/application/application-paused.entity';
 import { Application } from '../../src/alcs/application/application.entity';
@@ -12,14 +20,6 @@ import { ApplicationRegion } from '../../src/alcs/code/application-code/applicat
 import { ApplicationType } from '../../src/alcs/code/application-code/application-type/application-type.entity';
 import { Comment } from '../../src/alcs/comment/comment.entity';
 import { CommentMention } from '../../src/alcs/comment/mention/comment-mention.entity';
-import { ApplicationDecisionOutcomeCode } from '../../src/alcs/application-decision/application-decision-outcome.entity';
-import { ApplicationDecision } from '../../src/alcs/application-decision/application-decision.entity';
-import { ApplicationModification } from '../../src/alcs/application-decision/application-modification/application-modification.entity';
-import { ApplicationModificationOutcomeType } from '../../src/alcs/application-decision/application-modification/application-modification-outcome-type/application-modification-outcome-type.entity';
-import { ApplicationReconsideration } from '../../src/alcs/application-decision/application-reconsideration/application-reconsideration.entity';
-import { ApplicationReconsiderationOutcomeType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-outcome-type/application-reconsideration-outcome-type.entity';
-import { ApplicationReconsiderationType } from '../../src/alcs/application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
-import { ApplicationDecisionMeeting } from '../../src/alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
 import { AssigneeDto, UserDto } from '../../src/user/user.dto';
 import { User } from '../../src/user/user.entity';
 
@@ -123,7 +123,6 @@ const initApplicationReconsiderationMockEntity = (
   reconsideration.applicationUuid = app.uuid;
   reconsideration.auditCreatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.auditUpdatedAt = new Date(1, 1, 1, 1, 1, 1, 1);
-  reconsideration.reviewDate = new Date(1, 1, 1, 1, 1, 1, 1);
   reconsideration.submittedDate = new Date(1, 1, 1, 1, 1, 1, 1);
   const cardEntity = card ?? initCardMockEntity('222');
   reconsideration.card = cardEntity;
@@ -148,12 +147,11 @@ const initApplicationModificationMockEntity = (
   card?: Card,
 ): ApplicationModification => {
   const app = application ?? initApplicationMockEntity();
-  const reconsideration = new ApplicationModification({
+  const modification = new ApplicationModification({
     application: app,
     applicationUuid: app.uuid,
     auditCreatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
     auditUpdatedAt: new Date(1, 1, 1, 1, 1, 1, 1),
-    reviewDate: new Date(1, 1, 1, 1, 1, 1, 1),
     submittedDate: new Date(1, 1, 1, 1, 1, 1, 1),
     reviewOutcome: {
       label: 'mock',
@@ -163,10 +161,10 @@ const initApplicationModificationMockEntity = (
   });
 
   const cardEntity = card ?? initCardMockEntity('222');
-  reconsideration.card = cardEntity;
-  reconsideration.cardUuid = cardEntity.uuid;
+  modification.card = cardEntity;
+  modification.cardUuid = cardEntity.uuid;
 
-  return reconsideration;
+  return modification;
 };
 
 const initApplicationMockEntity = (fileNumber?: string): Application => {
@@ -282,6 +280,7 @@ const initApplicationDecisionMeetingMock = (
 
 const initApplicationDecisionMock = (application?: Application) => {
   return new ApplicationDecision({
+    isDraft: false,
     outcome: {
       code: 'CODE',
       label: 'label',
@@ -291,6 +290,8 @@ const initApplicationDecisionMock = (application?: Application) => {
     applicationUuid: application ? application.uuid : 'fake-application-uuid',
     application,
     documents: [],
+    conditions: [],
+    components: [],
   });
 };
 

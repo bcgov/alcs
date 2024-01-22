@@ -11,6 +11,7 @@ import { BoardService } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SYSTEM_SOURCE_TYPES } from '../../../../shared/dto/system-source.types.dto';
 import { SharedModule } from '../../../../shared/shared.module';
 import { ApplicationDialogComponent } from './application-dialog.component';
 
@@ -42,10 +43,12 @@ describe('ApplicationDialogComponent', () => {
     shortLabel: 'short_label',
     textColor: '#000',
     backgroundColor: '#fff',
+    requiresGovernmentReview: false,
   };
 
   const mockApplication: ApplicationDto = {
     uuid: '',
+    hideFromPortal: false,
     type: mockApplicationType,
     region: mockApplicationRegion,
     fileNumber: '1111',
@@ -54,6 +57,7 @@ describe('ApplicationDialogComponent', () => {
       uuid: 'fake',
       name: 'Local Government',
       preferredRegionCode: 'FAKE_CODE',
+      isFirstNation: false,
     },
     summary: 'MOCK SUMMARY',
     activeDays: 10,
@@ -61,18 +65,15 @@ describe('ApplicationDialogComponent', () => {
     paused: true,
     decisionMeetings: [],
     dateSubmittedToAlc: Date.now(),
-    statusHistory: [],
     card: {
+      boardCode: 'a',
       assignee: mockAssignee,
       highPriority: false,
-      board: {
-        code: 'board-code',
-      },
       status: {
         code: 'card-status',
       },
     } as CardDto,
-    source: 'ALCS',
+    source: SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(async () => {
@@ -85,6 +86,14 @@ describe('ApplicationDialogComponent', () => {
 
     mockBoardService = createMock();
     mockBoardService.$boards = new EventEmitter();
+    mockBoardService.fetchBoardDetail.mockResolvedValue({
+      allowedCardTypes: [],
+      code: '',
+      createCardTypes: [],
+      showOnSchedule: false,
+      statuses: [],
+      title: '',
+    });
 
     await TestBed.configureTestingModule({
       declarations: [ApplicationDialogComponent],
@@ -107,6 +116,7 @@ describe('ApplicationDialogComponent', () => {
     fixture = TestBed.createComponent(ApplicationDialogComponent);
     component = fixture.componentInstance;
     component.data = mockApplication;
+    component.boardStatuses = [];
     fixture.detectChanges();
   });
 

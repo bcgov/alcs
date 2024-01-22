@@ -1,0 +1,45 @@
+<div *ngFor="let decision of decisions; let index = index">
+  <h4>Decision #{{ decisions.length - index }}</h4>
+  <div class="decision-table">
+    <div>
+      <div class="subheading2">Decision Date</div>
+      {{ decision.date | momentFormat }}
+    </div>
+
+    <div>
+      <div class="subheading2">Resolution Number</div>
+      #{{ decision.resolutionNumber }}/{{ decision.resolutionYear }}
+    </div>
+
+    <div class="full-width">
+      <div class="subheading2">Decision Summary</div>
+      {{ decision.decisionDescription }}
+    </div>
+
+    <div class="full-width">
+      <div class="subheading2">Decision Document</div>
+      <div class="document split" *ngFor="let document of decision.documents">
+        <div>
+          <a (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+          &nbsp;({{ document.fileSize | filesize }})
+        </div>
+        <button class="center" mat-button (click)="openFile(document.uuid)">
+          <mat-icon>file_download</mat-icon>
+          Download
+        </button>
+      </div>
+      <div class="document responsive left" *ngFor="let document of decision.documents">
+        <div class="document-name">
+          <a (click)="openFile(document.uuid)">{{ document.fileName }}</a>
+        </div>
+        <div class="split">
+          <div>{{ document.fileSize | filesize }}</div>
+          <button class="center" mat-button (click)="openFile(document.uuid)">
+            <mat-icon>file_download</mat-icon>
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

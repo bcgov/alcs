@@ -1,0 +1,206 @@
+<section>
+  <h1>Welcome to the ALC Public Search</h1>
+  <app-warning-banner>
+    This search returns only publicly available information from submissions created as of July 2015. To view older decisions, visit the
+    <a href="https://www.alc.gov.bc.ca/application-decision-search/">Applications and Decisions</a> section of the ALC website. 
+    Applicants and local or First Nation governments should <a routerLink="/login">log in to the Portal</a> to view their detailed submissions.
+  </app-warning-banner>
+
+  <h3>Search by one or more of the following fields:</h3>
+
+  <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <div class="search-form">
+      <div>
+        <label for="fileNumber">ALC ID</label>
+        <mat-form-field appearance="outline">
+          <input mask="0*" id="fileNumber" matInput formControlName="fileNumber" />
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="pid">PID</label>
+        <mat-form-field appearance="outline">
+          <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+        </mat-form-field>
+        <div *ngIf="pidInvalid" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+        </div>
+      </div>
+      <div>
+        <label for="name">Name</label>
+        <mat-form-field appearance="outline">
+          <input id="name" matInput formControlName="name" minlength="3" />
+        </mat-form-field>
+        <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
+        </div>
+      </div>
+      <div>
+        <label for="civicAddress">Civic Address</label>
+        <mat-form-field appearance="outline">
+          <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
+        </mat-form-field>
+        <div *ngIf="civicAddressInvalid" class="field-error">
+          <mat-icon>warning</mat-icon>
+          <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
+        </div>
+      </div>
+      <div>
+        <label for="government">Local/First Nation Government</label>
+        <mat-form-field appearance="outline">
+          <input
+            (blur)="onBlur()"
+            id="government"
+            type="text"
+            matInput
+            formControlName="government"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete (optionSelected)="onGovernmentChange($event)" #auto="matAutocomplete">
+            <mat-option *ngFor="let option of filteredLocalGovernments | async" [value]="option.name">
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-label for="region">Region</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple="true" id="region" formControlName="region">
+            <mat-option *ngFor="let region of regions" [value]="region.code">{{ region.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="decisionOutcome">Decision Outcome</label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple="true" id="decisionOutcome" [formControl]="portalDecisionOutcomeControl">
+            <mat-option *ngFor="let decision of DECISION_MAP" [value]="decision[1]">
+              {{ decision[0] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-label for="decisionMaker">Decision Maker</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select id="decisionMaker" formControlName="decisionMaker">
+            <mat-option *ngFor="let decisionMaker of decisionMakers" [value]="decisionMaker.code">{{
+              decisionMaker.label
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <label for="type">Type</label>
+        <app-file-type-filter-drop-down
+          #fileTypeDropDown
+          [setFileTypes]="previousFileTypes"
+          (fileTypeChange)="onFileTypeChange($event)"
+        />
+      </div>
+      <div>
+        <mat-label for="status">Status</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
+            <mat-option *ngFor="let status of STATUS_MAP" [value]="status[1]">
+              {{ status[0] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="full-width">
+        <mat-label for="decisionDates">Decision Dates</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-date-range-input [max]="today" [rangePicker]="decisionDatePicker">
+            <input matStartDate formControlName="dateDecidedFrom" aria-label="date-decided-from" />
+            <input matEndDate formControlName="dateDecidedTo" aria-label="date-decided-to" />
+          </mat-date-range-input>
+          <mat-datepicker-toggle matIconSuffix [for]="decisionDatePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #decisionDatePicker></mat-date-range-picker
+        ></mat-form-field>
+      </div>
+    </div>
+
+    <div class="button-controls">
+      <button type="button" mat-stroked-button color="accent" (click)="onClear()">Clear</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="formEmpty || !searchForm.valid">Search</button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading && searchResultsHidden" class="center">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="search-fields-wrapper search-result-wrapper" *ngIf="!searchResultsHidden">
+    <h3 class="search-title">Search Results</h3>
+    <div *ngIf="isLoading && !searchResultsHidden" class="center">
+      <mat-spinner></mat-spinner>
+    </div>
+    <mat-tab-group *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+      <mat-tab>
+        <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          type="applications"
+          [results]="applications"
+          [totalCount]="applicationTotal"
+          [statuses]="statuses"
+          [pageIndex]="pageIndex"
+          (loadMore)="onLoadMore('APP')"
+        >
+        </app-search-list>
+        <app-application-search-table
+          *ngIf="!isMobile"
+          [applications]="applications"
+          [totalCount]="applicationTotal"
+          [statuses]="statuses"
+          (tableChange)="onTableChange($event)"
+        ></app-application-search-table>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          type="notices of intent"
+          [results]="noticeOfIntents"
+          [pageIndex]="pageIndex"
+          [totalCount]="noticeOfIntentTotal"
+          [statuses]="statuses"
+          (loadMore)="onLoadMore('NOI')"
+        >
+        </app-search-list>
+        <app-notice-of-intent-search-table
+          *ngIf="!isMobile"
+          [noticeOfIntents]="noticeOfIntents"
+          [totalCount]="noticeOfIntentTotal"
+          [statuses]="statuses"
+          (tableChange)="onTableChange($event)"
+        ></app-notice-of-intent-search-table>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label> Notifications: {{ notificationTotal }} </ng-template>
+        <app-search-list
+          *ngIf="isMobile"
+          type="notifications"
+          [results]="notifications"
+          [pageIndex]="pageIndex"
+          [totalCount]="notificationTotal"
+          [statuses]="statuses"
+          (loadMore)="onLoadMore('NOTI')"
+        >
+        </app-search-list>
+        <app-notification-search-table
+          *ngIf="!isMobile"
+          [statuses]="statuses"
+          [notifications]="notifications"
+          [totalCount]="notificationTotal"
+          (tableChange)="onTableChange($event)"
+        >
+        </app-notification-search-table>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</section>

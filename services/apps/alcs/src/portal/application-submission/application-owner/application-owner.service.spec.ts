@@ -4,12 +4,12 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationDocument } from '../../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../../alcs/application/application-document/application-document.service';
-import { PARCEL_TYPE } from '../application-parcel/application-parcel.dto';
+import { ApplicationService } from '../../../alcs/application/application.service';
+import { OwnerType } from '../../../common/owner-type/owner-type.entity';
 import { ApplicationParcel } from '../application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from '../application-parcel/application-parcel.service';
 import { ApplicationSubmission } from '../application-submission.entity';
 import { ApplicationSubmissionService } from '../application-submission.service';
-import { ApplicationOwnerType } from './application-owner-type/application-owner-type.entity';
 import { ApplicationOwner } from './application-owner.entity';
 import { ApplicationOwnerService } from './application-owner.service';
 
@@ -17,16 +17,18 @@ describe('ApplicationOwnerService', () => {
   let service: ApplicationOwnerService;
   let mockParcelService: DeepMocked<ApplicationParcelService>;
   let mockRepo: DeepMocked<Repository<ApplicationOwner>>;
-  let mockTypeRepo: DeepMocked<Repository<ApplicationOwnerType>>;
+  let mockTypeRepo: DeepMocked<Repository<OwnerType>>;
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
-  let mockApplicationservice: DeepMocked<ApplicationSubmissionService>;
+  let mockApplicationSubmissionservice: DeepMocked<ApplicationSubmissionService>;
+  let mockApplicationService: DeepMocked<ApplicationService>;
 
   beforeEach(async () => {
     mockParcelService = createMock();
     mockRepo = createMock();
     mockTypeRepo = createMock();
     mockAppDocumentService = createMock();
-    mockApplicationservice = createMock();
+    mockApplicationSubmissionservice = createMock();
+    mockApplicationService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -40,7 +42,7 @@ describe('ApplicationOwnerService', () => {
           useValue: mockRepo,
         },
         {
-          provide: getRepositoryToken(ApplicationOwnerType),
+          provide: getRepositoryToken(OwnerType),
           useValue: mockTypeRepo,
         },
         {
@@ -49,7 +51,11 @@ describe('ApplicationOwnerService', () => {
         },
         {
           provide: ApplicationSubmissionService,
-          useValue: mockApplicationservice,
+          useValue: mockApplicationSubmissionservice,
+        },
+        {
+          provide: ApplicationService,
+          useValue: mockApplicationService,
         },
       ],
     }).compile();
@@ -61,8 +67,12 @@ describe('ApplicationOwnerService', () => {
         owners: [new ApplicationOwner()],
       }),
     ]);
-    mockApplicationservice.update.mockResolvedValue(
+    mockApplicationSubmissionservice.update.mockResolvedValue(
       new ApplicationSubmission(),
+    );
+    mockApplicationService.updateApplicant.mockResolvedValue();
+    mockApplicationSubmissionservice.getFileNumber.mockResolvedValue(
+      'file-number',
     );
   });
 
@@ -80,7 +90,7 @@ describe('ApplicationOwnerService', () => {
 
   it('should load the type and then call save for create', async () => {
     mockRepo.save.mockResolvedValue(new ApplicationOwner());
-    mockTypeRepo.findOneOrFail.mockResolvedValue(new ApplicationOwnerType());
+    mockTypeRepo.findOneOrFail.mockResolvedValue(new OwnerType());
 
     await service.create(
       {
@@ -202,6 +212,14 @@ describe('ApplicationOwnerService', () => {
     expect(mockRepo.find).toHaveBeenCalledTimes(1);
   });
 
+  it('should call through for save', async () => {
+    mockRepo.save.mockResolvedValue(new ApplicationOwner());
+
+    await service.save(new ApplicationOwner());
+
+    expect(mockRepo.save).toHaveBeenCalledTimes(1);
+  });
+
   it('should call update for the application with the first parcels last name', async () => {
     mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
     const owners = [
@@ -213,16 +231,19 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A',
-    );
+    expect(mockApplicationSubmissionservice.update).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionservice.update.mock.calls[0][1].applicant,
+    ).toEqual('A');
+    expect(
+      mockApplicationSubmissionservice.getFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call update for the application with the first parcels last name', async () => {
@@ -248,16 +269,20 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A et al.',
-    );
+    expect(mockApplicationSubmissionservice.update).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionservice.update.mock.calls[0][1].applicant,
+    ).toEqual('A et al.');
+
+    expect(
+      mockApplicationSubmissionservice.getFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should call update for the application with the number owners last name', async () => {
@@ -275,16 +300,19 @@ describe('ApplicationOwnerService', () => {
     mockParcelService.fetchByApplicationSubmissionUuid.mockResolvedValue([
       new ApplicationParcel({
         owners,
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      '1 et al.',
-    );
+    expect(mockApplicationSubmissionservice.update).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionservice.update.mock.calls[0][1].applicant,
+    ).toEqual('1 et al.');
+    expect(
+      mockApplicationSubmissionservice.getFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
   });
 
   it('should use the first created parcel to set the application applicants name', async () => {
@@ -305,20 +333,32 @@ describe('ApplicationOwnerService', () => {
       new ApplicationParcel({
         owners: owners1,
         auditCreatedAt: new Date(1),
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
       new ApplicationParcel({
         owners: owners2,
         auditCreatedAt: new Date(100),
-        parcelType: PARCEL_TYPE.APPLICATION,
       }),
     ]);
 
     await service.updateSubmissionApplicant('');
 
-    expect(mockApplicationservice.update).toHaveBeenCalledTimes(1);
-    expect(mockApplicationservice.update.mock.calls[0][1].applicant).toEqual(
-      'A et al.',
-    );
+    expect(mockApplicationSubmissionservice.update).toHaveBeenCalledTimes(1);
+    expect(
+      mockApplicationSubmissionservice.update.mock.calls[0][1].applicant,
+    ).toEqual('C et al.');
+    expect(
+      mockApplicationSubmissionservice.getFileNumber,
+    ).toHaveBeenCalledTimes(1);
+    expect(mockApplicationService.updateApplicant).toHaveBeenCalledTimes(1);
+  });
+
+  it('should load then delete non application owners', async () => {
+    mockRepo.find.mockResolvedValue([new ApplicationOwner()]);
+    mockRepo.remove.mockResolvedValue([] as any);
+
+    await service.deleteNonParcelOwners('uuid');
+
+    expect(mockRepo.find).toHaveBeenCalledTimes(1);
+    expect(mockRepo.remove).toHaveBeenCalledTimes(1);
   });
 });

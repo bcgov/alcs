@@ -29,6 +29,9 @@ export class StaffJournalService {
         {
           noticeOfIntentUuid: parentUuid,
         },
+        {
+          notificationUuid: parentUuid,
+        },
       ],
       relations: this.DEFAULT_STAFF_JOURNAL_RELATIONS,
       order: {
@@ -68,6 +71,20 @@ export class StaffJournalService {
     const record = new StaffJournal({
       body: noteBody,
       noticeOfIntentUuid,
+      author,
+    });
+
+    return await this.staffJournalRepository.save(record);
+  }
+
+  async createForNotification(
+    notificationUuid: string,
+    noteBody: string,
+    author: User,
+  ) {
+    const record = new StaffJournal({
+      body: noteBody,
+      notificationUuid,
       author,
     });
 

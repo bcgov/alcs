@@ -1,5 +1,5 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 import { ApplicationCeoCriterionCode } from '../../alcs/application-decision/application-ceo-criterion/application-ceo-criterion.entity';
 
@@ -131,7 +131,7 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         ),
         forMember(
           (ad) => ad.date,
-          mapFrom((a) => a.date.getTime()),
+          mapFrom((a) => a.date?.getTime()),
         ),
         forMember(
           (ad) => ad.auditDate,
@@ -160,6 +160,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         mapper,
         ApplicationDecisionMeeting,
         ApplicationDecisionMeetingDto,
+        forMember(
+          (a) => a.date,
+          mapFrom((ad) => ad.date.getTime()),
+        ),
       );
       createMap(
         mapper,
@@ -182,6 +186,10 @@ export class ApplicationDecisionProfile extends AutomapperProfile {
         forMember(
           (a) => a.fileName,
           mapFrom((ad) => ad.document.fileName),
+        ),
+        forMember(
+          (a) => a.fileSize,
+          mapFrom((ad) => ad.document.fileSize),
         ),
         forMember(
           (a) => a.uploadedBy,

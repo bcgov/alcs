@@ -1,0 +1,17 @@
+@use '../../../styles/colors';
+
+.error {
+  margin-top: 4px !important;
+  color: colors.$error-color;
+  display: flex;
+  align-items: center;
+  font-weight: 700 !important;
+  font-size: 14px;
+
+  .mat-icon {
+    margin-right: 4px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Type } from 'class-transformer';
 import {
   Column,
@@ -11,6 +11,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { Base } from '../../common/entities/base.entity';
+import { FILE_NUMBER_SEQUENCE } from '../../file-number/file-number.constants';
 import { ApplicationSubmissionReview } from '../../portal/application-submission-review/application-submission-review.entity';
 import { ColumnNumericTransformer } from '../../utils/column-numeric-transform';
 import { ApplicationDecisionMeeting } from '../application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
@@ -18,19 +19,10 @@ import { ApplicationReconsideration } from '../application-decision/application-
 import { Card } from '../card/card.entity';
 import { ApplicationRegion } from '../code/application-code/application-region/application-region.entity';
 import { ApplicationType } from '../code/application-code/application-type/application-type.entity';
-import { ApplicationLocalGovernment } from './application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../local-government/local-government.entity';
 import { ApplicationDocument } from './application-document/application-document.entity';
 import { ApplicationMeeting } from './application-meeting/application-meeting.entity';
 import { ApplicationPaused } from './application-paused.entity';
-
-export class StatusHistory {
-  type: 'status_change';
-  label: string;
-  description: string;
-  time: number;
-}
-
-export const APPLICATION_FILE_NUMBER_SEQUENCE = 'alcs.alcs_file_number_seq';
 
 @Entity()
 export class Application extends Base {
@@ -45,7 +37,7 @@ export class Application extends Base {
   @AutoMap()
   @Column({
     unique: true,
-    default: () => `NEXTVAL('${APPLICATION_FILE_NUMBER_SEQUENCE}')`,
+    default: () => `NEXTVAL('${FILE_NUMBER_SEQUENCE}')`,
   })
   fileNumber: string;
 
@@ -60,6 +52,13 @@ export class Application extends Base {
   @AutoMap(() => String)
   @Column({ type: 'text', nullable: true })
   summary: string | null;
+
+  @AutoMap(() => Boolean)
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  hideFromPortal?: boolean;
 
   @AutoMap()
   @Column({
@@ -148,8 +147,8 @@ export class Application extends Base {
   @Column({ nullable: true })
   regionCode?: string;
 
-  @ManyToOne(() => ApplicationLocalGovernment, { nullable: true })
-  localGovernment?: ApplicationLocalGovernment;
+  @ManyToOne(() => LocalGovernment, { nullable: true })
+  localGovernment?: LocalGovernment;
 
   @Index()
   @Column({
@@ -170,8 +169,8 @@ export class Application extends Base {
   @Column({
     type: 'decimal',
     nullable: true,
-    precision: 12,
-    scale: 2,
+    precision: 15,
+    scale: 5,
     transformer: new ColumnNumericTransformer(),
     comment: 'Area in hectares of ALR impacted by the proposal',
   })
@@ -233,6 +232,14 @@ export class Application extends Base {
   })
   nfuUseSubType?: string | null;
 
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment: 'Inclusion Exclusion Applicant Type',
+    nullable: true,
+  })
+  inclExclApplicantType?: string | null;
+
   @Column({
     type: 'timestamptz',
     comment: 'The date at which the proposal use ends',
@@ -240,15 +247,28 @@ export class Application extends Base {
   })
   proposalEndDate?: Date | null;
 
-  @AutoMap(() => [StatusHistory])
   @Column({
-    comment:
-      'JSONB Column containing the status history of the Application from the Portal',
-    type: 'jsonb',
-    array: false,
-    default: () => `'[]'`,
+    type: 'timestamptz',
+    comment: 'The date at which the placement of fill ends (PFRS only)',
+    nullable: true,
   })
-  statusHistory: StatusHistory[];
+  proposalEndDate2?: Date | null;
+
+  @Column({
+    type: 'timestamptz',
+    comment: 'The date at which the proposal expires',
+    nullable: true,
+  })
+  proposalExpiryDate?: Date | null;
+
+  @AutoMap(() => String)
+  @Column({
+    type: 'text',
+    comment:
+      'Application Id that is applicable only to paper version applications from 70s - 80s',
+    nullable: true,
+  })
+  legacyId?: string | null;
 
   @AutoMap()
   @OneToMany(() => ApplicationPaused, (appPaused) => appPaused.application)
@@ -279,6 +299,7 @@ export class Application extends Base {
   card: Card | null;
 
   @AutoMap()
+  @Index()
   @Column({
     type: 'uuid',
     nullable: true,

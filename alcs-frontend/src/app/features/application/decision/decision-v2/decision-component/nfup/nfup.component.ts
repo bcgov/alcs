@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { DecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ApplicationDecisionComponentDto } from '../../../../../../services/application/decision/application-decision-v2/application-decision-v2.dto';
 
 @Component({
   selector: 'app-nfup',
@@ -7,5 +7,5 @@ import { DecisionComponentDto } from '../../../../../../services/application/dec
   styleUrls: ['./nfup.component.scss'],
 })
 export class NfupComponent {
-  @Input() component!: DecisionComponentDto;
+  @Input() component!: ApplicationDecisionComponentDto;
 }

@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -10,7 +10,7 @@ import {
   IsString,
 } from 'class-validator';
 import { BaseCodeDto } from '../../../common/dtos/base.dto';
-import { ApplicationLocalGovernmentDto } from '../../application/application-code/application-local-government/application-local-government.dto';
+import { LocalGovernmentDto } from '../../local-government/local-government.dto';
 import { CardDto } from '../../card/card.dto';
 import { ApplicationRegionDto } from '../../code/application-code/application-region/application-region.dto';
 import { ApplicationTypeDto } from '../../code/application-code/application-type/application-type.dto';
@@ -31,6 +31,10 @@ export class ApplicationModificationCreateDto {
   @IsNotEmpty()
   @IsString()
   applicant: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 
   @IsNotEmpty()
   @IsString()
@@ -56,22 +60,18 @@ export class ApplicationModificationCreateDto {
 }
 
 export class ApplicationModificationUpdateDto {
-  @AutoMap()
   @IsNumber()
   @IsOptional()
   submittedDate?: number;
 
-  @AutoMap()
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  reviewDate?: number;
+  description?: string;
 
-  @AutoMap()
   @IsString()
   @IsOptional()
   reviewOutcomeCode?: string;
 
-  @AutoMap()
   @IsBoolean()
   @IsOptional()
   isTimeExtension?: boolean;
@@ -88,7 +88,7 @@ export class ApplicationForModificationDto {
   statusCode: string;
   applicant: string;
   region: ApplicationRegionDto;
-  localGovernment: ApplicationLocalGovernmentDto;
+  localGovernment: LocalGovernmentDto;
   decisionMeetings: ApplicationDecisionMeetingDto[];
 }
 
@@ -97,7 +97,7 @@ export class ApplicationModificationDto {
   application: ApplicationForModificationDto;
   card: CardDto;
   submittedDate: number;
-  reviewDate: number;
+  description: string;
   reviewOutcome: ApplicationModificationOutcomeCodeDto | null;
   isTimeExtension: boolean | null;
   modifiesDecisions: ApplicationDecisionDto[];

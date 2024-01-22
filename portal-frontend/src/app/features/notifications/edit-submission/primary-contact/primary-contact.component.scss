@@ -1,0 +1,26 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+section {
+  margin-bottom: rem(32);
+}
+
+.form {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row .full-row {
+    grid-column: 1/2;
+  }
+
+  @media screen and (min-width: $tabletBreakpoint) {
+    .form-row {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .form-row .full-row {
+      grid-column: 1/3;
+    }
+  }
+}

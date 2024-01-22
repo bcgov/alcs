@@ -3,20 +3,20 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ToastService } from '../toast/toast.service';
-import { PortalDecisionDto } from './application-decision.dto';
+import { ApplicationPortalDecisionDto } from './application-decision.dto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApplicationDecisionService {
-  private serviceUrl = `${environment.apiUrl}/application-decision`;
+  private serviceUrl = `${environment.authUrl}/public/application/decision`;
 
   constructor(private httpClient: HttpClient, private toastService: ToastService) {}
 
   async getByFileId(fileNumber: string) {
     try {
       return await firstValueFrom(
-        this.httpClient.get<PortalDecisionDto[]>(`${this.serviceUrl}/application/${fileNumber}`)
+        this.httpClient.get<ApplicationPortalDecisionDto[]>(`${this.serviceUrl}/${fileNumber}`)
       );
     } catch (e) {
       console.error(e);

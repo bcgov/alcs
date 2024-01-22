@@ -5,8 +5,8 @@ import { ROLES_ALLOWED_APPLICATIONS } from '../../app-routing.module';
 import { ApplicationService } from '../../services/application/application.service';
 import { AuthenticationService, ICurrentUser, ROLES } from '../../services/authentication/authentication.service';
 import { BoardService, BoardWithFavourite } from '../../services/board/board.service';
-import { NotificationDto } from '../../services/notification/notification.dto';
-import { NotificationService } from '../../services/notification/notification.service';
+import { MessageDto } from '../../services/message/message.dto';
+import { MessageService } from '../../services/message/message.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { UserDto } from '../../services/user/user.dto';
 import { UserService } from '../../services/user/user.service';
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit {
   hasRoles = false;
   allowedSearch = false;
   sortedBoards: BoardWithFavourite[] = [];
-  notifications: NotificationDto[] = [];
+  notifications: MessageDto[] = [];
   isCommissioner = false;
   isAdmin = false;
 
@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit {
     private toastService: ToastService,
     private userService: UserService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: MessageService
   ) {}
 
   ngOnInit(): void {

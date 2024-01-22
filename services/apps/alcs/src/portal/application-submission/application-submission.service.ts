@@ -2,25 +2,31 @@ import {
   BaseServiceException,
   ServiceNotFoundException,
 } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, In, Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { FindOptionsRelations, Repository } from 'typeorm';
+import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
+import { ApplicationSubmissionStatusService } from '../../alcs/application/application-submission-status/application-submission-status.service';
+import { ApplicationSubmissionStatusType } from '../../alcs/application/application-submission-status/submission-status-type.entity';
+import { SUBMISSION_STATUS } from '../../alcs/application/application-submission-status/submission-status.dto';
+import { ApplicationSubmissionToSubmissionStatus } from '../../alcs/application/application-submission-status/submission-status.entity';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { VISIBILITY_FLAG } from '../../alcs/notification/notification-document/notification-document.entity';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
+import { FileNumberService } from '../../file-number/file-number.service';
 import { User } from '../../user/user.entity';
+import { FALLBACK_APPLICANT_NAME } from '../../utils/owner.constants';
 import { filterUndefined } from '../../utils/undefined';
 import { ApplicationSubmissionReview } from '../application-submission-review/application-submission-review.entity';
 import { GenerateReviewDocumentService } from '../pdf-generation/generate-review-document.service';
 import { GenerateSubmissionDocumentService } from '../pdf-generation/generate-submission-document.service';
-import { APPLICATION_STATUS } from './application-status/application-status.dto';
-import { ApplicationStatus } from './application-status/application-status.entity';
 import { ValidatedApplicationSubmission } from './application-submission-validator.service';
 import {
   ApplicationSubmissionDetailedDto,
@@ -31,10 +37,17 @@ import { ApplicationSubmission } from './application-submission.entity';
 import { NaruSubtype } from './naru-subtype/naru-subtype.entity';
 
 const LG_VISIBLE_STATUSES = [
-  APPLICATION_STATUS.SUBMITTED_TO_LG,
-  APPLICATION_STATUS.IN_REVIEW,
-  APPLICATION_STATUS.REFUSED_TO_FORWARD,
-  APPLICATION_STATUS.SUBMITTED_TO_ALC,
+  SUBMISSION_STATUS.INCOMPLETE,
+  SUBMISSION_STATUS.SUBMITTED_TO_LG,
+  SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+  SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+  SUBMISSION_STATUS.SUBMITTED_TO_ALC_INCOMPLETE,
+  SUBMISSION_STATUS.RECEIVED_BY_ALC,
+  SUBMISSION_STATUS.IN_REVIEW_BY_ALC,
+  SUBMISSION_STATUS.ALC_DECISION,
+  SUBMISSION_STATUS.REFUSED_TO_FORWARD_LG,
+  SUBMISSION_STATUS.RETURNED_TO_LG,
+  SUBMISSION_STATUS.CANCELLED,
 ];
 
 @Injectable()
@@ -55,17 +68,19 @@ export class ApplicationSubmissionService {
   constructor(
     @InjectRepository(ApplicationSubmission)
     private applicationSubmissionRepository: Repository<ApplicationSubmission>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
     @InjectRepository(NaruSubtype)
     private naruSubtypeRepository: Repository<NaruSubtype>,
     private applicationService: ApplicationService,
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private fileNumberService: FileNumberService,
+    private localGovernmentService: LocalGovernmentService,
     private applicationDocumentService: ApplicationDocumentService,
     @Inject(forwardRef(() => GenerateSubmissionDocumentService))
     private submissionDocumentGenerationService: GenerateSubmissionDocumentService,
     @Inject(forwardRef(() => GenerateReviewDocumentService))
     private generateReviewDocumentService: GenerateReviewDocumentService,
+    private applicationSubmissionStatusService: ApplicationSubmissionStatusService,
     @InjectMapper() private mapper: Mapper,
   ) {}
 
@@ -75,6 +90,7 @@ export class ApplicationSubmissionService {
         fileNumber,
         isDraft: false,
       },
+      relations: this.DEFAULT_RELATIONS,
     });
     if (!application) {
       throw new Error('Failed to find document');
@@ -82,13 +98,17 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async getOrFailByUuid(uuid: string) {
+  async getOrFailByUuid(
+    uuid: string,
+    relations: FindOptionsRelations<ApplicationSubmission> = {},
+  ) {
     const application = await this.applicationSubmissionRepository.findOne({
       where: {
         uuid,
       },
       relations: {
         naruSubtype: true,
+        ...relations,
       },
     });
     if (!application) {
@@ -97,13 +117,13 @@ export class ApplicationSubmissionService {
     return application;
   }
 
-  async create(type: string, createdBy: User) {
-    const fileNumber = await this.applicationService.generateNextFileNumber();
+  async create(type: string, createdBy: User, prescribedBody?: string) {
+    const fileNumber = await this.fileNumberService.generateNextFileNumber();
 
     await this.applicationService.create(
       {
         fileNumber,
-        applicant: 'Unknown',
+        applicant: FALLBACK_APPLICANT_NAME,
         typeCode: type,
         source: 'APPLICANT',
       },
@@ -125,11 +145,19 @@ export class ApplicationSubmissionService {
 
     const applicationSubmission = new ApplicationSubmission({
       fileNumber,
-      status: initialStatus,
       typeCode: type,
       createdBy,
+      prescribedBody,
     });
-    await this.applicationSubmissionRepository.save(applicationSubmission);
+
+    const submission = await this.applicationSubmissionRepository.save(
+      applicationSubmission,
+    );
+
+    // FIXME ideally this should happen in the same transaction as creation of submission
+    await this.applicationSubmissionStatusService.setInitialStatuses(
+      submission.uuid,
+    );
 
     return fileNumber;
   }
@@ -141,12 +169,24 @@ export class ApplicationSubmissionService {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
 
     applicationSubmission.applicant = updateDto.applicant;
+    applicationSubmission.purpose = filterUndefined(
+      updateDto.purpose,
+      applicationSubmission.purpose,
+    );
     applicationSubmission.typeCode =
       updateDto.typeCode || applicationSubmission.typeCode;
     applicationSubmission.localGovernmentUuid = updateDto.localGovernmentUuid;
     applicationSubmission.returnedComment = updateDto.returnedComment;
     applicationSubmission.hasOtherParcelsInCommunity =
       updateDto.hasOtherParcelsInCommunity;
+    applicationSubmission.prescribedBody = filterUndefined(
+      updateDto.prescribedBody,
+      updateDto.prescribedBody,
+    );
+    applicationSubmission.otherParcelsDescription = filterUndefined(
+      updateDto.otherParcelsDescription,
+      applicationSubmission.otherParcelsDescription,
+    );
 
     this.setLandUseFields(applicationSubmission, updateDto);
     this.setNFUFields(applicationSubmission, updateDto);
@@ -154,44 +194,52 @@ export class ApplicationSubmissionService {
     await this.setSUBDFields(applicationSubmission, updateDto);
     await this.setSoilFields(applicationSubmission, updateDto);
     this.setNARUFields(applicationSubmission, updateDto);
+    this.setInclusionExclusionFields(applicationSubmission, updateDto);
+    this.setCovenantFields(applicationSubmission, updateDto);
 
     await this.applicationSubmissionRepository.save(applicationSubmission);
 
-    return this.getOrFailByFileNumber(applicationSubmission.fileNumber);
+    if (!applicationSubmission.isDraft && updateDto.localGovernmentUuid) {
+      await this.applicationService.updateByFileNumber(
+        applicationSubmission.fileNumber,
+        {
+          localGovernmentUuid: updateDto.localGovernmentUuid,
+        },
+      );
+    }
+
+    return this.getOrFailByUuid(submissionUuid, this.DEFAULT_RELATIONS);
   }
 
-  async setPrimaryContact(submissionUuid: string, primaryContactUuid: string) {
+  async setPrimaryContact(
+    submissionUuid: string,
+    primaryContactUuid: string | null,
+  ) {
     const applicationSubmission = await this.getOrFailByUuid(submissionUuid);
     applicationSubmission.primaryContactOwnerUuid = primaryContactUuid;
     await this.applicationSubmissionRepository.save(applicationSubmission);
   }
 
-  async submitToLg(application: ApplicationSubmission) {
-    await this.updateStatus(application, APPLICATION_STATUS.SUBMITTED_TO_LG);
+  async submitToLg(submission: ApplicationSubmission) {
+    return await this.updateStatus(
+      submission,
+      SUBMISSION_STATUS.SUBMITTED_TO_LG,
+    );
   }
 
   async updateStatus(
     applicationSubmission: ApplicationSubmission,
-    statusCode: APPLICATION_STATUS,
+    statusCode: SUBMISSION_STATUS,
+    effectiveDate?: Date | null,
   ) {
-    const status = await this.getStatus(statusCode);
-
-    //Load submission without relations to prevent save from crazy cascading
-    const submission = await this.applicationSubmissionRepository.findOneOrFail(
-      {
-        where: {
-          fileNumber: applicationSubmission.fileNumber,
-          isDraft: false,
-        },
-      },
+    return await this.applicationSubmissionStatusService.setStatusDate(
+      applicationSubmission.uuid,
+      statusCode,
+      effectiveDate,
     );
-
-    submission.status = status;
-    //Use save to trigger subscriber
-    await this.applicationSubmissionRepository.save(submission);
   }
 
-  async getStatus(code: APPLICATION_STATUS) {
+  async getStatus(code: SUBMISSION_STATUS) {
     return await this.applicationStatusRepository.findOneOrFail({
       where: {
         code,
@@ -214,10 +262,15 @@ export class ApplicationSubmissionService {
           applicant: application.applicant,
           localGovernmentUuid: application.localGovernmentUuid,
           typeCode: application.typeCode,
-          statusHistory: application.statusHistory,
           dateSubmittedToAlc: new Date(),
         },
         shouldCreateCard,
+      );
+
+      await this.updateStatus(
+        application,
+        SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+        submittedApp.dateSubmittedToAlc,
       );
 
       this.generateAndAttachPdfs(
@@ -271,38 +324,51 @@ export class ApplicationSubmissionService {
     });
   }
 
-  getForGovernment(localGovernment: ApplicationLocalGovernment) {
+  async getForGovernment(localGovernment: LocalGovernment) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
     }
 
-    return this.applicationSubmissionRepository.find({
-      where: [
-        //Owns
+    const submissions = await this.applicationSubmissionRepository
+      .createQueryBuilder('aps')
+      .leftJoinAndSelect(
+        (sq) =>
+          sq
+            .select('apsst.submission_uuid')
+            .from(ApplicationSubmissionToSubmissionStatus, 'apsst')
+            .where('apsst.status_type_code IN (:...statuses)', {
+              statuses: ['SUBG', 'SUBM'],
+            })
+            .andWhere('apsst.effective_date IS NOT NULL')
+            .groupBy('apsst.submission_uuid'),
+        'fapsst',
+        'aps.uuid = fapsst.submission_uuid',
+      )
+      .leftJoinAndSelect(
+        User,
+        'createdBy',
+        'createdBy.uuid = aps.created_by_uuid',
+      )
+      .leftJoin(LocalGovernment, 'lg', 'lg.uuid = aps.local_government_uuid')
+      .where('aps.isDraft=False')
+      .andWhere(
+        '(createdBy.bceid_business_guid = :bceidGuid or (fapsst is not null and lg.uuid=:lgUuid))',
         {
-          createdBy: {
-            bceidBusinessGuid: localGovernment.bceidBusinessGuid,
-          },
-          isDraft: false,
+          bceidGuid: localGovernment.bceidBusinessGuid,
+          lgUuid: localGovernment.uuid,
         },
-        //Local Government
-        {
-          localGovernmentUuid: localGovernment.uuid,
-          status: {
-            code: In(LG_VISIBLE_STATUSES),
-          },
-          isDraft: false,
-        },
-      ],
-      order: {
-        auditUpdatedAt: 'DESC',
-      },
-    });
+      )
+      .leftJoinAndSelect('aps.submissionStatuses', 'submissionStatuses')
+      .leftJoinAndSelect('submissionStatuses.statusType', 'statusType')
+      .orderBy('aps.auditUpdatedAt', 'DESC')
+      .getMany();
+
+    return submissions;
   }
 
-  async getForGovernmentByUuid(
+  private async getForGovernmentByUuid(
     uuid: string,
-    localGovernment: ApplicationLocalGovernment,
+    localGovernment: LocalGovernment,
   ) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
@@ -324,9 +390,6 @@ export class ApplicationSubmissionService {
             isDraft: false,
             uuid,
             localGovernmentUuid: localGovernment.uuid,
-            status: {
-              code: In(LG_VISIBLE_STATUSES),
-            },
           },
         ],
         order: {
@@ -337,10 +400,16 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: this.DEFAULT_RELATIONS,
+        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
       });
 
-    if (!existingApplication) {
+    if (
+      !existingApplication ||
+      !this.isSubmissionVisibleToLocalGovernment(
+        existingApplication,
+        localGovernment,
+      )
+    ) {
       throw new ServiceNotFoundException(
         `Failed to load application with uuid ${uuid}`,
       );
@@ -349,9 +418,31 @@ export class ApplicationSubmissionService {
     return existingApplication;
   }
 
+  private isSubmissionVisibleToLocalGovernment(
+    existingApplication: ApplicationSubmission,
+    localGovernment: LocalGovernment,
+  ) {
+    return (
+      (existingApplication.createdBy &&
+        existingApplication.createdBy.bceidBusinessGuid ===
+          localGovernment.bceidBusinessGuid) ||
+      (LG_VISIBLE_STATUSES.includes(
+        existingApplication.status.statusTypeCode as SUBMISSION_STATUS,
+      ) &&
+        existingApplication.submissionStatuses.some(
+          (status) =>
+            [
+              SUBMISSION_STATUS.SUBMITTED_TO_ALC,
+              SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            ].includes(status.statusTypeCode as SUBMISSION_STATUS) &&
+            status.effectiveDate !== null,
+        ))
+    );
+  }
+
   async getForGovernmentByFileId(
     fileNumber: string,
-    localGovernment: ApplicationLocalGovernment,
+    localGovernment: LocalGovernment,
   ) {
     if (!localGovernment.bceidBusinessGuid) {
       throw new Error("Cannot load by governments that don't have guids");
@@ -373,9 +464,6 @@ export class ApplicationSubmissionService {
             isDraft: false,
             fileNumber,
             localGovernmentUuid: localGovernment.uuid,
-            status: {
-              code: In(LG_VISIBLE_STATUSES),
-            },
           },
         ],
         order: {
@@ -386,10 +474,16 @@ export class ApplicationSubmissionService {
             },
           },
         },
-        relations: this.DEFAULT_RELATIONS,
+        relations: { ...this.DEFAULT_RELATIONS, createdBy: true },
       });
 
-    if (!existingApplication) {
+    if (
+      !existingApplication ||
+      !this.isSubmissionVisibleToLocalGovernment(
+        existingApplication,
+        localGovernment,
+      )
+    ) {
       throw new ServiceNotFoundException(
         `Failed to load application with File ID ${fileNumber}`,
       );
@@ -419,7 +513,6 @@ export class ApplicationSubmissionService {
       relations: {
         ...this.DEFAULT_RELATIONS,
         createdBy: true,
-        status: true,
       },
     });
   }
@@ -484,7 +577,6 @@ export class ApplicationSubmissionService {
         },
         relations: {
           ...this.DEFAULT_RELATIONS,
-          status: true,
         },
       });
     }
@@ -507,31 +599,41 @@ export class ApplicationSubmissionService {
   async mapToDTOs(
     apps: ApplicationSubmission[],
     user: User,
-    userGovernment?: ApplicationLocalGovernment,
-  ) {
+    userGovernment?: LocalGovernment,
+  ): Promise<ApplicationSubmissionDto[]> {
     const types = await this.applicationService.fetchApplicationTypes();
-    return apps.map((app) => ({
-      ...this.mapper.map(app, ApplicationSubmission, ApplicationSubmissionDto),
-      type: types.find((type) => type.code === app.typeCode)!.label,
-      canEdit: [
-        APPLICATION_STATUS.IN_PROGRESS,
-        APPLICATION_STATUS.INCOMPLETE,
-        APPLICATION_STATUS.WRONG_GOV,
-      ].includes(app.status.code as APPLICATION_STATUS),
-      canView: app.status.code !== APPLICATION_STATUS.CANCELLED,
-      canReview:
-        [
-          APPLICATION_STATUS.SUBMITTED_TO_LG,
-          APPLICATION_STATUS.IN_REVIEW,
-        ].includes(app.status.code as APPLICATION_STATUS) &&
-        userGovernment &&
-        userGovernment.uuid === app.localGovernmentUuid,
-    }));
+
+    return apps.map((app) => {
+      const matchingAppType = types.find((type) => type.code === app.typeCode);
+      return {
+        ...this.mapper.map(
+          app,
+          ApplicationSubmission,
+          ApplicationSubmissionDto,
+        ),
+        type: matchingAppType!.label,
+        requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
+        canEdit: [
+          SUBMISSION_STATUS.IN_PROGRESS,
+          SUBMISSION_STATUS.INCOMPLETE,
+          SUBMISSION_STATUS.WRONG_GOV,
+        ].includes(app.status.statusTypeCode as SUBMISSION_STATUS),
+        canView: app.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
+        canReview:
+          [
+            SUBMISSION_STATUS.SUBMITTED_TO_LG,
+            SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+            SUBMISSION_STATUS.RETURNED_TO_LG,
+          ].includes(app.status.statusTypeCode as SUBMISSION_STATUS) &&
+          !!userGovernment &&
+          userGovernment.uuid === app.localGovernmentUuid,
+      };
+    });
   }
 
   async mapToDetailedDTO(
     application: ApplicationSubmission,
-    userGovernment?: ApplicationLocalGovernment,
+    userGovernment?: LocalGovernment,
   ) {
     const types = await this.applicationService.fetchApplicationTypes();
     const mappedApp = this.mapper.map(
@@ -539,27 +641,37 @@ export class ApplicationSubmissionService {
       ApplicationSubmission,
       ApplicationSubmissionDetailedDto,
     );
+
+    const matchingAppType = types.find(
+      (type) => type.code === application.typeCode,
+    );
     return {
       ...mappedApp,
-      type: types.find((type) => type.code === application.typeCode)!.label,
+      type: matchingAppType!.label,
+      requiresGovernmentReview: matchingAppType!.requiresGovernmentReview,
       canEdit: [
-        APPLICATION_STATUS.IN_PROGRESS,
-        APPLICATION_STATUS.INCOMPLETE,
-        APPLICATION_STATUS.WRONG_GOV,
-      ].includes(application.status.code as APPLICATION_STATUS),
-      canView: application.status.code !== APPLICATION_STATUS.CANCELLED,
+        SUBMISSION_STATUS.IN_PROGRESS,
+        SUBMISSION_STATUS.INCOMPLETE,
+        SUBMISSION_STATUS.WRONG_GOV,
+      ].includes(application.status.statusTypeCode as SUBMISSION_STATUS),
+      canView:
+        application.status.statusTypeCode !== SUBMISSION_STATUS.CANCELLED,
       canReview:
         [
-          APPLICATION_STATUS.SUBMITTED_TO_LG,
-          APPLICATION_STATUS.IN_REVIEW,
-        ].includes(application.status.code as APPLICATION_STATUS) &&
-        userGovernment &&
+          SUBMISSION_STATUS.SUBMITTED_TO_LG,
+          SUBMISSION_STATUS.IN_REVIEW_BY_LG,
+          SUBMISSION_STATUS.RETURNED_TO_LG,
+        ].includes(application.status.statusTypeCode as SUBMISSION_STATUS) &&
+        !!userGovernment &&
         userGovernment.uuid === application.localGovernmentUuid,
     };
   }
 
-  async cancel(application: ApplicationSubmission) {
-    await this.updateStatus(application, APPLICATION_STATUS.CANCELLED);
+  async cancel(submission: ApplicationSubmission) {
+    await this.applicationSubmissionStatusService.setStatusDate(
+      submission.uuid,
+      SUBMISSION_STATUS.CANCELLED,
+    );
   }
 
   private setLandUseFields(
@@ -593,43 +705,42 @@ export class ApplicationSubmissionService {
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
     application.nfuHectares = updateDto.nfuHectares || application.nfuHectares;
-    application.nfuPurpose = updateDto.nfuPurpose || application.nfuPurpose;
     application.nfuOutsideLands =
       updateDto.nfuOutsideLands || application.nfuOutsideLands;
     application.nfuAgricultureSupport =
       updateDto.nfuAgricultureSupport || application.nfuAgricultureSupport;
-    application.nfuWillImportFill =
-      updateDto.nfuWillImportFill !== undefined
-        ? updateDto.nfuWillImportFill
-        : application.nfuWillImportFill;
-    application.nfuTotalFillPlacement =
-      updateDto.nfuTotalFillPlacement !== undefined
-        ? updateDto.nfuTotalFillPlacement
-        : application.nfuTotalFillPlacement;
-    application.nfuMaxFillDepth =
-      updateDto.nfuMaxFillDepth !== undefined
-        ? updateDto.nfuMaxFillDepth
-        : application.nfuMaxFillDepth;
-    application.nfuFillVolume =
-      updateDto.nfuFillVolume !== undefined
-        ? updateDto.nfuFillVolume
-        : application.nfuFillVolume;
-    application.nfuProjectDurationUnit =
-      updateDto.nfuProjectDurationUnit !== undefined
-        ? updateDto.nfuProjectDurationUnit
-        : application.nfuProjectDurationUnit;
-    application.nfuProjectDurationAmount =
-      updateDto.nfuProjectDurationAmount !== undefined
-        ? updateDto.nfuProjectDurationAmount
-        : application.nfuProjectDurationAmount;
-    application.nfuFillTypeDescription =
-      updateDto.nfuFillTypeDescription !== undefined
-        ? updateDto.nfuFillTypeDescription
-        : application.nfuFillTypeDescription;
-    application.nfuFillOriginDescription =
-      updateDto.nfuFillOriginDescription !== undefined
-        ? updateDto.nfuFillOriginDescription
-        : application.nfuFillOriginDescription;
+    application.nfuWillImportFill = filterUndefined(
+      updateDto.nfuWillImportFill,
+      application.nfuWillImportFill,
+    );
+    application.nfuTotalFillArea = filterUndefined(
+      updateDto.nfuTotalFillArea,
+      application.nfuTotalFillArea,
+    );
+    application.nfuMaxFillDepth = filterUndefined(
+      updateDto.nfuMaxFillDepth,
+      application.nfuMaxFillDepth,
+    );
+    application.nfuAverageFillDepth = filterUndefined(
+      updateDto.nfuAverageFillDepth,
+      application.nfuAverageFillDepth,
+    );
+    application.nfuFillVolume = filterUndefined(
+      updateDto.nfuFillVolume,
+      application.nfuFillVolume,
+    );
+    application.nfuProjectDuration = filterUndefined(
+      updateDto.nfuProjectDuration,
+      application.nfuProjectDuration,
+    );
+    application.nfuFillTypeDescription = filterUndefined(
+      updateDto.nfuFillTypeDescription,
+      application.nfuFillTypeDescription,
+    );
+    application.nfuFillOriginDescription = filterUndefined(
+      updateDto.nfuFillOriginDescription,
+      application.nfuFillOriginDescription,
+    );
 
     return application;
   }
@@ -638,21 +749,26 @@ export class ApplicationSubmissionService {
     application: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    application.turPurpose = updateDto.turPurpose || application.turPurpose;
-    application.turAgriculturalActivities =
-      updateDto.turAgriculturalActivities ||
-      application.turAgriculturalActivities;
-    application.turReduceNegativeImpacts =
-      updateDto.turReduceNegativeImpacts ||
-      application.turReduceNegativeImpacts;
-    application.turOutsideLands =
-      updateDto.turOutsideLands || application.turOutsideLands;
-    application.turTotalCorridorArea =
-      updateDto.turTotalCorridorArea || application.turTotalCorridorArea;
-    application.turAllOwnersNotified =
-      updateDto.turAllOwnersNotified !== undefined
-        ? updateDto.turAllOwnersNotified
-        : application.turAllOwnersNotified;
+    application.turAgriculturalActivities = filterUndefined(
+      updateDto.turAgriculturalActivities,
+      application.turAgriculturalActivities,
+    );
+    application.turReduceNegativeImpacts = filterUndefined(
+      updateDto.turReduceNegativeImpacts,
+      application.turReduceNegativeImpacts,
+    );
+    application.turOutsideLands = filterUndefined(
+      updateDto.turOutsideLands,
+      application.turOutsideLands,
+    );
+    application.turTotalCorridorArea = filterUndefined(
+      updateDto.turTotalCorridorArea,
+      application.turTotalCorridorArea,
+    );
+    application.turAllOwnersNotified = filterUndefined(
+      updateDto.turAllOwnersNotified,
+      application.turAllOwnersNotified,
+    );
     return application;
   }
 
@@ -660,20 +776,22 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.subdPurpose =
-      updateDto.subdPurpose || applicationSubmission.subdPurpose;
-    applicationSubmission.subdSuitability =
-      updateDto.subdSuitability || applicationSubmission.subdSuitability;
-    applicationSubmission.subdAgricultureSupport =
-      updateDto.subdAgricultureSupport ||
-      applicationSubmission.subdAgricultureSupport;
-    applicationSubmission.subdIsHomeSiteSeverance =
-      updateDto.subdIsHomeSiteSeverance !== undefined
-        ? updateDto.subdIsHomeSiteSeverance
-        : applicationSubmission.subdIsHomeSiteSeverance;
-    applicationSubmission.subdProposedLots =
-      updateDto.subdProposedLots || applicationSubmission.subdProposedLots;
-
+    applicationSubmission.subdSuitability = filterUndefined(
+      updateDto.subdSuitability,
+      applicationSubmission.subdSuitability,
+    );
+    applicationSubmission.subdAgricultureSupport = filterUndefined(
+      updateDto.subdAgricultureSupport,
+      applicationSubmission.subdAgricultureSupport,
+    );
+    applicationSubmission.subdIsHomeSiteSeverance = filterUndefined(
+      updateDto.subdIsHomeSiteSeverance,
+      applicationSubmission.subdIsHomeSiteSeverance,
+    );
+    applicationSubmission.subdProposedLots = filterUndefined(
+      updateDto.subdProposedLots,
+      applicationSubmission.subdProposedLots,
+    );
     if (updateDto.subdIsHomeSiteSeverance === false) {
       const applicationUuid = await this.applicationService.getUuid(
         applicationSubmission.fileNumber,
@@ -689,25 +807,13 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
-    applicationSubmission.soilIsNOIFollowUp = filterUndefined(
-      updateDto.soilIsNOIFollowUp,
-      applicationSubmission.soilIsNOIFollowUp,
+    applicationSubmission.soilIsFollowUp = filterUndefined(
+      updateDto.soilIsFollowUp,
+      applicationSubmission.soilIsFollowUp,
     );
-    applicationSubmission.soilNOIIDs = filterUndefined(
-      updateDto.soilNOIIDs,
-      applicationSubmission.soilNOIIDs,
-    );
-    applicationSubmission.soilHasPreviousALCAuthorization = filterUndefined(
-      updateDto.soilHasPreviousALCAuthorization,
-      applicationSubmission.soilHasPreviousALCAuthorization,
-    );
-    applicationSubmission.soilApplicationIDs = filterUndefined(
-      updateDto.soilApplicationIDs,
-      applicationSubmission.soilApplicationIDs,
-    );
-    applicationSubmission.soilPurpose = filterUndefined(
-      updateDto.soilPurpose,
-      applicationSubmission.soilPurpose,
+    applicationSubmission.soilFollowUpIDs = filterUndefined(
+      updateDto.soilFollowUpIDs,
+      applicationSubmission.soilFollowUpIDs,
     );
     applicationSubmission.soilTypeRemoved = filterUndefined(
       updateDto.soilTypeRemoved,
@@ -781,13 +887,13 @@ export class ApplicationSubmissionService {
       updateDto.soilAlreadyPlacedAverageDepth,
       applicationSubmission.soilAlreadyPlacedAverageDepth,
     );
-    applicationSubmission.soilProjectDurationAmount = filterUndefined(
-      updateDto.soilProjectDurationAmount,
-      applicationSubmission.soilProjectDurationAmount,
+    applicationSubmission.soilProjectDuration = filterUndefined(
+      updateDto.soilProjectDuration,
+      applicationSubmission.soilProjectDuration,
     );
-    applicationSubmission.soilProjectDurationUnit = filterUndefined(
-      updateDto.soilProjectDurationUnit,
-      applicationSubmission.soilProjectDurationUnit,
+    applicationSubmission.fillProjectDuration = filterUndefined(
+      updateDto.fillProjectDuration,
+      applicationSubmission.fillProjectDuration,
     );
     applicationSubmission.soilFillTypeToPlace = filterUndefined(
       updateDto.soilFillTypeToPlace,
@@ -826,13 +932,10 @@ export class ApplicationSubmissionService {
     applicationSubmission: ApplicationSubmission,
     updateDto: ApplicationSubmissionUpdateDto,
   ) {
+    applicationSubmission.naruSubtype = undefined;
     applicationSubmission.naruSubtypeCode = filterUndefined(
       updateDto.naruSubtypeCode,
       applicationSubmission.naruSubtypeCode,
-    );
-    applicationSubmission.naruPurpose = filterUndefined(
-      updateDto.naruPurpose,
-      applicationSubmission.naruPurpose,
     );
     applicationSubmission.naruFloorArea = filterUndefined(
       updateDto.naruFloorArea,
@@ -866,13 +969,9 @@ export class ApplicationSubmissionService {
       updateDto.naruFillOrigin,
       applicationSubmission.naruFillOrigin,
     );
-    applicationSubmission.naruProjectDurationAmount = filterUndefined(
-      updateDto.naruProjectDurationAmount,
-      applicationSubmission.naruProjectDurationAmount,
-    );
-    applicationSubmission.naruProjectDurationUnit = filterUndefined(
-      updateDto.naruProjectDurationUnit,
-      applicationSubmission.naruProjectDurationUnit,
+    applicationSubmission.naruProjectDuration = filterUndefined(
+      updateDto.naruProjectDuration,
+      applicationSubmission.naruProjectDuration,
     );
     applicationSubmission.naruToPlaceVolume = filterUndefined(
       updateDto.naruToPlaceVolume,
@@ -890,6 +989,66 @@ export class ApplicationSubmissionService {
       updateDto.naruToPlaceAverageDepth,
       applicationSubmission.naruToPlaceAverageDepth,
     );
+    applicationSubmission.naruSleepingUnits = filterUndefined(
+      updateDto.naruSleepingUnits,
+      applicationSubmission.naruSleepingUnits,
+    );
+    applicationSubmission.naruAgriTourism = filterUndefined(
+      updateDto.naruAgriTourism,
+      applicationSubmission.naruAgriTourism,
+    );
+  }
+
+  private setInclusionExclusionFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.prescribedBody = filterUndefined(
+      updateDto.prescribedBody,
+      applicationSubmission.prescribedBody,
+    );
+    applicationSubmission.inclExclHectares = filterUndefined(
+      updateDto.inclExclHectares,
+      applicationSubmission.inclExclHectares,
+    );
+    applicationSubmission.exclWhyLand = filterUndefined(
+      updateDto.exclWhyLand,
+      applicationSubmission.exclWhyLand,
+    );
+    applicationSubmission.inclAgricultureSupport = filterUndefined(
+      updateDto.inclAgricultureSupport,
+      applicationSubmission.inclAgricultureSupport,
+    );
+    applicationSubmission.inclImprovements = filterUndefined(
+      updateDto.inclImprovements,
+      applicationSubmission.inclImprovements,
+    );
+    applicationSubmission.exclShareGovernmentBorders = filterUndefined(
+      updateDto.exclShareGovernmentBorders,
+      applicationSubmission.exclShareGovernmentBorders,
+    );
+    applicationSubmission.inclGovernmentOwnsAllParcels = filterUndefined(
+      updateDto.inclGovernmentOwnsAllParcels,
+      applicationSubmission.inclGovernmentOwnsAllParcels,
+    );
+  }
+
+  private setCovenantFields(
+    applicationSubmission: ApplicationSubmission,
+    updateDto: ApplicationSubmissionUpdateDto,
+  ) {
+    applicationSubmission.coveAreaImpacted = filterUndefined(
+      updateDto.coveAreaImpacted,
+      applicationSubmission.coveAreaImpacted,
+    );
+    applicationSubmission.coveFarmImpact = filterUndefined(
+      updateDto.coveFarmImpact,
+      applicationSubmission.coveFarmImpact,
+    );
+    applicationSubmission.coveHasDraft = filterUndefined(
+      updateDto.coveHasDraft,
+      applicationSubmission.coveHasDraft,
+    );
   }
 
   async listNaruSubtypes() {
@@ -899,5 +1058,86 @@ export class ApplicationSubmissionService {
         code: true,
       },
     });
+  }
+
+  async getFileNumber(submissionUuid: string, includeDraft = false) {
+    const submission = await this.applicationSubmissionRepository.findOne({
+      where: {
+        uuid: submissionUuid,
+        isDraft: includeDraft,
+      },
+      select: {
+        uuid: true,
+        fileNumber: true,
+      },
+    });
+    return submission?.fileNumber;
+  }
+
+  async canDeleteDocument(document: ApplicationDocument, user: User) {
+    const overlappingRoles = ROLES_ALLOWED_APPLICATIONS.filter((value) =>
+      user.clientRoles!.includes(value),
+    );
+    if (overlappingRoles.length > 0) {
+      return true;
+    }
+
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const isOwner = user.uuid === documentFlags.ownerUuid;
+    const isGovernmentOnFile =
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const isSameAccountAsOwner =
+      !!user.bceidBusinessGuid &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return isOwner || isGovernmentOnFile || isSameAccountAsOwner;
+  }
+
+  async canAccessDocument(document: ApplicationDocument, user: User) {
+    //If document has P, skip all checks.
+    if (document.visibilityFlags.includes(VISIBILITY_FLAG.PUBLIC)) {
+      return true;
+    }
+
+    const documentFlags = await this.getDocumentFlags(document);
+
+    const applicantFlag =
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.uuid === documentFlags.ownerUuid;
+    const governmentFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.GOVERNMENT) &&
+      user.bceidBusinessGuid === documentFlags.localGovernmentGuid;
+    const sharedAccountFlag =
+      !!user.bceidBusinessGuid &&
+      document.visibilityFlags.includes(VISIBILITY_FLAG.APPLICANT) &&
+      user.bceidBusinessGuid === documentFlags.ownerGuid;
+
+    return applicantFlag || governmentFlag || sharedAccountFlag;
+  }
+
+  private async getDocumentFlags(document: ApplicationDocument) {
+    const result = await this.applicationSubmissionRepository
+      .createQueryBuilder('submission')
+      .leftJoin('submission.application', 'application')
+      .leftJoin('application.documents', 'document')
+      .leftJoin('submission.createdBy', 'user')
+      .leftJoin('application.localGovernment', 'localGovernment')
+      .select([
+        'user.uuid',
+        'user.bceid_business_guid',
+        'localGovernment.bceidBusinessGuid',
+      ])
+      .where('document.uuid = :uuid', {
+        uuid: document.uuid,
+      })
+      .execute();
+
+    return {
+      ownerUuid: result[0]?.user_uuid,
+      ownerGuid: result[0]?.bceid_business_guid,
+      localGovernmentGuid: result[0]?.localGovernment_bceid_business_guid,
+    };
   }
 }

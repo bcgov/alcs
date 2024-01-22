@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import * as config from 'config';
 import { of } from 'rxjs';
 import { Repository } from 'typeorm';
+import { DocumentService } from '../../document/document.service';
 import { EmailStatus } from './email-status.entity';
 import { EmailService } from './email.service';
 
@@ -13,10 +14,12 @@ describe('EmailService', () => {
   let service: EmailService;
   let mockHttpService;
   let mockRepo: DeepMocked<Repository<EmailStatus>>;
+  let mockDocumentService: DeepMocked<DocumentService>;
 
   beforeEach(async () => {
     mockHttpService = createMock();
     mockRepo = createMock();
+    mockDocumentService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
@@ -25,6 +28,10 @@ describe('EmailService', () => {
         {
           provide: HttpService,
           useValue: mockHttpService,
+        },
+        {
+          provide: DocumentService,
+          useValue: mockDocumentService,
         },
         {
           provide: getRepositoryToken(EmailStatus),
@@ -63,6 +70,7 @@ describe('EmailService', () => {
       body: 'body',
       subject: 'subject',
       to: ['email'],
+      cc: ['carbon', 'copy'],
     };
     await service.sendEmail(mockEmail);
 
@@ -75,6 +83,7 @@ describe('EmailService', () => {
     expect(servicePostBody.subject).toEqual(mockEmail.subject);
     expect(servicePostBody.body).toEqual(mockEmail.body);
     expect(servicePostBody.from).toEqual(config.get('CHES.FROM'));
+    expect(servicePostBody.cc).toEqual(mockEmail.cc);
   });
 
   it('should re-use the token if its not expired', async () => {

@@ -1,5 +1,5 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { DOCUMENT_SOURCE } from '../../document/document.dto';
 
 export class AttachExternalDocumentDto {

@@ -18,10 +18,15 @@ import {
 } from '@nestjs/common';
 import { ApiOAuth2 } from '@nestjs/swagger';
 import * as config from 'config';
+import { generateCANCApplicationHtml } from '../../../../../templates/emails/cancelled';
 import { ROLES_ALLOWED_APPLICATIONS } from '../../common/authorization/roles';
 import { RolesGuard } from '../../common/authorization/roles-guard.service';
 import { UserRoles } from '../../common/authorization/roles.decorator';
+import { TrackingService } from '../../common/tracking/tracking.service';
+import { StatusEmailService } from '../../providers/email/status-email.service';
 import { formatIncomingDate } from '../../utils/incoming-date.formatter';
+import { SUBMISSION_STATUS } from '../application/application-submission-status/submission-status.dto';
+import { PARENT_TYPE } from '../card/card-subtask/card-subtask.dto';
 import { CardService } from '../card/card.service';
 import {
   ApplicationDto,
@@ -37,16 +42,22 @@ export class ApplicationController {
   constructor(
     private applicationService: ApplicationService,
     private cardService: CardService,
+    private statusEmailService: StatusEmailService,
+    private trackingService: TrackingService,
     @Inject(CONFIG_TOKEN) private config: config.IConfig,
   ) {}
 
   @Get('/:fileNumber')
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
-  async get(@Param('fileNumber') fileNumber): Promise<ApplicationDto> {
+  async get(
+    @Param('fileNumber') fileNumber,
+    @Req() req,
+  ): Promise<ApplicationDto> {
     const application = await this.applicationService.getOrFail(fileNumber);
     const mappedApplication = await this.applicationService.mapToDtos([
       application,
     ]);
+    await this.trackingService.trackView(req.user.entity, fileNumber);
     return mappedApplication[0];
   }
 
@@ -99,9 +110,13 @@ export class ApplicationController {
         agCapMap: updates.agCapMap,
         agCapSource: updates.agCapSource,
         proposalEndDate: formatIncomingDate(updates.proposalEndDate),
+        proposalEndDate2: formatIncomingDate(updates.proposalEndDate2),
+        proposalExpiryDate: formatIncomingDate(updates.proposalExpiryDate),
         nfuUseSubType: updates.nfuUseSubType,
         nfuUseType: updates.nfuUseType,
+        inclExclApplicantType: updates.inclExclApplicantType,
         staffObservations: updates.staffObservations,
+        hideFromPortal: updates.hideFromPortal,
       },
     );
 
@@ -115,6 +130,33 @@ export class ApplicationController {
   @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
   async softDelete(@Body() applicationNumber: string): Promise<void> {
     await this.applicationService.delete(applicationNumber);
+  }
+
+  @Post('/:fileNumber/cancel')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async cancel(@Param('fileNumber') fileNumber): Promise<void> {
+    const { applicationSubmission, primaryContact, submissionGovernment } =
+      await this.statusEmailService.getApplicationEmailData(fileNumber);
+
+    if (primaryContact) {
+      await this.statusEmailService.sendApplicationStatusEmail({
+        generateStatusHtml: generateCANCApplicationHtml,
+        status: SUBMISSION_STATUS.CANCELLED,
+        applicationSubmission,
+        government: submissionGovernment,
+        parentType: PARENT_TYPE.APPLICATION,
+        primaryContact,
+        ccGovernment: !!submissionGovernment,
+      });
+    }
+
+    await this.applicationService.cancel(fileNumber);
+  }
+
+  @Post('/:fileNumber/uncancel')
+  @UserRoles(...ROLES_ALLOWED_APPLICATIONS)
+  async uncancel(@Param('fileNumber') fileNumber): Promise<void> {
+    await this.applicationService.uncancel(fileNumber);
   }
 
   @Get('/card/:uuid')

@@ -1,21 +1,20 @@
 import { ServiceValidationException } from '@app/common/exceptions/base.exception';
 import { Injectable, Logger } from '@nestjs/common';
-import { ApplicationLocalGovernmentService } from '../../alcs/application/application-code/application-local-government/application-local-government.service';
-import { DOCUMENT_TYPE } from '../../alcs/application/application-document/application-document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
-import { APPLICATION_OWNER } from './application-owner/application-owner.dto';
+import { LocalGovernmentService } from '../../alcs/local-government/local-government.service';
+import { OWNER_TYPE } from '../../common/owner-type/owner-type.entity';
+import { DOCUMENT_TYPE } from '../../document/document-code.entity';
 import { ApplicationOwner } from './application-owner/application-owner.entity';
-import { PARCEL_TYPE } from './application-parcel/application-parcel.dto';
 import { ApplicationParcel } from './application-parcel/application-parcel.entity';
 import { ApplicationParcelService } from './application-parcel/application-parcel.service';
 import { ApplicationSubmission } from './application-submission.entity';
+import { CovenantTransfereeService } from './covenant-transferee/covenant-transferee.service';
 
 export class ValidatedApplicationSubmission extends ApplicationSubmission {
   applicant: string;
   localGovernmentUuid: string;
   parcels: ApplicationParcel[];
-  otherParcels: ApplicationParcel[];
   primaryContact: ApplicationOwner;
   parcelsAgricultureDescription: string;
   parcelsAgricultureImprovementDescription: string;
@@ -37,9 +36,10 @@ export class ApplicationSubmissionValidatorService {
   );
 
   constructor(
-    private localGovernmentService: ApplicationLocalGovernmentService,
+    private localGovernmentService: LocalGovernmentService,
     private appParcelService: ApplicationParcelService,
     private appDocumentService: ApplicationDocumentService,
+    private covenantTransfereeService: CovenantTransfereeService,
   ) {}
 
   async validateSubmission(applicationSubmission: ApplicationSubmission) {
@@ -49,8 +49,17 @@ export class ApplicationSubmissionValidatorService {
       errors.push(new ServiceValidationException('Missing applicant'));
     }
 
+    if (!applicationSubmission.purpose) {
+      errors.push(new ServiceValidationException('Missing purpose'));
+    }
+
+    const parcels = await this.appParcelService.fetchByApplicationFileId(
+      applicationSubmission.fileNumber,
+    );
+
     const validatedParcels = await this.validateParcels(
       applicationSubmission,
+      parcels,
       errors,
     );
 
@@ -61,6 +70,7 @@ export class ApplicationSubmissionValidatorService {
 
     const validatedPrimaryContact = await this.validatePrimaryContact(
       applicationSubmission,
+      parcels,
       applicantDocuments,
       errors,
     );
@@ -69,7 +79,11 @@ export class ApplicationSubmissionValidatorService {
     await this.validateOptionalDocuments(applicantDocuments, errors);
 
     if (applicationSubmission.typeCode === 'NFUP') {
-      await this.validateNfuProposal(applicationSubmission, errors);
+      await this.validateNfuProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
     }
     if (applicationSubmission.typeCode === 'TURP') {
       await this.validateTurProposal(applicationSubmission, errors);
@@ -78,6 +92,7 @@ export class ApplicationSubmissionValidatorService {
       await this.validateSubdProposal(
         applicationSubmission,
         applicantDocuments,
+        parcels,
         errors,
       );
     }
@@ -113,34 +128,49 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
+    if (applicationSubmission.typeCode === 'EXCL') {
+      await this.validateExclProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+
+    if (applicationSubmission.typeCode === 'INCL') {
+      await this.validateInclProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+    if (applicationSubmission.typeCode === 'COVE') {
+      await this.validateCoveProposal(
+        applicationSubmission,
+        applicantDocuments,
+        errors,
+      );
+    }
+
     const validatedApplication =
       validatedParcels && validatedPrimaryContact
         ? ({
             ...applicationSubmission,
             primaryContact: validatedPrimaryContact,
-            parcels: validatedParcels.filter(
-              (parcel) => parcel.parcelType === PARCEL_TYPE.APPLICATION,
-            ),
-            otherParcels: validatedParcels.filter(
-              (parcel) => parcel.parcelType === PARCEL_TYPE.OTHER,
-            ),
+            parcels: validatedParcels,
           } as ValidatedApplicationSubmission)
         : undefined;
 
     return {
       errors,
-      application: errors.length === 0 ? validatedApplication : undefined,
+      submission: errors.length === 0 ? validatedApplication : undefined,
     };
   }
 
   private async validateParcels(
     applicationSubmission: ApplicationSubmission,
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
-    const parcels = await this.appParcelService.fetchByApplicationFileId(
-      applicationSubmission.fileNumber,
-    );
-
     if (parcels.length === 0) {
       errors.push(new ServiceValidationException(`Application has no parcels`));
     }
@@ -151,15 +181,22 @@ export class ApplicationSubmissionValidatorService {
       );
     }
 
+    if (
+      applicationSubmission.hasOtherParcelsInCommunity &&
+      !applicationSubmission.otherParcelsDescription
+    ) {
+      errors.push(
+        new ServiceValidationException(`Missing other parcels description`),
+      );
+    }
+
     for (const parcel of parcels) {
       if (
-        parcel.ownershipTypeCode === null ||
         parcel.legalDescription === null ||
         parcel.mapAreaHectares === null ||
         parcel.civicAddress === null ||
         parcel.isFarm === null ||
-        (!parcel.isConfirmedByApplicant &&
-          parcel.parcelType === PARCEL_TYPE.APPLICATION)
+        !parcel.isConfirmedByApplicant
       ) {
         errors.push(
           new ServiceValidationException(`Invalid Parcel ${parcel.uuid}`),
@@ -190,14 +227,6 @@ export class ApplicationSubmissionValidatorService {
         );
       }
 
-      if (parcel.ownershipTypeCode === 'CRWN' && !parcel.crownLandOwnerType) {
-        errors.push(
-          new ServiceValidationException(
-            `Crown Parcel ${parcel.uuid} has no ownership type`,
-          ),
-        );
-      }
-
       if (parcel.owners.length === 0) {
         errors.push(
           new ServiceValidationException(`Parcel has no Owners ${parcel.uuid}`),
@@ -205,7 +234,6 @@ export class ApplicationSubmissionValidatorService {
       }
 
       if (
-        parcel.parcelType === PARCEL_TYPE.APPLICATION &&
         !parcel.certificateOfTitle &&
         (parcel.ownershipTypeCode === 'SMPL' || parcel.pid)
       ) {
@@ -224,6 +252,7 @@ export class ApplicationSubmissionValidatorService {
 
   private async validatePrimaryContact(
     applicationSubmission: ApplicationSubmission,
+    parcels: ApplicationParcel[],
     documents: ApplicationDocument[],
     errors: Error[],
   ): Promise<ApplicationOwner | undefined> {
@@ -238,12 +267,22 @@ export class ApplicationSubmissionValidatorService {
       return;
     }
 
-    const onlyHasIndividualOwner =
-      applicationSubmission.owners.length === 1 &&
-      applicationSubmission.owners[0].type.code ===
-        APPLICATION_OWNER.INDIVIDUAL;
+    const linkedOwnerUuids = parcels
+      .flatMap((parcel) => parcel.owners)
+      .map((owner) => owner.uuid);
 
-    if (!onlyHasIndividualOwner) {
+    const linkedOwners = applicationSubmission.owners.filter((owner) =>
+      linkedOwnerUuids.includes(owner.uuid),
+    );
+
+    const onlyHasIndividualOwner =
+      linkedOwners.length === 1 &&
+      linkedOwners[0].type.code === OWNER_TYPE.INDIVIDUAL;
+
+    const isGovernmentContact =
+      primaryOwner.type.code === OWNER_TYPE.GOVERNMENT;
+
+    if (!onlyHasIndividualOwner && !isGovernmentContact) {
       const authorizationLetters = documents.filter(
         (document) =>
           document.type?.code === DOCUMENT_TYPE.AUTHORIZATION_LETTER,
@@ -257,7 +296,7 @@ export class ApplicationSubmissionValidatorService {
       }
     }
 
-    if (primaryOwner.type.code === APPLICATION_OWNER.AGENT) {
+    if (primaryOwner.type.code === OWNER_TYPE.AGENT || isGovernmentContact) {
       if (
         !primaryOwner.firstName ||
         !primaryOwner.lastName ||
@@ -371,11 +410,11 @@ export class ApplicationSubmissionValidatorService {
 
   private async validateNfuProposal(
     applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
     errors: Error[],
   ) {
     if (
       !applicationSubmission.nfuHectares ||
-      !applicationSubmission.nfuPurpose ||
       !applicationSubmission.nfuOutsideLands ||
       !applicationSubmission.nfuAgricultureSupport ||
       applicationSubmission.nfuWillImportFill === null
@@ -387,16 +426,27 @@ export class ApplicationSubmissionValidatorService {
       if (
         !applicationSubmission.nfuFillTypeDescription ||
         !applicationSubmission.nfuFillOriginDescription ||
-        applicationSubmission.nfuTotalFillPlacement === null ||
+        applicationSubmission.nfuTotalFillArea === null ||
         applicationSubmission.nfuMaxFillDepth === null ||
+        applicationSubmission.nfuAverageFillDepth === null ||
         applicationSubmission.nfuFillVolume === null ||
-        applicationSubmission.nfuProjectDurationAmount === null ||
-        !applicationSubmission.nfuProjectDurationUnit
+        !applicationSubmission.nfuProjectDuration
       ) {
         errors.push(
           new ServiceValidationException(`NFU Fill Section incomplete`),
         );
       }
+    }
+
+    const proposalMaps = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMaps.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing Proposal Map / Site Plan`,
+        ),
+      );
     }
   }
 
@@ -405,7 +455,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      !applicationSubmission.turPurpose ||
       !applicationSubmission.turOutsideLands ||
       !applicationSubmission.turAgriculturalActivities ||
       !applicationSubmission.turReduceNegativeImpacts ||
@@ -419,6 +468,7 @@ export class ApplicationSubmissionValidatorService {
   private async validateSubdProposal(
     applicationSubmission: ApplicationSubmission,
     applicantDocuments: ApplicationDocument[],
+    parcels: ApplicationParcel[],
     errors: Error[],
   ) {
     if (applicationSubmission.subdProposedLots.length === 0) {
@@ -427,7 +477,6 @@ export class ApplicationSubmissionValidatorService {
       );
     }
     if (
-      !applicationSubmission.subdPurpose ||
       !applicationSubmission.subdSuitability ||
       !applicationSubmission.subdAgricultureSupport
     ) {
@@ -451,10 +500,27 @@ export class ApplicationSubmissionValidatorService {
       if (homesiteDocuments.length === 0) {
         errors.push(
           new ServiceValidationException(
-            `SUBD delcared homesite severance but does not have required document`,
+            `SUBD declared homesite severance but does not have required document`,
           ),
         );
       }
+    }
+
+    const initialArea = parcels.reduce(
+      (totalSize, parcel) => totalSize + (parcel.mapAreaHectares ?? 0),
+      0,
+    );
+    const subdividedArea = applicationSubmission.subdProposedLots.reduce(
+      (totalSize, proposedLot) => totalSize + (proposedLot.size ?? 0),
+      0,
+    );
+
+    if (initialArea !== subdividedArea) {
+      errors.push(
+        new ServiceValidationException(
+          `SUBD parcels area is different from proposed lot area`,
+        ),
+      );
     }
   }
 
@@ -464,7 +530,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      applicationSubmission.soilPurpose === null ||
       applicationSubmission.soilTypeRemoved === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
@@ -505,7 +570,6 @@ export class ApplicationSubmissionValidatorService {
     errors: Error[],
   ) {
     if (
-      applicationSubmission.soilPurpose === null ||
       applicationSubmission.soilFillTypeToPlace === null ||
       applicationSubmission.soilAlternativeMeasures === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
@@ -552,9 +616,7 @@ export class ApplicationSubmissionValidatorService {
     applicantDocuments: ApplicationDocument[],
   ) {
     if (
-      applicationSubmission.soilIsNOIFollowUp === null ||
-      applicationSubmission.soilHasPreviousALCAuthorization === null ||
-      !applicationSubmission.soilPurpose ||
+      applicationSubmission.soilIsFollowUp === null ||
       applicationSubmission.soilReduceNegativeImpacts === null
     ) {
       errors.push(
@@ -565,23 +627,12 @@ export class ApplicationSubmissionValidatorService {
     }
 
     if (
-      applicationSubmission.soilIsNOIFollowUp &&
-      !applicationSubmission.soilNOIIDs
+      applicationSubmission.soilIsFollowUp &&
+      !applicationSubmission.soilFollowUpIDs
     ) {
       errors.push(
         new ServiceValidationException(
-          `${applicationSubmission.typeCode} Proposal missing NOI IDs`,
-        ),
-      );
-    }
-
-    if (
-      applicationSubmission.soilHasPreviousALCAuthorization &&
-      !applicationSubmission.soilApplicationIDs
-    ) {
-      errors.push(
-        new ServiceValidationException(
-          `${applicationSubmission.typeCode} Proposal missing Application IDs`,
+          `${applicationSubmission.typeCode} Proposal missing Application or NOI IDs`,
         ),
       );
     }
@@ -646,10 +697,196 @@ export class ApplicationSubmissionValidatorService {
     const noticeOfWork = applicationDocuments.filter(
       (document) => document.typeCode === DOCUMENT_TYPE.NOTICE_OF_WORK,
     );
-    if (applicationSubmission.soilIsNOIFollowUp && noticeOfWork.length === 0) {
+    if (
+      applicationSubmission.soilHasSubmittedNotice &&
+      noticeOfWork.length === 0
+    ) {
       errors.push(
         new ServiceValidationException(
           `${applicationSubmission.typeCode} proposal has yes to notice of work but is not attached`,
+        ),
+      );
+    }
+  }
+
+  private async validateExclProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.prescribedBody === null ||
+      applicationSubmission.exclShareGovernmentBorders === null ||
+      applicationSubmission.exclWhyLand === null ||
+      applicationSubmission.inclExclHectares === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing exclusion fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    const proofOfAdvertising = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+    );
+    if (proofOfAdvertising.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proof of advertising`,
+        ),
+      );
+    }
+
+    const proofOfSignage = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+    );
+    if (proofOfSignage.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proof of signage`,
+        ),
+      );
+    }
+
+    const reportOfHearing = applicantDocuments.filter(
+      (document) =>
+        document.typeCode === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+    );
+    if (reportOfHearing.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing report of public hearing`,
+        ),
+      );
+    }
+  }
+
+  private async validateInclProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.inclImprovements === null ||
+      applicationSubmission.inclAgricultureSupport === null ||
+      applicationSubmission.inclExclHectares === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing inclusion fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.inclGovernmentOwnsAllParcels === false) {
+      const proofOfAdvertising = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_ADVERTISING,
+      );
+      if (proofOfAdvertising.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing proof of advertising`,
+          ),
+        );
+      }
+
+      const proofOfSignage = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.PROOF_OF_SIGNAGE,
+      );
+      if (proofOfSignage.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing proof of signage`,
+          ),
+        );
+      }
+
+      const reportOfHearing = applicantDocuments.filter(
+        (document) =>
+          document.typeCode === DOCUMENT_TYPE.REPORT_OF_PUBLIC_HEARING,
+      );
+      if (reportOfHearing.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing report of public hearing`,
+          ),
+        );
+      }
+    }
+  }
+
+  private async validateCoveProposal(
+    applicationSubmission: ApplicationSubmission,
+    applicantDocuments: ApplicationDocument[],
+    errors: Error[],
+  ) {
+    if (
+      applicationSubmission.coveHasDraft === null ||
+      applicationSubmission.coveFarmImpact === null ||
+      applicationSubmission.coveAreaImpacted === null
+    ) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal missing covenant fields`,
+        ),
+      );
+    }
+
+    const proposalMap = applicantDocuments.filter(
+      (document) => document.typeCode === DOCUMENT_TYPE.PROPOSAL_MAP,
+    );
+    if (proposalMap.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is missing proposal map / site plan`,
+        ),
+      );
+    }
+
+    if (applicationSubmission.coveHasDraft === true) {
+      const draftProposal = applicantDocuments.filter(
+        (document) => document.typeCode === DOCUMENT_TYPE.SRW_TERMS,
+      );
+      if (draftProposal.length === 0) {
+        errors.push(
+          new ServiceValidationException(
+            `${applicationSubmission.typeCode} proposal is missing draft proposal but has it true`,
+          ),
+        );
+      }
+    }
+
+    const coveTransferess =
+      await this.covenantTransfereeService.fetchBySubmissionUuid(
+        applicationSubmission.uuid,
+      );
+    if (coveTransferess.length === 0) {
+      errors.push(
+        new ServiceValidationException(
+          `${applicationSubmission.typeCode} proposal is is missing covenant transferees`,
         ),
       );
     }

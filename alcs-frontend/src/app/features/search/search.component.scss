@@ -1,0 +1,193 @@
+@use '../../../styles/colors';
+
+.spinner {
+  margin: 20px;
+}
+
+:host::ng-deep {
+  h3,
+  div,
+  span {
+    color: colors.$black;
+  }
+
+  .search-title {
+    width: 100%;
+    margin-top: 42px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    h4 {
+      margin-right: 12px !important;
+    }
+  }
+
+  .table {
+    width: 100%;
+    margin-top: 12px;
+
+    td,
+    th {
+      font-size: 16px;
+      width: 25%;
+    }
+
+    .type-cell {
+      width: 90px;
+    }
+
+    tr.mdc-data-table__row:hover {
+      box-shadow: 0 0 0 2px rgba(colors.$primary-color, 0.9);
+      cursor: pointer;
+      transform: scale(1);
+    }
+
+    tr.no-data td {
+      text-align: start;
+
+      > div:first-child {
+        margin-top: 28px;
+      }
+    }
+  }
+
+  .search-fields-wrapper {
+    padding: 0 80px;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    width: 100%;
+    margin: 24px 0;
+
+    &.date-row {
+      margin: 0 0 12px 0;
+    }
+
+    &.date-row-label {
+      margin: 0 0 4px 0;
+      gap: 4px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 100%;
+      flex: 1;
+    }
+
+    .resolution-wrapper {
+      gap: 12px;
+      margin: 0;
+    }
+  }
+
+  .address-search-fields-wrapper {
+    background-color: rgba(254, 233, 180, 0.502);
+    padding: 12px 80px;
+
+    .address-field {
+      background-color: white;
+    }
+
+    .row {
+      margin: 4px 0;
+    }
+  }
+
+  .expand-search {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+
+    .expand-search-btn {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #1a5a96;
+      margin-top: 12px;
+      margin-bottom: 24px;
+
+      span {
+        color: #1a5a96;
+      }
+    }
+  }
+
+  .btn-controls {
+    padding: 12px 80px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .title {
+    margin: 36px 80px;
+  }
+
+  .subtitle {
+    margin: 18px 80px;
+  }
+
+  .info-banner {
+    display: flex;
+    align-items: center;
+
+    .info-description {
+      min-width: 0;
+      word-break: break-word;
+    }
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      mat-icon {
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+
+  .search-result-wrapper {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+
+  .field-error {
+    color: colors.$error-color;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    flex-direction: row !important;
+    gap: 4px;
+
+    div {
+      color: colors.$error-color;
+    }
+  }
+
+  .btn-controls {
+    .reset-btn span {
+      color: colors.$primary-color;
+    }
+    .search-btn span {
+      color: #fff !important;
+    }
+  }
+  .mat-mdc-select-placeholder {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .no-data {
+    overflow: hidden;
+    margin: 20px 0;
+    padding: 8px 12px;
+  }
+}

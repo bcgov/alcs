@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import {
   IsArray,
   IsBoolean,
@@ -19,6 +19,9 @@ export class ApplicationParcelDto {
 
   @AutoMap()
   applicationSubmissionUuid: string;
+
+  @AutoMap(() => String)
+  certificateOfTitleUuid: string | null;
 
   @AutoMap(() => String)
   pid?: string | null;
@@ -52,8 +55,8 @@ export class ApplicationParcelDto {
 
   ownershipType?: ApplicationParcelOwnershipTypeDto;
 
-  @AutoMap(() => String)
-  parcelType: string;
+  @AutoMap(() => Number)
+  alrArea: number | null;
 
   certificateOfTitle?: ApplicationDocumentDto;
   owners: ApplicationOwnerDetailedDto[];
@@ -63,10 +66,6 @@ export class ApplicationParcelCreateDto {
   @IsNotEmpty()
   @IsString()
   applicationSubmissionUuid: string;
-
-  @IsOptional()
-  @IsString()
-  parcelType?: string;
 
   @IsOptional()
   @IsString()
@@ -106,7 +105,8 @@ export class ApplicationParcelUpdateDto {
   isFarm?: boolean | null;
 
   @IsBoolean()
-  isConfirmedByApplicant: boolean;
+  @IsOptional()
+  isConfirmedByApplicant?: boolean;
 
   @IsString()
   @IsOptional()
@@ -117,12 +117,12 @@ export class ApplicationParcelUpdateDto {
   crownLandOwnerType?: string | null;
 
   @IsArray()
-  ownerUuids: string[] | null;
-}
+  @IsOptional()
+  ownerUuids?: string[] | null;
 
-export enum PARCEL_TYPE {
-  APPLICATION = 'application',
-  OTHER = 'other',
+  @IsNumber()
+  @IsOptional()
+  alrArea?: number | null;
 }
 
 export class AttachCertificateOfTitleDto {

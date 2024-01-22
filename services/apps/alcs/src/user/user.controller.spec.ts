@@ -1,8 +1,9 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
+import { LocalGovernment } from '../alcs/local-government/local-government.entity';
 import { UserProfile } from '../common/automapper/user.automapper.profile';
 import {
   initMockUserDto,
@@ -16,13 +17,13 @@ import { UserService } from './user.service';
 
 describe('UserController', () => {
   let controller: UserController;
-  let mockService: DeepMocked<UserService>;
+  let mockUserService: DeepMocked<UserService>;
   let mockUser: Partial<User>;
   let mockUserDto: UserDto;
   let request;
 
   beforeEach(async () => {
-    mockService = createMock<UserService>();
+    mockUserService = createMock();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController, UserProfile],
@@ -35,7 +36,7 @@ describe('UserController', () => {
         //Keep this below mockKeyCloak as it overrides the one from there
         {
           provide: UserService,
-          useValue: mockService,
+          useValue: mockUserService,
         },
       ],
       imports: [
@@ -77,6 +78,8 @@ describe('UserController', () => {
       settings: {
         favoriteBoards: ['cats'],
       },
+      isFirstNationGovernment: false,
+      isLocalGovernment: false,
     };
 
     controller = module.get<UserController>(UserController);
@@ -86,37 +89,37 @@ describe('UserController', () => {
     expect(controller).toBeDefined();
   });
   it('should call getAssignableUsers on the service', async () => {
-    mockService.getAssignableUsers.mockResolvedValue([mockUser as User]);
+    mockUserService.getAssignableUsers.mockResolvedValue([mockUser as User]);
 
     const res = await controller.getAssignableUsers();
 
     expect(res[0].name).toEqual(mockUserDto.name);
     expect(res[0].initials).toEqual(mockUserDto.initials);
-    expect(mockService.getAssignableUsers).toHaveBeenCalledTimes(1);
+    expect(mockUserService.getAssignableUsers).toHaveBeenCalledTimes(1);
   });
 
   it('should call deleteUser on the service', async () => {
-    mockService.delete.mockResolvedValue(mockUser as User);
+    mockUserService.delete.mockResolvedValue(mockUser as User);
 
     const res = await controller.deleteUser('');
 
     expect(res).toBeTruthy();
-    expect(mockService.delete).toHaveBeenCalledTimes(1);
+    expect(mockUserService.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should call update user on the service', async () => {
     const mockUserDto = initMockUserDto();
-    mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
-    mockService.update.mockResolvedValueOnce({} as any);
+    mockUserService.getByUuid.mockResolvedValueOnce(mockUser as User);
+    mockUserService.update.mockResolvedValueOnce({} as any);
     request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
     await controller.update(mockUserDto.uuid, mockUserDto, request);
 
-    expect(mockService.update).toBeCalledTimes(1);
+    expect(mockUserService.update).toBeCalledTimes(1);
   });
 
   it('should fail on user update if user not found', async () => {
-    mockService.getByUuid.mockResolvedValueOnce(null);
+    mockUserService.getByUuid.mockResolvedValueOnce(null);
     const mockUserDto = initMockUserDto();
     request.user.entity.uuid = mockUser.uuid = mockUserDto.uuid;
 
@@ -129,8 +132,8 @@ describe('UserController', () => {
 
   it('should fail on user update if current user does not mach updating user', async () => {
     const mockUserDto = initMockUserDto();
-    mockService.getByUuid.mockResolvedValueOnce(mockUser as User);
-    mockService.update.mockResolvedValueOnce({} as any);
+    mockUserService.getByUuid.mockResolvedValueOnce(mockUser as User);
+    mockUserService.update.mockResolvedValueOnce({} as any);
 
     await expect(
       controller.update(mockUserDto.uuid, mockUserDto, request),
@@ -141,6 +144,13 @@ describe('UserController', () => {
 
   it('return the current user', async () => {
     const mockEntity = initUserMockEntity();
+    const governmentName = 'Government';
+
+    mockUserService.getUserLocalGovernment.mockResolvedValue(
+      new LocalGovernment({
+        name: governmentName,
+      }),
+    );
 
     const res = await controller.getMyself({
       user: {
@@ -148,6 +158,7 @@ describe('UserController', () => {
       },
     });
     expect(res.name).toEqual(mockEntity.name);
+    expect(res.government).toEqual(governmentName);
     expect(res.identityProvider).toEqual(mockEntity.identityProvider);
   });
 });

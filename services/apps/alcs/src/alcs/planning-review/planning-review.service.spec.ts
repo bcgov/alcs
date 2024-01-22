@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -60,6 +60,7 @@ describe('PlanningReviewService', () => {
         fileNumber: '1512311',
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'board-code',
       },
       fakeBoard,
     );
@@ -85,6 +86,7 @@ describe('PlanningReviewService', () => {
         fileNumber: existingFileNumber,
         localGovernmentUuid: 'fake-uuid',
         regionCode: 'region-code',
+        boardCode: 'board-code',
       },
       fakeBoard,
     );

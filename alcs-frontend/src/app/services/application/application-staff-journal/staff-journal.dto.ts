@@ -17,6 +17,11 @@ export interface CreateNoticeOfIntentStaffJournalDto {
   body: string;
 }
 
+export interface CreateNotificationStaffJournalDto {
+  notificationUuid: string;
+  body: string;
+}
+
 export interface UpdateStaffJournalDto {
   uuid: string;
   body: string;

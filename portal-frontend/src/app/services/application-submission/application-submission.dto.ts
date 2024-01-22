@@ -1,21 +1,33 @@
 import { BaseCodeDto } from '../../shared/dto/base.dto';
 import { ApplicationOwnerDetailedDto } from '../application-owner/application-owner.dto';
 
-export enum APPLICATION_STATUS {
+export enum SUBMISSION_STATUS {
   IN_PROGRESS = 'PROG',
-  SUBMITTED_TO_ALC = 'SUBM',
-  SUBMITTED_TO_LG = 'SUBG',
-  IN_REVIEW = 'REVW',
-  REFUSED_TO_FORWARD = 'REFU',
-  INCOMPLETE = 'INCM',
-  WRONG_GOV = 'WRNG',
+  INCOMPLETE = 'INCM', // L/FNG Returned as Incomplete
+  WRONG_GOV = 'WRNG', //Wrong L/FNG
+  SUBMITTED_TO_LG = 'SUBG', //Submitted to L/FNG
+  IN_REVIEW_BY_LG = 'REVG', //new Under Review by L/FNG
+  SUBMITTED_TO_ALC = 'SUBM', //Submitted to ALC
+  SUBMITTED_TO_ALC_INCOMPLETE = 'SUIN', //new Submitted to ALC - Incomplete
+  RECEIVED_BY_ALC = 'RECA', //new Received By ALC
+  IN_REVIEW_BY_ALC = 'REVA', //new Under Review by ALC
+  ALC_DECISION = 'ALCD', // Decision Released
+  REFUSED_TO_FORWARD_LG = 'RFFG', //new L/FNG Refused to Forward
+  RETURNED_TO_LG = 'INCG', //Returned to L/FNG from ALC
   CANCELLED = 'CANC',
-  ALC_DECISION = 'ALCD',
-  CEO_DECISION = 'CEOD',
 }
 
 export interface ApplicationStatusDto extends BaseCodeDto {
-  code: APPLICATION_STATUS;
+  code: SUBMISSION_STATUS;
+  portalBackgroundColor: string;
+  portalColor: string;
+}
+
+export interface ApplicationSubmissionToSubmissionStatusDto {
+  submissionUuid: string;
+  effectiveDate: number | null;
+  statusTypeCode: string;
+  status: ApplicationStatusDto;
 }
 
 export interface NaruSubtypeDto extends BaseCodeDto {}
@@ -28,12 +40,14 @@ export interface ProposedLot {
 export interface ApplicationSubmissionDto {
   uuid: string;
   fileNumber: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   lastStatusUpdate: number;
   applicant: string;
+  purpose: string | null;
   type: string;
   typeCode: string;
+  requiresGovernmentReview: boolean;
   localGovernmentUuid: string;
   status: ApplicationStatusDto;
   canEdit: boolean;
@@ -42,10 +56,13 @@ export interface ApplicationSubmissionDto {
   owners: ApplicationOwnerDetailedDto[];
   hasOtherParcelsInCommunity?: boolean | null;
   returnedComment?: string;
+  returnedToLfngComment?: string;
+  submissionStatuses: ApplicationSubmissionToSubmissionStatusDto[];
 }
 
 export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionDto {
   primaryContactOwnerUuid?: string;
+  otherParcelsDescription?: string | null;
 
   parcelsAgricultureDescription?: string | null;
   parcelsAgricultureImprovementDescription?: string | null;
@@ -61,20 +78,18 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
 
   //NFU Specific Fields
   nfuHectares: number | null;
-  nfuPurpose: string | null;
   nfuOutsideLands: string | null;
   nfuAgricultureSupport: string | null;
   nfuWillImportFill: boolean | null;
-  nfuTotalFillPlacement: number | null;
+  nfuTotalFillArea: number | null;
   nfuMaxFillDepth: number | null;
+  nfuAverageFillDepth: number | null;
   nfuFillVolume: number | null;
-  nfuProjectDurationAmount: number | null;
-  nfuProjectDurationUnit: string | null;
+  nfuProjectDuration: string | null;
   nfuFillTypeDescription: string | null;
   nfuFillOriginDescription: string | null;
 
   //TUR Fields
-  turPurpose: string | null;
   turAgriculturalActivities: string | null;
   turReduceNegativeImpacts: string | null;
   turOutsideLands: string | null;
@@ -82,18 +97,14 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  subdPurpose: string | null;
   subdSuitability: string | null;
   subdAgricultureSupport: string | null;
   subdIsHomeSiteSeverance: boolean | null;
   subdProposedLots: ProposedLot[];
 
   //Soil Fields
-  soilIsNOIFollowUp: boolean | null;
-  soilNOIIDs: string | null;
-  soilHasPreviousALCAuthorization: boolean | null;
-  soilApplicationIDs: string | null;
-  soilPurpose: string | null;
+  soilIsFollowUp: boolean | null;
+  soilFollowUpIDs: string | null;
   soilTypeRemoved: string | null;
   soilReduceNegativeImpacts: string | null;
   soilToRemoveVolume: number | null;
@@ -112,8 +123,8 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   soilAlreadyPlacedArea: number | null;
   soilAlreadyPlacedMaximumDepth: number | null;
   soilAlreadyPlacedAverageDepth: number | null;
-  soilProjectDurationAmount: number | null;
-  soilProjectDurationUnit: string | null;
+  soilProjectDuration: string | null;
+  fillProjectDuration: string | null;
   soilFillTypeToPlace: string | null;
   soilAlternativeMeasures: string | null;
   soilIsExtractionOrMining: boolean;
@@ -121,7 +132,6 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
 
   //NARU Fields
   naruSubtype: NaruSubtypeDto | null;
-  naruPurpose: string | null;
   naruFloorArea: number | null;
   naruResidenceNecessity: string | null;
   naruLocationRationale: string | null;
@@ -130,20 +140,37 @@ export interface ApplicationSubmissionDetailedDto extends ApplicationSubmissionD
   naruWillImportFill: boolean | null;
   naruFillType: string | null;
   naruFillOrigin: string | null;
-  naruProjectDurationAmount: number | null;
-  naruProjectDurationUnit: string | null;
+  naruProjectDuration: string | null;
   naruToPlaceVolume: number | null;
   naruToPlaceArea: number | null;
   naruToPlaceMaximumDepth: number | null;
   naruToPlaceAverageDepth: number | null;
+  naruSleepingUnits: number | null;
+  naruAgriTourism: string | null;
+
+  //Inclusion / Exclusion Fields
+  prescribedBody: string | null;
+  inclExclHectares: number | null;
+  exclWhyLand: string | null;
+  inclAgricultureSupport: string | null;
+  inclImprovements: string | null;
+  exclShareGovernmentBorders: boolean | null;
+  inclGovernmentOwnsAllParcels: boolean | null;
+
+  //Covenant Fields
+  coveHasDraft: boolean | null;
+  coveFarmImpact: string | null;
+  coveAreaImpacted: number | null;
 }
 
 export interface ApplicationSubmissionUpdateDto {
   applicant?: string;
+  purpose?: string | null;
   localGovernmentUuid?: string;
   typeCode?: string;
   primaryContactOwnerUuid?: string;
   hasOtherParcelsInCommunity?: boolean | null;
+  otherParcelsDescription?: string | null;
 
   //Land use fields
   parcelsAgricultureDescription?: string | null;
@@ -160,20 +187,18 @@ export interface ApplicationSubmissionUpdateDto {
 
   //NFU Specific Fields
   nfuHectares?: number | null;
-  nfuPurpose?: string | null;
   nfuOutsideLands?: string | null;
   nfuAgricultureSupport?: string | null;
   nfuWillImportFill?: boolean | null;
-  nfuTotalFillPlacement?: number | null;
+  nfuTotalFillArea?: number | null;
   nfuMaxFillDepth?: number | null;
+  nfuAverageFillDepth?: number | null;
   nfuFillVolume?: number | null;
-  nfuProjectDurationAmount?: number | null;
-  nfuProjectDurationUnit?: string | null;
+  nfuProjectDuration?: string | null;
   nfuFillTypeDescription?: string | null;
   nfuFillOriginDescription?: string | null;
 
   //TUR Fields
-  turPurpose?: string | null;
   turAgriculturalActivities?: string | null;
   turReduceNegativeImpacts?: string | null;
   turOutsideLands?: string | null;
@@ -181,18 +206,14 @@ export interface ApplicationSubmissionUpdateDto {
   turAllOwnersNotified?: boolean | null;
 
   //Subdivision Fields
-  subdPurpose?: string | null;
   subdSuitability?: string | null;
   subdAgricultureSupport?: string | null;
   subdIsHomeSiteSeverance?: boolean | null;
   subdProposedLots?: ProposedLot[];
 
   //Soil Fields
-  soilIsNOIFollowUp?: boolean | null;
-  soilNOIIDs?: string | null;
-  soilHasPreviousALCAuthorization?: boolean | null;
-  soilApplicationIDs?: string | null;
-  soilPurpose?: string | null;
+  soilIsFollowUp?: boolean | null;
+  soilFollowUpIDs?: string | null;
   soilTypeRemoved?: string | null;
   soilReduceNegativeImpacts?: string | null;
   soilToRemoveVolume?: number | null;
@@ -211,8 +232,8 @@ export interface ApplicationSubmissionUpdateDto {
   soilAlreadyPlacedArea?: number | null;
   soilAlreadyPlacedMaximumDepth?: number | null;
   soilAlreadyPlacedAverageDepth?: number | null;
-  soilProjectDurationAmount?: number | null;
-  soilProjectDurationUnit?: string | null;
+  soilProjectDuration?: string | null;
+  fillProjectDuration?: string | null;
   soilFillTypeToPlace?: string | null;
   soilAlternativeMeasures?: string | null;
   soilIsExtractionOrMining?: boolean | null;
@@ -220,7 +241,6 @@ export interface ApplicationSubmissionUpdateDto {
 
   //NARU Fields
   naruSubtypeCode?: string | null;
-  naruPurpose?: string | null;
   naruFloorArea?: number | null;
   naruResidenceNecessity?: string | null;
   naruLocationRationale?: string | null;
@@ -229,10 +249,25 @@ export interface ApplicationSubmissionUpdateDto {
   naruWillImportFill?: boolean | null;
   naruFillType?: string | null;
   naruFillOrigin?: string | null;
-  naruProjectDurationAmount?: number | null;
-  naruProjectDurationUnit?: string | null;
+  naruProjectDuration?: string | null;
   naruToPlaceVolume?: number | null;
   naruToPlaceArea?: number | null;
   naruToPlaceMaximumDepth?: number | null;
   naruToPlaceAverageDepth?: number | null;
+  naruSleepingUnits?: number | null;
+  naruAgriTourism?: string | null;
+
+  //Inclusion / Exclusion Fields
+  prescribedBody?: string | null;
+  inclExclHectares?: number | null;
+  exclWhyLand?: string | null;
+  inclAgricultureSupport?: string | null;
+  inclImprovements?: string | null;
+  exclShareGovernmentBorders?: boolean | null;
+  inclGovernmentOwnsAllParcels?: boolean | null;
+
+  //Covenant Fields
+  coveHasDraft?: boolean | null;
+  coveFarmImpact?: string | null;
+  coveAreaImpacted?: number | null;
 }

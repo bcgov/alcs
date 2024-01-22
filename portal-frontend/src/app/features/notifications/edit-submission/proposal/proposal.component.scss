@@ -1,0 +1,32 @@
+@use '../../../../../styles/functions' as *;
+@use '../../../../../styles/colors';
+
+section {
+  margin-top: rem(36);
+}
+
+.no-data-text {
+  color: colors.$grey-dark;
+  text-align: center;
+  padding-top: rem(16);
+}
+
+.table {
+  margin-top: rem(24);
+
+  .mat-mdc-header-cell {
+    vertical-align: text-top;
+  }
+
+  td {
+    padding: rem(12) rem(10);
+  }
+}
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.full-width {
+  width: 100%;
+}

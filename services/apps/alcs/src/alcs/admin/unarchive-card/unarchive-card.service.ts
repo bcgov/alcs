@@ -5,6 +5,7 @@ import { ApplicationService } from '../../application/application.service';
 import { CovenantService } from '../../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../../notification/notification.service';
 import { PlanningReviewService } from '../../planning-review/planning-review.service';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class UnarchiveCardService {
     private covenantService: CovenantService,
     private noticeOfIntentService: NoticeOfIntentService,
     private noticeOfIntentModificationService: NoticeOfIntentModificationService,
+    private notificationService: NotificationService,
   ) {}
 
   async fetchByFileId(fileId: string) {
@@ -41,6 +43,7 @@ export class UnarchiveCardService {
     await this.fetchAndMapModifications(fileId, result);
     await this.fetchAndMapCovenants(fileId, result);
     await this.fetchAndMapNOIs(fileId, result);
+    await this.fetchAndMapNotifications(fileId, result);
 
     return result;
   }
@@ -74,12 +77,11 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const modifications = await this.modificationService.getDeletedCards(
-      fileId,
-    );
+    const modifications =
+      await this.modificationService.getDeletedCards(fileId);
     for (const modification of modifications) {
       result.push({
-        cardUuid: modification.cardUuid,
+        cardUuid: modification.cardUuid ?? '',
         createdAt: modification.auditCreatedAt.getTime(),
         type: 'Modification',
         status: modification.card!.status.label,
@@ -96,9 +98,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const planningReviews = await this.planningReviewService.getDeletedCards(
-      fileId,
-    );
+    const planningReviews =
+      await this.planningReviewService.getDeletedCards(fileId);
     for (const planningReview of planningReviews) {
       result.push({
         cardUuid: planningReview.cardUuid,
@@ -118,12 +119,11 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const reconsiderations = await this.reconsiderationService.getDeletedCards(
-      fileId,
-    );
+    const reconsiderations =
+      await this.reconsiderationService.getDeletedCards(fileId);
     for (const reconsideration of reconsiderations) {
       result.push({
-        cardUuid: reconsideration.cardUuid,
+        cardUuid: reconsideration.cardUuid ?? '',
         createdAt: reconsideration.auditCreatedAt.getTime(),
         type: 'Reconsideration',
         status: reconsideration.card!.status.label,
@@ -140,9 +140,8 @@ export class UnarchiveCardService {
       createdAt: number;
     }[],
   ) {
-    const noticeOfIntents = await this.noticeOfIntentService.getDeletedCards(
-      fileId,
-    );
+    const noticeOfIntents =
+      await this.noticeOfIntentService.getDeletedCards(fileId);
     for (const noi of noticeOfIntents) {
       result.push({
         cardUuid: noi.cardUuid,
@@ -157,10 +156,31 @@ export class UnarchiveCardService {
 
     for (const noi of modificationNOIs) {
       result.push({
-        cardUuid: noi.cardUuid,
+        cardUuid: noi.cardUuid ?? '',
         createdAt: noi.auditCreatedAt.getTime(),
         type: 'NOI MODI',
         status: noi.card!.status.label,
+      });
+    }
+  }
+
+  private async fetchAndMapNotifications(
+    fileId: string,
+    result: {
+      cardUuid: string;
+      type: string;
+      status: string;
+      createdAt: number;
+    }[],
+  ) {
+    const notifications =
+      await this.notificationService.getDeletedCards(fileId);
+    for (const notification of notifications) {
+      result.push({
+        cardUuid: notification.cardUuid,
+        createdAt: notification.auditCreatedAt.getTime(),
+        type: 'NOTI',
+        status: notification.card!.status.label,
       });
     }
   }

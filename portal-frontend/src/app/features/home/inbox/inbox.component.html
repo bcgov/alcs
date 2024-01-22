@@ -1,0 +1,166 @@
+<section>
+  <form class="content" [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="full-width" appearance="outline">
+      <input
+        placeholder="Search Inbox by File ID"
+        mask="0*"
+        id="fileNumber"
+        matInput
+        formControlName="fileNumber"
+        aria-label="search"
+      />
+    </mat-form-field>
+
+    <mat-expansion-panel #panel>
+      <mat-expansion-panel-header class="search-toggle">
+        <mat-panel-title>{{ panel.expanded ? 'Less' : 'More' }} Search Options </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="search-form">
+        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
+          <mat-label for="filterBy">Filter By</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select id="filterBy" formControlName="filterBy">
+              <mat-option value="created">Created By {{ profile.government }}</mat-option>
+              <mat-option value="submitted">Submitted To {{ profile.government }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="profile && (profile.isFirstNationGovernment || profile.isLocalGovernment)">
+          <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
+          <mat-form-field appearance="outline">
+            <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />
+          </mat-form-field>
+        </div>
+        <div>
+          <label for="name">Name</label>
+          <mat-form-field appearance="outline">
+            <input id="name" matInput formControlName="name" minlength="3" />
+          </mat-form-field>
+          <div *ngIf="nameControl.invalid && (nameControl.dirty || nameControl.touched)" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="nameControl.errors?.['minlength']">Enter 3 or more characters to search by name</div>
+          </div>
+        </div>
+        <div>
+          <label for="pid">PID</label>
+          <mat-form-field appearance="outline">
+            <input id="pid" matInput formControlName="pid" minlength="9" maxlength="12" mask="000-000-000" />
+          </mat-form-field>
+          <div *ngIf="pidInvalid" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="pidControl.errors?.['mask']">PID must be 9 digits including leading zeroes</div>
+          </div>
+        </div>
+        <div
+          [ngClass]="{
+            'full-width': profile && (profile.isLocalGovernment || profile.isFirstNationGovernment)
+          }"
+        >
+          <label for="civicAddress">Civic Address</label>
+          <mat-form-field appearance="outline">
+            <input id="civicAddress" matInput formControlName="civicAddress" minlength="3" />
+          </mat-form-field>
+          <div *ngIf="civicAddressInvalid" class="field-error">
+            <mat-icon>warning</mat-icon>
+            <div *ngIf="civicAddressControl.errors?.['minlength']">Enter 3 or more characters to search</div>
+          </div>
+        </div>
+        <div>
+          <label for="type">Type</label>
+          <app-file-type-filter-drop-down
+            #fileTypeDropDown
+            [setFileTypes]="previousFileTypes"
+            (fileTypeChange)="onFileTypeChange($event)"
+          />
+        </div>
+        <div>
+          <mat-label for="status">Status</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select multiple="true" id="status" [formControl]="portalStatusControl">
+              <mat-option *ngFor="let status of allStatuses" [value]="status.code">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div *ngIf="profile && !profile.isFirstNationGovernment && !profile.isLocalGovernment">
+          <label for="governmentFileNumber">Local/First Nation Gov File Number</label>
+          <mat-form-field appearance="outline">
+            <input id="governmentFileNumber" matInput formControlName="governmentFileNumber" />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+
+    <div class="button-controls">
+      <button type="button" mat-stroked-button color="primary" (click)="onClear()">Clear</button>
+      <button type="submit" mat-flat-button color="primary" [disabled]="!searchForm.valid">Search</button>
+    </div>
+  </form>
+
+  <div class="search-fields-wrapper search-result-wrapper">
+    <div *ngIf="isLoading" class="center">
+      <mat-spinner></mat-spinner>
+    </div>
+    <mat-tab-group [selectedIndex]="tabIndex" *ngIf="!isLoading" mat-align-tabs="start" mat-stretch-tabs #searchResultTabs>
+      <mat-tab label="applications">
+        <ng-template mat-tab-label> Applications: {{ applicationTotal }} </ng-template>
+        <app-inbox-list
+          *ngIf="isMobile"
+          [items]="applications"
+          [totalCount]="applicationTotal"
+          (loadMore)="onLoadMore('APP')"
+          type="Applications"
+        >
+        </app-inbox-list>
+        <app-inbox-table
+          *ngIf="!isMobile"
+          [items]="applications"
+          [totalCount]="applicationTotal"
+          (tableChange)="onTableChange($event)"
+          [pageIndex]="pageIndex"
+          type="Applications"
+        ></app-inbox-table>
+      </mat-tab>
+
+      <mat-tab label="nois">
+        <ng-template mat-tab-label> Notice of Intent: {{ noticeOfIntentTotal }} </ng-template>
+        <app-inbox-list
+          *ngIf="isMobile"
+          [items]="noticeOfIntents"
+          [totalCount]="noticeOfIntentTotal"
+          (loadMore)="onLoadMore('NOI')"
+          type="Notices of Intent"
+        >
+        </app-inbox-list>
+        <app-inbox-table
+          *ngIf="!isMobile"
+          [items]="noticeOfIntents"
+          [totalCount]="noticeOfIntentTotal"
+          (tableChange)="onTableChange($event)"
+          type="Notices of Intent"
+        ></app-inbox-table>
+      </mat-tab>
+
+      <mat-tab label="notifications">
+        <ng-template mat-tab-label> Notification of SRW: {{ notificationTotal }} </ng-template>
+        <app-inbox-list
+          *ngIf="isMobile"
+          [items]="notifications"
+          [totalCount]="notificationTotal"
+          (loadMore)="onLoadMore('NOTI')"
+          type="Notifications"
+        >
+        </app-inbox-list>
+        <app-inbox-table
+          *ngIf="!isMobile"
+          [items]="notifications"
+          type="Notifications"
+          [totalCount]="notificationTotal"
+          (tableChange)="onTableChange($event)"
+        >
+        </app-inbox-table>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</section>

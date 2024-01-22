@@ -2,54 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
+import { DocumentTypeDto } from '../../../shared/document/document.dto';
 import { downloadFileFromUrl, openFileInline } from '../../../shared/utils/file';
 import { verifyFileSize } from '../../../shared/utils/file-size-checker';
 import { ToastService } from '../../toast/toast.service';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-  CreateDocumentDto,
-  UpdateDocumentDto,
-} from './application-document.dto';
-
-export enum DOCUMENT_TYPE {
-  //ALCS
-  DECISION_DOCUMENT = 'DPAC',
-  OTHER = 'OTHR',
-  ORIGINAL_APPLICATION = 'ORIG',
-
-  //Government Review
-  RESOLUTION_DOCUMENT = 'RESO',
-  STAFF_REPORT = 'STFF',
-
-  //Applicant Uploaded
-  CORPORATE_SUMMARY = 'CORS',
-  PROFESSIONAL_REPORT = 'PROR',
-  PHOTOGRAPH = 'PHTO',
-  AUTHORIZATION_LETTER = 'AAGR',
-  CERTIFICATE_OF_TITLE = 'CERT',
-
-  //App Documents
-  SERVING_NOTICE = 'POSN',
-  PROPOSAL_MAP = 'PRSK',
-  HOMESITE_SEVERANCE = 'HOME',
-  CROSS_SECTIONS = 'SPCS',
-  RECLAMATION_PLAN = 'RECP',
-  NOTICE_OF_WORK = 'NOWE',
-}
-
-export enum DOCUMENT_SOURCE {
-  APPLICANT = 'Applicant',
-  ALC = 'ALC',
-  LFNG = 'L/FNG',
-  AFFECTED_PARTY = 'Affected Party',
-  PUBLIC = 'Public',
-}
-
-export enum DOCUMENT_SYSTEM {
-  ALCS = 'ALCS',
-  PORTAL = 'Portal',
-}
+import { ApplicationDocumentDto, CreateDocumentDto, UpdateDocumentDto } from './application-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -75,15 +32,10 @@ export class ApplicationDocumentService {
     if (!isValidSize) {
       return;
     }
+    let formData = this.convertDtoToFormData(createDto);
 
-    let formData: FormData = new FormData();
-    formData.append('documentType', createDto.typeCode);
-    formData.append('source', createDto.source);
-    formData.append('visibilityFlags', createDto.visibilityFlags.join(', '));
-    formData.append('fileName', createDto.fileName);
-    formData.append('file', file, file.name);
     const res = await firstValueFrom(this.http.post(`${this.url}/application/${fileNumber}`, formData));
-    this.toastService.showSuccessToast('Review document uploaded');
+    this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
@@ -114,34 +66,39 @@ export class ApplicationDocumentService {
   }
 
   async fetchTypes() {
-    return firstValueFrom(this.http.get<ApplicationDocumentTypeDto[]>(`${this.url}/types`));
+    return firstValueFrom(this.http.get<DocumentTypeDto[]>(`${this.url}/types`));
   }
 
-  async update(uuid: string, createDto: UpdateDocumentDto) {
-    let formData: FormData = new FormData();
-
-    const file = createDto.file;
-    if (file) {
-      const isValidSize = verifyFileSize(file, this.toastService);
-      if (!isValidSize) {
-        return;
-      }
-      formData.append('file', file, file.name);
-    }
-    formData.append('documentType', createDto.typeCode);
-    formData.append('source', createDto.source);
-    formData.append('visibilityFlags', createDto.visibilityFlags.join(', '));
-    formData.append('fileName', createDto.fileName);
+  async update(uuid: string, updateDto: UpdateDocumentDto) {
+    let formData = this.convertDtoToFormData(updateDto);
     const res = await firstValueFrom(this.http.post(`${this.url}/${uuid}`, formData));
-    this.toastService.showSuccessToast('Review document uploaded');
+    this.toastService.showSuccessToast('Document uploaded');
     return res;
   }
 
   async updateSort(sortOrder: { uuid: string; order: number }[]) {
     try {
-      await firstValueFrom(this.http.post<ApplicationDocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
+      await firstValueFrom(this.http.post<DocumentTypeDto[]>(`${this.url}/sort`, sortOrder));
     } catch (e) {
       this.toastService.showErrorToast(`Failed to save document order`);
     }
+  }
+
+  private convertDtoToFormData(dto: UpdateDocumentDto) {
+    let formData: FormData = new FormData();
+    formData.append('documentType', dto.typeCode);
+    formData.append('source', dto.source);
+    formData.append('visibilityFlags', dto.visibilityFlags.join(', '));
+    formData.append('fileName', dto.fileName);
+    if (dto.file) {
+      formData.append('file', dto.file, dto.file.name);
+    }
+    if (dto.parcelUuid) {
+      formData.append('parcelUuid', dto.parcelUuid);
+    }
+    if (dto.ownerUuid) {
+      formData.append('ownerUuid', dto.ownerUuid);
+    }
+    return formData;
   }
 }

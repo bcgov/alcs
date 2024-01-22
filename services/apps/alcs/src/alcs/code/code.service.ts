@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsOrder, Repository } from 'typeorm';
+import { ApplicationDecisionMakerCode } from '../application-decision/application-decision-maker/application-decision-maker.entity';
+import { ApplicationSubmissionStatusType } from '../application/application-submission-status/submission-status-type.entity';
 import { BaseCodeEntity } from '../../common/entities/base.code.entity';
-import { ApplicationStatus } from '../../portal/application-submission/application-status/application-status.entity';
-import { CardStatus } from '../card/card-status/card-status.entity';
 import { ApplicationReconsiderationType } from '../application-decision/application-reconsideration/reconsideration-type/application-reconsideration-type.entity';
+import { CardStatus } from '../card/card-status/card-status.entity';
 import { ApplicationMeetingType } from './application-code/application-meeting-type/application-meeting-type.entity';
 import { ApplicationRegion } from './application-code/application-region/application-region.entity';
 import { ApplicationType } from './application-code/application-type/application-type.entity';
@@ -22,8 +23,10 @@ export class CodeService {
     private meetingTypesRepository: Repository<ApplicationMeetingType>,
     @InjectRepository(ApplicationReconsiderationType)
     private reconsiderationTypesRepository: Repository<ApplicationReconsiderationType>,
-    @InjectRepository(ApplicationStatus)
-    private applicationStatusRepository: Repository<ApplicationStatus>,
+    @InjectRepository(ApplicationSubmissionStatusType)
+    private applicationStatusRepository: Repository<ApplicationSubmissionStatusType>,
+    @InjectRepository(ApplicationDecisionMakerCode)
+    private applicationDecisionMakerCodeRepository: Repository<ApplicationDecisionMakerCode>,
   ) {}
 
   async getAll() {
@@ -40,6 +43,7 @@ export class CodeService {
       this.meetingTypesRepository.find(alphabeticalFindOptions),
       this.reconsiderationTypesRepository.find(alphabeticalFindOptions),
       this.applicationStatusRepository.find(alphabeticalFindOptions),
+      this.applicationDecisionMakerCodeRepository.find(alphabeticalFindOptions),
     ]);
 
     return {
@@ -49,6 +53,7 @@ export class CodeService {
       meetingTypes: values[3],
       reconsiderationTypes: values[4],
       applicationStatusTypes: values[5],
+      decisionMakers: values[6],
     };
   }
 

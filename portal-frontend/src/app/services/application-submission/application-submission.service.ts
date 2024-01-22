@@ -54,12 +54,13 @@ export class ApplicationSubmissionService {
     }
   }
 
-  async create(type: string) {
+  async create(type: string, prescribedBody?: string) {
     try {
       this.overlayService.showSpinner();
       return await firstValueFrom(
         this.httpClient.post<{ fileId: string }>(`${this.serviceUrl}`, {
           type,
+          prescribedBody,
         })
       );
     } catch (e) {
@@ -103,9 +104,10 @@ export class ApplicationSubmissionService {
   }
 
   async submitToAlcs(uuid: string) {
+    let res;
     try {
       this.overlayService.showSpinner();
-      await firstValueFrom(
+      res = await firstValueFrom(
         this.httpClient.post<ApplicationSubmissionDto>(`${this.serviceUrl}/alcs/submit/${uuid}`, {})
       );
       this.toastService.showSuccessToast('Application Submitted');
@@ -115,5 +117,6 @@ export class ApplicationSubmissionService {
     } finally {
       this.overlayService.hideSpinner();
     }
+    return res;
   }
 }

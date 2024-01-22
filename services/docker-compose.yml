@@ -52,6 +52,18 @@ services:
     networks:
       - alcs
 
+  clamav:
+    image: clamav/clamav:stable_base
+    volumes:
+      # Socket
+      - clamsocket:/var/run/clamav/
+      - clamav:/var/lib/clamav
+    ports:
+      - "3310:3310"
+    networks:
+      - alcs
+
+
 #  metabase:
 #    image: metabase/metabase:latest
 #    environment:
@@ -69,6 +81,8 @@ services:
 volumes:
   postgres:
   s3:
+  clamav:
+  clamsocket:
 
 networks: 
   alcs: 

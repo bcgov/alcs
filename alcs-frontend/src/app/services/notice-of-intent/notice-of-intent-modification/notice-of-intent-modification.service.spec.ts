@@ -6,7 +6,7 @@ import { ToastService } from '../../toast/toast.service';
 
 import { NoticeOfIntentModificationService } from './notice-of-intent-modification.service';
 
-describe('ApplicationReconsiderationService', () => {
+describe('NoticeOfIntentModificationService', () => {
   let service: NoticeOfIntentModificationService;
   let httpClient: DeepMocked<HttpClient>;
   let toastService: DeepMocked<ToastService>;
@@ -146,6 +146,7 @@ describe('ApplicationReconsiderationService', () => {
     const res = await service.create({
       fileNumber: '',
       boardCode: '',
+      description: '',
       localGovernmentUuid: '',
       modifiesDecisionUuids: [],
       regionCode: '',
@@ -168,6 +169,7 @@ describe('ApplicationReconsiderationService', () => {
     const res = await service.create({
       fileNumber: '',
       boardCode: '',
+      description: '',
       localGovernmentUuid: '',
       modifiesDecisionUuids: [],
       regionCode: '',

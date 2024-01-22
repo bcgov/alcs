@@ -53,6 +53,7 @@ describe('PlanningReviewController', () => {
       localGovernmentUuid: 'local-gov-uuid',
       fileNumber: 'file-number',
       regionCode: 'region-code',
+      boardCode: 'board-code',
     });
 
     expect(mockBoardService.getOneOrFail).toHaveBeenCalledTimes(1);

@@ -1,11 +1,19 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import { PortalAuthGuard } from '../../common/authorization/portal-auth-guard.service';
 import {
   DOCUMENT_TYPE,
   DOCUMENT_TYPES,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { DocumentService } from '../../document/document.service';
 
 @Controller('document')
+@UseGuards(PortalAuthGuard)
 export class DocumentController {
   constructor(private documentService: DocumentService) {}
 

@@ -1,20 +1,21 @@
 import { BaseServiceException } from '@app/common/exceptions/base.exception';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
 import {
-  ApplicationDocumentCode,
+  DocumentCode,
   DOCUMENT_TYPE,
-} from '../../alcs/application/application-document/application-document-code.entity';
+} from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import { ApplicationDocumentService } from '../../alcs/application/application-document/application-document.service';
 import { Application } from '../../alcs/application/application.entity';
 import { ApplicationService } from '../../alcs/application/application.service';
 import { ApplicationSubmissionReviewProfile } from '../../common/automapper/application-submission-review.automapper.profile';
+import { User } from '../../user/user.entity';
 import { ApplicationSubmission } from '../application-submission/application-submission.entity';
 
 import { ApplicationSubmissionReview } from './application-submission-review.entity';
@@ -26,7 +27,7 @@ describe('ApplicationSubmissionReviewService', () => {
   let mockAppDocumentService: DeepMocked<ApplicationDocumentService>;
   let mockAppService: DeepMocked<ApplicationService>;
 
-  const mockLocalGovernment = new ApplicationLocalGovernment({
+  const mockLocalGovernment = new LocalGovernment({
     isFirstNation: true,
     isActive: true,
   });
@@ -83,7 +84,10 @@ describe('ApplicationSubmissionReviewService', () => {
     const appReview = new ApplicationSubmissionReview();
     mockRepository.save.mockResolvedValue(appReview);
 
-    const res = await service.startReview(new ApplicationSubmission());
+    const res = await service.startReview(
+      new ApplicationSubmission(),
+      new User(),
+    );
 
     expect(res).toBe(appReview);
   });
@@ -93,7 +97,7 @@ describe('ApplicationSubmissionReviewService', () => {
     mockRepository.findOneOrFail.mockResolvedValue(appReview);
     mockRepository.save.mockResolvedValue({} as any);
 
-    const res = await service.update('', mockLocalGovernment, {});
+    const res = await service.update('', {});
 
     expect(res).toBeDefined();
     expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -108,7 +112,7 @@ describe('ApplicationSubmissionReviewService', () => {
     mockRepository.save.mockResolvedValue({} as any);
     mockAppService.getUuid.mockResolvedValue('');
 
-    const res = await service.update('', mockLocalGovernment, {
+    const res = await service.update('', {
       isOCPDesignation: false,
       isSubjectToZoning: false,
     });
@@ -214,7 +218,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
@@ -246,12 +250,12 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.STAFF_REPORT,
         }),
       }),
@@ -282,7 +286,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
@@ -310,12 +314,12 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.STAFF_REPORT,
         }),
       }),
@@ -341,7 +345,7 @@ describe('ApplicationSubmissionReviewService', () => {
 
     const documents = [
       new ApplicationDocument({
-        type: new ApplicationDocumentCode({
+        type: new DocumentCode({
           code: DOCUMENT_TYPE.RESOLUTION_DOCUMENT,
         }),
       }),

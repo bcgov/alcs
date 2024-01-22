@@ -46,6 +46,7 @@ export type BCeIDBasicToken = BaseToken & {
   bceid_user_guid: string;
   bceid_username: string;
   bceid_business_guid?: string;
+  bceid_business_name?: string;
 };
 
 @Injectable()
@@ -65,14 +66,14 @@ export class AuthorizationService {
     const baseUrl = this.config.get('KEYCLOAK.AUTH_SERVER_URL');
     const realm = this.config.get('KEYCLOAK.REALM');
     const res = await firstValueFrom(
-      await this.httpService.get(
+      this.httpService.get(
         `${baseUrl}/realms/${realm}/protocol/openid-connect/certs`,
       ),
     );
     this.jwks = await JWK.asKeyStore(res.data);
   }
 
-  async exchangeCodeForToken(code: string) {
+  async exchangeCodeForToken(code: string, isPortal: boolean) {
     const baseUrl = this.config.get<string>('ALCS.BASE_URL');
     const secret = this.config.get<string>('KEYCLOAK.SECRET');
     const clientId = this.config.get<string>('KEYCLOAK.CLIENT_ID');
@@ -94,18 +95,27 @@ export class AuthorizationService {
     const token = res.data;
 
     //Make sure token is legit, the Authguard will only do this on the next request
-    const payload = await JWS.createVerify(this.jwks).verify(token.id_token);
-    if (payload) {
-      const decodedToken = JSON.parse(
-        Buffer.from(payload.payload).toString(),
-      ) as BaseToken;
+    const decodedToken = await this.decodeToken(token.id_token);
+    if (decodedToken) {
       this.logger.debug(decodedToken);
-      await this.registerOrUpdateUser(decodedToken);
+      await this.registerOrUpdateUser(decodedToken, isPortal);
 
       return res.data;
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  private async decodeToken(token: string) {
+    const payload = await JWS.createVerify(this.jwks).verify(token);
+    if (payload && payload.payload) {
+      return JSON.parse(Buffer.from(payload.payload).toString()) as BaseToken;
+    }
+  }
+
+  async decodeHeaderToken(authorization: string) {
+    const token = authorization.replace('Bearer ', '');
+    return this.decodeToken(token);
   }
 
   async refreshToken(refreshToken: string): Promise<TokenResponse | undefined> {
@@ -161,6 +171,7 @@ export class AuthorizationService {
         bceidBusinessGuid: bceidToken.bceid_business_guid,
         bceidUserName: bceidToken.bceid_username,
         clientRoles: bceidToken.client_roles || [],
+        businessName: bceidToken.bceid_business_name,
       };
     }
     throw new Error(
@@ -168,7 +179,7 @@ export class AuthorizationService {
     );
   }
 
-  private async registerOrUpdateUser(payload: BaseToken) {
+  private async registerOrUpdateUser(payload: BaseToken, isPortal: boolean) {
     const bceidGuid = payload['bceid_user_guid'];
     const idirUserGuid = payload['idir_user_guid'];
     const existingUser = await this.userService.getByGuid({
@@ -186,8 +197,7 @@ export class AuthorizationService {
         this.mapUserFromTokenToCreateDto(payload),
       );
 
-      //TODO: Only send if they are trying to load ALCS
-      if (user.clientRoles.length === 0) {
+      if (user.clientRoles.length === 0 && !isPortal) {
         await this.userService.sendNewUserRequestEmail(
           user.email,
           user.bceidGuid ?? user.displayName,

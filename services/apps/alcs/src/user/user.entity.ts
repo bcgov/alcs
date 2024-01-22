@@ -1,4 +1,4 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { Card } from '../alcs/card/card.entity';
 import { CommentMention } from '../alcs/comment/mention/comment-mention.entity';
@@ -46,6 +46,10 @@ export class User extends Base {
   @Column({ nullable: true })
   familyName: string;
 
+  @AutoMap(() => String)
+  @Column({ type: 'varchar', nullable: true })
+  businessName: string | null;
+
   @AutoMap()
   @Index({ unique: true })
   @Column({ nullable: true })
@@ -64,8 +68,8 @@ export class User extends Base {
   @Column({ nullable: true })
   bceidUserName: string;
 
-  @Column({ nullable: true })
-  bceidBusinessGuid: string;
+  @Column({ nullable: true, type: 'varchar' })
+  bceidBusinessGuid: string | null;
 
   @AutoMap()
   @Column({ default: [], array: true, type: 'text' })

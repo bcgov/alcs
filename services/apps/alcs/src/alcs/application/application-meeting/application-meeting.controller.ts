@@ -1,6 +1,6 @@
 import { ServiceNotFoundException } from '@app/common/exceptions/base.exception';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from 'automapper-core';
+import { InjectMapper } from 'automapper-nestjs';
 import {
   Body,
   Controller,
@@ -51,9 +51,8 @@ export class ApplicationMeetingController {
   async getAllForApplication(
     @Param('fileNumber') fileNumber,
   ): Promise<ApplicationMeetingDto[]> {
-    const meetings = await this.appMeetingService.getByAppFileNumber(
-      fileNumber,
-    );
+    const meetings =
+      await this.appMeetingService.getByAppFileNumber(fileNumber);
 
     return this.mapper.mapArrayAsync(
       meetings,

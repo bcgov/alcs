@@ -1,5 +1,5 @@
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from 'automapper-classes';
+import { AutomapperModule } from 'automapper-nestjs';
 import { createMock, DeepMocked } from '@golevelup/nestjs-testing';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ClsService } from 'nestjs-cls';
@@ -14,6 +14,7 @@ import { CardService } from '../card/card.service';
 import { CovenantService } from '../covenant/covenant.service';
 import { NoticeOfIntentModificationService } from '../notice-of-intent-decision/notice-of-intent-modification/notice-of-intent-modification.service';
 import { NoticeOfIntentService } from '../notice-of-intent/notice-of-intent.service';
+import { NotificationService } from '../notification/notification.service';
 import { PlanningReviewService } from '../planning-review/planning-review.service';
 import { BoardController } from './board.controller';
 import { BOARD_CODES } from './board.dto';
@@ -32,6 +33,7 @@ describe('BoardController', () => {
   let covenantService: DeepMocked<CovenantService>;
   let noticeOfIntentService: DeepMocked<NoticeOfIntentService>;
   let noiModificationService: DeepMocked<NoticeOfIntentModificationService>;
+  let notificationService: DeepMocked<NotificationService>;
   let mockBoard;
 
   beforeEach(async () => {
@@ -44,8 +46,12 @@ describe('BoardController', () => {
     covenantService = createMock();
     noticeOfIntentService = createMock();
     noiModificationService = createMock();
+    notificationService = createMock();
+
     mockBoard = new Board({
       allowedCardTypes: [],
+      statuses: [],
+      createCardTypes: [],
       uuid: 'fake-board',
     });
 
@@ -64,6 +70,8 @@ describe('BoardController', () => {
     noticeOfIntentService.mapToDtos.mockResolvedValue([]);
     noiModificationService.getByBoard.mockResolvedValue([]);
     noiModificationService.mapToDtos.mockResolvedValue([]);
+    notificationService.getByBoard.mockResolvedValue([]);
+    notificationService.mapToDtos.mockResolvedValue([]);
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -97,6 +105,10 @@ describe('BoardController', () => {
           useValue: noiModificationService,
         },
         {
+          provide: NotificationService,
+          useValue: notificationService,
+        },
+        {
           provide: ClsService,
           useValue: {},
         },
@@ -128,7 +140,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(mockBoard.uuid);
+    await controller.getBoardWithCards(mockBoard.uuid);
 
     expect(appService.getByBoard).toHaveBeenCalledTimes(1);
     expect(appService.getByBoard).toBeCalledWith(mockBoard.uuid);
@@ -148,7 +160,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(boardCode);
+    await controller.getBoardWithCards(boardCode);
 
     expect(planningReviewService.getByBoard).toHaveBeenCalledTimes(1);
     expect(planningReviewService.mapToDtos).toHaveBeenCalledTimes(1);
@@ -162,7 +174,7 @@ describe('BoardController', () => {
       }),
     ];
 
-    await controller.getCards(boardCode);
+    await controller.getBoardWithCards(boardCode);
 
     expect(modificationService.getByBoard).toHaveBeenCalledTimes(1);
     expect(modificationService.mapToDtos).toHaveBeenCalledTimes(1);

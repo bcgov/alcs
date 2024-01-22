@@ -1,0 +1,135 @@
+@use '../../../../../styles/colors.scss';
+
+h3,
+div,
+span,
+p {
+  color: colors.$black;
+}
+
+.header,
+.footer {
+  display: flex;
+  padding-left: 16px;
+}
+
+.header {
+  justify-content: space-between;
+}
+
+.footer {
+  justify-content: flex-end;
+}
+
+:host ::ng-deep {
+  .display-none {
+    display: none !important;
+  }
+
+  .read-more {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .decision-container {
+    padding: 28px 0;
+
+    .post-decisions {
+      padding: 8px 16px;
+      background-color: colors.$grey-light;
+      grid-template-columns: 50% 50%;
+      display: grid;
+      min-height: 36px;
+      text-transform: uppercase;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .header {
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 16px;
+
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+    }
+
+    .even-condition {
+      background-color: colors.$grey-light;
+    }
+
+    .condition-container {
+      display: block;
+      padding: 24px 16px;
+
+      .header {
+        display: flex;
+        padding: 0px;
+        gap: 16px;
+        padding-bottom: 16px;
+
+        color: colors.$black;
+        justify-content: flex-start;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 31% 31% 31%;
+        grid-row-gap: 24px;
+        grid-column-gap: 16px;
+
+        .full-width {
+          grid-column: 1/4;
+        }
+      }
+    }
+
+    .no-conditions {
+      margin: 16px 16px;
+      color: colors.$grey-dark;
+    }
+  }
+
+  .lot-table {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: max-content max-content max-content 0.8fr;
+    grid-column-gap: 36px;
+    grid-row-gap: 12px;
+    align-items: center;
+  }
+
+  .container {
+    margin: 32px 0;
+  }
+
+  .subheading2 {
+    display: flex;
+    gap: 4px;
+  }
+
+  .icon {
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+  }
+
+  .component-labels {
+    white-space: pre-wrap;
+  }
+
+  .inline-plan-numbers {
+    width: 100%;
+
+    .editing {
+      width: 100%;
+      .mat-mdc-form-field {
+        width: 100%;
+      }
+    }
+  }
+}

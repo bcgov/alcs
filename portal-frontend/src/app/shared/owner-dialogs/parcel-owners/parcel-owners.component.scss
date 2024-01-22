@@ -1,0 +1,20 @@
+@use '../../../../styles/functions' as *;
+@use '../../../../styles/colors';
+
+.actions {
+  button:not(:last-child) {
+    margin-right: rem(8) !important;
+  }
+}
+
+.no-data-text {
+  text-align: center;
+  color: colors.$grey-dark;
+  padding-top: rem(12);
+}
+
+.no-data-text {
+  color: colors.$grey-dark;
+  text-align: left;
+  padding-top: 0;
+}

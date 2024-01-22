@@ -1,6 +1,6 @@
-import { AutoMap } from '@automapper/classes';
+import { AutoMap } from 'automapper-classes';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { ApplicationLocalGovernmentDto } from '../application/application-code/application-local-government/application-local-government.dto';
+import { LocalGovernmentDto } from '../local-government/local-government.dto';
 import { CardDto } from '../card/card.dto';
 import { ApplicationRegionDto } from '../code/application-code/application-region/application-region.dto';
 
@@ -21,6 +21,10 @@ export class CreatePlanningReviewDto {
   @IsString()
   @IsNotEmpty()
   regionCode: string;
+
+  @IsString()
+  @IsNotEmpty()
+  boardCode: string;
 }
 
 export class PlanningReviewDto {
@@ -31,7 +35,7 @@ export class PlanningReviewDto {
   card: CardDto;
 
   @AutoMap()
-  localGovernment: ApplicationLocalGovernmentDto;
+  localGovernment: LocalGovernmentDto;
 
   @AutoMap()
   region: ApplicationRegionDto;

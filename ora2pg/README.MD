@@ -201,7 +201,7 @@ NOTE: at the time of writing this documentation the only version of ora2pg that 
 
 Dockerized version of ora2pg tool will be used for migration from Oracle to Postgres. Follow this link for more details: https://github.com/Guy-Incognito/ora2pg
 
-- (only if you are running local Oracle in docker) make sure that the steps above regarding the Oracle data import is completed successfully, and your Oracle instance is running. Use docker ps to check running containers
+- (only if you are running local Oracle in docker) make sure that the steps above regarding the Oracle data import are completed successfully, and your Oracle instance is running. Use docker ps to check running containers
 
 ```sh
 docker ps
@@ -233,7 +233,7 @@ docker ps
    georgmoser/ora2pg:18.2
   ```
 
-  - once the container finishes, you will notice 'output.sql' in the data folder that you specified above. That file contains DDL for schema migration. However, it requires some manual adjustment.
+  - once the container finishes, you will notice 'output.sql' in the data folder that you specified above. That file contains DDL for schema migration. However, it requires some manual adjustment. Note!You could follow steps bellow or fix the fix errors one by one from psql output files after running schema and data import commands.  
     - at the top of the file, remove following line '\set ON_ERROR_STOP ON'
     - locate table 'oats_alr_appl_components' and navigate to the constraint creation section and search for these lines that you need to comment, otherwise the DDL script will fail on Postgres side
     ```SQL
@@ -298,9 +298,9 @@ docker ps
 - apply the schema migration file that was generated previously. This can be done using UI or CLI tool.  
   Example using the psql:
 
-`psql -h $HOSTe -p $PORT -U $USER -d $DBNAME -a -f path-to-ddl-file/ddl.sql`
-`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/ddl_18_2_test.sql`
-`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/data_18_2_test.sql`
+`psql -h $HOSTe -p $PORT -U $USER -d $DBNAME -a -f path-to-ddl-file/ddl.sql`  
+`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/ddl_18_2_test.sql | tee schema_output.txt`  
+`psql -h localhost -p 5432 -U postgres -d postgres -f ../data/data_18_2_test.sql | tee data_output.txt`
 
 - once schema migration applied check that all the tables are in place
 - in the sources locate 'import.sql'

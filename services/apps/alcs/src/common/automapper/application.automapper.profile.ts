@@ -1,16 +1,13 @@
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
-import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper } from 'automapper-core';
+import { AutomapperProfile, InjectMapper } from 'automapper-nestjs';
 import { Injectable } from '@nestjs/common';
 
 import { ApplicationDecisionMeetingDto } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.dto';
 import { ApplicationDecisionMeeting } from '../../alcs/application-decision/application-decision-v1/application-decision-meeting/application-decision-meeting.entity';
-import { ApplicationLocalGovernmentDto } from '../../alcs/application/application-code/application-local-government/application-local-government.dto';
-import { ApplicationLocalGovernment } from '../../alcs/application/application-code/application-local-government/application-local-government.entity';
-import { ApplicationDocumentCode } from '../../alcs/application/application-document/application-document-code.entity';
-import {
-  ApplicationDocumentDto,
-  ApplicationDocumentTypeDto,
-} from '../../alcs/application/application-document/application-document.dto';
+import { LocalGovernmentDto } from '../../alcs/local-government/local-government.dto';
+import { LocalGovernment } from '../../alcs/local-government/local-government.entity';
+import { ApplicationDocumentDto } from '../../alcs/application/application-document/application-document.dto';
+import { DocumentCode } from '../../document/document-code.entity';
 import { ApplicationDocument } from '../../alcs/application/application-document/application-document.entity';
 import {
   ApplicationMeetingDto,
@@ -18,10 +15,7 @@ import {
 } from '../../alcs/application/application-meeting/application-meeting.dto';
 import { ApplicationMeeting } from '../../alcs/application/application-meeting/application-meeting.entity';
 import { ApplicationPaused } from '../../alcs/application/application-paused.entity';
-import {
-  ApplicationDto,
-  SubmittedApplicationDto,
-} from '../../alcs/application/application.dto';
+import { ApplicationDto } from '../../alcs/application/application.dto';
 import { Application } from '../../alcs/application/application.entity';
 import { CardDto } from '../../alcs/card/card.dto';
 import { Card } from '../../alcs/card/card.entity';
@@ -33,7 +27,7 @@ import { ApplicationTypeDto } from '../../alcs/code/application-code/application
 import { ApplicationType } from '../../alcs/code/application-code/application-type/application-type.entity';
 import { StaffJournalDto } from '../../alcs/staff-journal/staff-journal.dto';
 import { StaffJournal } from '../../alcs/staff-journal/staff-journal.entity';
-import { ApplicationSubmission } from '../../portal/application-submission/application-submission.entity';
+import { DocumentTypeDto } from '../../document/document.dto';
 
 @Injectable()
 export class ApplicationProfile extends AutomapperProfile {
@@ -47,11 +41,7 @@ export class ApplicationProfile extends AutomapperProfile {
       createMap(mapper, ApplicationRegion, ApplicationRegionDto);
       createMap(mapper, ApplicationMeetingType, ApplicationMeetingTypeDto);
 
-      createMap(
-        mapper,
-        ApplicationLocalGovernment,
-        ApplicationLocalGovernmentDto,
-      );
+      createMap(mapper, LocalGovernment, LocalGovernmentDto);
 
       createMap(
         mapper,
@@ -88,6 +78,14 @@ export class ApplicationProfile extends AutomapperProfile {
         forMember(
           (a) => a.proposalEndDate,
           mapFrom((ad) => ad.proposalEndDate?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalEndDate2,
+          mapFrom((ad) => ad.proposalEndDate2?.getTime()),
+        ),
+        forMember(
+          (a) => a.proposalExpiryDate,
+          mapFrom((ad) => ad.proposalExpiryDate?.getTime()),
         ),
         forMember(
           (ad) => ad.card,
@@ -144,7 +142,7 @@ export class ApplicationProfile extends AutomapperProfile {
           mapFrom((ad) => ad.document.system),
         ),
       );
-      createMap(mapper, ApplicationDocumentCode, ApplicationDocumentTypeDto);
+      createMap(mapper, DocumentCode, DocumentTypeDto);
 
       createMap(
         mapper,
@@ -198,25 +196,6 @@ export class ApplicationProfile extends AutomapperProfile {
 
       createMap(mapper, ApplicationDto, Card);
 
-      createMap(
-        mapper,
-        ApplicationSubmission,
-        SubmittedApplicationDto,
-        forMember(
-          (a) => a.documents,
-          mapFrom((ad) => {
-            if (ad.application.documents) {
-              return this.mapper.mapArray(
-                ad.application.documents,
-                ApplicationDocument,
-                ApplicationDocumentDto,
-              );
-            } else {
-              return [];
-            }
-          }),
-        ),
-      );
       createMap(
         mapper,
         StaffJournal,

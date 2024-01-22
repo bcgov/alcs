@@ -27,7 +27,7 @@ export class CommentComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.commentDate = moment(this.comment.createdAt).format(environment.shortTimeFormat);
+    this.commentDate = moment(this.comment.createdAt).format(environment.longTimeFormat);
   }
 
   onDelete() {

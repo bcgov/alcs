@@ -12,12 +12,14 @@ import { AuthenticationService, ICurrentUser } from '../../../../services/authen
 import { BoardService, BoardWithFavourite } from '../../../../services/board/board.service';
 import { CardDto } from '../../../../services/card/card.dto';
 import { CardService } from '../../../../services/card/card.service';
-import { NoticeOfIntentDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
+import { NoticeOfIntentSubmissionStatusService } from '../../../../services/notice-of-intent/notice-of-intent-submission-status/notice-of-intent-submission-status.service';
+import { NoticeOfIntentDto, NoticeOfIntentTypeDto } from '../../../../services/notice-of-intent/notice-of-intent.dto';
 import { NoticeOfIntentService } from '../../../../services/notice-of-intent/notice-of-intent.service';
 import { ToastService } from '../../../../services/toast/toast.service';
 import { AssigneeDto } from '../../../../services/user/user.dto';
 import { UserService } from '../../../../services/user/user.service';
 import { ConfirmationDialogService } from '../../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { SYSTEM_SOURCE_TYPES } from '../../../../shared/dto/system-source.types.dto';
 import { NoticeOfIntentDialogComponent } from './notice-of-intent-dialog.component';
 
 describe('NoticeOfIntentDialogComponent', () => {
@@ -30,6 +32,7 @@ describe('NoticeOfIntentDialogComponent', () => {
 
   const mockDto: NoticeOfIntentDto = {
     applicant: 'fake-type',
+    hideFromPortal: false,
     region: {
       code: 'region-code',
       label: 'region',
@@ -39,15 +42,14 @@ describe('NoticeOfIntentDialogComponent', () => {
       name: 'local-gov',
       uuid: 'uuid',
       preferredRegionCode: 'CODE',
+      isFirstNation: false,
     },
     fileNumber: 'file-number',
     card: {
       status: {
         code: 'FAKE_STATUS',
       },
-      board: {
-        code: 'FAKE_BOARD',
-      },
+      boardCode: 'FAKE_BOARD',
     } as CardDto,
     activeDays: 0,
     paused: false,
@@ -55,6 +57,8 @@ describe('NoticeOfIntentDialogComponent', () => {
     uuid: '',
     retroactive: null,
     subtype: [],
+    type: {} as NoticeOfIntentTypeDto,
+    source: SYSTEM_SOURCE_TYPES.ALCS,
   };
 
   beforeEach(async () => {
@@ -113,6 +117,10 @@ describe('NoticeOfIntentDialogComponent', () => {
         {
           provide: AuthenticationService,
           useValue: authenticationService,
+        },
+        {
+          provide: NoticeOfIntentSubmissionStatusService,
+          useValue: {},
         },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],
